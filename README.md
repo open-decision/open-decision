@@ -1,0 +1,5 @@
+# Introduction
+
+This repo contains the React implementation of the tree-builder for the open-decision application.
+
+## TODO create compelling README
