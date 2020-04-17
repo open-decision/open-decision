@@ -32,6 +32,7 @@
     "@emotion/styled": "^10.0.27",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-hot-loader": "^4.12.20"
+    "react-hot-loader": "^4.12.20",
+    "theme-ui": "^0.3.1"
   }
 }
