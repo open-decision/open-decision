@@ -2,14 +2,18 @@
 /** @jsx jsx */
 import { hot } from "react-hot-loader/root";
 // import React from "react";
-import styled from "@emotion/styled";
+// import styled from "@emotion/styled";
 import { jsx, ThemeProvider } from "theme-ui";
 import theme from "./theme";
 
-const StyledApp = styled.div`
-  margin: 1rem;
-  color: ${(props) => props.theme.colors.primary};
-`;
+// const StyledApp = styled.div`
+//   color: blue;
+// `;
+
+const StyledApp = ({ children }) => {
+  const styles = { color: "secondary" };
+  return <div sx={styles}>{children}</div>;
+};
 
 function App() {
   return (

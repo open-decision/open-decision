@@ -8,5 +8,6 @@ export default {
     text: "#000",
     background: "#fff",
     primary: "blue",
+    secondary: "red",
   },
 };
