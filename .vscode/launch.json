@@ -5,6 +5,28 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "firefox",
+      "request": "launch",
+      "reAttach": true,
+      "name": "Launch Firefox",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}",
+      "profile": "Development",
+      "keepProfileChanges": true,
+      "skipFiles": [
+        "**/node_modules/**"
+      ],
+      "reloadOnChange": {
+        "watch": [
+          "${workspaceFolder}/**/*.js"
+        ],
+        "ignore": [
+          "${workspaceFolder}/node_modules/**"
+        ]
+      },
+      "clearConsoleOnReload": true,
+    },
+    {
       "type": "chrome",
       "request": "launch",
       "name": "Launch Chrome",
