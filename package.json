@@ -28,12 +28,15 @@
     "webpack-dev-server": "^3.10.3"
   },
   "dependencies": {
+    "@emotion/babel-plugin-jsx-pragmatic": "^0.1.5",
     "@emotion/core": "^10.0.28",
     "@emotion/styled": "^10.0.27",
     "@hot-loader/react-dom": "^16.13.0",
+    "framer-motion": "^1.11.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-hot-loader": "^4.12.20",
+    "react-router-dom": "^5.2.0",
     "theme-ui": "^0.3.1"
   }
 }

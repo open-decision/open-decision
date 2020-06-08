@@ -5,6 +5,7 @@ const webpack = require("webpack");
 module.exports = {
   entry: "./src/index.js",
   mode: "development",
+  devtool: "source-map",
   module: {
     rules: [
       {
@@ -17,7 +18,10 @@ module.exports = {
   },
   resolve: {
     extensions: ["*", ".js", ".jsx"],
-    alias: { "react-dom": "@hot-loader/react-dom" },
+    alias: {
+      "react-dom": "@hot-loader/react-dom",
+      components: path.resolve(__dirname, "src/components"),
+    },
   },
   output: {
     path: path.resolve(__dirname, "dist/"),
