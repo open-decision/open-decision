@@ -1,3 +1,4 @@
 export * from "./Header";
-export * from "./Layout";
 export * from "./Canvas";
+export * from "./Logo";
+export * from "./Avatar";

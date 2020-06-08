@@ -3,24 +3,23 @@ import { hot } from "react-hot-loader/root";
 import React from "react";
 import { ThemeProvider } from "theme-ui";
 import theme from "./theme";
-import { Header, Layout, Canvas } from "./components";
-import { BrowserRouter } from "react-router-dom";
+import { Header, Canvas, Logo } from "components";
+import { BrowserRouter, Link } from "react-router-dom";
 
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
-      <Layout>
-        <Header
-          sx={{
-            gridArea: "header",
-            backgroundColor: "green",
-            color: "white",
-          }}
-        >
-          <h1>Logo</h1>
-        </Header>
-        <Canvas />
-      </Layout>
+      <Header
+        sx={{
+          gridArea: "header",
+          backgroundColor: "grays.0",
+          color: "white",
+          boxShadow: 0,
+        }}
+      >
+        <Logo as={Link} />
+      </Header>
+      <Canvas />
     </ThemeProvider>
   );
 };
