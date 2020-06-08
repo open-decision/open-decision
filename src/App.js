@@ -9,17 +9,22 @@ import { BrowserRouter, Link } from "react-router-dom";
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
-      <Header
-        sx={{
-          gridArea: "header",
-          backgroundColor: "grays.0",
-          color: "white",
-          boxShadow: 0,
-        }}
+      <div
+        sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
       >
-        <Logo as={Link} />
-      </Header>
-      <Canvas />
+        <Header
+          sx={{
+            gridArea: "header",
+            backgroundColor: "grays.0",
+            color: "white",
+            boxShadow: 0,
+            flex: "0",
+          }}
+        >
+          <Logo as={Link} />
+        </Header>
+        <Canvas />
+      </div>
     </ThemeProvider>
   );
 };

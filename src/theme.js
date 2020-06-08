@@ -9,7 +9,8 @@ export default {
     background: "#fff",
     primary: "blue",
     secondary: "red",
-    grays: ["#FAFAFA", "#66615B"],
+    tertiary: { primary: "#54DE95", contrast: "#0D6336" },
+    grays: ["#FAFAFA", "#818181", "#66615B"],
   },
   space: [0, 4, 8, 16, 24, 48, 64, 128, 256, 512],
   fontSizes: [
@@ -23,6 +24,6 @@ export default {
     "4rem",
     "8rem",
   ],
-  radii: ["10%", "20%", "40%", "50%", "100%"],
+  radii: [],
   shadows: ["0 7px 14px rgba(50,50,93,.1),0 3px 6px rgba(0,0,0,.08)"],
 };
