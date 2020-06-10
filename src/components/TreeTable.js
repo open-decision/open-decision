@@ -76,6 +76,9 @@ export const TreeTable = ({ className }) => {
       <TabPanel value={value} index={2}>
         <Table />
       </TabPanel>
+      <TabPanel value={value} index={3}>
+        <Table />
+      </TabPanel>
     </div>
   );
 };
