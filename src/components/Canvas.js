@@ -1,20 +1,33 @@
-import { WelcomeScreen } from "components";
+import { WelcomeScreen, TreeTable } from "components";
+import React from "react";
 
-export const Canvas = ({ children, className }) => {
+//DEP username is hardcoded
+
+export const Canvas = ({ className }) => {
   return (
     <div
       className={className}
       sx={{
         backgroundColor: "#E5E5E5",
-        flex: "1",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
+        minHeight: "100vh",
+        display: "grid",
+        gridTemplateColumns: "2fr 8fr 2fr",
+        gridTemplateRows: "4fr 4fr",
       }}
     >
-      <div sx={{ width: "60vw" }}>
-        <WelcomeScreen username="Dirk_laywer23"></WelcomeScreen>
-        {children}
+      <WelcomeScreen
+        username="Dirk_laywer23"
+        sx={{ gridColumn: "2 / 3", alignSelf: "flex-end", mb: 4 }}
+      />
+      <div
+        sx={{
+          backgroundColor: "grays.1",
+          gridColumn: "1 / -1",
+          display: "grid",
+          gridTemplateColumns: "inherit",
+        }}
+      >
+        <TreeTable sx={{ gridColumn: "2 / 3" }} />
       </div>
     </div>
   );

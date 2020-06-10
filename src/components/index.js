@@ -4,3 +4,6 @@ export * from "./Logo";
 export * from "./Avatar";
 export * from "./Greeting";
 export * from "./WelcomeScreen";
+export * from "./TreeTable";
+export * from "./TableItem";
+export * from "./Tag";

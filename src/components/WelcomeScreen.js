@@ -1,21 +1,16 @@
 import { Greeting } from "components";
 import { Button } from "theme-ui";
+import React from "react";
 
-export const WelcomeScreen = ({ username }) => {
+//TODO Button + icon is missing => + character is not suitable, because characters have inherent line height (which is basically vertical padding in this case)
+
+export const WelcomeScreen = ({ username, className }) => {
   return (
-    <div
-      sx={{
-        height: "40vh",
-        display: "flex",
-        justifyContent: "flex-end",
-        flexDirection: "column",
-        alignItems: "start",
-      }}
-    >
+    <div className={className}>
       <Greeting username={username}></Greeting>
       <Button
         sx={{
-          borderRadius: "15px",
+          borderRadius: 3,
           padding: 4,
           fontSize: 3,
           marginTop: 4,
@@ -26,8 +21,7 @@ export const WelcomeScreen = ({ username }) => {
           justifyContent: "space-between",
         }}
       >
-        <div sx={{ fontSize: 6, marginRight: 3 }}>+</div>
-        <div> Neuen Baum hinzufügen</div>
+        Neuen Baum hinzufügen
       </Button>
     </div>
   );

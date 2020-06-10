@@ -8,7 +8,8 @@ export const Header = ({ className }) => {
         justifyContent: "space-between",
         flexDirection: "row",
         alignItems: "center",
-        padding: 4,
+        paddingX: 6,
+        paddingY: 3,
       }}
       className={className}
     >

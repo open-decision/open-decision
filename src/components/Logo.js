@@ -5,7 +5,7 @@ export const Logo = ({ as }) => (
   <Box
     as={as}
     to="/"
-    sx={{ textDecoration: "none", color: "grays.1", fontSize: 5 }}
+    sx={{ textDecoration: "none", color: "grays.2", fontSize: 5 }}
   >
     open <span sx={{ color: "secondary" }}>decision</span>
   </Box>
