@@ -3,8 +3,7 @@ import { invert } from "polished";
 
 const getRandomColor = () => Math.floor(Math.random() * 256);
 
-export const Tag = ({ children }) => {
-  const color = `rgb(${getRandomColor()}, ${getRandomColor()}, ${getRandomColor()})`;
+export const Tag = ({ children, color }) => {
   return (
     <div
       sx={{

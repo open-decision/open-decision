@@ -1,6 +1,10 @@
 import React from "react";
-import { Text } from "theme-ui";
+import { motion } from "framer-motion";
 
-export const Greeting = ({ username }) => {
-  return <Text sx={{ fontSize: 6, color: "grays.2" }}>Hallo, {username}!</Text>;
+export const Greeting = ({ children, ...props }) => {
+  return (
+    <motion.div sx={{ fontSize: 6, color: "grays.2" }} {...props}>
+      Hallo, {children}!
+    </motion.div>
+  );
 };

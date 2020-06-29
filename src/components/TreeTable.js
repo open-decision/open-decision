@@ -5,13 +5,16 @@ import { TableItem } from "components";
 
 import React from "react";
 
-const Table = ({ className }) => (
+const Table = ({ className, treeData }) => (
   <div
     sx={{ gridTemplateColumns: "1fr 3fr 4fr 3fr 1fr", mt: 5 }}
     className={className}
   >
     <TableHeader />
-    <TableItem sx={{ my: 3 }} />
+    {treeData.map((node) => {
+      const { node: tree } = node;
+      return <TableItem sx={{ my: 3 }} key={tree.id} content={tree} />;
+    })}
   </div>
 );
 
@@ -28,7 +31,7 @@ const TableHeader = () => {
       <div></div>
       <div>NAME</div>
       <div>TAGS</div>
-      <div>ZULETZT GEÄNDERT</div>
+      <div>ERSTELLT AM</div>
     </div>
   );
 };
@@ -56,7 +59,7 @@ function a11yProps(index) {
   };
 }
 
-export const TreeTable = ({ className }) => {
+export const TreeTable = ({ className, treeData }) => {
   const [value, setValue] = React.useState(0);
 
   return (
@@ -68,9 +71,9 @@ export const TreeTable = ({ className }) => {
         <Tab label="Archiv" {...a11yProps(3)} />
       </Tabs>
       <TabPanel value={value} index={0}>
-        <Table />
+        <Table treeData={treeData} />
       </TabPanel>
-      <TabPanel value={value} index={1}>
+      {/* <TabPanel value={value} index={1}>
         <Table />
       </TabPanel>
       <TabPanel value={value} index={2}>
@@ -78,7 +81,7 @@ export const TreeTable = ({ className }) => {
       </TabPanel>
       <TabPanel value={value} index={3}>
         <Table />
-      </TabPanel>
+      </TabPanel> */}
     </div>
   );
 };

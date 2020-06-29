@@ -8,36 +8,20 @@
       "type": "firefox",
       "request": "launch",
       "reAttach": true,
-      "name": "Launch Firefox",
-      "url": "http://localhost:3000",
-      "webRoot": "${workspaceFolder}",
-      "profile": "Development",
+      "name": "Firefox",
+      "firefoxExecutable": "/usr/bin/firefox-developer-edition",
+      "profile": "dev",
       "keepProfileChanges": true,
-      "skipFiles": [
-        "**/node_modules/**"
-      ],
-      "reloadOnChange": {
-        "watch": [
-          "${workspaceFolder}/**/*.js"
-        ],
-        "ignore": [
-          "${workspaceFolder}/node_modules/**"
-        ]
-      },
-      "clearConsoleOnReload": true,
-      "pathMappings": [
-        {
-          "url": "webpack:///src",
-          "path": "${workspaceFolder}/src"
-        }
-      ]
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}"
     },
     {
       "type": "chrome",
       "request": "launch",
-      "name": "Launch Chrome",
+      "name": "Chrome",
       "url": "http://localhost:3000",
-      "webRoot": "${workspaceFolder}"
+      "skipFiles": ["node_modules", ".cache", "public"],
+      "webRoot": "${workspaceRoot}/src"
     }
   ]
 }

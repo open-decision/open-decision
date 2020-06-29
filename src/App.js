@@ -3,7 +3,7 @@ import { hot } from "react-hot-loader/root";
 import React from "react";
 import { ThemeProvider } from "theme-ui";
 import theme from "./theme";
-import { Header, Canvas, Logo } from "components";
+import { Header, Dashboard, Logo } from "components";
 import { BrowserRouter, Link } from "react-router-dom";
 
 const App = () => {
@@ -23,7 +23,7 @@ const App = () => {
         >
           <Logo as={Link} />
         </Header>
-        <Canvas />
+        <Dashboard />
       </div>
     </ThemeProvider>
   );

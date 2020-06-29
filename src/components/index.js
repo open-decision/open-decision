@@ -1,5 +1,5 @@
 export * from "./Header";
-export * from "./Canvas";
+export * from "./Dashboard";
 export * from "./Logo";
 export * from "./Avatar";
 export * from "./Greeting";
