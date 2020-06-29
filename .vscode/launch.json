@@ -25,6 +25,12 @@
         ]
       },
       "clearConsoleOnReload": true,
+      "pathMappings": [
+        {
+          "url": "webpack:///src",
+          "path": "${workspaceFolder}/src"
+        }
+      ]
     },
     {
       "type": "chrome",
