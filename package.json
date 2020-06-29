@@ -2,7 +2,7 @@
   "name": "open-decision-builder_from-scratch",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack-dev-server --mode development",
@@ -22,6 +22,8 @@
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.20.1",
+    "html-loader": "^1.1.0",
+    "html-webpack-plugin": "^4.3.0",
     "prettier": "2.0.5",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.12",
