@@ -41,6 +41,7 @@
     "@emotion/styled": "^10.0.27",
     "@hot-loader/react-dom": "^16.13.0",
     "@material-ui/core": "^4.10.2",
+    "@material-ui/icons": "^4.9.1",
     "framer-motion": "^1.11.1",
     "polished": "^3.6.5",
     "ramda": "^0.27.0",

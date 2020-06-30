@@ -2,17 +2,18 @@ import { TreeTable } from "components";
 import { Greeting } from "components";
 import { Button, Box } from "theme-ui";
 import React from "react";
-import { readTrees } from "../backend-integration/readTrees";
-import { lensPath, view } from "ramda";
+import { fetchDatabase } from "../backend-integration/fetchDatabase";
+import AddIcon from "@material-ui/icons/Add";
+import { ALL_TREES } from "../backend-integration/queries/allTrees";
+import { getTreeData } from "../backend-integration/dataAccessors/getTreeData";
 
-const treeDataLens = lensPath(["data", "allDecisionTrees", "edges"]);
 //DEP username is hardcoded
 export const Dashboard = ({ className }) => {
   const [treeData, setTreeData] = React.useState();
 
   React.useEffect(() => {
     const fetchData = async () => {
-      setTreeData(await view(treeDataLens)(await readTrees()));
+      setTreeData(await fetchDatabase(ALL_TREES, getTreeData));
     };
     fetchData();
   }, []);
@@ -25,7 +26,7 @@ export const Dashboard = ({ className }) => {
         minHeight: "100vh",
         display: "grid",
         gridTemplateColumns: "2fr 8fr 2fr",
-        gridTemplateRows: "4fr 4fr",
+        gridTemplateRows: "3fr 4fr",
       }}
     >
       <Box sx={{ gridColumn: "2 / 3", alignSelf: "flex-end", mb: 4 }}>
@@ -43,6 +44,7 @@ export const Dashboard = ({ className }) => {
             justifyContent: "space-between",
           }}
         >
+          <AddIcon />
           Neuen Baum hinzufügen
         </Button>
       </Box>
