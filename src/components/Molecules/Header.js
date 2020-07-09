@@ -1,4 +1,5 @@
-import { Avatar, Logo } from "components";
+import { Logo } from "components";
+import { Avatar } from "theme-ui";
 
 export const Header = ({ className }) => {
   return (
