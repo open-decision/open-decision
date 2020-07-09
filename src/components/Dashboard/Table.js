@@ -19,15 +19,24 @@ import matchSorter from "match-sorter";
 //date manipulation to make the creation date friendlier
 import { parseISO, formatWithOptions } from "date-fns/esm/fp";
 import { de } from "date-fns/locale";
-import { compose, map, path, prop, flatten, uniq, includes } from "ramda";
+import {
+  compose,
+  map,
+  path,
+  prop,
+  flatten,
+  uniq,
+  includes,
+  filter,
+} from "ramda";
 
 import { trace } from "../../utilities";
 
-const filterTags = compose(
-  uniq,
-  flatten,
-  map(compose(map(prop("name")), path(["values", "tags"])))
-);
+//Data transformation functions
+//{row} => [String]
+const getTags = compose(map(prop("name")), path(["values", "tags"]));
+//{rows} => [String]
+const filterTags = compose(uniq, flatten, map(getTags));
 
 const GlobalFilter = ({
   preGlobalFilteredRows,
@@ -59,30 +68,30 @@ const GlobalFilter = ({
   );
 };
 
-// function SelectColumnFilter({
-//   column: { filterValue, setFilter, preFilteredRows, id },
-// }) {
-//   // Calculate the options for filtering
-//   // using the preFilteredRows
-//   const options = filterTags(preFilteredRows);
+function SelectColumnFilter({
+  column: { filterValue, setFilter, preFilteredRows, id },
+}) {
+  // Calculate the options for filtering
+  // using the preFilteredRows
+  const options = filterTags(preFilteredRows);
 
-//   // Render a multi-select box
-//   return (
-//     <select
-//       value={filterValue}
-//       onChange={(e) => {
-//         setFilter(e.target.value || undefined);
-//       }}
-//     >
-//       <option value="">All</option>
-//       {options.map((option, i) => (
-//         <option key={i} value={option}>
-//           {option}
-//         </option>
-//       ))}
-//     </select>
-//   );
-// }
+  // Render a multi-select box
+  return (
+    <select
+      value={filterValue}
+      onChange={(e) => {
+        setFilter(e.target.value || undefined);
+      }}
+    >
+      <option value="">All</option>
+      {options.map((option, i) => (
+        <option key={i} value={option}>
+          {option}
+        </option>
+      ))}
+    </select>
+  );
+}
 
 function fuzzyTextFilterFn(rows, id, filterValue) {
   return matchSorter(rows, filterValue, { keys: [(row) => row.values[id]] });
@@ -125,9 +134,9 @@ export const Table = ({ className, data }) => {
     []
   );
 
-  // const tagFilter = (rows, id, filterValue) => {
-  //   return includes(filterValue, filterTags(rows));
-  // };
+  const tagFilter = (rows, id, filterValue) => {
+    return filter(compose(includes(filterValue), getTags))(rows);
+  };
 
   //This defines the table columns. The data is passed in. The accessor is the property in each object in data.
   const columns = React.useMemo(
@@ -143,6 +152,8 @@ export const Table = ({ className, data }) => {
         Cell: ({ cell: { value } }) => {
           return <Tags values={value} />;
         },
+        Filter: SelectColumnFilter,
+        filter: tagFilter,
       },
       {
         Header: "ERSTELLT",
@@ -186,8 +197,8 @@ export const Table = ({ className, data }) => {
     {
       columns,
       data,
-      defaultColumn,
       filterTypes,
+      defaultColumn,
     },
     useFilters,
     useGlobalFilter,
