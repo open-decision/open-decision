@@ -36,6 +36,7 @@ export default {
     "8rem",
   ],
   radii: [
+    "0",
     "0.5rem",
     "0.8rem",
     "1rem",
@@ -78,6 +79,22 @@ export default {
       py: 1,
       px: 2,
       fontSize: 0,
+    },
+  },
+  forms: {
+    label: {
+      fontFamily: "body",
+    },
+    input: {
+      fontFamily: "body",
+      bg: "grays.0",
+      borderRadius: 1,
+    },
+    select: {
+      borderRadius: 1,
+      "&:focus": {
+        border: "2px solid blue",
+      },
     },
   },
   layout: {

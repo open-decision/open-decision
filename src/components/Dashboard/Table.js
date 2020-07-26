@@ -3,7 +3,7 @@
 import React from "react";
 
 //Components
-import { Text } from "theme-ui";
+import { Text, Label, Flex, Input, Select } from "theme-ui";
 import { Tags } from "components";
 
 //Hooks and functions for the table logic => not UI components
@@ -30,8 +30,6 @@ import {
   filter,
 } from "ramda";
 
-import { trace } from "../../utilities";
-
 //Data transformation functions
 //{row} => [String]
 const getTags = compose(map(prop("name")), path(["values", "tags"]));
@@ -50,26 +48,30 @@ const GlobalFilter = ({
   }, 200);
 
   return (
-    <span>
-      Search:{" "}
-      <input
+    <Flex sx={{ py: 3, alignItems: "center" }}>
+      <Label htmlFor="search" sx={{ flexBasis: "max-content", mr: 4 }}>
+        Suche:
+      </Label>
+      <Input
+        id="search"
         value={value || ""}
         onChange={(e) => {
           setValue(e.target.value);
           onChange(e.target.value);
         }}
         placeholder={`${count} records...`}
-        style={{
+        sx={{
           fontSize: "1.1rem",
           border: "0",
+          flex: "1",
         }}
       />
-    </span>
+    </Flex>
   );
 };
 
 function SelectColumnFilter({
-  column: { filterValue, setFilter, preFilteredRows, id },
+  column: { filterValue, setFilter, preFilteredRows },
 }) {
   // Calculate the options for filtering
   // using the preFilteredRows
@@ -77,7 +79,7 @@ function SelectColumnFilter({
 
   // Render a multi-select box
   return (
-    <select
+    <Select
       value={filterValue}
       onChange={(e) => {
         setFilter(e.target.value || undefined);
@@ -89,8 +91,19 @@ function SelectColumnFilter({
           {option}
         </option>
       ))}
-    </select>
+    </Select>
   );
+}
+
+function fuzzyGlobalFilter(rows, id, filterValue) {
+  return matchSorter(rows, filterValue.trim(), {
+    keys: [
+      "values.name",
+      (row) =>
+        formatWithOptions({ locale: de })("P")(parseISO(row.values.createdAt)),
+      (row) => row.values.tags.map((tag) => tag.name),
+    ],
+  });
 }
 
 function fuzzyTextFilterFn(rows, id, filterValue) {
@@ -116,27 +129,14 @@ function DefaultColumnFilter({
 export const Table = ({ className, data }) => {
   const filterTypes = React.useMemo(
     () => ({
-      // Add a new fuzzyTextFilterFn filter type.
       fuzzyText: fuzzyTextFilterFn,
-      // Or, override the default text filter to use
-      // "startWith"
-      text: (rows, id, filterValue) => {
-        return rows.filter((row) => {
-          const rowValue = row.values[id];
-          return rowValue !== undefined
-            ? String(rowValue)
-                .toLowerCase()
-                .startsWith(String(filterValue).toLowerCase())
-            : true;
-        });
+      tags: (rows, id, filterValue) => {
+        console.log(filterValue);
+        return filter(compose(includes(filterValue), getTags))(rows);
       },
     }),
     []
   );
-
-  const tagFilter = (rows, id, filterValue) => {
-    return filter(compose(includes(filterValue), getTags))(rows);
-  };
 
   //This defines the table columns. The data is passed in. The accessor is the property in each object in data.
   const columns = React.useMemo(
@@ -149,15 +149,14 @@ export const Table = ({ className, data }) => {
       {
         Header: "TAGS",
         accessor: "tags",
-        Cell: ({ cell: { value } }) => {
-          return <Tags values={value} />;
-        },
+        filter: "tags",
+        Cell: ({ cell: { value } }) => <Tags values={value} />,
         Filter: SelectColumnFilter,
-        filter: tagFilter,
       },
       {
         Header: "ERSTELLT",
         accessor: "createdAt",
+        filter: "fuzzyText",
         Cell: ({ cell: { value } }) => {
           return (
             <span>
@@ -189,7 +188,6 @@ export const Table = ({ className, data }) => {
     //headerGroups and rows are internal data structures derived from columns and data.
     headerGroups,
     rows,
-    visibleColumns,
     setGlobalFilter,
     state,
     preGlobalFilteredRows,
@@ -199,6 +197,7 @@ export const Table = ({ className, data }) => {
       data,
       filterTypes,
       defaultColumn,
+      globalFilter: fuzzyGlobalFilter,
     },
     useFilters,
     useGlobalFilter,
@@ -207,68 +206,77 @@ export const Table = ({ className, data }) => {
 
   //Here we use the information provided by useTable (and associated hooks) to display an interactive table UI
   return (
-    <table
-      {...getTableProps()}
-      sx={{
-        borderCollapse: "seperate",
-        borderSpacing: "0 1em",
-        width: "100%",
-      }}
-      className={className}
-    >
-      <thead>
-        {headerGroups.map((headerGroup) => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map((column) => (
-              <Text
-                as="th"
-                {...column.getHeaderProps(column.getSortByToggleProps())}
-                sx={{
-                  textAlign: "left",
-                }}
-              >
-                {column.render("Header")}
-                <span sx={{ ml: 2 }}>
-                  {column.isSorted ? (column.isSortedDesc ? "⬇" : "⬆") : "⬅"}
-                </span>
-                {/* Render the columns filter UI */}
-                <div>{column.canFilter ? column.render("Filter") : null}</div>
-              </Text>
-            ))}
-          </tr>
-        ))}
-        <tr>
-          <th
-            colSpan={visibleColumns.length}
-            style={{
-              textAlign: "left",
-            }}
-          >
-            <GlobalFilter
-              setGlobalFilter={setGlobalFilter}
-              globalFilter={state.globalFilter}
-              preGlobalFilteredRows={preGlobalFilteredRows}
-            />
-          </th>
-        </tr>
-      </thead>
-
-      <tbody {...getTableBodyProps()}>
-        {rows.map((row) => {
-          prepareRow(row);
-          return (
-            <tr {...row.getRowProps()}>
-              {row.cells.map((cell) => {
-                return (
-                  <Text as="td" {...cell.getCellProps()}>
-                    {cell.render("Cell")}
-                  </Text>
-                );
-              })}
+    <>
+      {/* This is the Search Field */}
+      <GlobalFilter
+        setGlobalFilter={setGlobalFilter}
+        globalFilter={state.globalFilter}
+        preGlobalFilteredRows={preGlobalFilteredRows}
+      />
+      {/* apply the table props */}
+      <table
+        {...getTableProps()}
+        sx={{
+          borderCollapse: "seperate",
+          borderSpacing: "0 1em",
+          width: "100%",
+        }}
+        className={className}
+      >
+        <thead>
+          {/* Loop over the header rows */}
+          {headerGroups.map((headerGroup) => (
+            // Apply the header row props
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {/* Loop over the headers in each row */}
+              {headerGroup.headers.map((column) => (
+                // Apply the header cell props
+                <Text
+                  as="th"
+                  {...column.getHeaderProps(column.getSortByToggleProps())}
+                  sx={{
+                    textAlign: "left",
+                  }}
+                >
+                  {/* Render the header */}
+                  {column.render("Header")}
+                  <span sx={{ ml: 2 }}>
+                    {column.isSorted ? (column.isSortedDesc ? "⬇" : "⬆") : "⬅"}
+                  </span>
+                  {/* Render the columns filter UI */}
+                  <div sx={{ py: 2 }}>
+                    {column.canFilter ? column.render("Filter") : null}
+                  </div>
+                </Text>
+              ))}
             </tr>
-          );
-        })}
-      </tbody>
-    </table>
+          ))}
+        </thead>
+
+        {/* Apply the table body props */}
+        <tbody {...getTableBodyProps()}>
+          {/* Loop over the table rows */}
+          {rows.map((row) => {
+            // Prepare the row for display
+            prepareRow(row);
+            return (
+              // Apply the row props
+              <tr {...row.getRowProps()}>
+                {/* Loop over the rows cells */}
+                {row.cells.map((cell) => {
+                  // Apply the cell props
+                  return (
+                    <Text as="td" {...cell.getCellProps()}>
+                      {/* Render the cell contents */}
+                      {cell.render("Cell")}
+                    </Text>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </>
   );
 };
