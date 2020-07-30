@@ -1,4 +1,6 @@
-export default {
+import { roboto } from "@theme-ui/presets";
+
+const tokens = {
   fonts: {
     body: "Roboto, sans-serif",
     heading: '"Roboto Condensed", sans-serif',
@@ -58,7 +60,18 @@ export default {
     default: {
       fontFamily: "body",
     },
+    heading: {
+      fontFamily: "heading",
+      fontWeight: "heading",
+      lineHeight: "heading",
+    },
+    headingLarge: {
+      variant: "text.heading",
+      fontSize: 5,
+      my: 3,
+    },
   },
+
   buttons: {
     primary: {
       bg: "tertiary.primary",
@@ -103,3 +116,5 @@ export default {
     },
   },
 };
+
+export default { ...roboto, ...tokens };

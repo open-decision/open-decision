@@ -1,9 +1,10 @@
 /* eslint-disable react/display-name */
 /* eslint-disable react/jsx-key */
 import React from "react";
+import styled from "@emotion/styled";
 
 //Components
-import { Text, Label, Flex, Input, Select } from "theme-ui";
+import { Text, Label, Flex, Input, Select, Heading } from "theme-ui";
 import { Tags } from "components";
 
 //Hooks and functions for the table logic => not UI components
@@ -13,6 +14,7 @@ import {
   useGlobalFilter,
   useAsyncDebounce,
   useFilters,
+  useFlexLayout,
 } from "react-table";
 import matchSorter from "match-sorter";
 
@@ -116,7 +118,7 @@ function DefaultColumnFilter({
   const count = preFilteredRows.length;
 
   return (
-    <input
+    <Input
       value={filterValue || ""}
       onChange={(e) => {
         setFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
@@ -150,6 +152,7 @@ export const Table = ({ className, data }) => {
         Header: "TAGS",
         accessor: "tags",
         filter: "tags",
+        disableSortBy: true,
         Cell: ({ cell: { value } }) => <Tags values={value} />,
         Filter: SelectColumnFilter,
       },
@@ -157,6 +160,8 @@ export const Table = ({ className, data }) => {
         Header: "ERSTELLT",
         accessor: "createdAt",
         filter: "fuzzyText",
+        width: 120,
+        style: { textAlign: "right" },
         Cell: ({ cell: { value } }) => {
           return (
             <span>
@@ -171,6 +176,9 @@ export const Table = ({ className, data }) => {
 
   const defaultColumn = React.useMemo(
     () => ({
+      minWidth: 30,
+      width: 150,
+      maxWidth: 800,
       // Let's set up our default Filter UI
       Filter: DefaultColumnFilter,
     }),
@@ -199,6 +207,7 @@ export const Table = ({ className, data }) => {
       defaultColumn,
       globalFilter: fuzzyGlobalFilter,
     },
+    useFlexLayout,
     useFilters,
     useGlobalFilter,
     useSortBy
@@ -214,69 +223,84 @@ export const Table = ({ className, data }) => {
         preGlobalFilteredRows={preGlobalFilteredRows}
       />
       {/* apply the table props */}
-      <table
+      <div
         {...getTableProps()}
         sx={{
-          borderCollapse: "seperate",
-          borderSpacing: "0 1em",
           width: "100%",
         }}
-        className={className}
+        className="table"
       >
-        <thead>
+        {/* <Heading variant="headingLarge" as="caption" sx={{ textAlign: "left" }}>
+          Entscheidungsbäume
+        </Heading> */}
+        <div>
           {/* Loop over the header rows */}
           {headerGroups.map((headerGroup) => (
             // Apply the header row props
-            <tr {...headerGroup.getHeaderGroupProps()}>
+            <div {...headerGroup.getHeaderGroupProps()}>
               {/* Loop over the headers in each row */}
               {headerGroup.headers.map((column) => (
                 // Apply the header cell props
-                <Text
-                  as="th"
-                  {...column.getHeaderProps(column.getSortByToggleProps())}
-                  sx={{
-                    textAlign: "left",
-                  }}
+                <Heading
+                  {...column.getHeaderProps([
+                    {
+                      style: column.style,
+                    },
+                    column.getSortByToggleProps(),
+                  ])}
+                  sx={{ my: 3 }}
                 >
                   {/* Render the header */}
                   {column.render("Header")}
-                  <span sx={{ ml: 2 }}>
-                    {column.isSorted ? (column.isSortedDesc ? "⬇" : "⬆") : "⬅"}
-                  </span>
+                  {column.canSort && (
+                    <span sx={{ ml: 2 }}>
+                      {column.isSorted
+                        ? column.isSortedDesc
+                          ? "⬇"
+                          : "⬆"
+                        : "⬅"}
+                    </span>
+                  )}
                   {/* Render the columns filter UI */}
-                  <div sx={{ py: 2 }}>
+                  {/* <div sx={{ py: 2, pr: 4 }}>
                     {column.canFilter ? column.render("Filter") : null}
-                  </div>
-                </Text>
+                  </div> */}
+                </Heading>
               ))}
-            </tr>
+            </div>
           ))}
-        </thead>
+        </div>
 
         {/* Apply the table body props */}
-        <tbody {...getTableBodyProps()}>
+        <div {...getTableBodyProps()}>
           {/* Loop over the table rows */}
           {rows.map((row) => {
             // Prepare the row for display
             prepareRow(row);
             return (
               // Apply the row props
-              <tr {...row.getRowProps()}>
+              <div {...row.getRowProps()} sx={{ my: 2 }}>
                 {/* Loop over the rows cells */}
                 {row.cells.map((cell) => {
                   // Apply the cell props
                   return (
-                    <Text as="td" {...cell.getCellProps()}>
+                    <Text
+                      {...cell.getCellProps([
+                        {
+                          style: cell.column.style,
+                        },
+                      ])}
+                    >
                       {/* Render the cell contents */}
                       {cell.render("Cell")}
                     </Text>
                   );
                 })}
-              </tr>
+              </div>
             );
           })}
-        </tbody>
-      </table>
+        </div>
+      </div>
     </>
   );
 };

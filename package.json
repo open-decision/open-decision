@@ -46,6 +46,7 @@
     "@hot-loader/react-dom": "^16.13.0",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
+    "@theme-ui/presets": "^0.3.0",
     "date-fns": "^2.15.0",
     "framer-motion": "^1.11.1",
     "match-sorter": "^4.2.0",
