@@ -3,21 +3,8 @@ import { Button, Box, Container, Flex, Heading } from "theme-ui";
 import React from "react";
 import AddIcon from "@material-ui/icons/Add";
 
-import { fetchDatabase } from "../../backend-integration/fetchDatabase";
-import { ALL_TREES } from "../../backend-integration/queries/allTrees";
-import { getTreeData } from "../../backend-integration/dataAccessors/getTreeData";
-
 //DEP username is hardcoded
-export const Dashboard = ({ className }) => {
-  const [treeData, setTreeData] = React.useState();
-
-  React.useEffect(() => {
-    const fetchData = async () => {
-      setTreeData(await fetchDatabase(ALL_TREES, getTreeData));
-    };
-    fetchData();
-  }, []);
-
+export const Dashboard = ({ className, treeData }) => {
   return (
     <Flex
       className={className}

@@ -1,11 +1,11 @@
 /* eslint-disable react/display-name */
 /* eslint-disable react/jsx-key */
 import React from "react";
-import styled from "@emotion/styled";
 
 //Components
-import { Text, Label, Flex, Input, Select, Heading } from "theme-ui";
+import { Text, Label, Flex, Input, Select, Heading, Box } from "theme-ui";
 import { Tags } from "components";
+import { EditTwoTone, DeleteTwoTone } from "@material-ui/icons";
 
 //Hooks and functions for the table logic => not UI components
 import {
@@ -31,6 +31,7 @@ import {
   includes,
   filter,
 } from "ramda";
+import { Link } from "react-router-dom";
 
 //Data transformation functions
 //{row} => [String]
@@ -170,6 +171,35 @@ export const Table = ({ className, data }) => {
           );
         },
       },
+      {
+        Header: "BEARBEITEN",
+        accessor: "id",
+        disableSortBy: true,
+        style: { textAlign: "right" },
+        Cell: ({ cell: { value } }) => {
+          return (
+            <Box
+              sx={{
+                "& > *:not(:last-child)": {
+                  mr: 3,
+                },
+              }}
+            >
+              <Link
+                to={`/builder/${value}`}
+                sx={{
+                  textDecoration: "none",
+                  color: "initial",
+                  ":hover": { color: "primary" },
+                }}
+              >
+                <EditTwoTone />
+              </Link>
+              <DeleteTwoTone sx={{ ":hover": { color: "red" } }} />
+            </Box>
+          );
+        },
+      },
     ],
     []
   );
@@ -228,7 +258,7 @@ export const Table = ({ className, data }) => {
         sx={{
           width: "100%",
         }}
-        className="table"
+        className={className}
       >
         {/* <Heading variant="headingLarge" as="caption" sx={{ textAlign: "left" }}>
           Entscheidungsbäume

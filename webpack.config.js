@@ -30,6 +30,7 @@ module.exports = {
     alias: {
       "react-dom": "@hot-loader/react-dom",
       components: path.resolve(__dirname, "src/components"),
+      backendIntegration: path.resolve(__dirname, 'src/backend-integration')
     },
   },
   output: {
