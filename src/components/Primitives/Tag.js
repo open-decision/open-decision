@@ -1,10 +1,10 @@
 import React from "react";
-import { Badge } from "theme-ui";
+import { Badge, Box } from "theme-ui";
 import { readableColor } from "polished";
 
 export const Tags = ({ className, values }) => {
   return (
-    <>
+    <Box>
       {values.map((tag, idx) => {
         return (
           <Badge
@@ -21,6 +21,6 @@ export const Tags = ({ className, values }) => {
           </Badge>
         );
       })}
-    </>
+    </Box>
   );
 };

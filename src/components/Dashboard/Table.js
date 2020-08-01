@@ -3,9 +3,18 @@
 import React from "react";
 
 //Components
-import { Text, Label, Flex, Input, Select, Heading, Box } from "theme-ui";
+import {
+  Text,
+  Label,
+  Flex,
+  Input,
+  Select,
+  Heading,
+  Box,
+  IconButton,
+} from "theme-ui";
 import { Tags } from "components";
-import { EditTwoTone, DeleteTwoTone } from "@material-ui/icons";
+import { EditTwoTone, DeleteTwoTone, AddBoxTwoTone } from "@material-ui/icons";
 
 //Hooks and functions for the table logic => not UI components
 import {
@@ -154,14 +163,26 @@ export const Table = ({ className, data }) => {
         accessor: "tags",
         filter: "tags",
         disableSortBy: true,
-        Cell: ({ cell: { value } }) => <Tags values={value} />,
+        width: 200,
+        Cell: ({ cell: { value } }) => {
+          return (
+            <Flex
+              sx={{ alignItems: "center", justifyContent: "space-between" }}
+            >
+              <Tags values={value} />
+              <IconButton>
+                <AddBoxTwoTone />
+              </IconButton>
+            </Flex>
+          );
+        },
         Filter: SelectColumnFilter,
       },
       {
         Header: "ERSTELLT",
         accessor: "createdAt",
         filter: "fuzzyText",
-        width: 120,
+        width: 100,
         style: { textAlign: "right" },
         Cell: ({ cell: { value } }) => {
           return (
