@@ -115,6 +115,12 @@ const tokens = {
       maxWidth: "1000px",
     },
   },
+  cards: {
+    primary: {
+      p: 3,
+      border: "1px solid black",
+    },
+  },
 };
 
 export default { ...roboto, ...tokens };

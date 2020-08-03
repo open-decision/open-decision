@@ -1,6 +1,6 @@
 import { lensPath, view, map, compose, prop, lensProp, over } from "ramda";
 
-export const getTreeData = (data) => {
+export const getAllTreeData = (data) => {
   const treeDataLens = lensPath(["data", "allDecisionTrees", "edges"]);
   const tagLens = lensProp(["tags"]);
 

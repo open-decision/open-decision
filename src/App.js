@@ -9,7 +9,7 @@ import { Dashboard, Layout } from "components/index";
 import {
   fetchDatabase,
   ALL_TREES,
-  getTreeData,
+  getAllTreeData,
 } from "backendIntegration/index";
 
 import { Builder } from "./Builder";
@@ -19,7 +19,7 @@ const App = () => {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      setTreeData(await fetchDatabase(ALL_TREES, getTreeData));
+      setTreeData(await fetchDatabase(ALL_TREES, getAllTreeData));
     };
     fetchData();
   }, []);
