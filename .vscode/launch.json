@@ -21,7 +21,8 @@
       "name": "Chrome",
       "url": "http://localhost:3000",
       "skipFiles": ["node_modules", ".cache", "public"],
-      "webRoot": "${workspaceRoot}/src"
+      "webRoot": "${workspaceRoot}/src",
+      "runtimeExecutable": "/usr/bin/google-chrome-unstable"
     }
   ]
 }

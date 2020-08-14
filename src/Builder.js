@@ -5,29 +5,38 @@ import {
   SINGLE_TREE,
   getSingleTreeData,
 } from "backendIntegration/index";
-import { Card, Flex } from "theme-ui";
+import { Flex } from "theme-ui";
+import { NodeEditor } from "flume";
+import config from "./config";
 
 export const Builder = () => {
-  let { treeId } = useParams();
-  const [treeData, setTreeData] = React.useState();
+  const [nodes, setNodes] = React.useState({});
+  // let { treeId } = useParams();
+  // const [treeData, setTreeData] = React.useState();
 
-  React.useEffect(() => {
-    const fetchData = async () => {
-      setTreeData(await fetchDatabase(SINGLE_TREE, getSingleTreeData));
-    };
-    fetchData();
-  }, []);
+  // React.useEffect(() => {
+  //   const fetchData = async () => {
+  //     setTreeData(await fetchDatabase(SINGLE_TREE, getSingleTreeData));
+  //   };
+  //   fetchData();
+  // }, []);
 
-  console.log(treeData);
+  console.log(nodes);
 
   return (
     <Flex sx={{ alignItems: "start", flexWrap: "wrap" }}>
-      {treeData &&
-        treeData.map((node) => (
-          <Card key={node.name} sx={{ m: 4 }}>
-            {node.name}
-          </Card>
-        ))}
+      <NodeEditor
+        portTypes={config.portTypes}
+        nodeTypes={config.nodeTypes}
+        defaultNodes={[
+          {
+            type: "entrypoint",
+            x: 190,
+            y: -150,
+          },
+        ]}
+        onChange={setNodes}
+      />
     </Flex>
   );
 };

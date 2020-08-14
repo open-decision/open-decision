@@ -49,6 +49,7 @@
     "@theme-ui/presets": "^0.3.0",
     "d3": "^5.16.0",
     "date-fns": "^2.15.0",
+    "flume": "^0.5.0",
     "framer-motion": "^1.11.1",
     "match-sorter": "^4.2.0",
     "polished": "^3.6.5",
