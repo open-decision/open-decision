@@ -61,7 +61,10 @@ const GlobalFilter = ({
 
   return (
     <Flex sx={{ py: 3, alignItems: "center" }}>
-      <Label htmlFor="search" sx={{ flexBasis: "max-content", mr: 4 }}>
+      <Label
+        htmlFor="search"
+        sx={{ flex: "0", mr: 4, minWidth: "max-content" }}
+      >
         Suche:
       </Label>
       <Input
