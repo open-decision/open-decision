@@ -4,10 +4,24 @@ const config = new FlumeConfig();
 
 config
   .addPortType({
-    type: "connection",
-    name: "connection",
-    label: "Dynamic",
-    color: Colors.green,
+    type: "introduction",
+    name: "introduction",
+    label: "Einführung",
+    hidePort: true,
+    controls: [
+      Controls.text({
+        name: "welcomeMessage",
+        label: "Willkommensnachricht",
+        placeholder:
+          "Hier können Sie den Nutzer des Entscheidungsbaumes begrüßen.",
+      }),
+      Controls.text({
+        name: "Erklärung",
+        label: "Erklärung",
+        placeholder:
+          "Wenn Sie möchten können Sie die Funktion des Baumes erklären.",
+      }),
+    ],
   })
   .addPortType({
     type: "question",
@@ -30,35 +44,35 @@ config
     ],
   })
   .addPortType({
-    type: "introduction",
-    name: "introduction",
-    label: "Einführung",
-    hidePort: true,
+    type: "answer",
+    name: "answer",
+    label: "Antwort",
+    color: Colors.green,
     controls: [
       Controls.text({
-        name: "welcomeMessage",
-        label: "Willkommensnachricht",
-        placeholder:
-          "Hier können Sie den Nutzer des Entscheidungsbaumes begrüßen.",
-      }),
-      Controls.text({
-        name: "Erklärung",
-        label: "Erklärung",
-        placeholder:
-          "Wenn Sie möchten können Sie die Funktion des Baumes erklären.",
+        name: "answer",
+        label: "Antwort",
       }),
     ],
   })
   .addNodeType({
-    type: "string",
+    type: "question",
     label: "Frage",
     description: "Stellen Sie eine Frage and den Nutzer.",
     initialWidth: 140,
     inputs: (ports) => [
-      ports.connection({ label: "Nächste Frage" }),
+      ports.answer({ label: "Nächste Frage" }),
       ports.question(),
     ],
-    outputs: (ports) => [ports.connection()],
+    outputs: (ports) => [ports.answer({ label: "Antworten" })],
+  })
+  .addNodeType({
+    type: "answer",
+    label: "Answer",
+    description: "Eine Antwortmöglichkeit.",
+    initialWidth: 140,
+    inputs: (ports) => [ports.answer()],
+    outputs: (ports) => [ports.answer({ label: "Antworten" })],
   })
   .addRootNodeType({
     type: "entrypoint",
@@ -66,7 +80,7 @@ config
     initialWidth: 170,
     inputs: (ports) => [ports.introduction()],
     outputs: (ports) => [
-      ports.connection({
+      ports.answer({
         label: "Erste Frage",
       }),
     ],

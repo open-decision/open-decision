@@ -8,9 +8,10 @@ import {
 import { Flex } from "theme-ui";
 import { NodeEditor } from "flume";
 import config from "./config";
+import testTree from "./testTree";
 
 export const Builder = () => {
-  const [nodes, setNodes] = React.useState({});
+  const [nodes, setNodes] = React.useState(testTree);
   // let { treeId } = useParams();
   // const [treeData, setTreeData] = React.useState();
 
@@ -21,20 +22,12 @@ export const Builder = () => {
   //   fetchData();
   // }, []);
 
-  console.log(nodes);
-
   return (
     <Flex sx={{ alignItems: "start", flexWrap: "wrap" }}>
       <NodeEditor
         portTypes={config.portTypes}
         nodeTypes={config.nodeTypes}
-        defaultNodes={[
-          {
-            type: "entrypoint",
-            x: 190,
-            y: -150,
-          },
-        ]}
+        nodes={nodes}
         onChange={setNodes}
       />
     </Flex>
