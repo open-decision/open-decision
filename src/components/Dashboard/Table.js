@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* eslint-disable react/display-name */
 /* eslint-disable react/jsx-key */
 import React from "react";
@@ -13,7 +14,7 @@ import {
   Box,
   IconButton,
 } from "theme-ui";
-import { Tags } from "components";
+import { Tags } from "../";
 import { EditTwoTone, DeleteTwoTone, AddBoxTwoTone } from "@material-ui/icons";
 
 //Hooks and functions for the table logic => not UI components
@@ -141,7 +142,7 @@ function DefaultColumnFilter({
   );
 }
 
-export const Table = ({ className, data }) => {
+export const Table = ({ className = "", data }) => {
   const filterTypes = React.useMemo(
     () => ({
       fuzzyText: fuzzyTextFilterFn,

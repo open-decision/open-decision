@@ -30,6 +30,7 @@ export const Dashboard = ({ className, treeData }) => {
           sx={{
             fontSize: 3,
             marginTop: 4,
+            boxShadow: 0,
           }}
           variant="large"
         >

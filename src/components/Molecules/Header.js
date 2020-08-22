@@ -1,7 +1,7 @@
-import { Logo } from "components";
+import { Logo } from "../";
 import { Avatar } from "theme-ui";
 
-export const Header = ({ className }) => {
+export const Header = ({ className = "" }) => {
   return (
     <div
       sx={{

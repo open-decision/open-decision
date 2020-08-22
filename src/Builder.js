@@ -4,7 +4,7 @@ import {
   fetchDatabase,
   SINGLE_TREE,
   getSingleTreeData,
-} from "backendIntegration/index";
+} from "./backend-integration";
 import { Flex } from "theme-ui";
 import { NodeEditor } from "flume";
 import config from "./config";

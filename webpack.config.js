@@ -1,7 +1,7 @@
 /* eslint-disable */
 const path = require("path");
 const webpack = require("webpack");
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   entry: "./src/index.js",
@@ -19,18 +19,16 @@ module.exports = {
         test: /\.html$/,
         use: [
           {
-            loader: "html-loader"
-          }
-        ]
-      }
+            loader: "html-loader",
+          },
+        ],
+      },
     ],
   },
   resolve: {
     extensions: ["*", ".js", ".jsx"],
     alias: {
       "react-dom": "@hot-loader/react-dom",
-      components: path.resolve(__dirname, "src/components"),
-      backendIntegration: path.resolve(__dirname, 'src/backend-integration')
     },
   },
   output: {
@@ -44,8 +42,11 @@ module.exports = {
     publicPath: "http://localhost:3000",
     hotOnly: true,
   },
-  plugins: [new webpack.HotModuleReplacementPlugin(), new HtmlWebpackPlugin({
-    template: "./public/index.html",
-    filename: "./index.html"
-  })],
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new HtmlWebpackPlugin({
+      template: "./public/index.html",
+      filename: "./index.html",
+    }),
+  ],
 };

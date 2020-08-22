@@ -1,5 +1,5 @@
 import React from "react";
-import { Header } from "components";
+import { Header } from "./";
 import { Grid } from "theme-ui";
 
 export const Layout = (props) => {

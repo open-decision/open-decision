@@ -5,12 +5,12 @@ import { ThemeProvider } from "theme-ui";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 import theme from "./theme";
-import { Dashboard, Layout } from "components/index";
+import { Dashboard, Layout } from "./components/";
 import {
   fetchDatabase,
   ALL_TREES,
   getAllTreeData,
-} from "backendIntegration/index";
+} from "./backend-integration/";
 
 import { Builder } from "./Builder";
 

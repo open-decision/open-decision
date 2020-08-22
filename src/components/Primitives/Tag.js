@@ -2,7 +2,7 @@ import React from "react";
 import { Badge, Box } from "theme-ui";
 import { readableColor } from "polished";
 
-export const Tags = ({ className, values }) => {
+export const Tags = ({ className = "", values }) => {
   return (
     <Box>
       {values.map((tag, idx) => {

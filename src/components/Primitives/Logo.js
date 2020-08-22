@@ -1,12 +1,12 @@
 import React from "react";
-import { Box } from "theme-ui";
+import { Link } from "theme-ui";
 
-export const Logo = ({ as }) => (
-  <Box
+export const Logo = ({ as = null }) => (
+  <Link
     as={as}
-    to="/"
+    href="/"
     sx={{ textDecoration: "none", color: "grays.2", fontSize: 5 }}
   >
     open <span sx={{ color: "secondary" }}>decision</span>
-  </Box>
+  </Link>
 );
