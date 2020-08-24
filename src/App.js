@@ -5,14 +5,12 @@ import { ThemeProvider } from "theme-ui";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 import theme from "./theme";
-import { Dashboard, Layout } from "./components/";
+import { Dashboard, Layout, Builder } from "./components/";
 import {
   fetchDatabase,
   ALL_TREES,
   getAllTreeData,
 } from "./backend-integration/";
-
-import { Builder } from "./Builder";
 
 const App = () => {
   const [treeData, setTreeData] = React.useState();
@@ -28,10 +26,10 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <Switch>
         <Layout>
-          <Route path="/" exact>
+          {/* <Route path="/" exact>
             <Dashboard treeData={treeData} />
-          </Route>
-          <Route path="/builder/:treeId">
+          </Route> */}
+          <Route path="/">
             <Builder />
           </Route>
         </Layout>

@@ -1,18 +1,17 @@
 import React from "react";
-import { useParams } from "react-router-dom";
-import {
-  fetchDatabase,
-  SINGLE_TREE,
-  getSingleTreeData,
-} from "./backend-integration";
+// import {
+//   fetchDatabase,
+//   SINGLE_TREE,
+//   getSingleTreeData,
+// } from "./backend-integration";
 import { Flex } from "theme-ui";
 import { NodeEditor } from "flume";
 import config from "./config";
 import testTree from "./testTree";
 
 export const Builder = () => {
-  const [nodes, setNodes] = React.useState(testTree);
-  // let { treeId } = useParams();
+  const [state, setState] = React.useState(testTree);
+
   // const [treeData, setTreeData] = React.useState();
 
   // React.useEffect(() => {
@@ -27,8 +26,9 @@ export const Builder = () => {
       <NodeEditor
         portTypes={config.portTypes}
         nodeTypes={config.nodeTypes}
-        nodes={nodes}
-        onChange={setNodes}
+        nodes={state}
+        onChange={setState}
+        // debug="true"
       />
     </Flex>
   );

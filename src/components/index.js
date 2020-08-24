@@ -1,5 +1,7 @@
-export * from "./Molecules/Header";
+export * from "./Shared/Layout";
+export * from "./Shared/Logo";
+export * from "./Shared/Header";
+
+//Features - Large component groups creating a feature or distinct UI
 export * from "./Dashboard/Dashboard";
-export * from "./Primitives/Logo";
-export * from "./Primitives/Tag";
-export * from "./Layout";
+export * from "./Builder/Builder";

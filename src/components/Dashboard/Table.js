@@ -14,7 +14,7 @@ import {
   Box,
   IconButton,
 } from "theme-ui";
-import { Tags } from "../";
+import { Tags } from "./Tag";
 import { EditTwoTone, DeleteTwoTone, AddBoxTwoTone } from "@material-ui/icons";
 
 //Hooks and functions for the table logic => not UI components

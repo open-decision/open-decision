@@ -6,5 +6,6 @@ export const fetchDatabase = async (query, dataAccessor) => {
     },
     body: JSON.stringify({ query: query }),
   });
+
   return dataAccessor(await response.json());
 };

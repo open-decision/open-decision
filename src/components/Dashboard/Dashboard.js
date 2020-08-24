@@ -4,7 +4,7 @@ import React from "react";
 import AddIcon from "@material-ui/icons/Add";
 
 //DEP username is hardcoded
-export const Dashboard = ({ className, treeData }) => {
+export const Dashboard = ({ className = "", treeData }) => {
   return (
     <Flex
       className={className}
