@@ -173,10 +173,14 @@ export const Table = ({ className = "", data }) => {
             <Flex
               sx={{ alignItems: "center", justifyContent: "space-between" }}
             >
-              <Tags values={value} />
-              <IconButton>
-                <AddBoxTwoTone />
-              </IconButton>
+              {value && (
+                <>
+                  <Tags values={value} />
+                  <IconButton>
+                    <AddBoxTwoTone />
+                  </IconButton>
+                </>
+              )}
             </Flex>
           );
         },
