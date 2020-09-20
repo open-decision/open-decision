@@ -14,7 +14,12 @@ export const Builder = () => {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      setNodes(await fetchDatabase(SINGLE_TREE, getSingleTreeData));
+      setNodes(
+        await fetchDatabase({
+          query: SINGLE_TREE,
+          dataAccessor: getSingleTreeData,
+        })
+      );
     };
     fetchData();
   }, []);

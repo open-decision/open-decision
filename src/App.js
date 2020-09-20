@@ -5,24 +5,30 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 import { Dashboard, Layout, Builder } from "./components/";
 import { useAuth } from "./Hooks/useAuth";
-// import {
-//   fetchDatabase,
-//   ALL_TREES,
-//   getAllTreeData,
-// } from "./backend-integration/";
+import {
+  fetchDatabase,
+  ALL_TREES,
+  getAllTreeData,
+} from "./backend-integration/";
 
 const App = () => {
   const [treeData, setTreeData] = React.useState();
   const auth = useAuth();
 
-  // React.useEffect(() => {
-  //   if (token) {
-  //     const fetchData = async () => {
-  //       setTreeData(await fetchDatabase(ALL_TREES, getAllTreeData, token));
-  //     };
-  //     fetchData();
-  //   }
-  // }, [token]);
+  React.useEffect(() => {
+    if (auth.user) {
+      const fetchData = async () => {
+        setTreeData(
+          await fetchDatabase({
+            query: ALL_TREES,
+            dataAccessor: getAllTreeData,
+            token: auth.user,
+          })
+        );
+      };
+      fetchData();
+    }
+  }, [auth.user]);
 
   return (
     <Switch>

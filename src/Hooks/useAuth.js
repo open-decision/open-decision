@@ -23,7 +23,11 @@ const useProvideAuth = () => {
     email = "demo@open-decision.org",
     password = "fogmub-bifDaj-sarjo8"
   ) => {
-    const token = await fetchDatabase(GET_TOKEN, { email, password }, getToken);
+    const token = await fetchDatabase({
+      query: GET_TOKEN,
+      queryVariables: { email, password },
+      dataAccessor: getToken,
+    });
     return setUser(token);
   };
 
