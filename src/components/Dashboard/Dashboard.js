@@ -3,7 +3,7 @@ import { Button, Box, Container, Flex, Heading } from "theme-ui";
 import React from "react";
 import AddIcon from "@material-ui/icons/Add";
 
-//DEP username is hardcoded
+//FIXME username is hardcoded
 export const Dashboard = ({ className = "", treeData }) => {
   return (
     <Flex
