@@ -78,12 +78,14 @@ const tokens = {
       color: "tertiary.contrast",
       display: "flex",
       placeItems: "center",
+      borderRadius: 1,
     },
     large: {
       variant: "buttons.primary",
       p: 4,
       borderRadius: 2,
     },
+    icon: { width: 48, height: 48, borderRadius: 99999 },
   },
   badges: {
     primary: {
@@ -119,6 +121,13 @@ const tokens = {
     primary: {
       p: 3,
       border: "1px solid black",
+    },
+  },
+  images: {
+    avatar: {
+      width: 48,
+      height: 48,
+      borderRadius: 99999,
     },
   },
 };

@@ -4,7 +4,6 @@ import config from "./config";
 const resolvePorts = (portType, data) => {
   switch (portType) {
     case "string": {
-      console.log(data);
       return data.string;
     }
     case "boolean":

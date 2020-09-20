@@ -1,6 +1,6 @@
 export const GET_TOKEN = `
-mutation {
-  tokenAuth(email: "demo@open-decision.org", password: "fogmub-bifDaj-sarjo8") {
+mutation ($email: String!, $password: String!) {
+  tokenAuth(email: $email, password: $password) {
     token,
   }
 }`;
