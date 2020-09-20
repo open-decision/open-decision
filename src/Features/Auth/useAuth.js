@@ -19,27 +19,29 @@ export const useAuth = () => {
 //Hook that manages the user token and the methods associated with the auth state of the user
 const useProvideAuth = () => {
   const [user, setUser] = React.useState(null);
+  const [refreshToken, setRefreshToken] = React.useState(null);
 
   const signin = async ({
-    email = "demo@open-decision.org",
+    email = "test@outlook.de",
     password = "fogmub-bifDaj-sarjo8",
     callback,
   }) => {
-    const token = await fetchDatabase({
+    const response = await fetchDatabase({
       query: GET_TOKEN,
       queryVariables: { email, password },
       dataAccessor: getToken,
     });
     //FIXME not sure why I need the Timeout
     setTimeout(callback, 100);
-    return setUser(token);
+    setUser(response.token);
+    setRefreshToken(response.refreshToken);
   };
 
   const signup = async ({
-    email = "test12@test.com",
-    password1 = "123456!tewst",
-    password2 = "123456!tewst",
-    username = "Tester",
+    email = "test@outlook.de",
+    password1 = "fogmub-bifDaj-sarjo8",
+    password2 = "fogmub-bifDaj-sarjo8",
+    username = "",
   }) => {
     const response = await fetchDatabase({
       query: REGISTER_USER,
@@ -62,9 +64,13 @@ const useProvideAuth = () => {
 
   const signout = async (callback) => {
     //FIXME not sure why I need the Timeout
-    const response = await fetchDatabase({ query: LOGOUT_USER });
+    const response = await fetchDatabase({
+      query: LOGOUT_USER,
+      queryVariables: { refreshToken },
+    });
     setTimeout(callback, 100);
     setUser(null);
+    setRefreshToken(null);
     return response;
   };
 

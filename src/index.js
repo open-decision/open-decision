@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "theme-ui";
 import App from "./App.js";
-import { AuthProvider } from "./Hooks/Auth/useAuth.js";
+import { AuthProvider } from "./Features/Auth/useAuth.js";
 import theme from "./theme";
 
 const AppContext = () => {

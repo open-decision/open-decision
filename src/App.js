@@ -4,7 +4,7 @@ import React from "react";
 import { Switch, Route } from "react-router-dom";
 
 import { Dashboard, Layout, Builder } from "./components/";
-import { useAuth } from "./Hooks/Auth/useAuth";
+import { useAuth } from "./Features/Auth/useAuth";
 import {
   fetchDatabase,
   ALL_TREES,

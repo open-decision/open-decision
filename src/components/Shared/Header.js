@@ -1,6 +1,6 @@
 import { Logo } from "../";
 import { Avatar, Link, Flex, Button } from "theme-ui";
-import { useAuth } from "../../Hooks/Auth/useAuth";
+import { useAuth } from "../../Features/Auth/useAuth";
 import React from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { IconButton } from "@material-ui/core";
@@ -71,8 +71,8 @@ export const Header = ({ className = "" }) => {
             <FaUserCircle size="48" />
           </IconButton>
         )}
-        <AuthButton sx={{ marginLeft: 3 }} />
-        <Button onClick={auth.signup}>SignUp</Button>
+        <AuthButton sx={{ marginX: 3 }} />
+        {!auth.user && <Button onClick={auth.signup}>SignUp</Button>}
       </Flex>
     </Flex>
   );

@@ -2,7 +2,7 @@
 import React from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { Button } from "theme-ui";
-import { useAuth } from "./Hooks/Auth/useAuth";
+import { useAuth } from "./Features/Auth/useAuth";
 
 export const AuthButton = ({ className = "" }) => {
   const auth = useAuth();

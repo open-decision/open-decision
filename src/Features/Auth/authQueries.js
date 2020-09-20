@@ -1,7 +1,16 @@
 export const GET_TOKEN = `
 mutation ($email: String!, $password: String!) {
-  tokenAuth(email: $email, password: $password) {
+  tokenAuth(email: $email, password: $password){
+    success,
+    errors,
     token,
+    refreshToken,
+    unarchiving,
+    user {
+      email
+      lastName
+      firstName
+    }
   }
 }`;
 
@@ -20,10 +29,8 @@ query {
 }`;
 
 export const LOGOUT_USER = `
-mutation {
-  revokeToken(
-    refreshToken: "a64f732b4e00432f2ff1b47537a11458be13fc82"
-  ) {
+mutation ($refreshToken: String!) {
+  revokeToken(refreshToken: $refreshToken) {
     success,
     errors
   }

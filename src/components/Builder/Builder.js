@@ -12,6 +12,8 @@ import engine from "./engine";
 export const Builder = () => {
   const [nodes, setNodes] = React.useState();
 
+  console.log(nodes);
+
   React.useEffect(() => {
     const fetchData = async () => {
       setNodes(
@@ -29,6 +31,8 @@ export const Builder = () => {
       <NodeEditor
         portTypes={config.portTypes}
         nodeTypes={config.nodeTypes}
+        nodes={nodes}
+        onChange={setNodes}
         defaultNodes={[
           {
             type: "homepage",
@@ -36,6 +40,7 @@ export const Builder = () => {
             y: -150,
           },
         ]}
+        debug={true}
       />
     </Flex>
   );
