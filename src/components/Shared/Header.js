@@ -1,6 +1,6 @@
 import { Logo } from "../";
-import { Avatar, Link, Flex } from "theme-ui";
-import { useAuth } from "../../Hooks/useAuth";
+import { Avatar, Link, Flex, Button } from "theme-ui";
+import { useAuth } from "../../Hooks/Auth/useAuth";
 import React from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { IconButton } from "@material-ui/core";
@@ -22,7 +22,14 @@ export const Header = ({ className = "" }) => {
       }}
       className={className}
     >
-      <Logo sx={{ flex: "1 1 60%" }} />
+      <Link
+        variant="nav"
+        as={RouterLink}
+        // @ts-ignore
+        to="/"
+      >
+        <Logo sx={{ flex: "1 1 60%" }} />
+      </Link>
       <Flex
         sx={{
           flex: "1 1 20%",
@@ -65,6 +72,7 @@ export const Header = ({ className = "" }) => {
           </IconButton>
         )}
         <AuthButton sx={{ marginLeft: 3 }} />
+        <Button onClick={auth.signup}>SignUp</Button>
       </Flex>
     </Flex>
   );

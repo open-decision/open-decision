@@ -1,7 +1,7 @@
 export const fetchDatabase = async ({
   query,
   queryVariables = {},
-  dataAccessor,
+  dataAccessor = (data) => data,
   token = "",
 }) => {
   const response = await fetch("https://builder.open-decision.org/graphql", {

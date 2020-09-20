@@ -1,10 +1,10 @@
 //react-hot-loader needs to be imported before react and react-dom
 import { hot } from "react-hot-loader/root";
 import React from "react";
-import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 
 import { Dashboard, Layout, Builder } from "./components/";
-import { useAuth } from "./Hooks/useAuth";
+import { useAuth } from "./Hooks/Auth/useAuth";
 import {
   fetchDatabase,
   ALL_TREES,
