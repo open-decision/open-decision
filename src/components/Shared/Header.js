@@ -1,9 +1,11 @@
 import { Logo } from "../";
-import { Avatar, Button, Flex } from "theme-ui";
+import { Avatar, Link, Flex } from "theme-ui";
 import { useAuth } from "../../Hooks/useAuth";
 import React from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { IconButton } from "@material-ui/core";
+import { AuthButton } from "../../AuthButton";
+import { Link as RouterLink } from "react-router-dom";
 
 export const Header = ({ className = "" }) => {
   const auth = useAuth();
@@ -16,10 +18,36 @@ export const Header = ({ className = "" }) => {
         alignItems: "center",
         paddingX: 6,
         paddingY: 3,
+        bg: "grays.1",
       }}
       className={className}
     >
-      <Logo sx={{ flex: "1" }} />
+      <Logo sx={{ flex: "1 1 60%" }} />
+      <Flex
+        sx={{
+          flex: "1 1 20%",
+          justifyContent: "flex-end",
+        }}
+      >
+        <Link
+          variant="nav"
+          as={RouterLink}
+          // @ts-ignore
+          to="/builder"
+          sx={{ marginX: 4 }}
+        >
+          Builder
+        </Link>
+        <Link
+          variant="nav"
+          as={RouterLink}
+          // @ts-ignore
+          to="/dashboard"
+          sx={{ marginX: 4 }}
+        >
+          Dashboard
+        </Link>
+      </Flex>
       <Flex
         sx={{
           justifyContent: "space-between",
@@ -28,24 +56,15 @@ export const Header = ({ className = "" }) => {
         }}
       >
         {auth.user ? (
-          <>
-            <Button onClick={() => auth.signout()} sx={{ mr: "1rem" }}>
-              Logout
-            </Button>
-            <IconButton>
-              <Avatar src="https://images.unsplash.com/photo-1586297135537-94bc9ba060aa?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1400&q=80" />
-            </IconButton>
-          </>
+          <IconButton>
+            <Avatar src="https://images.unsplash.com/photo-1586297135537-94bc9ba060aa?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1400&q=80" />
+          </IconButton>
         ) : (
-          <>
-            <Button onClick={() => auth.signin()} sx={{ mr: "1rem" }}>
-              Login
-            </Button>
-            <IconButton>
-              <FaUserCircle size="48" />
-            </IconButton>
-          </>
+          <IconButton>
+            <FaUserCircle size="48" />
+          </IconButton>
         )}
+        <AuthButton sx={{ marginLeft: 3 }} />
       </Flex>
     </Flex>
   );

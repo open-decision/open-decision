@@ -26,21 +26,28 @@ export const useAuth = () => {
 const useProvideAuth = () => {
   const [user, setUser] = React.useState(null);
 
-  const signin = async (
+  const signin = async ({
     email = "demo@open-decision.org",
-    password = "fogmub-bifDaj-sarjo8"
-  ) => {
+    password = "fogmub-bifDaj-sarjo8",
+    callback,
+  }) => {
     const token = await fetchDatabase({
       query: GET_TOKEN,
       queryVariables: { email, password },
       dataAccessor: getToken,
     });
+    //FIXME not sure why I need the Timeout
+    setTimeout(callback, 100);
     return setUser(token);
   };
 
   // const signup = (email, password) => {};
 
-  const signout = () => setUser(null);
+  const signout = (callback) => {
+    //FIXME not sure why I need the Timeout
+    setTimeout(callback, 100);
+    return setUser(null);
+  };
 
   // Return the user object and auth methods
   return {

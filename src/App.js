@@ -1,7 +1,7 @@
 //react-hot-loader needs to be imported before react and react-dom
 import { hot } from "react-hot-loader/root";
 import React from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
 
 import { Dashboard, Layout, Builder } from "./components/";
 import { useAuth } from "./Hooks/useAuth";
@@ -10,6 +10,8 @@ import {
   ALL_TREES,
   getAllTreeData,
 } from "./backend-integration/";
+import { ProtectedRoute } from "./ProtectedRoute";
+import { Login } from "./Login";
 
 const App = () => {
   const [treeData, setTreeData] = React.useState([]);
@@ -36,22 +38,22 @@ const App = () => {
     <Switch>
       <Layout>
         <Route path="/" exact>
+          <h1>Unauthenticated Homepage</h1>
+        </Route>
+        <Route path="/login">
+          <Login />
+        </Route>
+
+        <ProtectedRoute path="/dashboard">
           <Dashboard treeData={treeData} />
-        </Route>
-        <Route path="/builder/:treeId">
+        </ProtectedRoute>
+
+        <ProtectedRoute path="/builder">
           <Builder />
-        </Route>
+        </ProtectedRoute>
       </Layout>
     </Switch>
   );
 };
 
-const AppWrapper = () => {
-  return (
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  );
-};
-
-export default hot(AppWrapper);
+export default hot(App);

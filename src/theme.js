@@ -130,6 +130,13 @@ const tokens = {
       borderRadius: 99999,
     },
   },
+  links: {
+    nav: {
+      fontWeight: "bold",
+      color: "inherit",
+      textDecoration: "none",
+    },
+  },
 };
 
 export default { ...roboto, ...tokens };
