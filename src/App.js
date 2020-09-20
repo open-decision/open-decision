@@ -12,7 +12,7 @@ import {
 } from "./backend-integration/";
 
 const App = () => {
-  const [treeData, setTreeData] = React.useState();
+  const [treeData, setTreeData] = React.useState([]);
   const auth = useAuth();
 
   React.useEffect(() => {
@@ -27,6 +27,8 @@ const App = () => {
         );
       };
       fetchData();
+    } else {
+      setTreeData([]);
     }
   }, [auth.user]);
 
