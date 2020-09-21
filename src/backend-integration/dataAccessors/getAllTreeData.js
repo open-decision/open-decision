@@ -1,17 +1,8 @@
-import { lensPath, view, map, compose, prop } from "ramda";
+import { map, pipe, pathOr } from "ramda";
 
 export const getAllTreeData = (data) => {
-  const treeDataLens = lensPath(["data", "allDecisionTrees", "edges"]);
+  const allTreeData = pathOr([], ["data", "allDecisionTrees", "edges"]);
+  const parseTags = pipe(pathOr("", ["node", "tags"]), JSON.parse);
 
-  const parseTags = (data) => {
-    if (data.tags) {
-      data.tags = JSON.parse(data.tags);
-    }
-    return data;
-  };
-
-  return compose(
-    map(compose(parseTags, prop("node"))),
-    view(treeDataLens)
-  )(data);
+  return pipe(allTreeData, map(parseTags))(data);
 };

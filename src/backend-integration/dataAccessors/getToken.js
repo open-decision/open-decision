@@ -1,3 +1,3 @@
-import { path } from "ramda";
+import { pathOr } from "ramda";
 
-export const getToken = path(["data", "tokenAuth"]);
+export const getToken = pathOr("", ["data", "tokenAuth"]);

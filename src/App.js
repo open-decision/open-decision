@@ -2,6 +2,7 @@
 import { hot } from "react-hot-loader/root";
 import React from "react";
 import { Switch, Route } from "react-router-dom";
+import { useQuery } from "react-query";
 
 import { Dashboard, Layout, Builder } from "./components/";
 import { useAuth } from "./Features/Auth/useAuth";
@@ -16,23 +17,13 @@ import { Login } from "./Login";
 const App = () => {
   const [treeData, setTreeData] = React.useState([]);
   const auth = useAuth();
-
-  React.useEffect(() => {
-    if (auth.user) {
-      const fetchData = async () => {
-        setTreeData(
-          await fetchDatabase({
-            query: ALL_TREES,
-            dataAccessor: getAllTreeData,
-            token: auth.user,
-          })
-        );
-      };
-      fetchData();
-    } else {
-      setTreeData([]);
-    }
-  }, [auth.user]);
+  const { data, status } = useQuery("allTrees", () =>
+    fetchDatabase({
+      query: ALL_TREES,
+      dataAccessor: getAllTreeData,
+      token: auth.user,
+    })
+  );
 
   return (
     <Switch>
