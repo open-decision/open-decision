@@ -31,23 +31,14 @@ import matchSorter from "match-sorter";
 //date manipulation to make the creation date friendlier
 import { parseISO, formatWithOptions } from "date-fns/esm/fp";
 import { de } from "date-fns/locale";
-import {
-  compose,
-  map,
-  path,
-  prop,
-  flatten,
-  uniq,
-  includes,
-  filter,
-} from "ramda";
+import { pipe, map, path, prop, flatten, uniq, includes, filter } from "ramda";
 import { Link } from "react-router-dom";
 
 //Data transformation functions
 //{row} => [String]
-const getTags = compose(map(prop("name")), path(["values", "tags"]));
+const getTags = pipe(path(["values", "tags"]), map(prop("name")));
 //{rows} => [String]
-const filterTags = compose(uniq, flatten, map(getTags));
+const filterTags = pipe(map(getTags), flatten, uniq);
 
 const GlobalFilter = ({
   preGlobalFilteredRows,
@@ -148,7 +139,7 @@ export const Table = ({ className = "", data }) => {
       fuzzyText: fuzzyTextFilterFn,
       tags: (rows, id, filterValue) => {
         console.log(filterValue);
-        return filter(compose(includes(filterValue), getTags))(rows);
+        return filter(pipe(includes(filterValue), getTags))(rows);
       },
     }),
     []
