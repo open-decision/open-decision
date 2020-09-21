@@ -1,17 +1,24 @@
-export const fetchDatabase = async ({
-  query,
-  queryVariables = {},
-  dataAccessor = (data) => data,
-  token = "",
-}) => {
-  const response = await fetch("https://builder.open-decision.org/graphql", {
-    method: `Post`,
+import { GraphQLClient } from "graphql-request";
+import { curry } from "ramda";
+
+const fetchDatabase = async (
+  { query, dataAccessor = (data) => data, token = "" },
+  key,
+  variables
+) => {
+  console.log(query);
+  console.log({ variables });
+  const endpoint = "https://builder.open-decision.org/graphql";
+
+  const graphQLClient = new GraphQLClient(endpoint, {
     headers: {
-      "Content-Type": `application/json`,
-      Authorization: `JWT ${token}`,
+      authorization: `JWT ${token}`,
     },
-    body: JSON.stringify({ query: query, variables: queryVariables }),
   });
 
-  return dataAccessor(await response.json());
+  const response = await graphQLClient.request(query, variables);
+
+  return dataAccessor(response);
 };
+
+export default curry(fetchDatabase);

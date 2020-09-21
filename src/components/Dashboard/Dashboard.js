@@ -2,9 +2,42 @@ import { Table } from "./";
 import { Button, Box, Container, Flex, Heading } from "theme-ui";
 import React from "react";
 import AddIcon from "@material-ui/icons/Add";
+import { useAuth } from "../../Features/Auth/useAuth";
+import { fetchDatabase, getAllTreeData } from "../../backend-integration";
+import { useQuery } from "react-query";
+import { gql } from "graphql-request";
+
+const ALL_TREES = gql`
+  {
+    allDecisionTrees {
+      edges {
+        node {
+          id
+          name
+          slug
+          tags
+          createdAt
+        }
+      }
+    }
+  }
+`;
 
 //FIXME username is hardcoded
-export const Dashboard = ({ className = "", treeData }) => {
+export const Dashboard = ({ className = "" }) => {
+  const auth = useAuth();
+
+  const { data, status } = useQuery(
+    ["allTrees", {}],
+    fetchDatabase({
+      query: ALL_TREES,
+      dataAccessor: getAllTreeData,
+      token: auth.user,
+    })
+  );
+
+  console.log(data);
+
   return (
     <Flex
       className={className}
@@ -44,9 +77,9 @@ export const Dashboard = ({ className = "", treeData }) => {
           flex: "1 1 60%",
         }}
       >
-        {treeData && (
+        {data && (
           <Container>
-            <Table data={treeData} />
+            <Table data={data} />
           </Container>
         )}
       </Box>

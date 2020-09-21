@@ -50,6 +50,8 @@
     "@types/theme-ui": "^0.3.6",
     "date-fns": "^2.16.1",
     "flume": "^0.5.1",
+    "graphql": "^15.3.0",
+    "graphql-request": "^3.1.0",
     "match-sorter": "^4.2.1",
     "polished": "^3.6.7",
     "ramda": "^0.27.1",
@@ -58,6 +60,7 @@
     "react-hot-loader": "^4.12.21",
     "react-icons": "^3.11.0",
     "react-query": "^2.23.0",
+    "react-query-devtools": "^2.5.0",
     "react-router-dom": "^5.2.0",
     "react-table": "^7.5.1",
     "theme-ui": "^0.3.1"

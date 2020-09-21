@@ -1,4 +1,5 @@
-export * from "./fetchDatabase";
+import fetchDatabase from "./fetchDatabase";
+export { fetchDatabase };
 
 //queries
 export * from "./queries/allTrees";

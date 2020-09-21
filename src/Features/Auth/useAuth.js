@@ -26,12 +26,13 @@ const useProvideAuth = () => {
     password = "fogmub-bifDaj-sarjo8",
     callback,
   }) => {
-    const response = await fetchDatabase({
-      query: GET_TOKEN,
-      queryVariables: { email, password },
-      dataAccessor: getToken,
-    });
-    //FIXME not sure why I need the Timeout
+    const response = await fetchDatabase(
+      { query: GET_TOKEN, dataAccessor: getToken },
+      "",
+      { email, password }
+    );
+
+    console.log(response);
     setTimeout(callback, 100);
     setUser(response.token);
     setRefreshToken(response.refreshToken);
@@ -43,14 +44,11 @@ const useProvideAuth = () => {
     password2 = "fogmub-bifDaj-sarjo8",
     username = "",
   }) => {
-    const response = await fetchDatabase({
-      query: REGISTER_USER,
-      queryVariables: {
-        email,
-        username,
-        password1,
-        password2,
-      },
+    const response = await fetchDatabase({ query: REGISTER_USER }, "", {
+      email,
+      username,
+      password1,
+      password2,
     });
 
     const register = response.data.register;
@@ -63,10 +61,9 @@ const useProvideAuth = () => {
   };
 
   const signout = async (callback) => {
-    //FIXME not sure why I need the Timeout
     const response = await fetchDatabase({
       query: LOGOUT_USER,
-      queryVariables: { refreshToken },
+      variables: { refreshToken },
     });
     setTimeout(callback, 100);
     setUser(null);
