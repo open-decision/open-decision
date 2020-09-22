@@ -32,7 +32,6 @@ const useProvideAuth = () => {
       { email, password }
     );
 
-    console.log(response);
     setTimeout(callback, 100);
     setUser(response.token);
     setRefreshToken(response.refreshToken);
