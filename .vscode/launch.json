@@ -20,10 +20,10 @@
       "request": "launch",
       "name": "Chrome",
       "url": "http://localhost:3000",
-      "skipFiles": ["node_modules", ".cache", "public"],
-      "webRoot": "${workspaceRoot}/src",
+      "skipFiles": ["${workspaceFolder}/node_modules/**/*.js"],
+      "webRoot": "${workspaceRoot}",
       "runtimeExecutable": "/usr/bin/google-chrome-unstable",
-      "sourceMaps": true,
+      "sourceMaps": true
     }
   ]
 }
