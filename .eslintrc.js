@@ -1,13 +1,10 @@
+// eslint-disable-next-line no-undef
 module.exports = {
   env: {
     browser: true,
     es6: true,
   },
-  extends: [
-    "plugin:prettier/recommended",
-    "eslint:recommended",
-    "plugin:react/recommended",
-  ],
+  extends: ["eslint:recommended", "plugin:react/recommended", "prettier"],
   globals: {
     Atomics: "readonly",
     SharedArrayBuffer: "readonly",
@@ -21,7 +18,6 @@ module.exports = {
   },
   plugins: ["react"],
   rules: {
-    "prettier/prettier": "error",
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",
   },

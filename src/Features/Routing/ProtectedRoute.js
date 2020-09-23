@@ -1,6 +1,6 @@
 import React from "react";
 import { Redirect, Route } from "react-router-dom";
-import { useAuth } from "./Features/Auth/useAuth";
+import { useAuth } from "../Auth/useAuth";
 
 export const ProtectedRoute = ({ children, ...props }) => {
   const auth = useAuth();
@@ -9,11 +9,7 @@ export const ProtectedRoute = ({ children, ...props }) => {
     <Route
       {...props}
       render={({ location }) => {
-        return auth.user ? (
-          children
-        ) : (
-          <Redirect to={{ pathname: "/login", state: { from: location } }} />
-        );
+        return auth.user ? children : <Redirect to={{ pathname: "/login", state: { from: location } }} />;
       }}
     />
   );

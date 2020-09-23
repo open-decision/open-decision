@@ -1,15 +1,15 @@
-import { Logo } from "../";
+import { Logo } from "..";
 import { Avatar, Link, Flex, Button } from "theme-ui";
 import { useAuth } from "../../Features/Auth/useAuth";
 import React from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { IconButton } from "@material-ui/core";
-import { AuthButton } from "../../AuthButton";
+import { AuthButton } from "../../Features/Auth/AuthButton";
 import { Link as RouterLink } from "react-router-dom";
 
 export const Header = ({ className = "" }) => {
   const auth = useAuth();
-
+  //TODO handle signup failure in UI
   return (
     <Flex
       sx={{
@@ -72,7 +72,7 @@ export const Header = ({ className = "" }) => {
           </IconButton>
         )}
         <AuthButton sx={{ marginX: 3 }} />
-        {!auth.user && <Button onClick={auth.signup}>SignUp</Button>}
+        {!auth.user && <Button onClick={() => auth.signup({})}>SignUp</Button>}
       </Flex>
     </Flex>
   );

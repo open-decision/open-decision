@@ -4,11 +4,21 @@ const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  entry: "./src/index.js",
+  entry: "./src/index.tsx",
   mode: "development",
   devtool: "source-map",
+  resolve: {
+    extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
+    alias: {
+      "react-dom": "@hot-loader/react-dom",
+    },
+  },
   module: {
     rules: [
+      {
+        test: /\.(ts|tsx)$/,
+        loader: "awesome-typescript-loader",
+      },
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
@@ -24,12 +34,6 @@ module.exports = {
         ],
       },
     ],
-  },
-  resolve: {
-    extensions: ["*", ".js", ".jsx"],
-    alias: {
-      "react-dom": "@hot-loader/react-dom",
-    },
   },
   output: {
     path: path.resolve(__dirname, "dist/"),

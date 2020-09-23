@@ -5,7 +5,7 @@ import { Switch, Route } from "react-router-dom";
 
 import { Dashboard, Layout, Builder } from "./components/";
 
-import { ProtectedRoute } from "./ProtectedRoute";
+import { ProtectedRoute } from "./Features/Routing/ProtectedRoute";
 import { Login } from "./Login";
 import { ReactQueryDevtools } from "react-query-devtools";
 

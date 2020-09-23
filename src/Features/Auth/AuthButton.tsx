@@ -2,7 +2,7 @@
 import React from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { Button } from "theme-ui";
-import { useAuth } from "./Features/Auth/useAuth";
+import { useAuth } from "./useAuth";
 
 export const AuthButton = ({ className = "" }) => {
   const auth = useAuth();
@@ -10,7 +10,7 @@ export const AuthButton = ({ className = "" }) => {
   let location = useLocation();
 
   let { from } = location.state || { from: { pathname: "/" } };
-
+  //TODO handle Auth Failure in UI
   return (
     <Button
       onClick={() => {

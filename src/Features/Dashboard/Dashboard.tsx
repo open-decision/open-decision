@@ -1,8 +1,8 @@
-import { Table } from "./";
+import { Table } from ".";
 import { Button, Box, Container, Flex, Heading } from "theme-ui";
 import React from "react";
 import AddIcon from "@material-ui/icons/Add";
-import { useAuth } from "../../Features/Auth/useAuth";
+import { useAuth } from "../Auth/useAuth";
 import { fetchDatabase, getAllTreeData } from "../../backend-integration";
 import { useQuery } from "react-query";
 import { gql } from "graphql-request";
@@ -27,16 +27,19 @@ const ALL_TREES = gql`
 export const Dashboard = ({ className = "" }) => {
   const auth = useAuth();
 
-  const { data, status } = useQuery(
-    ["allTrees", {}],
-    fetchDatabase({
-      query: ALL_TREES,
-      dataAccessor: getAllTreeData,
-      token: auth.user,
-    })
-  );
+  console.log(auth);
 
-  console.log(data);
+  const { data, status } = useQuery(["allTrees"], async (key: string) =>
+    fetchDatabase(
+      {
+        query: ALL_TREES,
+        dataAccessor: getAllTreeData,
+        token: auth.user,
+        variables: {},
+      },
+      key
+    )
+  );
 
   return (
     <Flex
