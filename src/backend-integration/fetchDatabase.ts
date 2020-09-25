@@ -9,7 +9,7 @@ export const fetchDatabase = async (
   { query, dataAccessor = (data: any) => data, token, variables }: config,
   key?: string
 ): Promise<any | string> => {
-  const endpoint = "https://builder.open-decisions.org/graphql";
+  const endpoint = "https://builder.open-decision.org/graphql";
 
   const graphQLClient = new GraphQLClient(endpoint, {
     headers: {
