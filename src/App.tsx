@@ -1,13 +1,12 @@
 //react-hot-loader needs to be imported before react and react-dom
-import { hot } from "react-hot-loader/root";
 import React from "react";
+import { hot } from "react-hot-loader/root";
 import { Switch, Route } from "react-router-dom";
-
-import { Dashboard, Layout, Builder } from "./components/";
-
-import { ProtectedRoute } from "./Features/Routing/ProtectedRoute";
-import { Login } from "./Login";
 import { ReactQueryDevtools } from "react-query-devtools";
+import { Dashboard, Layout } from "./components";
+import { Login } from "./Login";
+import { ProtectedRoute } from "./Features/Routing/ProtectedRoute";
+import { Builder } from "./Features/Builder/Builder";
 
 const App = () => {
   return (

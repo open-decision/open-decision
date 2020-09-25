@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "theme-ui";
-import App from "./App.js";
+import App from "./App";
 import { AuthProvider } from "./Features/Auth/useAuth";
 import theme from "./theme";
 

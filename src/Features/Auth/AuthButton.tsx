@@ -1,10 +1,10 @@
 // @ts-nocheck
-import React from "react";
+import React, { ComponentProps, FunctionComponent } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import { Button } from "theme-ui";
+import { Button, SxProps } from "theme-ui";
 import { useAuth } from "./useAuth";
 
-export const AuthButton = ({ className = "" }) => {
+export const AuthButton = ({ sx }: { sx: SxProps }) => {
   const auth = useAuth();
   let history = useHistory();
   let location = useLocation();
@@ -18,7 +18,7 @@ export const AuthButton = ({ className = "" }) => {
           ? auth.signout(() => history.push("/"))
           : auth.signin({ callback: () => history.replace(from) });
       }}
-      className={className}
+      sx={sx}
     >
       {auth.user ? "Logout" : "Login"}
     </Button>

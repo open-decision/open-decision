@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  fetchDatabase,
-  SINGLE_TREE,
-  getSingleTreeData,
-} from "../../backend-integration";
+import { fetchDatabase, SINGLE_TREE, getSingleTreeData } from "../../backend-integration";
 import { Flex } from "theme-ui";
 import { NodeEditor, useRootEngine } from "flume";
 import config from "./config";
