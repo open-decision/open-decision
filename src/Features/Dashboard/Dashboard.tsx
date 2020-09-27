@@ -1,6 +1,7 @@
+/**@jsx jsx */
+import { jsx } from "theme-ui";
 import { Table } from ".";
 import { Button, Box, Container, Flex, Heading } from "theme-ui";
-import React from "react";
 import AddIcon from "@material-ui/icons/Add";
 import { useAuth } from "../Auth/useAuth";
 import { fetchDatabase, getAllTreeData } from "../../backend-integration";

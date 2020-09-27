@@ -1,5 +1,6 @@
 //react-hot-loader needs to be imported before react and react-dom
-import React from "react";
+/** @jsx jsx */
+import { jsx } from "theme-ui";
 import { hot } from "react-hot-loader/root";
 import { Switch, Route } from "react-router-dom";
 import { ReactQueryDevtools } from "react-query-devtools";
@@ -13,7 +14,9 @@ const App = () => {
     <Switch>
       <Layout>
         <Route path="/" exact>
-          <h1>Unauthenticated Homepage</h1>
+          <div sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <h1>Unauthenticated Homepage</h1>
+          </div>
         </Route>
         <Route path="/login">
           <Login />

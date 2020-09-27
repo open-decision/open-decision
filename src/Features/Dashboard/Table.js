@@ -1,31 +1,17 @@
 // @ts-nocheck
 /* eslint-disable react/display-name */
 /* eslint-disable react/jsx-key */
+/**@jsx jsx */
+import { jsx } from "theme-ui";
 import React from "react";
 
 //Components
-import {
-  Text,
-  Label,
-  Flex,
-  Input,
-  Select,
-  Heading,
-  Box,
-  IconButton,
-} from "theme-ui";
+import { Text, Label, Flex, Input, Select, Heading, Box, IconButton } from "theme-ui";
 import { Tags } from "./Tag";
 import { EditTwoTone, DeleteTwoTone, AddBoxTwoTone } from "@material-ui/icons";
 
 //Hooks and functions for the table logic => not UI components
-import {
-  useTable,
-  useSortBy,
-  useGlobalFilter,
-  useAsyncDebounce,
-  useFilters,
-  useFlexLayout,
-} from "react-table";
+import { useTable, useSortBy, useGlobalFilter, useAsyncDebounce, useFilters, useFlexLayout } from "react-table";
 import matchSorter from "match-sorter";
 
 //date manipulation to make the creation date friendlier
@@ -40,11 +26,7 @@ const getTags = pipe(path(["values", "tags"]), map(prop("name")));
 //{rows} => [String]
 const filterTags = pipe(map(getTags), flatten, uniq);
 
-const GlobalFilter = ({
-  preGlobalFilteredRows,
-  globalFilter,
-  setGlobalFilter,
-}) => {
+const GlobalFilter = ({ preGlobalFilteredRows, globalFilter, setGlobalFilter }) => {
   const count = preGlobalFilteredRows.length;
   const [value, setValue] = React.useState(globalFilter);
   const onChange = useAsyncDebounce((value) => {
@@ -53,10 +35,7 @@ const GlobalFilter = ({
 
   return (
     <Flex sx={{ py: 3, alignItems: "center" }}>
-      <Label
-        htmlFor="search"
-        sx={{ flex: "0", mr: 4, minWidth: "max-content" }}
-      >
+      <Label htmlFor="search" sx={{ flex: "0", mr: 4, minWidth: "max-content" }}>
         Suche:
       </Label>
       <Input
@@ -77,9 +56,7 @@ const GlobalFilter = ({
   );
 };
 
-function SelectColumnFilter({
-  column: { filterValue, setFilter, preFilteredRows },
-}) {
+function SelectColumnFilter({ column: { filterValue, setFilter, preFilteredRows } }) {
   // Calculate the options for filtering
   // using the preFilteredRows
   const options = filterTags(preFilteredRows);
@@ -106,8 +83,7 @@ function fuzzyGlobalFilter(rows, id, filterValue) {
   return matchSorter(rows, filterValue.trim(), {
     keys: [
       "values.name",
-      (row) =>
-        formatWithOptions({ locale: de })("P")(parseISO(row.values.createdAt)),
+      (row) => formatWithOptions({ locale: de })("P")(parseISO(row.values.createdAt)),
       (row) => row.values.tags.map((tag) => tag.name),
     ],
   });
@@ -117,9 +93,7 @@ function fuzzyTextFilterFn(rows, id, filterValue) {
   return matchSorter(rows, filterValue, { keys: [(row) => row.values[id]] });
 }
 
-function DefaultColumnFilter({
-  column: { filterValue, preFilteredRows, setFilter },
-}) {
+function DefaultColumnFilter({ column: { filterValue, preFilteredRows, setFilter } }) {
   const count = preFilteredRows.length;
 
   return (
@@ -161,9 +135,7 @@ export const Table = ({ className = "", data }) => {
         width: 200,
         Cell: ({ cell: { value } }) => {
           return (
-            <Flex
-              sx={{ alignItems: "center", justifyContent: "space-between" }}
-            >
+            <Flex sx={{ alignItems: "center", justifyContent: "space-between" }}>
               {value && (
                 <>
                   <Tags values={value} />
@@ -184,11 +156,7 @@ export const Table = ({ className = "", data }) => {
         width: 100,
         style: { textAlign: "right" },
         Cell: ({ cell: { value } }) => {
-          return (
-            <span>
-              {formatWithOptions({ locale: de })("P")(parseISO(value))}
-            </span>
-          );
+          return <span>{formatWithOptions({ locale: de })("P")(parseISO(value))}</span>;
         },
       },
       {
@@ -303,13 +271,7 @@ export const Table = ({ className = "", data }) => {
                   {/* Render the header */}
                   {column.render("Header")}
                   {column.canSort && (
-                    <span sx={{ ml: 2 }}>
-                      {column.isSorted
-                        ? column.isSortedDesc
-                          ? "⬇"
-                          : "⬆"
-                        : "⬅"}
-                    </span>
+                    <span sx={{ ml: 2 }}>{column.isSorted ? (column.isSortedDesc ? "⬇" : "⬆") : "⬅"}</span>
                   )}
                   {/* Render the columns filter UI */}
                   {/* <div sx={{ py: 2, pr: 4 }}>

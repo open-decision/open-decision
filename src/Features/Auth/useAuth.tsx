@@ -19,8 +19,19 @@ interface authResponse {
 //TODO email and password should not be optional
 type Auth = {
   user?: string;
-  signin?({ email, password, callback }: { email: string; password: string; callback?: Function }): Promise<authStatus>;
+
+  signin?({
+    email,
+    password,
+    callback,
+  }: {
+    email?: string;
+    password?: string;
+    callback?: Function;
+  }): Promise<authStatus>;
+
   signout?(callback: Function): Promise<authStatus>;
+
   signup?({
     email,
     password1,

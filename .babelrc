@@ -2,22 +2,8 @@
   //emotion needs to be the first plugin the array
   "plugins": [
     "emotion",
+    "@babel/plugin-syntax-dynamic-import",
     "react-hot-loader/babel",
-    [
-      "@emotion/babel-plugin-jsx-pragmatic",
-      {
-        "module": "theme-ui",
-        "import": "jsx",
-        "export": "jsx"
-      }
-    ],
-    [
-      "@babel/plugin-transform-react-jsx",
-      {
-        "pragma": "jsx",
-        "pragmaFrag": "React.Fragment"
-      }
-    ],
     ["@babel/plugin-transform-regenerator"],
     [
       "@babel/plugin-transform-runtime",

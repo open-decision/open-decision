@@ -1,7 +1,8 @@
+/** @jsx jsx */
+import { jsx } from "theme-ui";
 import { Logo } from "..";
 import { Avatar, Link, Flex, Button } from "theme-ui";
 import { useAuth } from "../../Features/Auth/useAuth";
-import React from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { IconButton } from "@material-ui/core";
 import { AuthButton } from "../../Features/Auth/AuthButton";
@@ -62,6 +63,8 @@ export const Header = ({ className = "" }) => {
           flexBasis: "max-content",
         }}
       >
+        <AuthButton sx={{ marginX: 3 }} />
+        {!auth.user && <Button onClick={() => auth.signup({})}>SignUp</Button>}
         {auth.user ? (
           <IconButton>
             <Avatar src="https://images.unsplash.com/photo-1586297135537-94bc9ba060aa?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1400&q=80" />
@@ -71,8 +74,6 @@ export const Header = ({ className = "" }) => {
             <FaUserCircle size="48" />
           </IconButton>
         )}
-        <AuthButton sx={{ marginX: 3 }} />
-        {!auth.user && <Button onClick={() => auth.signup({})}>SignUp</Button>}
       </Flex>
     </Flex>
   );
