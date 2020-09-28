@@ -1,16 +1,5 @@
 {
   //emotion needs to be the first plugin the array
-  "plugins": [
-    "emotion",
-    "@babel/plugin-syntax-dynamic-import",
-    "react-hot-loader/babel",
-    ["@babel/plugin-transform-regenerator"],
-    [
-      "@babel/plugin-transform-runtime",
-      {
-        "corejs": 3
-      }
-    ]
-  ],
-  "presets": ["@babel/preset-env", "@babel/preset-react"]
+  "plugins": ["emotion", "react-hot-loader/babel"],
+  "presets": ["@babel/preset-env", "@babel/preset-react", "@babel/preset-typescript"]
 }

@@ -9,7 +9,9 @@
     "sourceMap": true,
     "target": "es5",
     "esModuleInterop": true,
-    "allowJs": true
+    "allowJs": true,
+    "skipLibCheck": true,
+    "noEmit": true
   },
   "include": ["src"]
 }

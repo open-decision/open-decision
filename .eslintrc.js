@@ -4,21 +4,22 @@ module.exports = {
     browser: true,
     es6: true,
   },
-  extends: ["eslint:recommended", "plugin:react/recommended", "prettier"],
-  globals: {
-    Atomics: "readonly",
-    SharedArrayBuffer: "readonly",
-  },
+  parser: "@typescript-eslint/parser",
   parserOptions: {
-    ecmaFeatures: {
-      jsx: true,
-    },
     ecmaVersion: 2018,
+    ecmaFeatures: { jsx: true },
     sourceType: "module",
   },
-  plugins: ["react"],
+  plugins: ["react", "@typescript-eslint"],
+  extends: ["eslint:recommended", "plugin:react/recommended", "prettier", "plugin:@typescript-eslint/recommended"],
   rules: {
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",
+  },
+  settings: {
+    react: {
+      pragma: "React",
+      version: "detect",
+    },
   },
 };

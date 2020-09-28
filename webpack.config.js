@@ -2,13 +2,14 @@
 const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 module.exports = {
   entry: "./src/index.tsx",
   mode: "development",
   devtool: "source-map",
   resolve: {
-    extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
+    extensions: [".js", ".ts", ".tsx"],
     alias: {
       "react-dom": "@hot-loader/react-dom",
     },
@@ -16,14 +17,14 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(ts|tsx)$/,
-        loader: "awesome-typescript-loader",
-      },
-      {
-        test: /\.(js|jsx)$/,
+        test: /\.(ts|js)x?$/,
         exclude: /node_modules/,
-        loader: "babel-loader",
-        options: { presets: ["@babel/env"] },
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/env", "@babel/preset-react", "@babel/preset-typescript"],
+          },
+        },
       },
       {
         test: /\.html$/,
@@ -51,6 +52,12 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./public/index.html",
       filename: "./index.html",
+    }),
+    new ForkTsCheckerWebpackPlugin({
+      async: false,
+      eslint: {
+        files: "./src/**/*",
+      },
     }),
   ],
 };
