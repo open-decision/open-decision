@@ -5,17 +5,20 @@ import { GET_TOKEN, LOGOUT_USER, REGISTER_USER } from "./authQueries";
 
 interface authStatus {
   success: boolean;
-  errors?: {};
+  errors?: string;
 }
 
 interface authResponse {
   success: boolean;
-  errors?: {};
-  refreshToken?: string;
-  token?: string;
-  unarchiving?: boolean;
-  user?: { email?: string; lastName?: string; firstName?: string };
+  errors?: string;
+  data?: {
+    refreshToken?: string;
+    token?: string;
+    unarchiving?: boolean;
+    user?: { email?: string; lastName?: string; firstName?: string };
+  };
 }
+
 //TODO email and password should not be optional
 type Auth = {
   user?: string;
@@ -27,10 +30,10 @@ type Auth = {
   }: {
     email?: string;
     password?: string;
-    callback?: Function;
+    callback?: () => void;
   }): Promise<authStatus>;
 
-  signout?(callback: Function): Promise<authStatus>;
+  signout?(callback: () => void): Promise<authStatus>;
 
   signup?({
     email,
@@ -51,19 +54,19 @@ export const useProvideAuth = (): Auth => {
   const [refreshToken, setRefreshToken] = React.useState(null);
 
   const signin: Auth["signin"] = async ({ email = "test@outlook.de", password = "fogmub-bifDaj-sarjo8", callback }) => {
-    const response: authResponse = await fetchDatabase({
+    const { data, success, errors }: authResponse = await fetchDatabase({
       query: GET_TOKEN,
       dataAccessor: prop("tokenAuth"),
       variables: { email, password },
     });
 
-    if (response.success) {
+    if (success) {
       setTimeout(callback, 100);
-      setUser(response.token);
-      setRefreshToken(response.refreshToken);
-      return { success: response.success };
+      setUser(data.token);
+      setRefreshToken(data.refreshToken);
+      return { success };
     } else {
-      return { success: response.success, errors: response.errors };
+      return { success, errors };
     }
   };
 
@@ -73,7 +76,7 @@ export const useProvideAuth = (): Auth => {
     password2 = "fogmub-bifDaj-sarjo8",
     username = "",
   }) => {
-    const response: authResponse = await fetchDatabase({
+    const { data, success, errors }: authResponse = await fetchDatabase({
       query: REGISTER_USER,
       dataAccessor: prop("register"),
       variables: {
@@ -84,28 +87,28 @@ export const useProvideAuth = (): Auth => {
       },
     });
 
-    if (response.success) {
-      setUser(response.token);
-      return { success: response.success };
+    if (success) {
+      setUser(data.token);
+      return { success: success };
     } else {
-      return { success: response.success, errors: response.errors };
+      return { success, errors };
     }
   };
 
   const signout: Auth["signout"] = async (callback) => {
-    const response: authResponse = await fetchDatabase({
+    const { success, errors }: authResponse = await fetchDatabase({
       query: LOGOUT_USER,
       dataAccessor: prop("revokeToken"),
       variables: { refreshToken },
     });
 
-    if (response.success) {
+    if (success) {
       setTimeout(callback, 100);
       setUser(null);
       setRefreshToken(null);
-      return { success: response.success };
+      return { success: success };
     } else {
-      return { success: response.success, errors: response.errors };
+      return { success, errors };
     }
   };
 

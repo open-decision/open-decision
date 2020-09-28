@@ -1,14 +1,15 @@
 import { GraphQLClient } from "graphql-request";
 interface config {
   query: string;
-  dataAccessor?: Function;
+  dataAccessor?: (data: unknown) => Record<string, unknown> | Record<string, unknown>[];
   token?: string;
-  variables?: object;
+  variables?: Record<string, unknown>;
 }
-export const fetchDatabase = async (
-  { query, dataAccessor = (data: any) => data, token, variables }: config,
-  key?: string
-): Promise<any | string> => {
+
+interface fetchDatabase {
+  (config: config, key?: string): Promise<{ success: boolean; data?: unknown; errors?: string }>;
+}
+export const fetchDatabase: fetchDatabase = async ({ query, dataAccessor, token, variables }, key) => {
   const endpoint = "https://builder.open-decision.org/graphql";
 
   const graphQLClient = new GraphQLClient(endpoint, {
@@ -19,7 +20,7 @@ export const fetchDatabase = async (
 
   try {
     const response = await graphQLClient.request(query, variables);
-    return dataAccessor(response);
+    return { success: true, data: dataAccessor(response) };
   } catch (error) {
     return { success: false, errors: error.message };
   }

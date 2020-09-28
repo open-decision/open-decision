@@ -28,8 +28,6 @@ const ALL_TREES = gql`
 export const Dashboard = ({ className = "" }) => {
   const auth = useAuth();
 
-  console.log(auth);
-
   const { data, status } = useQuery(["allTrees"], async (key: string) =>
     fetchDatabase(
       {
@@ -75,17 +73,17 @@ export const Dashboard = ({ className = "" }) => {
           Neuen Baum hinzufügen
         </Button>
       </Container>
+
       <Box
         sx={{
           bg: "grays.1",
           flex: "1 1 60%",
         }}
       >
-        {data && (
-          <Container>
-            <Table data={data} />
-          </Container>
-        )}
+        <Container>
+          {status === "success" && data.success ? <Table data={data.data} /> : <h1>Loading ...</h1>}
+        </Container>
+        )
       </Box>
     </Flex>
   );

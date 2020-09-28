@@ -1,9 +1,9 @@
 /**@jsx jsx */
 import { jsx } from "theme-ui";
-import { Header } from "../";
+import { Header } from "..";
 import { Grid } from "theme-ui";
 
-export const Layout = (props) => {
+export const Layout = (props: any) => {
   return (
     <Grid sx={{ gridTemplateRows: "auto 1fr auto", minHeight: "100vh" }} gap={0}>
       <Header />

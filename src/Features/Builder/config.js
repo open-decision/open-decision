@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { FlumeConfig, Colors, Controls } from "flume";
 
 const config = new FlumeConfig();

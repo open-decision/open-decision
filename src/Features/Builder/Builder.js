@@ -8,16 +8,16 @@ import engine from "./engine";
 export const Builder = () => {
   const [nodes, setNodes] = React.useState();
 
-  console.log(nodes);
-
   React.useEffect(() => {
     const fetchData = async () => {
-      setNodes(
-        await fetchDatabase({
-          query: SINGLE_TREE,
-          dataAccessor: getSingleTreeData,
-        })
-      );
+      const { data, success, errors } = await fetchDatabase({
+        query: SINGLE_TREE,
+        dataAccessor: getSingleTreeData,
+      });
+
+      if (success) {
+        setNodes(data);
+      }
     };
     fetchData();
   }, []);

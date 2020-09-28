@@ -1,4 +1,3 @@
-// @ts-nocheck
 /* eslint-disable react/display-name */
 /* eslint-disable react/jsx-key */
 /**@jsx jsx */

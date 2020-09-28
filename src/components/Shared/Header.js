@@ -23,12 +23,7 @@ export const Header = ({ className = "" }) => {
       }}
       className={className}
     >
-      <Link
-        variant="nav"
-        as={RouterLink}
-        // @ts-ignore
-        to="/"
-      >
+      <Link variant="nav" as={RouterLink} to="/">
         <Logo sx={{ flex: "1 1 60%" }} />
       </Link>
       <Flex
@@ -37,22 +32,10 @@ export const Header = ({ className = "" }) => {
           justifyContent: "flex-end",
         }}
       >
-        <Link
-          variant="nav"
-          as={RouterLink}
-          // @ts-ignore
-          to="/builder"
-          sx={{ marginX: 4 }}
-        >
+        <Link variant="nav" as={RouterLink} to="/builder" sx={{ marginX: 4 }}>
           Builder
         </Link>
-        <Link
-          variant="nav"
-          as={RouterLink}
-          // @ts-ignore
-          to="/dashboard"
-          sx={{ marginX: 4 }}
-        >
+        <Link variant="nav" as={RouterLink} to="/dashboard" sx={{ marginX: 4 }}>
           Dashboard
         </Link>
       </Flex>
