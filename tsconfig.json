@@ -1,17 +1,21 @@
 {
   "compilerOptions": {
-    "jsx": "react",
-    "module": "commonjs",
-    "noImplicitAny": true,
-    "outDir": "./build/",
-    "preserveConstEnums": true,
-    "removeComments": true,
-    "sourceMap": true,
-    "target": "es5",
-    "esModuleInterop": true,
+    "noEmit": true /* Most important thing: will not compile anything */,
+    "jsx": "preserve" /* Do not compile your JSX */,
+    "allowSyntheticDefaultImports": true /* To import without "* as" */,
+    // "alwaysStrict": true,
+    "target": "ESNEXT",
+    // "strictNullChecks": true /* You have to add "| null" in your type when needed */,
+    // "strictFunctionTypes": true /* Enable strict checking of function types. */,
+    // "noImplicitThis": true /* Raise error on 'this' expressions with an implied 'any' type. */,
+    // "noUnusedLocals": true /* Report errors on unused locals. */,
+    // "noUnusedParameters": true /* Report errors on unused parameters. */,
+    // "noImplicitReturns": true /* Report error when not all code paths in function return a value. */,
+    // "noFallthroughCasesInSwitch": true /* Report errors for fallthrough cases in switch statement. */,
+    "moduleResolution": "node" /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */,
+    "baseUrl": "./src" /* Base directory to resolve non-absolute module names. */,
     "allowJs": true,
-    "skipLibCheck": true,
-    "noEmit": true
+    "skipLibCheck": true
   },
   "include": ["src"]
 }
