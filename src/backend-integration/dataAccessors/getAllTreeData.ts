@@ -1,4 +1,4 @@
-import { map, pipe, pathOr } from "ramda";
+import { pathOr, pipe, map } from "remeda";
 
 interface treeObject {
   node: {
@@ -11,12 +11,15 @@ interface treeObject {
 }
 
 interface allTreeData {
-  (allDecisionTrees: { edges: treeObject[] }): Record<string, treeObject>[];
+  (data: { allDecisionTrees: { edges: treeObject[] } }): Record<
+    string,
+    treeObject
+  >[];
 }
 
 export const getAllTreeData: allTreeData = (data) => {
-  const allTreeData = pathOr([], ["allDecisionTrees", "edges"]);
-  const parseTags = pipe(pathOr("", ["node", "tags"]), JSON.parse);
+  const parseTags = (data: treeObject) =>
+    pipe(data, pathOr(["node", "tags"], ""), JSON.parse);
 
-  return pipe(allTreeData, map(parseTags))(data);
+  return pipe(data, pathOr(["allDecisionTrees", "edges"], []), map(parseTags));
 };

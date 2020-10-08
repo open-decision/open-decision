@@ -1,15 +1,18 @@
 /** @jsx jsx */
-import { jsx } from "theme-ui";
-import { Logo } from "..";
-import { Avatar, Link, Flex, Button } from "theme-ui";
-import { useAuth } from "../../Features/Auth/useAuth";
+import { Heading, jsx } from "theme-ui";
+import { Avatar, Flex } from "theme-ui";
 import { FaUserCircle } from "react-icons/fa";
 import { IconButton } from "@material-ui/core";
-import { AuthButton } from "../../Features/Auth/AuthButton";
-import { Link as RouterLink } from "react-router-dom";
+import { AuthButton, SignupButton, useAuthToken } from "../../Features";
+import { Link } from "./InternalLink";
+import { FunctionComponent } from "react";
 
-export const Header = ({ className = "" }) => {
-  const auth = useAuth();
+interface Props {
+  className?: string;
+}
+
+export const Header: FunctionComponent<Props> = ({ className = "" }) => {
+  const { token } = useAuthToken();
   //TODO handle signup failure in UI
   return (
     <Flex
@@ -23,8 +26,13 @@ export const Header = ({ className = "" }) => {
       }}
       className={className}
     >
-      <Link variant="nav" as={RouterLink} to="/">
-        <Logo sx={{ flex: "1 1 60%" }} />
+      <Link variant="nav" to="/">
+        <Heading
+          className={className}
+          sx={{ color: "grays.4", fontSize: 5, flex: "1 1 60%" }}
+        >
+          open <span sx={{ color: "secondary" }}>decision</span>
+        </Heading>
       </Link>
       <Flex
         sx={{
@@ -32,10 +40,10 @@ export const Header = ({ className = "" }) => {
           justifyContent: "flex-end",
         }}
       >
-        <Link variant="nav" as={RouterLink} to="/builder" sx={{ marginX: 4 }}>
+        <Link variant="nav" to="/builder" sx={{ marginX: 4 }}>
           Builder
         </Link>
-        <Link variant="nav" as={RouterLink} to="/dashboard" sx={{ marginX: 4 }}>
+        <Link variant="nav" to="/dashboard" sx={{ marginX: 4 }}>
           Dashboard
         </Link>
       </Flex>
@@ -47,8 +55,8 @@ export const Header = ({ className = "" }) => {
         }}
       >
         <AuthButton sx={{ marginX: 3 }} />
-        {!auth.user && <Button onClick={() => auth.signup({})}>SignUp</Button>}
-        {auth.user ? (
+        {!token && <SignupButton />}
+        {token ? (
           <IconButton>
             <Avatar src="https://images.unsplash.com/photo-1586297135537-94bc9ba060aa?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1400&q=80" />
           </IconButton>

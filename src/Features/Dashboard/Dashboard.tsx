@@ -1,12 +1,15 @@
 /**@jsx jsx */
 import { jsx } from "theme-ui";
-import { Table } from ".";
+import { Table } from "./Table/Table";
 import { Button, Box, Container, Flex, Heading } from "theme-ui";
 import AddIcon from "@material-ui/icons/Add";
-import { useAuth } from "../Auth/useAuth";
-import { fetchDatabase, getAllTreeData } from "../../backend-integration";
-import { useQuery } from "react-query";
-import { gql } from "graphql-request";
+import { FunctionComponent } from "react";
+import { columns, defaultColumn } from "./Table/TableData";
+import { useQuery, gql } from "@apollo/client";
+
+interface DashboardProps {
+  className?: string;
+}
 
 const ALL_TREES = gql`
   {
@@ -25,20 +28,10 @@ const ALL_TREES = gql`
 `;
 
 //FIXME username is hardcoded
-export const Dashboard = ({ className = "" }) => {
-  const auth = useAuth();
-
-  const { data, status } = useQuery(["allTrees"], async (key: string) =>
-    fetchDatabase(
-      {
-        query: ALL_TREES,
-        dataAccessor: getAllTreeData,
-        token: auth.user,
-        variables: {},
-      },
-      key
-    )
-  );
+export const Dashboard: FunctionComponent<DashboardProps> = ({
+  className = "",
+}) => {
+  const { loading, error, data } = useQuery(ALL_TREES);
 
   return (
     <Flex
@@ -81,7 +74,17 @@ export const Dashboard = ({ className = "" }) => {
         }}
       >
         <Container>
-          {status === "success" && data.success ? <Table data={data.data} /> : <h1>Loading ...</h1>}
+          {error ? (
+            <p>Error :(</p>
+          ) : loading ? (
+            <h1>Loading ...</h1>
+          ) : (
+            <Table
+              columns={columns}
+              data={data}
+              defaultColumn={defaultColumn}
+            />
+          )}
         </Container>
         )
       </Box>

@@ -2,8 +2,14 @@
 import { jsx } from "theme-ui";
 import { Badge, Box } from "theme-ui";
 import { readableColor } from "polished";
+import { FunctionComponent } from "react";
 
-export const Tags = ({ className = "", values = [] }) => {
+interface TagProps {
+  className?: string;
+  values: { color: string; name: string }[];
+}
+
+export const Tags: FunctionComponent<TagProps> = ({ className = "", values = [] }) => {
   return (
     <Box>
       {values.map((tag, idx) => {
