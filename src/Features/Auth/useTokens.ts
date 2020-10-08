@@ -5,11 +5,11 @@ type TokenHook = {
 };
 
 const createTokenHook = (tokenName: string): TokenHook => {
-  const token = localStorage.getItem(tokenName);
+  const getToken = () => localStorage.getItem(tokenName);
   const setToken = (token) => localStorage.setItem(tokenName, token);
   const removeToken = () => localStorage.removeItem(tokenName);
 
-  return { token, setToken, removeToken };
+  return { token: getToken(), setToken, removeToken };
 };
 
 export const useAuthToken = (): TokenHook => createTokenHook("authToken");

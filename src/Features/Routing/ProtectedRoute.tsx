@@ -8,8 +8,6 @@ export const ProtectedRoute: FunctionComponent<RouteProps> = ({
 }) => {
   const { token } = useAuthToken();
 
-  console.log(token);
-
   return (
     <Route
       {...props}
