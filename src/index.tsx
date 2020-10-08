@@ -4,18 +4,19 @@ import "core-js/stable";
 import "regenerator-runtime/runtime";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "theme-ui";
-import App from "./App";
-import { AuthProvider } from "./Features/Auth/useAuth";
+import { App } from "./App";
 import theme from "./theme";
+import { ApolloProvider } from "@apollo/client";
+import { client } from "./ApolloClient";
 
 const AppContext = () => {
   return (
     <BrowserRouter>
-      <AuthProvider>
+      <ApolloProvider client={client}>
         <ThemeProvider theme={theme}>
           <App />
         </ThemeProvider>
-      </AuthProvider>
+      </ApolloProvider>
     </BrowserRouter>
   );
 };

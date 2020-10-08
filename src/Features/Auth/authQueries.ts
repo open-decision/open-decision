@@ -1,6 +1,6 @@
-import { gql } from "graphql-request";
+import { gql } from "@apollo/client";
 
-export const GET_TOKEN = gql`
+export const LOGIN_USER = gql`
   mutation($email: String!, $password: String!) {
     tokenAuth(email: $email, password: $password) {
       success
@@ -42,8 +42,18 @@ export const LOGOUT_USER = gql`
 `;
 
 export const REGISTER_USER = gql`
-  mutation($email: String!, $username: String!, $password1: String!, $password2: String!) {
-    register(email: $email, username: $username, password1: $password1, password2: $password2) {
+  mutation(
+    $email: String!
+    $username: String!
+    $password1: String!
+    $password2: String!
+  ) {
+    register(
+      email: $email
+      username: $username
+      password1: $password1
+      password2: $password2
+    ) {
       success
       errors
       token
