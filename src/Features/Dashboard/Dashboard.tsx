@@ -3,15 +3,15 @@ import { jsx } from "theme-ui";
 import { Table } from "./Table/Table";
 import { Button, Box, Container, Flex, Heading } from "theme-ui";
 import AddIcon from "@material-ui/icons/Add";
-import { FunctionComponent } from "react";
 import { columns, defaultColumn } from "./Table/TableData";
-import { useQuery, gql } from "@apollo/client";
+// import { useQuery, gql } from "@apollo/client";
+import { allTreeData, GlobalProps } from "types/global";
+import { map, pipe, pathOr } from "remeda";
+import { FunctionComponent } from "react";
 
-interface DashboardProps {
-  className?: string;
-}
+import { useQuery } from "urql";
 
-const ALL_TREES = gql`
+const ALL_TREES = `
   {
     allDecisionTrees {
       edges {
@@ -28,10 +28,18 @@ const ALL_TREES = gql`
 `;
 
 //FIXME username is hardcoded
-export const Dashboard: FunctionComponent<DashboardProps> = ({
+export const Dashboard: FunctionComponent<GlobalProps> = ({
   className = "",
 }) => {
-  const { loading, error, data } = useQuery(ALL_TREES);
+  const [{ data, fetching, error }] = useQuery<allTreeData>({
+    query: ALL_TREES,
+  });
+
+  const treeData = pipe(
+    data,
+    pathOr(["allDecisionTrees", "edges"], []),
+    map((x) => x.node)
+  );
 
   return (
     <Flex
@@ -76,12 +84,12 @@ export const Dashboard: FunctionComponent<DashboardProps> = ({
         <Container>
           {error ? (
             <p>Error :(</p>
-          ) : loading ? (
+          ) : fetching ? (
             <h1>Loading ...</h1>
           ) : (
             <Table
               columns={columns}
-              data={data}
+              data={treeData}
               defaultColumn={defaultColumn}
             />
           )}
