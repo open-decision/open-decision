@@ -3,24 +3,29 @@ import React from "react";
 import { Button, jsx } from "theme-ui";
 import { useHistory, useLocation } from "react-router-dom";
 import { FunctionComponent } from "react";
-import { LocationState } from "./types";
-import { useMutation } from "@apollo/client";
+// import { useMutation } from "@apollo/client";
 import { LOGIN_USER, LOGOUT_USER } from "./authQueries";
 import { useAuthToken, useRefreshToken } from "./useTokens";
+import { LocationState } from "types/global";
+import { useMutation } from "urql";
 
 export const AuthButton: FunctionComponent<{ className?: string }> = ({
   className,
 }) => {
   const {
-    token: authToken,
+    getToken: getAuthToken,
     setToken: setAuthToken,
     removeToken: removeAuthToken,
   } = useAuthToken();
+
   const {
-    token: refreshToken,
+    getToken: getRefreshToken,
     setToken: setRefreshToken,
     removeToken: removeRefreshToken,
   } = useRefreshToken();
+
+  const authToken = getAuthToken();
+  const refreshToken = getRefreshToken();
 
   const history = useHistory();
   const location = useLocation<LocationState>();
@@ -53,14 +58,18 @@ export const AuthButton: FunctionComponent<{ className?: string }> = ({
 
   const loginState = authToken ? logout : login;
 
-  const [mutationFn] = useMutation(loginState.query, {
-    variables: loginState.variables,
-    onCompleted: loginState.onCompleted,
-  });
+  const [, updateTodo] = useMutation(loginState.query);
 
   //TODO handle Auth Failure in UI
   return (
-    <Button onClick={() => mutationFn()} className={className}>
+    <Button
+      onClick={() =>
+        updateTodo(loginState.variables).then(({ data }) =>
+          loginState.onCompleted(data)
+        )
+      }
+      className={className}
+    >
       {loginState.text}
     </Button>
   );
