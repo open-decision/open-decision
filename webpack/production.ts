@@ -41,6 +41,11 @@ export function buildProductionConfig(env, dirname) {
             },
           },
         },
+        {
+          test: /\.mjs$/,
+          include: /node_modules/,
+          type: "javascript/auto",
+        },
       ],
     },
     plugins: [

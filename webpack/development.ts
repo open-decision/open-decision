@@ -41,6 +41,11 @@ function buildDevelopementConfig(env, dirname) {
             },
           },
         },
+        {
+          test: /\.mjs$/,
+          include: /node_modules/,
+          type: "javascript/auto",
+        },
       ],
     },
     plugins: [
