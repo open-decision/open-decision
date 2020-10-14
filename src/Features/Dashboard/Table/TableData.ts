@@ -1,7 +1,8 @@
+import { Column } from "react-table";
 import { DefaultColumnFilter } from "./Filter";
 import { ActionsCell, DateCell, TagCell } from "./SpecialCells";
 
-export const columns = [
+export const columns: Column<Record<string, unknown>>[] = [
   {
     Header: "NAME",
     accessor: "name",
@@ -21,14 +22,14 @@ export const columns = [
     accessor: "createdAt",
     filter: "fuzzyText",
     width: 100,
-    style: { textAlign: "right" },
+    // style: { textAlign: "right" },
     Cell: DateCell,
   },
   {
     Header: "BEARBEITEN",
     accessor: "id",
     disableSortBy: true,
-    style: { textAlign: "right" },
+    // style: { textAlign: "right" },
     Cell: ActionsCell,
   },
 ];

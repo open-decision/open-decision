@@ -76,11 +76,10 @@ export const GlobalFilter = ({
 //   );
 // };
 
-export function fuzzyGlobalFilter<T extends Record<string, unknown>>(
-  rows: Row<T>[],
-  id: IdType<T>[],
+export function fuzzyGlobalFilter(
+  rows: Row[],
   filterValue: FilterValue
-): Row<T>[] {
+): Row[] {
   return matchSorter(rows, filterValue.trim(), {
     keys: [
       "values.name",

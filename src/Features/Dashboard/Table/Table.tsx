@@ -1,6 +1,6 @@
 /**@jsx jsx */
 import { jsx } from "theme-ui";
-import React, { PropsWithChildren, ReactElement } from "react";
+import React, { FunctionComponent } from "react";
 
 //Components
 import { Text, Heading } from "theme-ui";
@@ -10,23 +10,22 @@ import {
   useSortBy,
   useGlobalFilter,
   useFlexLayout,
-  TableOptions,
   Column,
 } from "react-table";
+import { treeObject, GlobalProps } from "types/global";
 
-export interface Table<T extends Record<string, unknown>>
-  extends TableOptions<T> {
-  className?: string;
-  data: T[];
-  columns: Column<T>[];
-}
+type TableProps = {
+  data: treeObject[];
+  columns: Column[];
+  defaultColumn: Partial<Column>;
+} & GlobalProps;
 
-export function Table<T extends Record<string, unknown>>({
+export const Table: FunctionComponent<TableProps> = ({
   className,
   data,
   columns,
   defaultColumn,
-}: PropsWithChildren<Table<T>>): ReactElement {
+}) => {
   const {
     setGlobalFilter,
     state: { globalFilter },
@@ -35,7 +34,7 @@ export function Table<T extends Record<string, unknown>>({
     getTableBodyProps,
     rows,
     prepareRow,
-  } = useTable<T>(
+  } = useTable(
     {
       data,
       columns,
@@ -105,4 +104,4 @@ export function Table<T extends Record<string, unknown>>({
       </div>
     </React.Fragment>
   );
-}
+};
