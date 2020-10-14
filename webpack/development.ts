@@ -8,7 +8,7 @@ function buildDevelopementConfig(env, dirname) {
 
   return {
     entry: "./src/index.tsx",
-    devtool: "cheap-module-eval-source-map",
+    devtool: "inline-source-map",
     mode: "development",
     resolve: {
       extensions: [".js", ".json", ".ts", ".jsx", ".tsx"],
@@ -17,7 +17,6 @@ function buildDevelopementConfig(env, dirname) {
       path: dirname + "/dist",
       filename: "index.js",
       publicPath: "/",
-      sourceMapFilename: "bundle.map",
     },
     devServer: {
       publicPath: "http://localhost:3000",

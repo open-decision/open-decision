@@ -13,7 +13,6 @@ export function buildProductionConfig(env, dirname) {
       path: dirname + "/dist",
       filename: "index.js",
       publicPath: "/",
-      sourceMapFilename: "bundle.map",
     },
     mode: "production",
     resolve: {
