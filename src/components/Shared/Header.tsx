@@ -1,18 +1,15 @@
 /** @jsx jsx */
-import { Heading, jsx } from "theme-ui";
-import { Avatar, Flex } from "theme-ui";
+import { Heading, jsx, Avatar, Flex } from "theme-ui";
 import { FaUserCircle } from "react-icons/fa";
 import { IconButton } from "@material-ui/core";
 import { AuthButton, SignupButton, useAuthToken } from "../../Features";
 import { Link } from "./InternalLink";
 import { FunctionComponent } from "react";
+import { GlobalProps } from "types/global";
+export const Header: FunctionComponent<GlobalProps> = ({ className = "" }) => {
+  const { getToken } = useAuthToken();
+  const token = getToken();
 
-interface Props {
-  className?: string;
-}
-
-export const Header: FunctionComponent<Props> = ({ className = "" }) => {
-  const { token } = useAuthToken();
   //TODO handle signup failure in UI
   return (
     <Flex
