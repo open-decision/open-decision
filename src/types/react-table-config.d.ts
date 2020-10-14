@@ -16,12 +16,18 @@ import {
   UseSortByInstanceProps,
   UseSortByOptions,
   UseSortByState,
+  UseFiltersColumnOptions,
+  UseFiltersOptions,
+  UseFiltersState,
+  UseFiltersInstanceProps,
+  UseFiltersOptions,
 } from "react-table";
 
 declare module "react-table" {
   export interface TableOptions<D extends Record<string, unknown>>
     extends UseGlobalFiltersOptions<D>,
       UseSortByOptions<D>,
+      UseFiltersOptions<D>,
       Record<string, unknown> {}
 
   export type Hooks<
@@ -31,16 +37,19 @@ declare module "react-table" {
   export interface TableInstance<
     D extends Record<string, unknown> = Record<string, unknown>
   > extends UseGlobalFiltersInstanceProps<D>,
+      UseFiltersInstanceProps<D>,
       UseSortByInstanceProps<D> {}
 
   export interface TableState<
     D extends Record<string, unknown> = Record<string, unknown>
   > extends UseGlobalFiltersState<D>,
+      UseFiltersState<D>,
       UseSortByState<D> {}
 
   export interface ColumnInterface<
     D extends Record<string, unknown> = Record<string, unknown>
   > extends UseGlobalFiltersColumnOptions<D>,
+      UseFiltersColumnOptions<D>,
       UseSortByColumnOptions<D> {}
 
   export interface ColumnInstance<
