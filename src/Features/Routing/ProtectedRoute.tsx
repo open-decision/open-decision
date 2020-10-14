@@ -6,13 +6,13 @@ export const ProtectedRoute: FunctionComponent<RouteProps> = ({
   children,
   ...props
 }) => {
-  const { token } = useAuthToken();
+  const { getToken } = useAuthToken();
 
   return (
     <Route
       {...props}
       render={({ location }) =>
-        token ? (
+        getToken() ? (
           children
         ) : (
           <Redirect
