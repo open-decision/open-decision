@@ -10,8 +10,14 @@ module.exports = {
     ecmaFeatures: { jsx: true },
     sourceType: "module",
   },
-  plugins: ["react", "@typescript-eslint"],
-  extends: ["eslint:recommended", "plugin:react/recommended", "prettier", "plugin:@typescript-eslint/recommended"],
+  plugins: ["react", "@typescript-eslint", "jsx-a11y"],
+  extends: [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "prettier",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:jsx-a11y/recommended",
+  ],
   rules: {
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",
