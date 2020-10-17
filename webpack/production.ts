@@ -2,7 +2,7 @@
 const webpack = require("webpack");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 
 export function buildProductionConfig(env, dirname) {
   console.log("Start build for NODE_ENV: ", env.NODE_ENV);
@@ -50,11 +50,6 @@ export function buildProductionConfig(env, dirname) {
     },
     plugins: [
       new CleanWebpackPlugin(),
-      new UglifyJsPlugin({
-        parallel: true,
-        sourceMap: true,
-        cache: true,
-      }),
       new webpack.SourceMapDevToolPlugin({
         filename: "sourcemaps/[name].js.map",
         lineToLine: true,
@@ -66,6 +61,10 @@ export function buildProductionConfig(env, dirname) {
     ],
     performance: {
       hints: "warning",
+    },
+    optimization: {
+      minimize: true,
+      minimizer: [new TerserPlugin()],
     },
   };
 }
