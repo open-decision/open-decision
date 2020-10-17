@@ -1,15 +1,45 @@
 /** @jsx jsx */
+import React from "react";
 import { Heading, jsx, Avatar, Flex } from "theme-ui";
 import { FaUserCircle } from "react-icons/fa";
 import { IconButton } from "@material-ui/core";
-import { AuthButton, SignupButton, useAuthToken } from "../../Features";
+import {
+  LoginButton,
+  LogoutButton,
+  SignupButton,
+  useAuthToken,
+} from "../../Features";
 import { Link } from "./InternalLink";
 import { FunctionComponent } from "react";
 import { GlobalProps } from "types/global";
-export const Header: FunctionComponent<GlobalProps> = ({ className = "" }) => {
-  const { getToken } = useAuthToken();
+
+const AuthButtons = ({ className }: { className?: string }) => {
+  const [getToken] = useAuthToken();
   const token = getToken();
 
+  return (
+    <Flex sx={{ alignItems: "center" }} className={className}>
+      {token ? (
+        <React.Fragment>
+          <LogoutButton sx={{ mr: 2 }} />
+          <IconButton>
+            <Avatar src="https://images.unsplash.com/photo-1586297135537-94bc9ba060aa?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1400&q=80" />
+          </IconButton>
+        </React.Fragment>
+      ) : (
+        <React.Fragment>
+          <LoginButton sx={{ mr: 2 }} />
+          <SignupButton sx={{ mr: 2 }} />
+          <IconButton>
+            <FaUserCircle size="48" />
+          </IconButton>
+        </React.Fragment>
+      )}
+    </Flex>
+  );
+};
+
+export const Header: FunctionComponent<GlobalProps> = ({ className = "" }) => {
   //TODO handle signup failure in UI
   return (
     <Flex
@@ -44,25 +74,7 @@ export const Header: FunctionComponent<GlobalProps> = ({ className = "" }) => {
           Dashboard
         </Link>
       </Flex>
-      <Flex
-        sx={{
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexBasis: "max-content",
-        }}
-      >
-        <AuthButton sx={{ marginX: 3 }} />
-        {!token && <SignupButton />}
-        {token ? (
-          <IconButton>
-            <Avatar src="https://images.unsplash.com/photo-1586297135537-94bc9ba060aa?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1400&q=80" />
-          </IconButton>
-        ) : (
-          <IconButton>
-            <FaUserCircle size="48" />
-          </IconButton>
-        )}
-      </Flex>
+      <AuthButtons />
     </Flex>
   );
 };
