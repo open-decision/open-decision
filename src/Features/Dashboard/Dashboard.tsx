@@ -1,18 +1,16 @@
 /**@jsx jsx */
-import { jsx } from "theme-ui";
 import { Table } from "./Table/Table";
-import { Button, Box, Container, Flex, Heading } from "theme-ui";
+import { jsx, Button, Box, Container, Flex, Heading, Spinner } from "theme-ui";
 import AddIcon from "@material-ui/icons/Add";
 import { columns, defaultColumn } from "./Table/TableData";
-// import { useQuery, gql } from "@apollo/client";
 import { allTreeData, GlobalProps } from "types/global";
 import { map, pipe, pathOr } from "remeda";
 import { FunctionComponent } from "react";
+import { useMutation, useQuery } from "urql";
+import gql from "graphql-tag";
 
-import { useQuery } from "urql";
-
-const ALL_TREES = `
-  {
+const ALL_TREES = gql`
+  query ALL_TREES {
     allDecisionTrees {
       edges {
         node {
@@ -26,6 +24,18 @@ const ALL_TREES = `
     }
   }
 `;
+const CREATE_TREE = gql`
+  mutation CREATE_TREE($input: CreateDecisionTreeMutationInput!) {
+    createTree(input: $input) {
+      tree {
+        id
+        name
+        extraData
+        tags
+      }
+    }
+  }
+`;
 
 //FIXME username is hardcoded
 export const Dashboard: FunctionComponent<GlobalProps> = ({
@@ -34,6 +44,8 @@ export const Dashboard: FunctionComponent<GlobalProps> = ({
   const [{ data, fetching, error }] = useQuery<allTreeData>({
     query: ALL_TREES,
   });
+
+  const [, createTree] = useMutation(CREATE_TREE);
 
   const treeData = pipe(
     data,
@@ -69,6 +81,13 @@ export const Dashboard: FunctionComponent<GlobalProps> = ({
             boxShadow: 0,
           }}
           variant="large"
+          onClick={() =>
+            createTree({
+              input: {
+                name: "Tes",
+              },
+            }).then((result) => console.log(result))
+          }
         >
           <AddIcon />
           Neuen Baum hinzufügen
@@ -85,7 +104,7 @@ export const Dashboard: FunctionComponent<GlobalProps> = ({
           {error ? (
             <p>Error :(</p>
           ) : fetching ? (
-            <h1>Loading ...</h1>
+            <Spinner />
           ) : (
             <Table
               columns={columns}
