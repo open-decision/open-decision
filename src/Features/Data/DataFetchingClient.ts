@@ -1,11 +1,14 @@
-import { createClient } from "urql";
+import { createClient, defaultExchanges } from "urql";
+import { devtoolsExchange } from "@urql/devtools";
 
+const getToken = () => localStorage.getItem("authToken");
 export const client = createClient({
   url: "https://builder.open-decision.org/graphql",
+  exchanges: [devtoolsExchange, ...defaultExchanges],
   fetchOptions: () => {
-    const token = localStorage.getItem("authToken");
+    const token = getToken();
     return {
-      headers: { authorization: token ? `Bearer ${token}` : "" },
+      headers: { authorization: token ? `JWT ${token}` : "" },
     };
   },
 });
