@@ -92,7 +92,7 @@ export const Table: FunctionComponent<TableProps> = ({
               <div {...row.getRowProps()} sx={{ my: 2 }} key={row.id}>
                 {row.cells.map((cell) => {
                   return (
-                    <Text {...cell.getCellProps()} key={cell.row.id}>
+                    <Text {...cell.getCellProps()} key={cell.value}>
                       {cell.render("Cell")}
                     </Text>
                   );
