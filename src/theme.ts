@@ -12,7 +12,7 @@ const tokens: Theme = {
     background: "#fff",
     primary: "blue",
     secondary: "red",
-    tertiary: { primary: "#54DE95", contrast: "#0D6336" },
+    tertiary: { primary: "#54DE95", contrast: "#123523" },
     grays: ["#FAFAFA", "#F0F0F0", "#E5E5E5", "#818181", "#66615B"],
   },
   space: [
@@ -100,6 +100,9 @@ const tokens: Theme = {
   forms: {
     label: {
       fontFamily: "body",
+      display: "flex",
+      flexDirection: "column",
+      fontSize: 4,
     },
     input: {
       fontFamily: "body",
@@ -116,6 +119,10 @@ const tokens: Theme = {
   layout: {
     container: {
       maxWidth: "1000px",
+    },
+    stack: {
+      display: "grid",
+      gridGap: 3,
     },
   },
   cards: {
