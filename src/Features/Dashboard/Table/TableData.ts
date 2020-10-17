@@ -15,21 +15,18 @@ export const columns: Column<Record<string, unknown>>[] = [
     disableSortBy: true,
     width: 200,
     Cell: TagCell,
-    // Filter: SelectColumnFilter,
   },
   {
     Header: "ERSTELLT",
     accessor: "createdAt",
     filter: "fuzzyText",
     width: 100,
-    // style: { textAlign: "right" },
     Cell: DateCell,
   },
   {
     Header: "BEARBEITEN",
     accessor: "id",
     disableSortBy: true,
-    // style: { textAlign: "right" },
     Cell: ActionsCell,
   },
 ];

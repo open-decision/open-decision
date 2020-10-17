@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { jsx } from "theme-ui";
+import { Container, jsx } from "theme-ui";
 import { Switch, Route } from "react-router-dom";
 import { Layout } from "./components";
 import { Dashboard, ProtectedRoute, Builder, Login } from "./Features";
@@ -10,15 +10,9 @@ export const App: FunctionComponent = () => {
     <Switch>
       <Layout>
         <Route path="/" exact>
-          <div
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
+          <Container>
             <h1>Unauthenticated Homepage</h1>
-          </div>
+          </Container>
         </Route>
         <Route path="/login">
           <Login />

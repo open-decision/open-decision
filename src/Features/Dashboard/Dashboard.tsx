@@ -1,54 +1,37 @@
 /**@jsx jsx */
-import { jsx } from "theme-ui";
 import { Table } from "./Table/Table";
-import { Button, Box, Container, Flex, Heading } from "theme-ui";
+import { jsx, Button, Box, Container, Flex, Heading, Spinner } from "theme-ui";
 import AddIcon from "@material-ui/icons/Add";
 import { columns, defaultColumn } from "./Table/TableData";
-// import { useQuery, gql } from "@apollo/client";
-import { allTreeData, GlobalProps } from "types/global";
-import { map, pipe, pathOr } from "remeda";
+import { GlobalProps } from "types/global";
 import { FunctionComponent } from "react";
+import {
+  All_TreesQuery,
+  useAll_TreesQuery,
+  useCreate_TreeMutation,
+} from "../../generated/graphql";
+import * as E from "fp-ts/Either";
+import { Either } from "fp-ts/Either";
+import { identity, pipe } from "fp-ts/lib/function";
+import { hasPath } from "ramda";
+import { TreeNodes } from "./dashboard.graphql";
 
-import { useQuery } from "urql";
-
-const ALL_TREES = `
-  {
-    allDecisionTrees {
-      edges {
-        node {
-          id
-          name
-          slug
-          tags
-          createdAt
-        }
-      }
-    }
-  }
-`;
+const getTreeData = (data: All_TreesQuery): Either<[], TreeNodes> =>
+  hasPath(["allDecisionTrees", "edges"])(data)
+    ? E.right(data.allDecisionTrees.edges.map((x) => x.node))
+    : E.left([]);
 
 //FIXME username is hardcoded
 export const Dashboard: FunctionComponent<GlobalProps> = ({
   className = "",
 }) => {
-  const [{ data, fetching, error }] = useQuery<allTreeData>({
-    query: ALL_TREES,
-  });
+  const [{ data, fetching, error }] = useAll_TreesQuery();
+  const [, createTree] = useCreate_TreeMutation();
 
-  const treeData = pipe(
-    data,
-    pathOr(["allDecisionTrees", "edges"], []),
-    map((x) => x.node)
-  );
+  const treeData = pipe(data, getTreeData, E.fold(identity, identity));
 
   return (
-    <Flex
-      className={className}
-      sx={{
-        bg: "grays.2",
-        flexDirection: "column",
-      }}
-    >
+    <Flex className={className} sx={{ bg: "grays.2", flexDirection: "column" }}>
       <Container
         sx={{
           flex: "1 1 40%",
@@ -69,23 +52,25 @@ export const Dashboard: FunctionComponent<GlobalProps> = ({
             boxShadow: 0,
           }}
           variant="large"
+          onClick={() =>
+            createTree({
+              input: {
+                name: "Tes",
+              },
+            }).then((result) => console.log(result))
+          }
         >
           <AddIcon />
           Neuen Baum hinzufügen
         </Button>
       </Container>
 
-      <Box
-        sx={{
-          bg: "grays.1",
-          flex: "1 1 60%",
-        }}
-      >
+      <Box sx={{ bg: "grays.1", flex: "1 1 60%" }}>
         <Container>
           {error ? (
             <p>Error :(</p>
           ) : fetching ? (
-            <h1>Loading ...</h1>
+            <Spinner />
           ) : (
             <Table
               columns={columns}

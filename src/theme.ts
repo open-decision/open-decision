@@ -2,19 +2,47 @@ import { roboto } from "@theme-ui/presets";
 import { Theme } from "theme-ui";
 
 const tokens: Theme = {
-  fonts: {
-    body: "Roboto, sans-serif",
-    heading: '"Roboto Condensed", sans-serif',
-    monospace: "Menlo, monospace",
-  },
+  useColorSchemeMediaQuery: true,
+
   colors: {
     text: "#000",
     background: "#fff",
     primary: "blue",
     secondary: "red",
-    tertiary: { primary: "#54DE95", contrast: "#0D6336" },
+    tertiary: { primary: "#54DE95", contrast: "#123523" },
     grays: ["#FAFAFA", "#F0F0F0", "#E5E5E5", "#818181", "#66615B"],
   },
+
+  fonts: {
+    body: "Roboto, sans-serif",
+    heading: '"Roboto Condensed", sans-serif',
+    monospace: "Menlo, monospace",
+  },
+
+  fontWeights: { body: 400, heading: 700, bold: 700 },
+
+  fontSizes: [
+    "0.7rem",
+    "0.9rem",
+    "1rem",
+    "1.25rem",
+    "1.5rem",
+    "2rem",
+    "3rem",
+    "4rem",
+    "8rem",
+  ],
+
+  lineHeights: {
+    body: 1.5,
+    heading: 1.125,
+  },
+
+  letterSpacings: {
+    body: "normal",
+    caps: "0.2em",
+  },
+
   space: [
     0,
     "0.25rem",
@@ -27,17 +55,7 @@ const tokens: Theme = {
     "16rem",
     "32rem",
   ],
-  fontSizes: [
-    "0.7rem",
-    "0.9rem",
-    "1rem",
-    "1.25rem",
-    "1.5rem",
-    "2rem",
-    "3rem",
-    "4rem",
-    "8rem",
-  ],
+
   radii: [
     "0",
     "0.5rem",
@@ -50,6 +68,7 @@ const tokens: Theme = {
     "4rem",
     "8rem",
   ],
+
   shadows: [
     "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)",
     "0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)",
@@ -57,6 +76,7 @@ const tokens: Theme = {
     "0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)",
     "0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22)",
   ],
+
   text: {
     default: {
       fontFamily: "body",
@@ -69,7 +89,6 @@ const tokens: Theme = {
     headingLarge: {
       variant: "text.heading",
       fontSize: 5,
-      my: 3,
     },
   },
 
@@ -88,6 +107,7 @@ const tokens: Theme = {
     },
     icon: { width: 48, height: 48, borderRadius: 99999 },
   },
+
   badges: {
     primary: {
       fontFamily: "body",
@@ -97,9 +117,13 @@ const tokens: Theme = {
       fontSize: 0,
     },
   },
+
   forms: {
     label: {
       fontFamily: "body",
+      display: "flex",
+      flexDirection: "column",
+      fontSize: 4,
     },
     input: {
       fontFamily: "body",
@@ -113,29 +137,38 @@ const tokens: Theme = {
       },
     },
   },
+
   layout: {
     container: {
       maxWidth: "1000px",
     },
+    stack: {
+      display: "grid",
+      gridGap: 3,
+    },
+    centered: { display: "flex" },
   },
+
   cards: {
     primary: {
       p: 3,
       border: "1px solid black",
     },
   },
-  images: {
-    avatar: {
-      width: 48,
-      height: 48,
-      borderRadius: 99999,
-    },
-  },
+
   links: {
     nav: {
       fontWeight: "bold",
       color: "inherit",
       textDecoration: "none",
+    },
+  },
+
+  images: {
+    avatar: {
+      width: 48,
+      height: 48,
+      borderRadius: 99999,
     },
   },
 };

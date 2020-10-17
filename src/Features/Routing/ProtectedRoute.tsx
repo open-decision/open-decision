@@ -6,7 +6,7 @@ export const ProtectedRoute: FunctionComponent<RouteProps> = ({
   children,
   ...props
 }) => {
-  const { getToken } = useAuthToken();
+  const [getToken] = useAuthToken();
 
   return (
     <Route

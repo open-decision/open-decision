@@ -10,6 +10,8 @@ export const SignupButton: FunctionComponent<{ className?: string }> = ({
   const [, setToken] = useAuthToken();
   const [, register] = useRegister_UserMutation();
 
+  const data = "text";
+
   const handleRegisterUser = () =>
     register({
       email: "test@outlook.com",

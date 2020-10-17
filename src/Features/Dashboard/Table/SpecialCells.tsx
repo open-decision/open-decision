@@ -3,7 +3,7 @@
 /**@jsx jsx */
 import { Box, Flex, IconButton, jsx } from "theme-ui";
 import React from "react";
-import { Tags } from "../Tag";
+import { Tags } from "./Tag";
 import { AddBoxTwoTone, DeleteTwoTone, EditTwoTone } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 import { parseISO, formatWithOptions } from "date-fns/esm/fp";
@@ -12,23 +12,21 @@ import { CellProps } from "react-table";
 import { Tag } from "../../../types/global";
 
 export const TagCell: React.FC<CellProps<Tag>> = ({ cell: { value } }) => (
-  <Flex sx={{ alignItems: "center", justifyContent: "space-between" }}>
-    {value && (
-      <React.Fragment>
-        <Tags values={value} />
-        <IconButton>
-          <AddBoxTwoTone />
-        </IconButton>
-      </React.Fragment>
-    )}
+  <Flex sx={{ justifyContent: "space-between" }}>
+    {value && <Tags values={value} />}
+    <IconButton>
+      <AddBoxTwoTone />
+    </IconButton>
   </Flex>
 );
 
-export const DateCell: React.FC<CellProps<any>> = ({ cell: { value } }) => (
-  <span>{formatWithOptions({ locale: de })("P")(parseISO(value))}</span>
-);
+export const DateCell: React.FC<CellProps<any, string>> = ({
+  cell: { value },
+}) => <span>{formatWithOptions({ locale: de })("P")(parseISO(value))}</span>;
 
-export const ActionsCell: React.FC<CellProps<any>> = ({ cell: { value } }) => {
+export const ActionsCell: React.FC<CellProps<any, string>> = ({
+  cell: { value },
+}) => {
   return (
     <Box sx={{ "& > *:not(:last-child)": { mr: 3 } }}>
       <Link

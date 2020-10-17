@@ -5,7 +5,6 @@ import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "theme-ui";
 import { App } from "./App";
 import theme from "./theme";
-// import { ApolloProvider } from "@apollo/client";
 import { client } from "./Features/Data/DataFetchingClient";
 import { Provider } from "urql";
 
