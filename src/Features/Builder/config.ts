@@ -16,34 +16,6 @@ config
     ],
   })
   .addPortType({
-    type: "question",
-    name: "question",
-    label: "Frage",
-    color: Colors.orange,
-    controls: [
-      Controls.select({
-        name: "question",
-        label: "Frage",
-        options: [
-          { value: "Wie geht es ihnen?", label: "Befindlichkeit" },
-          { value: "Haben sie heute schon gefrühstückt?", label: "Frühstück" },
-        ],
-      }),
-    ],
-  })
-  .addPortType({
-    type: "boolean",
-    name: "boolean",
-    label: "Wahr/Falsch",
-    color: Colors.blue,
-    controls: [
-      Controls.checkbox({
-        name: "boolean",
-        label: "Wahr/Falsch",
-      }),
-    ],
-  })
-  .addPortType({
     type: "number",
     name: "number",
     label: "Nummer",
@@ -61,43 +33,17 @@ config
     description: "",
     initialWidth: 140,
     inputs: (ports) => [
-      ports.boolean({
+      ports.string({
         name: "yes_no",
         label: "Ergebnis",
       }),
-      ports.string({
+      ports.number({
         name: "ja",
         label: "Ja",
         hidePort: true,
       }),
-      ports.string({
-        name: "nein",
-        label: "Nein",
-        hidePort: true,
-      }),
     ],
     outputs: (ports) => [ports.string({ label: "Antwort" })],
-  })
-  .addNodeType({
-    type: "question",
-    label: "Frage",
-    description: "Stellen Sie eine Frage and den Nutzer.",
-    initialWidth: 140,
-    inputs: (ports) => [
-      ports.question({
-        label: "Frage",
-        hidePort: true,
-      }),
-      ports.string({
-        label: "1. Antwortmöglichkeit",
-        hidePort: true,
-      }),
-      ports.string({
-        label: "2. Antwortmöglichkeit",
-        hidePort: true,
-      }),
-    ],
-    outputs: (ports) => [ports.boolean({ label: "Antwort" })],
   })
   .addRootNodeType({
     type: "homepage",
