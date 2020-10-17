@@ -1,36 +1,28 @@
 /** @jsx jsx */
 import { Button, jsx } from "theme-ui";
 import { FunctionComponent } from "react";
-// import { useMutation } from "@apollo/client";
-import { REGISTER_USER } from "./authQueries";
 import { useAuthToken } from "./useTokens";
-import { useMutation } from "urql";
-
-type registerUser = {
-  register: {
-    token: string;
-    refreshToken: string;
-  };
-};
+import { useRegister_UserMutation } from "../../generated/graphql";
 
 export const SignupButton: FunctionComponent<{ className?: string }> = ({
   className,
 }) => {
-  const { setToken } = useAuthToken();
-
-  const [, registerUser] = useMutation<registerUser>(REGISTER_USER);
+  const [, setToken] = useAuthToken();
+  const [, register] = useRegister_UserMutation();
 
   const handleRegisterUser = () =>
-    registerUser({
-      email: "test@outlook.de",
-      password1: "fogmub-bifDaj-sarjo8",
-      password2: "fogmub-bifDaj-sarjo8",
+    register({
+      email: "test@outlook.com",
+      password1: "fogmub-bifaj-sarjo8",
+      password2: "fogmub-bifaj-sarjo8",
       username: "",
     }).then(({ data, error }) => {
       if (error) {
         console.error("registerUser failed", error);
       } else {
-        data.register.token ? setToken(data.register.token) : null;
+        data.register.success === false
+          ? console.error(data.register.errors)
+          : setToken(data.register.token);
       }
     });
 

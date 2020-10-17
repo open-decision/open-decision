@@ -1,7 +1,7 @@
-import { gql } from "@apollo/client";
+import gql from "graphql-tag";
 
 export const LOGIN_USER = gql`
-  mutation($email: String!, $password: String!) {
+  mutation LOGIN_USER($email: String!, $password: String!) {
     tokenAuth(email: $email, password: $password) {
       success
       errors
@@ -17,23 +17,8 @@ export const LOGIN_USER = gql`
   }
 `;
 
-export const GET_USER_INFO = gql`
-  query {
-    me {
-      email
-      lastName
-      firstName
-      id
-      dateJoined
-      lastLogin
-      isStaff
-      isActive
-    }
-  }
-`;
-
 export const LOGOUT_USER = gql`
-  mutation($refreshToken: String!) {
+  mutation LOGOUT_USER($refreshToken: String!) {
     revokeToken(refreshToken: $refreshToken) {
       success
       errors
@@ -42,7 +27,7 @@ export const LOGOUT_USER = gql`
 `;
 
 export const REGISTER_USER = gql`
-  mutation(
+  mutation REGISTER_USER(
     $email: String!
     $username: String!
     $password1: String!
