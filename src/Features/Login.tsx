@@ -1,11 +1,46 @@
 /**@jsx jsx */
-import { jsx } from "theme-ui";
+import React from "react";
+import { Input, jsx, Label, Container, Flex } from "theme-ui";
 import { FunctionComponent } from "react";
+import { LoginButton } from "./Auth/LoginButton";
+import { SignupButton } from "./Auth/SignupButton";
 
 export const Login: FunctionComponent = () => {
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+
   return (
-    <div sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+    <Container
+      variant="stack"
+      sx={{
+        justifyContent: "center",
+        alignContent: "center",
+        gridGap: 5,
+      }}
+    >
       <h1>Login</h1>
-    </div>
+      <Label>
+        E-Mail
+        <Input
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          type="email"
+          required
+        />
+      </Label>
+      <Label>
+        Passwort
+        <Input
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          type="password"
+          required
+        />
+      </Label>
+      <Flex sx={{ justifyContent: "space-between" }}>
+        <SignupButton />
+        <LoginButton email={email} password={password} />
+      </Flex>
+    </Container>
   );
 };
