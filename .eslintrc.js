@@ -28,4 +28,5 @@ module.exports = {
       version: "detect",
     },
   },
+  ignorePatterns: ["src/generated/*"],
 };
