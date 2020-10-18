@@ -3,55 +3,25 @@ import { Table } from "./Table/Table";
 import { jsx, Button, Box, Container, Flex, Heading, Spinner } from "theme-ui";
 import AddIcon from "@material-ui/icons/Add";
 import { columns, defaultColumn } from "./Table/TableData";
-import { allTreeData, GlobalProps } from "types/global";
-import { map, pipe, pathOr } from "remeda";
+import { GlobalProps } from "types/global";
+import { map, pipe, pathOr, prop, pick } from "remeda";
 import { FunctionComponent } from "react";
-import { useMutation, useQuery } from "urql";
-import gql from "graphql-tag";
-
-const ALL_TREES = gql`
-  query ALL_TREES {
-    allDecisionTrees {
-      edges {
-        node {
-          id
-          name
-          slug
-          tags
-          createdAt
-        }
-      }
-    }
-  }
-`;
-const CREATE_TREE = gql`
-  mutation CREATE_TREE($input: CreateDecisionTreeMutationInput!) {
-    createTree(input: $input) {
-      tree {
-        id
-        name
-        extraData
-        tags
-      }
-    }
-  }
-`;
+import {
+  useAll_TreesQuery,
+  useCreate_TreeMutation,
+} from "../../generated/graphql";
+import {} from "fp-ts";
 
 //FIXME username is hardcoded
 export const Dashboard: FunctionComponent<GlobalProps> = ({
   className = "",
 }) => {
-  const [{ data, fetching, error }] = useQuery<allTreeData>({
-    query: ALL_TREES,
-  });
+  const [{ data, fetching, error }] = useAll_TreesQuery();
+  const [, createTree] = useCreate_TreeMutation();
 
-  const [, createTree] = useMutation(CREATE_TREE);
+  const treeData = pipe(data, pathOr(["allDecisionTrees", "edges"], []));
 
-  const treeData = pipe(
-    data,
-    pathOr(["allDecisionTrees", "edges"], []),
-    map((x) => x.node)
-  );
+  map(treeData, (x) => x.node);
 
   return (
     <Flex
@@ -106,11 +76,7 @@ export const Dashboard: FunctionComponent<GlobalProps> = ({
           ) : fetching ? (
             <Spinner />
           ) : (
-            <Table
-              columns={columns}
-              data={treeData}
-              defaultColumn={defaultColumn}
-            />
+            <Table columns={columns} data={[]} defaultColumn={defaultColumn} />
           )}
         </Container>
         )

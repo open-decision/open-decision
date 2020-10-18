@@ -10,7 +10,7 @@
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack-dev-server --color --env.NODE_ENV=development",
+    "dev": "graphql-codegen --config codegen.yml && webpack-dev-server --color --env.NODE_ENV=development",
     "build": "webpack --color --env.NODE_ENV=production",
     "codegen": "graphql-codegen --config codegen.yml"
   },
@@ -76,6 +76,7 @@
     "core-js": "^3.6.5",
     "date-fns": "^2.16.1",
     "flume": "^0.5.1",
+    "fp-ts": "^2.8.4",
     "graphql": "^15.3.0",
     "graphql-tag": "^2.11.0",
     "match-sorter": "^4.2.1",
