@@ -28,7 +28,7 @@ function buildDevelopementConfig(env, dirname) {
       rules: [
         {
           test: /\.[jt]sx?$/,
-          include: dirname + "/src",
+          include: /(\/|\\)src/,
           use: {
             loader: "babel-loader",
             options: {
