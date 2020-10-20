@@ -4,7 +4,7 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 
-export function buildProductionConfig(env, dirname) {
+export function buildProductionConfig(env: any, dirname: any) {
   console.log("Start build for NODE_ENV: ", env.NODE_ENV);
 
   return {

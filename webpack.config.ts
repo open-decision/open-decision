@@ -3,7 +3,7 @@ const path = require("path");
 const developmentConfig = require("./webpack/development");
 const productionConfig = require("./webpack/production");
 
-module.exports = (env) => {
+module.exports = (env: any) => {
   if (env.NODE_ENV === "production")
     return productionConfig(env, path.resolve(__dirname));
 

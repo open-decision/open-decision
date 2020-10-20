@@ -6,9 +6,10 @@ module.exports = {
   },
   parser: "@typescript-eslint/parser",
   parserOptions: {
-    ecmaVersion: 2018,
+    ecmaVersion: 12,
     ecmaFeatures: { jsx: true },
     sourceType: "module",
+    project: "tsconfig.eslint.json",
   },
   plugins: ["react", "@typescript-eslint", "jsx-a11y"],
   extends: [
@@ -21,7 +22,16 @@ module.exports = {
   rules: {
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",
+    "@typescript-eslint/no-unsafe-assignment": "off",
+    "@typescript-eslint/no-unsafe-return": "off",
+    "@typescript-eslint/no-explicit-any": "off",
   },
+  overrides: [
+    {
+      files: "test/**/*.ts",
+      env: { node: true, jest: true },
+    },
+  ],
   settings: {
     react: {
       pragma: "React",

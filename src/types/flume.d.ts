@@ -199,7 +199,7 @@ declare module "flume" {
     resetLoops: (maxLoops: any) => void;
     checkLoops: () => void;
     getRootNode: (nodes: any) => any;
-    reduceRootInputs: (inputs: any, callback: any) => {};
+    reduceRootInputs: (inputs: any, callback: any) => Record<string, unknown>;
     resolveInputValues: (
       node: any,
       nodeType: any,
@@ -207,7 +207,7 @@ declare module "flume" {
       context: any
     ) => any;
     getValueOfConnection: (connection: any, nodes: any, context: any) => any;
-    resolveRootNode(nodes: any, options?: {}): any;
+    resolveRootNode(nodes: any, options?: Record<string, unknown>): any;
   }
 
   export class FlumeConfig {

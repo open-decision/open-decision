@@ -3,7 +3,7 @@ const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin"
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
-function buildDevelopementConfig(env, dirname) {
+function buildDevelopementConfig(env: any, dirname: any) {
   console.log("Start build for NODE_ENV: ", env.NODE_ENV);
 
   return {
