@@ -12,10 +12,11 @@ import {
   useFlexLayout,
   Column,
 } from "react-table";
-import { treeObject, GlobalProps } from "types/global";
+import { GlobalProps } from "types/global";
+import { TreeNodes } from "../dashboard.graphql";
 
 type TableProps = {
-  data: treeObject[];
+  data: TreeNodes;
   columns: Column[];
   defaultColumn: Partial<Column>;
 } & GlobalProps;
@@ -53,13 +54,7 @@ export const Table: FunctionComponent<TableProps> = ({
         setGlobalFilter={setGlobalFilter}
         globalFilter={globalFilter}
       />
-      <div
-        {...getTableProps()}
-        sx={{
-          width: "100%",
-        }}
-        className={className}
-      >
+      <div {...getTableProps()} sx={{ width: "100%" }} className={className}>
         <div>
           {headerGroups.map((headerGroup) => (
             <div {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>

@@ -3,7 +3,6 @@ import { devtoolsExchange } from "@urql/devtools";
 
 const getToken = () => localStorage.getItem("authToken");
 
-console.log(getToken());
 export const client = createClient({
   url: "https://builder.open-decision.org/graphql",
   exchanges: [devtoolsExchange, ...defaultExchanges],

@@ -4,13 +4,22 @@ import { jsx, Button, Box, Container, Flex, Heading, Spinner } from "theme-ui";
 import AddIcon from "@material-ui/icons/Add";
 import { columns, defaultColumn } from "./Table/TableData";
 import { GlobalProps } from "types/global";
-import { map, pipe, pathOr, prop, pick } from "remeda";
 import { FunctionComponent } from "react";
 import {
+  All_TreesQuery,
   useAll_TreesQuery,
   useCreate_TreeMutation,
 } from "../../generated/graphql";
-import {} from "fp-ts";
+import * as E from "fp-ts/Either";
+import { Either } from "fp-ts/Either";
+import { identity, pipe } from "fp-ts/lib/function";
+import { hasPath } from "ramda";
+import { TreeNodes } from "./dashboard.graphql";
+
+const getTreeData = (data: All_TreesQuery): Either<[], TreeNodes> =>
+  hasPath(["allDecisionTrees", "edges"])(data)
+    ? E.right(data.allDecisionTrees.edges.map((x) => x.node))
+    : E.left([]);
 
 //FIXME username is hardcoded
 export const Dashboard: FunctionComponent<GlobalProps> = ({
@@ -19,18 +28,10 @@ export const Dashboard: FunctionComponent<GlobalProps> = ({
   const [{ data, fetching, error }] = useAll_TreesQuery();
   const [, createTree] = useCreate_TreeMutation();
 
-  const treeData = pipe(data, pathOr(["allDecisionTrees", "edges"], []));
-
-  map(treeData, (x) => x.node);
+  const treeData = pipe(data, getTreeData, E.fold(identity, identity));
 
   return (
-    <Flex
-      className={className}
-      sx={{
-        bg: "grays.2",
-        flexDirection: "column",
-      }}
-    >
+    <Flex className={className} sx={{ bg: "grays.2", flexDirection: "column" }}>
       <Container
         sx={{
           flex: "1 1 40%",
@@ -64,19 +65,18 @@ export const Dashboard: FunctionComponent<GlobalProps> = ({
         </Button>
       </Container>
 
-      <Box
-        sx={{
-          bg: "grays.1",
-          flex: "1 1 60%",
-        }}
-      >
+      <Box sx={{ bg: "grays.1", flex: "1 1 60%" }}>
         <Container>
           {error ? (
             <p>Error :(</p>
           ) : fetching ? (
             <Spinner />
           ) : (
-            <Table columns={columns} data={[]} defaultColumn={defaultColumn} />
+            <Table
+              columns={columns}
+              data={treeData}
+              defaultColumn={defaultColumn}
+            />
           )}
         </Container>
         )
