@@ -26,7 +26,11 @@ export function buildProductionConfig(env: any, dirname: any) {
           use: {
             loader: "babel-loader",
             options: {
-              plugins: ["emotion", "@babel/plugin-syntax-dynamic-import"],
+              plugins: [
+                "emotion",
+                "@babel/plugin-syntax-dynamic-import",
+                "@babel/plugin-proposal-optional-chaining",
+              ],
               presets: [
                 [
                   "@babel/preset-env",

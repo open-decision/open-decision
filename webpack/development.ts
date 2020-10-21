@@ -36,6 +36,7 @@ function buildDevelopementConfig(env: any, dirname: any) {
                 "react-refresh/babel",
                 "emotion",
                 "@babel/plugin-syntax-dynamic-import",
+                "@babel/plugin-proposal-optional-chaining",
               ],
               presets: ["@babel/preset-react", "@babel/preset-typescript"],
             },
