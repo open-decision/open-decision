@@ -13,7 +13,7 @@
     "dev": "graphql-codegen --config codegen.yml && webpack-dev-server --color --env.NODE_ENV=development",
     "build": "webpack --color --env.NODE_ENV=production",
     "codegen": "graphql-codegen --config codegen.yml",
-    "lint": "eslint src --ext js,ts"
+    "lint": "eslint src --ext js,ts,tsx"
   },
   "keywords": [],
   "author": "Philipp Garbowsky <phil.garbowsky@philtech.dev>",
