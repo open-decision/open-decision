@@ -3,7 +3,6 @@ import React from "react";
 import { Input, jsx, Label, Container, Flex } from "theme-ui";
 import { FunctionComponent } from "react";
 import { LoginButton } from "./Auth/LoginButton";
-import { SignupButton } from "./Auth/SignupButton";
 
 export const Login: FunctionComponent = () => {
   const [email, setEmail] = React.useState("");
@@ -38,7 +37,6 @@ export const Login: FunctionComponent = () => {
         />
       </Label>
       <Flex sx={{ justifyContent: "space-between" }}>
-        <SignupButton />
         <LoginButton email={email} password={password} />
       </Flex>
     </Container>
