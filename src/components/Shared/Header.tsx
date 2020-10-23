@@ -13,7 +13,7 @@ import { Link } from "./InternalLink";
 import { FunctionComponent } from "react";
 import { GlobalProps } from "types/global";
 
-const AuthButtons = ({ className }: { className?: string }) => {
+const AuthButtons: FunctionComponent<GlobalProps> = ({ className }) => {
   const [getToken] = useAuthToken();
   const token = getToken();
 
@@ -39,17 +39,18 @@ const AuthButtons = ({ className }: { className?: string }) => {
   );
 };
 
-export const Header: FunctionComponent<GlobalProps> = ({ className = "" }) => {
+export const Header: FunctionComponent<GlobalProps> = ({ className }) => {
   //TODO handle signup failure in UI
   return (
     <Flex
+      variant="container"
+      bg="grays.1"
+      px={6}
+      py={3}
       sx={{
         justifyContent: "space-between",
         flexDirection: "row",
         alignItems: "center",
-        paddingX: 6,
-        paddingY: 3,
-        bg: "grays.1",
       }}
       className={className}
     >
@@ -61,12 +62,7 @@ export const Header: FunctionComponent<GlobalProps> = ({ className = "" }) => {
           open <span sx={{ color: "secondary" }}>decision</span>
         </Heading>
       </Link>
-      <Flex
-        sx={{
-          flex: "1 1 20%",
-          justifyContent: "flex-end",
-        }}
-      >
+      <Flex sx={{ flex: "1 1 20%", justifyContent: "flex-end" }}>
         <Link variant="nav" to="/builder" sx={{ marginX: 4 }}>
           Builder
         </Link>
