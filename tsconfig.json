@@ -1,17 +1,21 @@
 {
+  "include": ["src"],
   "compilerOptions": {
-    "noEmit": true /* Most important thing: will not compile anything */,
-    "jsx": "preserve" /* Do not compile your JSX */,
-    "allowSyntheticDefaultImports": true,
-    "target": "ES2018",
-    "strict": true,
-    "alwaysStrict": true,
-    "strictNullChecks": true,
+    "module": "esnext",
+    "target": "esnext",
     "moduleResolution": "node",
+    "jsx": "preserve",
     "baseUrl": "./src",
-    "sourceMap": true,
-    "allowJs": true,
-    "skipLibCheck": true
-  },
-  "include": ["src"]
+    /* paths - If you configure Snowpack import aliases, add them here. */
+    "paths": { "@internalTypes/*": ["types/*"] },
+    /* noEmit - Snowpack builds (emits) files, not tsc. */
+    "noEmit": true,
+    /* Additional Options */
+    // "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "importsNotUsedAsValues": "remove"
+  }
 }

@@ -10,10 +10,7 @@
     "plugin:jsx-a11y/recommended",
     "plugin:react-hooks/recommended"
   ],
-  "env": {
-    "browser": true,
-    "es6": true
-  },
+  "env": { "browser": true, "es6": true },
   "globals": {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly"
@@ -21,9 +18,7 @@
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2020,
-    "ecmaFeatures": {
-      "jsx": true
-    },
+    "ecmaFeatures": { "jsx": true },
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
@@ -35,11 +30,6 @@
     "@typescript-eslint/no-unsafe-return": "off",
     "@typescript-eslint/no-explicit-any": "off"
   },
-  "settings": {
-    "react": {
-      "pragma": "React",
-      "version": "detect"
-    }
-  },
-  "ignorePatterns": ["src/generated/*"]
+  "settings": { "react": { "pragma": "React", "version": "detect" } },
+  "ignorePatterns": ["src/types/generated/*"]
 }
