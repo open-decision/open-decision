@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { Container, jsx } from "theme-ui";
 import { Switch, Route } from "react-router-dom";
-import { Layout } from "./components";
+import { Layout } from "@components/index";
 import { Dashboard, ProtectedRoute, Login, Builder } from "./Features";
 import { FunctionComponent } from "react";
 

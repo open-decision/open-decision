@@ -2,13 +2,12 @@
 import React from "react";
 import { Heading, jsx, Avatar, Flex, IconButton } from "theme-ui";
 import { FaUserCircle } from "react-icons/fa";
-// import { IconButton } from "@material-ui/core";
 import {
   LoginButton,
   LogoutButton,
   SignupButton,
   useAuthToken,
-} from "../../Features";
+} from "../Features";
 import { Link } from "./InternalLink";
 import { FunctionComponent } from "react";
 import { GlobalProps } from "@internalTypes/global";
