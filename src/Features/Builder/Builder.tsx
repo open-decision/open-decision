@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { Flex } from "theme-ui";
-import { NodeEditor } from "flume";
+import { NodeEditor } from "flume-test";
 import config from "./config";
 
 export const Builder: FunctionComponent<Record<string, unknown>> = () => {

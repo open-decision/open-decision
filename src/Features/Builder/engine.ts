@@ -1,4 +1,4 @@
-import { RootEngine } from "flume";
+import { RootEngine } from "flume-test";
 import config from "./config";
 
 const resolvePorts = (portType, data) => {

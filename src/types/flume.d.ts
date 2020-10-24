@@ -1,4 +1,4 @@
-declare module "flume" {
+declare module "flume-test" {
   export enum Colors {
     yellow,
     orange,
