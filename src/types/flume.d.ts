@@ -68,7 +68,7 @@ declare module "flume" {
   }
 
   interface PortBuilderType {
-    type: string;
+    type?: string;
     name?: string;
     label?: string;
     noControls?: boolean;
@@ -81,8 +81,8 @@ declare module "flume" {
     type: string;
     label?: string;
     initialWidth?: number;
-    inputs?: ((ports: any) => PortBuilderType[]) | PortBuilderType[];
-    outputs?: ((ports: any) => PortBuilderType[]) | PortBuilderType[];
+    inputs?: ((ports: PortTypes) => PortBuilderType[]) | PortBuilderType[];
+    outputs?: ((ports: PortTypes) => PortBuilderType[]) | PortBuilderType[];
     root?: boolean;
     addable?: boolean;
     deletable?: boolean;
@@ -134,16 +134,25 @@ declare module "flume" {
     y: number;
   }
 
-  interface Nodes {
+  type Nodes = {
     [id: string]: Node;
-  }
+  };
 
-  interface Comments {
+  type Comments = {
     [id: string]: Comment;
+  };
+
+  interface PortConfig {
+    name?: string;
+    label?: string;
+    hidePort?: boolean;
+    color?: string;
+    controls?: any;
+    noControls?: boolean;
   }
 
   interface PortTypes {
-    [id: string]: PortType;
+    [id: string]: (config?: PortConfig) => PortBuilderType;
   }
 
   interface NodeTypes {

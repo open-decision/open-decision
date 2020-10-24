@@ -1,0 +1,34 @@
+body {
+  max-width: none;
+  padding: 0;
+}
+
+@tailwind base;
+@tailwind components;
+
+:is(button, a, input):focus {
+  @apply outline-none ring;
+}
+
+.menu-link {
+  @apply text-sm font-semibold p-3 rounded-lg hover:shadow-inner hover:bg-gray-300;
+}
+
+@screen md {
+  .menu-link {
+    @apply text-lg font-bold;
+  }
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr min(theme("screens.lg"), 100%) 1fr;
+  grid-template-rows: max-content 1fr;
+}
+@tailwind utilities;
+
+@layer utilities {
+  .flex-basis-0 {
+    flex-basis: 0;
+  }
+}

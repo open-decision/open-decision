@@ -1,0 +1,14 @@
+overwrite: true
+schema: "https://builder.open-decision.org/graphql"
+documents: "src/**/*.gql"
+generates:
+  src/types/generated/graphql.tsx:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-urql"
+    config:
+      withHooks: true
+  src/types/generated/graphql.schema.json:
+    plugins:
+      - "introspection"

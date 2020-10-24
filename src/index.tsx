@@ -2,21 +2,20 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "regenerator-runtime/runtime";
 import { BrowserRouter } from "react-router-dom";
-import { ThemeProvider } from "theme-ui";
 import { App } from "./App";
-import theme from "./theme";
-import { client } from "./Features/Data/DataFetchingClient";
+import { client } from "./features/Data/DataFetchingClient";
 import { Provider } from "urql";
+import { AuthProvider } from "./features/Auth/AuthContext";
 
 const AppContext = () => {
   return (
-    <BrowserRouter>
-      <Provider value={client}>
-        <ThemeProvider theme={theme}>
+    <Provider value={client}>
+      <AuthProvider>
+        <BrowserRouter>
           <App />
-        </ThemeProvider>
-      </Provider>
-    </BrowserRouter>
+        </BrowserRouter>
+      </AuthProvider>
+    </Provider>
   );
 };
 

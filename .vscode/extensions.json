@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "bradlc.vscode-tailwindcss",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "Gruntfuggly.todo-tree",
+    "ms-vsliveshare.vsliveshare-pack",
+    "eamodio.gitlens",
+    "GraphQL.vscode-graphql",
+  ]
+}

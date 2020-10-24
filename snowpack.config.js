@@ -1,19 +1,21 @@
+/** @type {import("snowpack").SnowpackUserConfig } */
+
 module.exports = {
   mount: { public: "/", src: "/_dist_" },
   plugins: [
-    "@snowpack/plugin-dotenv",
+    "@snowpack/plugin-postcss",
     "@snowpack/plugin-typescript",
-    "@snowpack/plugin-react-refresh",
-    [
-      "@snowpack/plugin-run-script",
-      { cmd: "eslint 'src/**/*.{js,jsx,ts,tsx}'", watch: 'watch "$1" src' },
-    ],
     "@snowpack/plugin-webpack",
   ],
   install: [],
   installOptions: {},
-  devOptions: { open: "none" },
+  devOptions: { open: "none", port: 3000 },
   buildOptions: {},
   proxy: {},
-  alias: { "@internalTypes": "./src/types" },
+  alias: {
+    "@internalTypes": "./src/types",
+    "@components": "./src/components",
+    "@features": "./src/features",
+    "@utils": "./src/utils",
+  },
 };

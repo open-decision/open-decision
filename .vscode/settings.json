@@ -1,17 +1,15 @@
 {
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
-  },
-  "eslint.options": {
-    "extensions": [".js", ".jsx"]
-  },
+  "tailwindCSS.includeLanguages": { "typescriptreact": "html" },
+  "tailwindCSS.emmetCompletions": true,
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
   "eslint.validate": [
     "javascript",
     "javascriptreact",
     "typescript",
     "typescriptreact"
   ],
-  "typescript.tsserver.experimental.enableProjectDiagnostics": true,
   "todo-tree.highlights.defaultHighlight": {
     "icon": "alert",
     "type": "text",
@@ -57,5 +55,21 @@
     "BUG",
     "TEST",
     "TALK"
-  ]
+  ],
+  "typescript.tsdk": "./node_modules/typescript/lib",
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "node_modules": true,
+    ".*": false,
+    "snowpack*": true,
+    "tailwind*": false,
+    "tsconfig*": false,
+    "postcss*": true,
+    "yarn.lock": true
+  },
+  "explorerExclude.backup": null
 }

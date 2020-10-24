@@ -3,3 +3,6 @@ dist
 # Local Netlify folder
 .netlify
 generated
+build
+yarn-error.log
+tasks.json

@@ -23,7 +23,9 @@
       "skipFiles": ["${workspaceFolder}/node_modules/**/*.js"],
       "webRoot": "${workspaceRoot}",
       "runtimeExecutable": "/usr/bin/google-chrome-unstable",
-      "sourceMaps": true
+      "sourceMapPathOverrides": {
+        "_dist_///*": "*"
+      }
     }
   ]
 }
