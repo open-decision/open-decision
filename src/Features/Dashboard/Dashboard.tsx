@@ -3,13 +3,13 @@ import { Table } from "./Table/Table";
 import { jsx, Button, Box, Container, Flex, Heading, Spinner } from "theme-ui";
 import AddIcon from "@material-ui/icons/Add";
 import { columns, defaultColumn } from "./Table/TableData";
-import { GlobalProps } from "types/global";
+import { GlobalProps } from "@internalTypes/global";
 import { FunctionComponent } from "react";
 import {
   All_TreesQuery,
   useAll_TreesQuery,
   useCreate_TreeMutation,
-} from "../../generated/graphql";
+} from "@internalTypes/generated/graphql";
 import * as E from "fp-ts/Either";
 import { Either } from "fp-ts/Either";
 import { identity, pipe } from "fp-ts/lib/function";

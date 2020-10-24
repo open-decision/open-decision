@@ -8,10 +8,10 @@ import {
   useAsyncDebounce,
 } from "react-table";
 import { jsx, Flex, Input, Label } from "theme-ui";
-import matchSorter from "match-sorter";
+import { matchSorter } from "match-sorter";
 import { readableDate } from "./utils";
 import { parseISO } from "date-fns/esm";
-import { Tag } from "types/global";
+import { Tag } from "@internalTypes/global";
 
 export const GlobalFilter = ({
   globalFilter,

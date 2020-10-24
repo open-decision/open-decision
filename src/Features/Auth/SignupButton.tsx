@@ -2,15 +2,13 @@
 import { Button, jsx } from "theme-ui";
 import { FunctionComponent } from "react";
 import { useAuthToken } from "./useTokens";
-import { useRegister_UserMutation } from "../../generated/graphql";
+import { useRegister_UserMutation } from "@internalTypes/generated/graphql";
 
 export const SignupButton: FunctionComponent<{ className?: string }> = ({
   className,
 }) => {
   const [, setToken] = useAuthToken();
   const [, register] = useRegister_UserMutation();
-
-  const data = "text";
 
   const handleRegisterUser = () =>
     register({

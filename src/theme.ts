@@ -13,12 +13,6 @@ const tokens: Theme = {
     grays: ["#FAFAFA", "#F0F0F0", "#E5E5E5", "#818181", "#66615B"],
   },
 
-  fonts: {
-    body: "Roboto, sans-serif",
-    heading: '"Roboto Condensed", sans-serif',
-    monospace: "Menlo, monospace",
-  },
-
   fontWeights: { body: 400, heading: 700, bold: 700 },
 
   fontSizes: [

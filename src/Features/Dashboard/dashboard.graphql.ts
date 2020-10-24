@@ -1,4 +1,4 @@
-import { DecisionTreeNode } from "generated/graphql";
+import { DecisionTreeNode } from "@internalTypes/generated/graphql";
 import gql from "graphql-tag";
 
 export type TreeNodes = {

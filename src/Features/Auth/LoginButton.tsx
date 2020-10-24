@@ -4,8 +4,8 @@ import { Button, jsx } from "theme-ui";
 import { useHistory, useLocation } from "react-router-dom";
 import { FunctionComponent } from "react";
 import { useAuthToken, useRefreshToken } from "./useTokens";
-import { LocationState } from "types/global";
-import { useLogin_UserMutation } from "../../generated/graphql";
+import { LocationState } from "@internalTypes/global";
+import { useLogin_UserMutation } from "@internalTypes/generated/graphql";
 
 //This type defines the props the LoginButton component accepts
 type Props = {

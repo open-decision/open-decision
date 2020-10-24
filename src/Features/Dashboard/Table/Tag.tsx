@@ -3,7 +3,7 @@ import { jsx } from "theme-ui";
 import { Badge, Box } from "theme-ui";
 import { readableColor } from "polished";
 import { FunctionComponent } from "react";
-import { GlobalProps } from "types/global";
+import { GlobalProps } from "@internalTypes/global";
 
 type TagProps = {
   values: { color: string; name: string }[];

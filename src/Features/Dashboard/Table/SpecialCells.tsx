@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { parseISO, formatWithOptions } from "date-fns/esm/fp";
 import { de } from "date-fns/locale";
 import { CellProps } from "react-table";
-import { Tag } from "../../../types/global";
+import { Tag } from "@internalTypes/global";
 
 export const TagCell: React.FC<CellProps<Tag>> = ({ cell: { value } }) => (
   <Flex sx={{ justifyContent: "space-between" }}>

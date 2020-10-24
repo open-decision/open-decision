@@ -1,7 +1,7 @@
 /**@jsx jsx */
 import React from "react";
 import { Input, jsx, Label, Container, Flex } from "theme-ui";
-import { FunctionComponent } from "react";
+import type { FunctionComponent } from "react";
 import { LoginButton } from "./Auth/LoginButton";
 
 export const Login: FunctionComponent = () => {

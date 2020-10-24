@@ -1,8 +1,8 @@
 /** @jsx jsx */
 import React from "react";
-import { Heading, jsx, Avatar, Flex } from "theme-ui";
+import { Heading, jsx, Avatar, Flex, IconButton } from "theme-ui";
 import { FaUserCircle } from "react-icons/fa";
-import { IconButton } from "@material-ui/core";
+// import { IconButton } from "@material-ui/core";
 import {
   LoginButton,
   LogoutButton,
@@ -11,7 +11,7 @@ import {
 } from "../../Features";
 import { Link } from "./InternalLink";
 import { FunctionComponent } from "react";
-import { GlobalProps } from "types/global";
+import { GlobalProps } from "@internalTypes/global";
 
 const AuthButtons: FunctionComponent<GlobalProps> = ({ className }) => {
   const [getToken] = useAuthToken();
