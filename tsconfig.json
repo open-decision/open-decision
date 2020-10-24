@@ -9,7 +9,8 @@
     /* paths - If you configure Snowpack import aliases, add them here. */
     "paths": {
       "@internalTypes/*": ["types/*"],
-      "@components/*": ["components/*"]
+      "@components/*": ["components/*"],
+      "@features/*": ["features/*"]
     },
     /* noEmit - Snowpack builds (emits) files, not tsc. */
     "noEmit": true,

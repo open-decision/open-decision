@@ -7,7 +7,7 @@ import {
   LogoutButton,
   SignupButton,
   useAuthToken,
-} from "../Features";
+} from "@features/index";
 import { Link } from "./InternalLink";
 import { FunctionComponent } from "react";
 import { GlobalProps } from "@internalTypes/global";

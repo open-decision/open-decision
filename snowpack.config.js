@@ -15,5 +15,9 @@ module.exports = {
   devOptions: { open: "none" },
   buildOptions: {},
   proxy: {},
-  alias: { "@internalTypes": "./src/types", "@components": "./src/components" },
+  alias: {
+    "@internalTypes": "./src/types",
+    "@components": "./src/components",
+    "@features": "./src/features",
+  },
 };

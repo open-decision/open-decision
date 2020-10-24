@@ -2,7 +2,7 @@
 import { Container, jsx } from "theme-ui";
 import { Switch, Route } from "react-router-dom";
 import { Layout } from "@components/index";
-import { Dashboard, ProtectedRoute, Login, Builder } from "./Features";
+import { Dashboard, ProtectedRoute, Login, Builder } from "@features/index";
 import { FunctionComponent } from "react";
 
 export const App: FunctionComponent = () => {
