@@ -22,7 +22,7 @@ type CombinedProps = ThemedUILinkProps &
 // 2. Create a new component with the above type
 const FinalLink: ForwardRef<HTMLAnchorElement, CombinedProps> = ThemeUILink;
 
-export const Link: FunctionComponent<CombinedProps> = ({
+export const InternalLink: FunctionComponent<CombinedProps> = ({
   children,
   ...props
 }) => {
