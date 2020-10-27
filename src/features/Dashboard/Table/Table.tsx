@@ -57,7 +57,9 @@ export const Table: FunctionComponent<TableProps> = ({
       <div {...getTableProps()} sx={{ width: "100%" }} className={className}>
         <div>
           {headerGroups.map((headerGroup) => (
-            <div {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
+            // a key is produced by ...headerGroup.getHEaderGroupProps(), but that confuses eslint
+            // eslint-disable-next-line react/jsx-key
+            <div {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
                 <Heading
                   key={column.id}
@@ -87,7 +89,11 @@ export const Table: FunctionComponent<TableProps> = ({
               <div {...row.getRowProps()} sx={{ my: 2 }} key={row.id}>
                 {row.cells.map((cell) => {
                   return (
-                    <Text {...cell.getCellProps()} key={cell.value}>
+                    <Text
+                      {...cell.getCellProps()}
+                      key={cell.value}
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
                       {cell.render("Cell")}
                     </Text>
                   );
