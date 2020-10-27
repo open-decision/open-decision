@@ -4,15 +4,13 @@ module.exports = {
     "@snowpack/plugin-dotenv",
     "@snowpack/plugin-typescript",
     "@snowpack/plugin-react-refresh",
-    [
-      "@snowpack/plugin-run-script",
-      { cmd: "eslint 'src/**/*.{js,jsx,ts,tsx}'", watch: 'watch "$1" src' },
-    ],
     "@snowpack/plugin-webpack",
+    "@snowpack/plugin-postcss",
+    // "@snowpack/plugin-sass",
   ],
   install: [],
   installOptions: {},
-  devOptions: { open: "none" },
+  devOptions: { open: "none", port: 3000 },
   buildOptions: {},
   proxy: {},
   alias: {

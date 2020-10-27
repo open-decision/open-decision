@@ -4,6 +4,7 @@ import { Switch, Route } from "react-router-dom";
 import { Layout } from "@components/index";
 import { Dashboard, ProtectedRoute, Login, Builder } from "@features/index";
 import { FunctionComponent } from "react";
+import "./index.css";
 
 export const App: FunctionComponent = () => {
   return (
