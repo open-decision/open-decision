@@ -1,16 +1,21 @@
-import { roboto } from "@theme-ui/presets";
 import { Theme } from "theme-ui";
 
-const tokens: Theme = {
+export default theme: Theme = {
   useColorSchemeMediaQuery: true,
 
   colors: {
     text: "#000",
     background: "#fff",
-    primary: "blue",
+    primary: "#54DE95",
     secondary: "red",
-    tertiary: { primary: "#54DE95", contrast: "#123523" },
+    accent: "blue",
     grays: ["#FAFAFA", "#F0F0F0", "#E5E5E5", "#818181", "#66615B"],
+  },
+
+  fonts: {
+    body: "Roboto, sans-serif",
+    heading: '"Roboto Condensed", sans-serif',
+    monospace: "Menlo, monospace",
   },
 
   fontWeights: { body: 400, heading: 700, bold: 700 },
@@ -50,18 +55,7 @@ const tokens: Theme = {
     "32rem",
   ],
 
-  radii: [
-    "0",
-    "0.5rem",
-    "0.8rem",
-    "1rem",
-    "1.25rem",
-    "1.5rem",
-    "2rem",
-    "3rem",
-    "4rem",
-    "8rem",
-  ],
+  radii: ["10%", "25%", "50%"],
 
   shadows: [
     "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)",
@@ -88,24 +82,24 @@ const tokens: Theme = {
 
   buttons: {
     primary: {
-      bg: "tertiary.primary",
-      color: "tertiary.contrast",
+      bg: "primary",
+      color: "text",
       display: "flex",
       placeItems: "center",
-      borderRadius: 1,
+      borderRadius: 0,
     },
     large: {
       variant: "buttons.primary",
       p: 4,
-      borderRadius: 2,
+      borderRadius: 1,
     },
-    icon: { width: 48, height: 48, borderRadius: 99999 },
+    icon: { width: "auto", height: "auto", borderRadius: 2 },
   },
 
   badges: {
     primary: {
       fontFamily: "body",
-      borderRadius: "4px",
+      borderRadius: 0,
       py: 1,
       px: 2,
       fontSize: 0,
@@ -122,10 +116,10 @@ const tokens: Theme = {
     input: {
       fontFamily: "body",
       bg: "grays.0",
-      borderRadius: 1,
+      borderRadius: 0,
     },
     select: {
-      borderRadius: 1,
+      borderRadius: 0,
       "&:focus": {
         border: "2px solid blue",
       },
@@ -155,16 +149,11 @@ const tokens: Theme = {
       fontWeight: "bold",
       color: "inherit",
       textDecoration: "none",
+      fontSize: [1, 3],
     },
   },
 
   images: {
-    avatar: {
-      width: 48,
-      height: 48,
-      borderRadius: 99999,
-    },
+    avatar: {},
   },
 };
-
-export default { ...roboto, ...tokens };
