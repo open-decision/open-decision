@@ -1,14 +1,11 @@
 {
-  "eslint.options": {
-    "extensions": [".js", ".jsx"]
-  },
+  "tailwindCSS.includeLanguages": { "typescriptreact": "html" },
   "eslint.validate": [
     "javascript",
     "javascriptreact",
     "typescript",
     "typescriptreact"
   ],
-  "typescript.tsserver.experimental.enableProjectDiagnostics": true,
   "todo-tree.highlights.defaultHighlight": {
     "icon": "alert",
     "type": "text",
