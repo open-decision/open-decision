@@ -1,7 +1,6 @@
 /**@jsx jsx */
-import { jsx } from "theme-ui";
+import { jsx, Grid } from "theme-ui";
 import { Header } from "./Header";
-import { Grid } from "theme-ui";
 import { FunctionComponent } from "react";
 
 export const Layout: FunctionComponent = ({ children }) => {
