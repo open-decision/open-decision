@@ -3,3 +3,4 @@ dist
 # Local Netlify folder
 .netlify
 generated
+build
