@@ -1,6 +1,6 @@
 import { Theme } from "theme-ui";
 
-export default theme: Theme = {
+export const theme: Theme = {
   useColorSchemeMediaQuery: true,
 
   colors: {

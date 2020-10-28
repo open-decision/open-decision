@@ -4,7 +4,7 @@ import "regenerator-runtime/runtime";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "theme-ui";
 import { App } from "./App";
-import theme from "./theme";
+import { theme } from "./theme";
 import { client } from "./features/Data/DataFetchingClient";
 import { Provider } from "urql";
 

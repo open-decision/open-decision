@@ -6,7 +6,6 @@ module.exports = {
     "@snowpack/plugin-react-refresh",
     "@snowpack/plugin-webpack",
     "@snowpack/plugin-postcss",
-    // "@snowpack/plugin-sass",
   ],
   install: [],
   installOptions: {},
