@@ -1,5 +1,9 @@
 {
   "tailwindCSS.includeLanguages": { "typescriptreact": "html" },
+  "tailwindCSS.emmetCompletions": true,
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
   "eslint.validate": [
     "javascript",
     "javascriptreact",
@@ -51,5 +55,7 @@
     "BUG",
     "TEST",
     "TALK"
-  ]
+  ],
+  "sundial.sunrise": "08:00",
+  "sundial.sunset": "20:00"
 }
