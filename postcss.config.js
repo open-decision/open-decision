@@ -1,10 +1,14 @@
-// @ts-nocheck
+const purgecss = require("@fullhuman/postcss-purgecss");
+const tailwindcss = require("tailwindcss");
+const autoprefixer = require("autoprefixer");
+
 module.exports = {
   plugins: [
-    require("tailwindcss"),
-    require("autoprefixer"),
+    tailwindcss(),
+    autoprefixer(),
     process.env.NODE_ENV === "production" &&
-      require("@fullhuman/postcss-purgecss")({
+      // @ts-ignore
+      purgecss({
         content: ["./src/**/*.tsx", "./src/**/*.jsx", "./public/index.html"],
         defaultExtractor: (content) => content.match(/[A-Za-z0-9-_:/]+/g) || [],
       }),
