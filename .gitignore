@@ -4,3 +4,4 @@ dist
 .netlify
 generated
 build
+yarn-error.log
