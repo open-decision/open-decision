@@ -1,8 +1,8 @@
-/** @jsx jsx */
-import { Button, jsx } from "theme-ui";
+import React from "react";
 import { FunctionComponent } from "react";
 import { useAuthToken } from "./useTokens";
 import { useRegister_UserMutation } from "@internalTypes/generated/graphql";
+import { Button } from "@components/index";
 
 export const SignupButton: FunctionComponent<{ className?: string }> = ({
   className,

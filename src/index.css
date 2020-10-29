@@ -1,5 +1,18 @@
-@tailwind base;
+@import "tailwindcss/base";
+@import "tailwindcss/components";
 
-@tailwind components;
+.menu-link {
+  @apply text-sm font-semibold  p-3 rounded-lg;
+}
 
-@tailwind utilities;
+.menu-link:hover {
+  @apply shadow-inner bg-gray-500;
+}
+
+@screen md {
+  .menu-link {
+    @apply text-lg font-bold;
+  }
+}
+
+@import "tailwindcss/utilities";

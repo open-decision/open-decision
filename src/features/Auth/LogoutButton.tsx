@@ -1,10 +1,9 @@
-/** @jsx jsx */
 import React from "react";
-import { Button, jsx } from "theme-ui";
 import { useHistory } from "react-router-dom";
 import { FunctionComponent } from "react";
 import { useAuthToken, useRefreshToken } from "./useTokens";
 import { useLogout_UserMutation } from "@internalTypes/generated/graphql";
+import { Button } from "@components/index";
 
 export const LogoutButton: FunctionComponent<{ className?: string }> = ({
   className,

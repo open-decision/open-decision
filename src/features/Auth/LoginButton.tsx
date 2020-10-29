@@ -1,11 +1,10 @@
-/** @jsx jsx */
 import React from "react";
-import { Button, jsx } from "theme-ui";
 import { useHistory, useLocation } from "react-router-dom";
 import { FunctionComponent } from "react";
 import { useAuthToken, useRefreshToken } from "./useTokens";
 import { LocationState } from "@internalTypes/global";
 import { useLogin_UserMutation } from "@internalTypes/generated/graphql";
+import { Button } from "@components/index";
 
 //This type defines the props the LoginButton component accepts
 type Props = {
@@ -66,7 +65,7 @@ export const LoginButton: FunctionComponent<Props> = ({
   //FIXME handle Errors in UI
   //This is the Button that is shown in the UI. onClick is called when the user clicks the Button.
   return (
-    <Button onClick={onClickHandler} className={className}>
+    <Button className={className} onClick={onClickHandler}>
       Login
     </Button>
   );

@@ -1,8 +1,8 @@
 /** @jsx jsx */
-import { Container, jsx } from "theme-ui";
+import { jsx } from "theme-ui";
 import { Switch, Route } from "react-router-dom";
 import { Layout } from "@components/index";
-import { Dashboard, ProtectedRoute, Login, Builder } from "@features/index";
+import { Dashboard, ProtectedRoute, LoginForm, Builder } from "@features/index";
 import { FunctionComponent } from "react";
 import "./index.css";
 
@@ -11,12 +11,14 @@ export const App: FunctionComponent = () => {
     <Switch>
       <Layout>
         <Route path="/" exact>
-          <Container>
-            <h1>Unauthenticated Homepage</h1>
-          </Container>
+          <div className="flex justify-center items-center">
+            <h1 className="text-4xl">Unauthenticated Homepage</h1>
+          </div>
         </Route>
         <Route path="/login">
-          <Login />
+          <div className="flex justify-center items-center">
+            <LoginForm />
+          </div>
         </Route>
 
         <ProtectedRoute path="/dashboard">

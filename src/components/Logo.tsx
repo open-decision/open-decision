@@ -1,18 +1,15 @@
-/**@jsx jsx */
-import { FunctionComponent } from "react";
-import { jsx, Heading } from "theme-ui";
+import { GlobalProps } from "@internalTypes/global";
+import React from "react";
 import { InternalLink } from "./InternalLink";
 
-type LogoProps = {
-  accentColor: "primary" | "secondary" | "tertiary";
-};
-
-export const Logo: FunctionComponent<LogoProps> = ({ accentColor }) => {
+export const Logo: React.FC<GlobalProps> = ({ className }) => {
   return (
-    <InternalLink variant="nav" to="/">
-      <Heading as="h1" sx={{ color: "grays.4", fontSize: 5, flex: "1 1 60" }}>
-        open <span sx={{ color: `${accentColor}.0` }}>decision</span>
-      </Heading>
+    <InternalLink to="/">
+      <h1
+        className={`text-gray-800 font-bold text-xl md:text-3xl ${className}`}
+      >
+        open <span className="text-red-500">decision</span>
+      </h1>
     </InternalLink>
   );
 };
