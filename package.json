@@ -28,6 +28,7 @@
     "@babel/preset-react": "^7.12.1",
     "@babel/preset-typescript": "^7.12.1",
     "@babel/runtime": "^7.12.1",
+    "@fullhuman/postcss-purgecss": "^3.0.0",
     "@graphql-codegen/cli": "1.18.0",
     "@graphql-codegen/introspection": "1.18.0",
     "@graphql-codegen/typescript": "1.17.11",
