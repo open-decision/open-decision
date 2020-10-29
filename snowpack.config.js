@@ -3,7 +3,6 @@ module.exports = {
   plugins: [
     "@snowpack/plugin-dotenv",
     "@snowpack/plugin-typescript",
-    "@snowpack/plugin-react-refresh",
     "@snowpack/plugin-webpack",
     "@snowpack/plugin-postcss",
   ],
