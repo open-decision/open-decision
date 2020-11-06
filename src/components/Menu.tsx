@@ -53,7 +53,7 @@ export const Menu: React.FC<UserMenu> = ({
 
         {open ? (
           <Dropdown className={`${className.dropdown}`}>
-            <div className="flex flex-col -m-3 mb-0">
+            <div className="flex flex-col -m-3 mb-0 space-y-4">
               {links.menuLinks.map((link) => (
                 <InternalLink
                   to={link.to}
@@ -71,7 +71,7 @@ export const Menu: React.FC<UserMenu> = ({
               ))}
             </div>
 
-            <div className="flex space-x-6 border-t-2 pt-3 mt-8 border-gray-400">
+            <div className="flex space-x-6 border-t-2 pt-3 mt-6 border-gray-400">
               {links.dropdownButtons}
             </div>
           </Dropdown>
@@ -89,9 +89,7 @@ type Dropdown = {
 export const Dropdown: React.FC<Dropdown> = ({ className = "", children }) => {
   return (
     <div className={`origin-top-right absolute right-0 mt-4 shadow-lg`}>
-      <div
-        className={`px-8 py-6 space-y-4 rounded-md bg-gray-200 ${className}`}
-      >
+      <div className={`px-8 py-6 rounded-md bg-gray-200 ${className}`}>
         {children}
       </div>
     </div>
