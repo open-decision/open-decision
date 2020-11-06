@@ -12,8 +12,7 @@ import {
   useFlexLayout,
   Column,
 } from "react-table";
-import { GlobalProps } from "@internalTypes/global";
-import { TreeNodes } from "../dashboard.graphql";
+import { GlobalProps, TreeNodes } from "@internalTypes/global";
 
 type TableProps = {
   data: TreeNodes;
