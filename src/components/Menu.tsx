@@ -1,11 +1,7 @@
 import React from "react";
 import { IconButton } from "./IconButton";
 import { InternalLink } from "./InternalLink";
-
-const AnonymousUserIcon = new URL(
-  "/assets/icons/account_circle.svg",
-  import.meta.url
-);
+import { UserCircleOutline } from "@graywolfai/react-heroicons";
 
 type Link = { to: string; text: string };
 
@@ -26,7 +22,7 @@ type UserMenu = {
 };
 
 export const Menu: React.FC<UserMenu> = ({
-  icon = AnonymousUserIcon.href,
+  icon,
   alt = "Anonymer User",
   className = { menu: "", dropdown: "", menuIcon: "" },
   links,
@@ -45,11 +41,11 @@ export const Menu: React.FC<UserMenu> = ({
 
       <div className="relative">
         <IconButton
-          icon={icon}
-          alt={alt}
           onClick={() => setOpen(!open)}
           className={`${className.menuIcon}`}
-        />
+        >
+          {icon ? <img src={icon} alt={alt} /> : <UserCircleOutline />}
+        </IconButton>
 
         {open ? (
           <Dropdown className={`${className.dropdown}`}>

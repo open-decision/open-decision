@@ -1,23 +1,25 @@
 //TODO type the cell functions correctly remove next line to see the errors
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/**@jsx jsx */
-import { Box, Flex, IconButton, jsx } from "theme-ui";
 import React from "react";
 import { Tags } from "./Tag";
-import { AddBoxTwoTone, DeleteTwoTone, EditTwoTone } from "@material-ui/icons";
-import { Link } from "react-router-dom";
 import { parseISO, formatWithOptions } from "date-fns/esm/fp";
 import { de } from "date-fns/locale";
 import { CellProps } from "react-table";
 import { Tag } from "@internalTypes/global";
+import { IconButton, IconLink } from "@components/index";
+import {
+  PlusCircleOutline,
+  PencilOutline,
+  TrashOutline,
+} from "@graywolfai/react-heroicons";
 
 export const TagCell: React.FC<CellProps<Tag>> = ({ cell: { value } }) => (
-  <Flex sx={{ justifyContent: "space-between" }}>
+  <div className="justify-between">
     {value && <Tags values={value} />}
     <IconButton>
-      <AddBoxTwoTone />
+      <PlusCircleOutline className="w-6 h-6" />
     </IconButton>
-  </Flex>
+  </div>
 );
 
 export const DateCell: React.FC<CellProps<any, string>> = ({
@@ -26,20 +28,13 @@ export const DateCell: React.FC<CellProps<any, string>> = ({
 
 export const ActionsCell: React.FC<CellProps<any, string>> = ({
   cell: { value },
-}) => {
-  return (
-    <Box sx={{ "& > *:not(:last-child)": { mr: 3 } }}>
-      <Link
-        to={`/builder/${value}`}
-        sx={{
-          textDecoration: "none",
-          color: "initial",
-          ":hover": { color: "primary" },
-        }}
-      >
-        <EditTwoTone />
-      </Link>
-      <DeleteTwoTone sx={{ ":hover": { color: "red" } }} />
-    </Box>
-  );
-};
+}) => (
+  <div className="space-x-3 flex ">
+    <IconLink to={`/builder/${value}`} className="inline">
+      <PencilOutline className="w-6 h-6" />
+    </IconLink>
+    <IconButton className="inline">
+      <TrashOutline className="w-6 h-6" />
+    </IconButton>
+  </div>
+);
