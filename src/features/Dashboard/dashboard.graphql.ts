@@ -1,9 +1,5 @@
-import { DecisionTreeNode } from "@internalTypes/generated/graphql";
 import gql from "graphql-tag";
 
-export type TreeNodes = {
-  __typename?: "DecisionTreeNode";
-} & Pick<DecisionTreeNode, "id" | "name" | "slug" | "tags" | "createdAt">[];
 export const ALL_TREES = gql`
   query ALL_TREES {
     allDecisionTrees {
