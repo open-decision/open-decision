@@ -1,8 +1,20 @@
+@import url("https://cdn.jsdelivr.net/npm/water.css@2/out/water.css");
+
+body {
+  max-width: none;
+  padding: 0;
+}
+
 @tailwind base;
 @tailwind components;
 
+button:focus,
+a:focus {
+  @apply shadow-outline outline-none;
+}
+
 .menu-link {
-  @apply text-sm font-semibold  p-3 rounded-lg;
+  @apply text-sm font-semibold p-3 rounded-lg;
 }
 
 .menu-link:hover {
@@ -13,6 +25,12 @@
   .menu-link {
     @apply text-lg font-bold;
   }
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr min(theme("screens.lg"), 100%) 1fr;
+  grid-template-rows: 8fr 10fr;
 }
 
 @tailwind utilities;
