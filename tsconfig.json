@@ -10,7 +10,8 @@
     "paths": {
       "@internalTypes/*": ["types/*"],
       "@components/*": ["components/*"],
-      "@features/*": ["features/*"]
+      "@features/*": ["features/*"],
+      "@utils/*": ["utils/*"]
     },
     /* noEmit - Snowpack builds (emits) files, not tsc. */
     "noEmit": true,

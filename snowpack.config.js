@@ -15,5 +15,6 @@ module.exports = {
     "@internalTypes": "./src/types",
     "@components": "./src/components",
     "@features": "./src/features",
+    "@utils": "./src/utils",
   },
 };
