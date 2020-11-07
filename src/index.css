@@ -25,6 +25,10 @@ a:focus {
   }
 }
 
+.clickable:active {
+  transform: translateY(2px);
+}
+
 .dashboard-grid {
   display: grid;
   grid-template-columns: 1fr min(theme("screens.lg"), 100%) 1fr;
