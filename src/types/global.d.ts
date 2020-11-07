@@ -1,5 +1,9 @@
 import { DecisionTreeNode } from "./generated/graphql";
+import { FunctionComponent } from "react";
 
+export type Component<T = Record<string, unknown>> = FunctionComponent<
+  T & GlobalProps
+>;
 export type Tag = { name: string; color: string };
 
 export type Tree = {
@@ -25,7 +29,9 @@ export type allTreeData = {
   allDecisionTrees: { edges: { node: treeObject }[] };
 };
 
-export type GlobalProps = { className?: string };
+interface GlobalProps {
+  className?: string;
+}
 
 export type TreeNodes = {
   __typename?: "DecisionTreeNode";
