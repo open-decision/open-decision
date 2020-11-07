@@ -1,12 +1,17 @@
+import { Component } from "@internalTypes/global";
 import React from "react";
 import { Header } from "./Header";
 
-export const Layout: React.FC = ({ children }) => {
+type Layout = {
+  footer?: boolean;
+};
+
+export const Layout: Component<Layout> = ({ children, footer = true }) => {
   return (
     <div className="grid grid-rows-layout h-screen">
       <Header />
       {children}
-      <footer>Footer content</footer>
+      {footer ? <footer>Footer content</footer> : null}
     </div>
   );
 };

@@ -6,3 +6,4 @@ export * from "./IconButton";
 export * from "./Input";
 export * from "./Logo";
 export * from "./Menu";
+export * from "./Field";

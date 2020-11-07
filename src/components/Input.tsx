@@ -1,9 +1,10 @@
 import React from "react";
-import { GlobalProps } from "@internalTypes/global";
+import { Component } from "@internalTypes/global";
 
-type Input = React.FC<
-  React.InputHTMLAttributes<HTMLInputElement> &
-    GlobalProps & { setValue: React.Dispatch<React.SetStateAction<string>> }
+type Input = Component<
+  React.InputHTMLAttributes<HTMLInputElement> & {
+    setValue: React.Dispatch<React.SetStateAction<string>>;
+  }
 >;
 
 export const Input: Input = ({ value, setValue, className = "", ...props }) => (

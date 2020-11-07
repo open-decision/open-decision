@@ -1,8 +1,8 @@
-import { GlobalProps } from "@internalTypes/global";
+import { Component } from "@internalTypes/global";
 import React from "react";
 import { InternalLink } from "./InternalLink";
 
-export const Logo: React.FC<GlobalProps> = ({ className }) => {
+export const Logo: Component = ({ className }) => {
   return (
     <InternalLink to="/">
       <h1

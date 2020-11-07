@@ -12,7 +12,7 @@ type IconButton = React.FC<
 
 const iconVariants = {
   base:
-    "rounded-full w-10 h-10 overflow-hidden border-4 border-gray-100 flex justify-center items-center",
+    "rounded-full w-10 h-10 overflow-hidden border-4 border-gray-100 flex justify-center items-center clickable",
 };
 
 type iconVariants = keyof typeof iconVariants;

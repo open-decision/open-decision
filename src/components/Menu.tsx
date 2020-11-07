@@ -2,6 +2,7 @@ import React from "react";
 import { IconButton } from "./IconButton";
 import { InternalLink } from "./InternalLink";
 import { UserCircleOutline } from "@graywolfai/react-heroicons";
+import { useKeyboardEvent } from "@utils/index";
 
 type Link = { to: string; text: string };
 
@@ -14,10 +15,8 @@ type UserMenu = {
     menuIcon?: string;
   };
   links: {
-    menuLinks: Link[];
     dropdownLinks?: Link[];
     dropdownButtons?: JSX.Element | JSX.Element[];
-    buttons?: JSX.Element | JSX.Element[];
   };
 };
 
@@ -28,52 +27,45 @@ export const Menu: React.FC<UserMenu> = ({
   links,
 }) => {
   const [open, setOpen] = React.useState(false);
+  useKeyboardEvent("Escape", () => setOpen(false));
 
   return (
     <div className={`flex items-center justify-end sm:space-x-6`}>
-      <div className={`space-x-8 hidden md:flex ${className.menu}`}>
-        {links.menuLinks.map((link) => (
-          <InternalLink to={link.to} key={link.to} className="menu-link">
-            {link.text}
-          </InternalLink>
-        ))}
-      </div>
-
       <div className="relative">
         <IconButton
           onClick={() => setOpen(!open)}
-          className={`${className.menuIcon}`}
+          className={`relative z-10 ${className.menuIcon}`}
         >
           {icon ? <img src={icon} alt={alt} /> : <UserCircleOutline />}
         </IconButton>
 
         {open ? (
-          <Dropdown className={`${className.dropdown}`}>
-            <div className="flex flex-col -m-3 mb-0 space-y-4">
-              {links.menuLinks.map((link) => (
-                <InternalLink
-                  to={link.to}
-                  key={link.to}
-                  className="md:hidden menu-link"
-                >
-                  {link.text}
-                </InternalLink>
-              ))}
-
-              {links.dropdownLinks.map((link) => (
-                <InternalLink to={link.to} key={link.to} className="menu-link">
-                  {link.text}
-                </InternalLink>
-              ))}
-            </div>
-
-            <div className="flex space-x-6 border-t-2 pt-3 mt-6 border-gray-400">
-              {links.dropdownButtons}
-            </div>
-          </Dropdown>
+          <>
+            {/* Backdrop to close the Menu on click outside */}
+            <button
+              onClick={() => setOpen(false)}
+              className="fixed inset-0 w-full h-full bg-black opacity-25 cursor-default z-10"
+              tabIndex={-1}
+            />
+            <Dropdown className={`relative z-10 ${className.dropdown}`}>
+              <div className="flex flex-col -m-3 mb-0 space-y-4">
+                {links.dropdownLinks.map((link) => (
+                  <InternalLink
+                    to={link.to}
+                    key={link.to}
+                    className="menu-link"
+                  >
+                    {link.text}
+                  </InternalLink>
+                ))}
+              </div>
+              <div className="flex space-x-6 border-t-2 pt-3 mt-6 border-gray-400">
+                {links.dropdownButtons}
+              </div>
+            </Dropdown>
+          </>
         ) : null}
       </div>
-      <div className="flex space-x-6">{links.buttons}</div>
     </div>
   );
 };

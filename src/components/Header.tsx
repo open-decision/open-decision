@@ -38,15 +38,10 @@ export const Header: React.FC = () => {
                 : undefined
             }
             links={{
-              menuLinks: [
-                { to: "./builder", text: "Builder" },
-                { to: "./dashboard", text: "Dashboard" },
-              ],
               dropdownLinks: [
                 { to: "./profile", text: "Profil" },
                 { to: "./settings", text: "Einstellungen" },
               ],
-              buttons: <AuthButtons className="hidden sm:block" />,
               dropdownButtons: <AuthButtons />,
             }}
           />
