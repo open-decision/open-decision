@@ -1,5 +1,4 @@
-/**@jsx jsx */
-import { ReactElement } from "react";
+import React from "react";
 import {
   FilterProps,
   FilterValue,
@@ -7,74 +6,34 @@ import {
   Row,
   useAsyncDebounce,
 } from "react-table";
-import { jsx, Flex, Input, Label } from "theme-ui";
 import { matchSorter } from "match-sorter";
 import { readableDate } from "./utils";
 import { parseISO } from "date-fns/esm";
 import { Tag } from "@internalTypes/global";
+import { Field } from "@components/index";
 
-export const GlobalFilter = ({
-  globalFilter,
-  setGlobalFilter,
-}: {
+type GlobalFilter = {
   globalFilter: FilterValue;
   setGlobalFilter: (filterValue: string) => void;
-}): ReactElement => {
-  const onChange = useAsyncDebounce((value) => {
+};
+
+export const GlobalFilter: React.FC<GlobalFilter> = ({
+  globalFilter,
+  setGlobalFilter,
+}) => {
+  const setValue = useAsyncDebounce((value) => {
     setGlobalFilter(value || undefined);
   }, 200);
 
   return (
-    <Flex sx={{ py: 3, alignItems: "center" }}>
-      <Label
-        htmlFor="search"
-        sx={{ flex: "0", mr: 4, minWidth: "max-content" }}
-      >
-        Suche:
-      </Label>
-      <Input
-        id="search"
-        value={globalFilter || ""}
-        onChange={(e) => {
-          onChange(e.target.value);
-        }}
-        // placeholder={`${count} records...`}
-        sx={{
-          fontSize: "1.1rem",
-          border: "0",
-          flex: "1",
-        }}
-      />
-    </Flex>
+    <Field
+      name="search"
+      label="Suche: "
+      value={globalFilter || ""}
+      setValue={setValue}
+    />
   );
 };
-
-// export const SelectColumnFilter = ({
-//   filterValue,
-//   setFilter,
-//   preFilteredRows,
-// }: ColumnInstance): ReactElement => {
-//   // Calculate the options for filtering
-//   // using the preFilteredRows
-//   const options = filterTags(preFilteredRows);
-
-//   // Render a multi-select box
-//   return (
-//     <Select
-//       value={filterValue}
-//       onChange={(e) => {
-//         setFilter(e.target.value || undefined);
-//       }}
-//     >
-//       <option value="">All</option>
-//       {options.map((option, i) => (
-//         <option key={i} value={option}>
-//           {option}
-//         </option>
-//       ))}
-//     </Select>
-//   );
-// };
 
 export function fuzzyGlobalFilter(
   rows: Row[],

@@ -1,6 +1,6 @@
 /**@jsx jsx */
 import { jsx } from "theme-ui";
-import React, { FunctionComponent } from "react";
+import React from "react";
 
 //Components
 import { Text, Heading } from "theme-ui";
@@ -12,15 +12,15 @@ import {
   useFlexLayout,
   Column,
 } from "react-table";
-import { GlobalProps, TreeNodes } from "@internalTypes/global";
+import { Component, TreeNodes } from "@internalTypes/global";
 
 type TableProps = {
   data: TreeNodes;
   columns: Column[];
   defaultColumn: Partial<Column>;
-} & GlobalProps;
+};
 
-export const Table: FunctionComponent<TableProps> = ({
+export const Table: Component<TableProps> = ({
   className,
   data,
   columns,

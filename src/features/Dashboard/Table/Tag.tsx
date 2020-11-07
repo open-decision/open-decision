@@ -2,17 +2,13 @@
 import { jsx } from "theme-ui";
 import { Badge, Box } from "theme-ui";
 import { readableColor } from "polished";
-import { FunctionComponent } from "react";
-import { GlobalProps } from "@internalTypes/global";
+import { Component } from "@internalTypes/global";
 
 type TagProps = {
   values: { color: string; name: string }[];
-} & GlobalProps;
+};
 
-export const Tags: FunctionComponent<TagProps> = ({
-  className = "",
-  values = [],
-}) => {
+export const Tags: Component<TagProps> = ({ className = "", values = [] }) => {
   return (
     <Box>
       {values.map((tag, idx) => {

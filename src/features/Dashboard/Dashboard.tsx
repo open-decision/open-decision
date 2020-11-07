@@ -2,13 +2,12 @@ import { Table } from "./Table/Table";
 import React from "react";
 import AddIcon from "@material-ui/icons/Add";
 import { columns, defaultColumn } from "./Table/TableData";
-import { GlobalProps, TreeNodes } from "@internalTypes/global";
+import { Component, TreeNodes } from "@internalTypes/global";
 import {
   All_TreesQuery,
   useAll_TreesQuery,
   useCreate_TreeMutation,
 } from "@internalTypes/generated/graphql";
-import { FunctionComponent } from "react";
 import * as E from "fp-ts/Either";
 import { identity, pipe } from "fp-ts/lib/function";
 import { hasPath } from "ramda";
@@ -20,7 +19,7 @@ const getTreeData = (data: All_TreesQuery): E.Either<[], TreeNodes> =>
     : E.left([]);
 
 //FIXME username is hardcoded
-export const Dashboard: FunctionComponent<GlobalProps> = () => {
+export const Dashboard: Component = () => {
   const [{ data, fetching, error }] = useAll_TreesQuery();
   const [, createTree] = useCreate_TreeMutation();
 
@@ -31,7 +30,7 @@ export const Dashboard: FunctionComponent<GlobalProps> = () => {
       <div className="col-start-2 mx-4 md:mx-8 flex flex-col justify-end items-start">
         <h2 className="text-3xl">Hallo Dirk_laywer23</h2>
         <Button
-          className="my-8"
+          className="my-8 flex items-center justify-center"
           size="large"
           onClick={() =>
             createTree({
@@ -42,7 +41,7 @@ export const Dashboard: FunctionComponent<GlobalProps> = () => {
           }
         >
           <AddIcon />
-          Neuen Baum hinzufügen
+          Neuen Baum erstellen
         </Button>
       </div>
 
