@@ -1,33 +1,31 @@
-/** @jsx jsx */
-import { jsx } from "theme-ui";
+import React from "react";
 import { Switch, Route } from "react-router-dom";
 import { Layout } from "@components/index";
-import { Dashboard, ProtectedRoute, LoginForm, Builder } from "@features/index";
-import { FunctionComponent } from "react";
+import { Dashboard, ProtectedRoute, LoginCard, Builder } from "@features/index";
 import "./index.css";
 
-export const App: FunctionComponent = () => {
+export const App: React.FC = () => {
   return (
     <Switch>
-      <Layout>
-        <Route path="/" exact>
-          <div className="flex justify-center items-center">
-            <h1 className="text-4xl">Unauthenticated Homepage</h1>
-          </div>
-        </Route>
-        <Route path="/login">
-          <div className="flex justify-center items-center">
-            <LoginForm />
-          </div>
-        </Route>
-
-        <ProtectedRoute path="/dashboard">
+      <ProtectedRoute path={["/", "/dashboard"]} exact>
+        <Layout>
           <Dashboard />
-        </ProtectedRoute>
-        <ProtectedRoute path="/builder">
+        </Layout>
+      </ProtectedRoute>
+
+      <Route path="/login">
+        <Layout>
+          <div className="flex justify-center items-center">
+            <LoginCard />
+          </div>
+        </Layout>
+      </Route>
+
+      <ProtectedRoute path="/builder">
+        <Layout footer={false}>
           <Builder />
-        </ProtectedRoute>
-      </Layout>
+        </Layout>
+      </ProtectedRoute>
     </Switch>
   );
 };
