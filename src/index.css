@@ -1,10 +1,23 @@
+@import url("https://fonts.googleapis.com/css2?family=Karla&family=Rubik&display=swap");
+
 body {
   max-width: none;
   padding: 0;
+
+  @apply font-body;
 }
 
 @tailwind base;
 @tailwind components;
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply font-heading;
+}
 
 button:focus,
 a:focus {
@@ -25,10 +38,6 @@ a:focus {
   }
 }
 
-.clickable:active {
-  transform: translateY(2px);
-}
-
 .dashboard-grid {
   display: grid;
   grid-template-columns: 1fr min(theme("screens.lg"), 100%) 1fr;
@@ -36,3 +45,7 @@ a:focus {
 }
 
 @tailwind utilities;
+
+.clickable:active {
+  transform: translateY(2px);
+}

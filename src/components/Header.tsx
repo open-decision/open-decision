@@ -25,7 +25,6 @@ export const Header: React.FC = () => {
   const [getToken] = useAuthToken();
   const token = getToken();
 
-  //TODO handle signup failure in UI
   return (
     <div className="bg-gray-400 px-4 md:px-8 py-2">
       <div className="flex justify-between items-center">

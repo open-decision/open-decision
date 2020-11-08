@@ -30,7 +30,7 @@ export const Dashboard: Component = () => {
       <div className="col-start-2 mx-4 md:mx-8 flex flex-col justify-end items-start">
         <h2 className="text-3xl">Hallo Dirk_laywer23</h2>
         <Button
-          className="my-8 flex items-center justify-center"
+          className="my-8"
           size="large"
           onClick={() =>
             createTree({
@@ -40,7 +40,7 @@ export const Dashboard: Component = () => {
             }).then((result) => console.log(result))
           }
         >
-          <PlusCircleOutline />
+          <PlusCircleOutline className="w-8 h-8 mr-2 inline" />
           Neuen Baum erstellen
         </Button>
       </div>

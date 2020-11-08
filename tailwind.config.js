@@ -6,6 +6,7 @@ module.exports = {
   purge: [],
   theme: {
     extend: {
+      fontFamily: { body: "Karla", heading: "Rubik" },
       colors: {
         primary: {
           50: "#F8FEFB",
