@@ -1,9 +1,6 @@
-/**@jsx jsx */
-import { jsx } from "theme-ui";
 import React from "react";
 
 //Components
-import { Text, Heading } from "theme-ui";
 import { fuzzyGlobalFilter, GlobalFilter, filterTypes } from "./Filter";
 import {
   useTable,
@@ -48,7 +45,7 @@ export const Table: Component<TableProps> = ({
   );
 
   return (
-    <React.Fragment>
+    <>
       <GlobalFilter
         setGlobalFilter={setGlobalFilter}
         globalFilter={globalFilter}
@@ -60,14 +57,14 @@ export const Table: Component<TableProps> = ({
             // eslint-disable-next-line react/jsx-key
             <div {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
-                <Heading
+                <h2
+                  className="my-3"
                   key={column.id}
                   {...column.getHeaderProps([column.getSortByToggleProps()])}
-                  sx={{ my: 3 }}
                 >
                   {column.render("Header")}
                   {column.canSort && (
-                    <span sx={{ ml: 2 }}>
+                    <span className="ml-2">
                       {column.isSorted
                         ? column.isSortedDesc
                           ? "⬇"
@@ -75,7 +72,7 @@ export const Table: Component<TableProps> = ({
                         : "⬅"}
                     </span>
                   )}
-                </Heading>
+                </h2>
               ))}
             </div>
           ))}
@@ -88,13 +85,13 @@ export const Table: Component<TableProps> = ({
               <div {...row.getRowProps()} sx={{ my: 2 }} key={row.id}>
                 {row.cells.map((cell) => {
                   return (
-                    <Text
+                    <span
+                      className="flex, items-center"
                       {...cell.getCellProps()}
                       key={cell.value}
-                      sx={{ display: "flex", alignItems: "center" }}
                     >
                       {cell.render("Cell")}
-                    </Text>
+                    </span>
                   );
                 })}
               </div>
@@ -102,6 +99,6 @@ export const Table: Component<TableProps> = ({
           })}
         </div>
       </div>
-    </React.Fragment>
+    </>
   );
 };

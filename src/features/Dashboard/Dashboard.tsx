@@ -1,6 +1,6 @@
 import { Table } from "./Table/Table";
 import React from "react";
-import AddIcon from "@material-ui/icons/Add";
+import { PlusCircleOutline } from "@graywolfai/react-heroicons";
 import { columns, defaultColumn } from "./Table/TableData";
 import { Component, TreeNodes } from "@internalTypes/global";
 import {
@@ -40,7 +40,7 @@ export const Dashboard: Component = () => {
             }).then((result) => console.log(result))
           }
         >
-          <AddIcon />
+          <PlusCircleOutline />
           Neuen Baum erstellen
         </Button>
       </div>

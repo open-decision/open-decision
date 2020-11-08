@@ -1,8 +1,7 @@
-/**@jsx jsx */
-import { jsx } from "theme-ui";
-import { Badge, Box } from "theme-ui";
+import React from "react";
 import { readableColor } from "polished";
 import { Component } from "@internalTypes/global";
+import { Badge } from "@components/index";
 
 type TagProps = {
   values: { color: string; name: string }[];
@@ -10,23 +9,20 @@ type TagProps = {
 
 export const Tags: Component<TagProps> = ({ className = "", values = [] }) => {
   return (
-    <Box>
-      {values.map((tag, idx) => {
-        return (
-          <Badge
-            variant="primary"
-            key={idx}
-            sx={{
-              bg: tag.color,
-              color: readableColor(tag.color),
-              m: 1,
-            }}
-            className={className}
-          >
-            {tag.name}
-          </Badge>
-        );
-      })}
-    </Box>
+    <div>
+      {values.map((tag, idx) => (
+        <Badge
+          key={idx}
+          sx={{
+            bg: tag.color,
+            color: readableColor(tag.color),
+            m: 1,
+          }}
+          className={className}
+        >
+          {tag.name}
+        </Badge>
+      ))}
+    </div>
   );
 };
