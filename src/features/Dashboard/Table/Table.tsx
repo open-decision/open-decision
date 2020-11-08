@@ -18,7 +18,6 @@ type TableProps = {
 };
 
 export const Table: Component<TableProps> = ({
-  className,
   data,
   columns,
   defaultColumn,
@@ -50,7 +49,7 @@ export const Table: Component<TableProps> = ({
         setGlobalFilter={setGlobalFilter}
         globalFilter={globalFilter}
       />
-      <div {...getTableProps()} sx={{ width: "100%" }} className={className}>
+      <div {...getTableProps()} className="w-full">
         <div>
           {headerGroups.map((headerGroup) => (
             // a key is produced by ...headerGroup.getHEaderGroupProps(), but that confuses eslint
@@ -82,7 +81,7 @@ export const Table: Component<TableProps> = ({
           {rows.map((row) => {
             prepareRow(row);
             return (
-              <div {...row.getRowProps()} sx={{ my: 2 }} key={row.id}>
+              <div {...row.getRowProps()} className="my-2" key={row.id}>
                 {row.cells.map((cell) => {
                   return (
                     <span
