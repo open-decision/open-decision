@@ -20,7 +20,8 @@ h6 {
 }
 
 button:focus,
-a:focus {
+a:focus,
+input:focus {
   @apply shadow-outline outline-none;
 }
 

@@ -1,28 +1,35 @@
+import { Component } from "@internalTypes/global";
+import clsx from "clsx";
 import React from "react";
 import { Input } from "./Input";
 
-type Input = React.FC<
-  React.InputHTMLAttributes<HTMLInputElement> & {
-    setValue: React.Dispatch<React.SetStateAction<string>>;
-    name: string;
-    label: string;
-  }
->;
+type Input = React.InputHTMLAttributes<HTMLInputElement> & {
+  setValue: React.Dispatch<React.SetStateAction<string>>;
+  name: string;
+  label: string;
+  layout: "block" | "inline";
+};
 
-export const Field: Input = ({
+export const Field: Component<Input> = ({
   className,
   name,
   label,
   value,
   setValue,
+  layout = "block",
   ...props
 }) => {
   return (
-    <div className={className}>
-      <label
-        htmlFor={name}
-        className="block text-gray-700 text-sm font-bold mb-2"
-      >
+    <div
+      className={clsx(
+        {
+          "flex items-center space-x-6": layout === "inline",
+          "space-y-2": layout === "block",
+        },
+        className
+      )}
+    >
+      <label htmlFor={name} className={clsx("text-gray-900 font-bold")}>
         {label}
       </label>
       <Input value={value} setValue={setValue} {...props} />
