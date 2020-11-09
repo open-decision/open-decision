@@ -48,6 +48,7 @@ export const Table: Component<TableProps> = ({
       <GlobalFilter
         setGlobalFilter={setGlobalFilter}
         globalFilter={globalFilter}
+        className="mt-4"
       />
       <div {...getTableProps()} className="w-full">
         <div>

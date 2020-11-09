@@ -9,7 +9,7 @@ import {
 import { matchSorter } from "match-sorter";
 import { readableDate } from "./utils";
 import { parseISO } from "date-fns/esm";
-import { Tag } from "@internalTypes/global";
+import { Component, Tag } from "@internalTypes/global";
 import { Field } from "@components/index";
 
 type GlobalFilter = {
@@ -17,9 +17,10 @@ type GlobalFilter = {
   setGlobalFilter: (filterValue: string) => void;
 };
 
-export const GlobalFilter: React.FC<GlobalFilter> = ({
+export const GlobalFilter: Component<GlobalFilter> = ({
   globalFilter,
   setGlobalFilter,
+  ...props
 }) => {
   const setValue = useAsyncDebounce((value) => {
     setGlobalFilter(value || undefined);
@@ -27,10 +28,12 @@ export const GlobalFilter: React.FC<GlobalFilter> = ({
 
   return (
     <Field
+      layout="inline"
       name="search"
       label="Suche: "
       value={globalFilter || ""}
       setValue={setValue}
+      {...props}
     />
   );
 };
