@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import {
   FilterProps,
   FilterValue,
@@ -10,7 +10,7 @@ import { matchSorter } from "match-sorter";
 import { readableDate } from "./utils";
 import { parseISO } from "date-fns/esm";
 import { Component, Tag } from "@internalTypes/global";
-import { Field } from "@components/index";
+import { Field, Input } from "@components/index";
 
 type GlobalFilter = {
   globalFilter: FilterValue;
@@ -66,14 +66,7 @@ fuzzyTextFilter.autoRemove = (val: string) => !val;
 export function DefaultColumnFilter<T extends Record<string, unknown>>({
   column: { filterValue, setFilter },
 }: FilterProps<T>): ReactElement {
-  return (
-    <Input
-      value={filterValue || ""}
-      onChange={(e) => {
-        setFilter(e.target.value || undefined);
-      }}
-    />
-  );
+  return <Input value={filterValue || ""} setValue={setFilter} />;
 }
 
 // export function TagFilter<T extends Record<string, unknown>>(

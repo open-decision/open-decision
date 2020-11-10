@@ -30,6 +30,7 @@ export const Dashboard: Component = () => {
       <div className="col-start-2 mx-4 md:mx-8 flex flex-col justify-end items-start">
         <h2 className="text-3xl">Hallo Dirk_laywer23</h2>
         <Button
+          level="primary"
           className="my-8"
           size="large"
           onClick={() =>
