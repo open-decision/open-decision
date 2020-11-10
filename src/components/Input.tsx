@@ -14,7 +14,7 @@ export const Input: Component<Input> = ({
 }) => (
   <input
     className={clsx(
-      "rounded w-full py-2 px-3 focus:bg-tertiary-50 focus:border-tertiary-100 border border-tertiary-100 leading-tight",
+      "rounded w-full py-2 px-3 border border-gray-500 bg-gray-300 focus:bg-primary-50 leading-tight focus:text-primary-900",
       className
     )}
     value={value}
