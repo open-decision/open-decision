@@ -3,14 +3,14 @@ import clsx from "clsx";
 import React from "react";
 import { Input } from "./Input";
 
-type Input = React.InputHTMLAttributes<HTMLInputElement> & {
+type Field = React.InputHTMLAttributes<HTMLInputElement> & {
   setValue: React.Dispatch<React.SetStateAction<string>>;
   name: string;
   label: string;
-  layout: "block" | "inline";
+  layout?: "block" | "inline";
 };
 
-export const Field: Component<Input> = ({
+export const Field: Component<Field> = ({
   className,
   name,
   label,
