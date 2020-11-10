@@ -19,10 +19,8 @@ h6 {
   @apply font-heading;
 }
 
-button:focus,
-a:focus,
-input:focus {
-  @apply shadow-outline outline-none;
+:is(button, a, input):focus {
+  @apply outline-none shadow-outline;
 }
 
 .menu-link {
@@ -49,4 +47,10 @@ input:focus {
 
 .clickable:active {
   transform: translateY(2px);
+}
+
+@layer utilities {
+  .flex-basis-0 {
+    flex-basis: 0;
+  }
 }
