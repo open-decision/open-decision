@@ -1,17 +1,17 @@
-import { Component } from "@internalTypes/global";
 import clsx from "clsx";
 import React from "react";
 import { Input } from "./Input";
 
 type Field = React.InputHTMLAttributes<HTMLInputElement> & {
+  classNames?: { box?: string; label?: string; input?: string };
   setValue: React.Dispatch<React.SetStateAction<string>>;
   name: string;
   label: string;
   layout?: "block" | "inline";
 };
 
-export const Field: Component<Field> = ({
-  className,
+export const Field: React.FC<Field> = ({
+  classNames,
   name,
   label,
   value,
@@ -26,13 +26,21 @@ export const Field: Component<Field> = ({
           "flex items-center space-x-6": layout === "inline",
           "space-y-2": layout === "block",
         },
-        className
+        classNames.box
       )}
     >
-      <label htmlFor={name} className={clsx("text-gray-900 font-bold")}>
+      <label
+        htmlFor={name}
+        className={clsx("text-gray-700 font-semibold", classNames.label)}
+      >
         {label}
       </label>
-      <Input value={value} setValue={setValue} {...props} />
+      <Input
+        className={classNames.input}
+        value={value}
+        setValue={setValue}
+        {...props}
+      />
     </div>
   );
 };

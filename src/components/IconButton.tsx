@@ -6,27 +6,18 @@ import { Link, LinkProps } from "react-router-dom";
 type IconButton = React.FC<
   React.ButtonHTMLAttributes<HTMLButtonElement> & {
     className?: string;
-    variant?: iconVariants;
   }
 >;
 
 const iconVariants = {
   base:
-    "rounded-full w-10 h-10 overflow-hidden border-4 border-gray-100 flex justify-center items-center clickable",
+    "rounded-full w-10 h-10 overflow-hidden flex justify-center items-center clickable",
 };
 
 type iconVariants = keyof typeof iconVariants;
 
-export const IconButton: IconButton = ({
-  className,
-  children,
-  variant,
-  ...props
-}) => (
-  <button
-    className={clsx(pluck(iconVariants, ["base", variant]), className)}
-    {...props}
-  >
+export const IconButton: IconButton = ({ className, children, ...props }) => (
+  <button className={clsx(pluck(iconVariants, ["base"]), className)} {...props}>
     {children}
   </button>
 );
