@@ -22,7 +22,7 @@ export const App: React.FC = () => {
       </Route>
 
       <ProtectedRoute path="/builder">
-        <Layout footer={false}>
+        <Layout>
           <Builder />
         </Layout>
       </ProtectedRoute>
