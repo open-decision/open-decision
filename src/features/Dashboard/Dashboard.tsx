@@ -1,36 +1,45 @@
-import { Table } from "./Table/Table";
 import React from "react";
 import { PlusCircleOutline } from "@graywolfai/react-heroicons";
-import { columns, defaultColumn } from "./Table/TableData";
-import { Component, TreeNodes } from "@internalTypes/global";
+import { Component, TreeNode } from "@internalTypes/global";
 import {
   All_TreesQuery,
   useAll_TreesQuery,
   useCreate_TreeMutation,
 } from "@internalTypes/generated/graphql";
-import * as E from "fp-ts/Either";
-import { identity, pipe } from "fp-ts/lib/function";
-import { hasPath } from "ramda";
 import { Button } from "@components/index";
+import { TreeList } from "./TreeList";
+import { data } from "./testData";
 
-const getTreeData = (data: All_TreesQuery): E.Either<[], TreeNodes> =>
-  hasPath(["allDecisionTrees", "edges"])(data)
-    ? E.right(data.allDecisionTrees.edges.map((x) => x.node))
-    : E.left([]);
+const getTreeData = (data: All_TreesQuery): TreeNode[] => {
+  const trees = data?.allDecisionTrees?.edges?.map((x) => x.node) ?? [];
+  return trees.map((x) => {
+    return { ...x, tags: x.tags ? JSON.parse(x.tags) : [] };
+  });
+};
 
 //FIXME username is hardcoded
 export const Dashboard: Component = () => {
-  const [{ data, fetching, error }] = useAll_TreesQuery();
-  const [, createTree] = useCreate_TreeMutation();
+  const [
+    {
+      //FIXME error and data should be destructured from here. For dev purposes they are hardcoded.
+      // data,
+      fetching,
+      // error
+    },
+  ] = useAll_TreesQuery();
 
-  const treeData = pipe(data, getTreeData, E.fold(identity, identity));
+  //FIXME Testdata
+  const error = false;
+
+  const [, createTree] = useCreate_TreeMutation();
+  const treeData = getTreeData(data);
 
   return (
-    <div className="bg-gray-300 dashboard-grid">
-      <div className="col-start-2 mx-4 md:mx-8 flex flex-col justify-end items-start">
-        <h2 className="text-3xl">Hallo Dirk_laywer23</h2>
+    <div className="dashboard-grid">
+      <div className="col-start-2 mt-24 mx-4 md:mx-8 flex flex-col justify-end items-start">
+        <h2 className="text-5xl">Hallo Dirk_laywer23</h2>
         <Button
-          level="primary"
+          level="secondary"
           className="my-8"
           size="large"
           onClick={() =>
@@ -41,23 +50,18 @@ export const Dashboard: Component = () => {
             }).then((result) => console.log(result))
           }
         >
-          <PlusCircleOutline className="w-8 h-8 mr-2 inline" />
-          Neuen Baum erstellen
+          <PlusCircleOutline className="w-8 mr-2 inline" />
+          Neue Anwendung erstellen
         </Button>
       </div>
 
-      <div className="bg-gray-100 row-start-2 col-span-full"></div>
       <div className="col-start-2 row-start-2 mx-4 md:mx-8">
         {error ? (
           <p>Error :(</p>
         ) : fetching ? (
           <span>Laden</span>
         ) : (
-          <Table
-            columns={columns}
-            data={treeData}
-            defaultColumn={defaultColumn}
-          />
+          <TreeList data={treeData} />
         )}
       </div>
     </div>
