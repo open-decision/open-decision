@@ -5,3 +5,4 @@ dist
 generated
 build
 yarn-error.log
+tasks.json
