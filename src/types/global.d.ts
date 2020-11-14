@@ -1,5 +1,5 @@
-import { DecisionTreeNode } from "./generated/graphql";
 import { FunctionComponent } from "react";
+import { tagColors } from "@components/index";
 
 export type Component<T = Record<string, unknown>> = FunctionComponent<
   T & GlobalProps
@@ -33,6 +33,10 @@ interface GlobalProps {
   className?: string;
 }
 
-export type TreeNodes = {
-  __typename?: "DecisionTreeNode";
-} & Pick<DecisionTreeNode, "id" | "name" | "slug" | "tags" | "createdAt">[];
+export type TreeNode = {
+  id: string;
+  name: string;
+  slug: string;
+  tags: { name: string; color: tagColors }[];
+  createdAt: string;
+};
