@@ -1,5 +1,5 @@
 import React from "react";
-import { NodeEditor } from "flume-test";
+import { NodeEditor } from "flume";
 import config from "./config";
 
 export const Builder: React.FC = () => {

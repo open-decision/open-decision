@@ -1,4 +1,4 @@
-import { RootEngine } from "flume-test";
+import { RootEngine } from "flume";
 import config from "./config";
 
 const resolvePorts = (portType, data) => {
@@ -20,8 +20,9 @@ const resolvePorts = (portType, data) => {
 
 const resolveNodes = (node, inputValues, nodeType, context) => {
   switch (node.type) {
-    case "string":
+    case "string": {
       return { string: inputValues.string };
+    }
     case "boolean":
       return { boolean: inputValues.boolean };
     case "number":

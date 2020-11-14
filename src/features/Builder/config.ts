@@ -1,4 +1,4 @@
-import { FlumeConfig, Colors, Controls } from "flume-test";
+import { FlumeConfig, Colors, Controls } from "flume";
 
 const config = new FlumeConfig();
 
