@@ -1,11 +1,17 @@
-import { Component } from "@internalTypes/global";
 import React from "react";
 import { Header } from "./Header";
 
-export const Layout: Component = ({ children }) => {
+type Layout = {
+  header?: boolean;
+};
+
+export const Layout: React.FunctionComponent<Layout> = ({
+  children,
+  header = true,
+}) => {
   return (
     <div className="grid grid-rows-layout h-screen">
-      <Header />
+      {header ? <Header /> : <div />}
       {children}
     </div>
   );

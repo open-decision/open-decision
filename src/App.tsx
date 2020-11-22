@@ -14,7 +14,7 @@ export const App: React.FC = () => {
       </ProtectedRoute>
 
       <Route path="/login">
-        <Layout>
+        <Layout header={false}>
           <div className="flex justify-center items-center">
             <LoginCard />
           </div>
