@@ -2,15 +2,16 @@ import React from "react";
 import { matchSorter } from "match-sorter";
 import { readableDate } from "./utils";
 import { parseISO } from "date-fns/esm";
-import { Component, Tag, TreeNode } from "@internalTypes/global";
 import { Field } from "@components/index";
+import { Tag, ValidTreeNode } from "./types";
 
 type GlobalFilter = {
+  className?: string;
   value: string;
-  setValue: (filterValue: string) => void;
+  setValue: React.Dispatch<React.SetStateAction<string>>;
 };
 
-export const Search: Component<GlobalFilter> = ({
+export const Search: React.FunctionComponent<GlobalFilter> = ({
   value,
   setValue,
   className,
@@ -29,10 +30,7 @@ export const Search: Component<GlobalFilter> = ({
     <Field
       //FIXME related to Tailwind vs code extension => classNames as a prop does not trigger autocomplete => https://github.com/tailwindlabs/tailwindcss-intellisense/issues/129
       //class="
-      classNames={{
-        box: className,
-        input: "bg-gray-100 border-2 border-gray-300 shadow-inner",
-      }}
+      classNames={{ box: className }}
       // "
       layout="inline"
       name="search"
@@ -45,10 +43,9 @@ export const Search: Component<GlobalFilter> = ({
 };
 
 export const fuzzySearch = (
-  data: TreeNode[],
+  data: ValidTreeNode[],
   filterValue: string
-): TreeNode[] => {
-  console.log("filter:", data);
+): ValidTreeNode[] => {
   return matchSorter(data, filterValue, {
     keys: [
       "name",
@@ -58,7 +55,6 @@ export const fuzzySearch = (
   });
 };
 
-export const sortByKey = (data: TreeNode[], key: string) => {
-  console.log("sort:", data);
+export const sortByKey = (data: ValidTreeNode[], key: string) => {
   return matchSorter(data, "", { keys: [key] });
 };

@@ -1,24 +1,16 @@
 import React from "react";
 import { PlusCircleOutline } from "@graywolfai/react-heroicons";
-import { Component, TreeNode } from "@internalTypes/global";
 import {
-  All_TreesQuery,
   useAll_TreesQuery,
   useCreate_TreeMutation,
 } from "@internalTypes/generated/graphql";
 import { Button } from "@components/index";
 import { TreeList } from "./TreeList";
 import { data } from "./testData";
-
-const getTreeData = (data: All_TreesQuery): TreeNode[] => {
-  const trees = data?.allDecisionTrees?.edges?.map((x) => x.node) ?? [];
-  return trees.map((x) => {
-    return { ...x, tags: x.tags ? JSON.parse(x.tags) : [] };
-  });
-};
+import { validateTreeData } from "./dataValidation";
 
 //FIXME username is hardcoded
-export const Dashboard: Component = () => {
+export const Dashboard: React.FunctionComponent = () => {
   const [
     {
       //FIXME error and data should be destructured from here. For dev purposes they are hardcoded.
@@ -32,7 +24,7 @@ export const Dashboard: Component = () => {
   const error = false;
 
   const [, createTree] = useCreate_TreeMutation();
-  const treeData = getTreeData(data);
+  const { invalidData, validData } = validateTreeData(data);
 
   return (
     <div className="dashboard-grid">
@@ -61,7 +53,7 @@ export const Dashboard: Component = () => {
         ) : fetching ? (
           <span>Laden</span>
         ) : (
-          <TreeList data={treeData} />
+          <TreeList data={validData} />
         )}
       </div>
     </div>

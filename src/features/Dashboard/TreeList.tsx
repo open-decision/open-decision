@@ -1,5 +1,4 @@
-import { Badge, Button, IconButton } from "@components/index";
-import { TreeNode } from "@internalTypes/global";
+import { Badge, Button } from "@components/index";
 import React from "react";
 import { parseISO, formatWithOptions } from "date-fns/esm/fp";
 import { de } from "date-fns/locale";
@@ -9,8 +8,9 @@ import {
 } from "@graywolfai/react-heroicons";
 import { fuzzySearch, Search, sortByKey } from "./Filter";
 import { motion } from "framer-motion";
+import { ValidTreeNode } from "./types";
 
-type TreeCard = { tree: TreeNode };
+type TreeCard = { tree: ValidTreeNode };
 
 const TreeCard: React.FC<TreeCard> = ({ tree }) => (
   <div className="bg-gray-50 rounded-md shadow-md space-y-2 hover:shadow-lg transition-all duration-100 border-l-4 border-green-500">
@@ -20,9 +20,9 @@ const TreeCard: React.FC<TreeCard> = ({ tree }) => (
           {tag.name}
         </Badge>
       ))}
-      <IconButton>
+      <Button level="icon" size="filled">
         <PlusCircleOutline className="w-6 h-6" />
-      </IconButton>
+      </Button>
     </div>
 
     <div className="px-4 pb-4 flex items-baseline">
@@ -33,7 +33,7 @@ const TreeCard: React.FC<TreeCard> = ({ tree }) => (
         </span>
       </div>
       <div className="flex self-end">
-        <Button level="base" className="text-gray-500 hover:text-red-700">
+        <Button level="ghost" className="text-gray-500 hover:text-red-700 mr-4">
           Archivieren
         </Button>
         <Button level="secondary">Öffnen</Button>
@@ -54,7 +54,12 @@ type SortButton = {
   label: string;
 };
 
-const SortButton = ({ sort, setSort, name, label }) => {
+const SortButton: React.FunctionComponent<SortButton> = ({
+  sort,
+  setSort,
+  name,
+  label,
+}) => {
   const variants = {
     up: { rotate: 180 },
     down: { rotate: 0 },
@@ -87,7 +92,7 @@ const SortButton = ({ sort, setSort, name, label }) => {
   );
 };
 
-type TreeList = { data: TreeNode[] };
+type TreeList = { data: ValidTreeNode[] };
 
 export const TreeList: React.FC<TreeList> = ({ data }) => {
   const [filter, setFilter] = React.useState("");
