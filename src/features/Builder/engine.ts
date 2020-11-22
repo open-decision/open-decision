@@ -1,7 +1,7 @@
 import { RootEngine } from "flume";
 import config from "./config";
 
-const resolvePorts = (portType, data) => {
+const resolvePorts = (portType: string, data: any) => {
   switch (portType) {
     case "string": {
       return data.string;
@@ -18,7 +18,7 @@ const resolvePorts = (portType, data) => {
   }
 };
 
-const resolveNodes = (node, inputValues, nodeType, context) => {
+const resolveNodes = (node: any, inputValues: any, context: any) => {
   switch (node.type) {
     case "string": {
       return { string: inputValues.string };
@@ -27,8 +27,8 @@ const resolveNodes = (node, inputValues, nodeType, context) => {
       return { boolean: inputValues.boolean };
     case "number":
       return { number: inputValues.number };
-    case "user":
-      return context.user;
+    case "question_options":
+      return { string: inputValues.string };
     case "joinText":
       return { joinedText: inputValues.string1 + " " + inputValues.string2 };
     case "reverseBoolean":

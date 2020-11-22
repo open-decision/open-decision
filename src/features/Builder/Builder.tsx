@@ -1,9 +1,9 @@
 import React from "react";
-import { NodeEditor } from "flume";
+import { NodeEditor, Nodes } from "flume";
 import config from "./config";
 
 export const Builder: React.FC = () => {
-  const [nodes, setNodes] = React.useState();
+  const [nodes, setNodes] = React.useState<Nodes>({});
 
   return (
     <NodeEditor

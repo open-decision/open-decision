@@ -28,6 +28,38 @@ config
     ],
   })
   .addNodeType({
+    type: "question_text",
+    label: "Frage mit Textantwort",
+    inputs: (ports) => [
+      ports.string({ label: "Fragetitel", hidePort: true }),
+      ports.string({ label: "Fragetext", hidePort: true }),
+    ],
+    outputs: (ports) => [ports.string({ label: "Antwort" })],
+  })
+  .addNodeType({
+    type: "question_number",
+    label: "Frage mit Nummerantwort",
+    inputs: (ports) => [
+      ports.string({ label: "Fragetitel", hidePort: true }),
+      ports.string({ label: "Fragetext", hidePort: true }),
+    ],
+    outputs: (ports) => [ports.number({ label: "Antwort" })],
+  })
+  .addNodeType({
+    type: "question_options",
+    label: "Frage mit Antwortmöglichkeiten",
+    inputs: (ports) => [
+      ports.string({ label: "Fragetitel", name: "title", hidePort: true }),
+      ports.string({ label: "Fragetext", name: "question", hidePort: true }),
+      ports.string({
+        label: "Antwortmöglichkeiten",
+        name: "answers",
+        hidePort: true,
+      }),
+    ],
+    outputs: (ports) => [ports.string({ label: "Antwort" })],
+  })
+  .addNodeType({
     type: "yes_no",
     label: "Ja/Nein",
     description: "",
