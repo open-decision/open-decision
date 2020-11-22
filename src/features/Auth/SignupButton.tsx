@@ -1,34 +1,32 @@
 import React from "react";
 import { FunctionComponent } from "react";
-import { useAuthToken } from "./useTokens";
-import { useRegister_UserMutation } from "@internalTypes/generated/graphql";
 import { Button } from "@components/index";
+import { useAuthMethods } from "./AuthContext";
 
-export const SignupButton: FunctionComponent<{ className?: string }> = ({
+type SignupButton = {
+  className?: string;
+  email: string;
+  username: string;
+  password1: string;
+  password2: string;
+};
+
+export const SignupButton: FunctionComponent<SignupButton> = ({
   className,
+  email,
+  username,
+  password1,
+  password2,
 }) => {
-  const [, setToken] = useAuthToken();
-  const [, register] = useRegister_UserMutation();
-
-  const handleRegisterUser = () =>
-    register({
-      email: "test@outlook.com",
-      password1: "fogmub-bifaj-sarjo8",
-      password2: "fogmub-bifaj-sarjo8",
-      username: "",
-    }).then(({ data, error }) => {
-      if (error) {
-        console.error("registerUser failed", error);
-      } else {
-        data.register.success === false
-          ? console.error(data.register.errors)
-          : setToken(data.register.token);
-      }
-    });
+  const { signup } = useAuthMethods();
 
   //TODO handle Auth Failure in UI
   return (
-    <Button onClick={handleRegisterUser} className={className}>
+    <Button
+      level="primary"
+      onClick={() => signup({ email, username, password1, password2 })}
+      className={className}
+    >
       Registrieren
     </Button>
   );

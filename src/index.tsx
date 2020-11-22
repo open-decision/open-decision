@@ -5,14 +5,17 @@ import { BrowserRouter } from "react-router-dom";
 import { App } from "./App";
 import { client } from "./features/Data/DataFetchingClient";
 import { Provider } from "urql";
+import { AuthProvider } from "./features/Auth/AuthContext";
 
 const AppContext = () => {
   return (
-    <BrowserRouter>
-      <Provider value={client}>
-        <App />
-      </Provider>
-    </BrowserRouter>
+    <Provider value={client}>
+      <AuthProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </AuthProvider>
+    </Provider>
   );
 };
 
