@@ -14,73 +14,132 @@
     "test": "web-test-runner \"src/**/*.test.tsx\"",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
     "lint": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\"",
-    "codegen": "graphql-codegen --config codegen.yml"
+    "codegen": "graphql-codegen --config .codegen.yml",
+    "bundlesize": "bundlesize"
   },
   "keywords": [],
   "author": "Philipp Garbowsky <phil.garbowsky@philtech.dev>",
   "license": "ISC",
   "devDependencies": {
     "@fullhuman/postcss-purgecss": "^3.0.0",
-    "@graphql-codegen/cli": "1.19.1",
+    "@graphql-codegen/cli": "1.19.2",
     "@graphql-codegen/introspection": "1.18.0",
     "@graphql-codegen/typescript": "1.17.11",
-    "@graphql-codegen/typescript-operations": "1.17.9",
+    "@graphql-codegen/typescript-operations": "1.17.10",
     "@graphql-codegen/typescript-urql": "^2.0.2",
-    "@snowpack/app-scripts-react": "^1.12.6",
     "@snowpack/plugin-dotenv": "^2.0.4",
     "@snowpack/plugin-postcss": "^1.0.7",
     "@snowpack/plugin-typescript": "^1.1.0",
     "@snowpack/plugin-webpack": "^2.1.1",
-    "@snowpack/web-test-runner-plugin": "^0.1.4",
-    "@testing-library/react": "^11.1.2",
-    "@types/chai": "^4.2.14",
     "@types/match-sorter": "^5.0.0",
-    "@types/node": "^14.14.7",
+    "@types/node": "^14.14.8",
     "@types/ramda": "^0.27.32",
     "@types/react": "^16.9.56",
     "@types/react-dom": "^16.9.9",
     "@types/react-router-dom": "^5.1.6",
-    "@types/react-table": "^7.0.25",
     "@types/snowpack-env": "^2.3.2",
-    "@typescript-eslint/eslint-plugin": "^4.7.0",
-    "@typescript-eslint/parser": "^4.7.0",
-    "@web/test-runner": "^0.9.7",
+    "@typescript-eslint/eslint-plugin": "^4.8.1",
+    "@typescript-eslint/parser": "^4.8.1",
     "autoprefixer": "^10.0.2",
-    "chai": "^4.2.0",
     "eslint": "^7.13.0",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.2.0",
     "postcss": "^8.1.7",
-    "postcss-cli": "^8.2.0",
+    "postcss-cli": "^8.3.0",
+    "postcss-preset-env": "^6.7.0",
     "prettier": "2.1.2",
     "snowpack": "^2.17.1",
     "ts-node": "^9.0.0",
-    "type-fest": "^0.18.0",
+    "type-fest": "^0.19.0",
     "typescript": "^4.0.5"
   },
   "dependencies": {
     "@graywolfai/react-heroicons": "^1.1.1",
-    "@tailwindcss/ui": "^0.7.2",
+    "@types/react-modal": "^3.10.6",
     "@urql/devtools": "^2.0.2",
     "clsx": "^1.1.1",
     "date-fns": "^2.16.1",
-    "flume": "^0.6.1",
-    "fp-ts": "^2.8.5",
+    "flume": "^0.6.2",
+    "fp-ts": "^2.8.6",
     "framer-motion": "^2.9.4",
     "graphql": "^15.4.0",
     "graphql-tag": "^2.11.0",
+    "io-ts": "^2.2.12",
+    "io-ts-types": "^0.5.12",
     "match-sorter": "^5.0.0",
     "polished": "^4.0.3",
     "ramda": "^0.27.1",
     "react": "^16",
     "react-dom": "^16",
     "react-icons": "^3.11.0",
+    "react-modal": "^3.11.2",
     "react-router-dom": "^5.2.0",
-    "react-table": "^7.6.1",
     "remeda": "0.0.27",
-    "tailwindcss": "^1.9.6",
-    "urql": "^1.11.2"
+    "tailwindcss": "^2.0.1",
+    "urql": "^1.11.3"
+  },
+  "eslintConfig": {
+    "extends": [
+      "eslint:recommended",
+      "prettier",
+      "prettier/react",
+      "prettier/@typescript-eslint",
+      "plugin:react/recommended",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "plugin:jsx-a11y/recommended",
+      "plugin:react-hooks/recommended"
+    ],
+    "env": {
+      "browser": true,
+      "es6": true
+    },
+    "globals": {
+      "Atomics": "readonly",
+      "SharedArrayBuffer": "readonly"
+    },
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "ecmaVersion": 2020,
+      "ecmaFeatures": {
+        "jsx": true
+      },
+      "sourceType": "module",
+      "project": "./tsconfig.json"
+    },
+    "plugins": [
+      "react",
+      "@typescript-eslint"
+    ],
+    "rules": {
+      "react/react-in-jsx-scope": "off",
+      "react/prop-types": "off",
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-return": "off",
+      "@typescript-eslint/no-explicit-any": "off"
+    },
+    "settings": {
+      "react": {
+        "pragma": "React",
+        "version": "detect"
+      }
+    },
+    "ignorePatterns": [
+      "src/types/generated/*"
+    ]
+  },
+  "prettier": {},
+  "graphql": {
+    "schema": "https://builder.open-decision.org/graphql",
+    "documents": "src/**/*.graphql.ts",
+    "extensions": {
+      "endpoints": {
+        "default": {
+          "url": "https://builder.open-decision.org/graphql"
+        }
+      }
+    }
   }
 }
