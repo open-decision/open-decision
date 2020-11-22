@@ -1,12 +1,14 @@
 import React from "react";
 import { Button, Field, Logo, Tabs } from "@components/index";
-import { Component } from "@internalTypes/global";
+import { LocationState } from "@internalTypes/types";
+import { useAuthMethods } from "./Auth/AuthContext";
+import { useHistory, useLocation } from "react-router-dom";
 
-export const LoginCard: Component = () => {
+export const LoginCard: React.FunctionComponent = () => {
   return (
     <div className="w-full max-w-xs">
       <div className="bg-white shadow-xl rounded-lg mb-4 flex flex-col overflow-hidden">
-        <div className="flex justify-center items-center p-8 bg-gradient-to-r from-gray-200 to-gray-400">
+        <div className="flex justify-center items-center p-8 bg-gradient-to-r from-gray-100 to-gray-300">
           <Logo />
         </div>
         <Tabs
@@ -22,9 +24,17 @@ export const LoginCard: Component = () => {
   );
 };
 
-const LoginForm: Component = () => {
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
+const LoginForm: React.FunctionComponent = () => {
+  const [email, setEmail] = React.useState("test@outlook.com");
+  const [password, setPassword] = React.useState("fogmub-bifaj-sarjo8");
+  const { login } = useAuthMethods();
+
+  const history = useHistory();
+  const location = useLocation<LocationState>();
+
+  const { from } = location.state || {
+    from: { pathname: "/" },
+  };
 
   return (
     <form className="flex flex-col">
@@ -54,18 +64,29 @@ const LoginForm: Component = () => {
           </a>
         </div>
       </div>
-      <Button level="primary" className="h-20" rounded={false}>
+      <Button
+        rounded={false}
+        className="h-20"
+        type="submit"
+        onClick={(event) => {
+          event.preventDefault();
+          login({ email, password }, () => history.replace(from));
+        }}
+      >
         Log-In
       </Button>
     </form>
   );
 };
 
-const SignupForm: Component = () => {
+const SignupForm: React.FunctionComponent = () => {
   const [email, setEmail] = React.useState("");
   const [name, setName] = React.useState("");
   const [password1, setPassword1] = React.useState("");
   const [password2, setPassword2] = React.useState("");
+  const { signup } = useAuthMethods();
+
+  const history = useHistory();
 
   return (
     <form className="flex flex-col">
@@ -115,7 +136,18 @@ const SignupForm: Component = () => {
           .
         </div>
       </div>
-      <Button level="primary" className="h-20" rounded={false}>
+      <Button
+        level="primary"
+        className="h-20"
+        rounded={false}
+        type="submit"
+        onClick={(event) => {
+          event.preventDefault();
+          signup({ email, password1, password2, username: name }, () =>
+            history.replace("/")
+          );
+        }}
+      >
         Registrieren
       </Button>
     </form>
