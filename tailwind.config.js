@@ -1,9 +1,12 @@
+// @ts-nocheck
+const plugin = require("tailwindcss/plugin");
+
 module.exports = {
   future: {
     removeDeprecatedGapUtilities: true,
     purgeLayersByDefault: true,
   },
-  purge: [],
+  purge: ["./src/**/*.tsx"],
   theme: {
     extend: {
       gridTemplateRows: {
@@ -13,5 +16,15 @@ module.exports = {
     },
   },
   variants: { backgroundColor: ["responsive", "hover", "focus", "active"] },
-  plugins: [require("@tailwindcss/ui")],
+  plugins: [
+    plugin(function ({ addUtilities }) {
+      const newUtilities = {
+        ".clickable:active": {
+          transform: "translateY(2px)",
+        },
+      };
+
+      addUtilities(newUtilities);
+    }),
+  ],
 };
