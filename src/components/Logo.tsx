@@ -1,8 +1,9 @@
-import { Component } from "@internalTypes/global";
 import React from "react";
 import { InternalLink } from "./InternalLink";
 
-export const Logo: Component = ({ className }) => {
+export const Logo: React.FunctionComponent<{ className?: string }> = ({
+  className,
+}) => {
   return (
     <InternalLink to="/">
       <h1

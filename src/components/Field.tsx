@@ -11,7 +11,7 @@ type Field = React.InputHTMLAttributes<HTMLInputElement> & {
 };
 
 export const Field: React.FC<Field> = ({
-  classNames,
+  classNames = { box: "", label: "", input: "" },
   name,
   label,
   value,

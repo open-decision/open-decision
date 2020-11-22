@@ -1,12 +1,11 @@
 import React from "react";
-import { Component } from "@internalTypes/global";
 import clsx from "clsx";
 
 type Input = React.InputHTMLAttributes<HTMLInputElement> & {
   setValue: React.Dispatch<React.SetStateAction<string>>;
 };
 
-export const Input: Component<Input> = ({
+export const Input: React.FunctionComponent<Input> = ({
   value,
   setValue,
   className,
@@ -14,7 +13,7 @@ export const Input: Component<Input> = ({
 }) => (
   <input
     className={clsx(
-      "rounded w-full py-2 px-3 focus:bg-primary-50 leading-tight focus:text-primary-900",
+      "rounded w-full py-2 px-3 leading-tight  bg-gray-100 border-2 border-gray-300 shadow-inner",
       className
     )}
     value={value}

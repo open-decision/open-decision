@@ -1,24 +1,13 @@
 import React from "react";
-import { LoginButton, LogoutButton, SignupButton } from "@features/index";
+import { LogoutButton } from "@features/index";
 import { Logo, Menu } from "@components/index";
 import { useAuth } from "@features/Auth/AuthContext";
-
-const AuthButtons = ({ className = "", authState = false }) => {
-  return authState ? (
-    <LogoutButton className={className} />
-  ) : (
-    <>
-      <LoginButton className={className} />
-      <SignupButton className={className} />
-    </>
-  );
-};
 
 export const Header: React.FC = () => {
   const { token } = useAuth();
 
   return (
-    <div className="bg-gray-200 px-4 md:px-8 py-2">
+    <div className="bg-gray-200 px-4 md:px-8 py-4">
       <div className="flex justify-between items-center">
         <Logo />
         <div className="flex items-center space-x-8">
@@ -33,7 +22,7 @@ export const Header: React.FC = () => {
                 { to: "./profile", text: "Profil" },
                 { to: "./settings", text: "Einstellungen" },
               ],
-              dropdownButtons: <AuthButtons authState={token ? true : false} />,
+              dropdownButtons: <LogoutButton />,
             }}
           />
         </div>
