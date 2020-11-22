@@ -2,7 +2,7 @@ import React from "react";
 
 export const useKeyboardEvent = (key: string, callback: () => void): void => {
   React.useEffect(() => {
-    const handler = function (event) {
+    const handler = function (event: KeyboardEvent) {
       if (event.key === key) {
         callback();
       }
@@ -22,7 +22,7 @@ type localStorage = [
 
 export const useLocalStorage = (name: string): localStorage => {
   const getItem = () => localStorage.getItem(name);
-  const setItem = (token) => localStorage.setItem(name, token);
+  const setItem = (token: string) => localStorage.setItem(name, token);
   const removeItem = () => localStorage.removeItem(name);
 
   return [getItem, setItem, removeItem];
