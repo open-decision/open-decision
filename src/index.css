@@ -7,15 +7,11 @@ body {
 @tailwind components;
 
 :is(button, a, input):focus {
-  @apply outline-none shadow-outline;
+  @apply outline-none ring;
 }
 
 .menu-link {
-  @apply text-sm font-semibold p-3 rounded-lg;
-}
-
-.menu-link:hover {
-  @apply shadow-inner bg-gray-500;
+  @apply text-sm font-semibold p-3 rounded-lg hover:shadow-inner hover:bg-gray-300;
 }
 
 @screen md {
@@ -29,12 +25,7 @@ body {
   grid-template-columns: 1fr min(theme("screens.lg"), 100%) 1fr;
   grid-template-rows: max-content 1fr;
 }
-
 @tailwind utilities;
-
-.clickable:active {
-  transform: translateY(2px);
-}
 
 @layer utilities {
   .flex-basis-0 {
