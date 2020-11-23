@@ -7,7 +7,13 @@ import "./index.css";
 export const App: React.FC = () => {
   return (
     <Switch>
-      <ProtectedRoute path={["/", "/dashboard"]} exact>
+      <Route path="/">
+        <Layout>
+          <Builder />
+        </Layout>
+      </Route>
+
+      {/* <ProtectedRoute path={["/", "/dashboard"]} exact>
         <Layout>
           <Dashboard />
         </Layout>
@@ -19,13 +25,7 @@ export const App: React.FC = () => {
             <LoginCard />
           </div>
         </Layout>
-      </Route>
-
-      <ProtectedRoute path="/builder">
-        <Layout>
-          <Builder />
-        </Layout>
-      </ProtectedRoute>
+      </Route> */}
     </Switch>
   );
 };

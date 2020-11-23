@@ -11,7 +11,6 @@ export const Builder: React.FC = () => {
       nodeTypes={config.nodeTypes}
       nodes={nodes}
       onChange={setNodes}
-      defaultNodes={[{ type: "homepage", x: 190, y: -150 }]}
     />
   );
 };

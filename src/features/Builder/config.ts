@@ -6,90 +6,51 @@ config
   .addPortType({
     type: "string",
     name: "string",
-    label: "Text",
     color: Colors.green,
-    controls: [
-      Controls.text({
-        name: "string",
-        label: "Text",
-      }),
-    ],
+    controls: [Controls.text({ name: "test", label: "Test" })],
   })
   .addPortType({
-    type: "number",
-    name: "number",
-    label: "Nummer",
-    color: Colors.red,
+    type: "comparison",
+    name: "comparison",
+    color: Colors.green,
+    hidePort: true,
+    label: "Wenn Input gleich",
+    acceptTypes: ["string"],
+    controls: [Controls.text({ label: "gleich", name: "comparison" })],
+  })
+  .addPortType({
+    type: "question",
+    name: "question",
+    color: Colors.orange,
+    hidePort: true,
     controls: [
-      Controls.number({
-        name: "number",
-        label: "Nummer",
-      }),
+      Controls.text({ label: "Frage", name: "question" }),
+      Controls.text({ label: "Antwortmöglichkeiten", name: "answer" }),
     ],
   })
   .addNodeType({
-    type: "question_text",
-    label: "Frage mit Textantwort",
+    type: "dependent",
+    label: "Abhängiger Frageknoten",
     inputs: (ports) => [
-      ports.string({ label: "Fragetitel", hidePort: true }),
-      ports.string({ label: "Fragetext", hidePort: true }),
+      ports.string({ label: "Input", noControls: true }),
+      ports.comparison(),
+      ports.question(),
     ],
-    outputs: (ports) => [ports.string({ label: "Antwort" })],
+    outputs: (ports) => [ports.string({ label: "Gewählte Antwort" })],
   })
   .addNodeType({
-    type: "question_number",
-    label: "Frage mit Nummerantwort",
-    inputs: (ports) => [
-      ports.string({ label: "Fragetitel", hidePort: true }),
-      ports.string({ label: "Fragetext", hidePort: true }),
-    ],
-    outputs: (ports) => [ports.number({ label: "Antwort" })],
+    type: "independent",
+    label: "Unabhängiger Frageknoten",
+    inputs: (ports) => [ports.question()],
+    outputs: (ports) => [ports.string({ label: "Gewählte Antwort" })],
   })
   .addNodeType({
-    type: "question_options",
-    label: "Frage mit Antwortmöglichkeiten",
+    type: "endnode",
+    label: "Ergebnis",
     inputs: (ports) => [
-      ports.string({ label: "Fragetitel", name: "title", hidePort: true }),
-      ports.string({ label: "Fragetext", name: "question", hidePort: true }),
-      ports.string({
-        label: "Antwortmöglichkeiten",
-        name: "answers",
-        hidePort: true,
-      }),
-    ],
-    outputs: (ports) => [ports.string({ label: "Antwort" })],
-  })
-  .addNodeType({
-    type: "yes_no",
-    label: "Ja/Nein",
-    description: "",
-    initialWidth: 140,
-    inputs: (ports) => [
-      ports.string({
-        name: "yes_no",
-        label: "Ergebnis",
-      }),
-      ports.number({
-        name: "ja",
-        label: "Ja",
-        hidePort: true,
-      }),
-    ],
-    outputs: (ports) => [ports.string({ label: "Antwort" })],
-  })
-  .addRootNodeType({
-    type: "homepage",
-    label: "Antwort",
-    initialWidth: 170,
-    inputs: (ports) => [
-      ports.string({
-        name: "description",
-        label: "Erklärung",
-      }),
-      ports.string({
-        name: "answer",
-        label: "Antwortext",
-      }),
+      ports.string({ label: "Input", noControls: true }),
+      ports.comparison(),
+      ports.string({ hidePort: true, label: "Ergebnis", name: "result" }),
     ],
   });
 

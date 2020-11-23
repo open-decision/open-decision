@@ -68,7 +68,7 @@ declare module "flume" {
   }
 
   interface PortBuilderType {
-    type: string;
+    type?: string;
     name?: string;
     label?: string;
     noControls?: boolean;
