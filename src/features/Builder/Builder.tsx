@@ -3,7 +3,7 @@ import { NodeEditor, Nodes } from "flume";
 import config from "./config";
 import { Button } from "@components/index";
 
-const Editor: React.FC = ({ initialNodes }) => {
+const Editor: React.FC<{ initialNodes?: any }> = ({ initialNodes }) => {
   const [nodes, setNodes] = React.useState<Nodes>(initialNodes);
 
   return (
