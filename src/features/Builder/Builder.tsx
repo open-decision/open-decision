@@ -34,7 +34,7 @@ export const Builder = () => {
         </Button>
         <Button
           onClick={() => {
-            setNodes();
+            setNodes(undefined);
           }}
         >
           Reset
