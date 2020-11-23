@@ -3,14 +3,15 @@ import { NodeEditor, Nodes } from "flume";
 import config from "./config";
 import { Button } from "@components/index";
 
-const Editor: React.FC<{ initialNodes?: any }> = ({ initialNodes }) => {
-  const [nodes, setNodes] = React.useState<Nodes>(initialNodes);
-
+const Editor: React.FC<{ initialNodes?: any }> = ({
+  initialNodes,
+  setNodes,
+}) => {
   return (
     <NodeEditor
       portTypes={config.portTypes}
       nodeTypes={config.nodeTypes}
-      nodes={nodes}
+      nodes={initialNodes}
       onChange={setNodes}
     />
   );
@@ -18,6 +19,7 @@ const Editor: React.FC<{ initialNodes?: any }> = ({ initialNodes }) => {
 
 export const Builder = () => {
   const [nodes, setNodes] = React.useState();
+  console.log(nodes);
 
   return (
     <div className="relative" style={{ backgroundColor: "#1a1c1d" }}>
@@ -40,7 +42,7 @@ export const Builder = () => {
           Reset
         </Button>
       </div>
-      {nodes ? <Editor initialNodes={nodes} /> : null}
+      {nodes ? <Editor initialNodes={nodes} setNodes={setNodes} /> : null}
     </div>
   );
 };
