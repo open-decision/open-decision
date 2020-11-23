@@ -12,7 +12,7 @@ const variants = {
 type linkVariants = keyof typeof variants;
 
 type InternalLink = React.FC<
-  LinkProps & { variant?: linkVariants; className: string }
+  LinkProps & { variant?: linkVariants; className?: string }
 >;
 
 export const InternalLink: InternalLink = ({
