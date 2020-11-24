@@ -9,7 +9,7 @@
   ],
   "description": "",
   "scripts": {
-    "dev": "npm run codegen && snowpack dev",
+    "dev": "snowpack dev",
     "build": "npm run codegen && snowpack build",
     "test": "web-test-runner \"src/**/*.test.tsx\"",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
