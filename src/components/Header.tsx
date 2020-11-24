@@ -21,7 +21,7 @@ export const Header: React.FC = () => {
                 alt="Anonymer User"
               />
             ) : (
-              <UserCircleOutline />
+              <UserCircleOutline className="w-full" />
             )
           }
         >
