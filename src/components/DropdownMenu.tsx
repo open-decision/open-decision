@@ -1,6 +1,24 @@
-import { useKeyboardEvent } from "@utils/index";
 import React from "react";
-import { Button } from "@components/index";
+import { useKeyboardEvent } from "@utils/index";
+import { Button } from "./Button";
+
+type MenuProps = {
+  icon?: React.ReactNode;
+  alt?: string;
+};
+
+export const DropdownMenu: React.FC<MenuProps> = ({ icon = "", children }) => {
+  const [open, setOpen] = React.useState(false);
+  useKeyboardEvent("Escape", () => setOpen(false));
+
+  return (
+    <div className="flex items-center justify-end sm:space-x-6">
+      <Dropdown icon={icon} open={open} setOpen={setOpen}>
+        <div className="flex flex-col -m-3 mb-0 space-y-4">{children}</div>
+      </Dropdown>
+    </div>
+  );
+};
 
 type Dropdown = {
   open: boolean;
@@ -8,7 +26,7 @@ type Dropdown = {
   icon: React.ReactNode;
 };
 
-export const Dropdown: React.FunctionComponent<Dropdown> = ({
+const Dropdown: React.FunctionComponent<Dropdown> = ({
   children,
   open,
   setOpen,
@@ -20,7 +38,7 @@ export const Dropdown: React.FunctionComponent<Dropdown> = ({
     <div className="relative">
       <Button
         size="filled"
-        level="icon"
+        kind="icon"
         onClick={() => setOpen(!open)}
         className="relative z-10"
       >

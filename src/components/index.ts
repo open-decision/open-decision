@@ -4,7 +4,7 @@ export * from "./InternalLink";
 export * from "./Button";
 export * from "./Input";
 export * from "./Logo";
-export * from "./Menu";
+export * from "./DropdownMenu";
 export * from "./Field";
 export * from "./Badge";
 export * from "./Tabs";
