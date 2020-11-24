@@ -1,17 +1,13 @@
 import React from "react";
 import { Header } from "./Header";
 
-type Layout = {
-  header?: boolean;
-};
-
-export const Layout: React.FunctionComponent<Layout> = ({
-  children,
-  header = true,
-}) => {
+export const Layout: React.FunctionComponent = ({ children }) => {
   return (
-    <div className="grid grid-rows-layout h-screen">
-      {header ? <Header /> : <div />}
+    <div
+      className="grid h-screen"
+      style={{ gridTemplateRows: "auto 1fr auto" }}
+    >
+      <Header />
       {children}
     </div>
   );
