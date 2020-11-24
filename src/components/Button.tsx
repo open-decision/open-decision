@@ -45,7 +45,7 @@ export const Button: Button = ({
   <button
     className={clsx(
       className,
-      "font-bold transition-all duration-100",
+      "font-bold transition-all duration-100 inline-flex items-center",
       pluck([size], sizes),
       pluck([kind], variants),
       rounded && "rounded",
