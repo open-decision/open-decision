@@ -26,7 +26,7 @@ type buttonSizes = keyof typeof sizes;
 type Button = React.FC<
   React.ButtonHTMLAttributes<HTMLButtonElement> & {
     className?: string;
-    level?: buttonTypes;
+    kind?: buttonTypes;
     size?: buttonSizes;
     rounded?: boolean;
     active?: boolean;
@@ -36,7 +36,7 @@ type Button = React.FC<
 export const Button: Button = ({
   className = "",
   children,
-  level = "primary",
+  kind = "primary",
   size = "normal",
   rounded = true,
   active = false,
@@ -47,7 +47,7 @@ export const Button: Button = ({
       className,
       "font-bold transition-all duration-100",
       pluck([size], sizes),
-      pluck([level], variants),
+      pluck([kind], variants),
       rounded && "rounded",
       active && "border-b-2 border-green-500"
     )}

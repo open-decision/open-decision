@@ -20,7 +20,7 @@ const TreeCard: React.FC<TreeCard> = ({ tree }) => (
           {tag.name}
         </Badge>
       ))}
-      <Button level="icon" size="filled">
+      <Button kind="icon" size="filled">
         <PlusCircleOutline className="w-6 h-6" />
       </Button>
     </div>
@@ -33,10 +33,10 @@ const TreeCard: React.FC<TreeCard> = ({ tree }) => (
         </span>
       </div>
       <div className="flex self-end">
-        <Button level="ghost" className="text-gray-500 hover:text-red-700 mr-4">
+        <Button kind="ghost" className="text-gray-500 hover:text-red-700 mr-4">
           Archivieren
         </Button>
-        <Button level="secondary">Öffnen</Button>
+        <Button kind="secondary">Öffnen</Button>
       </div>
     </div>
   </div>
@@ -69,7 +69,7 @@ const SortButton: React.FunctionComponent<SortButton> = ({
   return (
     <Button
       className="flex"
-      level="ghost"
+      kind="ghost"
       active={sort.key === name}
       rounded={false}
       onClick={() =>
