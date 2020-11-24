@@ -9,9 +9,6 @@ module.exports = {
   purge: ["./src/**/*.tsx"],
   theme: {
     extend: {
-      gridTemplateRows: {
-        layout: "auto 1fr auto",
-      },
       minWidth: { "1/4": "25%", "1/2": "50%", "3/4": "75%" },
     },
   },
