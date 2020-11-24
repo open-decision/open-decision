@@ -26,7 +26,7 @@ type signup = (
 type AuthMethods = { login: login; logout: logout; signup: signup };
 
 const AuthContext = React.createContext<AuthContext>({
-  token: "1234",
+  token: "",
   expires: 0,
   refreshToken: "",
 });
@@ -35,7 +35,6 @@ const AuthMethodContext = React.createContext<AuthMethods>({} as AuthMethods);
 
 export const AuthProvider: React.FC = ({ children }) => {
   const [state, setState] = React.useState({
-    //FIXME remove 1234 from token when the token is persisted through a cookie
     token: "",
     expires: 0,
     refreshToken: "",
