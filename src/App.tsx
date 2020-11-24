@@ -13,19 +13,17 @@ export const App: React.FC = () => {
         </Layout>
       </Route>
 
-      {/* <ProtectedRoute path={["/", "/dashboard"]} exact>
+      <ProtectedRoute path={["/", "/dashboard"]} exact>
         <Layout>
           <Dashboard />
         </Layout>
       </ProtectedRoute>
 
       <Route path="/login">
-        <Layout header={false}>
-          <div className="flex justify-center items-center">
-            <LoginCard />
-          </div>
-        </Layout>
-      </Route> */}
+        <div className="flex justify-center items-center">
+          <LoginCard />
+        </div>
+      </Route>
     </Switch>
   );
 };
