@@ -9,8 +9,7 @@ const variants = {
     "border-2 border-green-400 hover:bg-green-200 text-green-800 shadow hover:shadow-lg",
   tertiary: "text-green-900 hover:text-green-700",
   ghost: "text-gray-600 hover:text-gray-800",
-  icon:
-    "rounded-full w-10 h-10 overflow-hidden flex justify-center items-center clickable",
+  icon: "rounded-full w-10 h-10 overflow-hidden",
 } as const;
 
 const sizes = {
@@ -45,7 +44,7 @@ export const Button: Button = ({
   <button
     className={clsx(
       className,
-      "font-bold transition-all duration-100 inline-flex items-center",
+      "font-bold transition-all duration-100 inline-flex items-center clickable",
       pluck([size], sizes),
       pluck([kind], variants),
       rounded && "rounded",
