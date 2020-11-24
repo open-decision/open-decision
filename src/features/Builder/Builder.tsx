@@ -20,13 +20,33 @@ const Editor: React.FC<{ initialNodes?: any; setNodes?: any }> = ({
 
 export const Builder = () => {
   const [nodes, setNodes] = React.useState<undefined | Nodes>();
+  let fileReader: FileReader;
+
+  const handleFileRead = () =>
+    setNodes(JSON.parse(fileReader.result as string));
+
+  const handleFileChosen = (file: File) => {
+    fileReader = new FileReader();
+    fileReader.onloadend = handleFileRead;
+    fileReader.readAsText(file);
+  };
 
   return (
     <div className="relative" style={{ backgroundColor: "#1a1c1d" }}>
       {nodes ? (
         <>
-          <div className="absolute p-5 z-20 space-x-6">
-            <Button onClick={() => alert(JSON.stringify(nodes))}>Export</Button>
+          <div className="absolute p-5 z-20 space-x-6 flex">
+            <a
+              download="decision_tree.json"
+              href={`data:application/json,${JSON.stringify(
+                nodes,
+                null,
+                "\t"
+              )}`}
+              className="bg-green-300 hover:bg-green-400 text-green-800 shadow hover:shadow-lg py-2 px-4 rounded font-bold"
+            >
+              Export
+            </a>
 
             <Button
               onClick={() => {
@@ -50,19 +70,17 @@ export const Builder = () => {
               </Button>
             </p>
             <p className="text-xl mt-4">
-              Alternativ kann ein bestehender Datensatz
-              <Button
-                onClick={() => {
-                  const data = prompt("Bitte Baumdaten eingeben.") || "{}";
-                  const parsedData = JSON.parse(data);
-                  setNodes(parsedData);
-                }}
-                className="mx-2"
-              >
-                <ChevronRightOutline className="w-6" />
-                Importiert
-              </Button>{" "}
-              werden.
+              Alternativ kann ein bestehender Datensatz importiert werden.
+              <input
+                className="ml-2"
+                type="file"
+                name="file"
+                accept=".json"
+                onChange={(e) =>
+                  e?.currentTarget?.files &&
+                  handleFileChosen(e.currentTarget.files[0])
+                }
+              />
             </p>
           </div>
         </div>
