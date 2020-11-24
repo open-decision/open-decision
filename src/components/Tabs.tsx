@@ -2,13 +2,13 @@ import clsx from "clsx";
 import React from "react";
 
 type Tabs = {
-  tabs: { component: React.FunctionComponent; label: string }[];
+  Tabs: { Component: React.FunctionComponent; label: string }[];
   initialActive: string;
   className?: string;
 };
 
 export const Tabs: React.FunctionComponent<Tabs> = ({
-  tabs,
+  Tabs,
   initialActive,
   className,
 }) => {
@@ -17,25 +17,23 @@ export const Tabs: React.FunctionComponent<Tabs> = ({
   return (
     <div>
       <div className={clsx(className, "flex justify-around")}>
-        {tabs.map((tab) => (
+        {Tabs.map((Tab) => (
           <button
-            key={tab.label}
+            key={Tab.label}
             className={clsx(
               "flex-grow flex-basis-0 p-4 border-b-2 hover:bg-green-200 focus:bg-green-100 focus:outline-none",
-              { ["border-green-500 bg-green-50"]: active === tab.label }
+              { ["border-green-500 bg-green-50"]: active === Tab.label }
             )}
-            onClick={(e) => setActive(tab.label)}
+            onClick={(e) => setActive(Tab.label)}
           >
-            {tab.label}
+            {Tab.label}
           </button>
         ))}
       </div>
 
-      {tabs
-        .filter((tab) => tab.label === active)
-        .map((tab) => (
-          <tab.component key={tab.label} />
-        ))}
+      {Tabs.filter((Tab) => Tab.label === active).map((Tab) => (
+        <Tab.Component key={Tab.label} />
+      ))}
     </div>
   );
 };

@@ -14,9 +14,9 @@ export const LoginCard: React.FunctionComponent = () => {
         <Tabs
           className="shadow-inner"
           initialActive="Einloggen"
-          tabs={[
-            { label: "Einloggen", component: LoginForm },
-            { label: "Registrieren", component: SignupForm },
+          Tabs={[
+            { label: "Einloggen", Component: LoginForm },
+            { label: "Registrieren", Component: SignupForm },
           ]}
         />
       </div>
@@ -137,7 +137,7 @@ const SignupForm: React.FunctionComponent = () => {
         </div>
       </div>
       <Button
-        level="primary"
+        kind="primary"
         className="h-20"
         rounded={false}
         type="submit"
