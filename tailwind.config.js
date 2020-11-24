@@ -1,5 +1,6 @@
 // @ts-nocheck
 const plugin = require("tailwindcss/plugin");
+const colors = require("tailwindcss/colors");
 
 module.exports = {
   future: {
@@ -8,6 +9,14 @@ module.exports = {
   },
   purge: ["./src/**/*.tsx"],
   theme: {
+    colors: {
+      gray: colors.warmGray,
+      green: colors.emerald,
+      red: colors.rose,
+      blue: colors.indigo,
+      yellow: colors.amber,
+      white: colors.white,
+    },
     extend: {
       minWidth: { "1/4": "25%", "1/2": "50%", "3/4": "75%" },
     },
