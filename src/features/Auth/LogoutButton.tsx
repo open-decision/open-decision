@@ -13,7 +13,7 @@ export const LogoutButton: FunctionComponent<{ className?: string }> = ({
   //TODO handle Failure in UI
   return (
     <Button
-      kind="primary"
+      kind="filled"
       onClick={(e) => logout(() => history.push("/"))}
       className={className}
     >

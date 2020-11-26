@@ -1,7 +1,7 @@
 import React from "react";
 import { NodeEditor, Nodes } from "flume";
 import config from "./config";
-import { Button } from "@components/index";
+import { Button, FileInput, Link } from "@components/index";
 import { ChevronRightOutline } from "@graywolfai/react-heroicons";
 
 const Editor: React.FC<{ initialNodes?: any; setNodes?: any }> = ({
@@ -36,17 +36,17 @@ export const Builder = () => {
       {nodes ? (
         <>
           <div className="absolute p-5 z-20 space-x-6 flex">
-            <a
+            <Link
+              variant="button"
               download="decision_tree.json"
               href={`data:application/json,${JSON.stringify(
                 nodes,
                 null,
                 "\t"
               )}`}
-              className="bg-green-300 hover:bg-green-400 text-green-800 shadow hover:shadow-lg py-2 px-4 rounded font-bold"
             >
               Export
-            </a>
+            </Link>
 
             <Button
               onClick={() => {
@@ -69,11 +69,10 @@ export const Builder = () => {
                 Starten
               </Button>
             </p>
-            <p className="text-xl mt-4">
+            <p className="text-xl mt-6">
               Alternativ kann ein bestehender Datensatz importiert werden.
-              <input
-                className="ml-2"
-                type="file"
+              <FileInput
+                className="mt-4"
                 name="file"
                 accept=".json"
                 onChange={(e) =>

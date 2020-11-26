@@ -2,7 +2,7 @@ import React from "react";
 import { LogoutButton } from "@features/index";
 import { Logo, Dropdown } from "@components/index";
 import { useAuth } from "@features/Auth/AuthContext";
-import { InternalLink } from "./InternalLink";
+import { InternalLink } from "./Links";
 import { UserCircleOutline } from "@graywolfai/react-heroicons";
 
 export const Header: React.FC = () => {

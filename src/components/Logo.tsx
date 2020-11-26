@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import React from "react";
-import { InternalLink } from "./InternalLink";
+import { InternalLink } from "./Links";
 
 export const Logo: React.FunctionComponent<{ className?: string }> = ({
   className,

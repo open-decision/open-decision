@@ -1,10 +1,9 @@
 import clsx from "clsx";
 import React from "react";
-import { Input } from "./Input";
+import { Input } from "./Inputs";
 
 type Field = React.InputHTMLAttributes<HTMLInputElement> & {
   classNames?: { box?: string; label?: string; input?: string };
-  setValue: React.Dispatch<React.SetStateAction<string>>;
   name: string;
   label: string;
   layout?: "block" | "inline";
@@ -14,8 +13,6 @@ export const Field: React.FC<Field> = ({
   classNames = { box: "", label: "", input: "" },
   name,
   label,
-  value,
-  setValue,
   layout = "block",
   ...props
 }) => {
@@ -35,12 +32,7 @@ export const Field: React.FC<Field> = ({
       >
         {label}
       </label>
-      <Input
-        className={classNames.input}
-        value={value}
-        setValue={setValue}
-        {...props}
-      />
+      <Input className={classNames.input} {...props} />
     </div>
   );
 };

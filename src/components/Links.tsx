@@ -1,12 +1,14 @@
 import { pluck } from "@utils/index";
 import clsx from "clsx";
 import React from "react";
-import { Link, LinkProps } from "react-router-dom";
+import { Link as RouterLink, LinkProps } from "react-router-dom";
 
 const variants = {
   default: "",
   icon:
     "rounded-full w-10 h-10 overflow-hidden flex justify-center items-center clickable",
+  button:
+    "bg-green-300 hover:bg-green-400 text-green-800 shadow hover:shadow-lg py-2 px-4 rounded font-bold",
 } as const;
 
 type linkVariants = keyof typeof variants;
@@ -22,7 +24,7 @@ export const InternalLink: InternalLink = ({
   ...props
 }) => {
   return (
-    <Link
+    <RouterLink
       className={clsx(
         pluck([variant], variants),
         className,
@@ -31,6 +33,31 @@ export const InternalLink: InternalLink = ({
       {...props}
     >
       {children}
-    </Link>
+    </RouterLink>
   );
 };
+
+type Link = React.FC<
+  React.AnchorHTMLAttributes<HTMLAnchorElement> & {
+    variant?: linkVariants;
+    className?: string;
+  }
+>;
+
+export const Link: Link = ({
+  children,
+  variant = "default",
+  className,
+  ...props
+}) => (
+  <a
+    className={clsx(
+      pluck([variant], variants),
+      className,
+      "no-underline text-base"
+    )}
+    {...props}
+  >
+    {children}
+  </a>
+);

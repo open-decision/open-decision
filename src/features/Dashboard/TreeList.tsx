@@ -36,7 +36,7 @@ const TreeCard: React.FC<TreeCard> = ({ tree }) => (
         <Button kind="ghost" className="text-gray-500 hover:text-red-700 mr-4">
           Archivieren
         </Button>
-        <Button kind="secondary">Öffnen</Button>
+        <Button kind="outlined">Öffnen</Button>
       </div>
     </div>
   </div>
