@@ -36,7 +36,7 @@ export const Search: React.FunctionComponent<GlobalFilter> = ({
       name="search"
       label="Suche: "
       value={value || ""}
-      setValue={setValue}
+      onChange={(e) => setValue(e.target.value)}
       {...props}
     />
   );

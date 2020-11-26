@@ -79,7 +79,9 @@ export const Builder = () => {
                   e?.currentTarget?.files &&
                   handleFileChosen(e.currentTarget.files[0])
                 }
-              />
+              >
+                Datei hochladen
+              </FileInput>
             </p>
           </div>
         </div>

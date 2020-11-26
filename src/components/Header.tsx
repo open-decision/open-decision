@@ -7,7 +7,6 @@ import { UserCircleOutline } from "@graywolfai/react-heroicons";
 
 export const Header: React.FC = () => {
   const { token } = useAuth();
-  console.log(token);
 
   return (
     <div className="bg-gray-200 px-4 md:px-8 py-4">

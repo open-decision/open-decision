@@ -23,11 +23,11 @@ export const Input: Input = ({ className, variant = "default", ...props }) => (
   />
 );
 
-export const FileInput: Input = ({ className, ...props }) => (
+export const FileInput: Input = ({ className, children, ...props }) => (
   <label
     className={clsx(
       className,
-      "w-48 flex flex-col items-center px-2 py-4 bg-gray-100 text-green-900 rounded-lg shadow-lg tracking-wide uppercase border border-green-700 cursor-pointer hover:bg-green-300 clickable"
+      "w-48 flex flex-col items-center px-2 py-4 text-green-900 rounded-lg tracking-wide uppercase border-2 border-green-800 cursor-pointer hover:bg-green-100 clickable shadow-inner bg-gray-100"
     )}
   >
     <svg
@@ -38,7 +38,7 @@ export const FileInput: Input = ({ className, ...props }) => (
     >
       <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
     </svg>
-    <span className="mt-2 text-base leading-normal">Datei auswählen</span>
+    <span className="mt-2 text-base leading-normal">{children}</span>
     <input type="file" className="hidden" {...props} />
   </label>
 );

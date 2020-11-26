@@ -43,7 +43,7 @@ const LoginForm: React.FunctionComponent = () => {
           name="email"
           label="E-Mail"
           value={email}
-          setValue={setEmail}
+          onChange={(e) => setEmail(e.target.value)}
           type="email"
           required
         />
@@ -51,7 +51,7 @@ const LoginForm: React.FunctionComponent = () => {
           name="password"
           label="Passwort"
           value={password}
-          setValue={setPassword}
+          onChange={(e) => setPassword(e.target.value)}
           type="password"
           required
         />
@@ -96,7 +96,7 @@ const SignupForm: React.FunctionComponent = () => {
             name="email"
             label="E-Mail"
             value={email}
-            setValue={setEmail}
+            onChange={(e) => setEmail(e.target.value)}
             type="email"
             required
           />
@@ -104,7 +104,7 @@ const SignupForm: React.FunctionComponent = () => {
             name="name"
             label="Name"
             value={name}
-            setValue={setName}
+            onChange={(e) => setName(e.target.value)}
             type="text"
             required
           />
@@ -112,7 +112,7 @@ const SignupForm: React.FunctionComponent = () => {
             name="password"
             label="Passwort"
             value={password1}
-            setValue={setPassword1}
+            onChange={(e) => setPassword1(e.target.value)}
             type="password"
             required
           />
@@ -120,7 +120,7 @@ const SignupForm: React.FunctionComponent = () => {
             name="password"
             label="Passwort wiederholen"
             value={password2}
-            setValue={setPassword2}
+            onChange={(e) => setPassword2(e.target.value)}
             type="password"
             required
           />
