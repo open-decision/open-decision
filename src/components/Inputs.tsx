@@ -27,7 +27,7 @@ export const FileInput: Input = ({ className, children, ...props }) => (
   <label
     className={clsx(
       className,
-      "w-48 flex flex-col items-center px-2 py-4 text-green-900 rounded-lg tracking-wide uppercase border-2 border-green-800 cursor-pointer hover:bg-green-100 clickable shadow-inner bg-gray-100"
+      "min-w-max flex flex-col items-center px-4 py-6 text-green-900 rounded-lg tracking-wide uppercase border-2 border-green-800 cursor-pointer hover:bg-green-100 clickable shadow-inner bg-gray-100"
     )}
   >
     <svg
