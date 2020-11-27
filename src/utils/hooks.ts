@@ -1,4 +1,3 @@
-import { pipe } from "fp-ts/lib/function";
 import React from "react";
 
 export const useKeyboardEvent = (key: string, callback: () => void): void => {
