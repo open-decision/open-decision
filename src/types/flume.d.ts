@@ -134,13 +134,13 @@ declare module "flume" {
     y: number;
   }
 
-  interface Nodes {
-    [id: string]: Node;
-  }
+  type Nodes = {
+    [id?: string]: Node;
+  };
 
-  interface Comments {
-    [id: string]: Comment;
-  }
+  type Comments = {
+    [id?: string]: Comment;
+  };
 
   interface PortConfig {
     name?: string;
