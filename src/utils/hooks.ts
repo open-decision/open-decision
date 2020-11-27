@@ -1,3 +1,4 @@
+import { pipe } from "fp-ts/lib/function";
 import React from "react";
 
 export const useKeyboardEvent = (key: string, callback: () => void): void => {
@@ -26,4 +27,27 @@ export const useLocalStorage = (name: string): localStorage => {
   const removeItem = () => localStorage.removeItem(name);
 
   return [getItem, setItem, removeItem];
+};
+
+export const useFileReader = <S>(): [
+  fileContent: S | undefined,
+  setFileContent: React.Dispatch<React.SetStateAction<S | undefined>>,
+  handleUpload: (e: React.ChangeEvent<HTMLInputElement>) => void | null
+] => {
+  const [fileContent, setFileContent] = React.useState<S>();
+
+  const fileReader = new FileReader();
+
+  const handleFileRead = () =>
+    setFileContent(JSON.parse(fileReader.result as string));
+
+  const handleFileChosen = (file: File) => {
+    fileReader.onloadend = handleFileRead;
+    fileReader.readAsText(file);
+  };
+
+  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) =>
+    e?.currentTarget?.files && handleFileChosen(e.currentTarget.files[0]);
+
+  return [fileContent, setFileContent, handleUpload];
 };
