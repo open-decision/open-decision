@@ -50,11 +50,15 @@ export const fuzzySearch = (
     keys: [
       "name",
       (data) => readableDate(parseISO(data.createdAt)),
+      //@ts-expect-error - Issue https://github.com/kentcdodds/match-sorter/issues/116
       (data) => data.tags.map((tag: Tag) => tag.name),
     ],
   });
 };
 
-export const sortByKey = (data: ValidTreeNode[], key: string) => {
+export const sortByKey = (
+  data: ValidTreeNode[],
+  key: string
+): ValidTreeNode[] => {
   return matchSorter(data, "", { keys: [key] });
 };
