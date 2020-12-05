@@ -7,7 +7,7 @@ module.exports = {
     removeDeprecatedGapUtilities: true,
     purgeLayersByDefault: true,
   },
-  purge: ["./src/**/*.tsx"],
+  purge: ["./src/**/*.tsx", "./src/**/*.ts"],
   theme: {
     colors: {
       gray: colors.warmGray,
@@ -16,6 +16,9 @@ module.exports = {
       blue: colors.indigo,
       yellow: colors.amber,
       white: colors.white,
+      indigo: colors.indigo,
+      purple: colors.purple,
+      pink: colors.pink,
     },
     extend: {
       minWidth: { "1/4": "25%", "1/2": "50%", "3/4": "75%" },
