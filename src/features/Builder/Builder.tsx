@@ -14,16 +14,19 @@ const Editor: React.FC<{
   initialData?: EditorState;
   setNodes?: any;
   setComments?: any;
-}> = ({ initialData = { nodes: {}, comments: {} }, setNodes, setComments }) => (
-  <NodeEditor
-    portTypes={config.portTypes}
-    nodeTypes={config.nodeTypes}
-    nodes={initialData.nodes}
-    onChange={setNodes}
-    comments={initialData.comments}
-    onCommentsChange={setComments}
-  />
-);
+}> = ({ initialData = { nodes: {}, comments: {} }, setNodes, setComments }) => {
+  console.log(config);
+  return (
+    <NodeEditor
+      portTypes={config.portTypes}
+      nodeTypes={config.nodeTypes}
+      nodes={initialData.nodes}
+      onChange={setNodes}
+      comments={initialData.comments}
+      onCommentsChange={setComments}
+    />
+  );
+};
 
 export const Builder: React.FC = () => {
   const [data, setData, setFile] = useFileReader<EditorState>();

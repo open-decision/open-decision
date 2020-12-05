@@ -7,12 +7,6 @@ import "./index.css";
 export const App: React.FC = () => {
   return (
     <Switch>
-      <Route path="/">
-        <Layout>
-          <Builder />
-        </Layout>
-      </Route>
-
       <ProtectedRoute path={["/", "/dashboard"]} exact>
         <Layout>
           <Dashboard />
@@ -20,10 +14,16 @@ export const App: React.FC = () => {
       </ProtectedRoute>
 
       <Route path="/login">
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center h-screen">
           <LoginCard />
         </div>
       </Route>
+
+      <ProtectedRoute path="/builder">
+        <Layout>
+          <Builder />
+        </Layout>
+      </ProtectedRoute>
     </Switch>
   );
 };
