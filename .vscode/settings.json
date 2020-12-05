@@ -64,10 +64,10 @@
     "**/CVS": true,
     "**/.DS_Store": true,
     "node_modules": true,
-    ".*": true,
+    ".*": false,
     "snowpack*": true,
     "tailwind*": false,
-    "tsconfig*": true,
+    "tsconfig*": false,
     "postcss*": true,
     "yarn.lock": true
   },
