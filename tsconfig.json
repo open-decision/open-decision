@@ -1,26 +1,27 @@
 {
-  "include": ["src"],
   "compilerOptions": {
-    "module": "esnext",
-    "target": "esnext",
-    "moduleResolution": "node",
+    "composite": true,
     "jsx": "preserve",
     "baseUrl": "./src",
-    /* paths - If you configure Snowpack import aliases, add them here. */
     "paths": {
       "@internalTypes/*": ["types/*"],
       "@components/*": ["components/*"],
       "@features/*": ["features/*"],
       "@utils/*": ["utils/*"]
     },
-    /* noEmit - Snowpack builds (emits) files, not tsc. */
-    "noEmit": true,
-    /* Additional Options */
+    "module": "ESNext",
+    "types": [],
+    "sourceMap": true,
+    "target": "ES2018",
     "strict": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
+    // "noUnusedLocals": true,
+    // "noUnusedParameters": true,
+    // "noImplicitReturns": true,
+    "declaration": true,
     "allowSyntheticDefaultImports": true,
-    "importsNotUsedAsValues": "remove"
-  }
+    "moduleResolution": "node",
+    "noEmit": true,
+    "plugins": [{ "name": "typescript-plugin-css-modules" }]
+  },
+  "include": ["src"]
 }

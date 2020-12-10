@@ -1,15 +1,30 @@
 import React from "react";
-import { NodeEditor, EditorState } from "builder";
+import { NodeEditor } from "./node-editor";
 import { Button, FileInput, Header, Link } from "@components/index";
 import { ChevronRightOutline } from "@graywolfai/react-heroicons";
 import { useFileReader } from "@utils/index";
+import { EditorState } from "./node-editor/reducers";
+
+const initialEditorState = {
+  comments: {},
+  id: "1234",
+  nodes: {},
+  position: { x: 0, y: 0 },
+  zoom: 1,
+};
 
 const Editor: React.FC<{
   initialData?: EditorState;
   onChange?: any;
   setComments?: any;
-}> = ({ initialData = { nodes: {}, comments: {} }, onChange }) => {
-  return <NodeEditor config={{}} state={initialData} onChange={onChange} />;
+}> = ({ initialData = initialEditorState, onChange }) => {
+  return (
+    <NodeEditor
+      config={{ nodes: {}, ports: {} }}
+      state={initialData}
+      onChange={onChange}
+    />
+  );
 };
 
 export const Builder: React.FC = () => {
@@ -44,9 +59,7 @@ export const Builder: React.FC = () => {
             </div>
             <Editor
               initialData={data}
-              onChange={(value: EditorState) =>
-                setData({ ...data, nodes: value })
-              }
+              onChange={(value: EditorState) => setData(value)}
             />
           </>
         ) : (
@@ -56,7 +69,7 @@ export const Builder: React.FC = () => {
               <p className="mt-6 text-xl">
                 Um den Builder auszuprobieren klicke auf{" "}
                 <Button
-                  onClick={() => setData({ nodes: {}, comments: {} })}
+                  onClick={() => setData(initialEditorState)}
                   className="mx-2"
                 >
                   <ChevronRightOutline className="w-6" />
