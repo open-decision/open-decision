@@ -1,253 +1,105 @@
 import React from "react";
-import styles from "./Stage.module.css";
-import { Portal } from "react-portal";
-import ContextMenu, { menuOption } from "../ContextMenu/ContextMenu";
-import {
-  EditorDispatchContext,
-  EditorContext,
-  STAGE_ID,
-} from "../../utilities";
-import { Draggable } from "../Draggable/Draggable";
-import orderBy from "lodash/orderBy";
-import clamp from "lodash/clamp";
-import { coordinates, NodeTypes } from "../../types";
+import { useKeyPressEvent } from "react-use";
+import { useGesture } from "react-use-gesture";
+import { useEditorStore } from "../../globalState";
+import clsx from "clsx";
 
 type StageProps = {
-  outerStageChildren: React.ReactNode;
-  numNodes: number;
-  stageRect: React.MutableRefObject<DOMRect | null>;
-  spaceToPan: boolean;
-  disableComments: boolean;
+  /**
+   * Setting this to false disables panning in the Editor.
+   */
   disablePan: boolean;
+  /**
+   * Setting this to false disables zooming in the Editor.
+   */
   disableZoom: boolean;
-  nodeTypes: NodeTypes;
+  className?: string;
 };
 
-export const Stage: React.FC<StageProps> = ({
+type Stage = React.FC<React.HTMLAttributes<HTMLDivElement> & StageProps>;
+
+/**
+ * The Stage is the main parent component of the node-editor. It holds all the Nodes and Connections pased in as children. It's main pourpose is to allow panning and zooming.
+ */
+export const Stage: Stage = ({
   children,
-  outerStageChildren,
-  numNodes,
-  stageRect,
-  spaceToPan,
-  disableComments,
+  className,
   disablePan,
   disableZoom,
-  nodeTypes,
+  ...props
 }) => {
-  const dispatch = React.useContext(EditorDispatchContext);
-  const { zoom, position, id } = React.useContext(EditorContext);
+  const [
+    zoom,
+    coordinates,
+    setCoordinates,
+    setZoom,
+  ] = useEditorStore((state) => [
+    state.zoom,
+    state.coordinates,
+    state.setCoordinates,
+    state.setZoom,
+  ]);
 
-  const wrapper = React.useRef<HTMLDivElement>(null);
-  const translateWrapper = React.useRef<HTMLDivElement>(null);
-
-  const [menuOpen, setMenuOpen] = React.useState(false);
-  const [menuCoordinates, setMenuCoordinates] = React.useState({ x: 0, y: 0 });
-  const dragData = React.useRef({ x: 0, y: 0 });
+  /**
+   * This tracks whether the space key is pressed. We need this, because the Stage should be pannable when pressing the space key.
+   */
   const [spaceIsPressed, setSpaceIsPressed] = React.useState(false);
-
-  const setStageRect = React.useCallback(() => {
-    stageRect.current = wrapper?.current?.getBoundingClientRect() ?? null;
-  }, [stageRect.current]);
-
-  React.useEffect(() => {
-    stageRect.current = wrapper?.current?.getBoundingClientRect() ?? null;
-    window.addEventListener("resize", setStageRect);
-    return () => {
-      window.removeEventListener("resize", setStageRect);
-    };
-  }, [stageRect.current, setStageRect]);
-
-  const handleWheel = React.useCallback(
-    (e: WheelEvent) => {
-      e.preventDefault();
-      if (numNodes > 0) {
-        const delta = e.deltaY;
-        dispatch({
-          type: "SET_SCALE",
-          zoom: clamp(zoom - clamp(delta, -10, 10) * 0.005, 0.1, 7),
-        });
-      }
-    },
-    [dispatch, numNodes, zoom]
+  useKeyPressEvent(
+    (e) => e.code === "Space",
+    () => setSpaceIsPressed(true),
+    () => setSpaceIsPressed(false)
   );
 
-  const handleDragDelayStart = () => {
-    wrapper?.current?.focus();
-  };
+  /**
+   * These gestures represent the panning and zooming inside the Stage. They are enabled and disabled by the `disableZoom` and `disablePan` props.
+   */
+  const stageGestures = useGesture(
+    {
+      // We track the mousewheel and zoom in and out of the Stage.
+      onWheel: ({ delta: [, y] }) => setZoom(y),
+      // We track the drag and pan the Stage based on the previous coordinates and the delta (change) in the coordinates.
+      onDrag: ({ movement, buttons, cancel }) => {
+        //The panning should not work on right mouse click.
+        const isValidClick = buttons === 1 || buttons === 4;
 
-  const handleDragStart = (e: MouseEvent) => {
-    e.preventDefault();
-    dragData.current = {
-      x: e.clientX,
-      y: e.clientY,
-    };
-  };
-
-  const handleMouseDrag = (_coordinates: coordinates, e: MouseEvent) => {
-    const xDistance = dragData.current.x - e.clientX;
-    const yDistance = dragData.current.y - e.clientY;
-    translateWrapper.current
-      ? (translateWrapper.current.style.transform = `translate(${-(
-          position.x + xDistance
-        )}px, ${-(position.y + yDistance)}px)`)
-      : null;
-  };
-
-  const handleDragEnd = (_coordinates: coordinates, e: MouseEvent) => {
-    const xDistance = dragData.current.x - e.clientX;
-    const yDistance = dragData.current.y - e.clientY;
-    dragData.current.x = e.clientX;
-    dragData.current.y = e.clientY;
-    dispatch({
-      type: "SET_TRANSLATE",
-      position: {
-        x: position.x + xDistance,
-        y: position.y + yDistance,
+        // We cancel the event when the wrong button has been used. Otherwise we perform the operation
+        isValidClick ? setCoordinates(movement) : cancel();
       },
-    });
-  };
-
-  const handleContextMenu = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
-    e.preventDefault();
-    setMenuCoordinates({ x: e.clientX, y: e.clientY });
-    setMenuOpen(true);
-    return false;
-  };
-
-  const closeContextMenu = () => {
-    setMenuOpen(false);
-  };
-
-  const byScale = (value: number) => (1 / zoom) * value;
-
-  const addNode = (option: menuOption) => {
-    const wrapperRect = wrapper.current!.getBoundingClientRect();
-
-    const x =
-      byScale(menuCoordinates.x - wrapperRect.x - wrapperRect.width / 2) +
-      byScale(position.x);
-
-    const y =
-      byScale(menuCoordinates.y - wrapperRect.y - wrapperRect.height / 2) +
-      byScale(position.y);
-
-    if (option.internalType === "comment") {
-      dispatch({
-        type: "ADD_COMMENT",
-        x,
-        y,
-      });
-    } else {
-      dispatch({
-        type: "ADD_NODE",
-        x,
-        y,
-        nodeType: option.node!.type,
-      });
+      //This gesture enables panning of the Stage when the mouse is moved. We need this to make the Stage pannable when the Space key is pressed.
+      onMove: ({ movement }) => setCoordinates(movement),
+    },
+    {
+      move: { enabled: !disablePan && spaceIsPressed, initial: coordinates },
+      wheel: { enabled: !disableZoom, axis: "y" },
+      drag: { enabled: !disablePan, initial: coordinates },
     }
-  };
+  );
 
-  const handleDocumentKeyUp = (e: KeyboardEvent) => {
-    if (e.which === 32) {
-      setSpaceIsPressed(false);
-      document.removeEventListener("keyup", handleDocumentKeyUp);
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.which === 32 && document.activeElement === wrapper.current) {
-      e.preventDefault();
-      e.stopPropagation();
-      setSpaceIsPressed(true);
-      document.addEventListener("keyup", handleDocumentKeyUp);
-    }
-  };
-
-  const handleMouseEnter = () => {
-    if (!wrapper?.current?.contains(document.activeElement)) {
-      wrapper?.current?.focus();
-    }
-  };
-
-  React.useEffect(() => {
-    if (!disableZoom) {
-      const stageWrapper = wrapper.current;
-      stageWrapper?.addEventListener("wheel", handleWheel);
-      return () => {
-        stageWrapper?.removeEventListener("wheel", handleWheel);
-      };
-    } else return;
-  }, [handleWheel, disableZoom]);
-
-  const menuOptions = React.useMemo(() => {
-    const options = orderBy(
-      Object.values(nodeTypes)
-        .filter((node) => node.addable !== false)
-        .map(
-          (node): menuOption => ({
-            value: node.type,
-            label: node.label!,
-            description: node.description!,
-            sortIndex: node.sortIndex,
-            node,
-          })
-        ),
-      ["sortIndex", "label"]
-    );
-    if (!disableComments) {
-      options.push({
-        value: "comment",
-        label: "Comment",
-        description: "A comment for documenting nodes",
-        internalType: "comment",
-      });
-    }
-    return options;
-  }, [nodeTypes, disableComments]);
+  //------------------------------------------------------------------------
 
   return (
-    <Draggable
-      id={`${STAGE_ID}${id}`}
-      className={styles.wrapper}
-      innerRef={wrapper}
-      onContextMenu={handleContextMenu}
-      onMouseEnter={handleMouseEnter}
-      onDragDelayStart={handleDragDelayStart}
-      onDragStart={handleDragStart}
-      onDrag={handleMouseDrag}
-      onDragEnd={handleDragEnd}
-      onKeyDown={handleKeyDown}
+    <div
+      className={clsx(
+        "overflow-hidden relative pattern-background outline-none",
+        className
+      )}
       tabIndex={-1}
-      style={{ cursor: spaceIsPressed && spaceToPan ? "grab" : "" }}
-      disabled={disablePan || (spaceToPan && !spaceIsPressed)}
+      style={{ cursor: spaceIsPressed ? "grab" : "" }}
+      {...stageGestures()}
+      {...props}
     >
-      {menuOpen ? (
-        <Portal>
-          <ContextMenu
-            x={menuCoordinates.x}
-            y={menuCoordinates.y}
-            options={menuOptions}
-            onRequestClose={closeContextMenu}
-            onOptionSelected={addNode}
-            label="Add Node"
-          />
-        </Portal>
-      ) : null}
+      {/* This inner wrapper is used to translate the position of the content on pan. */}
       <div
-        ref={translateWrapper}
-        className={styles.transformWrapper}
-        style={{ transform: `translate(${-position.x}px, ${-position.y}px)` }}
+        className="origin-center absolute left-1/2 top-1/2"
+        style={{
+          transform: `translate(${coordinates[0]}px, ${coordinates[1]}px)`,
+        }}
       >
-        <div
-          className={styles.scaleWrapper}
-          style={{ transform: `scale(${zoom})` }}
-        >
+        {/* This inner wrapper is used to zoom.  */}
+        <div className="absolute" style={{ transform: `scale(${zoom})` }}>
           {children}
         </div>
       </div>
-      {outerStageChildren}
-    </Draggable>
+    </div>
   );
 };

@@ -1,242 +1,131 @@
 import React from "react";
-import styles from "./Node.module.css";
+import { useGesture } from "react-use-gesture";
 import {
-  getPortRect,
-  calculateCurve,
-  EditorContext,
-  EditorDispatchContext,
-} from "../../utilities";
-import { Portal } from "react-portal";
-import ContextMenu, { menuOption } from "../ContextMenu/ContextMenu";
-import IoPorts from "../IoPorts/IoPorts";
-import { Draggable } from "../Draggable/Draggable";
-import {
-  connection,
-  connections,
-  coordinates,
-  NodeTypes,
-  PortTypes,
-} from "../../types";
+  useEdgesStore,
+  useEditorStore,
+  useNodesStore,
+} from "../../globalState";
+import shallow from "zustand/shallow";
+import { ChatOutline, PlusOutline } from "@graywolfai/react-heroicons";
+import { getOutputConnections } from "./utilities";
+import { Port } from "./Port";
+import { useNewNodeMenu } from "./useNewNodeMenu";
+import { useSidebarState } from "./useSidebar";
+import clsx from "clsx";
+import { GhostButton } from "components/Buttons/GhostButton";
 
 type NodeProps = {
+  /**
+   * The Node only gets the id of the node it is supposed to render. It takes care of getting the data it needs about the node itself.
+   */
   id: string;
-  width?: number;
-  height?: number;
-  x?: number;
-  y?: number;
-  delay?: number;
-  stageRect: React.MutableRefObject<DOMRect | null>;
-  connections: connections;
-  type: string;
-  inputData?: any;
-  onDragStart: (e: MouseEvent) => void;
-  onDragEnd: (coordinates: coordinates, e: MouseEvent) => void;
-  onDrag?: (coordinates: coordinates, e: MouseEvent) => void;
-  nodeTypes: NodeTypes;
-  portTypes: PortTypes;
-  recalculate: () => void;
 };
 
-export const Node: React.FC<NodeProps> = ({
-  id,
-  width,
-  height,
-  x,
-  y,
-  delay = 6,
-  stageRect,
-  connections,
-  type,
-  inputData,
-  onDragStart,
-  onDragEnd,
-  onDrag,
-  nodeTypes,
-  portTypes,
-  recalculate,
-  ...props
-}) => {
-  const dispatch = React.useContext(EditorDispatchContext);
-  const { position, zoom } = React.useContext(EditorContext);
-  const { label, deletable, inputs = [], outputs = [] } = nodeTypes[type];
+export const Node: React.FC<NodeProps> = ({ id }) => {
+  const outputConnections = useEdgesStore(getOutputConnections(id), shallow);
+  const [updateEdgeTarget, removeEdgeTarget] = useEdgesStore(
+    (state) => [state.updateEdgeTarget, state.removeEdgeTarget],
+    shallow
+  );
 
-  const nodeWrapper = React.useRef<HTMLDivElement>(null);
-  const [menuOpen, setMenuOpen] = React.useState(false);
-  const [menuCoordinates, setMenuCoordinates] = React.useState({ x: 0, y: 0 });
+  const setNode = useNodesStore((state) => state.setNode);
+  const node = useNodesStore((state) => state.nodes[id]);
+  const zoom = useEditorStore((state) => state.zoom);
+  const color = useNodesStore(
+    (state) => state.nodeTypes[node.type].color,
+    shallow
+  );
+  const [dragging, setDragging] = React.useState(false);
 
-  const byScale = (value: number) => (1 / zoom) * value;
+  const { openMenu } = useNewNodeMenu();
+  const openSidebar = useSidebarState((state) => state.openSidebar);
 
-  const updateConnectionsByTransput = (
-    transput: connection,
-    isOutput?: boolean
-  ) => {
-    Object.entries(transput).forEach(([portName, outputs]) => {
-      outputs.forEach((output) => {
-        const toRect = getPortRect(id, portName, isOutput ? "output" : "input");
-
-        const fromRect = getPortRect(
-          output.nodeId,
-          output.portName,
-          isOutput ? "input" : "output"
-        );
-
-        const portHalf = fromRect!.width / 2;
-
-        let combined;
-
-        if (isOutput) {
-          combined = id + portName + output.nodeId + output.portName;
-        } else {
-          combined = output.nodeId + output.portName + id + portName;
-        }
-
-        const cnx = document.querySelector(
-          `[data-connection-id="${combined}"]`
-        );
-
-        const from = {
-          x:
-            byScale(
-              toRect!.x -
-                stageRect.current!.x +
-                portHalf -
-                stageRect.current!.width / 2
-            ) + byScale(position.x),
-          y:
-            byScale(
-              toRect!.y -
-                stageRect.current!.y +
-                portHalf -
-                stageRect.current!.height / 2
-            ) + byScale(position.y),
-        };
-
-        const to = {
-          x:
-            byScale(
-              fromRect!.x -
-                stageRect.current!.x +
-                portHalf -
-                stageRect.current!.width / 2
-            ) + byScale(position.x),
-          y:
-            byScale(
-              fromRect!.y -
-                stageRect.current!.y +
-                portHalf -
-                stageRect.current!.height / 2
-            ) + byScale(position.y),
-        };
-
-        cnx?.setAttribute("d", calculateCurve(from, to));
-      });
-    });
-  };
-
-  const updateNodeConnections = () => {
-    if (connections) {
-      updateConnectionsByTransput(connections.inputs);
-      updateConnectionsByTransput(connections.outputs, true);
+  //-----------------------------------------------------------------------
+  //This is the drag gesture of the node. It updates the Node state when the Node is dragged. The initial start position of the Node come from the coordinates in the nodes state. We transform the data produced by the drag operation by dividing it with the editor zoom. This makes sure that we keep the Node under the mouse when dragging.
+  const nodeGestures = useGesture(
+    {
+      onDragStart: () => setDragging(true),
+      onDrag: ({ movement, event, tap }) => {
+        event.stopPropagation();
+        if (!tap) setNode(id, { ...node, coordinates: movement });
+      },
+      onDragEnd: () => setDragging(false),
+      onPointerDown: ({ event }) => event.stopPropagation(),
+    },
+    {
+      drag: {
+        initial: node.coordinates,
+        transform: ([x, y]) => [x / zoom, y / zoom],
+        filterTaps: true,
+      },
     }
-  };
+  );
 
-  const stopDrag = (coordinates: coordinates, _e: MouseEvent) => {
-    dispatch({
-      type: "SET_NODE_COORDINATES",
-      ...coordinates,
-      nodeId: id,
-    });
-  };
-
-  const handleDrag = (coordinates: coordinates, _e: MouseEvent) => {
-    nodeWrapper.current
-      ? (nodeWrapper.current.style.transform = `translate(${coordinates.x}px,${coordinates.y}px)`)
-      : null;
-    updateNodeConnections();
-  };
-
-  const startDrag = (e: MouseEvent) => {
-    onDragStart(e);
-  };
-
-  const handleContextMenu = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setMenuCoordinates({ x: e.clientX, y: e.clientY });
-    setMenuOpen(true);
-    return false;
-  };
-
-  const closeContextMenu = () => {
-    setMenuOpen(false);
-  };
-
-  const handleMenuOption = ({ value }: menuOption) => {
-    switch (value) {
-      case "deleteNode":
-        dispatch({
-          type: "REMOVE_NODE",
-          nodeId: id,
-        });
-        break;
-      default:
-        return;
-    }
-  };
+  const boxGestures = useGesture({
+    onPointerEnter: () => updateEdgeTarget(id),
+    onPointerLeave: () => removeEdgeTarget(),
+  });
 
   return (
-    <Draggable
-      className={styles.wrapper}
+    <div
       style={{
-        width,
-        transform: `translate(${x}px, ${y}px)`,
+        transform: `translate(${node.coordinates[0]}px, ${node.coordinates[1]}px)`,
+        gridTemplateColumns: `10px 10px ${node.width - 40}px 10px 10px`,
+        gridTemplateRows: node.height,
       }}
-      onDragStart={startDrag}
-      onDrag={handleDrag}
-      onDragEnd={stopDrag}
-      innerRef={nodeWrapper}
-      data-node-id={id}
-      onContextMenu={handleContextMenu}
-      stageRect={stageRect}
-      {...props}
+      className={clsx("absolute left-0 top-0 grid", dragging && "z-50")}
+      {...boxGestures()}
     >
-      <h2 className={styles.label}>{label}</h2>
-      <IoPorts
-        nodeId={id}
-        inputs={inputs}
-        outputs={outputs}
-        connections={connections}
-        updateNodeConnections={updateNodeConnections}
-        inputData={inputData}
-        inputTypes={portTypes}
-        recalculate={recalculate}
-      />
-      {menuOpen ? (
-        <Portal>
-          <ContextMenu
-            x={menuCoordinates.x}
-            y={menuCoordinates.y}
-            options={[
-              ...(deletable !== false
-                ? [
-                    {
-                      label: "Delete Node",
-                      value: "deleteNode",
-                      description: "Deletes a node and all of its connections.",
-                    },
-                  ]
-                : []),
-            ]}
-            onRequestClose={closeContextMenu}
-            onOptionSelected={handleMenuOption}
-            hideFilter
-            label="Node Options"
-            emptyText="This node has no options."
+      {/* This is the body of the Node. */}
+      <GhostButton
+        className={clsx(
+          "bg-gray-100 rounded shadow-lg flex flex-col select-none border-l-4 hover:shadow-xl transition-shadow duration-200 col-start-2 col-end-5 row-span-full",
+          dragging ? "opacity-100" : "opacity-80"
+        )}
+        style={{ borderLeftColor: color ?? "gray" }}
+        onClick={() => openSidebar(id, node.type)}
+        {...nodeGestures()}
+      >
+        <div className="p-1 flex items-center">
+          <ChatOutline
+            style={{ width: "2.5em", color: color ?? "black" }}
+            className="mr-2 rounded py-4 px-2"
           />
-        </Portal>
-      ) : null}
-    </Draggable>
+          <h2 className="font-semibold flex-1 text-left">{node.name}</h2>
+        </div>
+      </GhostButton>
+      {/* These are the Ports of the Nodes. There is only one Port on each side. The Output Port can also be an unconnected port. This port looks different and has a menu to create a new Node. Above we get the outputConnections and here we use them to decide which port to render. */}
+      <Port
+        nodeId={id}
+        className="col-start-1 col-end-3 row-span-full self-center justify-self-center"
+        variant="connected"
+        type="input"
+      />
+      {outputConnections ? (
+        <Port
+          nodeId={id}
+          className="col-start-4 col-end-6 row-span-full self-center justify-self-center"
+          variant="connected"
+          type="output"
+        />
+      ) : (
+        <Port
+          className="col-start-4 col-end-6 row-span-full self-center justify-self-center"
+          nodeId={id}
+          variant="unconnected"
+          type="output"
+        >
+          <button
+            onClick={(event) => {
+              event.stopPropagation();
+              openMenu([event.pageX, event.pageY], id);
+            }}
+            className="w-full h-full p-1"
+          >
+            <PlusOutline className="text-white" />
+          </button>
+        </Port>
+      )}
+    </div>
   );
 };

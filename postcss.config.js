@@ -1,16 +1,7 @@
-const tailwindcss = require("tailwindcss");
+const tailwindcss = require("@tailwindcss/postcss7-compat");
 const autoprefixer = require("autoprefixer");
-const postcssPresetEnv = require("postcss-preset-env");
+// const postcssPresetEnv = require("postcss-preset-env");
 
 module.exports = {
-  plugins: [
-    tailwindcss(),
-    postcssPresetEnv({
-      stage: 3,
-      features: {
-        "nesting-rules": true,
-      },
-    }),
-    autoprefixer(),
-  ],
+  plugins: [tailwindcss(), autoprefixer()],
 };

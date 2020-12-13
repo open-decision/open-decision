@@ -1,22 +1,34 @@
 import React from "react";
-import { Component } from "@internalTypes/types";
 import clsx from "clsx";
-import { pluck } from "@utils/index";
-import { badgeColors } from "@internalTypes/types";
+import { badgeColors as colors } from "internalTypes";
 
-export type BadgeColors = keyof typeof badgeColors;
+const sizes = {
+  default: "px-3",
+  large: "px-4 py-1",
+};
 
-type Badge = { color: BadgeColors };
+export type BadgeProps = Omit<
+  React.HTMLAttributes<HTMLSpanElement>,
+  "color"
+> & {
+  color?: keyof typeof colors;
+  size?: keyof typeof sizes;
+};
 
-export const Badge: Component<
-  React.HTMLAttributes<HTMLSpanElement> & Badge
-> = ({ children, className = "", color, ...props }) => {
+export const Badge: React.FC<BadgeProps> = ({
+  children,
+  className = "",
+  color = "blue",
+  size = "default",
+  ...props
+}) => {
   return (
     <span
       className={clsx(
+        "rounded-md font-semibold text-sm",
         className,
-        "px-3 rounded-md font-semibold text-sm",
-        pluck([color], badgeColors)
+        colors[color],
+        sizes[size]
       )}
       {...props}
     >

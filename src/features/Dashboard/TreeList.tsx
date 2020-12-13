@@ -1,7 +1,7 @@
-import { Badge, Button } from "@components/index";
+import { Badge, FilledButton, IconButton, OutlinedButton } from "components";
 import React from "react";
 import { parseISO, formatWithOptions } from "date-fns/esm/fp";
-import { de } from "date-fns/locale";
+import de from "date-fns/locale/de";
 import {
   ChevronDownSolid,
   PlusCircleOutline,
@@ -13,16 +13,16 @@ import { ValidTreeNode } from "./types";
 type TreeCard = { tree: ValidTreeNode };
 
 const TreeCard: React.FC<TreeCard> = ({ tree }) => (
-  <div className="bg-gray-50 rounded-md shadow-md space-y-2 hover:shadow-lg transition-all duration-100 border-l-4 border-green-500">
+  <div className="bg-gray-50 rounded-md shadow-md space-y-2 hover:shadow-lg transition-all duration-100 border-l-4 border-primary-500">
     <div className="space-x-4 px-4 py-2 flex items-center">
       {tree.tags.map((tag) => (
         <Badge key={tag.name} color={tag.color} className="shadow-sm">
           {tag.name}
         </Badge>
       ))}
-      <Button kind="icon" size="filled">
+      <IconButton size="small">
         <PlusCircleOutline className="w-6 h-6" />
-      </Button>
+      </IconButton>
     </div>
 
     <div className="px-4 pb-4 flex items-baseline">
@@ -33,10 +33,13 @@ const TreeCard: React.FC<TreeCard> = ({ tree }) => (
         </span>
       </div>
       <div className="flex self-end">
-        <Button kind="ghost" className="text-gray-500 hover:text-red-700 mr-4">
+        <FilledButton
+          variant="ghost"
+          className="text-gray-500 hover:text-red-700 mr-4"
+        >
           Archivieren
-        </Button>
-        <Button kind="outlined">Öffnen</Button>
+        </FilledButton>
+        <OutlinedButton>Öffnen</OutlinedButton>
       </div>
     </div>
   </div>
@@ -67,9 +70,9 @@ const SortButton: React.FunctionComponent<SortButton> = ({
   };
 
   return (
-    <Button
+    <FilledButton
       className="flex"
-      kind="ghost"
+      variant="ghost"
       active={sort.key === name}
       rounded={false}
       onClick={() =>
@@ -88,7 +91,7 @@ const SortButton: React.FunctionComponent<SortButton> = ({
       >
         <ChevronDownSolid className="w-6" />
       </motion.span>
-    </Button>
+    </FilledButton>
   );
 };
 
@@ -111,7 +114,7 @@ export const TreeList: React.FC<TreeList> = ({ data }) => {
       : null;
 
     setFilteredData(modifiedData);
-  }, [data, filter, sort]);
+  }, [data, filter, filteredData, sort]);
 
   return (
     <div className="space-y-8 my-12">

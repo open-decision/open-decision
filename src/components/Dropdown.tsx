@@ -1,30 +1,32 @@
 import React from "react";
-import { useKeyboardEvent } from "@utils/index";
-import { Button } from "./Button";
+import { useKeyboardEvent } from "utils";
+import clsx from "clsx";
+import { IconButton } from "components";
 
 type Dropdown = {
   icon: React.ReactNode;
+  className?: string;
 };
 
 export const Dropdown: React.FunctionComponent<Dropdown> = ({
   children,
   icon,
+  className,
 }) => {
   const [open, setOpen] = React.useState(false);
   useKeyboardEvent("Escape", () => setOpen(false));
 
   return (
-    <div className="relative h-10">
-      <Button
-        className="relative z-20"
-        size="filled"
-        kind="icon"
+    <div className={clsx("relative flex items-center", className)}>
+      <IconButton
+        className="relative z-20 w-11"
+        size="small"
         onClick={() => setOpen(!open)}
       >
         {icon}
-      </Button>
-      {open ? (
-        <>
+      </IconButton>
+      {open && (
+        <div className="mt-2">
           <button
             onClick={() => setOpen(false)}
             className="z-10 fixed inset-0 w-full h-full bg-gray-900 opacity-25 cursor-default"
@@ -35,8 +37,8 @@ export const Dropdown: React.FunctionComponent<Dropdown> = ({
               {children}
             </div>
           </div>
-        </>
-      ) : null}
+        </div>
+      )}
     </div>
   );
 };

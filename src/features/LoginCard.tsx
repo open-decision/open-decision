@@ -1,7 +1,7 @@
 import React from "react";
-import { Button, Field, Logo, Tabs } from "@components/index";
-import { LocationState } from "@internalTypes/types";
-import { useAuthMethods } from "./Auth/AuthContext";
+import { FilledButton, Field, Logo, Tabs } from "components";
+import { LocationState } from "internalTypes";
+import { useAuthMethods } from "features";
 import { useHistory, useLocation } from "react-router-dom";
 
 export const LoginCard: React.FunctionComponent = () => {
@@ -58,13 +58,13 @@ const LoginForm: React.FunctionComponent = () => {
         <div className="flex justify-center">
           <a
             className="block font-bold text-sm text-blue-500 hover:text-blue-800"
-            href="#"
+            href="/reset-password"
           >
             Passwort vergessen?
           </a>
         </div>
       </div>
-      <Button
+      <FilledButton
         rounded={false}
         className="h-20"
         type="submit"
@@ -74,7 +74,7 @@ const LoginForm: React.FunctionComponent = () => {
         }}
       >
         Log-In
-      </Button>
+      </FilledButton>
     </form>
   );
 };
@@ -129,15 +129,14 @@ const SignupForm: React.FunctionComponent = () => {
           Indem Sie auf registrieren klicken akzeptieren Sie unsere{" "}
           <a
             className="font-bold text-sm text-blue-500 hover:text-blue-800"
-            href="#"
+            href="/agb"
           >
             AGB
           </a>
           .
         </div>
       </div>
-      <Button
-        kind="filled"
+      <FilledButton
         className="h-20"
         rounded={false}
         type="submit"
@@ -149,7 +148,7 @@ const SignupForm: React.FunctionComponent = () => {
         }}
       >
         Registrieren
-      </Button>
+      </FilledButton>
     </form>
   );
 };

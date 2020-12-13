@@ -1,52 +1,77 @@
 //External Libraries
 import React from "react";
-import { clamp } from "lodash";
-import { nanoid } from "nanoid/non-secure";
-
-//State Management
-import { toastsReducer, editorReducer, EditorState } from "./reducers";
 
 //Components
 import { Stage } from "./components/Stage/Stage";
-import { Node } from "./components/Node/Node";
-import { Comment } from "./components/Comment/Comment";
-import { Toaster } from "./components/Toaster/Toaster";
-import { Connections } from "./components/Connections/Connections";
+// import { Comment } from "./components/Comment/Comment";
+// import { Toaster } from "./components/Toaster/Toaster";
 
-//Functions
-import usePrevious from "./hooks/usePrevious";
-
-// Types, Constants and Styles
-import styles from "./index.module.css";
-import { EditorConfig } from "./types";
+//Hooks and Functions
+import { useEdgesStore, useEditorStore, useNodesStore } from "./globalState";
+import { Nodes } from "./components/Node/Nodes";
+import { ConnectionsWrapper } from "./components/Connections/ConnectionsWrapper";
 import {
-  EditorDispatchContext,
-  EditorContext,
-  createConnections,
-  DRAG_CONNECTION_ID,
-} from "./utilities";
-import { useDOMRect } from "./hooks/useDOMRect";
+  comments,
+  coordinates,
+  edges,
+  nodes,
+  nodeTypes,
+  portTypes,
+} from "./types";
+import { NewNodeToolbar } from "./components/NewNodeToolbar/NewNodeToolbar";
+import { useNewNodeMenu } from "./components/Node/useNewNodeMenu";
+import { NewNodeMenu } from "./components/Node/NewNodeMenu";
+import Portal from "@reach/portal";
+import shallow from "zustand/shallow";
+import { useSidebarState } from "./components/Node/useSidebar";
+import { NodeEditingSidebar } from "./components/Node/NodeEditingSidebar";
+
+export type EditorState = {
+  /**
+   * The id of the Editor.
+   */
+  id: string;
+  /**
+   * The current zoom level.
+   */
+  zoom: number;
+  /**
+   * The current position of the Editor.
+   */
+  coordinates: coordinates;
+  /**
+   * The currently shown Nodes.
+   */
+  nodes: nodes;
+  /**
+   * The currently shown Nodes.
+   */
+  edges: edges;
+  /**
+   * The currently shown Comments.
+   */
+  comments: comments;
+  /**
+   * The preconfigured avaliable NodeTypes and PortTypes that can be added when using the node-editor.
+   */
+  nodeTypes: nodeTypes;
+  portTypes: portTypes;
+  treeName: string;
+};
 
 type NodeEditorProps = {
   /**
    * The state of the content in the Editor.
    */
   state: EditorState;
+  setState?: (value: EditorState) => void;
   /**
-   * The preconfigured nodes and ports. This determines which nodes are avaliable when working with the Editor.
+   * Zooming can be disabled. False by default.
    */
-  config: EditorConfig;
-  /**
-   * @description - This function is called every time the nodes update. This is helpful when managing the editor state externally.
-   * @param state - The state of the Editor.
-   */
-  onChange: (state: EditorState) => void;
-  /**
-   * Similar to Photoshop it is possible to pan the Editor when holding the space key.
-   */
-  spaceToPan?: boolean;
-  disableComments?: boolean;
   disableZoom?: boolean;
+  /**
+   * Panning can be disabled. False by default.
+   */
   disablePan?: boolean;
   /**
    * The Editor can make sure, that circular connections between nodes are not possible. By default circular connections are prevented.
@@ -58,121 +83,76 @@ type NodeEditorProps = {
    */
   zoom?: number;
   /**
-   * Comments can be hidden dynamically.
+   * Comments can be hidden dynamically. False by default.
    */
   hideComments?: boolean;
 };
 
 export const NodeEditor: React.FC<NodeEditorProps> = ({
   state,
-  config,
-  hideComments = false,
-  zoom = 1,
-  circularBehavior = "prevent",
-  onChange,
-  spaceToPan = false,
-  disableComments = false,
   disableZoom = false,
   disablePan = false,
 }) => {
-  //These Refs allow us to preserve state across component renders without causing a rerender.
-  const editorId = nanoid(10);
-  const [stageRef, recalculateRect] = useDOMRect(editorId);
-
-  //----------------------------------------------------------------
-
-  //The following is used for state management
-  const [toasts, dispatchToasts] = React.useReducer(toastsReducer, []);
-
-  const [editorState, dispatchEditorState] = React.useReducer(
-    editorReducer(config, circularBehavior, dispatchToasts),
-    {
-      id: editorId,
-      zoom: clamp(zoom, 0.1, 7),
-      position: { x: 0, y: 0 },
-      nodes: state.nodes,
-      comments: state.comments,
-    }
+  const [setCoordinates, setZoom] = useEditorStore(
+    (state) => [state.setCoordinates, state.setZoom],
+    shallow
   );
 
-  //----------------------------------------------------------------
+  const setNodes = useNodesStore((state) => state.setNodes, shallow);
+  const setEdges = useEdgesStore((state) => state.setEdges, shallow);
 
-  //These functions are used to update the stage imperatively across the codebase when necessary. They also track whether something should be recalculated.
+  const { isMenuOpen } = useNewNodeMenu();
+  const isSidebarOpen = useSidebarState((state) => state.open);
 
-  const [
-    shouldRecalculateConnections,
-    setShouldRecalculateConnections,
-  ] = React.useState(true);
-
-  const triggerRecalculation = () => {
-    setShouldRecalculateConnections(true);
-  };
-
-  const recalculateConnections = React.useCallback(() => {
-    createConnections(editorState, editorId);
-  }, [editorId, editorState]);
-
-  React.useLayoutEffect(() => {
-    if (shouldRecalculateConnections) {
-      recalculateConnections();
-      setShouldRecalculateConnections(false);
-    }
-  }, [shouldRecalculateConnections, recalculateConnections]);
-
-  const previousNodes = usePrevious(editorState);
   React.useEffect(() => {
-    if (previousNodes && onChange && editorState !== previousNodes) {
-      onChange(editorState);
-    }
-  }, [editorState, previousNodes, onChange]);
+    setZoom(state.zoom);
+    setCoordinates(state.coordinates);
+
+    setNodes(state.nodes, state.nodeTypes, state.portTypes);
+    setEdges(state.edges);
+  }, [
+    setCoordinates,
+    setEdges,
+    setNodes,
+    setZoom,
+    state.coordinates,
+    state.edges,
+    state.nodeTypes,
+    state.nodes,
+    state.portTypes,
+    state.zoom,
+  ]);
 
   //----------------------------------------------------------------
 
   return (
-    <EditorDispatchContext.Provider value={dispatchEditorState}>
-      <EditorContext.Provider value={editorState}>
-        <Stage
-          nodeTypes={config.nodes}
-          spaceToPan={spaceToPan}
-          disablePan={disablePan}
-          disableZoom={disableZoom}
-          disableComments={disableComments || hideComments}
-          stageRect={stageRef}
-          numNodes={Object.keys(editorState.nodes).length}
-          outerStageChildren={
-            <React.Fragment>
-              <Toaster toasts={toasts} dispatchToasts={dispatchToasts} />
-            </React.Fragment>
-          }
-        >
-          {!hideComments &&
-            Object.values(editorState.comments).map((comment) => (
-              <Comment
-                {...comment}
-                stageRect={stageRef}
-                onDragStart={recalculateRect}
-                key={comment.id}
-              />
-            ))}
-          {Object.values(editorState.nodes).map((node) => (
-            <Node
-              {...node}
-              stageRect={stageRef}
-              onDragEnd={triggerRecalculation}
-              onDragStart={recalculateRect}
-              key={node.id}
-              recalculate={triggerRecalculation}
-              nodeTypes={config.nodes}
-              portTypes={config.ports}
-            />
-          ))}
-          <Connections editorId={editorId} />
-          <div
-            className={styles.dragWrapper}
-            id={`${DRAG_CONNECTION_ID}${editorId}`}
-          ></div>
-        </Stage>
-      </EditorContext.Provider>
-    </EditorDispatchContext.Provider>
+    <div
+      className="w-full h-full grid"
+      style={{
+        gridTemplateColumns: "max-content 4fr 1fr",
+        gridTemplateRows: "1fr",
+      }}
+    >
+      <NewNodeToolbar style={{ gridColumn: "1", gridRow: "1" }} />
+      <Stage
+        disablePan={disablePan}
+        disableZoom={disableZoom}
+        style={{ gridColumn: "2 / 4", gridRow: "1" }}
+      >
+        <ConnectionsWrapper />
+        <Nodes />
+        {isMenuOpen && (
+          <Portal>
+            <NewNodeMenu />
+          </Portal>
+        )}
+      </Stage>
+      {isSidebarOpen && (
+        <NodeEditingSidebar
+          className="bg-gray-100 z-10"
+          style={{ gridColumn: "3 / 4", gridRow: "1" }}
+        />
+      )}
+    </div>
   );
 };
