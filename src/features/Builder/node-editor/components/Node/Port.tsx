@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import React from "react";
-import Portal from "@reach/portal";
+import * as Portal from "@radix-ui/react-portal";
 import { pipe, prop } from "remeda";
 import { useEdgesStore } from "../../globalState";
 import { coordinates } from "../../types";
@@ -30,6 +30,7 @@ export const Port: Port = ({
   ...props
 }) => {
   const connectionRef = React.useRef<SVGPathElement>(null);
+  const [dragging, setDragging] = React.useState(false);
 
   const [
     addEdge,
@@ -44,7 +45,6 @@ export const Port: Port = ({
     state.startNewEdgeCreation,
     state.endNewEdgeCreation,
   ]);
-  const [dragging, setDragging] = React.useState(false);
 
   const handleDragStart = (event: React.PointerEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -88,12 +88,10 @@ export const Port: Port = ({
     >
       {children}
       {type === "output" && dragging && (
-        <Portal>
+        <Portal.Root>
           <Connection ref={connectionRef} />
-        </Portal>
+        </Portal.Root>
       )}
     </div>
   );
 };
-
-Port.displayName = "Port";

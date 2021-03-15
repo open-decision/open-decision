@@ -42,3 +42,11 @@ mutation CREATE_TREE($input: CreateDecisionTreeMutationInput!) {
     }
   }
 }
+
+mutation REFRESH_TOKEN {
+  refreshToken {
+    success
+    errors
+    token
+  }
+}

@@ -4,7 +4,7 @@ import { useAll_TreesQuery, useCreate_TreeMutation } from "internalTypes";
 import { TreeList } from "./TreeList";
 import { data } from "./testData";
 import { validateTreeData } from "./dataValidation";
-import { OutlinedButton } from "components";
+import { Button } from "components";
 
 //FIXME username is hardcoded
 export const Dashboard: React.FunctionComponent = () => {
@@ -27,9 +27,10 @@ export const Dashboard: React.FunctionComponent = () => {
     <div className="dashboard-grid">
       <div className="col-start-2 mt-24 mx-4 md:mx-8 flex flex-col justify-end items-start">
         <h2 className="text-5xl">Hallo Dirk_laywer23</h2>
-        <OutlinedButton
+        <Button
+          outlined
           className="my-8"
-          size="large"
+          size="xLarge"
           onClick={() =>
             createTree({
               input: {
@@ -40,7 +41,7 @@ export const Dashboard: React.FunctionComponent = () => {
         >
           <PlusCircleOutline className="w-8 mr-2 inline" />
           Neue Anwendung erstellen
-        </OutlinedButton>
+        </Button>
       </div>
 
       <div className="col-start-2 row-start-2 mx-4 md:mx-8">

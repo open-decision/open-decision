@@ -2,6 +2,7 @@ import {
   useLogin_UserMutation,
   useLogout_UserMutation,
   useRegister_UserMutation,
+  useRefresh_TokenMutation,
 } from "internalTypes";
 import React from "react";
 
@@ -34,11 +35,29 @@ const AuthContext = React.createContext<AuthContext>({
 const AuthMethodContext = React.createContext<AuthMethods>({} as AuthMethods);
 
 export const AuthProvider: React.FC = ({ children }) => {
+  const [, refreshQuery] = useRefresh_TokenMutation();
+
   const [state, setState] = React.useState({
     token: "",
     expires: 0,
     refreshToken: "",
   });
+
+  React.useEffect(() => {
+    refreshQuery().then(({ data, error }) => {
+      if (error) return console.error("refreshing user failed", error);
+
+      const refreshToken = data?.refreshToken;
+
+      if (refreshToken?.token == null)
+        return console.error("no token received");
+
+      setState((previousState) => ({
+        ...previousState,
+        token: refreshToken.token,
+      }));
+    });
+  }, [refreshQuery]);
 
   const [, loginQuery] = useLogin_UserMutation();
   const login: login = ({ email, password }, callback) => {

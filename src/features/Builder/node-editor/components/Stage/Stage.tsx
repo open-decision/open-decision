@@ -1,5 +1,4 @@
 import React from "react";
-import { useKeyPressEvent } from "react-use";
 import { useGesture } from "react-use-gesture";
 import { useEditorStore } from "../../globalState";
 import clsx from "clsx";
@@ -41,16 +40,6 @@ export const Stage: Stage = ({
   ]);
 
   /**
-   * This tracks whether the space key is pressed. We need this, because the Stage should be pannable when pressing the space key.
-   */
-  const [spaceIsPressed, setSpaceIsPressed] = React.useState(false);
-  useKeyPressEvent(
-    (e) => e.code === "Space",
-    () => setSpaceIsPressed(true),
-    () => setSpaceIsPressed(false)
-  );
-
-  /**
    * These gestures represent the panning and zooming inside the Stage. They are enabled and disabled by the `disableZoom` and `disablePan` props.
    */
   const stageGestures = useGesture(
@@ -65,11 +54,8 @@ export const Stage: Stage = ({
         // We cancel the event when the wrong button has been used. Otherwise we perform the operation
         isValidClick ? setCoordinates(movement) : cancel();
       },
-      //This gesture enables panning of the Stage when the mouse is moved. We need this to make the Stage pannable when the Space key is pressed.
-      onMove: ({ movement }) => setCoordinates(movement),
     },
     {
-      move: { enabled: !disablePan && spaceIsPressed, initial: coordinates },
       wheel: { enabled: !disableZoom, axis: "y" },
       drag: { enabled: !disablePan, initial: coordinates },
     }
@@ -84,7 +70,6 @@ export const Stage: Stage = ({
         className
       )}
       tabIndex={-1}
-      style={{ cursor: spaceIsPressed ? "grab" : "" }}
       {...stageGestures()}
       {...props}
     >

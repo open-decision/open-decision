@@ -1,8 +1,31 @@
 import React from "react";
-import { FilledButton, Field, Logo, Tabs } from "components";
-import { LocationState } from "internalTypes";
+import { Button, Field, Logo } from "components";
 import { useAuthMethods } from "features";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import * as Tabs from "@radix-ui/react-tabs";
+import { styled } from "utils/stitches.config";
+
+const TabList = styled(Tabs.List, {
+  display: "flex",
+  justifyContent: "space-around",
+});
+
+const Tab = styled(Tabs.Tab, {
+  flexGrow: 1,
+  flexBasis: "0",
+  padding: "$4",
+  display: "flex",
+  justifyContent: "center",
+
+  "&:hover, &:focus": {
+    backgroundColor: "$primary200",
+  },
+
+  '&[data-state="active"]': {
+    boxShadow: "inset 0 -2px 0 0 $colors$primary500",
+    backgroundColor: "$primary50",
+  },
+});
 
 export const LoginCard: React.FunctionComponent = () => {
   return (
@@ -11,14 +34,18 @@ export const LoginCard: React.FunctionComponent = () => {
         <div className="flex justify-center items-center p-8 bg-gradient-to-r from-gray-100 to-gray-300">
           <Logo />
         </div>
-        <Tabs
-          className="shadow-inner"
-          initialActive="Einloggen"
-          Tabs={[
-            { label: "Einloggen", Component: LoginForm },
-            { label: "Registrieren", Component: SignupForm },
-          ]}
-        />
+        <Tabs.Root defaultValue="login">
+          <TabList>
+            <Tab value="login">Einloggen</Tab>
+            <Tab value="register">Registrieren</Tab>
+          </TabList>
+          <Tabs.Panel value="login">
+            <LoginForm />
+          </Tabs.Panel>
+          <Tabs.Panel value="register">
+            <SignupForm />
+          </Tabs.Panel>
+        </Tabs.Root>
       </div>
     </div>
   );
@@ -29,12 +56,7 @@ const LoginForm: React.FunctionComponent = () => {
   const [password, setPassword] = React.useState("fogmub-bifaj-sarjo8");
   const { login } = useAuthMethods();
 
-  const history = useHistory();
-  const location = useLocation<LocationState>();
-
-  const { from } = location.state || {
-    from: { pathname: "/" },
-  };
+  const navigate = useNavigate();
 
   return (
     <form className="flex flex-col">
@@ -64,17 +86,17 @@ const LoginForm: React.FunctionComponent = () => {
           </a>
         </div>
       </div>
-      <FilledButton
-        rounded={false}
+      <Button
+        rounded="none"
         className="h-20"
         type="submit"
         onClick={(event) => {
           event.preventDefault();
-          login({ email, password }, () => history.replace(from));
+          login({ email, password }, () => navigate("/", { replace: true }));
         }}
       >
         Log-In
-      </FilledButton>
+      </Button>
     </form>
   );
 };
@@ -86,7 +108,7 @@ const SignupForm: React.FunctionComponent = () => {
   const [password2, setPassword2] = React.useState("");
   const { signup } = useAuthMethods();
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
     <form className="flex flex-col">
@@ -136,19 +158,19 @@ const SignupForm: React.FunctionComponent = () => {
           .
         </div>
       </div>
-      <FilledButton
+      <Button
         className="h-20"
-        rounded={false}
+        rounded="none"
         type="submit"
         onClick={(event) => {
           event.preventDefault();
           signup({ email, password1, password2, username: name }, () =>
-            history.replace("/")
+            navigate("/", { replace: true })
           );
         }}
       >
         Registrieren
-      </FilledButton>
+      </Button>
     </form>
   );
 };

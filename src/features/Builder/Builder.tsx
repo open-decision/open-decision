@@ -1,6 +1,6 @@
 import React from "react";
 import { EditorState, NodeEditor } from "./node-editor";
-import { FilledButton, FileInput, Header, Input } from "components";
+import { FileInput, Header, Input, Button } from "components";
 import { ChevronRightOutline } from "@graywolfai/react-heroicons";
 import { useFileReader } from "utils";
 import {
@@ -9,6 +9,7 @@ import {
   examplePortTypes,
 } from "./node-editor/tests/nodes";
 import { edges, nodes } from "./node-editor/types";
+import { css } from "utils/stitches.config";
 
 const randomProperty = (obj: any) => {
   const keys = Object.keys(obj);
@@ -80,10 +81,23 @@ export const Builder: React.FC = () => {
                   setData({ ...data, treeName: event.target.value })
                 }
               />
-              <div className="space-x-4 self-center py-2">
-                <FilledButton>Preview</FilledButton>
-                <FilledButton>Export</FilledButton>
-                <FilledButton>Speichern</FilledButton>
+              <div
+                className={css({
+                  display: "grid",
+                  gridTemplateColumns: "repeat(3, 1fr)",
+                  alignItems: "center",
+                  gap: "$4",
+                })()}
+              >
+                <Button size="small" outlined>
+                  Preview
+                </Button>
+                <Button size="small" outlined>
+                  Export
+                </Button>
+                <Button size="small" outlined>
+                  Speichern
+                </Button>
               </div>
             </>
           ) : null}
@@ -99,17 +113,18 @@ export const Builder: React.FC = () => {
 
               <div className="flex space-x-4">
                 <Input
-                  className=""
                   type="number"
                   value={number}
                   onChange={(event) => setNumber(Number(event.target.value))}
                 />
-                <FilledButton
+                <Button
+                  variant="secondary"
+                  outlined
                   onClick={() => setData(initialEditorState(number))}
                 >
                   <ChevronRightOutline className="w-6" />
                   Starten
-                </FilledButton>
+                </Button>
               </div>
 
               <p className="text-lg">

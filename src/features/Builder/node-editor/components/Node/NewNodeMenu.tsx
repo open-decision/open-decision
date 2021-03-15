@@ -1,21 +1,80 @@
 import React from "react";
 import { pick } from "remeda";
 import { useEdgesStore, useNodesStore } from "../../globalState";
-import { NewspaperOutline } from "@graywolfai/react-heroicons";
-import clsx from "clsx";
-import { coordinates } from "../../types";
 import { nanoid } from "nanoid/non-secure";
-import { useNewNodeMenu } from "./useNewNodeMenu";
-import FocusTrap from "focus-trap-react";
-import { GhostButton } from "components";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { styled } from "utils/stitches.config";
+import { coordinates } from "../../types";
 
 type NewNodeMenuProps = {
+  nodeId: string;
   className?: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 };
 
-export const NewNodeMenu: React.FC<NewNodeMenuProps> = ({ className }) => {
-  const { coordinates, closeMenu: closeModal, nodeId, ref } = useNewNodeMenu();
+const Content = styled(DropdownMenu.Content, {
+  display: "grid",
+  gap: "$2",
+  minWidth: 130,
+  backgroundColor: "white",
+  borderRadius: "$sm",
+  padding: "$2 $3",
+  boxShadow: "$xl",
+  marginTop: "$2",
+});
 
+const Item = styled(DropdownMenu.Item, {
+  fontSize: "$md",
+  padding: "$2 $4",
+  cursor: "default",
+  backgroundColor: "$gray100",
+  fontWeight: "$semibold",
+
+  "&:focus": {
+    outline: "none",
+    backgroundColor: "$gray300",
+  },
+});
+
+const Label = styled(DropdownMenu.Label, {
+  fontSize: "$sm",
+  fontWeight: "$bold",
+  color: "$gray700",
+});
+
+type useNewNode = (
+  originCoordinates: coordinates,
+  nodeId: string
+) => (nodeType: string) => void;
+
+const useNewNode: useNewNode = (originCoordinates, nodeId) => {
+  const addNode = useNodesStore((state) => state.addNode);
+  const addEdge = useEdgesStore((state) => state.addEdge);
+  const nodeTypes = useNodesStore((state) => state.nodeTypes);
+
+  const createNewNode = (nodeType: string) => {
+    const nodeConfig = nodeTypes[nodeType];
+
+    const newNodeCoordinates: coordinates = [
+      originCoordinates[0] + nodeConfig.width + 150,
+      originCoordinates[1],
+    ];
+
+    const newNodeId = nanoid(5);
+    addNode(nodeType, newNodeCoordinates, newNodeId);
+    addEdge(nodeId, newNodeId);
+  };
+
+  return createNewNode;
+};
+
+export const NewNodeMenu: React.FC<NewNodeMenuProps> = ({
+  nodeId,
+  open,
+  onOpenChange,
+  children,
+}) => {
   const nodeTypes = useNodesStore((state) => state.nodeTypes);
   const options = Object.values(nodeTypes).map((nodeType) =>
     pick(nodeType, ["label", "color", "type", "width"])
@@ -25,82 +84,20 @@ export const NewNodeMenu: React.FC<NewNodeMenuProps> = ({ className }) => {
     (state) => state.nodes[nodeId].coordinates
   );
 
-  return (
-    <FocusTrap>
-      <div
-        className={clsx(
-          "bg-gray-100 rounded shadow-2xl border-gray-300 border-2 min-w-max absolute z-50",
-          className
-        )}
-        style={{ left: coordinates[0], top: coordinates[1] }}
-        ref={ref}
-      >
-        <h2 className="text-lg border-b-2 border-gray-30 p-2">
-          Neuen Knoten hinzufügen
-        </h2>
-        <div className="pt-3 p-2 space-y-2">
-          {options.map((option) => (
-            <MenuEntry
-              key={option.label}
-              color={option.color}
-              nodeType={option.type}
-              coordinates={nodeCoordinates}
-              width={option.width}
-              close={closeModal}
-              nodeId={nodeId}
-            >
-              {option.label}
-            </MenuEntry>
-          ))}
-        </div>
-      </div>
-    </FocusTrap>
-  );
-};
-
-type MenuEntry = React.FC<
-  React.ButtonHTMLAttributes<HTMLButtonElement> & {
-    className?: string;
-    coordinates: coordinates;
-    color?: string;
-    nodeType: string;
-    width: number;
-    close: () => void;
-    nodeId: string;
-  }
->;
-
-const MenuEntry: MenuEntry = ({
-  children,
-  color,
-  nodeType,
-  coordinates,
-  width,
-  close,
-  nodeId,
-  ...props
-}) => {
-  const addNode = useNodesStore((state) => state.addNode);
-  const addEdge = useEdgesStore((state) => state.addEdge);
-
-  const newNodeCoordinates: coordinates = [
-    coordinates[0] + width + 150,
-    coordinates[1],
-  ];
+  const createNewNode = useNewNode(nodeCoordinates, nodeId);
 
   return (
-    <GhostButton
-      {...props}
-      className="min-w-max w-full flex justify-start p-1 items-center rounded"
-      onClick={() => {
-        close();
-        const newNodeId = nanoid(5);
-        addNode(nodeType, newNodeCoordinates, newNodeId);
-        addEdge(nodeId, newNodeId);
-      }}
-    >
-      <NewspaperOutline className="h-4 w-4 mr-2" style={{ color: color }} />
+    <DropdownMenu.Root onOpenChange={onOpenChange} open={open}>
       {children}
-    </GhostButton>
+
+      <Content>
+        <Label css={{ marginBottom: "$2" }}>Neuen Knoten hinzufügen</Label>
+        {options.map((option) => (
+          <Item key={option.label} onSelect={() => createNewNode(option.type)}>
+            {option.label}
+          </Item>
+        ))}
+      </Content>
+    </DropdownMenu.Root>
   );
 };

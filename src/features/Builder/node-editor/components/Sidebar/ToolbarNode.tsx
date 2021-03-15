@@ -12,7 +12,7 @@ export const ToolbarNode: ToolbarNode = ({ label, color, ...props }) => {
   return (
     <button
       style={{ borderColor: color }}
-      className="bg-gray-100 p-4 rounded shadow-md border-l-4 flex items-center"
+      className="bg-gray-200 p-4 rounded shadow-md border-l-4 flex items-center font-semibold"
       {...props}
     >
       <ChatOutline

@@ -1,0 +1,4 @@
+schema: "./src/types/generated/graphql.schema.json"
+documents:
+  - src/features/Data/queries.graphql
+  - src/features/Data/mutations.graphql
