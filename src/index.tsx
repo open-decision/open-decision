@@ -1,20 +1,20 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "regenerator-runtime/runtime";
 import { BrowserRouter } from "react-router-dom";
 import { App } from "./App";
-import { client, AuthProvider } from "features";
-import { Provider } from "urql";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
+
+const queryClient = new QueryClient();
 
 const AppContext = () => {
   return (
-    <Provider value={client}>
-      <AuthProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </AuthProvider>
-    </Provider>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+      <ReactQueryDevtools />
+    </QueryClientProvider>
   );
 };
 

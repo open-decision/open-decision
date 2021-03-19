@@ -98,8 +98,6 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({
   const setNodes = useNodesStore((state) => state.setNodes, shallow);
   const setEdges = useEdgesStore((state) => state.setEdges, shallow);
 
-  const isSidebarOpen = useSidebarState((state) => state.open);
-
   React.useEffect(() => {
     setZoom(state.zoom);
     setCoordinates(state.coordinates);

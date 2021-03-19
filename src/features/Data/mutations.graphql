@@ -1,16 +1,13 @@
 mutation LOGIN_USER($email: String!, $password: String!) {
   tokenAuth(email: $email, password: $password) {
-    success
-    errors
     token
-    refreshToken
+    refreshExpiresIn
   }
 }
 
 mutation LOGOUT_USER($refreshToken: String!) {
   revokeToken(refreshToken: $refreshToken) {
     success
-    errors
   }
 }
 
@@ -26,9 +23,14 @@ mutation REGISTER_USER(
     password1: $password1
     password2: $password2
   ) {
-    success
-    errors
     token
+  }
+}
+
+mutation REFRESH_TOKEN {
+  refreshToken {
+    token
+    refreshExpiresIn
   }
 }
 
@@ -43,10 +45,13 @@ mutation CREATE_TREE($input: CreateDecisionTreeMutationInput!) {
   }
 }
 
-mutation REFRESH_TOKEN {
-  refreshToken {
-    success
-    errors
-    token
+mutation UPDATE_TREE($input: UpdateDecisionTreeMutationInput!) {
+  updateTree(input: $input) {
+    tree {
+      id
+      name
+      extraData
+      tags
+    }
   }
 }

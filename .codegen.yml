@@ -4,13 +4,13 @@ documents:
   - src/features/Data/queries.graphql
   - src/features/Data/mutations.graphql
 generates:
-  src/types/generated/graphql.tsx:
+  src/types/generated/graphql.ts:
     plugins:
       - "typescript"
       - "typescript-operations"
-      - "typescript-urql"
+      - "typescript-react-query"
     config:
-      withHooks: true
+      fetcher: graphql-request
   src/types/generated/graphql.schema.json:
     plugins:
       - "introspection"

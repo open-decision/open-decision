@@ -10,3 +10,11 @@ query ALL_TREES {
     }
   }
 }
+
+query USER {
+  me {
+    email
+    firstName
+    username
+  }
+}

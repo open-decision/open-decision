@@ -11,12 +11,33 @@ export const Button = styled("button", {
   },
 
   fontWeight: "$bold",
-  padding: "$2 $4",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
 
   variants: {
+    size: {
+      small: {
+        padding: "$1 $3",
+        fontSize: "$sm",
+      },
+      default: {
+        padding: "$2 $4",
+      },
+      large: {
+        fontSize: "$xl",
+        padding: "$3 $5",
+        md: {
+          fontSize: "$2xl",
+          padding: "$6 $8",
+        },
+      },
+      xLarge: {
+        fontSize: "$xl",
+        padding: "$8 $10",
+      },
+    },
+
     variant: {
       primary: {
         backgroundColor: "$primary200",
@@ -35,6 +56,16 @@ export const Button = styled("button", {
 
         "&:hover, &:focus": {
           backgroundColor: "$secondary300",
+          boxShadow: "$md",
+        },
+      },
+      danger: {
+        backgroundColor: "$red400",
+        color: "$red900",
+        boxShadow: "$sm",
+
+        "&:hover, &:focus": {
+          backgroundColor: "$red500",
           boxShadow: "$md",
         },
       },
@@ -62,25 +93,15 @@ export const Button = styled("button", {
       },
     },
 
-    size: {
-      small: {
-        padding: "$1 $3",
-        fontSize: "$sm",
-      },
-      default: {
-        padding: "$2 $4",
-      },
-      large: {
-        fontSize: "$xl",
-        padding: "$3 $5",
-        md: {
-          fontSize: "$2xl",
-          padding: "$6 $8",
+    ghost: {
+      true: {
+        backgroundColor: "unset",
+        boxShadow: "unset",
+
+        "&:hover, &:focus": {
+          backgroundColor: "unset",
+          boxShadow: "unset",
         },
-      },
-      xLarge: {
-        fontSize: "$xl",
-        padding: "$8 $10",
       },
     },
   },
@@ -113,6 +134,18 @@ export const Button = styled("button", {
 
         "&:hover, &:focus": {
           backgroundColor: "$secondary100",
+        },
+      },
+    },
+    {
+      variant: "danger",
+      outlined: "true",
+      css: {
+        backgroundColor: "transparent",
+        color: "$red700",
+
+        "&:hover, &:focus": {
+          backgroundColor: "$red50",
         },
       },
     },

@@ -21,7 +21,7 @@ module.exports = {
     minify: true,
     target: "es2018",
   },
-  devOptions: { open: "none", port: 3000 },
+  devOptions: { open: "none", port: 3000, output: "stream" },
   alias: {
     internalTypes: "./src/types",
     components: "./src/components",
