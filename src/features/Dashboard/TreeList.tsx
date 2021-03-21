@@ -1,53 +1,55 @@
-import { Badge, Button } from "components";
+import { Button } from "components";
 import React from "react";
 import { parseISO, formatWithOptions } from "date-fns/esm/fp";
 import de from "date-fns/locale/de";
-import {
-  ChevronDownSolid,
-  PlusCircleOutline,
-} from "@graywolfai/react-heroicons";
+import { ChevronDownSolid } from "@graywolfai/react-heroicons";
 import { fuzzySearch, Search, sortByKey } from "./Filter";
 import { motion } from "framer-motion";
 import { ValidTreeNode } from "./types";
 import { identity, pipe } from "remeda";
 import { Link } from "react-router-dom";
+import { TreeTags } from "./TreeTags";
 
 type TreeCard = { tree: ValidTreeNode };
 
-const TreeCard: React.FC<TreeCard> = ({ tree }) => (
-  <div className="bg-gray-50 rounded-md shadow-md space-y-2 hover:shadow-lg transition-all duration-100 border-l-4 border-primary-500">
-    <div className="space-x-4 px-4 py-2 flex items-center">
-      {tree.tags.map((tag) => (
-        <Badge key={tag.name} color={tag.color} className="shadow-sm">
-          {tag.name}
-        </Badge>
-      ))}
-      <Button rounded="full" variant="icon" size="small">
-        <PlusCircleOutline className="w-6 h-6" />
-      </Button>
-    </div>
+const TreeCard: React.FC<TreeCard> = ({ tree }) => {
+  return (
+    <div className="bg-gray-50 rounded-md shadow-md space-y-2 hover:shadow-lg transition-all duration-100 border-l-4 border-primary-500">
+      <TreeTags tree={tree} />
 
-    <div className="px-4 pb-4 flex items-baseline">
-      <div className="space-y-2 flex-grow">
-        <h3 className="text-4xl">{tree.name}</h3>
-        <span className="text-gray-500 text-sm">
-          {formatWithOptions({ locale: de })("P")(parseISO(tree.createdAt))}
-        </span>
-      </div>
-      <div className="flex self-end">
-        <Button
-          variant="ghost"
-          className="text-gray-500 hover:text-red-700 mr-4"
-        >
-          Archivieren
-        </Button>
-        <Button outlined as={Link} to="/builder">
-          Öffnen
-        </Button>
+      <div className="px-4 pb-4 flex items-baseline">
+        <div className="space-y-2 flex-grow">
+          <h3 className="text-4xl">{tree.name}</h3>
+          <span className="text-gray-500 text-sm">
+            Erstellt am:{" "}
+            {formatWithOptions({ locale: de })("P")(parseISO(tree.createdAt))}
+          </span>
+        </div>
+        <div className="self-end space-x-4">
+          <Button ghost size="small" css={{ display: "inline" }}>
+            Archivieren
+          </Button>
+          <Button
+            variant="danger"
+            outlined
+            size="small"
+            css={{ display: "inline" }}
+          >
+            Löschen
+          </Button>
+          <Button
+            as={Link}
+            outlined
+            to={`/builder/:${tree.id}`}
+            css={{ display: "inline" }}
+          >
+            Öffnen
+          </Button>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 type SortButton = {
   sort: { key: string; descending: boolean };
@@ -75,7 +77,7 @@ const SortButton: React.FunctionComponent<SortButton> = ({
 
   return (
     <Button
-      variant="ghost"
+      ghost
       rounded="none"
       onClick={() =>
         setSort({
