@@ -1,38 +1,33 @@
-import React from "react";
-import clsx from "clsx";
-import { badgeColors as colors } from "internalTypes";
+import { styled } from "utils/stitches.config";
 
-const sizes = {
-  default: "px-3",
-  large: "px-4 py-1",
-};
+export const Badge = styled("span", {
+  borderRadius: "$md",
+  fontWeight: "$semibold",
+  fontSize: "$sm",
 
-export type BadgeProps = Omit<
-  React.HTMLAttributes<HTMLSpanElement>,
-  "color"
-> & {
-  color?: keyof typeof colors;
-  size?: keyof typeof sizes;
-};
+  variants: {
+    color: {
+      red: { backgroundColor: "$red200", color: "$red900" },
+      blue: { backgroundColor: "$blue200", color: "$blue900" },
+      green: { backgroundColor: "$emerald200", color: "$emerald900" },
+      yellow: { backgroundColor: "$amber200", color: "$amber900" },
+      indigo: { backgroundColor: "$indigo200", color: "$indigo900" },
+      purple: { backgroundColor: "$purple200", color: "$purple900" },
+      pink: { backgroundColor: "$pink200", color: "$pink900" },
+    },
 
-export const Badge: React.FC<BadgeProps> = ({
-  children,
-  className = "",
-  color = "blue",
-  size = "default",
-  ...props
-}) => {
-  return (
-    <span
-      className={clsx(
-        "rounded-md font-semibold text-sm",
-        className,
-        colors[color],
-        sizes[size]
-      )}
-      {...props}
-    >
-      {children}
-    </span>
-  );
-};
+    size: {
+      default: {
+        paddingInline: "$3",
+      },
+      large: {
+        paddingInline: "$4",
+        paddingBlock: "$1",
+      },
+    },
+  },
+
+  defaultVariants: {
+    size: "default",
+  },
+});
