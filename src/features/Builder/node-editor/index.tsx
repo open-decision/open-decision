@@ -18,10 +18,7 @@ import {
 } from "./types";
 import shallow from "zustand/shallow";
 import { NewNodeSidebar } from "./components/Sidebar/NewNodeSidebar";
-import {
-  NodeEditingSidebar,
-  useSidebarState,
-} from "./components/Sidebar/NodeEditingSidebar";
+import { NodeEditingSidebar } from "./components/Sidebar/NodeEditingSidebar";
 
 export type EditorState = {
   /**

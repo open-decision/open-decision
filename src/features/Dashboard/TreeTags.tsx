@@ -9,7 +9,7 @@ export const TreeTags: React.FC<TreeTagsProps> = ({ tree }) => {
   return (
     <div className="space-x-4 px-4 py-2 flex items-center">
       {tree.tags.map((tag) => (
-        <Badge key={tag.name} color={tag.color} className="shadow-sm">
+        <Badge key={tag.name} color={tag.color} css={{ boxShadow: "$sm" }}>
           {tag.name}
         </Badge>
       ))}

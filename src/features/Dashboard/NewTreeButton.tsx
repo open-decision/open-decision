@@ -36,12 +36,12 @@ const Content = styled(Dialog.Content, {
 });
 
 const CloseIcon = styled(Dialog.Close, {
-  width: "26",
-  height: "26",
+  width: 26,
+  height: 26,
   color: "$warmGray800",
   position: "absolute",
-  right: "14",
-  top: "14",
+  right: 14,
+  top: 14,
 });
 
 const Form = styled("form", {
@@ -56,7 +56,7 @@ const Heading = styled("h2", {
   color: "$gray600",
 });
 
-export const NewTreeButton = () => {
+export const NewTreeButton: React.FC = () => {
   const [name, setName] = React.useState("");
   const [open, setOpen] = React.useState(false);
 

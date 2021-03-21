@@ -24,7 +24,9 @@ export const App: React.FC = () => {
       refreshToken ? login({ ...refreshToken }) : logout(),
   });
 
-  React.useEffect(() => auth.mutate({}), []);
+  //We get the mutate function specifically so we only depend on it in the Effect.
+  const { mutate: getToken } = auth;
+  React.useEffect(() => getToken({}), [getToken]);
 
   return auth.isLoading ? (
     <p>Loading ...</p>
