@@ -37,9 +37,7 @@ export const App: React.FC = () => {
 
   React.useEffect(() => getToken({}), [getToken]);
 
-  console.log(loading, status);
-
-  const [isReady, cancel, reset] = useTimeoutFn(() => {
+  const [_isReady, _cancel, reset] = useTimeoutFn(() => {
     getToken({});
     reset();
   }, 30000);

@@ -43,5 +43,5 @@
       "version": "detect"
     }
   },
-  "ignorePatterns": ["src/types/generated/*", "*.config*"]
+  "ignorePatterns": ["src/types/generated/*", "*.config*", "node_modules/*"]
 }

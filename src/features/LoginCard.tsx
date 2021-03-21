@@ -54,8 +54,8 @@ export const LoginCard: React.FunctionComponent = () => {
 };
 
 const LoginForm: React.FunctionComponent = () => {
-  const [email, setEmail] = React.useState("test@outlook.com");
-  const [password, setPassword] = React.useState("fogmub-bifaj-sarjo8");
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
   const navigate = useNavigate();
 
   const [login, client, logout] = useAuthStore((state) => [
@@ -87,6 +87,7 @@ const LoginForm: React.FunctionComponent = () => {
           onChange={(e) => setEmail(e.target.value)}
           type="email"
           required
+          autoComplete="username"
         />
         <Field
           name="password"
@@ -95,6 +96,7 @@ const LoginForm: React.FunctionComponent = () => {
           onChange={(e) => setPassword(e.target.value)}
           type="password"
           required
+          autoComplete="current-password"
         />
         <div className="flex justify-center">
           <a
@@ -164,6 +166,7 @@ const SignupForm: React.FunctionComponent = () => {
             onChange={(e) => setPassword1(e.target.value)}
             type="password"
             required
+            autoComplete="new-password"
           />
           <Field
             name="password"
@@ -172,6 +175,7 @@ const SignupForm: React.FunctionComponent = () => {
             onChange={(e) => setPassword2(e.target.value)}
             type="password"
             required
+            autoComplete="new-password"
           />
         </div>
         <div>

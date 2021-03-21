@@ -1,7 +1,6 @@
 import { styled } from "utils/stitches.config";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import { motion } from "framer-motion";
-
 export const SidebarRoot = styled(Collapsible.Root, {});
 
 export type SidebarProps = React.ComponentProps<typeof SidebarRoot> & {

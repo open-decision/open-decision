@@ -4,8 +4,8 @@ module.exports = {
   mount: { public: { url: "/", static: true }, src: { url: "/dist" } },
   plugins: [
     "@snowpack/plugin-react-refresh",
-    "@snowpack/plugin-typescript",
-    "@canarise/snowpack-eslint-plugin",
+    // "@snowpack/plugin-typescript",
+    // "@canarise/snowpack-eslint-plugin",
     [
       "@snowpack/plugin-build-script",
       {
