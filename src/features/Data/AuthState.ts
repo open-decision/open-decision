@@ -6,12 +6,14 @@ type loggedOut = {
   status: "loggedOut";
   token: undefined;
   refreshExpiresIn: undefined;
+  refreshToken: undefined;
 };
 
 type loggedIn = {
   status: "loggedIn";
   token: string;
   refreshExpiresIn: number;
+  refreshToken: string;
 };
 
 type authState = (loggedOut | loggedIn) & {
@@ -29,6 +31,7 @@ export const useAuthStore = create<AuthState>(
       status: "loggedOut",
       token: undefined,
       refreshExpiresIn: undefined,
+      refreshToken: undefined,
       client: new GraphQLClient("https://builder.open-decision.org/graphql", {
         credentials: "include",
       }),
@@ -46,6 +49,7 @@ export const useAuthStore = create<AuthState>(
             status: "loggedOut",
             token: undefined,
             refreshExpiresIn: undefined,
+            refreshToken: undefined,
           };
         }),
     }),
