@@ -68,7 +68,7 @@
     "@radix-ui/react-slot": "^0.0.4",
     "@radix-ui/react-tabs": "^0.0.6",
     "@radix-ui/react-tooltip": "^0.0.9",
-    "@stitches/react": "^0.1.0-canary.19",
+    "@stitches/react": "^0.1.0-canary.21",
     "@urql/devtools": "^2.0.3",
     "clsx": "^1.1.1",
     "d3-shape": "^2.1.0",

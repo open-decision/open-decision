@@ -17,14 +17,16 @@ const StyledAvatar = styled(Avatar.Root, {
   height: 48,
   borderRadius: "$full",
 });
+
 const Item = styled(DropdownMenu.Item, {});
+
 const Content = styled(DropdownMenu.Content, {
   display: "grid",
   gap: "$2",
   minWidth: 130,
   backgroundColor: "white",
   borderRadius: "$sm",
-  padding: "$2 $3",
+  padding: "$6 $8",
   boxShadow: "$xl",
   marginTop: "$2",
 });

@@ -70,7 +70,7 @@ export const Builder: React.FC = () => {
 
   return (
     <>
-      <Header>
+      {/* <Header>
         <div className="flex space-x-4 flex-1 justify-between">
           {data ? (
             <>
@@ -102,7 +102,7 @@ export const Builder: React.FC = () => {
             </>
           ) : null}
         </div>
-      </Header>
+      </Header> */}
       <div className="relative min-h-0">
         {data?.nodes ? (
           <Editor state={data} setState={(value) => setData(value)} />
