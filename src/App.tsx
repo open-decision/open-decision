@@ -3,46 +3,14 @@ import { Routes, Route } from "react-router-dom";
 import { Layout } from "components";
 import { Builder, Dashboard, LoginCard } from "features";
 import "./index.css";
-import { useRefresh_TokenMutation } from "internalTypes";
-import { useAuthStore } from "features/Data/AuthState";
-import { useTimeoutFn } from "react-use";
+import { useTokenRefresh } from "utils/useTokenRefresh";
 
 //There are two versions of the App based around the auth state.
 //If the user is authenticated he gets the AuthenticatedApp if not he gets the UnatuhenticatedApp, which is currently just the LoginCard.
 export const App: React.FC = () => {
-  const [loading, setLoading] = React.useState(true);
+  const loginStatus = useTokenRefresh();
 
-  //When refreshing the jwt cookie is discarded. We use the refresh cookie
-  //to get a new cookie so all queries are authenticated when the user is logged in.
-  const [status, login, logout, client] = useAuthStore((state) => [
-    state.status,
-    state.login,
-    state.logout,
-    state.client,
-  ]);
-
-  const auth = useRefresh_TokenMutation(client, {
-    onError: () => {
-      setLoading(false);
-      logout();
-    },
-    onSuccess: ({ refreshToken }) => {
-      setLoading(false);
-      refreshToken ? login({ ...refreshToken }) : logout();
-    },
-  });
-
-  //We get the mutate function specifically so we only depend on it in the Effect.
-  const { mutate: getToken } = auth;
-
-  React.useEffect(() => getToken({}), [getToken]);
-
-  const [_isReady, _cancel, reset] = useTimeoutFn(() => {
-    getToken({});
-    reset();
-  }, 30000);
-
-  return loading ? null : status === "loggedIn" ? (
+  return loginStatus === "loading" ? null : loginStatus === "loggedIn" ? (
     <AuthenticatedApp />
   ) : (
     <UnathenticatedApp />
@@ -56,9 +24,11 @@ const UnathenticatedApp: React.FC = () => {
       <Route
         path="/"
         element={
-          <div className="flex justify-center items-center h-screen">
-            <LoginCard />
-          </div>
+          <Layout>
+            <div className="flex justify-center items-center">
+              <LoginCard />
+            </div>
+          </Layout>
         }
       />
     </Routes>
