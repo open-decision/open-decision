@@ -32,9 +32,10 @@ export const useAuthStore = create<AuthState>(
       token: undefined,
       refreshExpiresIn: undefined,
       refreshToken: undefined,
-      client: new GraphQLClient("https://builder.open-decision.org/graphql", {
-        credentials: "include",
-      }),
+      client: new GraphQLClient(
+        "https://od-backend-dev.herokuapp.com/graphql",
+        { credentials: "include" }
+      ),
       login: (authState) =>
         set((state) => {
           state.client.setHeader("authorization", `JWT ${authState.token}`);
