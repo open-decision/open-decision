@@ -4,9 +4,9 @@ import * as Avatar from "@radix-ui/react-avatar";
 import { UserCircleOutline } from "@graywolfai/react-heroicons";
 import { styled } from "utils/stitches.config";
 import { Link } from "react-router-dom";
-import { useAuthStore } from "features/Data/AuthState";
-import { useLogout_UserMutation } from "internalTypes";
 import { Button } from "./Button";
+import { authService } from "features/Data/authStateMachine";
+import { useService } from "@xstate/react";
 
 const Trigger = styled(DropdownMenu.Trigger, {});
 const StyledAvatar = styled(Avatar.Root, {
@@ -37,15 +37,7 @@ const Content = styled(DropdownMenu.Content, {
 type UserMenuProps = { imgSrc?: string };
 
 export const UserMenu: React.FC<UserMenuProps> = ({ imgSrc }) => {
-  const [refreshToken, logout, client] = useAuthStore((state) => [
-    state.refreshToken,
-    state.logout,
-    state.client,
-  ]);
-
-  const logoutMutation = useLogout_UserMutation(client, {
-    onSuccess: () => logout(),
-  });
+  const [state, send] = useService(authService);
 
   return (
     <DropdownMenu.Root>
@@ -65,11 +57,9 @@ export const UserMenu: React.FC<UserMenuProps> = ({ imgSrc }) => {
         <Item as={Link} to="./settings">
           Einstellungen
         </Item>
-        {refreshToken ? (
-          <Button onClick={() => logoutMutation.mutate({ refreshToken })}>
-            Logout
-          </Button>
-        ) : null}
+        {state.matches("loggedIn") && (
+          <Button onClick={() => send("Logout")}>Logout</Button>
+        )}
       </Content>
     </DropdownMenu.Root>
   );

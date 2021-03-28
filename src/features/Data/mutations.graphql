@@ -1,14 +1,12 @@
 mutation LOGIN_USER($email: String!, $password: String!) {
   tokenAuth(email: $email, password: $password) {
-    token
-    refreshExpiresIn
-    refreshToken
+    errors
   }
 }
 
 mutation LOGOUT_USER($refreshToken: String!) {
   revokeToken(refreshToken: $refreshToken) {
-    success
+    errors
   }
 }
 
@@ -24,8 +22,7 @@ mutation REGISTER_USER(
     password1: $password1
     password2: $password2
   ) {
-    token
-    refreshToken
+    errors
   }
 }
 

@@ -3,13 +3,18 @@ import { useAll_TreesQuery, useUserQuery } from "internalTypes";
 import { TreeList } from "./TreeList";
 import { validateTreeData } from "./dataValidation";
 import { NewTreeButton } from "./NewTreeButton";
-import { useAuthStore } from "features/Data/AuthState";
+import { useService } from "@xstate/react";
+import { authService } from "features/Data/authStateMachine";
 
 export const Dashboard: React.FunctionComponent = () => {
-  const client = useAuthStore((state) => state.client);
+  const [state] = useService(authService);
 
-  const user = useUserQuery(client);
-  const allTrees = useAll_TreesQuery(client, {}, { select: validateTreeData });
+  const user = useUserQuery(state.context.client);
+  const allTrees = useAll_TreesQuery(
+    state.context.client,
+    {},
+    { select: validateTreeData }
+  );
 
   return (
     <div className="dashboard-grid">

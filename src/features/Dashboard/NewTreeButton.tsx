@@ -5,7 +5,8 @@ import { useQueryClient } from "react-query";
 import { useCreate_TreeMutation } from "internalTypes";
 import { Button, Field } from "components";
 import { styled } from "utils/stitches.config";
-import { useAuthStore } from "features/Data/AuthState";
+import { useService } from "@xstate/react";
+import { authService } from "features/Data/authStateMachine";
 
 const Overlay = styled(Dialog.Overlay, {
   backgroundColor: "rgba(0, 0, 0, .15)",
@@ -61,8 +62,8 @@ export const NewTreeButton: React.FC = () => {
   const [open, setOpen] = React.useState(false);
 
   const queryClient = useQueryClient();
-  const client = useAuthStore((state) => state.client);
-  const createTreeMutation = useCreate_TreeMutation(client, {
+  const [state] = useService(authService);
+  const createTreeMutation = useCreate_TreeMutation(state.context.client, {
     onSuccess: () => {
       queryClient.invalidateQueries("ALL_TREES");
       setOpen(false);
