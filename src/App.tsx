@@ -9,12 +9,16 @@ import { useService } from "@xstate/react";
 //There are two versions of the App based around the auth state.
 //If the user is authenticated he gets the AuthenticatedApp if not he gets the UnatuhenticatedApp.
 export const App: React.FC = () => {
-  const [state] = useService(authService);
+  const [state, _send, service] = useMachine(authStateMachine);
 
-  return state.matches("loggedIn") ? (
-    <AuthenticatedApp />
-  ) : (
-    <UnauthenticatedApp />
+  return (
+    <AuthServiceContext.Provider value={service}>
+      {state.matches("loggedIn") ? (
+        <AuthenticatedApp />
+      ) : (
+        <UnauthenticatedApp />
+      )}
+    </AuthServiceContext.Provider>
   );
 };
 
@@ -23,7 +27,7 @@ const UnauthenticatedApp: React.FC = () => {
     <Routes>
       {/* Login path. */}
       <Route
-        path="/"
+        path="*"
         element={
           <Layout>
             <MainContent

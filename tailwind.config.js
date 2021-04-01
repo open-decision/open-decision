@@ -1,5 +1,5 @@
-const plugin = require("@tailwindcss/postcss7-compat/plugin");
-const colors = require("@tailwindcss/postcss7-compat/colors");
+const plugin = require("tailwindcss/plugin");
+const colors = require("tailwindcss/colors");
 
 module.exports = {
   purge: ["./src/**/*.tsx", "./src/**/*.ts"],

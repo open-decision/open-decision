@@ -1,6 +1,5 @@
 import React from "react";
 import { Button, Field, Logo } from "components";
-import { useNavigate } from "react-router-dom";
 import * as Tabs from "@radix-ui/react-tabs";
 import { styled } from "utils/stitches.config";
 import { useLogin_UserMutation, useRegister_UserMutation } from "internalTypes";
@@ -57,7 +56,6 @@ export const LoginCard: React.FunctionComponent = () => {
 const LoginForm: React.FunctionComponent = () => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const navigate = useNavigate();
 
   const [state, send] = useService(authService);
   const queryClient = useQueryClient();
@@ -66,7 +64,6 @@ const LoginForm: React.FunctionComponent = () => {
     onSuccess: () => {
       send("Login");
       queryClient.invalidateQueries("USER");
-      navigate("/", { replace: true });
     },
   });
 
@@ -126,11 +123,8 @@ const SignupForm: React.FunctionComponent = () => {
   const registerMutation = useRegister_UserMutation(state.context.client, {
     onSuccess: () => {
       queryClient.invalidateQueries("USER");
-      navigate("/", { replace: true });
     },
   });
-
-  const navigate = useNavigate();
 
   return (
     <form className="flex flex-col">

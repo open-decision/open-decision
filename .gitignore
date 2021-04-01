@@ -27,6 +27,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 example/.docz/.cache
+.eslintcache
 
 # Local Netlify folder
 .docz

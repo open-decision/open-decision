@@ -1,9 +1,12 @@
 import { GraphQLClient } from "graphql-request";
 import { createMachine, interpret } from "xstate";
 
-const client = new GraphQLClient("http://localhost:8010/proxy/graphql", {
-  credentials: "include",
-});
+const client = new GraphQLClient(
+  `${import.meta.env.SNOWPACK_PUBLIC_API_URL}/graphql`,
+  {
+    credentials: "include",
+  }
+);
 
 const getNewToken = (client: GraphQLClient) =>
   client

@@ -12,23 +12,14 @@ const getNewToken = (client: GraphQLClient) =>
     .request<{
       refreshToken: { token?: string };
     }>(`mutation REFRESH_TOKEN {refreshToken {token}}`)
-    .then((data) => data.refreshToken?.token)
-    .catch(console.log);
+    .then((data) => data.refreshToken?.token);
 
 const removeTokenCookies = (client: GraphQLClient) =>
   client
     .request<{ deleteRefreshTokenCookie: { deleted: boolean } }>(
-      `mutation DELETE_COOKIE {
-    deleteRefreshTokenCookie {
-      deleted
-    }
-    deleteTokenCookie {
-      deleted
-    }
-  }`
+      `mutation DELETE_COOKIE {deleteRefreshTokenCookie {deleted} deleteTokenCookie {deleted}}`
     )
-    .then((data) => console.log(data))
-    .catch(console.log);
+    .then((data) => console.log(data));
 
 type AuthContext = { client: GraphQLClient };
 

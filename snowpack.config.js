@@ -5,19 +5,12 @@ module.exports = {
   plugins: [
     "@snowpack/plugin-react-refresh",
     // "@snowpack/plugin-typescript",
-    // "@canarise/snowpack-eslint-plugin",
-    [
-      "@snowpack/plugin-build-script",
-      {
-        cmd: "postcss",
-        input: [".css"],
-        output: [".css"],
-      },
-    ],
+    ["@canarise/snowpack-eslint-plugin", {globs: ['src/**/*.tsx', 'src/**/*.ts']}],
+    "@snowpack/plugin-postcss",
   ],
   routes: [{ match: "routes", src: ".*", dest: "/index.html" }],
   optimize: {
-    bundle: true,
+    // bundle: true,
     minify: true,
     target: "es2018",
   },

@@ -2,12 +2,74 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "Dev Environment",
+      "dependsOn": ["Frontend App", "Proxy Dev Server"],
+      "presentation": {
+        "reveal": "silent",
+        "showReuseMessage": false,
+        "clear": true
+      },
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
+    },
+    {
+      "label": "Test Build Environment",
+      "group": "build",
+      "dependsOrder": "sequence",
+      "dependsOn": ["build", "Serve Build"],
+      "presentation": {
+        "reveal": "silent",
+        "showReuseMessage": false,
+        "clear": true
+      }
+    },
+    {
+      "label": "Checks in Dev Environment",
+      "dependsOn": ["Typecheck", "Lint"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": true
+      }
+    },
+    {
+      "label": "Frontend App",
+      "type": "shell",
+      "command": "npm run start",
+      "presentation": {
+        "group": "server"
+      }
+    },
+    {
+      "label": "Proxy Dev Server",
+      "type": "shell",
+      "command": "npm run proxy:dev",
+      "presentation": {
+        "group": "server"
+      }
+    },
+    {
+      "label": "Serve Build",
+      "type": "shell",
+      "command": "npm run proxy:build & npx serve build",
+      "presentation": {
+        "group": "test build"
+      }
+    },
+    {
       "type": "npm",
-      "script": "start",
-      "problemMatcher": [],
-      "label": "npm: start",
-      "detail": "snowpack dev",
-      "runOptions": { "runOn": "folderOpen" }
+      "script": "build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "group": "test build"
+      },
+      "label": "build",
+      "detail": "npm run codegen && snowpack build"
     }
   ]
 }
