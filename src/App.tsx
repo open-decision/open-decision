@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import { Layout } from "components";
+import { Layout, MainContent } from "components";
 import { Builder, Dashboard, LoginCard } from "features";
 import "./index.css";
 import { useTokenRefresh } from "utils/useTokenRefresh";
@@ -25,9 +25,15 @@ const UnathenticatedApp: React.FC = () => {
         path="/"
         element={
           <Layout>
-            <div className="flex justify-center items-center">
+            <MainContent
+              css={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <LoginCard />
-            </div>
+            </MainContent>
           </Layout>
         }
       />
@@ -42,7 +48,9 @@ const AuthenticatedApp: React.FC = () => (
       path="/"
       element={
         <Layout>
-          <Dashboard />
+          <MainContent>
+            <Dashboard />
+          </MainContent>
         </Layout>
       }
     />
@@ -52,7 +60,15 @@ const AuthenticatedApp: React.FC = () => (
       path="/builder/:id"
       element={
         <Layout>
-          <Builder />
+          <MainContent
+            css={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "stretch",
+            }}
+          >
+            <Builder />
+          </MainContent>
         </Layout>
       }
     />
