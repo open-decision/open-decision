@@ -1,6 +1,5 @@
 export * from "./Layout";
 export * from "./Header";
-export * from "./Links";
 export * from "./Button";
 export * from "./Logo";
 export * from "./UserMenu";

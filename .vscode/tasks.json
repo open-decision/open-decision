@@ -37,7 +37,7 @@
     {
       "label": "Frontend App",
       "type": "shell",
-      "command": "npm run start",
+      "command": "npm run dev",
       "presentation": {
         "group": "server"
       }

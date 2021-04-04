@@ -3,10 +3,10 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Avatar from "@radix-ui/react-avatar";
 import { UserCircleOutline } from "@graywolfai/react-heroicons";
 import { styled } from "utils/stitches.config";
-import { Link } from "react-router-dom";
 import { Button } from "./Button";
 import { authService } from "features/Data/authStateMachine";
 import { useService } from "@xstate/react";
+import Link from "next/link";
 
 const Trigger = styled(DropdownMenu.Trigger, {});
 const StyledAvatar = styled(Avatar.Root, {
@@ -51,10 +51,12 @@ export const UserMenu: React.FC<UserMenuProps> = ({ imgSrc }) => {
       </Trigger>
 
       <Content>
-        <Item as={Link} to="./profile">
+        {/* @ts-expect-error: stitches error */}
+        <Item as={Link} href="./profile">
           Profil
         </Item>
-        <Item as={Link} to="./settings">
+        {/* @ts-expect-error: stitches error */}
+        <Item as={Link} href="./settings">
           Einstellungen
         </Item>
         {state.matches("loggedIn") && (

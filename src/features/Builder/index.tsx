@@ -8,57 +8,50 @@ import { Stage } from "./components/Stage/Stage";
 import { useEdgesStore, useEditorStore, useNodesStore } from "./globalState";
 import { Nodes } from "./components/Node/Nodes";
 import { ConnectionsWrapper } from "./components/Connections/ConnectionsWrapper";
-import {
-  comments,
-  coordinates,
-  edges,
-  nodes,
-  nodeTypes,
-  portTypes,
-} from "./types";
+import { coordinates, edges, nodes, nodeTypes, portTypes } from "./types";
 import shallow from "zustand/shallow";
 import { NewNodeSidebar } from "./components/Sidebar/NewNodeSidebar";
 import { NodeEditingSidebar } from "./components/Sidebar/NodeEditingSidebar";
 
-export type EditorState = {
-  /**
-   * The id of the Editor.
-   */
-  id: string;
-  /**
-   * The current zoom level.
-   */
-  zoom: number;
-  /**
-   * The current position of the Editor.
-   */
-  coordinates: coordinates;
-  /**
-   * The currently shown Nodes.
-   */
-  nodes: nodes;
-  /**
-   * The currently shown Nodes.
-   */
-  edges: edges;
-  /**
-   * The currently shown Comments.
-   */
-  comments: comments;
-  /**
-   * The preconfigured avaliable NodeTypes and PortTypes that can be added when using the node-editor.
-   */
-  nodeTypes: nodeTypes;
-  portTypes: portTypes;
-  treeName: string;
+export type Tree = {
+  config: {
+    /**
+     * The preconfigured avaliable NodeTypes that are avaliable in the node-editor.
+     */
+    nodeTypes: nodeTypes;
+    /**
+     * The preconfigured avaliable NodeTypes that are avaliable in the node-editor.
+     */
+    portTypes: portTypes;
+  };
+  state: {
+    treeName: string;
+    position: {
+      /**
+       * The current zoom level.
+       */
+      zoom: number;
+      /**
+       * The current position of the Editor.
+       */
+      coordinates: coordinates;
+    };
+    /**
+     * The currently shown Nodes.
+     */
+    nodes: nodes;
+    /**
+     * The currently shown Nodes.
+     */
+    edges: edges;
+  };
 };
 
 type NodeEditorProps = {
   /**
-   * The state of the content in the Editor.
+   * The id of the Tree.
    */
-  state: EditorState;
-  setState?: (value: EditorState) => void;
+  tree: Tree;
   /**
    * Zooming can be disabled. False by default.
    */
@@ -67,23 +60,10 @@ type NodeEditorProps = {
    * Panning can be disabled. False by default.
    */
   disablePan?: boolean;
-  /**
-   * The Editor can make sure, that circular connections between nodes are not possible. By default circular connections are prevented.
-   */
-  circularBehavior?: "prevent" | "warn" | "allow";
-  debug?: boolean;
-  /**
-   * The zoom of the Editor. Ranges from 0.1 to 7.
-   */
-  zoom?: number;
-  /**
-   * Comments can be hidden dynamically. False by default.
-   */
-  hideComments?: boolean;
 };
 
 export const NodeEditor: React.FC<NodeEditorProps> = ({
-  state,
+  tree,
   disableZoom = false,
   disablePan = false,
 }) => {
@@ -91,28 +71,15 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({
     (state) => [state.setCoordinates, state.setZoom],
     shallow
   );
-
   const setNodes = useNodesStore((state) => state.setNodes, shallow);
   const setEdges = useEdgesStore((state) => state.setEdges, shallow);
 
   React.useEffect(() => {
-    setZoom(state.zoom);
-    setCoordinates(state.coordinates);
-
-    setNodes(state.nodes, state.nodeTypes, state.portTypes);
-    setEdges(state.edges);
-  }, [
-    setCoordinates,
-    setEdges,
-    setNodes,
-    setZoom,
-    state.coordinates,
-    state.edges,
-    state.nodeTypes,
-    state.nodes,
-    state.portTypes,
-    state.zoom,
-  ]);
+    setZoom(tree.state.position.zoom);
+    setCoordinates(tree.state.position.coordinates);
+    setNodes(tree.state.nodes, tree.config.nodeTypes, tree.config.portTypes);
+    setEdges(tree.state.edges);
+  }, [setCoordinates, setEdges, setNodes, setZoom, tree]);
 
   //----------------------------------------------------------------
 

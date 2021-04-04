@@ -2,7 +2,7 @@ import { GraphQLClient } from "graphql-request";
 import { createMachine, interpret } from "xstate";
 
 const client = new GraphQLClient(
-  `${import.meta.env.SNOWPACK_PUBLIC_API_URL}/graphql`,
+  `https://od-backend-dev.herokuapp.com/graphql`,
   {
     credentials: "include",
   }
@@ -54,7 +54,7 @@ const authMachine = createMachine<AuthContext, AuthEvents, AuthState>(
         states: {
           idle: {
             after: {
-              3000: "refreshing",
+              300000: "refreshing",
             },
           },
           refreshing: {

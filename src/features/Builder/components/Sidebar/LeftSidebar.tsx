@@ -1,43 +1,44 @@
 import React from "react";
+import { ChevronDownSolid } from "@graywolfai/react-heroicons";
+import { motion } from "framer-motion";
+import { Tooltip } from "components";
+import { useKeyPressEvent } from "react-use";
 import {
   AnimationContainer,
-  SidebarProps,
   Content,
-  Header,
+  SidebarProps,
   Toggle,
+  Header,
   SidebarRoot,
 } from "./shared";
-import { ChevronDownSolid } from "@graywolfai/react-heroicons";
-import { Tooltip } from "components";
-import { motion } from "framer-motion";
-import { useKeyPressEvent } from "react-use";
 
 const arrowAnimationVariants = {
-  open: { rotate: -90 },
-  closed: { rotate: 90 },
+  open: { rotate: 90 },
+  closed: { rotate: -90 },
 };
 
-export const RightSidebar: React.FC<SidebarProps> = ({
+export const LeftSidebar: React.FC<SidebarProps> = ({
   css,
   children,
   title,
   tooltip,
   width,
-  open,
-  onOpenChange,
 }) => {
-  useKeyPressEvent("Escape", () => (onOpenChange ? onOpenChange(false) : null));
+  const [open, setOpen] = React.useState(false);
+  useKeyPressEvent("Escape", () => setOpen(false));
 
   const sidebarAnimationVariants = {
-    open: { x: "0" },
-    closed: { x: `${width}px` },
+    open: { x: 0 },
+    closed: { x: `-${width}px` },
   };
 
   return (
+    // @ts-expect-error: stitches error
     <SidebarRoot
+      // @ts-expect-error: stitches error
       css={{ zIndex: open ? "1" : "initial", ...css }}
       open={open}
-      onOpenChange={onOpenChange}
+      onOpenChange={() => setOpen(!open)}
     >
       <AnimationContainer
         animate={open ? "open" : "closed"}
@@ -45,7 +46,11 @@ export const RightSidebar: React.FC<SidebarProps> = ({
         variants={sidebarAnimationVariants}
         transition={{ duration: 0.3 }}
       >
-        <Tooltip content={tooltip ? tooltip : title} side="left">
+        <Content forceMount css={{ width }}>
+          <Header css={{ marginBottom: "$4" }}>{title}</Header>
+          {children}
+        </Content>
+        <Tooltip content={tooltip ? tooltip : title} side="right">
           <Toggle>
             <motion.div
               variants={arrowAnimationVariants}
@@ -56,10 +61,6 @@ export const RightSidebar: React.FC<SidebarProps> = ({
             </motion.div>
           </Toggle>
         </Tooltip>
-        <Content css={{ width }} forceMount>
-          <Header css={{ marginBottom: "$4" }}>{title}</Header>
-          {children}
-        </Content>
       </AnimationContainer>
     </SidebarRoot>
   );

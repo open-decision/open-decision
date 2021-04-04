@@ -9,6 +9,7 @@ export type notification = {
   variant: notificationVariants;
   title: string;
   content: string;
+  duration: number;
 };
 
 export type NotificationState = {

@@ -22,6 +22,7 @@ storybook-static
 .env.js
 package-lock.json
 yarn.lock
+.next
 
 npm-debug.log*
 yarn-debug.log*

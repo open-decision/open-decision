@@ -1,7 +1,9 @@
-import React from "react";
+import React, { FC } from "react";
 import { Header } from "components";
-import { Notifications } from "features";
+import { authService, Notifications } from "features";
 import { styled } from "utils/stitches.config";
+import { useService } from "@xstate/react";
+import { LoginPage } from "features/Data/LoginPage";
 
 const AppContainer = styled("div", {
   display: "grid",
@@ -9,7 +11,7 @@ const AppContainer = styled("div", {
   gridTemplateRows: "max-content 1fr",
 });
 
-const ContentContainer = styled("div", {
+const ContentContainer = styled("main", {
   display: "grid",
   gridTemplateColumns: "1fr 10fr 1fr",
 });
@@ -24,7 +26,7 @@ export const Layout: React.FunctionComponent = ({ children }) => {
     <AppContainer>
       <Header />
       <ContentContainer>
-        {children}
+        <Authenticated>{children}</Authenticated>
         <Notifications
           css={{
             gridRow: "1",
@@ -34,5 +36,17 @@ export const Layout: React.FunctionComponent = ({ children }) => {
         />
       </ContentContainer>
     </AppContainer>
+  );
+};
+
+const Authenticated: FC = ({ children }) => {
+  const [state] = useService(authService);
+
+  return state.matches("unknown") ? (
+    <MainContent>Loading ...</MainContent>
+  ) : state.matches("loggedIn") ? (
+    <>{children}</>
+  ) : (
+    <LoginPage />
   );
 };

@@ -1,7 +1,7 @@
 import React from "react";
 import { matchSorter } from "match-sorter";
 import { readableDate } from "./utils";
-import { parseISO } from "date-fns/esm";
+import { parseISO } from "date-fns";
 import { Field } from "components";
 import { Tag, ValidTreeNode } from "./types";
 

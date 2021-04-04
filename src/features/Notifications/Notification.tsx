@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { styled } from "utils/stitches.config";
 import {
   notification,
@@ -13,7 +13,6 @@ import {
   XOutline,
 } from "@graywolfai/react-heroicons";
 import { Button } from "components";
-import { useHoverDirty, useTween } from "react-use";
 import * as Progress from "@radix-ui/react-progress";
 import { motion, useAnimation } from "framer-motion";
 import { useGesture } from "react-use-gesture";
@@ -91,10 +90,13 @@ const ProgressIndicator = styled(Progress.Indicator, {
 export const Notification: React.FC<NotificationProps> = ({
   notification,
   id,
+  ...props
 }) => {
-  const lifetime = 5;
-  const controls = useAnimation();
-  controls.start("empty");
+  const animation = useAnimation();
+
+  useEffect(() => {
+    animation.start("empty");
+  }, []);
 
   const Icon = icons[notification.variant];
   const removeNotification = useNotificationStore(
@@ -102,11 +104,11 @@ export const Notification: React.FC<NotificationProps> = ({
   );
 
   const gestures = useGesture({
-    onPointerEnter: () => controls.stop(),
-    onPointerLeave: () => controls.start("empty"),
-    onClick: () => controls.set("full"),
-    onFocus: () => controls.stop(),
-    onBlur: () => controls.start("empty"),
+    onPointerEnter: () => animation.stop(),
+    onPointerLeave: () => animation.start("empty"),
+    onClick: () => animation.set("full"),
+    onFocus: () => animation.stop(),
+    onBlur: () => animation.start("empty"),
   });
 
   const progress = {
@@ -129,14 +131,15 @@ export const Notification: React.FC<NotificationProps> = ({
       variant={notification.variant}
       {...gestures()}
       role="alert"
+      {...props}
     >
       <ProgressBar>
         <ProgressIndicator
           as={motion.div}
           variants={progress}
-          transition={{ duration: lifetime }}
+          transition={{ duration: notification.duration }}
           initial="full"
-          animate={controls}
+          animate={animation}
           onAnimationComplete={() => removeNotification(id)}
         />
       </ProgressBar>
