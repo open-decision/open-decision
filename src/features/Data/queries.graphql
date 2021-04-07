@@ -11,6 +11,13 @@ query ALL_TREES {
   }
 }
 
+query TREE($id: ID!) {
+  decisionTree(id: $id) {
+    name
+    extraData
+  }
+}
+
 query USER {
   me {
     email
