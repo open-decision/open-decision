@@ -3,7 +3,7 @@
   "tasks": [
     {
       "label": "Dev Environment",
-      "dependsOn": ["Frontend App", "Proxy Dev Server"],
+      "dependsOn": ["Frontend App", "Proxy Dev Server", "Open Browser"],
       "presentation": {
         "reveal": "silent",
         "showReuseMessage": false,
@@ -56,6 +56,16 @@
       "command": "npm run proxy:build & npx serve build",
       "presentation": {
         "group": "test build"
+      }
+    },
+    {
+      "label": "Open Browser",
+      "type": "shell",
+      "command": "google-chrome-unstable http://localhost:3000",
+      "isBackground": true,
+      "presentation": {
+        "reveal": "never",
+        "showReuseMessage": false
       }
     },
     {
