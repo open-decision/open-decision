@@ -1,7 +1,7 @@
-import { MainContent } from "components";
-import { LoginCard } from "features";
+import { MainContent, LoginCard } from "components";
+import { FC } from "react";
 
-export const LoginPage = () => {
+export const LoginPage: FC = () => {
   return (
     <MainContent
       css={{

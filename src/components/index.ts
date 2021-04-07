@@ -8,3 +8,4 @@ export * from "./Badge";
 export * from "./Input";
 export * from "./FileInput";
 export * from "./Tooltip";
+export * from "./LoginCard";
