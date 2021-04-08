@@ -1,6 +1,12 @@
 import { useService } from "@xstate/react";
 import { MainContent } from "components";
 import { authService, NodeEditor, Tree as TreeType } from "features";
+import {
+  exampleEdges,
+  exampleNodes,
+  exampleNodeTypes,
+  examplePortTypes,
+} from "features/Builder/tests/nodes";
 import { useTreeQuery } from "internalTypes";
 import { useRouter } from "next/router";
 
@@ -13,12 +19,12 @@ export default function Tree() {
     { id: router.query.id as string },
     {
       select: ({ decisionTree }) => ({
-        config: { nodeTypes: {}, portTypes: {} },
+        config: { nodeTypes: exampleNodeTypes, portTypes: examplePortTypes },
         state: {
           position: { zoom: 1, coordinates: [0, 0] },
           treeName: decisionTree?.name ?? "",
-          nodes: {},
-          edges: {},
+          nodes: exampleNodes,
+          edges: exampleEdges,
         },
       }),
     }

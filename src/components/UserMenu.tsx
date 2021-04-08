@@ -4,7 +4,7 @@ import * as Avatar from "@radix-ui/react-avatar";
 import { UserCircleOutline } from "@graywolfai/react-heroicons";
 import { styled } from "utils/stitches.config";
 import { Button } from "./Button";
-import { authService } from "features/Data/authStateMachine";
+import { authService } from "features";
 import { useService } from "@xstate/react";
 import Link from "next/link";
 

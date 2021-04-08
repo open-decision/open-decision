@@ -61,7 +61,7 @@
     {
       "label": "Open Browser",
       "type": "shell",
-      "command": "google-chrome-unstable http://localhost:3000",
+      "command": "google-chrome-unstable http://localhost:3000 --auto-open-devtools-for-tabs",
       "isBackground": true,
       "presentation": {
         "reveal": "never",

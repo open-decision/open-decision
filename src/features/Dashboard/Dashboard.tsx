@@ -4,7 +4,7 @@ import { TreeList } from "./TreeList";
 import { validateTreeData } from "./dataValidation";
 import { NewTreeButton } from "./NewTreeButton";
 import { useService } from "@xstate/react";
-import { authService } from "features/Data/authStateMachine";
+import { authService } from "features";
 
 export const Dashboard: React.FunctionComponent = () => {
   const [state] = useService(authService);

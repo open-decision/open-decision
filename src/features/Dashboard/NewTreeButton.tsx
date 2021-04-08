@@ -6,7 +6,7 @@ import { useCreate_TreeMutation } from "internalTypes";
 import { Button, Field } from "components";
 import { styled } from "utils/stitches.config";
 import { useService } from "@xstate/react";
-import { authService } from "features/Data/authStateMachine";
+import { authService } from "features";
 
 const Overlay = styled(Dialog.Overlay, {
   backgroundColor: "rgba(0, 0, 0, .15)",

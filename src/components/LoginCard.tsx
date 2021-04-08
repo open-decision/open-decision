@@ -4,7 +4,7 @@ import * as Tabs from "@radix-ui/react-tabs";
 import { styled } from "utils/stitches.config";
 import { useLogin_UserMutation, useRegister_UserMutation } from "internalTypes";
 import { useQueryClient } from "react-query";
-import { authService } from "../features/Data/authStateMachine";
+import { authService } from "features";
 import { useService } from "@xstate/react";
 
 const TabList = styled(Tabs.List, {

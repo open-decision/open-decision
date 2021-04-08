@@ -3,9 +3,7 @@ import { createMachine, interpret } from "xstate";
 
 const client = new GraphQLClient(
   `https://od-backend-dev.herokuapp.com/graphql`,
-  {
-    credentials: "include",
-  }
+  { credentials: "include" }
 );
 
 const getNewToken = (client: GraphQLClient) =>
@@ -22,16 +20,16 @@ const removeTokenCookies = (client: GraphQLClient) =>
     )
     .then((data) => console.log(data));
 
-type AuthContext = { client: GraphQLClient };
+type Context = { client: GraphQLClient };
 
-type AuthState =
-  | { value: "unknown"; context: { client: GraphQLClient } }
-  | { value: "loggedIn"; context: { client: GraphQLClient } }
-  | { value: "loggedOut"; context: { client: GraphQLClient } };
+type State =
+  | { value: "unknown"; context: Context }
+  | { value: "loggedIn"; context: Context }
+  | { value: "loggedOut"; context: Context };
 
-type AuthEvents = { type: "Login" } | { type: "Logout" } | { type: "Refresh" };
+type Events = { type: "Login" } | { type: "Logout" } | { type: "Refresh" };
 
-const authMachine = createMachine<AuthContext, AuthEvents, AuthState>(
+const authMachine = createMachine<Context, Events, State>(
   {
     id: "auth",
     initial: "unknown",
