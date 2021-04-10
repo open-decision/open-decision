@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { CSS, styled } from "utils/stitches.config";
-import { useEditorStore, useNodesStore } from "../../globalState";
+import { useEditorStore, useTreeStore } from "../../globalState";
 import { LeftSidebar } from "./LeftSidebar";
 import { ToolbarNode } from "./ToolbarNode";
 import { pick } from "remeda";
-import { coordinates } from "../../types";
+import { coordinates, nodeTypes } from "../../types";
 import { nanoid } from "nanoid/non-secure";
+import shallow from "zustand/shallow";
 
 const turnNumberIntoOpposite = (number: number) =>
   number > 0 ? -number : Math.abs(number);
@@ -18,36 +19,44 @@ const getCenterOfStage = (
   turnNumberIntoOpposite(coordinates[1] / zoom),
 ];
 
+const createOptions = (nodeTypes: nodeTypes) =>
+  Object.values(nodeTypes).map((nodeType) =>
+    pick(nodeType, ["label", "color", "type", "width"])
+  );
+
 const NodeList = styled("div", { display: "grid", gap: "$4" });
 
 type NewNodeSidebarProps = { css?: CSS };
 
 export const NewNodeSidebar: React.FC<NewNodeSidebarProps> = ({ css }) => {
-  const nodeTypes = useNodesStore((state) => state.nodeTypes);
-  const options = Object.values(nodeTypes).map((nodeType) =>
-    pick(nodeType, ["label", "color", "type", "width"])
+  const [nodeTypes, addNode] = useTreeStore(
+    (state) => [state.data.nodeTypes, state.addNode],
+    shallow
   );
 
-  const addNode = useNodesStore((state) => state.addNode);
-  const [stageCoordinates, zoom] = useEditorStore((state) => [
-    state.coordinates,
-    state.zoom,
-  ]);
+  const options = useMemo(() => createOptions(nodeTypes), [nodeTypes]);
 
-  const centerOfStage = getCenterOfStage(stageCoordinates, zoom);
+  const [stageCoordinates, zoom] = useEditorStore(
+    (state) => [state.coordinates, state.zoom],
+    shallow
+  );
 
   return (
-    <LeftSidebar width={300} css={css} title="Neuen Knoten hinzufügen">
-      <NodeList>
-        {options.map((option) => (
-          <ToolbarNode
-            key={option.label}
-            label={option.label}
-            color={option.color}
-            onClick={() => addNode(option.type, centerOfStage, nanoid(5))}
-          />
-        ))}
-      </NodeList>
-    </LeftSidebar>
+    <NodeList>
+      {options.map((option) => (
+        <ToolbarNode
+          key={option.label}
+          label={option.label}
+          color={option.color}
+          onClick={() =>
+            addNode({
+              type: option.type,
+              coordinates: getCenterOfStage(stageCoordinates, zoom),
+              id: nanoid(5),
+            })
+          }
+        />
+      ))}
+    </NodeList>
   );
 };

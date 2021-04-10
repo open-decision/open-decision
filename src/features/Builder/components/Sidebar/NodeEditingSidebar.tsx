@@ -1,8 +1,7 @@
 import React from "react";
-import { useNodesStore } from "../../globalState";
-import { RightSidebar } from "./RightSidebar";
-import { CSS } from "utils/stitches.config";
+import { useTreeStore } from "../../globalState";
 import create from "zustand";
+import shallow from "zustand/shallow";
 
 type SidebarState = {
   open: boolean;
@@ -13,7 +12,7 @@ type SidebarState = {
   closeSidebar: () => void;
 };
 
-export const useSidebarState = create<SidebarState>((set) => ({
+export const useNodeEditingSidebarState = create<SidebarState>((set) => ({
   open: false,
   nodeId: "",
   nodeType: "",
@@ -23,80 +22,60 @@ export const useSidebarState = create<SidebarState>((set) => ({
   closeSidebar: () => set({ open: false, nodeId: "", nodeType: "" }),
 }));
 
-type NodeEditingSidebarProps = React.HTMLAttributes<HTMLDivElement> & {
-  css?: CSS;
-};
-
-export const NodeEditingSidebar: React.FC<NodeEditingSidebarProps> = ({
-  css,
-}) => {
-  const [
-    nodeId,
-    nodeType,
-    isSidebarOpen,
-    toggleSidebar,
-  ] = useSidebarState((state) => [
+export const NodeEditingSidebar = (): JSX.Element => {
+  const [nodeId, nodeType] = useNodeEditingSidebarState((state) => [
     state.nodeId,
     state.nodeType,
-    state.open,
-    state.toggleSidebar,
   ]);
 
-  const config = useNodesStore((state) => state.nodeTypes[nodeType]);
-  const [node, setNode] = useNodesStore((state) => [
-    state.nodes[nodeId],
-    state.setNode,
-  ]);
+  const [config, node, setNode] = useTreeStore(
+    (state) => [
+      state.data.nodeTypes[nodeType],
+      state.data.nodes[nodeId],
+      state.setNode,
+    ],
+    shallow
+  );
 
-  return (
-    <RightSidebar
-      css={css}
-      title="Knoten bearbeiten"
-      width={700}
-      open={isSidebarOpen}
-      onOpenChange={toggleSidebar}
-    >
-      {nodeId ? (
-        <>
-          <header className="flex justify-between items-stretch space-x-4">
-            <input
-              className="text-xl font-semibold border-b-4 pb-1 bg-gray-100 flex-1"
-              style={{ borderColor: config.color }}
-              value={node.name}
-              onChange={(event) =>
-                setNode(nodeId, { name: event.target.value })
-              }
-              maxLength={30}
-            />
-          </header>
-          <section className="space-y-2">
-            <h3 className="text-lg font-semibold">Unused Inputs</h3>
-            <div className="w-full h-52 bg-gray-300 flex items-center justify-center text-xl">
-              Filler
-            </div>
-          </section>
-          <section className="space-y-2">
-            <h3 className="text-lg font-semibold">Conditions</h3>
-            <div className="w-full h-52 bg-gray-300 flex items-center justify-center text-xl">
-              Filler
-            </div>
-          </section>
-          <section className="space-y-2">
-            <h3 className="text-lg font-semibold">Question</h3>
-            <div className="w-full h-52 bg-gray-300 flex items-center justify-center text-xl">
-              Filler
-            </div>
-          </section>
-          <section className="space-y-2">
-            <h3 className="text-lg font-semibold">Answers</h3>
-            <div className="w-full h-52 bg-gray-300 flex items-center justify-center text-xl">
-              Filler
-            </div>
-          </section>
-        </>
-      ) : (
-        <p>Bitte wähle einen Knoten aus</p>
-      )}
-    </RightSidebar>
+  return nodeId ? (
+    <>
+      <header className="flex justify-between items-stretch space-x-4">
+        <input
+          className="text-xl font-semibold border-b-4 pb-1 bg-gray-100 flex-1"
+          style={{ borderColor: config.color }}
+          value={node.name}
+          onChange={(event) =>
+            setNode({ id: nodeId, name: event.target.value })
+          }
+          maxLength={30}
+        />
+      </header>
+      <section className="space-y-2">
+        <h3 className="text-lg font-semibold">Unused Inputs</h3>
+        <div className="w-full h-52 bg-gray-300 flex items-center justify-center text-xl">
+          Filler
+        </div>
+      </section>
+      <section className="space-y-2">
+        <h3 className="text-lg font-semibold">Conditions</h3>
+        <div className="w-full h-52 bg-gray-300 flex items-center justify-center text-xl">
+          Filler
+        </div>
+      </section>
+      <section className="space-y-2">
+        <h3 className="text-lg font-semibold">Question</h3>
+        <div className="w-full h-52 bg-gray-300 flex items-center justify-center text-xl">
+          Filler
+        </div>
+      </section>
+      <section className="space-y-2">
+        <h3 className="text-lg font-semibold">Answers</h3>
+        <div className="w-full h-52 bg-gray-300 flex items-center justify-center text-xl">
+          Filler
+        </div>
+      </section>
+    </>
+  ) : (
+    <p>Bitte wähle einen Knoten aus</p>
   );
 };

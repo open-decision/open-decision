@@ -14,7 +14,7 @@ type TreeCard = { tree: ValidTreeNode };
 
 const TreeCard: React.FC<TreeCard> = ({ tree }) => {
   return (
-    <div className="bg-gray-50 rounded-md shadow-md space-y-2 hover:shadow-lg transition-all duration-100 border-l-4 border-primary-500">
+    <div className="bg-gray-50 rounded-md shadow-md space-y-2 hover:shadow-lg focus-within:shadow-lg transition-all duration-100 border-l-4 border-primary-500">
       <TreeTags tree={tree} />
 
       <div className="px-4 pb-4 flex items-baseline">
@@ -74,7 +74,6 @@ const SortButton: React.FunctionComponent<SortButton> = ({
   return (
     <Button
       ghost
-      rounded="none"
       onClick={() =>
         setSort({
           key: name,

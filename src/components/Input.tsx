@@ -1,14 +1,13 @@
-import React from "react";
-import clsx from "clsx";
+import { styled } from "utils/stitches.config";
 
-export type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
-
-export const Input: React.FC<InputProps> = ({ className, ...props }) => (
-  <input
-    className={clsx(
-      "rounded w-full py-2 px-3 leading-tight  bg-gray-100 border-2 border-gray-300 shadow-inner",
-      className
-    )}
-    {...props}
-  />
-);
+export const Input = styled("input", {
+  borderRadius: "$md",
+  width: "100%",
+  paddingBlock: "$2",
+  paddingInline: "$3",
+  lineHeight: "$tight",
+  backgroundColor: "$gray100",
+  borderColor: "$gray300",
+  borderWidth: "$2",
+  boxShadow: "$inner",
+});

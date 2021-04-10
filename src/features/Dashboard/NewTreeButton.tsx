@@ -90,7 +90,7 @@ export const NewTreeButton: React.FC = () => {
         >
           <Field
             label="Name"
-            variant="inline"
+            layout="inline"
             name="name"
             value={name}
             onChange={(event) => setName(event.target.value)}

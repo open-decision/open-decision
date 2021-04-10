@@ -46,7 +46,6 @@ export const Button = styled("button", {
 
         "&:hover, &:focus": {
           backgroundColor: "$primary300",
-          boxShadow: "$md",
         },
       },
       secondary: {
@@ -56,7 +55,6 @@ export const Button = styled("button", {
 
         "&:hover, &:focus": {
           backgroundColor: "$secondary300",
-          boxShadow: "$md",
         },
       },
       danger: {
@@ -66,13 +64,12 @@ export const Button = styled("button", {
 
         "&:hover, &:focus": {
           backgroundColor: "$red500",
-          boxShadow: "$md",
         },
       },
       icon: {
         padding: "$1",
       },
-      ghost: {},
+      ghost: { boxShadow: "none" },
     },
 
     rounded: {
@@ -100,19 +97,12 @@ export const Button = styled("button", {
 
         "&:hover, &:focus": {
           backgroundColor: "unset",
-          boxShadow: "unset",
         },
       },
     },
   },
 
   compoundVariants: [
-    {
-      variant: "ghost",
-      css: {
-        boxShadow: "none",
-      },
-    },
     {
       variant: "primary",
       outlined: "true",

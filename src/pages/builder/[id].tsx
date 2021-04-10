@@ -2,7 +2,7 @@ import { useService } from "@xstate/react";
 import { MainContent } from "components";
 import { authService, NodeEditor, Tree as TreeType } from "features";
 import {
-  exampleEdges,
+  exampleConnections,
   exampleNodes,
   exampleNodeTypes,
   examplePortTypes,
@@ -24,14 +24,14 @@ export default function Tree() {
           position: { zoom: 1, coordinates: [0, 0] },
           treeName: decisionTree?.name ?? "",
           nodes: exampleNodes,
-          edges: exampleEdges,
+          connections: exampleConnections,
         },
       }),
     }
   );
 
   return (
-    <MainContent>
+    <MainContent css={{ overflow: "hidden" }}>
       {tree.isSuccess && <NodeEditor tree={tree.data} />}
     </MainContent>
   );

@@ -1,12 +1,17 @@
-import React from "react";
+import React, { FC } from "react";
 import { useAll_TreesQuery, useUserQuery } from "internalTypes";
 import { TreeList } from "./TreeList";
 import { validateTreeData } from "./dataValidation";
 import { NewTreeButton } from "./NewTreeButton";
 import { useService } from "@xstate/react";
 import { authService } from "features";
+import { CSS, styled } from "utils/stitches.config";
 
-export const Dashboard: React.FunctionComponent = () => {
+const DashboardGrid = styled("div", {});
+
+type DashboardProps = { css?: CSS };
+
+export const Dashboard: FC<DashboardProps> = ({ css }) => {
   const [state] = useService(authService);
 
   const user = useUserQuery(state.context.client);
@@ -17,7 +22,7 @@ export const Dashboard: React.FunctionComponent = () => {
   );
 
   return (
-    <div className="dashboard-grid">
+    <DashboardGrid className="dashboard-grid" css={css}>
       <div className="col-start-2 mt-24 mx-4 md:mx-8 flex flex-col justify-end items-start">
         <h2 className="text-5xl mb-6">
           Hallo {user.data?.me?.username ?? "Dirk Lawyer"}
@@ -34,6 +39,6 @@ export const Dashboard: React.FunctionComponent = () => {
           <TreeList data={allTrees.data.validData} />
         ) : null}
       </div>
-    </div>
+    </DashboardGrid>
   );
 };

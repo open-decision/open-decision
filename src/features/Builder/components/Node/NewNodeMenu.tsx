@@ -1,13 +1,14 @@
 import React from "react";
 import { pick } from "remeda";
-import { useEdgesStore, useNodesStore } from "../../globalState";
+import { useTreeStore } from "../../globalState";
 import { nanoid } from "nanoid/non-secure";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { styled } from "utils/stitches.config";
-import { coordinates } from "../../types";
+import { coordinates, node } from "../../types";
+import shallow from "zustand/shallow";
 
 type NewNodeMenuProps = {
-  nodeId: string;
+  node: node;
   className?: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -43,48 +44,47 @@ const Label = styled(DropdownMenu.Label, {
   color: "$gray700",
 });
 
-type useNewNode = (
-  originCoordinates: coordinates,
-  nodeId: string
-) => (nodeType: string) => void;
+type useNewNode = (originNode: node) => (nodeType: string) => void;
 
-const useNewNode: useNewNode = (originCoordinates, nodeId) => {
-  const addNode = useNodesStore((state) => state.addNode);
-  const addEdge = useEdgesStore((state) => state.addEdge);
-  const nodeTypes = useNodesStore((state) => state.nodeTypes);
+const useNewNode: useNewNode = (originNode) => {
+  const [addNode, nodeTypes, addConnection] = useTreeStore(
+    (state) => [state.addNode, state.data.nodeTypes, state.addConnection],
+    shallow
+  );
 
   const createNewNode = (nodeType: string) => {
-    const nodeConfig = nodeTypes[nodeType];
+    const config = nodeTypes[nodeType];
 
     const newNodeCoordinates: coordinates = [
-      originCoordinates[0] + nodeConfig.width + 150,
-      originCoordinates[1],
+      originNode.coordinates[0] + config.width + 150,
+      originNode.coordinates[1],
     ];
 
     const newNodeId = nanoid(5);
-    addNode(nodeType, newNodeCoordinates, newNodeId);
-    addEdge(nodeId, newNodeId);
+    addNode({
+      id: newNodeId,
+      coordinates: newNodeCoordinates,
+      type: nodeType,
+      name: config.label,
+    });
+    addConnection(originNode.id, newNodeId);
   };
 
   return createNewNode;
 };
 
 export const NewNodeMenu: React.FC<NewNodeMenuProps> = ({
-  nodeId,
+  node,
   open,
   onOpenChange,
   children,
 }) => {
-  const nodeTypes = useNodesStore((state) => state.nodeTypes);
+  const nodeTypes = useTreeStore((state) => state.data.nodeTypes, shallow);
   const options = Object.values(nodeTypes).map((nodeType) =>
     pick(nodeType, ["label", "color", "type", "width"])
   );
 
-  const nodeCoordinates = useNodesStore(
-    (state) => state.nodes[nodeId].coordinates
-  );
-
-  const createNewNode = useNewNode(nodeCoordinates, nodeId);
+  const createNewNode = useNewNode(node);
 
   return (
     <DropdownMenu.Root onOpenChange={onOpenChange} open={open}>

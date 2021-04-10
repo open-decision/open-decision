@@ -1,9 +1,15 @@
-import React from "react";
+import { Tree } from "features/Builder";
+import { useEditorStore, useTreeStore } from "features/Builder/globalState";
+import { motion } from "framer-motion";
+import React, { useState } from "react";
 import { useGesture } from "react-use-gesture";
 import { CSS, styled } from "utils/stitches.config";
+import shallow from "zustand/shallow";
+import { ExistingConnection } from "../Connections/ExisitingConnection";
+import { Node } from "../Node/Node";
+
 const StageContainer = styled("div", {
   overflow: "hidden",
-  position: "relative",
   outline: "none",
   backgroundColor: "#ffffff",
   backgroundImage:
@@ -11,6 +17,7 @@ const StageContainer = styled("div", {
 });
 
 type StageProps = {
+  tree: Tree;
   /**
    * Setting this to false disables panning in the Editor.
    */
@@ -23,29 +30,45 @@ type StageProps = {
   css?: CSS;
 };
 
-type Stage = React.FC<React.HTMLAttributes<HTMLDivElement> & StageProps>;
-
 /**
  * The Stage is the main parent component of the node-editor. It holds all the Nodes and Connections pased in as children. It's main pourpose is to allow panning and zooming.
  */
-export const Stage: Stage = ({
-  children,
-  className,
+export const Stage = ({
+  tree,
   disablePan,
   disableZoom,
-  ...props
-}) => {
-  const [
-    zoom,
-    coordinates,
-    setCoordinates,
-    setZoom,
-  ] = useEditorStore((state) => [
-    state.zoom,
-    state.coordinates,
-    state.setCoordinates,
-    state.setZoom,
-  ]);
+  css,
+}: StageProps): JSX.Element => {
+  const [setCoordinates, setZoom, zoom, coordinates] = useEditorStore(
+    (state) => [
+      state.setCoordinates,
+      state.setZoom,
+      state.zoom,
+      state.coordinates,
+    ],
+    shallow
+  );
+
+  const [setInitialState, nodes, connections, nodeTypes] = useTreeStore(
+    (state) => [
+      state.setInitialState,
+      state.data.nodes,
+      state.data.connections,
+      state.data.nodeTypes,
+    ],
+    shallow
+  );
+
+  React.useEffect(() => {
+    setZoom(tree.state.position.zoom);
+    setCoordinates(tree.state.position.coordinates);
+    setInitialState({
+      nodes: tree.state.nodes,
+      nodeTypes: tree.config.nodeTypes,
+      portTypes: tree.config.portTypes,
+      connections: tree.state.connections,
+    });
+  }, [setCoordinates, setInitialState, setZoom, tree]);
 
   /**
    * These gestures represent the panning and zooming inside the Stage. They are enabled and disabled by the `disableZoom` and `disablePan` props.
@@ -53,7 +76,9 @@ export const Stage: Stage = ({
   const stageGestures = useGesture(
     {
       // We track the mousewheel and zoom in and out of the Stage.
-      onWheel: ({ delta: [, y] }) => setZoom(y),
+      onWheel: ({ delta: [, y] }) => {
+        setZoom(y);
+      },
       // We track the drag and pan the Stage based on the previous coordinates and the delta (change) in the coordinates.
       onDrag: ({ movement, buttons, cancel }) => {
         //The panning should not work on right mouse click.
@@ -72,21 +97,28 @@ export const Stage: Stage = ({
   //------------------------------------------------------------------------
 
   return (
-    <StageContainer
-      className={className}
-      tabIndex={-1}
-      {...stageGestures()}
-      {...props}
-    >
-      {/* This inner wrapper is used to translate the position of the content on pan. */}
-      <div
-        className="origin-center absolute left-1/2 top-1/2"
-        style={{
-          transform: `translate(${stageContext.coordinates[0]}px, ${stageContext.coordinates[1]}px)`,
+    <StageContainer tabIndex={-1} {...stageGestures()} css={css}>
+      <motion.div
+        transition={{ type: "spring", stiffness: 800, mass: 0.1, damping: 20 }}
+        animate={{
+          scale: zoom,
+          translateX: coordinates[0],
+          translateY: coordinates[1],
         }}
       >
-        {/* This inner wrapper is used to zoom.  */}
-      </div>
+        {Object.entries(connections).map(([outputNodeId, connections]) =>
+          connections.map((id) => (
+            <ExistingConnection
+              key={`${outputNodeId}-${id}`}
+              output={nodes[outputNodeId]}
+              input={nodes[id]}
+            />
+          ))
+        )}
+        {Object.values(nodes).map((node) => (
+          <Node node={node} config={nodeTypes[node.type]} key={node.id} />
+        ))}
+      </motion.div>
     </StageContainer>
   );
 };

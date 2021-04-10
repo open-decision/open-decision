@@ -1,25 +1,24 @@
 import { styled } from "utils/stitches.config";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import { motion } from "framer-motion";
-export const SidebarRoot = styled(Collapsible.Root, {});
+export const SidebarRoot = styled(Collapsible.Root, {
+  height: "100%",
+});
 
 export type SidebarProps = React.ComponentProps<typeof SidebarRoot> & {
   title: string;
   tooltip?: string;
-  width: number;
 };
 
-export const AnimationContainer = styled(motion.div, {
-  height: "100%",
-  display: "grid",
-  gridTemplateColumns: "repeat(2, max-content)",
-});
+export const AnimationContainer = styled(motion.div, {});
 
 export const Content = styled(Collapsible.Content, {
   backgroundColor: "$warmGray100",
   padding: "$4",
   height: "100%",
   boxShadow: "$xl",
+  overflowY: "auto",
+  position: "relative",
 });
 
 export const Toggle = styled(Collapsible.Button, {

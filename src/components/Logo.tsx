@@ -1,11 +1,19 @@
-import clsx from "clsx";
 import React from "react";
 import Link from "next/link";
+import { CSS, styled } from "utils/stitches.config";
 
-export const Logo: React.FC<Record<string, unknown>> = () => (
+const Title = styled("h1", {
+  width: "200px",
+});
+
+type LogoProps = {
+  css?: CSS;
+};
+
+export const Logo = ({ css }: LogoProps): JSX.Element => (
   <Link href="/">
-    <h1 className={clsx("w-44")}>
+    <Title css={css}>
       <img src="/assets/OD_LOGO.svg" alt="open-decision logo" />
-    </h1>
+    </Title>
   </Link>
 );

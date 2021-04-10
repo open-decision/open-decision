@@ -2,10 +2,11 @@ import clsx from "clsx";
 import React from "react";
 import * as Portal from "@radix-ui/react-portal";
 import { pipe, prop } from "remeda";
-import { useEdgesStore } from "../../globalState";
 import { coordinates } from "../../types";
 import { calculateCurve } from "../../utilities";
 import { Connection } from "../Connections/Connection";
+import { useTreeStore } from "features/Builder/globalState";
+import shallow from "zustand/shallow";
 
 const portVariants = {
   connected: "h-4 w-4 bg-blue-500",
@@ -32,25 +33,15 @@ export const Port: Port = ({
   const connectionRef = React.useRef<SVGPathElement>(null);
   const [dragging, setDragging] = React.useState(false);
 
-  const [
-    addEdge,
-    connectionTarget,
-    newConnectionInCreation,
-    startNewEdgeCreation,
-    endNewEdgeCreation,
-  ] = useEdgesStore((state) => [
-    state.addEdge,
-    state.connectionTarget,
-    state.newConnectionInCreation,
-    state.startNewEdgeCreation,
-    state.endNewEdgeCreation,
-  ]);
+  const [addConnection, nodes] = useTreeStore(
+    (state) => [state.addConnection, state.data.nodes],
+    shallow
+  );
 
   const handleDragStart = (event: React.PointerEvent<HTMLDivElement>) => {
     event.preventDefault();
     event.stopPropagation();
     setDragging(true);
-    startNewEdgeCreation();
 
     document.addEventListener("pointerup", handleDragEnd);
     document.addEventListener(
@@ -64,12 +55,17 @@ export const Port: Port = ({
     newCurve && connectionRef.current?.setAttribute("d", newCurve);
   };
 
-  const handleDragEnd = () => {
+  const handleDragEnd = (event: PointerEvent) => {
     setDragging(false);
-    endNewEdgeCreation();
     document.removeEventListener("pointerup", handleDragEnd);
     document.removeEventListener("pointermove", handleDrag([0, 0]));
-    addEdge(nodeId);
+
+    if (!(event.target instanceof HTMLElement)) return;
+    if (
+      event.target.dataset.id &&
+      Object.keys(nodes).includes(event.target.dataset.id)
+    )
+      addConnection(nodeId, event.target.dataset.id);
   };
 
   return (
@@ -78,11 +74,7 @@ export const Port: Port = ({
       className={clsx(
         className,
         "rounded-full border-2 border-gray-200 shadow-md relative",
-        connectionTarget === nodeId &&
-          type === "input" &&
-          newConnectionInCreation
-          ? portVariants.target
-          : pipe(portVariants, prop(variant))
+        pipe(portVariants, prop(variant))
       )}
       {...props}
     >

@@ -81,48 +81,16 @@ export type portTypes = Record<string, portConfig>;
 //The following types describe the objects used as part of the node-editors state.
 
 /**
- * The nodeBase describes properties that are common to all nodes in the editor.
- */
-type nodeBase = {
-  /**
-   * The positional coordinates of this Node.
-   */
-  coordinates: coordinates;
-  width: number;
-  height?: number;
-};
-
-/**
  * The position of nodes is tracked as x and y coordinates.
  */
 export type coordinates = [number, number];
 
 /**
- * A comment is a special type of node.
- */
-export type comment = nodeBase & {
-  /**
-   * The text content of the comment.
-   */
-  text: string;
-  /**
-   * The color of the comment.
-   */
-  color?: string;
-};
-
-/**
- * The comments are an object indexed by unique strings.
- */
-export type comments = Record<string, comment>;
-
-/**
  * A Node is the main type of element in the node-editor. The properties of a node are  focused on information unique to each Node in the Editor even if the type of Node is used more than once. The shared configuration of a Node are part of the NodeConfig which is associated via the type property.
  */
-export type node = nodeBase & {
-  /**
-   * The type is analogous to the type of a preconfigured node. Information is looked up based on this type so it must be a type that is part of the config object.
-   */
+export type node = {
+  id: string;
+  coordinates: coordinates;
   type: string;
   name: string;
 };
@@ -138,16 +106,14 @@ export type nodes = Record<string, node>;
 export type connectionCoordinates = [coordinates, coordinates];
 
 /**
- * The information associated with an individual edge.
+ * The information associated with an individual connection.
  */
-export type edge = {
-  nodeId: string;
-};
+export type connection = string;
 
 /**
- * The Object holding all the edges. Each property is the nodeId of the originating node. Each associated value is an array of all the edges connected to this node.
+ * The Object holding all the connections. Each property is the nodeId of the originating node. Each associated value is an array of all the connections connected to this node.
  */
-export type edges = Record<string, edge[]>;
+export type connections = Record<string, connection[]>;
 
 /**
  * Describes the data used to communicate necessary information about a node to connection calculations.

@@ -1,61 +1,44 @@
 import React from "react";
 import { calculateCurve, getConnectionCoordinates } from "../../utilities";
-import { NodesState, useEdgesStore, useNodesStore } from "../../globalState";
-import { edge, nodePositionalData } from "../../types";
-import shallow from "zustand/shallow";
+import { useTreeStore } from "../../globalState";
+import { node } from "../../types";
 import { Connection } from "./Connection";
 import { useGesture } from "react-use-gesture";
 
 type ConnectionProps = {
-  edge: edge;
-  connectedNodes: [string, string];
+  output: node;
+  input: node;
 };
-
-const createNodeInformation = (state: NodesState, nodeId: string) => {
-  const node = state.nodes[nodeId];
-
-  return {
-    coordinates: node.coordinates,
-    height: node?.height ?? 20,
-    width: node?.width ?? 150,
-  };
-};
-
 export const ExistingConnection: React.FC<ConnectionProps> = ({
-  connectedNodes,
+  output,
+  input,
 }) => {
-  const [outputNodeId, inputNodeId] = connectedNodes;
-
-  const outputNode: nodePositionalData = useNodesStore(
-    (state) => createNodeInformation(state, outputNodeId),
-    shallow
-  );
-
-  const inputNode = useNodesStore(
-    (state) => createNodeInformation(state, inputNodeId),
-    shallow
-  );
-
-  const [connectionCoordinates, setConnectionCoordinates] = React.useState(
-    getConnectionCoordinates(outputNode, inputNode)
-  );
-
-  React.useEffect(() => {
-    const newCoordinates = getConnectionCoordinates(outputNode, inputNode);
-
-    setConnectionCoordinates(newCoordinates);
-  }, [outputNode, inputNode]);
-
+  const [nodeTypes, removeConnection] = useTreeStore((state) => [
+    state.data.nodeTypes,
+    state.removeConnection,
+  ]);
   const [hovered, setHovered] = React.useState(false);
-  const removeEdge = useEdgesStore((state) => state.removeEdge);
 
-  const curve = connectionCoordinates && calculateCurve(connectionCoordinates);
+  const curve = calculateCurve(
+    getConnectionCoordinates(
+      {
+        coordinates: output.coordinates,
+        height: nodeTypes[output.type].height,
+        width: nodeTypes[output.type].width,
+      },
+      {
+        coordinates: input.coordinates,
+        height: nodeTypes[input.type].height,
+        width: nodeTypes[input.type].width,
+      }
+    )
+  );
 
   const gestures = useGesture({
     onPointerEnter: () => setHovered(true),
     onPointerLeave: () => setHovered(false),
     onPointerDown: ({ event }) => event.stopPropagation(),
-    onClick: () => removeEdge(outputNodeId, inputNodeId),
+    onClick: () => removeConnection(output.id, input.id),
   });
 
   return (

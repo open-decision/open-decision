@@ -1,8 +1,7 @@
 import clsx from "clsx";
-import React from "react";
-import { InputProps } from "./Input";
+import React, { HTMLAttributes } from "react";
 
-export type FileInputProps = InputProps;
+export type FileInputProps = HTMLAttributes<HTMLInputElement>;
 
 /**
  * A custom Form element wrapping the native file input type.
