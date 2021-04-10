@@ -5,8 +5,7 @@
   "description": "",
   "author": "Philipp Garbowsky <phil.garbowsky@philtech.dev>",
   "scripts": {
-    "proxy:dev": "lcp --proxyUrl https://od-backend-dev.herokuapp.com --origin http://localhost:3000 --credentials",
-    "proxy:build": "lcp --proxyUrl https://od-backend-dev.herokuapp.com --origin http://localhost:5000 --credentials",
+    "proxy": "lcp --proxyUrl https://od-backend-dev.herokuapp.com --origin http://localhost:3000 --credentials",
     "typecheck": "tsc -w",
     "codegen": "graphql-codegen --config .codegen.yml",
     "lint": "eslint src --ext ts,js,tsx,jsx -w",

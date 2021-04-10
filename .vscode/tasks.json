@@ -3,7 +3,7 @@
   "tasks": [
     {
       "label": "Dev Environment",
-      "dependsOn": ["Frontend App", "Proxy Dev Server", "Open Browser"],
+      "dependsOn": ["Frontend App", "Proxy Server", "Open Browser"],
       "presentation": {
         "reveal": "silent",
         "showReuseMessage": false,
@@ -43,9 +43,9 @@
       }
     },
     {
-      "label": "Proxy Dev Server",
+      "label": "Proxy Server",
       "type": "shell",
-      "command": "npm run proxy:dev",
+      "command": "npm run proxy",
       "presentation": {
         "group": "server"
       }
@@ -53,7 +53,7 @@
     {
       "label": "Serve Build",
       "type": "shell",
-      "command": "npm run proxy:build & npx serve build",
+      "command": "npm run proxy & npm run start",
       "presentation": {
         "group": "test build"
       }
@@ -79,7 +79,7 @@
         "group": "test build"
       },
       "label": "build",
-      "detail": "npm run codegen && snowpack build"
+      "detail": "npm run codegen && npm run build"
     }
   ]
 }
