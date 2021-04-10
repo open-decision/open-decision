@@ -352,6 +352,6 @@ const stitchesConfig = createCss({
   utils: {},
 });
 
-export const { styled, css, keyframes } = stitchesConfig;
+export const { styled, css, keyframes, getCssString } = stitchesConfig;
 
 export type CSS = StitchesCss<typeof stitchesConfig>;
