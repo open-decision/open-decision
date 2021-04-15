@@ -14,12 +14,10 @@ type GlobalFilter = {
 export const Search: React.FunctionComponent<GlobalFilter> = ({
   value,
   setValue,
-  className,
   ...props
 }) => (
   <Field
-    containerClasses={className}
-    variant="inline"
+    layout="inline"
     name="search"
     label="Suche: "
     value={value || ""}

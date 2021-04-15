@@ -61,8 +61,7 @@
     {
       "label": "Open Browser",
       "type": "shell",
-      "command": "google-chrome-unstable http://localhost:3000 --auto-open-devtools-for-tabs",
-      "isBackground": true,
+      "command": "'/mnt/c/Users/philg/AppData/Local/Google/Chrome SxS/Application/chrome.exe' http://localhost:3000 --auto-open-devtools-for-tabs",
       "presentation": {
         "reveal": "never",
         "showReuseMessage": false
