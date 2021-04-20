@@ -23,6 +23,8 @@ storybook-static
 package-lock.json
 yarn.lock
 .next
+.vscode/settings.json
+.vscode/launch.json
 
 npm-debug.log*
 yarn-debug.log*

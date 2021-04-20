@@ -2,7 +2,7 @@ import { ChatOutline } from "@graywolfai/react-heroicons";
 import React from "react";
 
 type ToolbarNode = React.FC<
-  React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  React.HTMLAttributes<HTMLDivElement> & {
     label: string;
     color?: string;
   }
@@ -10,7 +10,7 @@ type ToolbarNode = React.FC<
 
 export const ToolbarNode: ToolbarNode = ({ label, color, ...props }) => {
   return (
-    <button
+    <div
       style={{ borderColor: color }}
       className="bg-gray-200 p-4 rounded shadow-md border-l-4 flex items-center font-semibold"
       {...props}
@@ -20,6 +20,6 @@ export const ToolbarNode: ToolbarNode = ({ label, color, ...props }) => {
         className="mr-2 rounded"
       />
       {label}
-    </button>
+    </div>
   );
 };

@@ -43,56 +43,7 @@ export const examplePortTypes: portTypes = {
 };
 
 export const exampleNodeTypes: nodeTypes = {
-  number: {
-    type: "number",
-    label: "Number",
-    color: "#9333EA",
-    addable: true,
-    deletable: true,
-    description: "",
-    root: false,
-    sortPriority: 1,
-    width: 250,
-    height: 100,
-    inputPorts: [
-      { type: "number", label: "test", color: "blue", name: "number" },
-    ],
-    outputPorts: [
-      {
-        type: "number",
-        label: "test",
-        color: "blue",
-        name: "number",
-      },
-    ],
-  },
-  addNumbers: {
-    type: "addNumbers",
-    label: "Add Numbers",
-    addable: true,
-    color: "#22C55E",
-    deletable: true,
-    description: "",
-    root: false,
-    sortPriority: 1,
-    width: 250,
-    height: 100,
-    inputPorts: [
-      {
-        type: "number",
-        label: "test",
-        color: "blue",
-        name: "num1",
-      },
-      {
-        type: "number",
-        label: "test",
-        color: "blue",
-        name: "num2",
-      },
-    ],
-    outputPorts: [
-      { type: "number", label: "test", color: "blue", name: "number" },
-    ],
-  },
+  default: { type: "default", label: "Default" },
+  input: { type: "input", label: "Input" },
+  output: { type: "output", label: "Output" },
 };

@@ -23,24 +23,24 @@ export type nodeConfig = {
   /**
    * A root Node is an entry point into the tree.
    */
-  root: boolean;
+  root?: boolean;
   /**
    * Needs to be true for Nodes of this type to be **addable** in the node-editor.
    */
-  addable: boolean;
+  addable?: boolean;
   /**
    * Needs to be true for Nodes of this type to be **deletable** in the node-editor.
    */
-  deletable: boolean;
+  deletable?: boolean;
   /** A human readable description of this NodeType. */
-  description: string;
+  description?: string;
   /**
    * Ranks a NodeType to make them sortable based on their importance.
    */
-  sortPriority: number;
+  sortPriority?: number;
   color?: string;
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
 };
 
 /**
