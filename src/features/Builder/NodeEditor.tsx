@@ -68,10 +68,8 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ tree }) => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
 
-  const [
-    reactFlowInstance,
-    setReactFlowInstance,
-  ] = useState<OnLoadParams<any> | null>(null);
+  const [reactFlowInstance, setReactFlowInstance] =
+    useState<OnLoadParams<any> | null>(null);
 
   const onDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
