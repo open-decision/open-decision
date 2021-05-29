@@ -8,7 +8,7 @@ const Content = styled(TooltipPrimitive.Content, {
   padding: "$1 $2",
 });
 
-type TooltipProps = {
+export type TooltipProps = {
   content: string;
   open?: boolean;
   defaultOpen?: boolean;

@@ -1,3 +1,4 @@
+import { RichTextEditor } from "components";
 import { ElementData } from "features/Builder/NodeEditor";
 import React from "react";
 import { Node } from "react-flow-renderer";
@@ -37,9 +38,7 @@ export const NodeEditingSidebar = ({
       </section>
       <section className="space-y-2">
         <h3 className="text-lg font-semibold">Question</h3>
-        <div className="w-full h-52 bg-gray-300 flex items-center justify-center text-xl">
-          Filler
-        </div>
+        <RichTextEditor />
       </section>
       <section className="space-y-2">
         <h3 className="text-lg font-semibold">Answers</h3>

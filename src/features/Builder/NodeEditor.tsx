@@ -3,11 +3,9 @@ import React, { useRef, useState } from "react";
 
 //Hooks and Functions
 import { portTypes, nodeTypes } from "./types";
-import { NewNodeSidebar } from "./components/Sidebar/NewNodeSidebar";
-import { NodeEditingSidebar } from "./components/Sidebar/NodeEditingSidebar";
+import { NewNodeSidebar } from "../../components/Sidebar/NewNodeSidebar";
+import { NodeEditingSidebar } from "../../components/Sidebar/NodeEditingSidebar";
 import { styled } from "utils/stitches.config";
-import { LeftSidebar } from "./components/Sidebar/LeftSidebar";
-import { RightSidebar } from "./components/Sidebar/RightSidebar";
 import {
   Elements,
   ReactFlowProvider,
@@ -21,11 +19,14 @@ import { nanoid } from "nanoid/non-secure";
 import { Stage } from "./Stage";
 import { getElement, updateNode } from "./utilities/stateFunctions";
 import { pipe } from "remeda";
+import { SidebarRoot, SidebarContent, SidebarToggle } from "components";
 
 const Container = styled("div", {
   display: "grid",
   gridTemplateColumns: "max-content 1fr max-content",
   flexGrow: 1,
+  height: "100%",
+  width: "100vw",
 });
 
 export type ElementData = { label: string };
@@ -65,7 +66,7 @@ type NodeEditorProps = {
 export const NodeEditor: React.FC<NodeEditorProps> = ({ tree }) => {
   const [elements, setElements] = useState(tree.state.elements);
   const [selectedNodeId, setSelectedNodeId] = useState("");
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [isNodeEditingSidebarOpen, setNodeEditingSidebarOpen] = useState(false);
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
 
   const [reactFlowInstance, setReactFlowInstance] =
@@ -104,61 +105,61 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ tree }) => {
   );
 
   return (
-    <Container>
-      <ReactFlowProvider>
-        <div
-          className="w-screen h-full grid"
-          style={{ grid: "inherit" }}
-          ref={reactFlowWrapper}
+    <ReactFlowProvider>
+      <Container ref={reactFlowWrapper}>
+        <Stage
+          elements={elements}
+          onElementsRemove={(elementsToRemove) =>
+            removeElements(elementsToRemove, elements)
+          }
+          onConnect={(connection) => setElements(addEdge(connection, elements))}
+          onDragOver={onDragOver}
+          onDrop={onDrop}
+          onLoad={setReactFlowInstance}
+          onElementClick={(_, node) => {
+            setNodeEditingSidebarOpen(true);
+            setSelectedNodeId(node.id);
+          }}
+          style={{ gridColumn: "1 / -1", gridRow: "1" }}
+        />
+        <SidebarRoot
+          css={{
+            gridColumn: "1 / 2",
+            gridRow: "1",
+            overflowY: "auto",
+            zIndex: 5,
+          }}
         >
-          <LeftSidebar
-            css={{
-              gridColumn: "1 / 2",
-              gridRow: "1",
-              overflowY: "auto",
-              zIndex: 5,
-            }}
-            title="Neuen Knoten hinzufügen"
-          >
+          <SidebarContent>
             <NewNodeSidebar nodeTypes={tree.config.nodeTypes} />
-          </LeftSidebar>
-          <RightSidebar
-            css={{
-              gridColumn: "3 / 4",
-              gridRow: "1",
-              overflowY: "auto",
-              zIndex: 5,
-            }}
-            title="Knoten bearbeiten"
-            open={isSidebarOpen}
-            onOpenChange={(boolean) => setSidebarOpen(boolean ?? !open)}
-          >
+          </SidebarContent>
+          <SidebarToggle />
+        </SidebarRoot>
+        <SidebarRoot
+          css={{
+            gridColumn: "3 / 4",
+            gridRow: "1",
+            overflowY: "auto",
+            zIndex: 5,
+          }}
+          open={isNodeEditingSidebarOpen}
+          onOpenChange={(open) =>
+            open
+              ? setNodeEditingSidebarOpen(open)
+              : setNodeEditingSidebarOpen(false)
+          }
+        >
+          <SidebarToggle position="right" />
+          <SidebarContent css={{ width: "clamp(300px, 50vw, 800px)" }}>
             <NodeEditingSidebar
               node={selectedNode}
               setNode={(nodeId: string, newNode: Partial<Node<ElementData>>) =>
                 pipe(elements, updateNode(nodeId, newNode), setElements)
               }
             />
-          </RightSidebar>
-          <Stage
-            elements={elements}
-            onElementsRemove={(elementsToRemove) =>
-              removeElements(elementsToRemove, elements)
-            }
-            onConnect={(connection) =>
-              setElements(addEdge(connection, elements))
-            }
-            onDragOver={onDragOver}
-            onDrop={onDrop}
-            onLoad={setReactFlowInstance}
-            onElementClick={(_, node) => {
-              setSidebarOpen(true);
-              setSelectedNodeId(node.id);
-            }}
-            style={{ gridColumn: "1 / -1", gridRow: "1" }}
-          />
-        </div>
-      </ReactFlowProvider>
-    </Container>
+          </SidebarContent>
+        </SidebarRoot>
+      </Container>
+    </ReactFlowProvider>
   );
 };
