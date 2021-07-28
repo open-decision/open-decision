@@ -21,8 +21,11 @@ model DecisionTree {
 
 model User {
   id           Int            @id @default(autoincrement())
+  uuid         String         @default(uuid())
   name         String?
   email        String         @unique
   password     String
+  refreshToken String?
+  refreshTokenExpiry Int?
   DecisionTrees DecisionTree[]
 }

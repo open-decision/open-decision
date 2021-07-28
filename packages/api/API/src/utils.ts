@@ -1,11 +1,12 @@
-const jwt = require("jsonwebtoken");
+import express from "express";
+import jwt from "jsonwebtoken";
 const APP_SECRET = "SUPER_INSECURE_SECRET";
 
-function getTokenPayload(token) {
+function getTokenPayload(token: string) {
   return jwt.verify(token, APP_SECRET);
 }
 
-function getUserId(req, authToken) {
+function getUserId(req: express.Request, authToken: string) {
   if (req) {
     const authHeader = req.headers.authorization;
     if (authHeader) {
@@ -13,11 +14,11 @@ function getUserId(req, authToken) {
       if (!token) {
         throw new Error("No token found");
       }
-      const { userId } = getTokenPayload(token);
+      const userId = getTokenPayload(token);
       return userId;
     }
   } else if (authToken) {
-    const { userId } = getTokenPayload(authToken);
+    const userId = getTokenPayload(authToken);
     return userId;
   }
 
