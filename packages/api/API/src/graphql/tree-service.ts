@@ -6,7 +6,7 @@ export class TreeService {
       throw new Error("Unauthorized");
     } else {
       return context.prisma.decisionTree.findMany({
-        where: { owner: { id: user.id } },
+        where: { owner: { uuid: user.uuid } },
       });
     }
   }

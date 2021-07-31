@@ -15,17 +15,18 @@ model DecisionTree {
   tags      String
   extraData String
   language  String   @default("de_DE")
-  owner     User     @relation(fields: [ownerId], references: [id])
-  ownerId   Int
+  owner     User     @relation(fields: [ownerUuid], references: [uuid])
+  ownerUuid String   @db.Uuid
 }
 
 model User {
-  id           Int            @id @default(autoincrement())
-  uuid         String         @default(uuid())
+  id           Int            @unique @default(autoincrement())
+  uuid         String         @id @db.Uuid @default(uuid())
   name         String?
   email        String         @unique
   password     String
   refreshToken String?
   refreshTokenExpiry Int?
+  loginExpiry Int?
   DecisionTrees DecisionTree[]
 }

@@ -21,6 +21,7 @@
     "crypto-js": "^4.1.1",
     "express": "^4.17.1",
     "express-graphql": "^0.12.0",
+    "express-validator": "^6.12.1",
     "graphql": "^15.5.1",
     "helmet": "^4.6.0",
     "jsonwebtoken": "^8.5.1",
