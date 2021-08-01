@@ -12,21 +12,28 @@ model DecisionTree {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String
-  tags      String
-  extraData String
+  tags      Json?     
+  treeData  Json?     @db.JsonB
   language  String   @default("de_DE")
   owner     User     @relation(fields: [ownerUuid], references: [uuid])
   ownerUuid String   @db.Uuid
 }
 
 model User {
-  id           Int            @unique @default(autoincrement())
-  uuid         String         @id @db.Uuid @default(uuid())
-  name         String?
-  email        String         @unique
-  password     String
-  refreshToken String?
-  refreshTokenExpiry Int?
-  loginExpiry Int?
-  DecisionTrees DecisionTree[]
+  id                    Int            @unique @default(autoincrement())
+  uuid                  String         @id @db.Uuid @default(uuid())
+  name                  String?
+  role                  Role           @default(USER)
+  email                 String         @unique
+  password              String
+  refreshToken          String?
+  refreshTokenExpiry    Int?
+  loginExpiry           Int?
+  DecisionTrees         DecisionTree[]
+}
+
+enum Role {
+  USER
+  STAFF
+  ADMIN
 }

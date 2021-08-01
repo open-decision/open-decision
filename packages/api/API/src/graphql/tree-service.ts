@@ -1,13 +1,32 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, PrismaClient, User } from "@prisma/client";
+import { UUID } from "../types/uuid-class";
+import { NewTreeInput } from "./input-arguments-types";
 
 export class TreeService {
-  findById(user: Prisma.UserSelect, id: string, context: any) {
-    if (!user) {
-      throw new Error("Unauthorized");
-    } else {
-      return context.prisma.decisionTree.findMany({
-        where: { owner: { uuid: user.uuid } },
-      });
-    }
+  async findById(id: string, userUuid: UUID, prisma: PrismaClient) {
+    return prisma.decisionTree.findMany({
+      where: { owner: { uuid: userUuid.toString() } },
+    });
+  }
+
+  async findAll(userUuid: UUID, prisma: PrismaClient) {
+    return prisma.decisionTree.findMany({
+      where: { owner: { uuid: userUuid.toString() } },
+    });
+  }
+
+  async addNew(
+    newTreeData: NewTreeInput,
+    userUuid: UUID,
+    prisma: PrismaClient
+  ) {
+    return prisma.decisionTree.create({
+      data: {
+        ...newTreeData,
+        owner: { connect: { uuid: userUuid.toString() } },
+        tags: JSON.parse(newTreeData.tags || "{}"),
+        treeData: JSON.parse(newTreeData.treeData || "{}"),
+      },
+    });
   }
 }

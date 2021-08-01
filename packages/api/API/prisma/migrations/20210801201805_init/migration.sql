@@ -1,11 +1,14 @@
+-- CreateEnum
+CREATE TYPE "Role" AS ENUM ('USER', 'STAFF', 'ADMIN');
+
 -- CreateTable
 CREATE TABLE "DecisionTree" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "name" TEXT NOT NULL,
-    "tags" TEXT NOT NULL,
-    "extraData" TEXT NOT NULL,
+    "tags" JSONB,
+    "treeData" JSONB,
     "language" TEXT NOT NULL DEFAULT E'de_DE',
     "ownerUuid" UUID NOT NULL,
 
@@ -17,10 +20,12 @@ CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "uuid" UUID NOT NULL,
     "name" TEXT,
+    "role" "Role" NOT NULL DEFAULT E'USER',
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "refreshToken" TEXT,
     "refreshTokenExpiry" INTEGER,
+    "loginExpiry" INTEGER,
 
     PRIMARY KEY ("uuid")
 );

@@ -23,7 +23,7 @@ const checkAuthorization = function (
   try {
     userUuid = verifyAccessTokenAndGetUserUuid(token);
     // If everything is okay, continue
-    res.locals.authenticated = userUuid;
+    res.locals.user = userUuid;
     return next();
   } catch (err) {
     // Return error if any of the steps fails

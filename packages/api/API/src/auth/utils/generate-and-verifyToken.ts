@@ -1,10 +1,11 @@
 import jwt from "jsonwebtoken";
 import { User, PrismaClient } from "@prisma/client";
-import { TokenInterface } from "../types/auth-interfaces";
 import { v4 as uuidv4 } from "uuid";
 import sha256 from "crypto-js/sha256";
 import Base64 from "crypto-js/enc-base64";
-import isUUID from "validator/lib/isUUID";
+
+import { UUID } from "../../types/uuid-class";
+import { TokenInterface } from "../types/auth-interfaces";
 
 import { BaseError } from "../../error-handling/base-error";
 const ACCESS_TOKEN_SECRET =
@@ -24,8 +25,8 @@ export function generateRefreshToken(): string {
 
 export function verifyAccessTokenAndGetUserUuid(token: string) {
   const verifiedToken = jwt.verify(token, ACCESS_TOKEN_SECRET);
-  const uuid = (verifiedToken as TokenInterface).userUuid;
-  if (isUUID(uuid)) {
+  const uuid = new UUID((verifiedToken as TokenInterface).userUuid);
+  if (uuid.isValid()) {
     return uuid;
   } else {
     // Switch to return
@@ -77,24 +78,3 @@ export async function issueNewToken(
     });
   }
 }
-
-// export async function validateRefreshTokenAndGetUserId(
-//   token: string,
-//   prisma: PrismaClient
-// ) {
-//   const verifiedToken = jwt.verify(token, REFRESH_TOKEN_SECRET);
-//   const userUuid = (verifiedToken as TokenInterface).userUuid;
-//   //TODO: sanitize Uuid
-//   const user = await prisma.user.findFirst({
-//     where: { uuid: userUuid },
-//   });
-//   if (user) {
-//     return user.id;
-//   } else {
-//     //Proper error handling
-//     return "Wrong user";
-//   }
-// }
-
-//verify token and get uuid
-//Map uuid to userId
