@@ -1,6 +1,6 @@
 import React from "react";
 import NextDocument, { Html, Head, Main, NextScript } from "next/document";
-import { getCssString } from "utils/stitches.config";
+import { getCssString } from "@open-legal-tech/design-system";
 
 export default class Document extends NextDocument {
   render() {

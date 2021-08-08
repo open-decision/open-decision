@@ -1,5 +1,5 @@
 import React from "react";
-import { styled } from "utils/stitches.config";
+import { styled } from "@open-legal-tech/design-system";
 import { Notification } from "./Notification";
 import { useNotificationStore } from "./NotificationState";
 import { AnimatePresence } from "framer-motion";

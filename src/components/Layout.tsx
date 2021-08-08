@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { Header } from "components";
 import { authService, Notifications } from "features";
-import { styled } from "utils/stitches.config";
+import { styled } from "@open-legal-tech/design-system";
 import { useService } from "@xstate/react";
 import { LoginPage } from "features/Data/LoginPage";
 

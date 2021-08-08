@@ -1,4 +1,4 @@
-import { styled } from "utils/stitches.config";
+import { styled } from "@open-legal-tech/design-system";
 
 export const Input = styled("input", {
   borderRadius: "$md",

@@ -1,7 +1,7 @@
 import React from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import { Slot } from "@radix-ui/react-slot";
-import { styled } from "utils/stitches.config";
+import { styled } from "@open-legal-tech/design-system";
 
 const Content = styled(TooltipPrimitive.Content, {
   backgroundColor: "$gray200",

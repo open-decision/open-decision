@@ -4,7 +4,7 @@ import { PlusCircleOutline, XOutline } from "@graywolfai/react-heroicons";
 import { useQueryClient } from "react-query";
 import { useCreate_TreeMutation } from "internalTypes";
 import { Button, Field } from "components";
-import { styled } from "utils/stitches.config";
+import { styled } from "@open-legal-tech/design-system";
 import { useService } from "@xstate/react";
 import { authService } from "features";
 

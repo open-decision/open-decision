@@ -5,11 +5,11 @@ import { validateTreeData } from "./dataValidation";
 import { NewTreeButton } from "./NewTreeButton";
 import { useService } from "@xstate/react";
 import { authService } from "features";
-import { CSS, styled } from "utils/stitches.config";
+import { StyleObject, styled } from "@open-legal-tech/design-system";
 
 const DashboardGrid = styled("div", {});
 
-type DashboardProps = { css?: CSS };
+type DashboardProps = { css?: StyleObject };
 
 export const Dashboard: FC<DashboardProps> = ({ css }) => {
   const [state] = useService(authService);

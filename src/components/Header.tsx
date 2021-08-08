@@ -1,6 +1,6 @@
 import React from "react";
 import { Logo, UserMenu } from "components";
-import { CSS, styled } from "utils/stitches.config";
+import { StyleObject, styled } from "@open-legal-tech/design-system";
 
 const Container = styled("div", {
   backgroundColor: "$gray100",
@@ -20,7 +20,7 @@ const Content = styled("header", {
 });
 
 type HeaderProps = {
-  css?: CSS;
+  css?: StyleObject;
 };
 
 export const Header: React.FC<HeaderProps> = ({ children, css }) => {

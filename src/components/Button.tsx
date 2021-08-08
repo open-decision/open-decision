@@ -1,4 +1,4 @@
-import { styled } from "utils/stitches.config";
+import { styled } from "@open-legal-tech/design-system";
 export const Button = styled("button", {
   //Mini reset
   appearance: "none",

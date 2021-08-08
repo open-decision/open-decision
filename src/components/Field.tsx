@@ -1,6 +1,8 @@
 import React from "react";
-import { StitchesExtractVariantsStyles } from "@stitches/react";
-import { styled } from "utils/stitches.config";
+import {
+  StitchesExtractVariantsStyles,
+  styled,
+} from "@open-legal-tech/design-system";
 import { Input } from "./Input";
 
 const Container = styled("div", {

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { styled } from "utils/stitches.config";
+import { styled } from "@open-legal-tech/design-system";
 import {
   notification,
   notificationVariants,

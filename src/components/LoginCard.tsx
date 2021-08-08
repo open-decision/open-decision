@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Field, Logo } from "components";
 import * as Tabs from "@radix-ui/react-tabs";
-import { styled } from "utils/stitches.config";
+import { styled } from "@open-legal-tech/design-system";
 import { useLogin_UserMutation, useRegister_UserMutation } from "internalTypes";
 import { useQueryClient } from "react-query";
 import { authService } from "features";

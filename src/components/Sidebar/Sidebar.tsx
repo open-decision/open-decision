@@ -4,7 +4,7 @@ import {
   ChevronRightSolid,
 } from "@graywolfai/react-heroicons";
 import { useKeyPressEvent } from "react-use";
-import { keyframes, styled } from "utils/stitches.config";
+import { keyframes, styled } from "@open-legal-tech/design-system";
 import * as Collapsible from "@radix-ui/react-collapsible";
 
 const Sidebar = styled(Collapsible.Root, {

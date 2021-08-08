@@ -2,7 +2,7 @@ import React from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Avatar from "@radix-ui/react-avatar";
 import { UserCircleOutline } from "@graywolfai/react-heroicons";
-import { styled } from "utils/stitches.config";
+import { styled } from "@open-legal-tech/design-system";
 import { Button } from "./Button";
 import { authService } from "features";
 import { useService } from "@xstate/react";

@@ -5,7 +5,7 @@ import React, { useRef, useState } from "react";
 import { portTypes, nodeTypes } from "./types";
 import { NewNodeSidebar } from "../../components/Sidebar/NewNodeSidebar";
 import { NodeEditingSidebar } from "../../components/Sidebar/NodeEditingSidebar";
-import { styled } from "utils/stitches.config";
+import { styled } from "@open-legal-tech/design-system";
 import {
   Elements,
   ReactFlowProvider,

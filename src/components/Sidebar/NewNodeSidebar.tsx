@@ -1,11 +1,11 @@
 import { nodeConfig, nodeTypes } from "features/Builder/types";
 import React from "react";
-import { CSS, styled } from "utils/stitches.config";
+import { StyleObject, styled } from "@open-legal-tech/design-system";
 import { ToolbarNode } from "./ToolbarNode";
 
 const NodeList = styled("aside", { display: "grid", gap: "$4" });
 
-type NewNodeSidebarProps = { css?: CSS; nodeTypes: nodeTypes };
+type NewNodeSidebarProps = { css?: StyleObject; nodeTypes: nodeTypes };
 
 export const NewNodeSidebar: React.FC<NewNodeSidebarProps> = ({
   css,

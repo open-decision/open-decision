@@ -1,13 +1,13 @@
 import React from "react";
 import Link from "next/link";
-import { CSS, styled } from "utils/stitches.config";
+import { StyleObject, styled } from "@open-legal-tech/design-system";
 
 const Title = styled("h1", {
   width: "200px",
 });
 
 type LogoProps = {
-  css?: CSS;
+  css?: StyleObject;
 };
 
 export const Logo = ({ css }: LogoProps): JSX.Element => (
