@@ -7,7 +7,7 @@ node_modules
 build
 dist
 .rpt2_cache
-generated
+src/types/generated/*
 tsconfig.tsbuildinfo
 compiled.css
 storybook-static

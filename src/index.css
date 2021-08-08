@@ -11,10 +11,10 @@ body {
 }
 
 .menu-link {
-  @apply text-sm font-semibold p-3 rounded-lg hover:shadow-inner hover:bg-gray-300;
+  @apply text-sm font-semibold p-3 rounded-lg hover:shadow-inner hover:bg-gray3;
 }
 
-@screen md {
+@screen laptop {
   .menu-link {
     @apply text-lg font-bold;
   }
@@ -22,7 +22,7 @@ body {
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: 1fr min(theme("screens.lg"), 100%) 1fr;
+  grid-template-columns: 1fr min(theme("screens.largeTablet"), 100%) 1fr;
   grid-template-rows: max-content 1fr;
 }
 @tailwind utilities;

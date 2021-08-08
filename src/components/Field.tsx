@@ -1,5 +1,5 @@
 import React from "react";
-import { StitchesExtractVariantsStyles } from "@stitches/core";
+import { StitchesExtractVariantsStyles } from "@stitches/react";
 import { styled } from "utils/stitches.config";
 import { Input } from "./Input";
 

@@ -12,7 +12,7 @@ const TabList = styled(Tabs.List, {
   justifyContent: "space-around",
 });
 
-const Tab = styled(Tabs.Tab, {
+const Tab = styled(Tabs.Trigger, {
   flexGrow: 1,
   flexBasis: "0",
   padding: "$4",
@@ -41,12 +41,12 @@ export const LoginCard: React.FunctionComponent = () => {
             <Tab value="login">Einloggen</Tab>
             <Tab value="register">Registrieren</Tab>
           </TabList>
-          <Tabs.Panel value="login">
+          <Tabs.Content value="login">
             <LoginForm />
-          </Tabs.Panel>
-          <Tabs.Panel value="register">
+          </Tabs.Content>
+          <Tabs.Content value="register">
             <SignupForm />
-          </Tabs.Panel>
+          </Tabs.Content>
         </Tabs.Root>
       </div>
     </div>

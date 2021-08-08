@@ -21,7 +21,7 @@ const rotateRight = keyframes({
   to: { transform: "rotate(0deg)" },
 });
 
-const Toggle = styled(Collapsible.Button, {
+const Toggle = styled(Collapsible.Trigger, {
   margin: "$4",
   width: "40px",
   height: "40px",
