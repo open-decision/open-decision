@@ -1,5 +1,6 @@
 import { PlusCircleOutline } from "@graywolfai/react-heroicons";
-import { Badge, Button } from "components";
+import { IconButton } from "@open-legal-tech/design-system";
+import { Badge } from "components";
 import React from "react";
 import { ValidTreeNode } from "./types";
 
@@ -13,9 +14,9 @@ export const TreeTags: React.FC<TreeTagsProps> = ({ tree }) => {
           {tag.name}
         </Badge>
       ))}
-      <Button rounded="full" size="small" variant="icon">
+      <IconButton rounded="full" size="sm" label="Tag hinzufügen">
         <PlusCircleOutline className="w-6 h-6" />
-      </Button>
+      </IconButton>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { styled } from "@open-legal-tech/design-system";
+import { styled, IconButton } from "@open-legal-tech/design-system";
 import {
   notification,
   notificationVariants,
@@ -12,7 +12,6 @@ import {
   ExclamationOutline,
   XOutline,
 } from "@graywolfai/react-heroicons";
-import { Button } from "components";
 import * as Progress from "@radix-ui/react-progress";
 import { motion, useAnimation } from "framer-motion";
 import { useGesture } from "react-use-gesture";
@@ -151,9 +150,12 @@ export const Notification: React.FC<NotificationProps> = ({
             />
             {notification.title}
           </div>
-          <Button variant="icon" onClick={() => removeNotification(id)}>
+          <IconButton
+            onClick={() => removeNotification(id)}
+            label="Benachrichtigung schließen"
+          >
             <XOutline style={{ width: "1.3em" }} />
-          </Button>
+          </IconButton>
         </Header>
         <Content css={{ marginTop: "$2" }}>{notification.content}</Content>
       </div>

@@ -3,8 +3,8 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { PlusCircleOutline, XOutline } from "@graywolfai/react-heroicons";
 import { useQueryClient } from "react-query";
 import { useCreate_TreeMutation } from "internalTypes";
-import { Button, Field } from "components";
-import { styled } from "@open-legal-tech/design-system";
+import { Field } from "components";
+import { styled, Button } from "@open-legal-tech/design-system";
 import { useService } from "@xstate/react";
 import { authService } from "features";
 
@@ -72,7 +72,12 @@ export const NewTreeButton: React.FC = () => {
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
-      <Dialog.Trigger as={Button} outlined className="my-8" size="xLarge">
+      <Dialog.Trigger
+        as={Button}
+        variant="secondary"
+        className="my-8"
+        size="xl"
+      >
         <PlusCircleOutline className="w-8 mr-2 inline" />
         Neue Anwendung erstellen
       </Dialog.Trigger>
@@ -96,8 +101,7 @@ export const NewTreeButton: React.FC = () => {
             onChange={(event) => setName(event.target.value)}
           />
           <Button
-            variant="primary"
-            outlined
+            variant="secondary"
             css={{ marginTop: "$6", alignSelf: "flex-end" }}
           >
             Erstellen

@@ -1,4 +1,3 @@
-import { Button } from "components";
 import React from "react";
 import { parseISO, format } from "date-fns";
 import de from "date-fns/locale/de";
@@ -8,6 +7,7 @@ import { motion } from "framer-motion";
 import { ValidTreeNode } from "./types";
 import { identity, pipe } from "remeda";
 import { TreeTags } from "./TreeTags";
+import { Button } from "@open-legal-tech/design-system";
 import Link from "next/link";
 
 type TreeCard = { tree: ValidTreeNode };
@@ -25,19 +25,19 @@ const TreeCard: React.FC<TreeCard> = ({ tree }) => {
           </span>
         </div>
         <div className="self-end space-x-4">
-          <Button ghost size="small" css={{ display: "inline" }}>
+          <Button variant="ghost" size="sm" css={{ display: "inline" }}>
             Archivieren
           </Button>
           <Button
-            variant="danger"
-            outlined
-            size="small"
+            variant="secondary"
+            colorScheme="error"
+            size="sm"
             css={{ display: "inline" }}
           >
             Löschen
           </Button>
           <Link href={`/builder/${tree.id}`}>
-            <Button outlined css={{ display: "inline" }}>
+            <Button variant="secondary" css={{ display: "inline" }}>
               Öffnen
             </Button>
           </Link>
@@ -73,7 +73,7 @@ const SortButton: React.FunctionComponent<SortButton> = ({
 
   return (
     <Button
-      ghost
+      variant="ghost"
       onClick={() =>
         setSort({
           key: name,
