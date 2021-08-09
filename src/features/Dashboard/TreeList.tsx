@@ -7,43 +7,41 @@ import { motion } from "framer-motion";
 import { ValidTreeNode } from "./types";
 import { identity, pipe } from "remeda";
 import { TreeTags } from "./TreeTags";
-import { Button } from "@open-legal-tech/design-system";
+import {
+  Box,
+  Button,
+  Heading,
+  HeadingGroup,
+  Text,
+} from "@open-legal-tech/design-system";
 import Link from "next/link";
 
 type TreeCard = { tree: ValidTreeNode };
 
 const TreeCard: React.FC<TreeCard> = ({ tree }) => {
   return (
-    <div className="bg-gray1 rounded-md shadow-md space-y-2 hover:shadow-lg focus-within:shadow-lg transition-all duration-100 border-l-4 border-primary6">
+    <Box
+      css={{ padding: "$4" }}
+      className="bg-gray1 rounded-md shadow-md space-y-2 hover:shadow-lg focus-within:shadow-lg transition-all duration-100 border-l-4 border-primary9"
+    >
       <TreeTags tree={tree} />
 
-      <div className="px-4 pb-4 flex items-baseline">
-        <div className="space-y-2 flex-grow">
-          <h3 className="text-4xl">{tree.name}</h3>
-          <span className="text-gray11 text-sm">
+      <div className="flex items-baseline">
+        <HeadingGroup.Container className="flex-grow">
+          <Heading as="h3" size="sm">
+            {tree.name}
+          </Heading>
+          <HeadingGroup.SubHeading>
             Erstellt am: {format(parseISO(tree.createdAt), "P", { locale: de })}
-          </span>
-        </div>
+          </HeadingGroup.SubHeading>
+        </HeadingGroup.Container>
         <div className="self-end space-x-4">
-          <Button variant="ghost" size="sm" css={{ display: "inline" }}>
-            Archivieren
-          </Button>
-          <Button
-            variant="secondary"
-            colorScheme="error"
-            size="sm"
-            css={{ display: "inline" }}
-          >
-            Löschen
-          </Button>
           <Link href={`/builder/${tree.id}`}>
-            <Button variant="secondary" css={{ display: "inline" }}>
-              Öffnen
-            </Button>
+            <Button variant="secondary">Öffnen</Button>
           </Link>
         </div>
       </div>
-    </div>
+    </Box>
   );
 };
 
@@ -125,10 +123,10 @@ export const TreeList: React.FC<TreeList> = ({ data }) => {
 
   return (
     <div className="space-y-8 my-12">
-      <h2 className="text-xl font-bold">Ihre Anwendungen</h2>
-      <Search setValue={setFilter} value={filter} className="mt-4" />
+      <Heading className="text-xl font-bold">Ihre Anwendungen</Heading>
+      <Search setValue={setFilter} value={filter} />
       <div>
-        <div className="flex items-center">
+        <Text className="flex items-center">
           Sortieren nach:{" "}
           <SortButton sort={sort} setSort={setSort} name="name" label="Name" />
           <SortButton
@@ -137,7 +135,7 @@ export const TreeList: React.FC<TreeList> = ({ data }) => {
             name="createdAt"
             label="Datum"
           />
-        </div>
+        </Text>
         <div className="space-y-6 mt-2">
           {filteredData.map((tree) => (
             <motion.div key={tree.id} layout>

@@ -1,3 +1,4 @@
+import { Heading } from "@open-legal-tech/design-system";
 import { RichTextEditor } from "components";
 import { ElementData } from "features/Builder/NodeEditor";
 import React from "react";
@@ -25,23 +26,31 @@ export const NodeEditingSidebar = ({
         />
       </header>
       <section className="space-y-2">
-        <h3 className="text-lg font-semibold">Unused Inputs</h3>
+        <Heading as="h3" className="text-lg font-semibold">
+          Unused Inputs
+        </Heading>
         <div className="w-full h-52 bg-gray4 flex items-center justify-center text-xl">
           Filler
         </div>
       </section>
       <section className="space-y-2">
-        <h3 className="text-lg font-semibold">Conditions</h3>
+        <Heading as="h3" className="text-lg font-semibold">
+          Conditions
+        </Heading>
         <div className="w-full h-52 bg-gray4 flex items-center justify-center text-xl">
           Filler
         </div>
       </section>
       <section className="space-y-2">
-        <h3 className="text-lg font-semibold">Question</h3>
+        <Heading as="h3" className="text-lg font-semibold">
+          Question
+        </Heading>
         <RichTextEditor />
       </section>
       <section className="space-y-2">
-        <h3 className="text-lg font-semibold">Answers</h3>
+        <Heading as="h3" className="text-lg font-semibold">
+          Answers
+        </Heading>
         <div className="w-full h-52 bg-gray4 flex items-center justify-center text-xl">
           Filler
         </div>

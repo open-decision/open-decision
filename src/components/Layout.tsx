@@ -20,8 +20,6 @@ export const MainContent = styled("main", {
 export const Layout: React.FunctionComponent = ({ children }) => {
   return (
     <AppContainer>
-      <Header css={{ gridRow: "1", gridColumn: "1 / -1" }} />
-      <Notifications />
       <Authenticated>{children}</Authenticated>
     </AppContainer>
   );
@@ -33,7 +31,11 @@ const Authenticated: FC = ({ children }) => {
   return state.matches("unknown") ? (
     <MainContent>Loading ...</MainContent>
   ) : state.matches("loggedIn") ? (
-    <>{children}</>
+    <>
+      <Header css={{ gridRow: "1", gridColumn: "1 / -1" }} />
+      <Notifications />
+      {children}
+    </>
   ) : (
     <LoginPage />
   );

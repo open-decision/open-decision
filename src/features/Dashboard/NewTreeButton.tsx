@@ -4,7 +4,7 @@ import { PlusCircleOutline, XOutline } from "@graywolfai/react-heroicons";
 import { useQueryClient } from "react-query";
 import { useCreate_TreeMutation } from "internalTypes";
 import { Field } from "components";
-import { styled, Button } from "@open-legal-tech/design-system";
+import { styled, Button, Heading } from "@open-legal-tech/design-system";
 import { useService } from "@xstate/react";
 import { authService } from "features";
 
@@ -50,13 +50,6 @@ const Form = styled("form", {
   display: "flex",
   flexDirection: "column",
 });
-
-const Heading = styled("h2", {
-  fontSize: "$lg",
-  fontWeight: "$semibold",
-  color: "$gray7",
-});
-
 export const NewTreeButton: React.FC = () => {
   const [name, setName] = React.useState("");
   const [open, setOpen] = React.useState(false);

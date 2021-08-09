@@ -1,7 +1,7 @@
 import React from "react";
 import { Field, Logo } from "components";
 import * as Tabs from "@radix-ui/react-tabs";
-import { styled, Button } from "@open-legal-tech/design-system";
+import { styled, Button, Box } from "@open-legal-tech/design-system";
 import { useLogin_UserMutation, useRegister_UserMutation } from "internalTypes";
 import { useQueryClient } from "react-query";
 import { authService } from "features";
@@ -31,24 +31,22 @@ const Tab = styled(Tabs.Trigger, {
 
 export const LoginCard: React.FunctionComponent = () => {
   return (
-    <div className="w-full max-w-xs">
-      <div className="bg-gray1 shadow-xl rounded-lg mb-4 flex flex-col overflow-hidden">
-        <div className="flex justify-center items-center p-8 bg-gradient-to-r from-gray2 to-gray4">
-          <Logo />
-        </div>
-        <Tabs.Root defaultValue="login">
-          <TabList>
-            <Tab value="login">Einloggen</Tab>
-            <Tab value="register">Registrieren</Tab>
-          </TabList>
-          <Tabs.Content value="login">
-            <LoginForm />
-          </Tabs.Content>
-          <Tabs.Content value="register">
-            <SignupForm />
-          </Tabs.Content>
-        </Tabs.Root>
+    <div className="bg-gray1 shadow-md largeTablet:shadow-xl rounded-lg mb-4 flex flex-col overflow-hidden max-w-sm m-2">
+      <div className="flex justify-center items-center p-8 px-16 bg-gradient-to-r from-gray2 to-gray4">
+        <Logo />
       </div>
+      <Tabs.Root defaultValue="login">
+        <TabList>
+          <Tab value="login">Einloggen</Tab>
+          <Tab value="register">Registrieren</Tab>
+        </TabList>
+        <Tabs.Content value="login">
+          <LoginForm />
+        </Tabs.Content>
+        <Tabs.Content value="register">
+          <SignupForm />
+        </Tabs.Content>
+      </Tabs.Root>
     </div>
   );
 };

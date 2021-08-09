@@ -1,8 +1,10 @@
 import React from "react";
 import Link from "next/link";
-import { StyleObject, styled } from "@open-legal-tech/design-system";
+import { StyleObject, Heading, styled } from "@open-legal-tech/design-system";
+import Image from "next/image";
+import LogoImg from "../../public/assets/OD_LOGO.svg";
 
-const Title = styled("h1", {
+const Title = styled(Heading, {
   width: "200px",
 });
 
@@ -12,8 +14,12 @@ type LogoProps = {
 
 export const Logo = ({ css }: LogoProps): JSX.Element => (
   <Link href="/">
-    <Title css={css}>
-      <img src="/assets/OD_LOGO.svg" alt="open-decision logo" />
+    <Title as="h1" css={css}>
+      <Image
+        src={LogoImg}
+        layout="responsive"
+        alt="open-decision Logo click to go to Dashboard"
+      />
     </Title>
   </Link>
 );

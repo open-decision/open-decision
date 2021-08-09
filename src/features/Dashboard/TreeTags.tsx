@@ -8,13 +8,13 @@ type TreeTagsProps = { tree: ValidTreeNode };
 
 export const TreeTags: React.FC<TreeTagsProps> = ({ tree }) => {
   return (
-    <div className="space-x-4 px-4 py-2 flex items-center">
+    <div className="space-x-4 flex items-center">
       {tree.tags.map((tag) => (
         <Badge key={tag.name} color={tag.color} css={{ boxShadow: "$sm" }}>
           {tag.name}
         </Badge>
       ))}
-      <IconButton rounded="full" size="sm" label="Tag hinzufügen">
+      <IconButton alignContent rounded="full" size="sm" label="Tag hinzufügen">
         <PlusCircleOutline className="w-6 h-6" />
       </IconButton>
     </div>
