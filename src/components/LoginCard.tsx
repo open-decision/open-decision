@@ -20,20 +20,20 @@ const Tab = styled(Tabs.Trigger, {
   justifyContent: "center",
 
   "&:hover, &:focus": {
-    backgroundColor: "$primary200",
+    backgroundColor: "$primary3",
   },
 
   '&[data-state="active"]': {
-    boxShadow: "inset 0 -2px 0 0 $colors$primary500",
-    backgroundColor: "$primary50",
+    boxShadow: "inset 0 -2px 0 0 $colors$primary6",
+    backgroundColor: "$primary1",
   },
 });
 
 export const LoginCard: React.FunctionComponent = () => {
   return (
     <div className="w-full max-w-xs">
-      <div className="bg-white shadow-xl rounded-lg mb-4 flex flex-col overflow-hidden">
-        <div className="flex justify-center items-center p-8 bg-gradient-to-r from-gray-100 to-gray-300">
+      <div className="bg-gray1 shadow-xl rounded-lg mb-4 flex flex-col overflow-hidden">
+        <div className="flex justify-center items-center p-8 bg-gradient-to-r from-gray2 to-gray4">
           <Logo />
         </div>
         <Tabs.Root defaultValue="login">

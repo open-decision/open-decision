@@ -1,9 +1,12 @@
 import { MainContent } from "components";
 import { Dashboard } from "features";
 
-export default function Home() {
+type HomeProps = { className?: string };
+
+export default function Home({ className }: HomeProps): JSX.Element {
   return (
     <MainContent
+      className={className}
       css={{
         justifyContent: "center",
         alignItems: "center",

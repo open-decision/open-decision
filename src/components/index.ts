@@ -2,7 +2,6 @@ export * from "./Badge";
 export * from "./Field";
 export * from "./FileInput";
 export * from "./Header";
-export * from "./Input";
 export * from "./Layout";
 export * from "./LoginCard";
 export * from "./Logo";

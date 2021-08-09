@@ -31,7 +31,9 @@ const initialElements: Elements = [
   { id: "e2-3", source: "2", target: "3", label: "Test" },
 ];
 
-export default function Tree(): JSX.Element {
+type TreeProps = { className?: string };
+
+export default function Tree({ className }: TreeProps): JSX.Element {
   const [state] = useService(authService);
   const router = useRouter();
 
@@ -50,7 +52,7 @@ export default function Tree(): JSX.Element {
   );
 
   return (
-    <MainContent css={{ overflow: "hidden" }}>
+    <MainContent css={{ overflow: "hidden" }} className={className}>
       {tree.isSuccess && <NodeEditor tree={tree.data} />}
     </MainContent>
   );

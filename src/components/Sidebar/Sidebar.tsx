@@ -27,7 +27,7 @@ const Toggle = styled(Collapsible.Trigger, {
   height: "40px",
   padding: "$1",
   borderRadius: "$md",
-  backgroundColor: "$warmGray200",
+  backgroundColor: "$gray3",
 
   '&[data-state="open"] > .icon': {
     animation: `${rotateLeft} 200ms ease-in forwards`,
@@ -74,7 +74,7 @@ export function SidebarToggle({
 }
 
 export const SidebarContent = styled(Collapsible.Content, {
-  backgroundColor: "$warmGray100",
+  backgroundColor: "$gray2",
   padding: "$4",
   boxShadow: "$xl",
 });

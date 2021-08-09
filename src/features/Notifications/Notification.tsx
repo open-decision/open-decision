@@ -39,8 +39,8 @@ const Container = styled(motion.div, {
   variants: {
     variant: {
       neutral: {
-        backgroundColor: "$gray100",
-        color: "$gray800",
+        backgroundColor: "$gray2",
+        color: "$gray9",
       },
       danger: {
         backgroundColor: "$red50",

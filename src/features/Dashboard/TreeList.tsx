@@ -14,13 +14,13 @@ type TreeCard = { tree: ValidTreeNode };
 
 const TreeCard: React.FC<TreeCard> = ({ tree }) => {
   return (
-    <div className="bg-gray-50 rounded-md shadow-md space-y-2 hover:shadow-lg focus-within:shadow-lg transition-all duration-100 border-l-4 border-primary-500">
+    <div className="bg-gray1 rounded-md shadow-md space-y-2 hover:shadow-lg focus-within:shadow-lg transition-all duration-100 border-l-4 border-primary6">
       <TreeTags tree={tree} />
 
       <div className="px-4 pb-4 flex items-baseline">
         <div className="space-y-2 flex-grow">
           <h3 className="text-4xl">{tree.name}</h3>
-          <span className="text-gray-500 text-sm">
+          <span className="text-gray11 text-sm">
             Erstellt am: {format(parseISO(tree.createdAt), "P", { locale: de })}
           </span>
         </div>

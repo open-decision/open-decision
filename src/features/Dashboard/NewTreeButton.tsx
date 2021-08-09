@@ -39,7 +39,7 @@ const Content = styled(Dialog.Content, {
 const CloseIcon = styled(Dialog.Close, {
   width: 26,
   height: 26,
-  color: "$warmGray800",
+  color: "$gray9",
   position: "absolute",
   right: 14,
   top: 14,
@@ -54,7 +54,7 @@ const Form = styled("form", {
 const Heading = styled("h2", {
   fontSize: "$lg",
   fontWeight: "$semibold",
-  color: "$gray600",
+  color: "$gray7",
 });
 
 export const NewTreeButton: React.FC = () => {

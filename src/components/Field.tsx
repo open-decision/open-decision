@@ -2,8 +2,8 @@ import React from "react";
 import {
   StitchesExtractVariantsStyles,
   styled,
+  Input,
 } from "@open-legal-tech/design-system";
-import { Input } from "./Input";
 
 const Container = styled("div", {
   display: "grid",
@@ -22,7 +22,7 @@ const Container = styled("div", {
 });
 
 const Label = styled("label", {
-  color: "$gray700",
+  color: "$gray11",
   fontWeight: "$semibold",
   minWidth: "max-content",
 });

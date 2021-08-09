@@ -3,7 +3,7 @@ import { Logo, UserMenu } from "components";
 import { StyleObject, styled } from "@open-legal-tech/design-system";
 
 const Container = styled("div", {
-  backgroundColor: "$gray100",
+  backgroundColor: "$gray2",
   paddingInline: "$4",
   paddingBlock: "$2",
   boxShadow: "$md",
