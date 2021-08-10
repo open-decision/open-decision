@@ -14,7 +14,13 @@ export const TreeTags: React.FC<TreeTagsProps> = ({ tree }) => {
           {tag.name}
         </Badge>
       ))}
-      <IconButton alignContent rounded="full" size="sm" label="Tag hinzufügen">
+      <IconButton
+        alignContent
+        variant="ghost"
+        rounded="full"
+        size="sm"
+        label="Tag hinzufügen"
+      >
         <PlusCircleOutline className="w-6 h-6" />
       </IconButton>
     </div>

@@ -1,6 +1,6 @@
-import { aliasColor, theme } from "@open-legal-tech/design-system";
+import { createTheme } from "@open-legal-tech/design-system";
 
-export const defaultTheme = theme({
+export const defaultTheme = createTheme({
   fonts: {
     heading: "$sans",
   },
