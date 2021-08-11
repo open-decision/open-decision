@@ -28,9 +28,7 @@ const TreeCard: React.FC<TreeCard> = ({ tree }) => {
 
       <div className="flex items-baseline">
         <HeadingGroup.Container className="flex-grow">
-          <Heading as="h3" size="sm">
-            {tree.name}
-          </Heading>
+          <TreeListHeading size="sm">{tree.name}</TreeListHeading>
           <HeadingGroup.SubHeading>
             Erstellt am: {format(parseISO(tree.createdAt), "P", { locale: de })}
           </HeadingGroup.SubHeading>

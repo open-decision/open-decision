@@ -1,8 +1,10 @@
-import { Heading } from "@open-legal-tech/design-system";
+import { Heading, styled } from "@open-legal-tech/design-system";
 import { RichTextEditor } from "components";
 import { ElementData } from "features/Builder/NodeEditor";
 import React from "react";
 import { Node } from "react-flow-renderer";
+
+const SidebarHeading = styled("h3", Heading, {})
 
 type NodeEditingSidebarProps = {
   node: Node<ElementData> | undefined;
@@ -26,31 +28,31 @@ export const NodeEditingSidebar = ({
         />
       </header>
       <section className="space-y-2">
-        <Heading as="h3" className="text-lg font-semibold">
+        <SidebarHeading className="text-lg font-semibold">
           Unused Inputs
-        </Heading>
+        </SidebarHeading>
         <div className="w-full h-52 bg-gray4 flex items-center justify-center text-xl">
           Filler
         </div>
       </section>
       <section className="space-y-2">
-        <Heading as="h3" className="text-lg font-semibold">
+        <SidebarHeading className="text-lg font-semibold">
           Conditions
-        </Heading>
+        </SidebarHeading>
         <div className="w-full h-52 bg-gray4 flex items-center justify-center text-xl">
           Filler
         </div>
       </section>
       <section className="space-y-2">
-        <Heading as="h3" className="text-lg font-semibold">
+        <SidebarHeading className="text-lg font-semibold">
           Question
-        </Heading>
+        </SidebarHeading>
         <RichTextEditor />
       </section>
       <section className="space-y-2">
-        <Heading as="h3" className="text-lg font-semibold">
+        <SidebarHeading className="text-lg font-semibold">
           Answers
-        </Heading>
+        </SidebarHeading>
         <div className="w-full h-52 bg-gray4 flex items-center justify-center text-xl">
           Filler
         </div>
