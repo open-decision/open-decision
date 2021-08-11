@@ -1,4 +1,7 @@
-//The following types describe the configuration objects used in the node-editor.
+import * as T from "io-ts";
+
+// The following types describe the configuration objects used in
+// the node-editor.
 
 /**
  * The NodeConfig describes a certain type of preconfigured node. This is used to share the configuration of a node type across many uses in the state.
@@ -124,4 +127,90 @@ export type nodePositionalData = {
   height: number;
 };
 
-//------------------------------------------------------------------------------
+// ------------------------------------------------------------------
+// Runtime Types
+
+// TreeConfig Types
+// ------------------------------------------------------------------
+
+const PortConfig = T.type({
+  type: T.string,
+});
+
+const NodeConfig = T.type({
+  type: T.string,
+  label: T.string,
+  description: T.string,
+  inputPorts: T.array(PortConfig),
+  outputPorts: T.array(PortConfig),
+});
+
+const PortTypes = T.record(T.string, PortConfig);
+const NodeTypes = T.record(T.string, NodeConfig);
+
+const TreeConfig = T.type({
+  nodeTypes: NodeTypes,
+  portTypes: PortTypes,
+});
+
+// TreeState Types
+// ------------------------------------------------------------------
+
+const ElementData = T.type({
+  label: T.string,
+});
+
+const Coordinates = T.type({
+  x: T.number,
+  y: T.number,
+});
+
+const NodeState = T.intersection([
+  T.type({
+    id: T.string,
+    position: Coordinates,
+    type: T.string,
+  }),
+  T.partial({
+    data: ElementData,
+    isHidden: T.boolean,
+    draggable: T.boolean,
+    selectable: T.boolean,
+    connectable: T.boolean,
+  }),
+]);
+
+const EdgeState = T.intersection([
+  T.type({
+    id: T.string,
+    source: T.string,
+    target: T.string,
+  }),
+  T.partial({
+    type: T.string,
+    label: T.string,
+    animated: T.boolean,
+    isHidden: T.boolean,
+    data: ElementData,
+  }),
+]);
+
+const Elements = T.array(T.union([NodeState, EdgeState]));
+
+const TreeState = T.type({ treeName: T.string, elements: Elements });
+
+/**
+ * The main Type for a complete Tree.
+ */
+export const Tree = T.type({
+  config: TreeConfig,
+  state: TreeState,
+});
+
+export type TNodeConfig = T.TypeOf<typeof NodeConfig>;
+export type TNodeTypes = T.TypeOf<typeof NodeTypes>;
+export type TElementData = T.TypeOf<typeof ElementData>;
+export type TEdge = T.TypeOf<typeof EdgeState>;
+export type TNode = T.TypeOf<typeof NodeState>;
+export type TTree = T.TypeOf<typeof Tree>;
+export type TElements = T.TypeOf<typeof Elements>;

@@ -1,11 +1,11 @@
-import { nodeConfig, nodeTypes } from "features/Builder/types";
+import { TNodeConfig, TNodeTypes } from "features/Builder/types";
 import React from "react";
 import { StyleObject, styled } from "@open-legal-tech/design-system";
 import { ToolbarNode } from "./ToolbarNode";
 
 const NodeList = styled("aside", { display: "grid", gap: "$4" });
 
-type NewNodeSidebarProps = { css?: StyleObject; nodeTypes: nodeTypes };
+type NewNodeSidebarProps = { css?: StyleObject; nodeTypes: TNodeTypes };
 
 export const NewNodeSidebar: React.FC<NewNodeSidebarProps> = ({
   css,
@@ -13,7 +13,7 @@ export const NewNodeSidebar: React.FC<NewNodeSidebarProps> = ({
 }) => {
   const onDragStart = (
     event: React.DragEvent<HTMLDivElement>,
-    nodeConfig: nodeConfig
+    nodeConfig: TNodeConfig
   ) => {
     event.dataTransfer.setData("application/reactflow", nodeConfig.type);
     event.dataTransfer.effectAllowed = "move";

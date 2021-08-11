@@ -1,25 +1,29 @@
 //External Libraries
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 
 //Hooks and Functions
-import { portTypes, nodeTypes } from "./types";
-import { NewNodeSidebar } from "../../components/Sidebar/NewNodeSidebar";
-import { NodeEditingSidebar } from "../../components/Sidebar/NodeEditingSidebar";
 import { styled } from "@open-legal-tech/design-system";
 import {
-  Elements,
-  ReactFlowProvider,
-  OnLoadParams,
-  Node,
   isNode,
-  addEdge,
-  removeElements,
+  Node,
+  OnLoadParams,
+  ReactFlowProvider,
 } from "react-flow-renderer";
-import { nanoid } from "nanoid/non-secure";
 import { Stage } from "./Stage";
-import { getElement, updateNode } from "./utilities/stateFunctions";
-import { pipe } from "remeda";
-import { SidebarRoot, SidebarContent, SidebarToggle } from "components";
+import {
+  NewNodeSidebar,
+  NodeEditingSidebar,
+  SidebarContent,
+  SidebarRoot,
+  SidebarToggle,
+} from "components";
+import { nanoid } from "nanoid/non-secure";
+import { pipe } from "fp-ts/lib/function";
+import { getElement } from "./utilities/stateFunctions";
+import { TElementData } from "./types";
+import { createEdge } from "./hooks/createTreeMachine";
+import { fold } from "fp-ts/lib/Either";
+import { useTree } from "./hooks/useTree";
 
 const Container = styled("div", {
   display: "grid",
@@ -29,30 +33,7 @@ const Container = styled("div", {
   width: "100vw",
 });
 
-export type ElementData = { label: string };
-
-export type Tree = {
-  config: {
-    /**
-     * The preconfigured avaliable NodeTypes that are avaliable in the node-editor.
-     */
-    nodeTypes: nodeTypes;
-    /**
-     * The preconfigured avaliable NodeTypes that are avaliable in the node-editor.
-     */
-    portTypes: portTypes;
-  };
-  state: {
-    treeName: string;
-    elements: Elements<ElementData>;
-  };
-};
-
 type NodeEditorProps = {
-  /**
-   * The id of the Tree.
-   */
-  tree: Tree;
   /**
    * Zooming can be disabled. False by default.
    */
@@ -63,14 +44,17 @@ type NodeEditorProps = {
   disablePan?: boolean;
 };
 
-export const NodeEditor: React.FC<NodeEditorProps> = ({ tree }) => {
-  const [elements, setElements] = useState(tree.state.elements);
-  const [selectedNodeId, setSelectedNodeId] = useState("");
-  const [isNodeEditingSidebarOpen, setNodeEditingSidebarOpen] = useState(false);
+export const NodeEditor: React.FC<NodeEditorProps> = () => {
+  const [state, send] = useTree();
+  const tree = state.context.tree;
+
+  const [isNodeEditingSidebarOpen, setNodeEditingSidebarOpen] =
+    React.useState(false);
+  const [selectedNodeId, setSelectedNodeId] = React.useState("");
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
 
   const [reactFlowInstance, setReactFlowInstance] =
-    useState<OnLoadParams<any> | null>(null);
+    React.useState<OnLoadParams<any> | null>(null);
 
   const onDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -96,23 +80,34 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ tree }) => {
         data: { label: `${type} node` },
       };
 
-      setElements([...elements, newNode]);
+      send({ type: "addElement", value: newNode });
     }
   };
 
-  const selectedNode = pipe(elements, getElement(selectedNodeId), (el) =>
-    el && isNode(el) ? el : undefined
+  const selectedNode = pipe(
+    tree.state.elements,
+    getElement(selectedNodeId),
+    (el) => (el && isNode(el) ? el : undefined)
   );
 
   return (
-    <ReactFlowProvider>
-      <Container ref={reactFlowWrapper}>
+    <Container ref={reactFlowWrapper}>
+      <ReactFlowProvider>
         <Stage
-          elements={elements}
+          elements={tree.state.elements ?? {}}
           onElementsRemove={(elementsToRemove) =>
-            removeElements(elementsToRemove, elements)
+            send({ type: "deleteElement", elements: elementsToRemove })
           }
-          onConnect={(connection) => setElements(addEdge(connection, elements))}
+          onConnect={(connection) =>
+            pipe(
+              connection,
+              createEdge(tree.state.elements),
+              fold(
+                (errors) => console.warn(errors),
+                (value) => send({ type: "addElement", value })
+              )
+            )
+          }
           onDragOver={onDragOver}
           onDrop={onDrop}
           onLoad={setReactFlowInstance}
@@ -143,7 +138,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ tree }) => {
             zIndex: 5,
           }}
           open={isNodeEditingSidebarOpen}
-          onOpenChange={(open) =>
+          onOpenChange={(open: boolean) =>
             open
               ? setNodeEditingSidebarOpen(open)
               : setNodeEditingSidebarOpen(false)
@@ -153,13 +148,16 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ tree }) => {
           <SidebarContent css={{ width: "clamp(300px, 50vw, 800px)" }}>
             <NodeEditingSidebar
               node={selectedNode}
-              setNode={(nodeId: string, newNode: Partial<Node<ElementData>>) =>
-                pipe(elements, updateNode(nodeId, newNode), setElements)
+              setNode={(nodeId: string, newNode: Partial<Node<TElementData>>) =>
+                send({
+                  type: "updateElement",
+                  value: { id: nodeId, data: newNode },
+                })
               }
             />
           </SidebarContent>
         </SidebarRoot>
-      </Container>
-    </ReactFlowProvider>
+      </ReactFlowProvider>
+    </Container>
   );
 };

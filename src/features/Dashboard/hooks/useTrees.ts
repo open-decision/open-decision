@@ -7,19 +7,6 @@ import { v4 as uuidv4 } from "uuid";
 import create from "zustand";
 import produce from "immer";
 
-// const fetchTreesFromStorage = () => {
-//   const localTrees: TreeState = {};
-
-//   localForage.iterate((value, key, _index) => {
-//     const onRight = (validTree: ValidTreeNode) => (localTrees[key] = validTree);
-//     const onLeft = (errors: ValidationError[]) => console.warn(errors);
-
-//     return pipe(TreeNode.decode(value), fold(onLeft, onRight));
-//   });
-
-//   return localTrees;
-// };
-
 type useTreesState = {
   trees: TreeState;
   initialize: () => void;
