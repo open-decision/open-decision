@@ -3,7 +3,7 @@ import { matchSorter } from "match-sorter";
 import { readableDate } from "./utils";
 import { parseISO } from "date-fns";
 import { Field } from "components";
-import { Tag, ValidTreeNode } from "./types";
+import { InlinedValidTreeNode, Tag } from "./types";
 
 type GlobalFilter = {
   className?: string;
@@ -27,9 +27,9 @@ export const Search: React.FunctionComponent<GlobalFilter> = ({
 );
 
 export const fuzzySearch = (
-  data: ValidTreeNode[],
+  data: InlinedValidTreeNode[],
   filterValue: string
-): ValidTreeNode[] => {
+): InlinedValidTreeNode[] => {
   return matchSorter(data, filterValue, {
     keys: [
       "name",
@@ -40,8 +40,8 @@ export const fuzzySearch = (
 };
 
 export const sortByKey = (
-  data: ValidTreeNode[],
+  data: InlinedValidTreeNode[],
   key: string
-): ValidTreeNode[] => {
+): InlinedValidTreeNode[] => {
   return matchSorter(data, "", { keys: [key] });
 };

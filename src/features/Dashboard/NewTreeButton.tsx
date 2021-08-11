@@ -1,12 +1,15 @@
 import React from "react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { PlusCircleOutline, XOutline } from "@graywolfai/react-heroicons";
-import { useQueryClient } from "react-query";
-import { useCreate_TreeMutation } from "internalTypes";
 import { Field } from "components";
-import { styled, Button, Heading } from "@open-legal-tech/design-system";
-import { useService } from "@xstate/react";
-import { authService } from "features";
+import {
+  styled,
+  Button,
+  Heading,
+  Box,
+  IconButton,
+} from "@open-legal-tech/design-system";
+import { useTreeStore } from "./hooks/useTrees";
+import { Cross1Icon, PlusCircledIcon } from "@radix-ui/react-icons";
 
 const Overlay = styled(Dialog.Overlay, {
   backgroundColor: "rgba(0, 0, 0, .15)",
@@ -16,6 +19,7 @@ const Overlay = styled(Dialog.Overlay, {
   bottom: 0,
   left: 0,
 });
+
 const Content = styled(Dialog.Content, {
   position: "fixed",
   top: "50%",
@@ -36,54 +40,51 @@ const Content = styled(Dialog.Content, {
   },
 });
 
-const CloseIcon = styled(Dialog.Close, {
-  width: 26,
-  height: 26,
-  color: "$gray9",
-  position: "absolute",
-  right: 14,
-  top: 14,
-});
-
 const Form = styled("form", {
   marginTop: "$6",
   display: "flex",
   flexDirection: "column",
 });
+
+const DialogButton = styled(Dialog.Trigger, Button, {
+  display: "flex",
+  alignItems: "center",
+});
 export const NewTreeButton: React.FC = () => {
   const [name, setName] = React.useState("");
   const [open, setOpen] = React.useState(false);
-
-  const queryClient = useQueryClient();
-  const [state] = useService(authService);
-  const createTreeMutation = useCreate_TreeMutation(state.context.client, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("ALL_TREES");
-      setOpen(false);
-    },
-  });
+  const createTree = useTreeStore(
+    React.useCallback((state) => state.createTree, [])
+  );
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
-      <Dialog.Trigger
-        as={Button}
-        variant="secondary"
-        className="my-8"
-        size="xl"
-      >
-        <PlusCircleOutline className="w-8 mr-2 inline" />
+      <DialogButton variant="secondary" className="my-8" size="xl">
+        <PlusCircledIcon className="w-6 h-6 mr-2 inline" />
         Neue Anwendung erstellen
-      </Dialog.Trigger>
+      </DialogButton>
       <Overlay />
       <Content>
-        <CloseIcon>
-          <XOutline />
-        </CloseIcon>
-        <Heading>Neuen Baum hinzufügen</Heading>
+        <Box
+          css={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Heading css={{ marginRight: "$8" }}>Neuen Baum hinzufügen</Heading>
+          <IconButton
+            variant="tertiary"
+            label="Baumerstellung schließen"
+            as={Dialog.Trigger}
+          >
+            <Cross1Icon />
+          </IconButton>
+        </Box>
         <Form
-          onSubmit={(event) => {
+          onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
             event.preventDefault();
-            createTreeMutation.mutate({ input: { name } });
+            createTree({ name }, () => setOpen(false));
           }}
         >
           <Field
@@ -96,6 +97,7 @@ export const NewTreeButton: React.FC = () => {
           <Button
             variant="secondary"
             css={{ marginTop: "$6", alignSelf: "flex-end" }}
+            type="submit"
           >
             Erstellen
           </Button>

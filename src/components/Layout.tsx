@@ -1,9 +1,7 @@
-import React, { FC } from "react";
+import React from "react";
 import { Header } from "components";
-import { authService, Notifications } from "features";
-import { styled } from "@open-legal-tech/design-system";
-import { useService } from "@xstate/react";
-import { LoginPage } from "features/Data/LoginPage";
+import { Notifications } from "features";
+import { styled, ComponentProps } from "@open-legal-tech/design-system";
 
 const AppContainer = styled("div", {
   display: "grid",
@@ -17,26 +15,14 @@ export const MainContent = styled("main", {
   gridRow: "2",
 });
 
-export const Layout: React.FunctionComponent = ({ children }) => {
+export const Layout = ({
+  children,
+}: ComponentProps<typeof AppContainer>): JSX.Element => {
   return (
     <AppContainer>
-      <Authenticated>{children}</Authenticated>
-    </AppContainer>
-  );
-};
-
-const Authenticated: FC = ({ children }) => {
-  const [state] = useService(authService);
-
-  return state.matches("unknown") ? (
-    <MainContent>Loading ...</MainContent>
-  ) : state.matches("loggedIn") ? (
-    <>
       <Header css={{ gridRow: "1", gridColumn: "1 / -1" }} />
       <Notifications />
       {children}
-    </>
-  ) : (
-    <LoginPage />
+    </AppContainer>
   );
 };

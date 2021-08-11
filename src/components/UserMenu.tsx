@@ -2,9 +2,7 @@ import React from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Avatar from "@radix-ui/react-avatar";
 import { UserCircleOutline } from "@graywolfai/react-heroicons";
-import { styled, Button } from "@open-legal-tech/design-system";
-import { authService } from "features";
-import { useService } from "@xstate/react";
+import { styled } from "@open-legal-tech/design-system";
 import Link from "next/link";
 
 const Trigger = styled(DropdownMenu.Trigger, {});
@@ -36,8 +34,6 @@ const Content = styled(DropdownMenu.Content, {
 type UserMenuProps = { imgSrc?: string };
 
 export const UserMenu: React.FC<UserMenuProps> = ({ imgSrc }) => {
-  const [state, send] = useService(authService);
-
   return (
     <DropdownMenu.Root>
       <Trigger>
@@ -50,17 +46,12 @@ export const UserMenu: React.FC<UserMenuProps> = ({ imgSrc }) => {
       </Trigger>
 
       <Content>
-        {/* @ts-expect-error: stitches error */}
-        <Item as={Link} href="./profile">
-          Profil
-        </Item>
-        {/* @ts-expect-error: stitches error */}
-        <Item as={Link} href="./settings">
-          Einstellungen
-        </Item>
-        {state.matches("loggedIn") && (
-          <Button onClick={() => send("Logout")}>Logout</Button>
-        )}
+        <Link href="./profile">
+          <Item>Profil</Item>
+        </Link>
+        <Link href="./settings">
+          <Item>Einstellungen</Item>
+        </Link>
       </Content>
     </DropdownMenu.Root>
   );

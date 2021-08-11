@@ -4,7 +4,7 @@ import de from "date-fns/locale/de";
 import { ChevronDownSolid } from "@graywolfai/react-heroicons";
 import { fuzzySearch, Search, sortByKey } from "./Filter";
 import { motion } from "framer-motion";
-import { ValidTreeNode } from "./types";
+import { InlinedValidTreeNode, TreeState } from "./types";
 import { identity, pipe } from "remeda";
 import { TreeTags } from "./TreeTags";
 import {
@@ -12,13 +12,24 @@ import {
   Button,
   Heading,
   HeadingGroup,
+  IconButton,
+  styled,
   Text,
 } from "@open-legal-tech/design-system";
 import Link from "next/link";
+import { mapObjToArr } from "./utils";
+import { useTreeStore } from "./hooks/useTrees";
+import { TrashIcon } from "@radix-ui/react-icons";
 
-type TreeCard = { tree: ValidTreeNode };
+const TreeListHeading = styled("h3", Heading, {});
+
+type TreeCard = { tree: InlinedValidTreeNode };
 
 const TreeCard: React.FC<TreeCard> = ({ tree }) => {
+  const deleteTree = useTreeStore(
+    React.useCallback((state) => state.deleteTree, [])
+  );
+
   return (
     <Box
       css={{ padding: "$4" }}
@@ -33,7 +44,15 @@ const TreeCard: React.FC<TreeCard> = ({ tree }) => {
             Erstellt am: {format(parseISO(tree.createdAt), "P", { locale: de })}
           </HeadingGroup.SubHeading>
         </HeadingGroup.Container>
-        <div className="self-end space-x-4">
+        <div className="self-end space-x-4 flex">
+          <IconButton
+            variant="secondary"
+            label="Baum löschen"
+            onClick={() => deleteTree(tree.id)}
+            css={{ colorScheme: "error" }}
+          >
+            <TrashIcon style={{ width: "20px", height: "20px" }} />
+          </IconButton>
           <Link href={`/builder/${tree.id}`}>
             <Button variant="secondary">Öffnen</Button>
           </Link>
@@ -90,28 +109,30 @@ const SortButton: React.FunctionComponent<SortButton> = ({
   );
 };
 
-type TreeList = { data: ValidTreeNode[] };
+type TreeList = { data: TreeState };
 type sortState = { key: string; descending: boolean };
 
-const sortData = (sort: sortState) => (data: ValidTreeNode[]) =>
+const sortData = (sort: sortState) => (data: InlinedValidTreeNode[]) =>
   sort.descending
     ? sortByKey(data, sort.key)
     : sortByKey(data, sort.key).reverse();
 
-const filterData = (filter: string) => (data: ValidTreeNode[]) =>
+const filterData = (filter: string) => (data: InlinedValidTreeNode[]) =>
   fuzzySearch(data, filter);
 
 export const TreeList: React.FC<TreeList> = ({ data }) => {
   const [filter, setFilter] = React.useState("");
-  const [filteredData, setFilteredData] = React.useState(data);
+  const [filteredData, setFilteredData] = React.useState(mapObjToArr(data));
   const [sort, setSort] = React.useState<sortState>({
     key: "",
     descending: true,
   });
 
   React.useEffect(() => {
+    const arrayData = mapObjToArr(data);
+
     const modifiedData = pipe(
-      data,
+      arrayData,
       filter ? filterData(filter) : identity,
       sort.key ? sortData(sort) : identity
     );
