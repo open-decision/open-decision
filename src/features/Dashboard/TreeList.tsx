@@ -21,7 +21,7 @@ import { mapObjToArr } from "./utils";
 import { useTreeStore } from "./hooks/useTrees";
 import { TrashIcon } from "@radix-ui/react-icons";
 
-const TreeListHeading = styled("h3", Heading, {});
+const TreeListHeading = styled(Heading, {});
 
 type TreeCard = { tree: InlinedValidTreeNode };
 
@@ -39,7 +39,9 @@ const TreeCard: React.FC<TreeCard> = ({ tree }) => {
 
       <div className="flex items-baseline">
         <HeadingGroup.Container className="flex-grow">
-          <TreeListHeading size="sm">{tree.name}</TreeListHeading>
+          <TreeListHeading as="h3" size="sm">
+            {tree.name}
+          </TreeListHeading>
           <HeadingGroup.SubHeading>
             Erstellt am: {format(parseISO(tree.createdAt), "P", { locale: de })}
           </HeadingGroup.SubHeading>

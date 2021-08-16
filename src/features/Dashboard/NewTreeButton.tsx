@@ -46,7 +46,7 @@ const Form = styled("form", {
   flexDirection: "column",
 });
 
-const DialogButton = styled(Dialog.Trigger, Button, {
+const DialogButton = styled(Dialog.Trigger, {
   display: "flex",
   alignItems: "center",
 });
@@ -59,13 +59,13 @@ export const NewTreeButton: React.FC = () => {
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
-      <DialogButton variant="secondary" className="my-8" size="xl">
+      <DialogButton as={Button} variant="secondary" className="my-8" size="xl">
         <PlusCircledIcon className="w-6 h-6 mr-2 inline" />
         Neue Anwendung erstellen
       </DialogButton>
       <Overlay />
       <Content>
-        <Box
+        {/* <Box
           css={{
             display: "flex",
             justifyContent: "space-between",
@@ -73,14 +73,14 @@ export const NewTreeButton: React.FC = () => {
           }}
         >
           <Heading css={{ marginRight: "$8" }}>Neuen Baum hinzufügen</Heading>
-          <IconButton
+          <DialogButton
             variant="tertiary"
             label="Baumerstellung schließen"
-            as={Dialog.Trigger}
+            as={IconButton}
           >
             <Cross1Icon />
-          </IconButton>
-        </Box>
+          </DialogButton>
+        </Box> */}
         <Form
           onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
             event.preventDefault();
