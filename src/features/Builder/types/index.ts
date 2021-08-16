@@ -137,13 +137,17 @@ const PortConfig = T.type({
   type: T.string,
 });
 
-const NodeConfig = T.type({
-  type: T.string,
-  label: T.string,
-  description: T.string,
-  inputPorts: T.array(PortConfig),
-  outputPorts: T.array(PortConfig),
-});
+const NodeConfig = T.intersection([
+  T.type({
+    type: T.string,
+    label: T.string,
+  }),
+  T.partial({
+    description: T.string,
+    inputPorts: T.array(PortConfig),
+    outputPorts: T.array(PortConfig),
+  }),
+]);
 
 const PortTypes = T.record(T.string, PortConfig);
 const NodeTypes = T.record(T.string, NodeConfig);
@@ -209,6 +213,9 @@ export const Tree = T.type({
 
 export type TNodeConfig = T.TypeOf<typeof NodeConfig>;
 export type TNodeTypes = T.TypeOf<typeof NodeTypes>;
+
+export type TPortConfig = T.TypeOf<typeof PortConfig>;
+export type TPortTypes = T.TypeOf<typeof PortTypes>;
 export type TElementData = T.TypeOf<typeof ElementData>;
 export type TEdge = T.TypeOf<typeof EdgeState>;
 export type TNode = T.TypeOf<typeof NodeState>;

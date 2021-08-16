@@ -1,4 +1,4 @@
-import { connections, nodes, nodeTypes, portTypes } from "../types";
+import { connections, nodes, TNodeTypes, TPortTypes } from "../types";
 
 export const exampleNodes: nodes = {
   node1: {
@@ -32,17 +32,13 @@ export const exampleConnections: connections = {
   node6: ["node3"],
 };
 
-export const examplePortTypes: portTypes = {
+export const examplePortTypes: TPortTypes = {
   number: {
     type: "number",
-    label: "Number",
-    name: "number",
-    acceptTypes: ["number"],
-    color: "red",
   },
 };
 
-export const exampleNodeTypes: nodeTypes = {
+export const exampleNodeTypes: TNodeTypes = {
   default: { type: "default", label: "Default" },
   input: { type: "input", label: "Input" },
   output: { type: "output", label: "Output" },
