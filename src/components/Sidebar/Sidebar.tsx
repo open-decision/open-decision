@@ -74,7 +74,10 @@ export function SidebarToggle({
 }
 
 export const SidebarContent = styled(Collapsible.Content, {
+  display: "flex",
+  flexDirection: "column",
   backgroundColor: "$gray2",
   padding: "$4",
   boxShadow: "$xl",
+  gap: "$6",
 });
