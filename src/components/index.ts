@@ -1,4 +1,3 @@
-export * from "./Badge";
 export * from "./Field";
 export * from "./FileInput";
 export * from "./Header";

@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  StitchesExtractVariantsStyles,
-  styled,
-  Input,
-} from "@open-legal-tech/design-system";
+import { styled, Input } from "@open-legal-tech/design-system";
 
 const Container = styled("div", {
   display: "grid",
@@ -30,7 +26,7 @@ const Label = styled("label", {
 export type FieldProps = React.InputHTMLAttributes<HTMLInputElement> & {
   name: string;
   label: string;
-  layout?: keyof StitchesExtractVariantsStyles<typeof Container>["layout"];
+  layout?: "block" | "inline";
 };
 
 /**

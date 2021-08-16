@@ -1,5 +1,4 @@
-import { IconButton } from "@open-legal-tech/design-system";
-import { Badge } from "components";
+import { IconButton, Badge } from "@open-legal-tech/design-system";
 import React from "react";
 import { ValidTreeNode } from "./types";
 import { PlusCircledIcon } from "@radix-ui/react-icons";

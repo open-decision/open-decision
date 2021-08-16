@@ -2,6 +2,7 @@ import React from "react";
 import { Header } from "components";
 import { Notifications } from "features";
 import { styled, ComponentProps } from "@open-legal-tech/design-system";
+import { styled } from "@open-legal-tech/design-system";
 
 const AppContainer = styled("div", {
   display: "grid",

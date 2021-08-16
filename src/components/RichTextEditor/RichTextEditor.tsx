@@ -55,6 +55,7 @@ import {
   MdImage,
   MdLink,
 } from "react-icons/md";
+import { Box } from "@open-legal-tech/design-system";
 
 const optionsSoftBreakPlugin = {
   rules: [
@@ -134,7 +135,7 @@ const pluginsBasic = [
 const components = createSlatePluginsComponents();
 const options = createSlatePluginsOptions();
 
-export const RichTextEditor = (): JSX.Element => {
+export function RichTextEditor(props): JSX.Element {
   const editableProps = {
     placeholder: "Type…",
   };
@@ -179,7 +180,7 @@ export const RichTextEditor = (): JSX.Element => {
   };
 
   return (
-    <div>
+    <Box {...props}>
       <HeadingToolbar styles={{ root: { padding: "0", margin: "0" } }}>
         <ToolbarButtonsAlign />
         <ToolbarImage icon={<MdImage />} /> <ToolbarLink icon={<MdLink />} />
@@ -191,6 +192,6 @@ export const RichTextEditor = (): JSX.Element => {
         options={options}
         plugins={pluginsBasic}
       />
-    </div>
+    </Box>
   );
-};
+}

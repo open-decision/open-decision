@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@graywolfai/react-heroicons": "^1.2.3",
-    "@open-legal-tech/design-system": "^0.6.1",
+    "@open-legal-tech/design-system": "^0.7.57",
     "@radix-ui/react-avatar": "^0.0.15",
     "@radix-ui/react-collapsible": "^0.0.17",
     "@radix-ui/react-dialog": "^0.0.20",

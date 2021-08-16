@@ -1,8 +1,11 @@
 import React from "react";
 import { Field, Logo } from "components";
 import * as Tabs from "@radix-ui/react-tabs";
-import { styled, Button, Box } from "@open-legal-tech/design-system";
-import { useLogin_UserMutation, useRegister_UserMutation } from "internalTypes";
+import { styled } from "@open-legal-tech/design-system";
+import {
+  useLogin_UserMutation,
+  useRegister_UserMutation,
+} from "internalTypes/index";
 import { useQueryClient } from "react-query";
 import { authService } from "features";
 import { useService } from "@xstate/react";
@@ -95,7 +98,7 @@ const LoginForm: React.FunctionComponent = () => {
           </a>
         </div>
       </div>
-      <Button
+      {/* <Button
         rounded="none"
         className="h-20"
         type="submit"
@@ -105,7 +108,7 @@ const LoginForm: React.FunctionComponent = () => {
         }}
       >
         Log-In
-      </Button>
+      </Button> */}
     </form>
   );
 };
@@ -174,7 +177,7 @@ const SignupForm: React.FunctionComponent = () => {
           .
         </div>
       </div>
-      <Button
+      {/* <Button
         className="h-20"
         rounded="none"
         type="submit"
@@ -189,7 +192,7 @@ const SignupForm: React.FunctionComponent = () => {
         }}
       >
         Registrieren
-      </Button>
+      </Button> */}
     </form>
   );
 };
