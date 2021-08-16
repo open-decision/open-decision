@@ -16,7 +16,7 @@ import {
   SidebarContent,
   SidebarRoot,
   SidebarToggle,
-} from "components";
+} from "components/Sidebar";
 import { nanoid } from "nanoid/non-secure";
 import { pipe } from "fp-ts/lib/function";
 import { getElement } from "./utilities/stateFunctions";
@@ -111,10 +111,13 @@ export const NodeEditor: React.FC<NodeEditorProps> = () => {
           onDragOver={onDragOver}
           onDrop={onDrop}
           onLoad={setReactFlowInstance}
-          onElementClick={(_, node) => {
+          onElementClick={(_event, node) => {
             setNodeEditingSidebarOpen(true);
             setSelectedNodeId(node.id);
           }}
+          onNodeDragStop={(_event, node) =>
+            send({ type: "updateElement", value: { id: node.id, data: node } })
+          }
           style={{ gridColumn: "1 / -1", gridRow: "1" }}
         />
         <SidebarRoot
@@ -145,7 +148,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = () => {
           }
         >
           <SidebarToggle position="right" />
-          <SidebarContent css={{ width: "clamp(300px, 50vw, 800px)" }}>
+          <SidebarContent css={{ width: "clamp(300px, 50vw, 700px)" }}>
             <NodeEditingSidebar
               node={selectedNode}
               setNode={(nodeId: string, newNode: Partial<Node<TElementData>>) =>

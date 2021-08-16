@@ -1,13 +1,12 @@
 {
   "compilerOptions": {
-    "composite": true,
     "jsx": "preserve",
     "baseUrl": "./src",
     "paths": {
-      "internalTypes*": ["types*", "types"],
-      "components*": ["components*", "components"],
-      "features*": ["features*", "features"],
-      "utils*": ["utils*", "utils"]
+      "internalTypes/*": ["types/*"],
+      "component/s*": ["components/*"],
+      "features/*": ["features/*"],
+      "utils/*": ["utils/*"]
     },
     "module": "ESNext",
     "types": [],
@@ -26,6 +25,6 @@
     "resolveJsonModule": true,
     "isolatedModules": true
   },
-  "include": ["src", "components", "pages"],
+  "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }

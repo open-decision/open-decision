@@ -1,5 +1,5 @@
-import { MainContent } from "components";
-import { Dashboard } from "features";
+import { MainContent } from "components/Layout";
+import { NodeEditor } from "features/Builder/NodeEditor";
 
 export default function Home(): JSX.Element {
   return (

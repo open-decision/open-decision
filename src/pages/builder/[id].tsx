@@ -1,6 +1,5 @@
-import { MainContent } from "components";
-import { NodeEditor } from "features";
-import { TreeProvider } from "features/Builder/hooks/useTree";
+import { MainContent } from "components/Layout";
+import { NodeEditor } from "features/Builder/NodeEditor";
 
 export default function Tree(): JSX.Element {
   return (
