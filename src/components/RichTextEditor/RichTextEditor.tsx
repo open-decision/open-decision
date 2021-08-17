@@ -6,15 +6,16 @@ import { renderElement } from "./Elements";
 import { onKeyDownHandler } from "./formatting";
 import { renderLeaf } from "./Leaf";
 import { CustomElement } from "./types";
+import { Toolbar } from "./Toolbar";
 
 const initialValue: CustomElement[] = [
   { type: "h1", children: [{ text: "This is a Heading" }] },
   { type: "h2", children: [{ text: "This is a smaller Heading" }] },
   { type: "h3", children: [{ text: "This is the smallest Heading" }] },
-  { type: "paragraph", children: [{ text: "" }] },
-  { type: "paragraph", children: [{ text: "This is normal text" }] },
+  { type: "p", children: [{ text: "" }] },
+  { type: "p", children: [{ text: "This is normal text" }] },
   {
-    type: "paragraph",
+    type: "p",
     children: [
       {
         text: "This text represents all the currently possible formatting: ",
@@ -39,24 +40,25 @@ export function RichTextEditor(props: RichTextEditorProps): JSX.Element {
   const [value, setValue] = React.useState<Descendant[]>(initialValue);
 
   return (
-    <Box
-      css={{
-        padding: "$4",
-        backgroundColor: "white",
-      }}
-      {...props}
+    <Slate
+      editor={editor}
+      value={value}
+      onChange={(newValue) => setValue(newValue)}
     >
-      <Slate
-        editor={editor}
-        value={value}
-        onChange={(newValue) => setValue(newValue)}
+      <Toolbar />
+      <Box
+        css={{
+          padding: "$4",
+          backgroundColor: "white",
+        }}
+        {...props}
       >
         <Editable
           renderElement={renderElement}
           renderLeaf={renderLeaf}
           onKeyDown={onKeyDownHandler(editor)}
         />
-      </Slate>
-    </Box>
+      </Box>
+    </Slate>
   );
 }
