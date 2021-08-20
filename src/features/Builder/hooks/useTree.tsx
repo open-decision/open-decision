@@ -5,7 +5,7 @@ import * as localForage from "localforage";
 import { Tree, TTree } from "../types";
 import { Errors } from "io-ts";
 import { useQuery } from "react-query";
-import { useActor, useInterpret } from "@xstate/react";
+import { useInterpret } from "@xstate/react";
 
 async function getTreeFromStorage(id: string) {
   function onFailure(error: Errors) {
@@ -20,44 +20,18 @@ async function getTreeFromStorage(id: string) {
   return pipe(possibleTree, Tree.decode, fold(onFailure, onSuccess));
 }
 
-// const validateTreeId = pipe(
-//   fromPredicate(
-//     (id): id is string => isString(id),
-//     () => "The provided id is not of the valid type"
-//   )
-// );
-
-// function onInvalidId(error: string) {
-//   console.warn(error);
-//   // TODO Make it so that when there is no id a new tree is created.
-//   return "1234";
-// }
-
-// function onValidId(id: string) {
-//   return id;
-// }
-
 export function useTree() {
-  // const router = useRouter();
-  // const treeId = router.query.id;
-
-  // const validTreeId = pipe(
-  //   validateTreeId(treeId),
-  //   fold(onInvalidId, onValidId)
-  // );
-
   const service = useInterpret(treeMachine);
-  const actor = useActor(service);
 
   useQuery("tree", () => getTreeFromStorage("tree"), {
     retry: 0,
     onSuccess: (result) => {
-      actor[1]({ type: "resolve", tree: result });
+      service.send({ type: "resolve", tree: result });
     },
     onError: (_error) => {
-      actor[1]({ type: "reject" });
+      service.send({ type: "reject" });
     },
   });
 
-  return actor;
+  return service;
 }

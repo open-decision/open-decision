@@ -3,27 +3,17 @@ import React, { useRef } from "react";
 
 //Hooks and Functions
 import { styled } from "@open-legal-tech/design-system";
-import {
-  isNode,
-  Node,
-  OnLoadParams,
-  ReactFlowProvider,
-} from "react-flow-renderer";
+import { OnLoadParams, ReactFlowProvider } from "react-flow-renderer";
 import { Stage } from "./Stage";
-import {
-  NewNodeSidebar,
-  NodeEditingSidebar,
-  SidebarContent,
-  SidebarRoot,
-  SidebarToggle,
-} from "components/Sidebar";
+import { SidebarContent, SidebarRoot, SidebarToggle } from "components/Sidebar";
 import { nanoid } from "nanoid/non-secure";
 import { pipe } from "fp-ts/lib/function";
-import { getElement } from "./utilities/stateFunctions";
-import { TElementData } from "./types";
 import { createEdge } from "./hooks/createTreeMachine";
 import { fold } from "fp-ts/lib/Either";
 import { useTree } from "./hooks/useTree";
+import { useActor } from "@xstate/react";
+import { NodeEditingSidebar } from "./components/NodeEditingSidebar";
+import { NewNodeSidebar } from "./components/NewNodeSidebar";
 
 const Container = styled("div", {
   display: "grid",
@@ -45,7 +35,8 @@ type NodeEditorProps = {
 };
 
 export const NodeEditor: React.FC<NodeEditorProps> = () => {
-  const [state, send] = useTree();
+  const service = useTree();
+  const [state, send] = useActor(service);
   const tree = state.context.tree;
 
   const [isNodeEditingSidebarOpen, setNodeEditingSidebarOpen] =
@@ -73,30 +64,35 @@ export const NodeEditor: React.FC<NodeEditorProps> = () => {
         y: event.clientY - reactFlowBounds.top,
       });
 
-      const newNode = {
-        id: nanoid(5),
-        type,
-        position,
-        data: { label: `${type} node` },
-      };
-
-      send({ type: "addElement", value: newNode });
+      send({
+        type: "addNode",
+        value: {
+          id: nanoid(5),
+          type,
+          position,
+          data: { label: `${type} node` },
+          content: { inputs: [], content: [] },
+        },
+      });
     }
   };
 
-  const selectedNode = pipe(
-    tree.state.elements,
-    getElement(selectedNodeId),
-    (el) => (el && isNode(el) ? el : undefined)
-  );
+  const selectedNode = tree.state.elements.nodes[selectedNodeId];
+  const elements = [
+    ...Object.values(tree.state.elements.nodes),
+    ...Object.values(tree.state.elements.edges),
+  ];
 
   return (
     <Container ref={reactFlowWrapper}>
       <ReactFlowProvider>
         <Stage
-          elements={tree.state.elements ?? {}}
+          elements={elements}
           onElementsRemove={(elementsToRemove) =>
-            send({ type: "deleteElement", elements: elementsToRemove })
+            send({
+              type: "deleteNode",
+              ids: elementsToRemove.map((element) => element.id),
+            })
           }
           onConnect={(connection) =>
             pipe(
@@ -104,7 +100,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = () => {
               createEdge(tree.state.elements),
               fold(
                 (errors) => console.warn(errors),
-                (value) => send({ type: "addElement", value })
+                (value) => send({ type: "addEdge", value })
               )
             )
           }
@@ -116,7 +112,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = () => {
             setSelectedNodeId(node.id);
           }}
           onNodeDragStop={(_event, node) =>
-            send({ type: "updateElement", value: { id: node.id, data: node } })
+            send({ type: "updateNode", value: { id: node.id, data: node } })
           }
           style={{ gridColumn: "1 / -1", gridRow: "1" }}
         />
@@ -149,15 +145,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = () => {
         >
           <SidebarToggle position="right" />
           <SidebarContent css={{ width: "clamp(300px, 50vw, 700px)" }}>
-            <NodeEditingSidebar
-              node={selectedNode}
-              setNode={(nodeId: string, newNode: Partial<Node<TElementData>>) =>
-                send({
-                  type: "updateElement",
-                  value: { id: nodeId, data: newNode },
-                })
-              }
-            />
+            <NodeEditingSidebar selectedNodeId={selectedNodeId} />
           </SidebarContent>
         </SidebarRoot>
       </ReactFlowProvider>

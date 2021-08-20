@@ -52,9 +52,8 @@ const TreeCard: React.FC<TreeCard> = ({ tree }) => {
             label="Baum löschen"
             onClick={() => deleteTree(tree.id)}
             css={{ colorScheme: "error" }}
-          >
-            <TrashIcon style={{ width: "20px", height: "20px" }} />
-          </IconButton>
+            Icon={<TrashIcon style={{ width: "20px", height: "20px" }} />}
+          />
           <Link href={`/builder/${tree.id}`}>
             <Button variant="secondary">Öffnen</Button>
           </Link>

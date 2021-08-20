@@ -69,16 +69,20 @@ export const createEdge =
     return right(edge);
   };
 
+type updateElementData = Partial<TNode>;
+
 type Events =
   | { type: "resolve"; tree: TTree }
   | { type: "reject" }
   | { type: "createTree" }
-  | { type: "addElement"; value: TEdge | TNode }
+  | { type: "addNode"; value: TNode }
   | {
-      type: "updateElement";
-      value: { id: string; data: Partial<TEdge> | Partial<TNode> };
+      type: "updateNode";
+      value: { id: string; data: updateElementData };
     }
-  | { type: "deleteElement"; elements: Elements<any> };
+  | { type: "deleteNode"; ids: string[] };
+
+export type updateElement = (data: updateElementData) => void;
 
 type Context = { id: string; tree: TTree };
 
@@ -106,36 +110,28 @@ export const treeMachine = createMachine<Context, Events, State>({
     },
     idle: {
       on: {
-        addElement: {
+        addNode: {
           target: "sync",
           actions: assign((context, { value }) => {
-            context.tree.state.elements.push(value);
+            context.tree.state.elements.nodes[value.id] = value;
           }),
         },
-        updateElement: {
+        updateNode: {
           target: "sync",
           actions: assign((context, { value: { id, data } }) => {
-            const existingElementIndex = context.tree.state.elements.findIndex(
-              (element) => element.id === id
-            );
-            const oldElement =
-              context.tree.state.elements[existingElementIndex];
+            const oldElement = context.tree.state.elements.nodes[id];
 
-            context.tree.state.elements[existingElementIndex] = {
+            context.tree.state.elements.nodes[id] = {
               ...oldElement,
               ...data,
             };
           }),
         },
-        deleteElement: {
+        deleteNode: {
           target: "sync",
-          actions: assign((context, { elements }) => {
-            elements.forEach((element) => {
-              const elementIndex = context.tree.state.elements.findIndex(
-                (currentElement) => currentElement.id === element.id
-              );
-
-              context.tree.state.elements.splice(elementIndex, 1);
+          actions: assign((context, { ids }) => {
+            ids.forEach((id) => {
+              delete context.tree.state.elements.nodes[id];
             });
           }),
         },

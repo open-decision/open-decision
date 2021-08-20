@@ -42,59 +42,50 @@ export function Toolbar(): JSX.Element {
         onClick={() =>
           insertLink(editor, prompt("url") ?? "www.open-decision.org")
         }
-      >
-        <Link2Icon />
-      </ToolbarIconButton>
+        Icon={<Link2Icon />}
+      />
       <StyledSeparator orientation="vertical" decorative />
       <ToolbarIconButton
         label="Konvertiere den ausgewählten Text in eine Überschrift"
         onClick={() => toggleEditorElement("h1")}
-      >
-        <HeadingIcon />
-      </ToolbarIconButton>
+        Icon={<HeadingIcon />}
+      />
       <ToolbarIconButton
         label="Erstelle eine unnumerierte Liste"
         onClick={() => toggleEditorElement("ul")}
-      >
-        <ListBulletIcon />
-      </ToolbarIconButton>
+        Icon={<ListBulletIcon />}
+      />
       <StyledSeparator orientation="vertical" decorative />
       <ToolbarIconButton
         label="Markiere den ausgewählten Text dick"
         onClick={() => toggleEditorMark("bold")}
-      >
-        <FontBoldIcon />
-      </ToolbarIconButton>
+        Icon={<FontBoldIcon />}
+      />
       <ToolbarIconButton
         label="Markiere den ausgewählten Text kursiv"
         onClick={() => toggleEditorMark("italic")}
-      >
-        <FontItalicIcon />
-      </ToolbarIconButton>
+        Icon={<FontItalicIcon />}
+      />
       <ToolbarIconButton
         label="Unterstreiche den ausgewählten Text"
         onClick={() => toggleEditorMark("underline")}
-      >
-        <UnderlineIcon />
-      </ToolbarIconButton>
+        Icon={<UnderlineIcon />}
+      />
       <ToolbarIconButton
         label="Orientiere den ausgewählten Block links"
         onClick={() => toggleEditorElementUnionMark("justify", "left")}
-      >
-        <TextAlignLeftIcon />
-      </ToolbarIconButton>
+        Icon={<TextAlignLeftIcon />}
+      />
       <ToolbarIconButton
         label="Orientiere den ausgewählten Block mittig"
         onClick={() => toggleEditorElementUnionMark("justify", "center")}
-      >
-        <TextAlignJustifyIcon />
-      </ToolbarIconButton>
+        Icon={<TextAlignJustifyIcon />}
+      />
       <ToolbarIconButton
         label="Orientiere den ausgewählten Block rechts"
         onClick={() => toggleEditorElementUnionMark("justify", "right")}
-      >
-        <TextAlignRightIcon />
-      </ToolbarIconButton>
+        Icon={<TextAlignRightIcon />}
+      />
     </Box>
   );
 }

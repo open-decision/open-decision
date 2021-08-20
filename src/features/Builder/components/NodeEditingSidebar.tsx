@@ -1,21 +1,21 @@
 import { styled, Box, Input, Heading } from "@open-legal-tech/design-system";
+import { useActor } from "@xstate/react";
+import { SingleSelect } from "features/Builder/components/SingleSelect/SingleSelect";
 import { RichTextEditor } from "components/RichTextEditor";
-import { TElementData } from "features/Builder/types";
+import { useTree } from "features/Builder/hooks/useTree";
 
 import React from "react";
-import { Node } from "react-flow-renderer";
 
 const SidebarHeading = styled(Heading, {});
 
-type NodeEditingSidebarProps = {
-  node: Node<TElementData> | undefined;
-  setNode: (nodeId: string, newNode: Partial<Node<TElementData>>) => void;
-};
+export const NodeEditingSidebar = (): JSX.Element => {
+  const service = useTree();
+  const [state, send] = useActor(service);
 
-export const NodeEditingSidebar = ({
-  node,
-  setNode,
-}: NodeEditingSidebarProps): JSX.Element => {
+  if (!state.matches("idle")) {
+    <p>Momentan kann kein Knoten bearbeitet werden</p>;
+  }
+
   return node?.data ? (
     <>
       <Box as="header">
@@ -33,6 +33,9 @@ export const NodeEditingSidebar = ({
           Inhalt
         </SidebarHeading>
         <RichTextEditor />
+      </Box>
+      <Box as="section">
+        <SingleSelect inputs={node.content.inputs} />
       </Box>
     </>
   ) : (
