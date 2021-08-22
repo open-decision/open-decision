@@ -7,10 +7,7 @@ import { OnLoadParams, ReactFlowProvider } from "react-flow-renderer";
 import { Stage } from "./Stage";
 import { SidebarContent, SidebarRoot, SidebarToggle } from "components/Sidebar";
 import { nanoid } from "nanoid/non-secure";
-import { pipe } from "fp-ts/lib/function";
-import { createEdge } from "./hooks/createTreeMachine";
-import { fold } from "fp-ts/lib/Either";
-import { useTree } from "./hooks/useTree";
+import { TreeProvider, useTree } from "./state/useTree";
 import { useActor } from "@xstate/react";
 import { NodeEditingSidebar } from "./components/NodeEditingSidebar";
 import { NewNodeSidebar } from "./components/NewNodeSidebar";
@@ -34,7 +31,7 @@ type NodeEditorProps = {
   disablePan?: boolean;
 };
 
-export const NodeEditor: React.FC<NodeEditorProps> = () => {
+const Editor: React.FC<NodeEditorProps> = () => {
   const service = useTree();
   const [state, send] = useActor(service);
   const tree = state.context.tree;
@@ -77,7 +74,6 @@ export const NodeEditor: React.FC<NodeEditorProps> = () => {
     }
   };
 
-  const selectedNode = tree.state.elements.nodes[selectedNodeId];
   const elements = [
     ...Object.values(tree.state.elements.nodes),
     ...Object.values(tree.state.elements.edges),
@@ -94,16 +90,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = () => {
               ids: elementsToRemove.map((element) => element.id),
             })
           }
-          onConnect={(connection) =>
-            pipe(
-              connection,
-              createEdge(tree.state.elements),
-              fold(
-                (errors) => console.warn(errors),
-                (value) => send({ type: "addEdge", value })
-              )
-            )
-          }
+          onConnect={(connection) => send({ type: "addEdge", connection })}
           onDragOver={onDragOver}
           onDrop={onDrop}
           onLoad={setReactFlowInstance}
@@ -112,7 +99,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = () => {
             setSelectedNodeId(node.id);
           }}
           onNodeDragStop={(_event, node) =>
-            send({ type: "updateNode", value: { id: node.id, data: node } })
+            send({ type: "updateNode", id: node.id, data: node })
           }
           style={{ gridColumn: "1 / -1", gridRow: "1" }}
         />
@@ -120,7 +107,6 @@ export const NodeEditor: React.FC<NodeEditorProps> = () => {
           css={{
             gridColumn: "1 / 2",
             gridRow: "1",
-            overflowY: "auto",
             zIndex: 5,
           }}
         >
@@ -133,7 +119,6 @@ export const NodeEditor: React.FC<NodeEditorProps> = () => {
           css={{
             gridColumn: "3 / 4",
             gridRow: "1",
-            overflowY: "auto",
             zIndex: 5,
           }}
           open={isNodeEditingSidebarOpen}
@@ -144,11 +129,19 @@ export const NodeEditor: React.FC<NodeEditorProps> = () => {
           }
         >
           <SidebarToggle position="right" />
-          <SidebarContent css={{ width: "clamp(300px, 50vw, 700px)" }}>
-            <NodeEditingSidebar selectedNodeId={selectedNodeId} />
+          <SidebarContent>
+            <NodeEditingSidebar id={selectedNodeId} />
           </SidebarContent>
         </SidebarRoot>
       </ReactFlowProvider>
     </Container>
   );
 };
+
+export function NodeEditor() {
+  return (
+    <TreeProvider>
+      <Editor />
+    </TreeProvider>
+  );
+}

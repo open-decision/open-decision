@@ -9,6 +9,7 @@ import * as Collapsible from "@radix-ui/react-collapsible";
 
 const Sidebar = styled(Collapsible.Root, {
   display: "flex",
+  overflow: "hidden",
 });
 
 const rotateLeft = keyframes({
@@ -77,7 +78,11 @@ export const SidebarContent = styled(Collapsible.Content, {
   display: "flex",
   flexDirection: "column",
   backgroundColor: "$gray2",
-  padding: "$4",
   boxShadow: "$xl",
   gap: "$6",
+  overflowY: "scroll",
+
+  "&[data-state='open']": {
+    padding: "$4",
+  },
 });

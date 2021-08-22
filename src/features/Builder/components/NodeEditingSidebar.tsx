@@ -1,44 +1,43 @@
-import { styled, Box, Input, Heading } from "@open-legal-tech/design-system";
-import { useActor } from "@xstate/react";
+import * as React from "react";
+import { Box, Input, Heading } from "@open-legal-tech/design-system";
 import { SingleSelect } from "features/Builder/components/SingleSelect/SingleSelect";
 import { RichTextEditor } from "components/RichTextEditor";
-import { useTree } from "features/Builder/hooks/useTree";
+import { useTree } from "features/Builder/state/useTree";
+import { useNode } from "../state/useNode";
 
-import React from "react";
+type NodeEditingSidebarProps = { id: string };
 
-const SidebarHeading = styled(Heading, {});
-
-export const NodeEditingSidebar = (): JSX.Element => {
+export function NodeEditingSidebar({
+  id,
+}: NodeEditingSidebarProps): JSX.Element {
   const service = useTree();
-  const [state, send] = useActor(service);
+  const node = useNode(id);
 
-  if (!state.matches("idle")) {
-    <p>Momentan kann kein Knoten bearbeitet werden</p>;
-  }
-
-  return node?.data ? (
+  return node ? (
     <>
       <Box as="header">
         <Input
           css={{ width: "100%" }}
-          value={node.data.label}
+          value={node.data?.label ?? ""}
           onChange={(event) =>
-            setNode(node.id, { data: { label: event.target.value } })
+            service.send({
+              type: "updateNode",
+              id,
+              data: { data: { label: event.target.value } },
+            })
           }
           maxLength={30}
         />
       </Box>
       <Box as="section">
-        <SidebarHeading className="text-lg font-semibold">
-          Inhalt
-        </SidebarHeading>
+        <Heading className="text-lg font-semibold">Inhalt</Heading>
         <RichTextEditor />
       </Box>
       <Box as="section">
-        <SingleSelect inputs={node.content.inputs} />
+        <SingleSelect node={node} />
       </Box>
     </>
   ) : (
     <p>Bitte wähle einen Knoten aus</p>
   );
-};
+}

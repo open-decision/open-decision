@@ -37,6 +37,7 @@ export type Input = { id: string; value: string; position: number };
 
 type SingleSelectInputProps = Input & {
   onChange: React.ChangeEventHandler<HTMLInputElement>;
+  onDelete: (id: string) => void;
 };
 
 export function SingleSelectInput({
@@ -44,6 +45,7 @@ export function SingleSelectInput({
   value,
   position,
   onChange,
+  onDelete,
 }: SingleSelectInputProps): JSX.Element {
   return (
     <StyledAccordionContainer value={id}>
@@ -96,6 +98,7 @@ export function SingleSelectInput({
               }}
             />
           }
+          onClick={(_event) => onDelete(id)}
         />
       </Accordion.Header>
       <StyledAccordionContent>
