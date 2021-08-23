@@ -34,7 +34,7 @@ type NodeEditorProps = {
 const Editor: React.FC<NodeEditorProps> = () => {
   const service = useTree();
   const [state, send] = useActor(service);
-  const tree = state.context.tree;
+  const tree = state.context;
 
   const [isNodeEditingSidebarOpen, setNodeEditingSidebarOpen] =
     React.useState(false);
@@ -68,16 +68,14 @@ const Editor: React.FC<NodeEditorProps> = () => {
           type,
           position,
           data: { label: `${type} node` },
-          content: { inputs: [], content: [] },
+          inputs: [],
+          content: [],
         },
       });
     }
   };
 
-  const elements = [
-    ...Object.values(tree.state.elements.nodes),
-    ...Object.values(tree.state.elements.edges),
-  ];
+  const elements = [...Object.values(tree.nodes), ...Object.values(tree.edges)];
 
   return (
     <Container ref={reactFlowWrapper}>

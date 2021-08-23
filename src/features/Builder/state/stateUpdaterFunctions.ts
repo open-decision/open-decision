@@ -31,13 +31,13 @@ export type Events =
 export type FoundTreeEvent = { type: "foundTree"; tree: TTree };
 export const foundTree = assign(
   (context: Context, { tree }: FoundTreeEvent) => {
-    context.tree = tree;
+    context = tree;
   }
 );
 
 export type AddNodeEvent = { type: "addNode"; value: TNode };
 export const addNode = assign((context: Context, { value }: AddNodeEvent) => {
-  context.tree.state.elements.nodes[value.id] = value;
+  context.nodes[value.id] = value;
 });
 
 export type UpdateNodeEvent = {
@@ -47,9 +47,9 @@ export type UpdateNodeEvent = {
 };
 export const updateNode = assign(
   (context: Context, { id, data }: UpdateNodeEvent) => {
-    const oldElement = context.tree.state.elements.nodes[id];
+    const oldElement = context.nodes[id];
 
-    context.tree.state.elements.nodes[id] = {
+    context.nodes[id] = {
       ...oldElement,
       ...data,
     };
@@ -60,7 +60,7 @@ export type DeleteNodeEvent = { type: "deleteNode"; ids: string[] };
 export const deleteNode = assign(
   (context: Context, { ids }: DeleteNodeEvent) => {
     ids.forEach((id) => {
-      delete context.tree.state.elements.nodes[id];
+      delete context.nodes[id];
     });
   }
 );
@@ -73,11 +73,11 @@ export const addEdge = assign(
   (context: Context, { connection }: AddEdgeEvent) => {
     pipe(
       connection,
-      createEdge(context.tree.state.elements),
+      createEdge(context.edges),
       fold(
         (errors) => console.warn(errors),
         (value) => {
-          context.tree.state.elements.edges[value.id] = value;
+          context.edges[value.id] = value;
         }
       )
     );
@@ -91,8 +91,8 @@ export type UpdateEdgeEvent = {
 };
 export const updateEdge = assign(
   (context: Context, { id, data }: UpdateEdgeEvent) => {
-    const oldEdgeData = context.tree.state.elements.edges[id];
-    context.tree.state.elements.edges[id] = merge(oldEdgeData, data);
+    const oldEdgeData = context.edges[id];
+    context.edges[id] = merge(oldEdgeData, data);
   }
 );
 
@@ -102,7 +102,7 @@ export type DeleteEdgeEvent = {
 };
 export const deleteEdge = assign(
   (context: Context, { id }: DeleteEdgeEvent) => {
-    delete context.tree.state.elements.edges[id];
+    delete context.edges[id];
   }
 );
 
@@ -114,9 +114,8 @@ export type AddInputEvent = {
 
 export const addInput = assign(
   (context: Context, { nodeId, input }: AddInputEvent) => {
-    const position =
-      context.tree.state.elements.nodes[nodeId].content.inputs.length + 1;
-    context.tree.state.elements.nodes[nodeId].content.inputs.push({
+    const position = context.nodes[nodeId].inputs.length + 1;
+    context.nodes[nodeId].inputs.push({
       id: nanoid(5),
       position,
       value: "",
@@ -133,14 +132,12 @@ export type UpdateInputEvent = {
 
 export const updateInput = assign(
   (context: Context, { nodeId, input, inputId }: UpdateInputEvent) => {
-    const inputIndex = context.tree.state.elements.nodes[
-      nodeId
-    ].content.inputs.findIndex((input) => input.id === inputId);
-    const oldInput =
-      context.tree.state.elements.nodes[nodeId].content.inputs[inputIndex];
+    const inputIndex = context.nodes[nodeId].inputs.findIndex(
+      (input) => input.id === inputId
+    );
+    const oldInput = context.nodes[nodeId].inputs[inputIndex];
 
-    context.tree.state.elements.nodes[nodeId].content.inputs[inputIndex] =
-      merge(oldInput, input);
+    context.nodes[nodeId].inputs[inputIndex] = merge(oldInput, input);
   }
 );
 
@@ -152,13 +149,10 @@ export type DeleteInputEvent = {
 
 export const deleteInput = assign(
   (context: Context, { nodeId, inputId }: DeleteInputEvent) => {
-    const inputIndex = context.tree.state.elements.nodes[
-      nodeId
-    ].content.inputs.findIndex((input) => input.id === inputId);
-
-    context.tree.state.elements.nodes[nodeId].content.inputs.splice(
-      inputIndex,
-      1
+    const inputIndex = context.nodes[nodeId].inputs.findIndex(
+      (input) => input.id === inputId
     );
+
+    context.nodes[nodeId].inputs.splice(inputIndex, 1);
   }
 );

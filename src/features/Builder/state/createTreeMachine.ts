@@ -30,7 +30,7 @@ type State =
 export type TreeService = Interpreter<Context, any, Events, State>;
 
 export const treeMachine = createMachine<Context, Events, State>({
-  context: { id: "tree", tree: createNewTree() },
+  context: createNewTree(),
   id: "tree",
   initial: "pending",
   states: {
@@ -88,7 +88,7 @@ export const treeMachine = createMachine<Context, Events, State>({
         {
           target: "idle",
           actions: async (context, _event) => {
-            await updateTreeInStorage(context.id, context.tree);
+            await updateTreeInStorage(context.id, context);
           },
         },
       ],

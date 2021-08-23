@@ -169,20 +169,24 @@ const Coordinates = T.type({
   y: T.number,
 });
 
-const NodeInput = T.type({
-  id: T.string,
-  value: T.string,
-  position: T.number,
-});
-
-const NodeContent = T.type({ inputs: T.array(NodeInput), content: T.unknown });
+const NodeInput = T.intersection([
+  T.type({
+    id: T.string,
+    position: T.number,
+  }),
+  T.partial({
+    edge: T.string,
+    value: T.string,
+  }),
+]);
 
 const NodeState = T.intersection([
   T.type({
     id: T.string,
     position: Coordinates,
     type: T.string,
-    content: NodeContent,
+    inputs: T.array(NodeInput),
+    content: T.unknown,
   }),
   T.partial({
     data: ElementData,
@@ -208,33 +212,34 @@ const EdgeState = T.intersection([
   }),
 ]);
 
-const Elements = T.type({
-  nodes: T.record(T.string, NodeState),
-  edges: T.record(T.string, EdgeState),
-});
+const EdgesRecord = T.record(T.string, EdgeState);
+const NodesRecord = T.record(T.string, NodeState);
 
 const TreeState = T.type({
   treeName: T.string,
-  elements: Elements,
+  id: T.string,
+  nodes: NodesRecord,
+  edges: EdgesRecord,
 });
 
 /**
  * The main Type for a complete Tree.
  */
-export const Tree = T.type({
-  config: TreeConfig,
-  state: TreeState,
-});
+export const Tree = T.intersection([
+  T.type({
+    config: TreeConfig,
+  }),
+  TreeState,
+]);
 
 export type TNodeConfig = T.TypeOf<typeof NodeConfig>;
 export type TNodeTypes = T.TypeOf<typeof NodeTypes>;
-
 export type TPortConfig = T.TypeOf<typeof PortConfig>;
 export type TPortTypes = T.TypeOf<typeof PortTypes>;
 export type TElementData = T.TypeOf<typeof ElementData>;
 export type TEdge = T.TypeOf<typeof EdgeState>;
+export type TEdgesRecord = T.TypeOf<typeof EdgesRecord>;
+export type TNodesRecord = T.TypeOf<typeof NodesRecord>;
 export type TInput = T.TypeOf<typeof NodeInput>;
-export type TNodeContent = T.TypeOf<typeof NodeContent>;
 export type TNode = T.TypeOf<typeof NodeState>;
 export type TTree = T.TypeOf<typeof Tree>;
-export type TElements = T.TypeOf<typeof Elements>;
