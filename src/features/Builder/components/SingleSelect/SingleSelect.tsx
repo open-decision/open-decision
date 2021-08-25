@@ -45,7 +45,7 @@ export function SingleSelect({ node }: SingleSelectProps) {
         />
       </Box>
       <StyledAccordionRoot type="multiple">
-        {node.content.inputs.map((input) => (
+        {node.inputs.map((input) => (
           <SingleSelectInput
             key={input.id}
             onChange={(event) =>
@@ -63,7 +63,9 @@ export function SingleSelect({ node }: SingleSelectProps) {
                 inputId: input.id,
               })
             }
-            {...input}
+            value={input.value ?? ""}
+            position={input.position}
+            id={input.id}
           />
         ))}
       </StyledAccordionRoot>

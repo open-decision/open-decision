@@ -16,25 +16,17 @@ export function createNewTree(): TTree {
   };
 }
 
-const getEdgeId = ({
-  source,
-  sourceHandle,
-  target,
-  targetHandle,
-}: Connection): string =>
-  `reactflow__edge-${source}${sourceHandle}-${target}${targetHandle}`;
+const getEdgeId = ({ source, target }: Connection): string =>
+  `${source}-${target}`;
 
-const connectionExists = (_edge: Edge, edges: TEdge[]) => {
-  return edges.some(
-    (edge) =>
-      isEdge(edge) && edge.source === edge.source && edge.target === edge.target
-    // Currently source handles are not used by our implementation
-    // &&
-    // (edge.sourceHandle === edge.sourceHandle ||
-    //   (!edge.sourceHandle && !edge.sourceHandle)) &&
-    // (edge.targetHandle === edge.targetHandle ||
-    //   (!edge.targetHandle && !edge.targetHandle))
-  );
+const connectionExists = (edge: Edge, edges: TEdge[]) => {
+  return edges.some((oldEdge) => {
+    return (
+      isEdge(edge) &&
+      edge.source === oldEdge.source &&
+      edge.target === oldEdge.target
+    );
+  });
 };
 
 export const createEdge =
