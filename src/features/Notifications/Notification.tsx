@@ -153,9 +153,8 @@ export const Notification: React.FC<NotificationProps> = ({
           <IconButton
             onClick={() => removeNotification(id)}
             label="Benachrichtigung schließen"
-          >
-            <XOutline style={{ width: "1.3em" }} />
-          </IconButton>
+            Icon={<XOutline style={{ width: "1.3em" }} />}
+          />
         </Header>
         <Content css={{ marginTop: "$2" }}>{notification.content}</Content>
       </div>
