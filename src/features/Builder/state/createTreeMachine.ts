@@ -37,10 +37,10 @@ export const treeMachine = createMachine<Context, Events, State>({
     pending: {
       on: {
         foundTree: {
-          target: "sync",
+          target: "idle",
           actions: foundTree,
         },
-        noTree: { target: "sync" },
+        noTree: { target: "idle" },
       },
     },
     idle: {
