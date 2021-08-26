@@ -1,7 +1,7 @@
 import { Either, left, right } from "fp-ts/lib/Either";
 import { Connection, Edge, isEdge } from "react-flow-renderer";
 import { exampleNodeTypes, examplePortTypes } from "../tests/nodes";
-import { TEdge, TEdgesRecord, TTree } from "../types";
+import { TEdge, TEdgesRecord, TElementData, TTree } from "../types";
 
 export function createNewTree(): TTree {
   return {
@@ -31,7 +31,7 @@ const connectionExists = (edge: Edge, edges: TEdge[]) => {
 
 export const createEdge =
   (edges: TEdgesRecord) =>
-  (edgeParams: Connection | Edge<any>): Either<string, TEdge> => {
+  (edgeParams: Connection | Edge<TElementData>): Either<string, TEdge> => {
     if (!edgeParams.source || !edgeParams.target) {
       return left("Can't create edge. An edge needs a source and a target.");
     }

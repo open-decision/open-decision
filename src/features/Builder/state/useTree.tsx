@@ -1,12 +1,12 @@
-import * as React from "react";
+import { useInterpret } from "@xstate/react";
 import { fold } from "fp-ts/Either";
 import { pipe } from "fp-ts/lib/function";
-import { treeMachine, TreeService } from "./createTreeMachine";
-import * as localForage from "localforage";
-import { Tree, TTree } from "../types";
 import { Errors } from "io-ts";
+import * as localForage from "localforage";
+import * as React from "react";
 import { useQuery } from "react-query";
-import { useInterpret } from "@xstate/react";
+import { Tree, TTree } from "../types";
+import { treeMachine, TreeService } from "./createTreeMachine";
 
 async function getTreeFromStorage(id: string) {
   function onFailure(error: Errors) {
