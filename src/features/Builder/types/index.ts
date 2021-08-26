@@ -160,10 +160,6 @@ const TreeConfig = T.type({
 // TreeState Types
 // ------------------------------------------------------------------
 
-const ElementData = T.type({
-  label: T.string,
-});
-
 const Coordinates = T.type({
   x: T.number,
   y: T.number,
@@ -175,21 +171,26 @@ const NodeInput = T.intersection([
     position: T.number,
   }),
   T.partial({
+    target: T.string,
     edge: T.string,
     value: T.string,
   }),
 ]);
+
+const ElementData = T.type({
+  label: T.string,
+  inputs: T.array(NodeInput),
+  content: T.unknown,
+});
 
 const NodeState = T.intersection([
   T.type({
     id: T.string,
     position: Coordinates,
     type: T.string,
-    inputs: T.array(NodeInput),
-    content: T.unknown,
+    data: ElementData,
   }),
   T.partial({
-    data: ElementData,
     isHidden: T.boolean,
     draggable: T.boolean,
     selectable: T.boolean,
@@ -208,7 +209,6 @@ const EdgeState = T.intersection([
     label: T.string,
     animated: T.boolean,
     isHidden: T.boolean,
-    data: ElementData,
   }),
 ]);
 

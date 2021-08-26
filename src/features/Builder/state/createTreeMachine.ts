@@ -1,35 +1,36 @@
-import { TTree } from "../types";
-import { createMachine, Interpreter } from "xstate";
 import localForage from "localforage";
-import { createNewTree } from "./utils";
-import { Context } from "./types";
+import { createMachine, Interpreter } from "xstate";
+import { TTree } from "../types";
 import {
-  addNode,
   addEdge,
+  addInput,
+  addNode,
+  deleteEdge,
+  deleteInput,
   deleteNode,
   Events,
   foundTree,
-  updateNode,
   updateEdge,
-  deleteEdge,
-  addInput,
   updateInput,
-  deleteInput,
+  updateNode,
+  updateNodeData,
 } from "./stateUpdaterFunctions";
+import { Context } from "./types";
+import { createNewTree } from "./utils";
 
 async function updateTreeInStorage(id: string, tree: TTree) {
   localForage.setItem(id, tree);
 }
 
-type State =
+export type TreeState =
   | { value: "pending"; context: never }
   | { value: "missing"; context: Context }
   | { value: "idle"; context: Context }
   | { value: "creation"; context: never };
 
-export type TreeService = Interpreter<Context, any, Events, State>;
+export type TreeService = Interpreter<Context, any, Events, TreeState>;
 
-export const treeMachine = createMachine<Context, Events, State>({
+export const treeMachine = createMachine<Context, Events, TreeState>({
   context: createNewTree(),
   id: "tree",
   initial: "pending",
@@ -52,6 +53,10 @@ export const treeMachine = createMachine<Context, Events, State>({
         updateNode: {
           target: "sync",
           actions: updateNode,
+        },
+        updateNodeData: {
+          target: "sync",
+          actions: updateNodeData,
         },
         deleteNode: {
           target: "sync",

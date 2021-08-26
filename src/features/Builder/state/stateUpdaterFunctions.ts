@@ -1,16 +1,12 @@
 import { assign as immerAssign } from "@xstate/immer";
 import { fold } from "fp-ts/lib/Either";
+import { nanoid } from "nanoid/non-secure";
 import { Connection, Edge } from "react-flow-renderer";
 import { merge, pipe } from "remeda";
-import { TEdge, TInput, TNode, TTree } from "../types";
+import { assign } from "xstate";
+import { TEdge, TElementData, TInput, TNode, TTree } from "../types";
 import { Context } from "./types";
 import { createEdge } from "./utils";
-import { nanoid } from "nanoid/non-secure";
-import { assign } from "xstate";
-
-type UpdateElementData = Partial<TNode>;
-
-export type UpdateElementFunction = (data: UpdateElementData) => void;
 
 export type CreateTreeEvent = { type: "createTree" };
 export type NoTreeEvent = { type: "noTree" };
@@ -21,6 +17,7 @@ export type Events =
   | CreateTreeEvent
   | AddNodeEvent
   | UpdateNodeEvent
+  | UpdateNodeDataEvent
   | DeleteNodeEvent
   | AddEdgeEvent
   | UpdateEdgeEvent
@@ -46,15 +43,34 @@ export const addNode = immerAssign(
 export type UpdateNodeEvent = {
   type: "updateNode";
   id: string;
-  data: UpdateElementData;
+  node: Omit<Partial<TNode>, "data">;
 };
 export const updateNode = immerAssign(
-  (context: Context, { id, data }: UpdateNodeEvent) => {
+  (context: Context, { id, node }: UpdateNodeEvent) => {
     const oldElement = context.nodes[id];
 
     context.nodes[id] = {
       ...oldElement,
-      ...data,
+      ...node,
+    };
+  }
+);
+
+export type UpdateNodeDataEvent = {
+  type: "updateNodeData";
+  id: string;
+  data: Partial<TElementData>;
+};
+export const updateNodeData = immerAssign(
+  (context: Context, { id, data }: UpdateNodeDataEvent) => {
+    const oldElement = context.nodes[id];
+
+    context.nodes[id] = {
+      ...oldElement,
+      data: {
+        ...oldElement.data,
+        ...data,
+      },
     };
   }
 );
@@ -70,7 +86,7 @@ export const deleteNode = immerAssign(
 
 export type AddEdgeEvent = {
   type: "addEdge";
-  connection: Edge<any> | Connection;
+  connection: Edge<TElementData> | Connection;
 };
 export const addEdge = immerAssign(
   (context: Context, { connection }: AddEdgeEvent) => {
@@ -101,11 +117,13 @@ export const updateEdge = immerAssign(
 
 export type DeleteEdgeEvent = {
   type: "deleteEdge";
-  id: string;
+  ids: string[];
 };
 export const deleteEdge = immerAssign(
-  (context: Context, { id }: DeleteEdgeEvent) => {
-    delete context.edges[id];
+  (context: Context, { ids }: DeleteEdgeEvent) => {
+    ids.forEach((id) => {
+      delete context.edges[id];
+    });
   }
 );
 
@@ -117,8 +135,8 @@ export type AddInputEvent = {
 
 export const addInput = immerAssign(
   (context: Context, { nodeId, input }: AddInputEvent) => {
-    const position = context.nodes[nodeId].inputs.length + 1;
-    context.nodes[nodeId].inputs.push({
+    const position = context.nodes[nodeId].data.inputs.length + 1;
+    context.nodes[nodeId].data.inputs.push({
       id: nanoid(5),
       position,
       value: "",
@@ -135,12 +153,12 @@ export type UpdateInputEvent = {
 
 export const updateInput = immerAssign(
   (context: Context, { nodeId, input, inputId }: UpdateInputEvent) => {
-    const inputIndex = context.nodes[nodeId].inputs.findIndex(
+    const inputIndex = context.nodes[nodeId].data.inputs.findIndex(
       (input) => input.id === inputId
     );
-    const oldInput = context.nodes[nodeId].inputs[inputIndex];
+    const oldInput = context.nodes[nodeId].data.inputs[inputIndex];
 
-    context.nodes[nodeId].inputs[inputIndex] = merge(oldInput, input);
+    context.nodes[nodeId].data.inputs[inputIndex] = merge(oldInput, input);
   }
 );
 
@@ -152,10 +170,10 @@ export type DeleteInputEvent = {
 
 export const deleteInput = immerAssign(
   (context: Context, { nodeId, inputId }: DeleteInputEvent) => {
-    const inputIndex = context.nodes[nodeId].inputs.findIndex(
+    const inputIndex = context.nodes[nodeId].data.inputs.findIndex(
       (input) => input.id === inputId
     );
 
-    context.nodes[nodeId].inputs.splice(inputIndex, 1);
+    context.nodes[nodeId].data.inputs.splice(inputIndex, 1);
   }
 );

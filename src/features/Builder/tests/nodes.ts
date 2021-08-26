@@ -1,4 +1,4 @@
-import { connections, nodes, TNodeTypes, TPortTypes } from "../types";
+import { connections, nodes, TPortTypes } from "../types";
 
 export const exampleNodes: nodes = {
   node1: {
@@ -38,8 +38,6 @@ export const examplePortTypes: TPortTypes = {
   },
 };
 
-export const exampleNodeTypes: TNodeTypes = {
+export const exampleNodeTypes = {
   default: { type: "default", label: "Default" },
-  input: { type: "input", label: "Input" },
-  output: { type: "output", label: "Output" },
 };
