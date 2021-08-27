@@ -6,6 +6,10 @@
     ".": {
       "import": "./lib/index.mjs",
       "require": "./lib/index.js"
+    },
+    "./tokens": {
+      "import": "./lib/internal/tokens.mjs",
+      "require": "./lib/internal/tokens.js"
     }
   },
   "files": [
