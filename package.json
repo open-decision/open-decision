@@ -1,6 +1,6 @@
 {
-  "name": "@olt/design-system",
-  "version": "0.0.1",
+  "name": "@open-legal-tech/design-system",
+  "version": "0.8.0",
   "types": "./lib/index.d.ts",
   "exports": {
     ".": {
@@ -12,6 +12,9 @@
     "/lib",
     "/src"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "The open legal tech design system",
   "sideEffects": false,
   "scripts": {
@@ -67,5 +70,6 @@
     "storybook-dark-mode": "^1.0.8",
     "tailwindcss": "^2.2.7",
     "typescript": "^4.3.5"
-  }
+  },
+  "gitHead": "8af320c1bfb7bbf12aa4cbc316c015823f688284"
 }
