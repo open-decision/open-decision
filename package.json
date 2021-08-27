@@ -1,0 +1,71 @@
+{
+  "name": "@olt/design-system",
+  "version": "0.0.1",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./lib/index.mjs",
+      "require": "./lib/index.js"
+    }
+  },
+  "files": [
+    "/lib",
+    "/src"
+  ],
+  "description": "The open legal tech design system",
+  "sideEffects": false,
+  "scripts": {
+    "build:esm": "cross-env BABEL_ENV=esmUnbundled babel -w src --extensions '.ts,.tsx' --out-dir 'dist/esm' --source-maps",
+    "build:cjs": "cross-env BABEL_ENV=cjs babel -w src --extensions '.ts,.tsx' --out-dir 'dist/cjs' --source-maps",
+    "build:types": "tsc -w --outDir ./dist/types",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook",
+    "build": "rm -rf lib && rollup -c"
+  },
+  "dependencies": {
+    "@next/bundle-analyzer": "^11.1.0",
+    "@radix-ui/colors": "^0.1.7",
+    "@radix-ui/react-accessible-icon": "^0.0.16",
+    "@radix-ui/react-collapsible": "^0.0.17",
+    "@radix-ui/react-icons": "^1.0.3",
+    "@stitches/react": "^0.2.5",
+    "remeda": "^0.0.30"
+  },
+  "peerDependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "@next/bundle-analyzer": "^11.1.0",
+    "@rollup/plugin-commonjs": "^20.0.0",
+    "@rollup/plugin-node-resolve": "^13.0.4",
+    "@rollup/plugin-replace": "^3.0.0",
+    "@rollup/plugin-typescript": "^8.2.5",
+    "@storybook/addon-a11y": "^6.3.7",
+    "@storybook/addon-actions": "^6.3.7",
+    "@storybook/addon-docs": "^6.3.7",
+    "@storybook/addon-essentials": "^6.3.7",
+    "@storybook/addon-links": "^6.3.7",
+    "@storybook/addon-storysource": "^6.3.7",
+    "@storybook/react": "^6.3.7",
+    "@types/react": "^17.0.17",
+    "@types/react-dom": "^17.0.9",
+    "@types/tailwindcss": "^2.2.1",
+    "cross-env": "^7.0.3",
+    "glob": "^7.1.7",
+    "lerna": "^3.22.1",
+    "postcss": "^8.3.6",
+    "postcss-import": "^14.0.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "rollup": "^2.56.2",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-copy": "^3.4.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-rename": "^1.0.1",
+    "rollup-plugin-rename-node-modules": "^1.1.0",
+    "storybook-dark-mode": "^1.0.8",
+    "tailwindcss": "^2.2.7",
+    "typescript": "^4.3.5"
+  }
+}
