@@ -1,4 +1,4 @@
-import { createCss, StitchesCss } from "@stitches/react";
+import { createStitches, CSS } from "@stitches/react";
 import { tokens, media } from "../internal/tokens";
 import {
   slateDark,
@@ -20,7 +20,7 @@ import { ColorKeys, aliasColor } from "../internal/utils";
 
 const { colors, ...otherTokens } = tokens;
 
-export const designSystem = createCss({
+export const designSystem = createStitches({
   theme: {
     colors: {
       ...colors,
@@ -78,7 +78,7 @@ export const designSystem = createCss({
   },
 });
 
-export type StyleObject = StitchesCss<typeof designSystem>;
+export type StyleObject = CSS<typeof designSystem>;
 
 export * from "@stitches/react";
 
@@ -87,10 +87,10 @@ export const {
   config,
   keyframes,
   css,
-  global: globalCss,
+  globalCss,
   theme,
-  theme: createTheme,
-  getCssString: getCssText,
+  createTheme,
+  getCssText,
 } = designSystem;
 
 export const darkTheme = createTheme("dark", {
