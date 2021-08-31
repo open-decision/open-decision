@@ -1,9 +1,9 @@
 import * as React from "react";
 import { Meta, Story } from "@storybook/react";
-import { Header as SystemHeader } from "./index";
-import { styled } from "@stitches/react";
+import { Header as SystemHeader, HeaderContainerProps } from "./index";
 import { Heading } from "../Heading";
 import { Cross1Icon, HamburgerMenuIcon } from "@radix-ui/react-icons";
+import { styled } from "../stitches";
 
 const MenuItems = () => (
   <>
@@ -27,9 +27,7 @@ const StyledHeaderContainer = styled(SystemHeader.Container, {
   color: "$primary11",
 });
 
-type Props = React.ComponentProps<typeof SystemHeader.Container>;
-
-export const Header: Story<Props> = (props) => (
+export const Header: Story<HeaderContainerProps> = (props) => (
   <StyledHeaderContainer {...props}>
     <SystemHeader.Content>
       <Heading size="xs" css={{ minWidth: "max-content", paddingBlock: "$3" }}>

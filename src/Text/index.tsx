@@ -1,5 +1,6 @@
 import { styled } from "../stitches";
 
+export type TextProps = React.ComponentProps<typeof Text>;
 export const Text = styled("p", {
   fontFamily: "$text",
   lineHeight: "$normal",

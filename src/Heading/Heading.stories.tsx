@@ -1,8 +1,9 @@
 import * as React from "react";
 
 import { Meta, Story } from "@storybook/react";
-import { Heading } from "./index";
+import { Heading, HeadingProps } from "./index";
 import { Box } from "../Box";
+import { ClassNamesArg } from "@emotion/core";
 
 export default {
   component: Heading,
@@ -10,9 +11,7 @@ export default {
   decorators: [(Component) => <Component />],
 } as Meta;
 
-type Props = React.ComponentProps<typeof Heading>;
-
-export const List: Story<Props> = (props) => (
+export const List: Story<HeadingProps> = (props) => (
   <Box css={{ display: "grid", gap: "$12" }}>
     <Heading {...props} size="xl">
       Almost before we knew it, we had left the ground.
@@ -32,7 +31,9 @@ export const List: Story<Props> = (props) => (
   </Box>
 );
 
-const Template: Story<Props> = (props) => <Heading {...props}>Heading</Heading>;
+const Template: Story<HeadingProps> = (props) => (
+  <Heading {...props}>Heading</Heading>
+);
 
 export const ExtraLarge = Template.bind({});
 ExtraLarge.args = { size: "xl" };

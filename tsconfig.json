@@ -16,10 +16,10 @@
     "skipLibCheck": true,
     "paths": {
       // This is a workaround to make storybook work with stitches. https://github.com/modulz/stitches/issues/248
-      "@emotion/core": ["./src/internal/types/emotion.d.ts"]
+      "@emotion/core": ["./node_modules/@emotion/react"]
     }
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "types"],
   "exclude": [
     "node_modules",
     "**/__tests__/*",

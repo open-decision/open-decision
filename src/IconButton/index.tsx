@@ -2,6 +2,7 @@ import * as React from "react";
 import * as AccessibleIcon from "@radix-ui/react-accessible-icon";
 import { Button } from "../Button";
 import { styled } from "../stitches";
+import { VariantProps } from "../stitches";
 
 const StyledButton = styled(Button, {
   display: "flex",
@@ -31,12 +32,12 @@ const StyledButton = styled(Button, {
   },
 });
 
-type Props = React.ComponentProps<typeof StyledButton> & {
+export type IconButtonProps = React.ComponentProps<typeof StyledButton> & {
   label: string;
   Icon: React.ReactNode;
 };
 
-export const IconButton = React.forwardRef<HTMLButtonElement, Props>(
+export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
   ({ label, children, variant = "primary", Icon, ...props }, ref) => {
     return (
       <StyledButton variant={variant} ref={ref} {...props}>

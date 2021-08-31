@@ -49,11 +49,11 @@ export const designSystem = createStitches({
   },
   media,
   utils: {
-    colorScheme: (_config) => (value: ColorKeys) => {
+    colorScheme: (value: ColorKeys) => {
       let colorScheme = value;
 
       if (value === undefined) {
-        console.error(
+        console.warn(
           "The value passed to colorScheme should not be undefined. The default gray colorScheme is returned."
         );
 

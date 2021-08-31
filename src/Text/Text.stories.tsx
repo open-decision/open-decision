@@ -1,17 +1,16 @@
 import * as React from "react";
 
 import { Meta, Story } from "@storybook/react";
-import { Text } from "./index";
+import { Text, TextProps } from "./index";
 import { Box } from "../Box";
+import { VariantProps } from "@stitches/react";
 
 export default {
   component: Text,
   title: "Components/Text",
 } as Meta;
 
-type Props = Omit<React.ComponentProps<typeof Text>, "css">;
-
-export const List: Story<Props> = (props) => (
+export const List: Story<TextProps> = (props) => (
   <Box css={{ display: "grid", gap: "$4" }}>
     <Text size="xl" {...props}>
       Culpa qui ipsum nisi eu elit Lorem esse aliquip irure adipisicing anim

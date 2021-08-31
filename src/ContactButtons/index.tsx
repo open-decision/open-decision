@@ -54,4 +54,7 @@ const Buttons = [
   },
 ];
 
+export type ContactButtonsContainerProps = React.ComponentProps<
+  typeof Container
+>;
 export const ContactButtons = { Container, Buttons };

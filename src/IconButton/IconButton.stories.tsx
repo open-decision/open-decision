@@ -3,21 +3,21 @@ import * as React from "react";
 import { Meta, Story } from "@storybook/react";
 
 import { PlayIcon } from "@radix-ui/react-icons";
-import { IconButton } from "./index";
+import { IconButton, IconButtonProps } from "./index";
 
 export default {
   component: IconButton,
   title: "Components/IconButton",
 } as Meta;
 
-type Props = React.ComponentProps<typeof IconButton>;
-
-const IconButtonGrid: Story<Props> = (props) => <IconButton {...props} />;
+const IconButtonGrid: Story<IconButtonProps> = (props) => (
+  <IconButton {...props} />
+);
 
 export const Grid = IconButtonGrid.bind({});
 Grid.args = { Icon: <PlayIcon /> };
 
-const SingleIconButtonTemplate: Story<Props> = (props) => (
+const SingleIconButtonTemplate: Story<IconButtonProps> = (props) => (
   <IconButton {...props} />
 );
 

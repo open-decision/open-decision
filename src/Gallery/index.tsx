@@ -100,4 +100,6 @@ function Container({ children, css, contentAlign = true, ...props }: Props) {
   );
 }
 
+export type GalleryContainerProps = React.ComponentProps<typeof Container>;
+export type GallerySetProps = React.ComponentProps<typeof Set>;
 export const Gallery = { Container, Set };

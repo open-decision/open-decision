@@ -43,6 +43,7 @@ const responsiveFontSize = {
 
 const Container = styled("header", { ...responsiveFontSize });
 
+export type HeadingProps = React.ComponentProps<typeof Heading>;
 /**
  * ### A component for visual heading levels.
  *

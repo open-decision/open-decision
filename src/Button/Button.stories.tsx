@@ -1,16 +1,14 @@
 import * as React from "react";
 
 import { Meta, Story } from "@storybook/react";
-import { Button } from "./index";
+import { Button, ButtonProps } from "./index";
 
 export default {
   component: Button,
   title: "Components/Button",
 } as Meta;
 
-type Props = React.ComponentProps<typeof Button>;
-
-const ButtonGrid: Story<Props> = (props) => <Button {...props} />;
+const ButtonGrid: Story<ButtonProps> = (props) => <Button {...props} />;
 
 export const Primary = ButtonGrid.bind({});
 Primary.args = { children: "Button" };

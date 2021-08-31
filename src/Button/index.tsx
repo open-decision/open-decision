@@ -1,5 +1,6 @@
 import { styled } from "../stitches";
 
+export type ButtonProps = React.ComponentProps<typeof Button>;
 export const Button = styled("button", {
   $$borderWidth: "2px",
   $$paddingInline: "$space$4",
