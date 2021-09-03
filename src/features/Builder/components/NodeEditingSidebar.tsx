@@ -27,7 +27,7 @@ export function NodeEditingSidebar({
               data: { label: event.target.value },
             })
           }
-          maxLength={30}
+          maxLength={70}
         />
       </Box>
       <Box as="section">

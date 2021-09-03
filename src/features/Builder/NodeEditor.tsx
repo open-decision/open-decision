@@ -48,6 +48,10 @@ const Editor: React.FC<NodeEditorProps> = () => {
 
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
 
+  if (state.matches("pending")) {
+    return <div>Loading</div>;
+  }
+
   const onDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = "move";
@@ -71,7 +75,7 @@ const Editor: React.FC<NodeEditorProps> = () => {
           id: nanoid(5),
           type,
           position,
-          data: { label: `${type} node`, inputs: [], content: [] },
+          data: { label: `${type} node`, inputs: {}, content: [] },
         },
       });
     }
@@ -96,7 +100,14 @@ const Editor: React.FC<NodeEditorProps> = () => {
             },
           ])
         }
-        onConnect={(connection) => send({ type: "addEdge", connection })}
+        onConnect={({ source, target }) =>
+          source && target
+            ? send({
+                type: "addEdge",
+                connection: { source, target, inputs: [] },
+              })
+            : null
+        }
         onDragOver={onDragOver}
         onDrop={onDrop}
         onLoad={setReactFlowInstance}
