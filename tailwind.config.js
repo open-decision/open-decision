@@ -1,5 +1,5 @@
 module.exports = {
   mode: "jit",
-  presets: [require("@open-legal-tech/design-system/tailwind")],
+  presets: [require("@open-legal-tech/tailwind")],
   purge: ["./src/**/*.tsx", "./src/**/*.ts"],
 };
