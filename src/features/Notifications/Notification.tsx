@@ -1,10 +1,6 @@
 import React, { useEffect } from "react";
 import { styled, IconButton } from "@open-legal-tech/design-system";
-import {
-  notification,
-  notificationVariants,
-  useNotificationStore,
-} from "./NotificationState";
+import { notification, useNotificationStore } from "./NotificationState";
 import {
   FireOutline,
   HandOutline,
@@ -16,15 +12,12 @@ import * as Progress from "@radix-ui/react-progress";
 import { motion, useAnimation } from "framer-motion";
 import { useGesture } from "react-use-gesture";
 
-const icons: Record<
-  notificationVariants,
-  (props: React.SVGProps<SVGSVGElement>) => JSX.Element
-> = {
+const icons = {
   danger: FireOutline,
   neutral: HandOutline,
   success: CheckOutline,
   warning: ExclamationOutline,
-};
+} as const;
 
 type NotificationProps = {
   notification: notification;

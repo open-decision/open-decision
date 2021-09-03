@@ -13,15 +13,12 @@ import {
   Heading,
   HeadingGroup,
   IconButton,
-  styled,
   Text,
 } from "@open-legal-tech/design-system";
 import Link from "next/link";
 import { mapObjToArr } from "./utils";
 import { useTreeStore } from "./hooks/useTrees";
 import { TrashIcon } from "@radix-ui/react-icons";
-
-const TreeListHeading = styled(Heading, {});
 
 type TreeCard = { tree: InlinedValidTreeNode };
 
@@ -39,9 +36,9 @@ const TreeCard: React.FC<TreeCard> = ({ tree }) => {
 
       <div className="flex items-baseline">
         <HeadingGroup.Container className="flex-grow">
-          <TreeListHeading as="h3" size="sm">
+          <Heading as="h3" size="sm">
             {tree.name}
-          </TreeListHeading>
+          </Heading>
           <HeadingGroup.SubHeading>
             Erstellt am: {format(parseISO(tree.createdAt), "P", { locale: de })}
           </HeadingGroup.SubHeading>

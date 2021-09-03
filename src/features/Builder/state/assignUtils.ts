@@ -1,9 +1,8 @@
 import { assign as immerAssign } from "@xstate/immer";
 import { equals, merge, pipe } from "remeda";
-import { Context } from "./types";
 import * as Option from "fp-ts/Option";
 import { nanoid } from "nanoid/non-secure";
-import { sendToTreePayload } from "./treeMachine";
+import { Context, sendToTreePayload } from "./treeMachine";
 import { TNode, TNodeData } from "../types/Node";
 import { Edge, TEdge } from "../types/Edge";
 import { Path, TPath } from "../types/Path";
