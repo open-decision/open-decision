@@ -1,5 +1,7 @@
 import { useInterpret } from "@xstate/react";
 import * as React from "react";
+import { assign } from "xstate";
+import { Tree } from "../types/Tree";
 import { treeMachine, TreeService } from "./treeMachine";
 
 export const TreeContext = React.createContext<TreeService | null>(null);
@@ -9,7 +11,10 @@ type TreeProviderProps = Omit<
   "value"
 >;
 export function TreeProvider({ children }: TreeProviderProps) {
-  const service = useInterpret(treeMachine);
+  const service = useInterpret(treeMachine, {
+    devTools: true,
+    actions: { createNewTree: assign(Tree.createTree) },
+  });
 
   return (
     <TreeContext.Provider value={service}>{children}</TreeContext.Provider>

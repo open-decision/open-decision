@@ -1,5 +1,3 @@
-//External Libraries
-//Hooks and Functions
 import { styled } from "@open-legal-tech/design-system";
 import { useActor } from "@xstate/react";
 import { SidebarContent, SidebarRoot, SidebarToggle } from "components/Sidebar";
@@ -12,6 +10,7 @@ import { NodeEditingSidebar } from "./components/NodeEditingSidebar";
 import { Stage } from "./Stage";
 import { EditorProvider, useEditor } from "./state/useEditor";
 import { TreeProvider, useTree } from "./state/useTree";
+import { Path } from "./types/Path";
 
 const Container = styled("div", {
   display: "grid",
@@ -114,6 +113,13 @@ const Editor: React.FC<NodeEditorProps> = () => {
         onElementClick={(_event, node) => {
           setNodeEditingSidebarOpen(true);
           setSelectedNodeId(node.id);
+        }}
+        onEdgeUpdate={(oldEdge, newConnection) => {
+          return send({
+            type: "updateEdge",
+            id: oldEdge.id,
+            data: { target: newConnection.target ?? "" },
+          });
         }}
         onNodeDragStop={(_event, node) =>
           send({ type: "updateNode", id: node.id, node })

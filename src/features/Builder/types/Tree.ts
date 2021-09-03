@@ -1,5 +1,5 @@
 import * as T from "io-ts";
-import { exampleNodeTypes, examplePortTypes } from "../tests/nodes";
+import { exampleNodeTypes, examplePortTypes } from "../testData/nodes";
 import { EdgesRecord } from "./Edge";
 import { Node } from "./Node";
 

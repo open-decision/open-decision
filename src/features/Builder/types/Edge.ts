@@ -1,9 +1,9 @@
 import { pipe } from "fp-ts/function";
-import { fromNullable } from "fp-ts/lib/Option";
 import * as T from "io-ts";
 import { Required } from "utility-types";
 import { TTree } from "./Tree";
 import * as Option from "fp-ts/Option";
+import * as Either from "fp-ts/Either";
 
 const EdgeType = T.intersection([
   T.type({
@@ -32,11 +32,11 @@ const EdgeType = T.intersection([
 
 type getEdgeParameters = Required<Partial<TEdge>, "source" | "target">;
 
-const getEdgeId = ({ source, target }: getEdgeParameters): string =>
+const createEdgeId = ({ source, target }: getEdgeParameters): string =>
   `${source}-${target}`;
 
 const validEdge = (edges: TEdgesRecord) => (edge: TEdge) => {
-  const maybeEdge = Option.fromNullable(edges[getEdgeId(edge)]);
+  const maybeEdge = Option.fromNullable(edges[createEdgeId(edge)]);
 
   if (Option.isNone(maybeEdge)) return Option.some(edge);
 
@@ -46,22 +46,26 @@ const validEdge = (edges: TEdgesRecord) => (edge: TEdge) => {
 const createEdge = (edgeParams: Omit<TEdge, "id">): TEdge => {
   return {
     ...edgeParams,
-    id: getEdgeId(edgeParams),
+    id: createEdgeId(edgeParams),
   };
 };
 
-const getEdge = (edge: getEdgeParameters) => (tree: TTree) =>
+const getEdgeByPartialEdge = (edge: getEdgeParameters) => (tree: TTree) =>
   pipe(
-    tree.edges[getEdgeId({ source: edge.source, target: edge.target })],
-    fromNullable
+    tree.edges[createEdgeId({ source: edge.source, target: edge.target })],
+    Option.fromNullable
   );
+
+const getEdge = (edgeId: string) => (tree: TTree) =>
+  Option.fromNullable(tree.edges[edgeId]);
 
 export const Edge = {
   Type: EdgeType,
-  getEdgeId,
+  createEdgeId,
   validEdge,
   createEdge,
   getEdge,
+  getEdgeByPartialEdge,
 };
 
 export const EdgesRecord = T.record(T.string, EdgeType);

@@ -4,7 +4,8 @@ import { TTree } from "./Tree";
 import * as Record from "fp-ts/Record";
 import { pipe } from "fp-ts/function";
 import { nanoid } from "nanoid/non-secure";
-import { fromNullable } from "fp-ts/lib/Option";
+import * as Option from "fp-ts/lib/Option";
+import { Edge } from "./Edge";
 
 const PathType = T.intersection([
   T.type({
@@ -41,14 +42,30 @@ function createPath(path: Omit<TPath, "id">): TPath {
   };
 }
 
+const updatePath =
+  (path: TPath, nodeId: string) =>
+  (tree: TTree): TPath | undefined =>
+    pipe(
+      Option.fromNullable(tree.nodes[nodeId].data.inputs[path.id]),
+      Option.fold(
+        () => undefined,
+        (oldPath) => ({ ...oldPath, ...path })
+      )
+    );
+
 const getPath = (nodeId: string, inputId: string) => (tree: TTree) =>
-  pipe(tree.nodes[nodeId].data.inputs[inputId], fromNullable);
+  pipe(tree.nodes[nodeId].data.inputs[inputId], Option.fromNullable);
+
+const getPathByEdgeId = (edgeId: string) => (tree: TTree) => {
+  const maybeEdge = Edge.getEdge(edgeId)(tree);
+};
 
 export const Path = {
   Type: PathType,
   getPossiblePaths,
   createPath,
   getPath,
+  updatePath,
 };
 
 export type TPath = T.TypeOf<typeof PathType>;

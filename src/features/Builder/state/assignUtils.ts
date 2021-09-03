@@ -192,7 +192,7 @@ type AddPathEvent = {
 export const addPath = immerAssign<Context, AddPathEvent>(
   (context, { nodeId, inputId, targetId }) => {
     const edge = pipe(
-      Edge.getEdge({ source: nodeId, target: targetId })(context),
+      Edge.getEdgeByPartialEdge({ source: nodeId, target: targetId })(context),
       Option.fold(
         () =>
           Edge.createEdge({
@@ -230,11 +230,14 @@ export const updatePath = immerAssign<Context, UpdatePathEvent>(
     const oldTargetId = context.nodes[nodeId].data.inputs[inputId].target;
 
     if (oldTargetId) {
-      const oldEdgeId = Edge.getEdgeId({ source: nodeId, target: oldTargetId });
+      const oldEdgeId = Edge.createEdgeId({
+        source: nodeId,
+        target: oldTargetId,
+      });
       // Remove the input from the currently associated edge
       pipe(
         context,
-        Edge.getEdge({ source: nodeId, target: oldTargetId }),
+        Edge.getEdgeByPartialEdge({ source: nodeId, target: oldTargetId }),
         Option.map((edge) => ({
           ...edge,
           inputs: edge.inputs.filter(
@@ -256,7 +259,7 @@ export const updatePath = immerAssign<Context, UpdatePathEvent>(
     }
 
     const newEdge = pipe(
-      Edge.getEdge({ source: nodeId, target: targetId })(context),
+      Edge.getEdgeByPartialEdge({ source: nodeId, target: targetId })(context),
       Option.fold(
         () =>
           Edge.createEdge({
@@ -286,10 +289,12 @@ export const deletePath = immerAssign<Context, DeletePathEvent>(
     const input = context.nodes[nodeId].data.inputs[inputId];
 
     if (!input?.target) return;
-    const edgeId = Edge.getEdgeId({ source: nodeId, target: input.target });
+    const edgeId = Edge.createEdgeId({ source: nodeId, target: input.target });
 
     pipe(
-      Edge.getEdge({ source: nodeId, target: input.target })(context),
+      Edge.getEdgeByPartialEdge({ source: nodeId, target: input.target })(
+        context
+      ),
       Option.map((edge) => ({
         ...edge,
         inputs: edge.inputs.filter(
