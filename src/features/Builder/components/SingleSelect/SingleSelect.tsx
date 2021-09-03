@@ -15,15 +15,14 @@ import {
   TrashIcon,
 } from "@radix-ui/react-icons";
 import { useSelector } from "@xstate/react";
-import { TreeState } from "features/Builder/state/createTreeMachine";
 import { useEditor } from "features/Builder/state/useEditor";
 import { useTree } from "features/Builder/state/useTree";
-import { TNode } from "features/Builder/types";
 import * as React from "react";
-import { nanoid } from "nanoid/non-secure";
-import { UpdateInputEvent } from "features/Builder/state/stateUpdaterFunctions";
+import { createNewAssociatedNode } from "features/Builder/state/assignUtils";
+import { Path, TPath } from "features/Builder/types/Path";
+import { TNode } from "features/Builder/types/Node";
 
-const StyledAccordionRoot = styled(Accordion.Root, {
+const StyledAccordionRoot = styled(Box, {
   display: "grid",
   gap: "$2",
 });
@@ -56,29 +55,25 @@ export function SingleSelectInputs({ node }: SingleSelectProps) {
           onClick={() => service.send({ type: "addInput", nodeId: node.id })}
         />
       </Box>
-      <StyledAccordionRoot type="multiple">
-        {node.data.inputs.map((input) => (
+      <StyledAccordionRoot>
+        {Object.values(node.data.inputs).map((input) => (
           <SingleSelectInput
             key={input.id}
+            input={input}
             onChange={(event) =>
               service.send({
                 type: "updateInput",
                 nodeId: node.id,
                 inputId: input.id,
-                input: { value: event.target.value },
+                value: event.target.value,
               })
             }
             onDelete={() =>
-              service.send({
-                type: "deleteInput",
-                nodeId: node.id,
-                inputId: input.id,
-              })
+              service.send([
+                { type: "deletePath", nodeId: node.id, inputId: input.id },
+                { type: "deleteInput", nodeId: node.id, inputId: input.id },
+              ])
             }
-            value={input.value ?? ""}
-            position={input.position}
-            target={input.target}
-            id={input.id}
             nodeId={node.id}
           />
         ))}
@@ -87,9 +82,10 @@ export function SingleSelectInputs({ node }: SingleSelectProps) {
   );
 }
 
-const StyledAccordionContainer = styled(Accordion.Item, {
+const StyledAccordionContainer = styled(Box, {
   display: "grid",
   gridTemplateColumns: "max-content 1fr 50px",
+  gap: "$2",
 
   "&[data-state=open]": {
     gridTemplateRows: "1fr 1fr",
@@ -99,33 +95,28 @@ const StyledAccordionContainer = styled(Accordion.Item, {
   },
 });
 
-const StyledAccordionContent = styled(Accordion.Content, {
+const StyledAccordionContent = styled(Box, {
   gridColumn: "1 / -1",
   display: "flex",
   alignItems: "center",
 });
 
-type Input = { id: string; value?: string; position: number; target?: string };
-
-type SingleSelectInputProps = Input & {
+type SingleSelectInputProps = {
+  input: TPath;
   nodeId: string;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onDelete: (id: string) => void;
 };
 
 export function SingleSelectInput({
-  id,
+  input,
   nodeId,
-  target,
-  value,
-  position,
   onChange,
   onDelete,
 }: SingleSelectInputProps): JSX.Element {
   return (
-    <StyledAccordionContainer value={id}>
-      <Accordion.Header
-        as={Box}
+    <StyledAccordionContainer>
+      <Box
         css={{
           display: "grid",
           gridColumn: "1 / -1",
@@ -134,20 +125,17 @@ export function SingleSelectInput({
           $$border: "2px solid $colors$gray5",
         }}
       >
-        <Accordion.Trigger
+        <IconButton
           css={{
             border: "$$border",
             borderRadius: "$none",
             borderTopLeftRadius: "$$radius",
             borderBottomLeftRadius: "$$radius",
           }}
-          as={IconButton}
           label="Öffne die Verbindungen"
           variant="ghost"
           Icon={<ChevronDownIcon />}
-        >
-          {position}
-        </Accordion.Trigger>
+        />
         <Input
           css={{
             marginRight: "$2",
@@ -158,7 +146,7 @@ export function SingleSelectInput({
             borderTopRightRadius: "$$radius",
             borderBottomRightRadius: "$$radius",
           }}
-          value={value}
+          value={input.value ?? ""}
           onChange={onChange}
         />
         <IconButton
@@ -173,9 +161,9 @@ export function SingleSelectInput({
               }}
             />
           }
-          onClick={(_event) => onDelete(id)}
+          onClick={(_event) => onDelete(input.id)}
         />
-      </Accordion.Header>
+      </Box>
       <StyledAccordionContent>
         <Box css={{ width: "45px" }}>
           <CornerBottomLeftIcon
@@ -187,8 +175,8 @@ export function SingleSelectInput({
           />
         </Box>
         <Box css={{ gridColumn: 2, display: "flex", gap: "$1" }}>
-          <NodeLink target={target} />
-          <SelectNodeDropdown nodeId={nodeId} inputId={id} target={target} />
+          <NodeLink target={input.target} />
+          <SelectNodeDropdown nodeId={nodeId} input={input} />
         </Box>
       </StyledAccordionContent>
     </StyledAccordionContainer>
@@ -197,8 +185,7 @@ export function SingleSelectInput({
 
 type SelectNodeDropDownProps = {
   nodeId: string;
-  inputId: string;
-  target?: string;
+  input: TPath;
 };
 
 const StyledSelect = styled("select", {
@@ -207,84 +194,43 @@ const StyledSelect = styled("select", {
   padding: "$1 $2",
 });
 
-const getNodeOptions = (state: TreeState) =>
-  Object.entries(state.context.nodes).map(([key, value]) => ({
-    id: key,
-    name: value.data.label,
-  }));
-
-function SelectNodeDropdown({
-  nodeId,
-  inputId,
-  target,
-}: SelectNodeDropDownProps) {
+function SelectNodeDropdown({ nodeId, input }: SelectNodeDropDownProps) {
   const service = useTree();
-  const data = useSelector(service, getNodeOptions);
+  const tree = useSelector(service, (state) => state.context);
   const node = useSelector(service, (state) => state.context.nodes[nodeId]);
-
-  console.log(node);
-
-  function createUpdateInputEvent(target: string) {
-    return {
-      type: "updateInput",
-      nodeId,
-      inputId,
-      input: { target },
-    } as UpdateInputEvent;
-  }
-
-  function createNewAssociatedNode() {
-    const id = nanoid(5);
-    const position = { x: node.position.x, y: node.position.y + 80 };
-
-    service.send([
-      {
-        type: "addNode",
-        value: {
-          id,
-          position,
-          type: "default",
-          data: { inputs: [], content: [], label: "Neuer Knoten" },
-        },
-      },
-      {
-        type: "addEdge",
-        connection: {
-          source: nodeId,
-          sourceHandle: null,
-          target: id,
-          targetHandle: null,
-        },
-      },
-      createUpdateInputEvent(id),
-    ]);
-  }
+  const nodeOptions = Path.getPossiblePaths(nodeId)(tree);
 
   return (
-    <Box css={{ display: "flex" }}>
+    <Box css={{ display: "flex", gap: "$2" }}>
       {/* eslint-disable-next-line jsx-a11y/no-onchange */}
       <StyledSelect
-        value={target ?? ""}
+        value={input.target ?? ""}
         onChange={(event) =>
-          service.send(createUpdateInputEvent(event.target.value))
+          service.send({
+            type: "updatePath",
+            nodeId,
+            inputId: input.id,
+            targetId: event.target.value,
+          })
         }
       >
         <option value="">Wähle den Zielknoten</option>
-        {data.map((node) => (
-          <option disabled={node.id === nodeId} value={node.id} key={node.id}>
-            {node.name}
+        {Object.values(nodeOptions).map((option) => (
+          <option
+            disabled={option.target === nodeId}
+            value={option.target}
+            key={option.target}
+          >
+            {option.label}
           </option>
         ))}
       </StyledSelect>
-      {target ? (
+      {input.target ? (
         <IconButton
+          variant="tertiary"
+          css={{ colorScheme: "error" }}
           onClick={() =>
-            service.send({
-              type: "updateInput",
-              nodeId,
-              inputId,
-              input: { target: undefined },
-            })
+            service.send({ type: "deletePath", nodeId, inputId: input.id })
           }
           Icon={<Cross1Icon />}
           label="Entferne den Zielknoten"
@@ -292,9 +238,10 @@ function SelectNodeDropdown({
       ) : (
         <IconButton
           variant="tertiary"
+          css={{ colorScheme: "success" }}
           Icon={<PlusIcon />}
           label="Füge einen neuen Knoten hinzu und verknüpfe ihn mit diesem Input"
-          onClick={createNewAssociatedNode}
+          onClick={() => service.send(createNewAssociatedNode(node, input.id))}
         />
       )}
     </Box>

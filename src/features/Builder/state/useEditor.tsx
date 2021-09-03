@@ -1,6 +1,6 @@
 import * as React from "react";
 import { OnLoadParams } from "react-flow-renderer";
-import { TElementData } from "../types";
+import { TNodeData } from "../types/Node";
 
 type EditorState = {
   selectedNodeId: string;
@@ -22,7 +22,7 @@ export function EditorProvider({ children }: TreeProviderProps) {
   const [isNodeEditingSidebarOpen, setNodeEditingSidebarOpen] =
     React.useState(false);
   const [reactFlowInstance, setReactFlowInstance] = React.useState<
-    OnLoadParams<TElementData> | undefined
+    OnLoadParams<TNodeData> | undefined
   >();
 
   return (

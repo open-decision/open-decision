@@ -1,7 +1,7 @@
-import { TNodeConfig, TNodeTypes } from "features/Builder/types";
 import React from "react";
 import { StyleObject, styled } from "@open-legal-tech/design-system";
 import { ToolbarNode } from "./ToolbarNode";
+import { TNodeConfig, TNodeTypes } from "../types/Tree";
 
 const NodeList = styled("aside", { display: "grid", gap: "$4" });
 
