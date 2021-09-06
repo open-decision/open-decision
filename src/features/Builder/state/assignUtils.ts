@@ -3,9 +3,8 @@ import { equals, merge, pipe } from "remeda";
 import * as Option from "fp-ts/Option";
 import { nanoid } from "nanoid/non-secure";
 import { Context, sendToTreePayload } from "./treeMachine";
-import { TNode, TNodeData } from "../types/Node";
+import { Node, TNode, TNodeData, TPath } from "../types/Node";
 import { Edge, TEdge } from "../types/Edge";
-import { Path, TPath } from "../types/Path";
 
 export type CreateTreeEvent = { type: "createTree" };
 export type NoTreeEvent = { type: "noTree" };
@@ -89,7 +88,7 @@ const addEdge = (context: Context, { connection }: AddEdgeEvent) => {
         // lead to the target node. Since there cannot already be an input when an edge can be created between
         // two nodes we create an empty input on the source node with the an established relationship between the input
         // and the edge.
-        const newInput = Path.createPath({
+        const newInput = Node.createPath({
           target: newEdge.target,
         });
 
@@ -215,9 +214,9 @@ export const addPath = immerAssign<Context, AddPathEvent>(
 
     const newInput: TPath = pipe(
       context,
-      Path.getPath(nodeId, inputId),
+      Node.getPath(nodeId, inputId),
       Option.fold(
-        () => Path.createPath({ target: targetId }),
+        () => Node.createPath({ target: targetId }),
         (value) => ({ ...value, target: targetId })
       )
     );

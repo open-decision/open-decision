@@ -6,7 +6,6 @@ import {
   Input,
   styled,
 } from "@open-legal-tech/design-system";
-import * as Accordion from "@radix-ui/react-accordion";
 import {
   ChevronDownIcon,
   CornerBottomLeftIcon,
@@ -19,8 +18,7 @@ import { useEditor } from "features/Builder/state/useEditor";
 import { useTree } from "features/Builder/state/useTree";
 import * as React from "react";
 import { createNewAssociatedNode } from "features/Builder/state/assignUtils";
-import { Path, TPath } from "features/Builder/types/Path";
-import { TNode } from "features/Builder/types/Node";
+import { Node, TNode, TPath } from "features/Builder/types/Node";
 
 const StyledAccordionRoot = styled(Box, {
   display: "grid",
@@ -198,7 +196,7 @@ function SelectNodeDropdown({ nodeId, input }: SelectNodeDropDownProps) {
   const service = useTree();
   const tree = useSelector(service, (state) => state.context);
   const node = useSelector(service, (state) => state.context.nodes[nodeId]);
-  const nodeOptions = Path.getPossiblePaths(nodeId)(tree);
+  const nodeOptions = Node.getPossiblePaths(nodeId)(tree);
 
   return (
     <Box css={{ display: "flex", gap: "$2" }}>
