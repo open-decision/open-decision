@@ -121,6 +121,13 @@ export const updateEdge = immerAssign(
   (context: Context, { id, data }: UpdateEdgeEvent) => {
     const oldEdgeData = context.edges[id];
     context.edges[id] = merge(oldEdgeData, data);
+
+    if (data.target) {
+      oldEdgeData.inputs.forEach(({ inputId }) => {
+        context.nodes[oldEdgeData.source].data.inputs[inputId].target =
+          data.target;
+      });
+    }
   }
 );
 

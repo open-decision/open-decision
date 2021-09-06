@@ -3,7 +3,6 @@ import * as T from "io-ts";
 import { Required } from "utility-types";
 import { TTree } from "./Tree";
 import * as Option from "fp-ts/Option";
-import * as Either from "fp-ts/Either";
 
 const EdgeType = T.intersection([
   T.type({
@@ -72,20 +71,3 @@ export const EdgesRecord = T.record(T.string, EdgeType);
 
 export type TEdgesRecord = T.TypeOf<typeof EdgesRecord>;
 export type TEdge = T.TypeOf<typeof EdgeType>;
-
-// /**
-//  * A new edge should only be created if:
-//  * - A source and a target a specified
-//  * - The same edge does not already exist
-//  *
-//  * This function handles that logic
-//  */
-// export const tryAddEdge =
-//   (edges: TEdgesRecord) =>
-//   (edge: TEdge): Either<string, TEdge> => {
-//     if (connectionExists(edge, Object.values(edges))) {
-//       return left("Connection already exists");
-//     }
-
-//     return right(edge);
-//   };
