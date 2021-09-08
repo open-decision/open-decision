@@ -1,18 +1,23 @@
-import { theme } from "@open-legal-tech/design-system";
+import { Box, styled } from "@open-legal-tech/design-system";
 import React, { memo } from "react";
 import { Handle, NodeProps, Position } from "react-flow-renderer";
 import { TNodeData } from "../types/Node";
 
-const handleStyles = {
-  backgroundColor: theme.colors.gray11.value,
-};
+const Port = styled(Handle, {
+  backgroundColor: "$gray1 !important",
+  border: "1px solid $gray11 !important",
+  height: "10px !important",
+  width: "10px !important",
+});
 
-export const Node = memo(({ data }: NodeProps<TNodeData>) => {
+export const Node = memo(({ id, data }: NodeProps<TNodeData>) => {
   return (
     <>
-      <Handle type="target" position={Position.Top} style={handleStyles} />
-      {data.label}
-      <Handle type="source" position={Position.Bottom} style={handleStyles} />
+      <Port type="target" position={Position.Top} css={{ top: "-6px" }} />
+      <Box data-nodeid={id} css={{ padding: "$4" }}>
+        {data.label}
+      </Box>
+      <Port type="source" position={Position.Bottom} css={{ bottom: "-6px" }} />
     </>
   );
 });
