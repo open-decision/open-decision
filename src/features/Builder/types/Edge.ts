@@ -4,7 +4,7 @@ import { Required } from "utility-types";
 import { TTree } from "./Tree";
 import * as Option from "fp-ts/Option";
 
-const EdgeType = T.intersection([
+export const Type = T.intersection([
   T.type({
     id: T.string,
     source: T.string,
@@ -31,10 +31,10 @@ const EdgeType = T.intersection([
 
 type getEdgeParameters = Required<Partial<TEdge>, "source" | "target">;
 
-const createEdgeId = ({ source, target }: getEdgeParameters): string =>
+export const createEdgeId = ({ source, target }: getEdgeParameters): string =>
   `${source}-${target}`;
 
-const validEdge = (edges: TEdgesRecord) => (edge: TEdge) => {
+export const validEdge = (edges: TEdgesRecord) => (edge: TEdge) => {
   const maybeEdge = Option.fromNullable(edges[createEdgeId(edge)]);
 
   if (Option.isNone(maybeEdge)) return Option.some(edge);
@@ -42,32 +42,25 @@ const validEdge = (edges: TEdgesRecord) => (edge: TEdge) => {
   return Option.none;
 };
 
-const createEdge = (edgeParams: Omit<TEdge, "id">): TEdge => {
+export const createEdge = (edgeParams: Omit<TEdge, "id">): TEdge => {
   return {
     ...edgeParams,
+    type: "smoothstep",
     id: createEdgeId(edgeParams),
   };
 };
 
-const getEdgeByPartialEdge = (edge: getEdgeParameters) => (tree: TTree) =>
-  pipe(
-    tree.edges[createEdgeId({ source: edge.source, target: edge.target })],
-    Option.fromNullable
-  );
+export const getEdgeByPartialEdge =
+  (edge: getEdgeParameters) => (tree: TTree) =>
+    pipe(
+      tree.edges[createEdgeId({ source: edge.source, target: edge.target })],
+      Option.fromNullable
+    );
 
-const getEdge = (edgeId: string) => (tree: TTree) =>
+export const getEdge = (edgeId: string) => (tree: TTree) =>
   Option.fromNullable(tree.edges[edgeId]);
 
-export const Edge = {
-  Type: EdgeType,
-  createEdgeId,
-  validEdge,
-  createEdge,
-  getEdge,
-  getEdgeByPartialEdge,
-};
-
-export const EdgesRecord = T.record(T.string, EdgeType);
+export const EdgesRecord = T.record(T.string, Type);
 
 export type TEdgesRecord = T.TypeOf<typeof EdgesRecord>;
-export type TEdge = T.TypeOf<typeof EdgeType>;
+export type TEdge = T.TypeOf<typeof Type>;

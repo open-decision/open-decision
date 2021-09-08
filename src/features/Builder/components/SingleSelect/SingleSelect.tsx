@@ -18,14 +18,14 @@ import { useEditor } from "features/Builder/state/useEditor";
 import { useTree } from "features/Builder/state/useTree";
 import * as React from "react";
 import { createNewAssociatedNode } from "features/Builder/state/assignUtils";
-import { Node, TNode, TPath } from "features/Builder/types/Node";
+import * as Node from "features/Builder/types/Node";
 
 const StyledAccordionRoot = styled(Box, {
   display: "grid",
   gap: "$2",
 });
 
-type SingleSelectProps = { node: TNode };
+type SingleSelectProps = { node: Node.TNode };
 
 export function SingleSelectInputs({ node }: SingleSelectProps) {
   const service = useTree();
@@ -100,7 +100,7 @@ const StyledAccordionContent = styled(Box, {
 });
 
 type SingleSelectInputProps = {
-  input: TPath;
+  input: Node.TPath;
   nodeId: string;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onDelete: (id: string) => void;
@@ -183,7 +183,7 @@ export function SingleSelectInput({
 
 type SelectNodeDropDownProps = {
   nodeId: string;
-  input: TPath;
+  input: Node.TPath;
 };
 
 const StyledSelect = styled("select", {

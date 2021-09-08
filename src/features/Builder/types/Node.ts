@@ -6,12 +6,12 @@ import * as Record from "fp-ts/Record";
 import { not } from "fp-ts/Predicate";
 import * as Option from "fp-ts/lib/Option";
 
-const Coordinates = T.type({
+export const Coordinates = T.type({
   x: T.number,
   y: T.number,
 });
 
-const PathType = T.intersection([
+export const Path = T.intersection([
   T.type({
     id: T.string,
   }),
@@ -21,7 +21,7 @@ const PathType = T.intersection([
   }),
 ]);
 
-const getParentNode = (nodeId: string) => (tree: TTree) => {
+export const getParentNode = (nodeId: string) => (tree: TTree) => {
   let parentNode: TNode | undefined;
 
   for (const edgeId in tree.edges) {
@@ -34,7 +34,7 @@ const getParentNode = (nodeId: string) => (tree: TTree) => {
   return parentNode;
 };
 
-const getPossiblePaths = (nodeId: string) => (tree: TTree) => {
+export const getPossiblePaths = (nodeId: string) => (tree: TTree) => {
   const parentNode = getParentNode(nodeId)(tree);
 
   return pipe(
@@ -44,7 +44,7 @@ const getPossiblePaths = (nodeId: string) => (tree: TTree) => {
   );
 };
 
-function createPath(path: Omit<TPath, "id">): TPath {
+export function createPath(path: Omit<TPath, "id">): TPath {
   return {
     id: nanoid(5),
     value: "",
@@ -52,7 +52,7 @@ function createPath(path: Omit<TPath, "id">): TPath {
   };
 }
 
-const updatePath =
+export const updatePath =
   (path: TPath, nodeId: string) =>
   (tree: TTree): TPath | undefined =>
     pipe(
@@ -63,21 +63,21 @@ const updatePath =
       )
     );
 
-const getPath = (nodeId: string, inputId: string) => (tree: TTree) =>
+export const getPath = (nodeId: string, inputId: string) => (tree: TTree) =>
   pipe(tree.nodes[nodeId].data.inputs[inputId], Option.fromNullable);
 
-export const NodeData = T.type({
+export const Data = T.type({
   label: T.string,
-  inputs: T.record(T.string, PathType),
+  inputs: T.record(T.string, Path),
   content: T.unknown,
 });
 
-const NodeType = T.intersection([
+export const Type = T.intersection([
   T.type({
     id: T.string,
     position: Coordinates,
     type: T.string,
-    data: NodeData,
+    data: Data,
   }),
   T.partial({
     isHidden: T.boolean,
@@ -87,16 +87,16 @@ const NodeType = T.intersection([
   }),
 ]);
 
-const hasPath = (node: TNode, targetId: string) =>
+export const hasPath = (node: TNode, targetId: string) =>
   pipe(
     node.data.inputs,
     Record.filter((input) => input.target === targetId),
     not(Record.isEmpty)
   );
 
-const NodeRecord = T.record(T.string, NodeType);
+export const NodeRecord = T.record(T.string, Type);
 
-function createNewNode(node: Omit<TNode, "id" | "type">): TNode {
+export function createNewNode(node: Omit<TNode, "id" | "type">): TNode {
   return {
     id: nanoid(5),
     type: "default",
@@ -104,26 +104,11 @@ function createNewNode(node: Omit<TNode, "id" | "type">): TNode {
   };
 }
 
-const getNode = (nodeId: string) => (tree: TTree) => {
+export const getNode = (nodeId: string) => (tree: TTree) => {
   tree.nodes[nodeId];
 };
 
-export const Node = {
-  Type: NodeType,
-  Record: NodeRecord,
-  Coordinates,
-  Data: NodeData,
-  createNewNode,
-  getNode,
-  hasPath,
-  getPossiblePaths,
-  createPath,
-  getPath,
-  updatePath,
-  getParentNode,
-};
-
-export type TNode = T.TypeOf<typeof NodeType>;
-export type TNodeData = T.TypeOf<typeof NodeData>;
+export type TNode = T.TypeOf<typeof Type>;
+export type TNodeData = T.TypeOf<typeof Data>;
 export type TNodesRecord = T.TypeOf<typeof NodeRecord>;
-export type TPath = T.TypeOf<typeof PathType>;
+export type TPath = T.TypeOf<typeof Path>;

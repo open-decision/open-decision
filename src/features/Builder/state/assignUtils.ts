@@ -3,8 +3,8 @@ import { equals, merge, pipe } from "remeda";
 import * as Option from "fp-ts/Option";
 import { nanoid } from "nanoid/non-secure";
 import { Context, sendToTreePayload } from "./treeMachine";
-import { Node, TNode, TNodeData, TPath } from "../types/Node";
-import { Edge, TEdge } from "../types/Edge";
+import * as Node from "../types/Node";
+import * as Edge from "../types/Edge";
 
 export type CreateTreeEvent = { type: "createTree" };
 export type NoTreeEvent = { type: "noTree" };
@@ -25,7 +25,7 @@ export type Events =
   | UpdatePathEvent
   | DeletePathEvent;
 
-export type AddNodeEvent = { type: "addNode"; value: TNode };
+export type AddNodeEvent = { type: "addNode"; value: Node.TNode };
 export const addNode = immerAssign(
   (context: Context, { value }: AddNodeEvent) => {
     context.nodes[value.id] = value;
@@ -35,7 +35,7 @@ export const addNode = immerAssign(
 export type UpdateNodeEvent = {
   type: "updateNode";
   id: string;
-  node: Omit<Partial<TNode>, "data">;
+  node: Omit<Partial<Node.TNode>, "data">;
 };
 export const updateNode = immerAssign(
   (context: Context, { id, node }: UpdateNodeEvent) => {
@@ -51,7 +51,7 @@ export const updateNode = immerAssign(
 export type UpdateNodeDataEvent = {
   type: "updateNodeData";
   id: string;
-  data: Partial<TNodeData>;
+  data: Partial<Node.TNodeData>;
 };
 export const updateNodeData = immerAssign(
   (context: Context, { id, data }: UpdateNodeDataEvent) => {
@@ -107,14 +107,14 @@ const addEdge = (context: Context, { connection }: AddEdgeEvent) => {
 
 export type AddEdgeEvent = {
   type: "addEdge";
-  connection: Omit<TEdge, "id">;
+  connection: Omit<Edge.TEdge, "id">;
 };
 export const assignAddEdge = immerAssign(addEdge);
 
 export type UpdateEdgeEvent = {
   type: "updateEdge";
   id: string;
-  data: Partial<TEdge>;
+  data: Partial<Edge.TEdge>;
 };
 export const updateEdge = immerAssign(
   (context: Context, { id, data }: UpdateEdgeEvent) => {
@@ -212,7 +212,7 @@ export const addPath = immerAssign<Context, AddPathEvent>(
 
     context.edges[edge.id] = edge;
 
-    const newInput: TPath = pipe(
+    const newInput: Node.TPath = pipe(
       context,
       Node.getPath(nodeId, inputId),
       Option.fold(
@@ -323,7 +323,7 @@ export const deletePath = immerAssign<Context, DeletePathEvent>(
 );
 
 export function createNewAssociatedNode(
-  node: TNode,
+  node: Node.TNode,
   inputId: string
 ): sendToTreePayload {
   const id = nanoid(5);

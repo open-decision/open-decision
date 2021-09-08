@@ -3,14 +3,13 @@ import { useActor } from "@xstate/react";
 import { SidebarContent, SidebarRoot, SidebarToggle } from "components/Sidebar";
 import { nanoid } from "nanoid/non-secure";
 import React, { useRef } from "react";
-import { ReactFlowProvider } from "react-flow-renderer";
+import { ConnectionLineType, ReactFlowProvider } from "react-flow-renderer";
 import { NewNodeSidebar } from "./components/NewNodeSidebar";
 import { Node } from "./components/Node";
 import { NodeEditingSidebar } from "./components/NodeEditingSidebar";
 import { Stage } from "./Stage";
 import { EditorProvider, useEditor } from "./state/useEditor";
 import { TreeProvider, useTree } from "./state/useTree";
-import { Path } from "./types/Path";
 
 const Container = styled("div", {
   display: "grid",
@@ -46,6 +45,7 @@ const Editor: React.FC<NodeEditorProps> = () => {
   } = useEditor();
 
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
+  const sourceNodeId = useRef<string | undefined>(undefined);
 
   if (state.matches("pending")) {
     return <div>Loading</div>;
@@ -99,6 +99,27 @@ const Editor: React.FC<NodeEditorProps> = () => {
             },
           ])
         }
+        onConnectStart={(event) => {
+          if (event.target instanceof HTMLDivElement) {
+            sourceNodeId.current = event.target.dataset.nodeid;
+          }
+        }}
+        onConnectEnd={(event) => {
+          if (
+            event.target instanceof HTMLDivElement &&
+            event.target.dataset.nodeid &&
+            sourceNodeId.current
+          ) {
+            send({
+              type: "addEdge",
+              connection: {
+                source: sourceNodeId.current,
+                target: event.target.dataset.nodeid,
+                inputs: [],
+              },
+            });
+          }
+        }}
         onConnect={({ source, target }) =>
           source && target
             ? send({
@@ -110,6 +131,7 @@ const Editor: React.FC<NodeEditorProps> = () => {
         onDragOver={onDragOver}
         onDrop={onDrop}
         onLoad={setReactFlowInstance}
+        connectionLineType={ConnectionLineType.SmoothStep}
         onElementClick={(_event, node) => {
           setNodeEditingSidebarOpen(true);
           setSelectedNodeId(node.id);
@@ -120,6 +142,20 @@ const Editor: React.FC<NodeEditorProps> = () => {
             id: oldEdge.id,
             data: { target: newConnection.target ?? "" },
           });
+        }}
+        onEdgeUpdateEnd={(event, edge) => {
+          if (
+            event.target instanceof HTMLDivElement &&
+            event.target.dataset.nodeid
+          ) {
+            send({
+              type: "updateEdge",
+              id: edge.id,
+              data: {
+                target: event.target.dataset.nodeid,
+              },
+            });
+          }
         }}
         onNodeDragStop={(_event, node) =>
           send({ type: "updateNode", id: node.id, node })
