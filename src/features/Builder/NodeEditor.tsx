@@ -3,10 +3,11 @@ import { useActor } from "@xstate/react";
 import { SidebarContent, SidebarRoot, SidebarToggle } from "components/Sidebar";
 import { nanoid } from "nanoid/non-secure";
 import React, { useRef } from "react";
-import { ConnectionLineType, ReactFlowProvider } from "react-flow-renderer";
+import { ReactFlowProvider } from "react-flow-renderer";
 import { NewNodeSidebar } from "./components/NewNodeSidebar";
 import { Node } from "./components/Node";
 import { NodeEditingSidebar } from "./components/NodeEditingSidebar";
+import { createEdges } from "./edgeCreationEngine/edgeCreationEngine";
 import { Stage } from "./Stage";
 import { EditorProvider, useEditor } from "./state/useEditor";
 import { TreeProvider, useTree } from "./state/useTree";
@@ -74,13 +75,19 @@ const Editor: React.FC<NodeEditorProps> = () => {
           id: nanoid(5),
           type,
           position,
-          data: { label: `${type} node`, inputs: {}, content: [] },
+          data: { label: `${type} node`, relations: {}, content: [] },
         },
       });
     }
   };
 
-  const elements = [...Object.values(tree.nodes), ...Object.values(tree.edges)];
+  const elements = [
+    ...Object.values(tree.nodes).map((node) => ({
+      ...node,
+      style: { padding: 0, stroke: "transparent" },
+    })),
+    ...createEdges(tree.nodes),
+  ];
 
   return (
     <Container ref={reactFlowWrapper}>
@@ -91,10 +98,6 @@ const Editor: React.FC<NodeEditorProps> = () => {
           send([
             {
               type: "deleteNode",
-              ids: elementsToRemove.map((element) => element.id),
-            },
-            {
-              type: "deleteEdge",
               ids: elementsToRemove.map((element) => element.id),
             },
           ])
@@ -111,52 +114,39 @@ const Editor: React.FC<NodeEditorProps> = () => {
             sourceNodeId.current
           ) {
             send({
-              type: "addEdge",
-              connection: {
-                source: sourceNodeId.current,
-                target: event.target.dataset.nodeid,
-                inputs: [],
-              },
+              type: "addRelation",
+              nodeId: sourceNodeId.current,
+              value: { target: event.target.dataset.nodeid },
             });
           }
         }}
-        onConnect={({ source, target }) =>
-          source && target
-            ? send({
-                type: "addEdge",
-                connection: { source, target, inputs: [] },
-              })
-            : null
-        }
         onDragOver={onDragOver}
         onDrop={onDrop}
         onLoad={setReactFlowInstance}
-        connectionLineType={ConnectionLineType.SmoothStep}
         onElementClick={(_event, node) => {
           setNodeEditingSidebarOpen(true);
           setSelectedNodeId(node.id);
         }}
-        onEdgeUpdate={(oldEdge, newConnection) => {
-          return send({
-            type: "updateEdge",
-            id: oldEdge.id,
-            data: { target: newConnection.target ?? "" },
-          });
-        }}
-        onEdgeUpdateEnd={(event, edge) => {
-          if (
-            event.target instanceof HTMLDivElement &&
-            event.target.dataset.nodeid
-          ) {
-            send({
-              type: "updateEdge",
-              id: edge.id,
-              data: {
-                target: event.target.dataset.nodeid,
-              },
-            });
-          }
-        }}
+        // onEdgeUpdate={(oldEdge, newConnection) => {
+        //   return send({
+        //     type: "updatePath",
+        //     nodeId,
+        //   });
+        // }}
+        // onEdgeUpdateEnd={(event, edge) => {
+        //   if (
+        //     event.target instanceof HTMLDivElement &&
+        //     event.target.dataset.nodeid
+        //   ) {
+        //     send({
+        //       type: "updateEdge",
+        //       id: edge.id,
+        //       data: {
+        //         target: event.target.dataset.nodeid,
+        //       },
+        //     });
+        //   }
+        // }}
         onNodeDragStop={(_event, node) =>
           send({ type: "updateNode", id: node.id, node })
         }
@@ -190,7 +180,7 @@ const Editor: React.FC<NodeEditorProps> = () => {
       >
         <SidebarToggle position="right" />
         <SidebarContent>
-          <NodeEditingSidebar id={selectedNodeId} />
+          <NodeEditingSidebar nodeId={selectedNodeId} />
         </SidebarContent>
       </SidebarRoot>
     </Container>

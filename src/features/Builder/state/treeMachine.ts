@@ -1,20 +1,14 @@
 import localForage from "localforage";
 import { assign, createMachine, Interpreter } from "xstate";
 import {
-  addInput,
   addNode,
-  assignAddEdge,
-  deleteEdge,
-  deleteInput,
   deleteNode,
   Events,
-  updateEdge,
-  updateInput,
   updateNode,
   updateNodeData,
-  updatePath,
-  deletePath,
-  addPath,
+  addRelation,
+  updateRelation,
+  deleteRelation,
 } from "./assignUtils";
 import { fold } from "fp-ts/Either";
 import { pipe } from "fp-ts/lib/function";
@@ -89,41 +83,17 @@ export const treeMachine = createMachine<Context, Events, TreeState>(
             target: "sync",
             actions: deleteNode,
           },
-          addEdge: {
+          addRelation: {
             target: "sync",
-            actions: assignAddEdge,
+            actions: addRelation,
           },
-          updateEdge: {
+          updateRelation: {
             target: "sync",
-            actions: updateEdge,
+            actions: updateRelation,
           },
-          deleteEdge: {
+          deleteRelation: {
             target: "sync",
-            actions: deleteEdge,
-          },
-          addInput: {
-            target: "sync",
-            actions: addInput,
-          },
-          updateInput: {
-            target: "sync",
-            actions: updateInput,
-          },
-          deleteInput: {
-            target: "sync",
-            actions: deleteInput,
-          },
-          addPath: {
-            target: "sync",
-            actions: addPath,
-          },
-          updatePath: {
-            target: "sync",
-            actions: updatePath,
-          },
-          deletePath: {
-            target: "sync",
-            actions: deletePath,
+            actions: deleteRelation,
           },
         },
       },

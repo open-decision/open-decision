@@ -1,6 +1,5 @@
 import * as T from "io-ts";
 import { exampleNodeTypes, examplePortTypes } from "../testData/nodes";
-import { EdgesRecord } from "./Edge";
 import * as Node from "./Node";
 
 const PortConfig = T.type({
@@ -31,7 +30,6 @@ const TreeState = T.type({
   treeName: T.string,
   id: T.string,
   nodes: Node.NodeRecord,
-  edges: EdgesRecord,
 });
 const TreeType = T.intersection([
   T.type({
@@ -48,7 +46,6 @@ function createTree(): TTree {
       portTypes: examplePortTypes,
     },
     nodes: {},
-    edges: {},
     treeName: "Unbenannt",
   };
 }

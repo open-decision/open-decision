@@ -1,17 +1,17 @@
 import { pipe } from "fp-ts/function";
 import * as T from "io-ts";
 import { nanoid } from "nanoid/non-secure";
-import { TTree } from "./Tree";
 import * as Record from "fp-ts/Record";
 import { not } from "fp-ts/Predicate";
-import * as Option from "fp-ts/lib/Option";
+import * as Option from "fp-ts/Option";
+import * as Array from "fp-ts/Array";
 
 export const Coordinates = T.type({
   x: T.number,
   y: T.number,
 });
 
-export const Path = T.intersection([
+export const Relation = T.intersection([
   T.type({
     id: T.string,
   }),
@@ -21,30 +21,43 @@ export const Path = T.intersection([
   }),
 ]);
 
-export const getParentNode = (nodeId: string) => (tree: TTree) => {
-  let parentNode: TNode | undefined;
+export const getParentNodes = (nodeId: string) => (nodes: TNodesRecord) =>
+  pipe(
+    nodes,
+    Record.toArray,
+    Array.chain(([, node]) =>
+      pipe(
+        node.data.relations,
+        Record.toArray,
+        Array.filter(([, relation]) => relation.target === nodeId),
+        Array.map(() => node.id)
+      )
+    )
+  );
 
-  for (const edgeId in tree.edges) {
-    const edge = tree.edges[edgeId];
-    if (edge.target === nodeId) {
-      parentNode = tree.nodes[edge.source];
-    }
-  }
+export const getChildNodes = (nodeId: string) => (nodes: TNodesRecord) =>
+  pipe(nodes[nodeId], (node) =>
+    pipe(
+      node.data.relations,
+      Record.toArray,
+      Array.filter(([, relation]) => !!relation.target),
+      Array.map(([, relation]) => relation.target)
+    )
+  );
 
-  return parentNode;
-};
-
-export const getPossiblePaths = (nodeId: string) => (tree: TTree) => {
-  const parentNode = getParentNode(nodeId)(tree);
+export const getPossiblePaths = (nodeId: string) => (nodes: TNodesRecord) => {
+  const parentNodes = getParentNodes(nodeId)(nodes);
 
   return pipe(
-    tree.nodes,
-    Record.filter((node) => node.id !== nodeId && node.id !== parentNode?.id),
+    nodes,
+    Record.filter((node) => {
+      return node.id !== nodeId && !parentNodes.includes(node.id);
+    }),
     Record.map((node) => ({ target: node.id, label: node.data.label }))
   );
 };
 
-export function createPath(path: Omit<TPath, "id">): TPath {
+export function createPath(path: Omit<TRelation, "id">): TRelation {
   return {
     id: nanoid(5),
     value: "",
@@ -53,22 +66,23 @@ export function createPath(path: Omit<TPath, "id">): TPath {
 }
 
 export const updatePath =
-  (path: TPath, nodeId: string) =>
-  (tree: TTree): TPath | undefined =>
+  (path: TRelation, nodeId: string) =>
+  (nodes: TNodesRecord): TRelation | undefined =>
     pipe(
-      Option.fromNullable(tree.nodes[nodeId].data.inputs[path.id]),
+      Option.fromNullable(nodes[nodeId].data.relations[path.id]),
       Option.fold(
         () => undefined,
         (oldPath) => ({ ...oldPath, ...path })
       )
     );
 
-export const getPath = (nodeId: string, inputId: string) => (tree: TTree) =>
-  pipe(tree.nodes[nodeId].data.inputs[inputId], Option.fromNullable);
+export const getPath =
+  (nodeId: string, relationId: string) => (nodes: TNodesRecord) =>
+    pipe(nodes[nodeId].data.relations[relationId], Option.fromNullable);
 
 export const Data = T.type({
   label: T.string,
-  inputs: T.record(T.string, Path),
+  relations: T.record(T.string, Relation),
   content: T.unknown,
 });
 
@@ -89,8 +103,8 @@ export const Type = T.intersection([
 
 export const hasPath = (node: TNode, targetId: string) =>
   pipe(
-    node.data.inputs,
-    Record.filter((input) => input.target === targetId),
+    node.data.relations,
+    Record.filter((relation) => relation.target === targetId),
     not(Record.isEmpty)
   );
 
@@ -104,11 +118,11 @@ export function createNewNode(node: Omit<TNode, "id" | "type">): TNode {
   };
 }
 
-export const getNode = (nodeId: string) => (tree: TTree) => {
-  tree.nodes[nodeId];
+export const getNode = (nodeId: string) => (nodes: TNodesRecord) => {
+  nodes[nodeId];
 };
 
 export type TNode = T.TypeOf<typeof Type>;
 export type TNodeData = T.TypeOf<typeof Data>;
 export type TNodesRecord = T.TypeOf<typeof NodeRecord>;
-export type TPath = T.TypeOf<typeof Path>;
+export type TRelation = T.TypeOf<typeof Relation>;

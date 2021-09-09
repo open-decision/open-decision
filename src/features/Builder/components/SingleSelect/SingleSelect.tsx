@@ -50,27 +50,28 @@ export function SingleSelectInputs({ node }: SingleSelectProps) {
           css={{ colorScheme: "success" }}
           Icon={<PlusIcon style={{ width: "30px", height: "30px" }} />}
           label="Neue Antwortmöglichkeit hinzufügen"
-          onClick={() => service.send({ type: "addInput", nodeId: node.id })}
+          onClick={() => service.send({ type: "addRelation", nodeId: node.id })}
         />
       </Box>
       <StyledAccordionRoot>
-        {Object.values(node.data.inputs).map((input) => (
+        {Object.values(node.data.relations).map((relation) => (
           <SingleSelectInput
-            key={input.id}
-            input={input}
+            key={relation.id}
+            input={relation}
             onChange={(event) =>
               service.send({
-                type: "updateInput",
+                type: "updateRelation",
                 nodeId: node.id,
-                inputId: input.id,
-                value: event.target.value,
+                relationId: relation.id,
+                value: { target: event.target.value },
               })
             }
             onDelete={() =>
-              service.send([
-                { type: "deletePath", nodeId: node.id, inputId: input.id },
-                { type: "deleteInput", nodeId: node.id, inputId: input.id },
-              ])
+              service.send({
+                type: "deleteRelation",
+                nodeId: node.id,
+                relationIds: [relation.id],
+              })
             }
             nodeId={node.id}
           />
@@ -100,7 +101,7 @@ const StyledAccordionContent = styled(Box, {
 });
 
 type SingleSelectInputProps = {
-  input: Node.TPath;
+  input: Node.TRelation;
   nodeId: string;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onDelete: (id: string) => void;
@@ -183,7 +184,7 @@ export function SingleSelectInput({
 
 type SelectNodeDropDownProps = {
   nodeId: string;
-  input: Node.TPath;
+  input: Node.TRelation;
 };
 
 const StyledSelect = styled("select", {
@@ -194,9 +195,9 @@ const StyledSelect = styled("select", {
 
 function SelectNodeDropdown({ nodeId, input }: SelectNodeDropDownProps) {
   const service = useTree();
-  const tree = useSelector(service, (state) => state.context);
+  const nodes = useSelector(service, (state) => state.context.nodes);
   const node = useSelector(service, (state) => state.context.nodes[nodeId]);
-  const nodeOptions = Node.getPossiblePaths(nodeId)(tree);
+  const nodeOptions = Node.getPossiblePaths(nodeId)(nodes);
 
   return (
     <Box css={{ display: "flex", gap: "$2" }}>
@@ -205,10 +206,10 @@ function SelectNodeDropdown({ nodeId, input }: SelectNodeDropDownProps) {
         value={input.target ?? ""}
         onChange={(event) =>
           service.send({
-            type: "updatePath",
+            type: "updateRelation",
             nodeId,
-            inputId: input.id,
-            targetId: event.target.value,
+            relationId: input.id,
+            value: { target: event.target.value },
           })
         }
       >
@@ -228,7 +229,14 @@ function SelectNodeDropdown({ nodeId, input }: SelectNodeDropDownProps) {
           variant="tertiary"
           css={{ colorScheme: "error" }}
           onClick={() =>
-            service.send({ type: "deletePath", nodeId, inputId: input.id })
+            service.send({
+              type: "updateRelation",
+              nodeId,
+              relationId: input.id,
+              value: {
+                target: undefined,
+              },
+            })
           }
           Icon={<Cross1Icon />}
           label="Entferne den Zielknoten"
@@ -239,7 +247,7 @@ function SelectNodeDropdown({ nodeId, input }: SelectNodeDropDownProps) {
           css={{ colorScheme: "success" }}
           Icon={<PlusIcon />}
           label="Füge einen neuen Knoten hinzu und verknüpfe ihn mit diesem Input"
-          onClick={() => service.send(createNewAssociatedNode(node, input.id))}
+          onClick={() => service.send(createNewAssociatedNode(node))}
         />
       )}
     </Box>

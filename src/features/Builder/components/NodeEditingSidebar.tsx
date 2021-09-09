@@ -5,13 +5,13 @@ import { useTree } from "features/Builder/state/useTree";
 import * as React from "react";
 import { useNode } from "../state/useNode";
 
-type NodeEditingSidebarProps = { id: string };
+type NodeEditingSidebarProps = { nodeId: string };
 
 export function NodeEditingSidebar({
-  id,
+  nodeId,
 }: NodeEditingSidebarProps): JSX.Element {
   const service = useTree();
-  const node = useNode(id);
+  const node = useNode(nodeId);
 
   return node ? (
     <>
@@ -23,7 +23,7 @@ export function NodeEditingSidebar({
           onChange={(event) =>
             service.send({
               type: "updateNodeData",
-              id,
+              nodeId,
               data: { label: event.target.value },
             })
           }
