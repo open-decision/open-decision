@@ -4,22 +4,19 @@ import { IconButton } from "../../IconButton";
 import { keyframes, styled } from "../../stitches";
 import { Box } from "../../Box";
 
-type MenuTriggerProps = Omit<
-  React.ComponentProps<typeof Collapsible.Trigger>,
-  "children"
-> &
-  React.ComponentProps<typeof IconButton>;
+type MenuTriggerProps = React.ComponentProps<typeof IconButton>;
 
 const MenuTrigger = ({ Icon, ...props }: MenuTriggerProps) => {
   return (
-    <Collapsible.Trigger
-      as={IconButton}
-      variant="ghost"
-      css={{ colorScheme: "gray" }}
-      Icon={Icon}
-      {...props}
-    >
-      {props.children}
+    <Collapsible.Trigger asChild>
+      <IconButton
+        variant="ghost"
+        css={{ colorScheme: "gray" }}
+        Icon={Icon}
+        {...props}
+      >
+        {props.children}
+      </IconButton>
     </Collapsible.Trigger>
   );
 };

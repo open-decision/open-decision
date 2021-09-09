@@ -54,7 +54,7 @@ export type HeaderContentProps = React.ComponentProps<typeof Content>;
 export type HeaderLinkProps = React.ComponentProps<typeof Link>;
 export type HeaderListMenuProps = React.ComponentProps<typeof ListMenu>;
 export type HeaderFullScreenMenuProps = React.ComponentProps<
-  typeof FullscreenMenu
+  typeof FullscreenMenu["Container"]
 >;
 export const Header = {
   Container,
