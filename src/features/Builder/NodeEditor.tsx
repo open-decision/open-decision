@@ -1,16 +1,16 @@
 import { styled } from "@open-legal-tech/design-system";
 import { useActor } from "@xstate/react";
 import { SidebarContent, SidebarRoot, SidebarToggle } from "components/Sidebar";
-import { nanoid } from "nanoid/non-secure";
 import React, { useRef } from "react";
 import { ReactFlowProvider } from "react-flow-renderer";
-import { NewNodeSidebar } from "./components/NewNodeSidebar";
+import { NewNodeButton } from "./components/NewNodeButton";
 import { Node } from "./components/Node";
 import { NodeEditingSidebar } from "./components/NodeEditingSidebar";
 import { createEdges } from "./edgeCreationEngine/edgeCreationEngine";
 import { Stage } from "./Stage";
 import { EditorProvider, useEditor } from "./state/useEditor";
 import { TreeProvider, useTree } from "./state/useTree";
+import * as NodeType from "./types/Node";
 
 const Container = styled("div", {
   display: "grid",
@@ -18,6 +18,7 @@ const Container = styled("div", {
   flexGrow: 1,
   height: "100%",
   width: "100vw",
+  position: "relative",
 });
 
 type NodeEditorProps = {
@@ -71,12 +72,9 @@ const Editor: React.FC<NodeEditorProps> = () => {
 
       send({
         type: "addNode",
-        value: {
-          id: nanoid(5),
-          type,
+        value: NodeType.createNewNode({
           position,
-          data: { label: `${type} node`, relations: {}, content: [] },
-        },
+        }),
       });
     }
   };
@@ -155,18 +153,17 @@ const Editor: React.FC<NodeEditorProps> = () => {
           gridRow: "1",
         }}
       />
-      <SidebarRoot
+      <NewNodeButton
         css={{
-          gridColumn: "1 / 2",
-          gridRow: "1",
-          zIndex: 5,
+          position: "absolute",
+          top: "20px",
+          left: "20px",
+          colorScheme: "success",
+          borderRadius: "$full",
+          backgroundColor: "$colorScheme2",
+          zIndex: "$10",
         }}
-      >
-        <SidebarContent>
-          <NewNodeSidebar nodeTypes={tree.config.nodeTypes} />
-        </SidebarContent>
-        <SidebarToggle />
-      </SidebarRoot>
+      />
       <SidebarRoot
         css={{
           gridColumn: "3 / 4",

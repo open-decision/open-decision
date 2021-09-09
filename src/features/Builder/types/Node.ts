@@ -110,11 +110,19 @@ export const hasPath = (node: TNode, targetId: string) =>
 
 export const NodeRecord = T.record(T.string, Type);
 
-export function createNewNode(node: Omit<TNode, "id" | "type">): TNode {
+export function createNewNode(
+  node: Omit<TNode, "id" | "type" | "data"> & { data?: Partial<TNodeData> }
+): TNode {
   return {
     id: nanoid(5),
     type: "default",
     ...node,
+    data: {
+      relations: {},
+      content: [],
+      label: "Neuer Knoten",
+      ...node.data,
+    },
   };
 }
 
