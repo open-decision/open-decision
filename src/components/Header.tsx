@@ -1,12 +1,18 @@
 import React from "react";
-import { Logo, UserMenu } from "components";
-import { StyleObject, styled } from "@open-legal-tech/design-system";
+import { Logo } from "components";
+import {
+  StyleObject,
+  styled,
+  Box,
+  Input,
+  Text,
+} from "@open-legal-tech/design-system";
+import { ChevronDownIcon, RowsIcon } from "@radix-ui/react-icons";
 
 const Container = styled("div", {
-  backgroundColor: "$gray2",
+  backgroundColor: "$gray12",
   paddingInline: "$4",
   paddingBlock: "$2",
-  boxShadow: "$md",
 
   "@md": {
     paddingInline: "$8",
@@ -15,21 +21,37 @@ const Container = styled("div", {
 
 const Content = styled("header", {
   display: "flex",
-  justifyContent: "space-between",
   alignItems: "center",
+  justifyContent: "space-between",
+  height: "100%",
+  $color: "$colors$gray1",
 });
 
 type HeaderProps = {
   css?: StyleObject;
 };
 
-export const Header: React.FC<HeaderProps> = ({ children, css }) => {
+export const Header: React.FC<HeaderProps> = ({ css }) => {
   return (
     <Container css={css}>
-      <Content className="space-x-8">
-        <Logo />
-        {children}
-        <UserMenu imgSrc="https://images.unsplash.com/photo-1586297135537-94bc9ba060aa?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=256&q=80" />
+      <Content>
+        <Logo variant="dark" />
+        <Box css={{ display: "flex", alignItems: "center", gap: "$4" }}>
+          <Text as="h2" size="md">
+            Projektname:{" "}
+          </Text>
+          <Input
+            css={{
+              backgroundColor: "transparent",
+              padding: "$1 $2",
+              color: "white",
+            }}
+          />
+        </Box>
+        <Box css={{ color: "white", display: "flex", gap: "$2" }}>
+          <ChevronDownIcon />
+          <RowsIcon />
+        </Box>
       </Content>
     </Container>
   );

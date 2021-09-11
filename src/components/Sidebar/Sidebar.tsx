@@ -4,11 +4,15 @@ import {
   ChevronRightSolid,
 } from "@graywolfai/react-heroicons";
 import { useKeyPressEvent } from "react-use";
-import { keyframes, styled } from "@open-legal-tech/design-system";
+import {
+  IconButton,
+  keyframes,
+  styled,
+  StyleObject,
+} from "@open-legal-tech/design-system";
 import * as Collapsible from "@radix-ui/react-collapsible";
 
 const Sidebar = styled(Collapsible.Root, {
-  display: "flex",
   overflow: "hidden",
 });
 
@@ -22,13 +26,8 @@ const rotateRight = keyframes({
   to: { transform: "rotate(0deg)" },
 });
 
-const Toggle = styled(Collapsible.Trigger, {
-  margin: "$4",
-  width: "40px",
-  height: "40px",
-  padding: "$1",
-  borderRadius: "$md",
-  backgroundColor: "$gray3",
+const ToggleButton = styled(IconButton, {
+  colorScheme: "gray",
 
   '&[data-state="open"] > .icon': {
     animation: `${rotateLeft} 200ms ease-in forwards`,
@@ -56,21 +55,30 @@ export const SidebarRoot = ({
   );
 };
 
-type ToggleProps = React.ComponentProps<typeof Toggle> & {
+type ToggleProps = React.ComponentProps<typeof Collapsible.Trigger> & {
   position?: "left" | "right";
+  css?: StyleObject;
 };
 export function SidebarToggle({
   position = "left",
+  css,
   ...props
 }: ToggleProps): JSX.Element {
   return (
-    <Toggle {...props}>
-      {position === "left" ? (
-        <ChevronRightSolid className="icon" />
-      ) : (
-        <ChevronLeftSolid className="icon" />
-      )}
-    </Toggle>
+    <Collapsible.Trigger asChild {...props}>
+      <ToggleButton
+        variant="primary"
+        css={css}
+        label="Öffne die Sidebar"
+        Icon={
+          position === "left" ? (
+            <ChevronRightSolid className="icon" />
+          ) : (
+            <ChevronLeftSolid className="icon" />
+          )
+        }
+      />
+    </Collapsible.Trigger>
   );
 }
 

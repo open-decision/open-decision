@@ -1,21 +1,23 @@
-import { styled } from "@open-legal-tech/design-system";
+import {
+  Box,
+  Input,
+  styled,
+  StyleObject,
+} from "@open-legal-tech/design-system";
 import { useActor } from "@xstate/react";
 import { SidebarContent, SidebarRoot, SidebarToggle } from "components/Sidebar";
 import React, { useRef } from "react";
-import { ReactFlowProvider } from "react-flow-renderer";
 import { NewNodeButton } from "./components/NewNodeButton";
 import { Node } from "./components/Node";
 import { NodeEditingSidebar } from "./components/NodeEditingSidebar";
 import { createEdges } from "./edgeCreationEngine/edgeCreationEngine";
 import { Stage } from "./Stage";
-import { EditorProvider, useEditor } from "./state/useEditor";
-import { TreeProvider, useTree } from "./state/useTree";
+import { useEditor } from "./state/useEditor";
+import { useTree } from "./state/useTree";
 import * as NodeType from "./types/Node";
 
 const Container = styled("div", {
   display: "grid",
-  gridTemplateColumns: "max-content 1fr max-content",
-  flexGrow: 1,
   height: "100%",
   width: "100vw",
   position: "relative",
@@ -30,9 +32,10 @@ type NodeEditorProps = {
    * Panning can be disabled. False by default.
    */
   disablePan?: boolean;
+  css?: StyleObject;
 };
 
-const Editor: React.FC<NodeEditorProps> = () => {
+export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
   const service = useTree();
   const [state, send] = useActor(service);
   const tree = state.context;
@@ -88,110 +91,121 @@ const Editor: React.FC<NodeEditorProps> = () => {
   ];
 
   return (
-    <Container ref={reactFlowWrapper}>
-      <Stage
-        nodeTypes={{ default: Node }}
-        elements={elements}
-        onElementsRemove={(elementsToRemove) =>
-          send([
-            {
-              type: "deleteNode",
-              ids: elementsToRemove.map((element) => element.id),
-            },
-          ])
-        }
-        onConnectStart={(event) => {
-          if (event.target instanceof HTMLDivElement) {
-            sourceNodeId.current = event.target.dataset.nodeid;
+    <>
+      <Container ref={reactFlowWrapper} css={css}>
+        <Stage
+          nodeTypes={{ default: Node }}
+          elements={elements}
+          onElementsRemove={(elementsToRemove) =>
+            send([
+              {
+                type: "deleteNode",
+                ids: elementsToRemove.map((element) => element.id),
+              },
+            ])
           }
-        }}
-        onConnectEnd={(event) => {
-          if (
-            event.target instanceof HTMLDivElement &&
-            event.target.dataset.nodeid &&
-            sourceNodeId.current
-          ) {
-            send({
-              type: "addRelation",
-              nodeId: sourceNodeId.current,
-              value: { target: event.target.dataset.nodeid },
-            });
+          onConnectStart={(event) => {
+            if (event.target instanceof HTMLDivElement) {
+              sourceNodeId.current = event.target.dataset.nodeid;
+            }
+          }}
+          onConnectEnd={(event) => {
+            if (
+              event.target instanceof HTMLDivElement &&
+              event.target.dataset.nodeid &&
+              sourceNodeId.current
+            ) {
+              send({
+                type: "addRelation",
+                nodeId: sourceNodeId.current,
+                value: { target: event.target.dataset.nodeid },
+              });
+            }
+          }}
+          onDragOver={onDragOver}
+          onDrop={onDrop}
+          onLoad={setReactFlowInstance}
+          onElementClick={(_event, node) => {
+            setNodeEditingSidebarOpen(true);
+            setSelectedNodeId(node.id);
+          }}
+          // onEdgeUpdate={(oldEdge, newConnection) => {
+          //   return send({
+          //     type: "updatePath",
+          //     nodeId,
+          //   });
+          // }}
+          // onEdgeUpdateEnd={(event, edge) => {
+          //   if (
+          //     event.target instanceof HTMLDivElement &&
+          //     event.target.dataset.nodeid
+          //   ) {
+          //     send({
+          //       type: "updateEdge",
+          //       id: edge.id,
+          //       data: {
+          //         target: event.target.dataset.nodeid,
+          //       },
+          //     });
+          //   }
+          // }}
+          onNodeDragStop={(_event, node) =>
+            send({ type: "updateNode", id: node.id, node })
           }
-        }}
-        onDragOver={onDragOver}
-        onDrop={onDrop}
-        onLoad={setReactFlowInstance}
-        onElementClick={(_event, node) => {
-          setNodeEditingSidebarOpen(true);
-          setSelectedNodeId(node.id);
-        }}
-        // onEdgeUpdate={(oldEdge, newConnection) => {
-        //   return send({
-        //     type: "updatePath",
-        //     nodeId,
-        //   });
-        // }}
-        // onEdgeUpdateEnd={(event, edge) => {
-        //   if (
-        //     event.target instanceof HTMLDivElement &&
-        //     event.target.dataset.nodeid
-        //   ) {
-        //     send({
-        //       type: "updateEdge",
-        //       id: edge.id,
-        //       data: {
-        //         target: event.target.dataset.nodeid,
-        //       },
-        //     });
-        //   }
-        // }}
-        onNodeDragStop={(_event, node) =>
-          send({ type: "updateNode", id: node.id, node })
-        }
-        style={{
-          gridColumn: "1 / -1",
-          gridRow: "1",
-        }}
-      />
-      <NewNodeButton
-        css={{
-          position: "absolute",
-          top: "20px",
-          left: "20px",
-          colorScheme: "success",
-          borderRadius: "$full",
-          backgroundColor: "$colorScheme2",
-          zIndex: "$10",
-        }}
-      />
+          style={{
+            gridColumn: "1 / -1",
+            gridRow: "1",
+          }}
+        />
+        <NewNodeButton
+          css={{
+            position: "absolute",
+            top: "20px",
+            left: "20px",
+            colorScheme: "success",
+            borderRadius: "$full",
+            backgroundColor: "$colorScheme2",
+            zIndex: "$10",
+          }}
+        />
+      </Container>
       <SidebarRoot
         css={{
-          gridColumn: "3 / 4",
-          gridRow: "1",
           zIndex: 5,
+          display: "grid",
+          gridTemplateRows: "inherit",
+          gridRow: "1 / -1",
+          gridColumn: "2",
         }}
         open={isNodeEditingSidebarOpen}
         onOpenChange={(newOpenState = false) =>
           setNodeEditingSidebarOpen(newOpenState)
         }
       >
-        <SidebarToggle position="right" />
-        <SidebarContent>
+        <Box
+          css={{
+            backgroundColor: "$gray12",
+            gridRow: "1",
+            gap: "$4",
+            display: "flex",
+            alignItems: "center",
+            paddingInline: "$4",
+            borderLeft: "2px solid $gray8",
+          }}
+        >
+          <Input
+            placeholder="Search"
+            css={{ flex: "1", borderRadius: "$md" }}
+          />
+          <SidebarToggle
+            position="right"
+            css={{ width: "40px", height: "40px" }}
+          />
+        </Box>
+        <SidebarContent css={{ gridRow: "2" }}>
           <NodeEditingSidebar nodeId={selectedNodeId} />
         </SidebarContent>
       </SidebarRoot>
-    </Container>
+    </>
   );
 };
-
-export function NodeEditor() {
-  return (
-    <ReactFlowProvider>
-      <TreeProvider>
-        <EditorProvider>
-          <Editor />
-        </EditorProvider>
-      </TreeProvider>
-    </ReactFlowProvider>
-  );
-}

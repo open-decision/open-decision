@@ -9,7 +9,6 @@ const NotificationWrapper = styled("div", {
   zIndex: "9999",
   right: "25px",
   bottom: "25px",
-  display: "grid",
   gap: "$4",
   width: "clamp(250px, 20vw, 400px)",
 });
