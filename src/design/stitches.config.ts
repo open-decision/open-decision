@@ -5,3 +5,5 @@ export const defaultTheme = createTheme({
     heading: "$sans",
   },
 });
+
+defaultTheme.toString();
