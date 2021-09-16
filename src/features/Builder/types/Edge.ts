@@ -36,16 +36,6 @@ export const createEdge = (edgeParams: Omit<TEdge, "id">): TEdge => {
   };
 };
 
-// export const getEdgeByPartialEdge =
-//   (edge: getEdgeParameters) => (tree: TTree) =>
-//     pipe(
-//       tree.edges[createEdgeId({ source: edge.source, target: edge.target })],
-//       Option.fromNullable
-//     );
-
-// export const getEdge = (edgeId: string) => (tree: TTree) =>
-//   Option.fromNullable(tree.edges[edgeId]);
-
 export const EdgesRecord = T.record(T.string, Type);
 
 export type TEdgesRecord = T.TypeOf<typeof EdgesRecord>;

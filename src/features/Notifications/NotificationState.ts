@@ -1,6 +1,5 @@
 import create from "zustand";
 import produce from "immer";
-import { devtools } from "zustand/middleware";
 import { nanoid } from "nanoid/non-secure";
 
 export type notificationVariants = "success" | "danger" | "neutral" | "warning";
@@ -18,20 +17,18 @@ export type NotificationState = {
   removeNotification: (id: string) => void;
 };
 
-export const useNotificationStore = create<NotificationState>(
-  devtools((set) => ({
-    notifications: {},
-    addNotification: (notification) =>
-      set(
-        produce((state: NotificationState) => {
-          state.notifications[nanoid(5)] = notification;
-        })
-      ),
-    removeNotification: (id) =>
-      set(
-        produce((state: NotificationState) => {
-          delete state.notifications[id];
-        })
-      ),
-  }))
-);
+export const useNotificationStore = create<NotificationState>((set) => ({
+  notifications: {},
+  addNotification: (notification) =>
+    set(
+      produce((state: NotificationState) => {
+        state.notifications[nanoid(5)] = notification;
+      })
+    ),
+  removeNotification: (id) =>
+    set(
+      produce((state: NotificationState) => {
+        delete state.notifications[id];
+      })
+    ),
+}));

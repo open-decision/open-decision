@@ -94,6 +94,9 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
     <>
       <Container ref={reactFlowWrapper} css={css}>
         <Stage
+          onPaneClick={() => {
+            setNodeEditingSidebarOpen(false);
+          }}
           nodeTypes={{ default: Node }}
           elements={elements}
           onElementsRemove={(elementsToRemove) =>

@@ -12,7 +12,6 @@ type TreeProviderProps = Omit<
 >;
 export function TreeProvider({ children }: TreeProviderProps) {
   const service = useInterpret(treeMachine, {
-    devTools: true,
     actions: { createNewTree: assign(Tree.createTree) },
   });
 

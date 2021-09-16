@@ -63,6 +63,19 @@ export const deleteNode = immerAssign(
   (context: Context, { ids }: DeleteNodeEvent) => {
     ids.forEach((id) => {
       delete context.nodes[id];
+
+      // Remove the node from all the targets of other nodes
+      for (const key in context.nodes) {
+        const node = context.nodes[key];
+
+        for (const key in node.data.relations) {
+          const relation = node.data.relations[key];
+
+          if (relation.target === id) {
+            delete relation.target;
+          }
+        }
+      }
     });
   }
 );
