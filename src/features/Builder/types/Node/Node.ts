@@ -3,6 +3,7 @@ import * as T from "io-ts";
 import { nanoid } from "nanoid/non-secure";
 import * as Record from "fp-ts/Record";
 import { not } from "fp-ts/Predicate";
+import { Descendants } from "./NodeContent";
 
 export const Coordinates = T.type({
   x: T.number,
@@ -22,7 +23,7 @@ export const Relation = T.intersection([
 export const Data = T.type({
   label: T.string,
   relations: T.record(T.string, Relation),
-  content: T.unknown,
+  content: Descendants,
 });
 
 export const Type = T.intersection([

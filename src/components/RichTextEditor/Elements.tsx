@@ -32,7 +32,7 @@ export const renderElement = (props: RenderElementProps): JSX.Element => {
       return (
         <ul
           className={elementMarks(props.element)}
-          style={{ listStyle: "revert" }}
+          style={{ listStyle: "revert", marginLeft: "5px" }}
           {...props.attributes}
         >
           {props.children}
@@ -42,7 +42,7 @@ export const renderElement = (props: RenderElementProps): JSX.Element => {
       return (
         <ol
           className={elementMarks(props.element)}
-          style={{ listStyle: "revert" }}
+          style={{ listStyle: "revert", marginLeft: "5px" }}
           {...props.attributes}
         >
           {props.children}

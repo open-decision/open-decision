@@ -1,12 +1,12 @@
-import { Editor, Element, Text, Transforms } from "slate";
-import { ValuesType } from "utility-types";
 import {
-  TextBooleanMarks,
   Elements,
+  ElementUnionMarks,
   LinkElement,
   ListTags,
-  ElementUnionMarks,
-} from "./types";
+  TextBooleanMarks,
+} from "features/Builder/types/Node";
+import { Editor, Element, Text, Transforms } from "slate";
+import { ValuesType } from "utility-types";
 
 const LIST_TYPES = ["ol", "ul"];
 
@@ -124,7 +124,6 @@ export const toggleElementUnionMark =
     markValue: ValuesType<TMark>
   ): void => {
     const isActive = isElementUnionMarkActive(editor)(mark, markValue);
-    console.log(isActive);
 
     Transforms.setNodes(
       editor,

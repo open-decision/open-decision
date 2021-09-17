@@ -1,17 +1,17 @@
-import { Editor, Element, Path, Range, Transforms } from "slate";
-import { ReactEditor } from "slate-react";
-import { Overwrite } from "utility-types";
 import {
   CustomElement,
   CustomText,
-  GroupElement,
+  GroupElementType,
   LinkElement,
   TextElements,
-} from "./types";
+} from "features/Builder/types/Node";
+import { Editor, Element, Path, Range, Transforms } from "slate";
+import { ReactEditor } from "slate-react";
+import { Overwrite } from "utility-types";
 
 export const createGroupElement = (
   children: CustomElement[]
-): GroupElement => ({
+): GroupElementType => ({
   type: "group",
   children,
 });

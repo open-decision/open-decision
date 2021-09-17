@@ -32,7 +32,17 @@ export function NodeEditingSidebar({
       </Box>
       <Box as="section">
         <Heading>Inhalt</Heading>
-        <RichTextEditor />
+        <RichTextEditor
+          css={{ minHeight: "500px" }}
+          value={node.data.content}
+          setValue={(newValue) =>
+            service.send({
+              type: "updateNodeData",
+              nodeId,
+              data: { content: newValue },
+            })
+          }
+        />
       </Box>
       <Box as="section">
         <SingleSelectInputs node={node} />
