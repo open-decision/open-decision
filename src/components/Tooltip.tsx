@@ -28,7 +28,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
     defaultOpen={defaultOpen}
     onOpenChange={onOpenChange}
   >
-    <TooltipPrimitive.Trigger as={Slot}>{children}</TooltipPrimitive.Trigger>
+    <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
     <Content side="top" align="center" sideOffset={10} {...props}>
       {content}
     </Content>
