@@ -226,7 +226,7 @@ function SelectNodeDropdown({ nodeId, input }: SelectNodeDropDownProps) {
             value={option.target}
             key={option.target}
           >
-            {option.target}
+            {option.label}
           </option>
         ))}
       </StyledSelect>
