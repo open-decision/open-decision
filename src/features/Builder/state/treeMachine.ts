@@ -13,9 +13,9 @@ import {
 import { fold } from "fp-ts/Either";
 import { pipe } from "fp-ts/lib/function";
 import { Errors } from "io-ts";
-import { Tree, TTree } from "../types/Tree";
+import * as Tree from "../types/Tree";
 
-async function updateTreeInStorage(id: string, tree: TTree) {
+async function updateTreeInStorage(id: string, tree: Tree.TTree) {
   localForage.setItem(id, tree);
 }
 
@@ -24,7 +24,7 @@ async function getTreeFromStorage(id: string) {
     return Promise.reject(error);
   }
 
-  function onSuccess(value: TTree) {
+  function onSuccess(value: Tree.TTree) {
     return Promise.resolve(value);
   }
 
@@ -42,7 +42,7 @@ export type sendToTreePayload = Parameters<
   Interpreter<Context, any, Events, TreeState>["send"]
 >[0];
 
-export type Context = { id: string } & TTree;
+export type Context = { id: string } & Tree.TTree;
 
 export type TreeService = Interpreter<Context, any, Events, TreeState>;
 
@@ -117,7 +117,7 @@ export const treeMachine = createMachine<Context, Events, TreeState>(
   },
   {
     actions: {
-      createNewTree: assign(Tree.createTree),
+      createNewTree: assign(Tree.create),
     },
   }
 );

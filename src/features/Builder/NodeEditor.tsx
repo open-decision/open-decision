@@ -75,7 +75,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
 
       send({
         type: "addNode",
-        value: NodeType.createNewNode({
+        value: NodeType.create({
           position,
         }),
       });

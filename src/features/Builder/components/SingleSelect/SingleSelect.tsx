@@ -19,6 +19,9 @@ import { useTree } from "features/Builder/state/useTree";
 import * as React from "react";
 import { createNewAssociatedNode } from "features/Builder/state/assignUtils";
 import * as Node from "features/Builder/types/Node";
+import * as Tree from "features/Builder/types/Tree";
+import * as Record from "fp-ts/Record";
+import { pipe } from "fp-ts/lib/function";
 
 const StyledAccordionRoot = styled(Box, {
   display: "grid",
@@ -195,9 +198,12 @@ const StyledSelect = styled("select", {
 
 function SelectNodeDropdown({ nodeId, input }: SelectNodeDropDownProps) {
   const service = useTree();
-  const nodes = useSelector(service, (state) => state.context.nodes);
+  const tree = useSelector(service, (state) => state.context);
   const node = useSelector(service, (state) => state.context.nodes[nodeId]);
-  const nodeOptions = Node.getPossiblePaths(nodeId)(nodes);
+  const nodeOptions = pipe(
+    Tree.getConnectableNodes(node)(tree),
+    Record.map((node) => ({ target: node.id, label: node.data.label }))
+  );
 
   return (
     <Box css={{ display: "flex", gap: "$2" }}>
@@ -220,7 +226,7 @@ function SelectNodeDropdown({ nodeId, input }: SelectNodeDropDownProps) {
             value={option.target}
             key={option.target}
           >
-            {option.label}
+            {option.target}
           </option>
         ))}
       </StyledSelect>

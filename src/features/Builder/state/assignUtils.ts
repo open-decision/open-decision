@@ -3,6 +3,9 @@ import { nanoid } from "nanoid/non-secure";
 import { Context, sendToTreePayload } from "./treeMachine";
 import * as Node from "../types/Node";
 import { merge } from "remeda";
+import * as Tree from "../types/Tree";
+import produce from "immer";
+import { assign } from "xstate";
 
 export type CreateTreeEvent = { type: "createTree" };
 
@@ -86,11 +89,29 @@ export type AddRelationEvent = {
   value?: Omit<Partial<Node.TRelation>, "id">;
 };
 
-export const addRelation = immerAssign(
-  (context: Context, { nodeId, value }: AddRelationEvent) => {
+const produceRelation = (
+  context: Context,
+  { nodeId, value }: AddRelationEvent
+) =>
+  produce(context, (draftState) => {
     const id = nanoid(5);
+    draftState.nodes[nodeId].data.relations[id] = { id, ...value };
+  });
 
-    context.nodes[nodeId].data.relations[id] = { id, ...value };
+export const addRelation = assign(
+  (context: Context, event: AddRelationEvent) => {
+    const newContext = produceRelation(context, event);
+
+    if (event.value?.target) {
+      const circular = Tree.circularConnection(newContext)({
+        source: event.nodeId,
+        target: event.value.target,
+      });
+
+      if (circular) return context;
+    }
+
+    return newContext;
   }
 );
 

@@ -31,7 +31,7 @@ export const NewNodeButton = ({ css }: Props) => {
       onClick={() =>
         service.send({
           type: "addNode",
-          value: Node.createNewNode({
+          value: Node.create({
             position: center,
             data: {
               label: "New Node",
