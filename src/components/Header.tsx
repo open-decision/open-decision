@@ -7,7 +7,7 @@ import {
   Input,
   Text,
 } from "@open-legal-tech/design-system";
-import { ChevronDownIcon, RowsIcon } from "@radix-ui/react-icons";
+import { ChevronDown, Menu } from "react-feather";
 
 const Container = styled("div", {
   backgroundColor: "$gray12",
@@ -49,8 +49,8 @@ export const Header: React.FC<HeaderProps> = ({ css }) => {
           />
         </Box>
         <Box css={{ color: "white", display: "flex", gap: "$2" }}>
-          <ChevronDownIcon />
-          <RowsIcon />
+          <ChevronDown />
+          <Menu />
         </Box>
       </Content>
     </Container>

@@ -1,16 +1,5 @@
 import { Box, IconButton, styled } from "@open-legal-tech/design-system";
 import * as React from "react";
-import {
-  FontBoldIcon,
-  FontItalicIcon,
-  HeadingIcon,
-  Link2Icon,
-  ListBulletIcon,
-  TextAlignJustifyIcon,
-  TextAlignLeftIcon,
-  TextAlignRightIcon,
-  UnderlineIcon,
-} from "@radix-ui/react-icons";
 import * as Separator from "@radix-ui/react-separator";
 import { insertLink } from "./utils";
 import { useSlateStatic } from "slate-react";
@@ -19,6 +8,17 @@ import {
   toggleElement,
   toggleElementUnionMark,
 } from "./formatting";
+import {
+  AlignJustify,
+  AlignLeft,
+  AlignRight,
+  Bold,
+  Italic,
+  Link,
+  List,
+  Type,
+  Underline,
+} from "react-feather";
 
 const ToolbarIconButton = IconButton;
 ToolbarIconButton.defaultProps = { variant: "ghost" };
@@ -42,49 +42,49 @@ export function Toolbar(): JSX.Element {
         onClick={() =>
           insertLink(editor, prompt("url") ?? "www.open-decision.org")
         }
-        Icon={<Link2Icon />}
+        Icon={<Link />}
       />
       <StyledSeparator orientation="vertical" decorative />
       <ToolbarIconButton
         label="Konvertiere den ausgewählten Text in eine Überschrift"
         onClick={() => toggleEditorElement("h1")}
-        Icon={<HeadingIcon />}
+        Icon={<Type />}
       />
       <ToolbarIconButton
         label="Erstelle eine unnumerierte Liste"
         onClick={() => toggleEditorElement("ul")}
-        Icon={<ListBulletIcon />}
+        Icon={<List />}
       />
       <StyledSeparator orientation="vertical" decorative />
       <ToolbarIconButton
         label="Markiere den ausgewählten Text dick"
         onClick={() => toggleEditorMark("bold")}
-        Icon={<FontBoldIcon />}
+        Icon={<Bold />}
       />
       <ToolbarIconButton
         label="Markiere den ausgewählten Text kursiv"
         onClick={() => toggleEditorMark("italic")}
-        Icon={<FontItalicIcon />}
+        Icon={<Italic />}
       />
       <ToolbarIconButton
         label="Unterstreiche den ausgewählten Text"
         onClick={() => toggleEditorMark("underline")}
-        Icon={<UnderlineIcon />}
+        Icon={<Underline />}
       />
       <ToolbarIconButton
         label="Orientiere den ausgewählten Block links"
         onClick={() => toggleEditorElementUnionMark("justify", "left")}
-        Icon={<TextAlignLeftIcon />}
+        Icon={<AlignLeft />}
       />
       <ToolbarIconButton
         label="Orientiere den ausgewählten Block mittig"
         onClick={() => toggleEditorElementUnionMark("justify", "center")}
-        Icon={<TextAlignJustifyIcon />}
+        Icon={<AlignJustify />}
       />
       <ToolbarIconButton
         label="Orientiere den ausgewählten Block rechts"
         onClick={() => toggleEditorElementUnionMark("justify", "right")}
-        Icon={<TextAlignRightIcon />}
+        Icon={<AlignRight />}
       />
     </Box>
   );

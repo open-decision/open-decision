@@ -1,9 +1,9 @@
 import React from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Avatar from "@radix-ui/react-avatar";
-import { UserCircleOutline } from "@graywolfai/react-heroicons";
 import { styled } from "@open-legal-tech/design-system";
 import Link from "next/link";
+import { User } from "react-feather";
 
 const Trigger = styled(DropdownMenu.Trigger, {});
 const StyledAvatar = styled(Avatar.Root, {
@@ -40,7 +40,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ imgSrc }) => {
         <StyledAvatar>
           <Avatar.Image src={imgSrc} />
           <Avatar.Fallback>
-            <UserCircleOutline className="w-full" />
+            <User className="w-full" />
           </Avatar.Fallback>
         </StyledAvatar>
       </Trigger>

@@ -6,13 +6,6 @@ import {
   Input,
   styled,
 } from "@open-legal-tech/design-system";
-import {
-  ChevronDownIcon,
-  CornerBottomLeftIcon,
-  Cross1Icon,
-  PlusIcon,
-  TrashIcon,
-} from "@radix-ui/react-icons";
 import { useSelector } from "@xstate/react";
 import { useEditor } from "features/Builder/state/useEditor";
 import { useTree } from "features/Builder/state/useTree";
@@ -22,6 +15,7 @@ import * as Node from "features/Builder/types/Node";
 import * as Tree from "features/Builder/types/Tree";
 import * as Record from "fp-ts/Record";
 import { pipe } from "fp-ts/lib/function";
+import { ChevronDown, CornerDownRight, Plus, Trash, X } from "react-feather";
 
 const StyledAccordionRoot = styled(Box, {
   display: "grid",
@@ -51,7 +45,7 @@ export function SingleSelectInputs({ node }: SingleSelectProps) {
         <IconButton
           variant="tertiary"
           css={{ colorScheme: "success" }}
-          Icon={<PlusIcon style={{ width: "30px", height: "30px" }} />}
+          Icon={<Plus style={{ width: "30px", height: "30px" }} />}
           label="Neue Antwortmöglichkeit hinzufügen"
           onClick={() => service.send({ type: "addRelation", nodeId: node.id })}
         />
@@ -136,7 +130,7 @@ export function SingleSelectInput({
           }}
           label="Öffne die Verbindungen"
           variant="ghost"
-          Icon={<ChevronDownIcon />}
+          Icon={<ChevronDown />}
         />
         <Input
           css={{
@@ -156,7 +150,7 @@ export function SingleSelectInput({
           variant="tertiary"
           label="Entferne den Input"
           Icon={
-            <TrashIcon
+            <Trash
               style={{
                 width: "30px",
                 height: "30px",
@@ -168,7 +162,7 @@ export function SingleSelectInput({
       </Box>
       <StyledAccordionContent>
         <Box css={{ width: "45px" }}>
-          <CornerBottomLeftIcon
+          <CornerDownRight
             style={{
               width: "30px",
               height: "30px",
@@ -244,14 +238,14 @@ function SelectNodeDropdown({ nodeId, input }: SelectNodeDropDownProps) {
               },
             })
           }
-          Icon={<Cross1Icon />}
+          Icon={<X />}
           label="Entferne den Zielknoten"
         />
       ) : (
         <IconButton
           variant="tertiary"
           css={{ colorScheme: "success" }}
-          Icon={<PlusIcon />}
+          Icon={<Plus />}
           label="Füge einen neuen Knoten hinzu und verknüpfe ihn mit diesem Input"
           onClick={() => service.send(createNewAssociatedNode(node))}
         />

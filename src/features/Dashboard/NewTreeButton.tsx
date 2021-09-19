@@ -1,15 +1,9 @@
 import React from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Field } from "components";
-import {
-  styled,
-  Button,
-  Heading,
-  Box,
-  IconButton,
-} from "@open-legal-tech/design-system";
+import { styled, Button } from "@open-legal-tech/design-system";
 import { useTreeStore } from "./hooks/useTrees";
-import { Cross1Icon, PlusCircledIcon } from "@radix-ui/react-icons";
+import { PlusCircle } from "react-feather";
 
 const Overlay = styled(Dialog.Overlay, {
   backgroundColor: "rgba(0, 0, 0, .15)",
@@ -60,7 +54,7 @@ export const NewTreeButton: React.FC = () => {
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <DialogButton as={Button} variant="secondary" className="my-8" size="xl">
-        <PlusCircledIcon className="w-6 h-6 mr-2 inline" />
+        <PlusCircle className="w-6 h-6 mr-2 inline" />
         Neue Anwendung erstellen
       </DialogButton>
       <Overlay />

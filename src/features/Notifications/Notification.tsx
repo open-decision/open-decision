@@ -1,22 +1,16 @@
 import React, { useEffect } from "react";
 import { styled, IconButton } from "@open-legal-tech/design-system";
 import { notification, useNotificationStore } from "./NotificationState";
-import {
-  FireOutline,
-  HandOutline,
-  CheckOutline,
-  ExclamationOutline,
-  XOutline,
-} from "@graywolfai/react-heroicons";
 import * as Progress from "@radix-ui/react-progress";
 import { motion, useAnimation } from "framer-motion";
 import { useGesture } from "react-use-gesture";
+import { AlertTriangle, Bell, CheckCircle, Slash, X } from "react-feather";
 
 const icons = {
-  danger: FireOutline,
-  neutral: HandOutline,
-  success: CheckOutline,
-  warning: ExclamationOutline,
+  danger: Slash,
+  neutral: Bell,
+  success: CheckCircle,
+  warning: AlertTriangle,
 } as const;
 
 type NotificationProps = {
@@ -146,7 +140,7 @@ export const Notification: React.FC<NotificationProps> = ({
           <IconButton
             onClick={() => removeNotification(id)}
             label="Benachrichtigung schließen"
-            Icon={<XOutline style={{ width: "1.3em" }} />}
+            Icon={<X style={{ width: "1.3em" }} />}
           />
         </Header>
         <Content css={{ marginTop: "$2" }}>{notification.content}</Content>

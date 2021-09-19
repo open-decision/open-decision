@@ -1,7 +1,7 @@
 import { IconButton, Badge } from "@open-legal-tech/design-system";
 import React from "react";
+import { Plus } from "react-feather";
 import { ValidTreeNode } from "./types";
-import { PlusCircledIcon } from "@radix-ui/react-icons";
 
 type TreeTagsProps = { tree: ValidTreeNode };
 
@@ -19,7 +19,7 @@ export const TreeTags: React.FC<TreeTagsProps> = ({ tree }) => {
         rounded="full"
         size="sm"
         label="Tag hinzufügen"
-        Icon={<PlusCircledIcon className="w-6 h-6" />}
+        Icon={<Plus className="w-6 h-6" />}
       />
     </div>
   );

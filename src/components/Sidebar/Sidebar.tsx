@@ -1,8 +1,4 @@
 import React from "react";
-import {
-  ChevronLeftSolid,
-  ChevronRightSolid,
-} from "@graywolfai/react-heroicons";
 import { useKeyPressEvent } from "react-use";
 import {
   IconButton,
@@ -11,6 +7,7 @@ import {
   StyleObject,
 } from "@open-legal-tech/design-system";
 import * as Collapsible from "@radix-ui/react-collapsible";
+import { ChevronLeft, ChevronRight } from "react-feather";
 
 const Sidebar = styled(Collapsible.Root, {
   overflow: "hidden",
@@ -72,9 +69,9 @@ export function SidebarToggle({
         label="Öffne die Sidebar"
         Icon={
           position === "left" ? (
-            <ChevronRightSolid className="icon" />
+            <ChevronRight className="icon" />
           ) : (
-            <ChevronLeftSolid className="icon" />
+            <ChevronLeft className="icon" />
           )
         }
       />

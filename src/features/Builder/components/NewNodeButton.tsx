@@ -1,9 +1,9 @@
 import React from "react";
 import { IconButton, StyleObject } from "@open-legal-tech/design-system";
-import { PlusIcon } from "@radix-ui/react-icons";
 import { useTree } from "../state/useTree";
 import * as Node from "../types/Node";
 import { useStoreState } from "react-flow-renderer";
+import { Plus } from "react-feather";
 
 type Props = { css?: StyleObject };
 
@@ -40,7 +40,7 @@ export const NewNodeButton = ({ css }: Props) => {
         })
       }
       draggable
-      Icon={<PlusIcon style={{ width: "30px", height: "30px" }} />}
+      Icon={<Plus style={{ width: "30px", height: "30px" }} />}
     />
   );
 };

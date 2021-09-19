@@ -1,7 +1,6 @@
 import React from "react";
 import { parseISO, format } from "date-fns";
 import de from "date-fns/locale/de";
-import { ChevronDownSolid } from "@graywolfai/react-heroicons";
 import { fuzzySearch, Search, sortByKey } from "./Filter";
 import { motion } from "framer-motion";
 import { InlinedValidTreeNode, TreeState } from "./types";
@@ -18,7 +17,7 @@ import {
 import Link from "next/link";
 import { mapObjToArr } from "./utils";
 import { useTreeStore } from "./hooks/useTrees";
-import { TrashIcon } from "@radix-ui/react-icons";
+import { ChevronDown, Trash } from "react-feather";
 
 type TreeCard = { tree: InlinedValidTreeNode };
 
@@ -49,7 +48,7 @@ const TreeCard: React.FC<TreeCard> = ({ tree }) => {
             label="Baum löschen"
             onClick={() => deleteTree(tree.id)}
             css={{ colorScheme: "error" }}
-            Icon={<TrashIcon style={{ width: "20px", height: "20px" }} />}
+            Icon={<Trash style={{ width: "20px", height: "20px" }} />}
           />
           <Link href={`/builder/${tree.id}`}>
             <Button variant="secondary">Öffnen</Button>
@@ -101,7 +100,7 @@ const SortButton: React.FunctionComponent<SortButton> = ({
           sort.key === name ? (sort.descending ? "up" : "down") : "neutral"
         }
       >
-        <ChevronDownSolid className="w-6" />
+        <ChevronDown className="w-6" />
       </motion.span>
     </Button>
   );
