@@ -1,9 +1,9 @@
 import * as React from "react";
-import { ChevronRightIcon, ChevronLeftIcon } from "@radix-ui/react-icons";
 import { Box } from "../Box";
 import { IconButton } from "../IconButton";
 import { merge } from "remeda";
 import { styled } from "../stitches";
+import { ChevronLeft, ChevronRight } from "react-feather";
 
 const StyledOuterBox = styled(Box, {
   $$arrowWidth: "50px",
@@ -57,7 +57,7 @@ function Container({ children, css, contentAlign = true, ...props }: Props) {
       {...props}
     >
       <ArrowButton
-        Icon={<ChevronLeftIcon width={30} height={30} />}
+        Icon={<ChevronLeft width={30} height={30} />}
         label="scroll back"
         variant="ghost"
         css={{ order: 1, "@smallTablet": { order: "revert" } }}
@@ -85,7 +85,7 @@ function Container({ children, css, contentAlign = true, ...props }: Props) {
         {children}
       </Box>
       <ArrowButton
-        Icon={<ChevronRightIcon width={30} height={30} />}
+        Icon={<ChevronRight width={30} height={30} />}
         label="scroll forwards"
         variant="ghost"
         css={{ order: 2, "@smallTablet": { order: "revert" } }}

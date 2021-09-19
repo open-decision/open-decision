@@ -34,8 +34,8 @@
     "@radix-ui/colors": "^0.1.7",
     "@radix-ui/react-accessible-icon": "^0.1.0",
     "@radix-ui/react-collapsible": "^0.1.0",
-    "@radix-ui/react-icons": "^1.0.3",
     "@stitches/react": "^1.1.0",
+    "react-feather": "^2.0.9",
     "remeda": "^0.0.30"
   },
   "peerDependencies": {
