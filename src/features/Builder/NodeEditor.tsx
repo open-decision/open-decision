@@ -10,6 +10,7 @@ import React, { useRef } from "react";
 import { NewNodeButton } from "./components/NewNodeButton";
 import { Node } from "./components/Node";
 import { NodeEditingSidebar } from "./components/NodeEditingSidebar";
+import { NodeSearch } from "./components/NodeSearch/NodeSearch";
 import { createEdges } from "./edgeCreationEngine/edgeCreationEngine";
 import { Stage } from "./Stage";
 import { useEditor } from "./state/useEditor";
@@ -196,10 +197,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
             borderLeft: "2px solid $gray8",
           }}
         >
-          <Input
-            placeholder="Search"
-            css={{ flex: "1", borderRadius: "$md" }}
-          />
+          <NodeSearch />
           <SidebarToggle
             position="right"
             css={{ width: "40px", height: "40px" }}

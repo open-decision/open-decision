@@ -19,8 +19,6 @@ type TreeProviderProps = Omit<
 >;
 export function EditorProvider({ children }: TreeProviderProps) {
   const [selectedNodeId, setSelectedNodeId] = React.useState("");
-  const [isNodeEditingSidebarOpen, setNodeEditingSidebarOpen] =
-    React.useState(false);
   const [reactFlowInstance, setReactFlowInstance] = React.useState<
     OnLoadParams<TNodeData> | undefined
   >();
@@ -32,8 +30,8 @@ export function EditorProvider({ children }: TreeProviderProps) {
         setSelectedNodeId,
         reactFlowInstance,
         setReactFlowInstance,
-        isNodeEditingSidebarOpen,
-        setNodeEditingSidebarOpen,
+        isNodeEditingSidebarOpen: Boolean(selectedNodeId || undefined),
+        setNodeEditingSidebarOpen: () => setSelectedNodeId(""),
       }}
     >
       {children}
