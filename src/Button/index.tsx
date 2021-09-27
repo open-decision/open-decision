@@ -3,7 +3,7 @@ import { styled } from "../stitches";
 export type ButtonProps = React.ComponentProps<typeof Button>;
 export const Button = styled("button", {
   $$borderWidth: "2px",
-  $$paddingInline: "$space$4",
+  $$paddingInline: "$space$3",
   //Mini reset
   appearance: "none",
   colorScheme: "primary",
@@ -36,17 +36,17 @@ export const Button = styled("button", {
         fontSize: "$sm",
       },
       md: {
-        paddingBlock: "$2",
+        paddingBlock: "$1",
       },
       lg: {
         $$paddingInline: "$space$6",
         fontSize: "$lg",
-        paddingBlock: "$3",
+        paddingBlock: "$2",
       },
       xl: {
         $$paddingInline: "$space$8",
         fontSize: "$xl",
-        paddingBlock: "$4",
+        paddingBlock: "$3",
       },
     },
 

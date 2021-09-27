@@ -2,8 +2,8 @@ import * as React from "react";
 import { Meta, Story } from "@storybook/react";
 import { Header as SystemHeader, HeaderContainerProps } from "./index";
 import { Heading } from "../Heading";
-import { Cross1Icon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { styled } from "../stitches";
+import { Menu, X } from "react-feather";
 
 const MenuItems = () => (
   <>
@@ -41,13 +41,13 @@ export const Header: Story<HeaderContainerProps> = (props) => (
       MenuTrigger={
         <SystemHeader.FullscreenMenu.Trigger
           label="Menü öffnen"
-          Icon={<HamburgerMenuIcon />}
+          Icon={<Menu />}
         />
       }
       CloseTrigger={
         <SystemHeader.FullscreenMenu.Trigger
           label="Menü schließen"
-          Icon={<Cross1Icon />}
+          Icon={<X />}
         />
       }
     >

@@ -30,7 +30,6 @@
     "build": "rm -rf lib && rollup -c"
   },
   "dependencies": {
-    "@next/bundle-analyzer": "^11.1.2",
     "@radix-ui/colors": "^0.1.7",
     "@radix-ui/react-accessible-icon": "^0.1.0",
     "@radix-ui/react-collapsible": "^0.1.0",

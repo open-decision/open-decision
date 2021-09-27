@@ -50,29 +50,19 @@ export const designSystem = createStitches({
   media,
   utils: {
     colorScheme: (value: ColorKeys) => {
-      let colorScheme = value;
-
-      if (value === undefined) {
-        console.warn(
-          "The value passed to colorScheme should not be undefined. The default gray colorScheme is returned."
-        );
-
-        colorScheme = "gray";
-      }
-
       return {
-        "--colors-colorScheme1": `$colors$${colorScheme}1`,
-        "--colors-colorScheme2": `$colors$${colorScheme}2`,
-        "--colors-colorScheme3": `$colors$${colorScheme}3`,
-        "--colors-colorScheme4": `$colors$${colorScheme}4`,
-        "--colors-colorScheme5": `$colors$${colorScheme}5`,
-        "--colors-colorScheme6": `$colors$${colorScheme}6`,
-        "--colors-colorScheme7": `$colors$${colorScheme}7`,
-        "--colors-colorScheme8": `$colors$${colorScheme}8`,
-        "--colors-colorScheme9": `$colors$${colorScheme}9`,
-        "--colors-colorScheme10": `$colors$${colorScheme}10`,
-        "--colors-colorScheme11": `$colors$${colorScheme}11`,
-        "--colors-colorScheme12": `$colors$${colorScheme}12`,
+        "--colors-colorScheme1": `$colors$${value}1`,
+        "--colors-colorScheme2": `$colors$${value}2`,
+        "--colors-colorScheme3": `$colors$${value}3`,
+        "--colors-colorScheme4": `$colors$${value}4`,
+        "--colors-colorScheme5": `$colors$${value}5`,
+        "--colors-colorScheme6": `$colors$${value}6`,
+        "--colors-colorScheme7": `$colors$${value}7`,
+        "--colors-colorScheme8": `$colors$${value}8`,
+        "--colors-colorScheme9": `$colors$${value}9`,
+        "--colors-colorScheme10": `$colors$${value}10`,
+        "--colors-colorScheme11": `$colors$${value}11`,
+        "--colors-colorScheme12": `$colors$${value}12`,
       };
     },
   },

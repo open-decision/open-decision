@@ -3,8 +3,8 @@ import { Box } from "../Box";
 import { styled } from "../stitches";
 
 const Container = styled(Box, {
-  $$headerHeight: "calc(50px + $space$4)",
-  $$paddingInline: "$space$6",
+  $$headerHeight: "calc(50px + $space$2)",
+  $$paddingInline: "$space$3",
   paddingInline: "$$paddingInline",
   display: "flex",
   justifyContent: "center",
@@ -22,7 +22,7 @@ const Content = styled("header", {
   alignItems: "center",
   justifyContent: "space-between",
   flexGrow: 1,
-  gap: "$1 $4",
+  gap: "$1 $2",
   flexWrap: "wrap",
 });
 

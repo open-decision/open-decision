@@ -39,7 +39,7 @@ const StyledMenuContent = styled(Collapsible.Content, {
   position: "absolute",
   top: "$$headerHeight",
   left: 0,
-  gap: "$12",
+  gap: "$6",
   flexWrap: "wrap",
 
   "@animation": {
@@ -60,11 +60,11 @@ const MenuContent = ({ title, ...props }: MenuContentProps) => {
           boxSizing: "border-box",
           display: "flex",
           flexDirection: "column",
-          gap: "$6",
+          gap: "$3",
           width: "100vw",
           height: "calc(100vh - $$headerHeight)",
           overflow: "auto",
-          padding: "$8 $$paddingInline",
+          padding: "$4 $$paddingInline",
           backgroundColor: "var(--bgColor, $colors$gray2)",
         }}
       >
@@ -131,7 +131,7 @@ export const ListMenu = styled("nav", {
   display: "none",
 
   "@smallTablet": {
-    columnGap: "$10",
+    columnGap: "$5",
     display: "flex",
   },
 });
