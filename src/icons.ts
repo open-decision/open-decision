@@ -1,2 +1,2 @@
 export * from "react-feather";
-export * from "./icons";
+export * from "./icons/index";
