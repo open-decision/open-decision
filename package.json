@@ -7,13 +7,9 @@
       "import": "./lib/index.mjs",
       "require": "./lib/index.js"
     },
-    "./tokens": {
-      "import": "./lib/internal/tokens.mjs",
-      "require": "./lib/internal/tokens.js"
-    },
     "./icons": {
-      "import": "./lib/icons/index.mjs",
-      "require": "./lib/icons/index.js"
+      "import": "./lib/icons.mjs",
+      "require": "./lib/icons.js"
     }
   },
   "files": [
