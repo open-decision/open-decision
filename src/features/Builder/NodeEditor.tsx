@@ -1,9 +1,4 @@
-import {
-  Box,
-  Input,
-  styled,
-  StyleObject,
-} from "@open-legal-tech/design-system";
+import { Box, styled, StyleObject } from "@open-legal-tech/design-system";
 import { useActor } from "@xstate/react";
 import { SidebarContent, SidebarRoot, SidebarToggle } from "components/Sidebar";
 import React, { useRef } from "react";

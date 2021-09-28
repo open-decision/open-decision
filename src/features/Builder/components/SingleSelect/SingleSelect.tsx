@@ -60,7 +60,7 @@ export function SingleSelectInputs({ node }: SingleSelectProps) {
                 type: "updateRelation",
                 nodeId: node.id,
                 relationId: relation.id,
-                value: { target: event.target.value },
+                value: { value: event.target.value },
               })
             }
             onDelete={() =>

@@ -2,7 +2,6 @@ import { assign as immerAssign } from "@xstate/immer";
 import { nanoid } from "nanoid/non-secure";
 import { Context, sendToTreePayload } from "./treeMachine";
 import * as Node from "../types/Node";
-import { merge } from "remeda";
 import * as Tree from "../types/Tree";
 import produce from "immer";
 import { assign } from "xstate";
@@ -126,7 +125,10 @@ export const updateRelation = immerAssign(
   (context: Context, { nodeId, relationId, value }: UpdateRelationEvent) => {
     const oldValue = context.nodes[nodeId].data.relations[relationId];
 
-    context.nodes[nodeId].data.relations[relationId] = merge(oldValue, value);
+    context.nodes[nodeId].data.relations[relationId] = {
+      ...oldValue,
+      ...value,
+    };
   }
 );
 
