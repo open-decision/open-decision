@@ -14,7 +14,7 @@ export const Node = memo(({ id, data }: NodeProps<TNodeData>) => {
   return (
     <>
       <Port type="target" position={Position.Top} css={{ top: "-6px" }} />
-      <Box data-nodeid={id} css={{ padding: "$4" }}>
+      <Box data-nodeid={id} css={{ padding: "$4", minHeight: "50px" }}>
         {data.label}
       </Box>
       <Port type="source" position={Position.Bottom} css={{ bottom: "-6px" }} />
