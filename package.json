@@ -35,14 +35,15 @@
     "@radix-ui/react-accessible-icon": "^0.1.0",
     "@radix-ui/react-collapsible": "^0.1.0",
     "@stitches/react": "^1.1.0",
-    "react-feather": "^2.0.9",
     "remeda": "^0.0.30"
   },
   "peerDependencies": {
+    "react-feather": "^2.0.9",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   },
   "devDependencies": {
+    "react-feather": "^2.0.9",
     "@next/bundle-analyzer": "^11.1.2",
     "@rollup/plugin-commonjs": "^20.0.0",
     "@rollup/plugin-node-resolve": "^13.0.4",

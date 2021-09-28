@@ -27,22 +27,7 @@ const options = {
       entryFileNames: "[name].mjs",
     },
   ],
-  plugins: [
-    commonjs(),
-    typescript(),
-    resolve(),
-    peerDepsExternal(),
-    // copy({
-    //   targets: [
-    //     {
-    //       src: "src/*/package.json",
-    //       dest: "lib",
-    //       rename: (_name, _extension, fullPath) => fullPath.replace("src", ""),
-    //     },
-    //     { src: "package.json", dest: "lib" },
-    //   ],
-    // }),
-  ],
+  plugins: [commonjs(), typescript(), resolve(), peerDepsExternal()],
 };
 
 export default options;
