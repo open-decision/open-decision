@@ -7,9 +7,13 @@
       "import": "./lib/index.mjs",
       "require": "./lib/index.js"
     },
-    "./tokens": {
+    "./tokens/": {
       "import": "./lib/internal/tokens.mjs",
       "require": "./lib/internal/tokens.js"
+    },
+    "./icons/": {
+      "import": "./lib/icons/index.mjs",
+      "require": "./lib/icons/index.js"
     }
   },
   "files": [
@@ -25,6 +29,7 @@
     "build:esm": "cross-env BABEL_ENV=esmUnbundled babel -w src --extensions '.ts,.tsx' --out-dir 'dist/esm' --source-maps",
     "build:cjs": "cross-env BABEL_ENV=cjs babel -w src --extensions '.ts,.tsx' --out-dir 'dist/cjs' --source-maps",
     "build:types": "tsc -w --outDir ./dist/types",
+    "build:icons": "svgr ./src/assets/icons/svgs -d ./src/assets/icons/ --replace-attr-values '#2329D6=currentcolor' --typescript --no-dimensions --svg-props 'width=1.1em','height=1.1em' --ignore-existing",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "build": "rm -rf lib && rollup -c"
@@ -54,6 +59,7 @@
     "@storybook/addon-links": "^6.3.8",
     "@storybook/addon-storysource": "^6.3.8",
     "@storybook/react": "^6.3.8",
+    "@svgr/cli": "^5.5.0",
     "@types/react": "^17.0.20",
     "@types/react-dom": "^17.0.9",
     "@types/tailwindcss": "^2.2.1",
