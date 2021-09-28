@@ -7,6 +7,10 @@
       "import": "./lib/icons.mjs",
       "require": "./lib/icons.js"
     },
+    "./tokens": {
+      "import": "./lib/internal/tokens.mjs",
+      "require": "./lib/internal/tokens.js"
+    },
     ".": {
       "import": "./lib/index.mjs",
       "require": "./lib/index.js"
