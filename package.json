@@ -65,6 +65,7 @@
     "d3-shape": "^3.0.1",
     "dagre": "^0.8.5",
     "date-fns": "^2.23.0",
+    "downshift": "^6.1.7",
     "fp-ts": "^2.11.1",
     "framer-motion": "^4.1.17",
     "graphql": "^15.5.3",

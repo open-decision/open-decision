@@ -2,65 +2,75 @@ import { useSelector } from "@xstate/react";
 import { useTree } from "features/Builder/state/useTree";
 import * as React from "react";
 import { matchSorter } from "match-sorter";
-import { Box, Button, Input } from "@open-legal-tech/design-system";
+import { Box, Input } from "@open-legal-tech/design-system";
 import { useEditor } from "features/Builder/state/useEditor";
+import { useCombobox } from "downshift";
 
 export function NodeSearch() {
   const service = useTree();
   const nodes = useSelector(service, (state) => state.context.nodes);
-  const { setSelectedNodeId } = useEditor();
-  const searchableNodes = Object.values(nodes);
+  const { selectedNodeId, setSelectedNodeId } = useEditor();
+  const nodeArray = Object.values(nodes);
+  const items = nodeArray.map((node) => node.id);
+  const [inputItems, setInputItems] = React.useState(items);
 
-  const [searchTerm, setSearchTerm] = React.useState("");
-  const filteredResults = matchSorter(searchableNodes, searchTerm, {
-    keys: ["data.label"],
+  const {
+    isOpen,
+    getMenuProps,
+    getInputProps,
+    getComboboxProps,
+    highlightedIndex,
+    getItemProps,
+  } = useCombobox({
+    items: inputItems,
+    selectedItem: selectedNodeId ?? "",
+    itemToString: (item) => (item ? nodes[item].data.label : ""),
+    onSelectedItemChange: ({ selectedItem }) =>
+      selectedItem ? setSelectedNodeId(selectedItem) : {},
+    onInputValueChange: ({ inputValue }) => {
+      setInputItems(
+        matchSorter(nodeArray, inputValue ?? "", { keys: ["data.label"] }).map(
+          (node) => node.id
+        )
+      );
+    },
   });
 
-  const [status, setStatus] = React.useState<"idle" | "searching">("idle");
-
-  const showResults =
-    status === "searching" && Boolean(searchTerm) && filteredResults.length > 0;
-
   return (
-    <Box css={{ position: "relative", flex: "1" }}>
+    <Box css={{ position: "relative", flex: "1" }} {...getComboboxProps()}>
       <Input
-        value={searchTerm}
-        onChange={(event) => {
-          setSearchTerm(event.target.value);
-          setStatus("searching");
-        }}
-        placeholder="Search"
+        {...getInputProps()}
         css={{ borderRadius: "$md", width: "100%" }}
       />
-      {showResults && (
-        <Box
-          css={{
-            position: "absolute",
-            backgroundColor: "$gray2",
-            width: "100%",
-            marginTop: "$2",
-            borderRadius: "$md",
-            padding: "$2",
-            display: "grid",
-            gap: "$1",
-          }}
-        >
-          {filteredResults.map((node) => (
-            <Button
-              variant="tertiary"
-              key={node.id}
-              css={{ justifyContent: "start" }}
-              onClick={() => {
-                setSelectedNodeId(node.id);
-                setStatus("idle");
-                setSearchTerm(node.data.label);
+      <Box
+        {...getMenuProps()}
+        as="ul"
+        css={{
+          position: "absolute",
+          backgroundColor: "$gray2",
+          width: "100%",
+          marginTop: "$2",
+          borderRadius: "$md",
+          display: "grid",
+          gap: "$1",
+        }}
+      >
+        {isOpen &&
+          inputItems.map((item, index) => (
+            <Box
+              as="li"
+              css={{
+                backgroundColor:
+                  highlightedIndex === index ? "$primary3" : null,
+                padding: "$1 $2",
               }}
+              key={`${item}${index}`}
+              {...getItemProps({ item, index })}
             >
-              {node.data.label}
-            </Button>
+              {nodes[item].data.label}
+            </Box>
           ))}
-        </Box>
-      )}
+      </Box>
     </Box>
   );
 }
