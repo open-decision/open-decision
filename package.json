@@ -3,13 +3,13 @@
   "version": "0.8.0",
   "types": "./lib/index.d.ts",
   "exports": {
-    ".": {
-      "import": "./lib/index.mjs",
-      "require": "./lib/index.js"
-    },
     "./icons": {
       "import": "./lib/icons.mjs",
       "require": "./lib/icons.js"
+    },
+    ".": {
+      "import": "./lib/index.mjs",
+      "require": "./lib/index.js"
     }
   },
   "files": [
