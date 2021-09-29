@@ -2,19 +2,25 @@ import { styled } from "../stitches";
 
 export type ButtonProps = React.ComponentProps<typeof Button>;
 export const Button = styled("button", {
-  $$borderWidth: "2px",
+  $$borderWidth: "1px",
   $$paddingInline: "$space$3",
   //Mini reset
   appearance: "none",
   colorScheme: "primary",
+  fontFamily: "$text",
+  borderRadius: "$md",
 
   //The small animation pressing the Button down on click.
-  transition: "all",
+  transition: "transform background-color",
   transitionDuration: "0.1s",
 
   "&:active": {
     transform: "translateY(2px)",
     boxShadow: "$inner",
+  },
+
+  "&:disabled": {
+    opacity: 0.4,
   },
 
   fontWeight: "$semibold",
@@ -24,9 +30,6 @@ export const Button = styled("button", {
   fontSize: "$base",
   border: "$$borderWidth solid transparent",
   paddingInline: "$$paddingInline",
-
-  color: "$colorScheme11",
-  boxShadow: "$sm",
 
   variants: {
     size: {
@@ -52,27 +55,45 @@ export const Button = styled("button", {
 
     variant: {
       primary: {
-        backgroundColor: "$colorScheme3",
+        boxShadow: "$sm",
+        backgroundColor: "$colorScheme9",
+        color: "$colorScheme1",
 
-        "&:hover, &:focus": {
-          backgroundColor: "$colorScheme4",
+        "&:hover, &:focus-visible": {
+          backgroundColor: "$colorScheme10",
+        },
+
+        "&:active": {
+          backgroundColor: "$colorScheme11",
+        },
+
+        "&:disabled": {
+          opacity: 0.2,
         },
       },
       secondary: {
-        backgroundColor: "transparent",
-        borderColor: "$colorScheme7",
+        backgroundColor: "$colorScheme3",
+        color: "$colorScheme11",
 
-        "&:hover, &:focus": {
-          backgroundColor: "$colorScheme2",
+        "&:hover, &:focus-visible": {
+          backgroundColor: "$colorScheme5",
+        },
+
+        "&:active": {
+          backgroundColor: "$colorScheme7",
         },
       },
       tertiary: {
-        backgroundColor: "unset",
-        boxShadow: "unset",
-        borderColor: "transparent",
+        backgroundColor: "$colorScheme1",
+        color: "$colorScheme11",
+        borderColor: "currentcolor",
 
-        "&:hover, &:focus": {
-          backgroundColor: "$colorScheme4",
+        "&:hover, &:focus-visible": {
+          backgroundColor: "$colorScheme3",
+        },
+
+        "&:active": {
+          backgroundColor: "$colorScheme5",
         },
       },
       ghost: {
@@ -87,15 +108,6 @@ export const Button = styled("button", {
       },
     },
 
-    rounded: {
-      none: { borderRadius: "$none" },
-      sm: { borderRadius: "$sm" },
-      base: { borderRadius: "$base" },
-      md: { borderRadius: "$md" },
-      lg: { borderRadius: "$lg" },
-      full: { borderRadius: "$full" },
-    },
-
     alignContent: {
       true: {
         transform: "translateX(calc(($$borderWidth + $$paddingInline) * -1))",
@@ -106,6 +118,5 @@ export const Button = styled("button", {
   defaultVariants: {
     variant: "primary",
     size: "md",
-    rounded: "base",
   },
 });

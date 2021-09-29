@@ -1,40 +1,30 @@
 import * as React from "react";
-import { merge } from "remeda";
 import { styled } from "../stitches";
 
 export const StyledBadge = styled("span", {
-  borderRadius: "$md",
+  colorScheme: "primary",
+  borderRadius: "$full",
   fontWeight: "$semibold",
   fontSize: "$sm",
   paddingBlock: "$1",
+  fontFamily: "$text",
+  paddingInline: "$3",
+  border: "1px solid transparent",
 
   variants: {
-    size: {
-      default: {
-        paddingInline: "$3",
-      },
-      large: {
-        paddingInline: "$4",
-      },
+    level: {
+      primary: { backgroundColor: "$colorScheme9", color: "$colorScheme1" },
+      secondary: { color: "$colorScheme11", borderColor: "currentcolor" },
     },
   },
 
   defaultVariants: {
-    size: "default",
+    level: "primary",
   },
 });
 
 export type BadgeProps = React.ComponentProps<typeof StyledBadge>;
 
 export const Badge = React.forwardRef<HTMLButtonElement, BadgeProps>(
-  ({ css, ...props }, ref) => (
-    <StyledBadge
-      ref={ref}
-      css={merge(
-        { color: `$primary9`, backgroundColor: `$primary3` },
-        css ?? {}
-      )}
-      {...props}
-    />
-  )
+  ({ ...props }, ref) => <StyledBadge ref={ref} {...props} />
 );

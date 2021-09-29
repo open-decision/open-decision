@@ -8,13 +8,11 @@ export default {
   title: "Components/Badge",
 } as Meta;
 
-const BadgeGrid: Story<BadgeProps> = (props) => <Badge {...props} />;
+const BadgeGrid: Story<BadgeProps> = (props) => <Badge {...props}>Badge</Badge>;
 
-export const Default = BadgeGrid.bind({});
-Default.args = { children: "Badge" };
+export const Primary = BadgeGrid.bind({});
 
-export const Large = BadgeGrid.bind({});
-Large.args = {
-  size: "large",
-  children: "Badge",
+export const Secondary = BadgeGrid.bind({});
+Secondary.args = {
+  level: "secondary",
 };
