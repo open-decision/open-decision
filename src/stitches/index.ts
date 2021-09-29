@@ -43,7 +43,7 @@ export const designSystem = createStitches({
         "-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif;",
       serif:
         "Iowan Old Style, Apple Garamond, Baskerville, Times New Roman, Droid Serif, Times, Source Serif Pro, serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol",
-      heading: "$serif",
+      heading: "$sans",
       text: "$sans",
     },
   },

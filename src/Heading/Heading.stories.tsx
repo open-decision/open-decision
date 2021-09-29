@@ -13,13 +13,10 @@ export default {
 
 export const List: Story<HeadingProps> = (props) => (
   <Box css={{ display: "grid", gap: "$12" }}>
-    <Heading {...props} size="xl">
+    <Heading {...props} size="lg">
       Almost before we knew it, we had left the ground.
     </Heading>
     <Heading {...props}>
-      Almost before we knew it, we had left the ground.
-    </Heading>
-    <Heading {...props} size="md">
       Almost before we knew it, we had left the ground.
     </Heading>
     <Heading {...props} size="sm">
@@ -35,13 +32,10 @@ const Template: Story<HeadingProps> = (props) => (
   <Heading {...props}>Heading</Heading>
 );
 
-export const ExtraLarge = Template.bind({});
-ExtraLarge.args = { size: "xl" };
-
 export const Large = Template.bind({});
+Large.args = { size: "lg" };
 
 export const Medium = Template.bind({});
-Medium.args = { size: "md" };
 
 export const Small = Template.bind({});
 Small.args = { size: "sm" };

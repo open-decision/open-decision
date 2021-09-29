@@ -2,36 +2,21 @@ import { styled } from "../stitches";
 import { Text } from "../Text";
 
 const responsiveFontSize = {
+  fontWeight: "$semibold",
+
   variants: {
     size: {
-      xl: {
-        fontSize: "$4xl",
-        "@smallTablet": { fontSize: "$6xl" },
-        "@desktop": { fontSize: "$7xl" },
-      },
       lg: {
-        fontSize: "$3xl",
-
-        "@smallTablet": { fontSize: "$5xl" },
+        fontSize: "$xl",
       },
       md: {
-        fontSize: "$2xl",
-
-        "@smallTablet": { fontSize: "$3xl" },
+        fontSize: "$lg",
       },
       sm: {
-        fontWeight: "$medium",
-        fontSize: "$2xl",
-
-        "@smallTablet": { fontSize: "$3xl" },
+        fontSize: "$md",
       },
       xs: {
-        fontWeight: "$medium",
-        fontSize: "$xl",
-
-        "@smallTablet": {
-          fontSize: "$2xl",
-        },
+        fontSize: "$sm",
       },
     },
   },
@@ -58,7 +43,6 @@ export const Heading = styled("h2", {
   fontFamily: "$heading",
   color: "var(--color, $gray12)",
   margin: "unset",
-  fontWeight: "$semibold",
   letterSpacing: "$-1",
   lineHeight: "$tight",
   ...responsiveFontSize,

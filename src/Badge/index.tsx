@@ -5,7 +5,7 @@ export const StyledBadge = styled("span", {
   colorScheme: "primary",
   borderRadius: "$full",
   fontWeight: "$semibold",
-  fontSize: "$sm",
+  fontSize: "$xs",
   paddingBlock: "$1",
   fontFamily: "$text",
   paddingInline: "$3",

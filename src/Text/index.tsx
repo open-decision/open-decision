@@ -6,37 +6,25 @@ export const Text = styled("p", {
   lineHeight: "$normal",
   color: "var(--color, $gray12)",
   margin: "unset",
+  letterSpacing: 0,
 
   variants: {
     size: {
-      xl: {
-        fontSize: "$xl",
-
-        "@smallTablet": {
-          fontSize: "$2xl",
-        },
-      },
-      lg: {
-        fontSize: "$lg",
-
-        "@smallTablet": {
-          fontSize: "$xl",
-        },
-      },
+      lg: { fontSize: "$lg", lineHeight: "1.3em" },
       md: { fontSize: "$base" },
-      sm: {
+      sm: { fontSize: "$xs", lineHeight: "1.125em" },
+    },
+    type: {
+      overline: {
         fontSize: "$sm",
-
-        "@smallTablet": {
-          fontSize: "$base",
-        },
+        letterSpacing: "0.01em",
+        fontWeight: "$medium",
       },
-      xs: {
+      caption: {
         fontSize: "$xs",
-
-        "@smallTablet": {
-          fontSize: "$sm",
-        },
+        lineHeight: 1.3,
+        letterSpacing: "0.005em",
+        fontWeight: "$regular",
       },
     },
   },
