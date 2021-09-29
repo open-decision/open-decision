@@ -8,8 +8,8 @@ export * from "./Gallery";
 export * from "./Header";
 export * from "./Heading";
 export * from "./IconButton";
-export * from "./Input";
 export * from "./Text";
+export * from "./Form";
 
 // Styling solutions
 export * from "./stitches";
