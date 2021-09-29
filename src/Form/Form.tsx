@@ -42,7 +42,7 @@ export type FormProps<TValues extends FormStateValuesList> = Omit<
   React.ComponentProps<typeof StyledForm>,
   "onSubmit" | "onChange"
 > & {
-  onSubmit: (data: FormState<TValues>) => void;
+  onSubmit?: (data: FormState<TValues>) => void;
   onChange?: (data: FormState<TValues>) => void;
   initialValues: TValues;
   visible?: Partial<Record<keyof TValues, boolean>>;
@@ -55,14 +55,17 @@ type Status =
   | "validated"
   | "submitted";
 
-export function Form<TValues extends FormStateValuesList>({
-  children,
-  initialValues,
-  onSubmit,
-  onChange,
-  visible,
-  ...props
-}: FormProps<TValues>) {
+function FormComponent<TValues extends FormStateValuesList>(
+  {
+    children,
+    initialValues,
+    onSubmit,
+    onChange,
+    visible,
+    ...props
+  }: FormProps<TValues>,
+  ref: React.ForwardedRef<HTMLFormElement>
+) {
   const [data, setData] = React.useState(
     createInitialFormState(initialValues, visible)
   );
@@ -94,7 +97,7 @@ export function Form<TValues extends FormStateValuesList>({
 
   React.useEffect(() => {
     if (status === "validated") {
-      onSubmit(data);
+      onSubmit?.(data);
       setStatus("submitted");
     }
   }, [status]);
@@ -139,9 +142,12 @@ export function Form<TValues extends FormStateValuesList>({
         onChange={() => onChange?.(data)}
         {...props}
         noValidate
+        ref={ref}
       >
         {children}
       </StyledForm>
     </FormProvider>
   );
 }
+
+export const Form = React.forwardRef(FormComponent);
