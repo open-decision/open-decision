@@ -7,21 +7,26 @@ import { VariantProps } from "../stitches";
 const StyledButton = styled(Button, {
   display: "flex",
   gap: "$2",
-
-  $$paddingInline: "$space$2",
   padding: "$$paddingInline",
 
   variants: {
     size: {
       sm: {
-        $$paddingInline: "$space$1",
+        $$paddingInline: "0",
+        paddingBlock: "$$paddingInline",
         fontSize: "$sm",
       },
+      md: {
+        $$paddingInline: "$space$1",
+        paddingBlock: "$$paddingInline",
+      },
       lg: {
-        $$paddingInline: "$space$3",
+        $$paddingInline: "$space$2",
+        paddingBlock: "$$paddingInline",
       },
       xl: {
-        $$paddingInline: "$space$5",
+        $$paddingInline: "$space$4",
+        paddingBlock: "$$paddingInline",
 
         "& > svg": {
           width: "20px",
@@ -29,6 +34,15 @@ const StyledButton = styled(Button, {
         },
       },
     },
+    round: {
+      true: {
+        borderRadius: "$full",
+      },
+    },
+  },
+
+  defaultVariants: {
+    size: "md",
   },
 });
 

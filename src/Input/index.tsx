@@ -3,17 +3,27 @@ export * from "./InputWithButton";
 
 export const Input = styled("input", {
   colorScheme: "primary",
-  padding: "$2 $3",
-  backgroundColor: "$gray2",
-  boxShadow: "$inner",
-  color: "$gray12",
-  border: "2px solid $colors$gray5",
+  padding: "$1",
+  color: "$gray11",
+  border: "1px solid $colors$gray5",
   outline: "none",
+  borderRadius: "$md",
 
-  "&:focus": {
-    backgroundColor: "$gray3",
+  "&:focus-visible": {
     borderColor: "$colorScheme3",
-    boxShadow: "inset 0 0 0 2px $colors$colorScheme9",
+    boxShadow: "inset 0 0 0 1px $colors$colorScheme9",
+  },
+
+  "&:disabled": {
+    opacity: 0.3,
+  },
+
+  "&[data-state='valid']": {
+    borderColor: "$success10",
+  },
+
+  "&[data-state='invalid']": {
+    borderColor: "$error10",
   },
 });
 

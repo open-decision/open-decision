@@ -3,28 +3,25 @@ import * as React from "react";
 import { Meta, Story } from "@storybook/react";
 
 import { IconButton, IconButtonProps } from "./index";
-import { Play } from "react-feather";
+import { Users } from "react-feather";
+import { Box } from "../Box";
 export default {
   component: IconButton,
   title: "Components/IconButton",
 } as Meta;
 
-const IconButtonGrid: Story<IconButtonProps> = (props) => (
-  <IconButton {...props} />
-);
-
-export const Grid = IconButtonGrid.bind({});
-Grid.args = { Icon: <Play /> };
-
 const SingleIconButtonTemplate: Story<IconButtonProps> = (props) => (
-  <IconButton {...props} />
+  <Box css={{ display: "grid", gap: "$2", width: "max-content" }}>
+    <IconButton {...props} />
+    <IconButton round {...props} />
+  </Box>
 );
 
 export const Primary = SingleIconButtonTemplate.bind({});
-Primary.args = { Icon: <Play /> };
+Primary.args = { Icon: <Users /> };
 
 export const Secondary = SingleIconButtonTemplate.bind({});
-Secondary.args = { variant: "secondary", Icon: <Play /> };
+Secondary.args = { variant: "secondary", Icon: <Users /> };
 
 export const Tertiary = SingleIconButtonTemplate.bind({});
-Tertiary.args = { variant: "tertiary", Icon: <Play /> };
+Tertiary.args = { variant: "tertiary", Icon: <Users /> };

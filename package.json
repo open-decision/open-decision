@@ -37,7 +37,9 @@
   "dependencies": {
     "@radix-ui/colors": "^0.1.7",
     "@radix-ui/react-accessible-icon": "^0.1.0",
+    "@radix-ui/react-checkbox": "^0.1.0",
     "@radix-ui/react-collapsible": "^0.1.0",
+    "@radix-ui/react-radio-group": "^0.1.0",
     "@stitches/react": "^1.1.0",
     "remeda": "^0.0.30"
   },
