@@ -52,7 +52,11 @@ export function Combobox<
 
   return (
     <Box css={{ position: "relative" }} {...getComboboxProps()}>
-      <Input {...getInputProps()} name={name} css={{ borderRadius: "$md" }} />
+      <Input
+        {...getInputProps()}
+        name={name}
+        css={{ borderRadius: "$md", width: "100%" }}
+      />
       <Box
         {...getMenuProps()}
         as="ul"
