@@ -20,7 +20,7 @@ export const Input: Story<Props> = (props) => {
 
   const [selectedItemId, setSelectedItemId] = React.useState<
     typeof items[number]["id"]
-  >("123");
+  >("");
 
   return (
     <Form

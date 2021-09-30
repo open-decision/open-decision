@@ -13,6 +13,11 @@ type Props<
   selectedItemId: TItems[number]["id"];
 } & Omit<UseComboboxProps<TItems[number]>, "selectedItem" | "items">;
 
+const fallbackSelectedItem = {
+  id: "",
+  label: "",
+};
+
 export function Combobox<
   TItems extends readonly { readonly id: string; readonly label: string }[]
 >({ name, items, selectedItemId, ...props }: Props<TItems>) {
@@ -25,10 +30,8 @@ export function Combobox<
     getItemProps,
   } = useCombobox({
     items: items as Mutable<TItems>,
-    selectedItem: items.find((item) => item.id === selectedItemId) ?? {
-      id: "",
-      label: "",
-    },
+    selectedItem:
+      items.find((item) => item.id === selectedItemId) ?? fallbackSelectedItem,
     itemToString: (item) => item?.label ?? "",
     ...props,
   });
