@@ -41,7 +41,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       value,
       ...props
     },
-    ref
+    forwardedRef
   ) => {
     const {
       value: formValue,
@@ -97,7 +97,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <StyledInput
-        ref={ref}
+        ref={forwardedRef}
         value={value ?? formValue}
         onChange={(event) => {
           onChange ? onChange?.(event) : setValue(event.target.value ?? "");
