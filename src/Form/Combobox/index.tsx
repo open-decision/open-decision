@@ -25,7 +25,10 @@ export function Combobox<
     getItemProps,
   } = useCombobox({
     items: items as Mutable<TItems>,
-    selectedItem: items.find((item) => item.id === selectedItemId),
+    selectedItem: items.find((item) => item.id === selectedItemId) ?? {
+      id: "",
+      label: "",
+    },
     itemToString: (item) => item?.label ?? "",
     ...props,
   });
