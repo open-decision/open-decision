@@ -11,18 +11,33 @@ export default {
 
 type Props = VariantProps<typeof Combobox>;
 
-export const Input: Story<Props> = (props) => (
-  <Form
-    initialValues={{
-      test: "",
-    }}
-    onSubmit={({ values }) => alert(values)}
-    css={{ display: "grid", gap: "$2", width: "max-content" }}
-  >
-    <Combobox
-      name="test"
-      items={["test", "another one", "a third thingy"]}
-      selectedItem="test"
-    />
-  </Form>
-);
+export const Input: Story<Props> = (props) => {
+  const items = [
+    { id: "123", label: "test" },
+    { id: "1234", label: "another one" },
+    { id: "12345", label: "a third thingy" },
+  ] as const;
+
+  const [selectedItemId, setSelectedItemId] = React.useState<
+    typeof items[number]["id"]
+  >("123");
+
+  return (
+    <Form
+      initialValues={{
+        test: "",
+      }}
+      onSubmit={({ values }) => alert(values)}
+      css={{ display: "grid", gap: "$2", width: "max-content" }}
+    >
+      <Combobox
+        name="test"
+        items={items}
+        selectedItemId={selectedItemId}
+        onSelectedItemChange={({ selectedItem }) =>
+          setSelectedItemId(selectedItem.id)
+        }
+      />
+    </Form>
+  );
+};

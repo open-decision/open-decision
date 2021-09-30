@@ -2,14 +2,20 @@ import * as React from "react";
 import { useCombobox, UseComboboxProps } from "downshift";
 import { Input } from "../Input/Input";
 import { Box } from "../../Box";
+import { Mutable } from "utility-types";
+import { Text } from "../../Text";
 
-type Props<TItem> = {
+type Props<
+  TItems extends readonly { readonly id: string; readonly label: string }[]
+> = {
   name: string;
-  items: TItem[];
-  selectedItem: string;
-} & UseComboboxProps<TItem>;
+  items: TItems;
+  selectedItemId: TItems[number]["id"];
+} & Omit<UseComboboxProps<TItems[number]>, "selectedItem" | "items">;
 
-export function Combobox<TItem>({ name, items, ...props }: Props<TItem>) {
+export function Combobox<
+  TItems extends readonly { readonly id: string; readonly label: string }[]
+>({ name, items, selectedItemId, ...props }: Props<TItems>) {
   const {
     isOpen,
     getMenuProps,
@@ -17,7 +23,12 @@ export function Combobox<TItem>({ name, items, ...props }: Props<TItem>) {
     getComboboxProps,
     highlightedIndex,
     getItemProps,
-  } = useCombobox({ items, ...props });
+  } = useCombobox({
+    items: items as Mutable<TItems>,
+    selectedItem: items.find((item) => item.id === selectedItemId),
+    itemToString: (item) => item?.label ?? "",
+    ...props,
+  });
 
   return (
     <Box css={{ position: "relative" }} {...getComboboxProps()}>
@@ -35,22 +46,23 @@ export function Combobox<TItem>({ name, items, ...props }: Props<TItem>) {
           borderRadius: "$md",
           display: "grid",
           gap: "$1",
+          overflow: "hidden",
         }}
       >
         {isOpen &&
           items.map((item, index) => (
-            <Box
+            <Text
               as="li"
               css={{
                 backgroundColor:
                   highlightedIndex === index ? "$primary3" : null,
                 padding: "$1 $2",
               }}
-              key={`${item}${index}`}
+              key={`${item.id}${index}`}
               {...getItemProps({ item, index })}
             >
-              {item}
-            </Box>
+              {item.label}
+            </Text>
           ))}
       </Box>
     </Box>
