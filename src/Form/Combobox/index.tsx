@@ -4,6 +4,7 @@ import { Input } from "../Input/Input";
 import { Box } from "../../Box";
 import { Mutable } from "utility-types";
 import { Text } from "../../Text";
+import { matchSorter } from "match-sorter";
 
 type Props<
   TItems extends readonly { readonly id: string; readonly label: string }[]
@@ -11,7 +12,10 @@ type Props<
   name: string;
   items: TItems;
   selectedItemId?: TItems[number]["id"];
-} & Omit<UseComboboxProps<TItems[number]>, "selectedItem" | "items">;
+} & Omit<
+  UseComboboxProps<TItems[number]>,
+  "selectedItem" | "items" | "onInputValueChange"
+>;
 
 const fallbackSelectedItem = {
   id: "",
@@ -21,6 +25,8 @@ const fallbackSelectedItem = {
 export function Combobox<
   TItems extends readonly { readonly id: string; readonly label: string }[]
 >({ name, items, selectedItemId, ...props }: Props<TItems>) {
+  const [inputItems, setInputItems] = React.useState(items);
+
   const {
     isOpen,
     getMenuProps,
@@ -29,11 +35,18 @@ export function Combobox<
     highlightedIndex,
     getItemProps,
   } = useCombobox({
-    items: items as Mutable<TItems>,
+    items: inputItems as Mutable<TItems>,
     selectedItem: selectedItemId
       ? items.find((item) => item.id === selectedItemId)
       : fallbackSelectedItem,
     itemToString: (item) => item?.label ?? "",
+    onInputValueChange: ({ inputValue }) => {
+      const filteredItems = matchSorter(items, inputValue ?? "", {
+        keys: ["label"],
+      });
+
+      setInputItems(filteredItems as Mutable<TItems>);
+    },
     ...props,
   });
 
@@ -57,7 +70,7 @@ export function Combobox<
         }}
       >
         {isOpen &&
-          items.map((item, index) => (
+          inputItems.map((item, index) => (
             <Text
               as="li"
               css={{

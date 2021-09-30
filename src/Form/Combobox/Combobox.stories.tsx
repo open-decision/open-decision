@@ -16,6 +16,9 @@ export const Input: Story<Props> = (props) => {
     { id: "123", label: "test" },
     { id: "1234", label: "another one" },
     { id: "12345", label: "a third thingy" },
+    { id: "12312", label: "last one" },
+    { id: "3524523", label: "whatever" },
+    { id: "34564356", label: "oho" },
   ] as const;
 
   const [selectedItemId, setSelectedItemId] = React.useState<
