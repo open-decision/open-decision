@@ -1,28 +1,26 @@
-import { styled } from "../stitches";
+import { styled, StyleObject } from "../stitches";
 import { Text } from "../Text";
 
-const responsiveFontSize = {
-  fontWeight: "$semibold",
-
+const responsiveFontSize: StyleObject = {
   variants: {
     size: {
-      lg: {
-        fontSize: "$xl",
+      large: {
+        textStyle: "large-heading",
       },
-      md: {
-        fontSize: "$lg",
+      medium: {
+        textStyle: "medium-heading",
       },
-      sm: {
-        fontSize: "$md",
+      small: {
+        textStyle: "small-heading",
       },
-      xs: {
-        fontSize: "$sm",
+      "extra-small": {
+        textStyle: "extra-small-heading",
       },
     },
   },
 
   defaultVariants: {
-    size: "md",
+    size: "medium",
   },
 } as const;
 
@@ -43,8 +41,6 @@ export const Heading = styled("h2", {
   fontFamily: "$heading",
   color: "var(--color, $gray12)",
   margin: "unset",
-  letterSpacing: "$-1",
-  lineHeight: "$tight",
   ...responsiveFontSize,
 });
 
@@ -57,7 +53,6 @@ export const Heading = styled("h2", {
  */
 const SubHeading = styled(Text, {
   fontSize: "max(0.5em, 16px)",
-  letterSpacing: "$1",
 
   variants: {
     variant: {

@@ -12,7 +12,7 @@ export default {
 
 export const List: Story<TextProps> = (props) => (
   <Box css={{ display: "grid", gap: "$4" }}>
-    <Text size="lg" {...props}>
+    <Text size="large" {...props}>
       Culpa qui ipsum nisi eu elit Lorem esse aliquip irure adipisicing anim
       adipisicing. Esse nisi magna eu reprehenderit qui duis magna. Officia non
       sit id aliqua sint qui aute minim sint cupidatat. Sunt sunt excepteur enim
@@ -28,7 +28,7 @@ export const List: Story<TextProps> = (props) => (
       cillum amet deserunt id ipsum est magna occaecat adipisicing consequat ea
       adipisicing cupidatat.
     </Text>
-    <Text size="sm" {...props}>
+    <Text size="small" {...props}>
       Culpa qui ipsum nisi eu elit Lorem esse aliquip irure adipisicing anim
       adipisicing. Esse nisi magna eu reprehenderit qui duis magna. Officia non
       sit id aliqua sint qui aute minim sint cupidatat. Sunt sunt excepteur enim
@@ -51,10 +51,10 @@ const Template: Story<Props> = (props) => (
 );
 
 export const Large = Template.bind({});
-Large.args = { size: "lg" };
+Large.args = { size: "large" };
 export const Default = Template.bind({});
 export const Small = Template.bind({});
-Small.args = { size: "sm" };
+Small.args = { size: "small" };
 
 const ShortTemplate: Story<Props> = (props) => (
   <Text {...props}>Culpa qui ipsum</Text>

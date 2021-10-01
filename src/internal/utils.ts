@@ -55,3 +55,16 @@ export const aliasColor = <TAlias extends string>(
     [`${alias}12`]: colors[11],
   } as Record<ColorSpectrum<TAlias>, string>;
 };
+
+export type TextStyles =
+  | "large-heading"
+  | "medium-heading"
+  | "small-heading"
+  | "extra-small-heading"
+  | "button"
+  | "badge"
+  | "overline"
+  | "large-text"
+  | "medium-text"
+  | "small-text"
+  | "caption";

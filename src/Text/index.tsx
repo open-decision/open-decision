@@ -2,34 +2,26 @@ import { styled } from "../stitches";
 
 export type TextProps = React.ComponentProps<typeof Text>;
 export const Text = styled("p", {
-  fontFamily: "$text",
-  lineHeight: "$normal",
   color: "var(--color, $gray12)",
   margin: "unset",
-  letterSpacing: 0,
 
   variants: {
     size: {
-      lg: { fontSize: "$lg", lineHeight: "1.3em" },
-      md: { fontSize: "$base" },
-      sm: { fontSize: "$xs", lineHeight: "1.125em" },
+      large: { textStyle: "large-text" },
+      medium: { textStyle: "medium-text" },
+      small: { textStyle: "small-text" },
     },
     type: {
       overline: {
-        fontSize: "$sm",
-        letterSpacing: "0.01em",
-        fontWeight: "$medium",
+        textStyle: "overline",
       },
       caption: {
-        fontSize: "$xs",
-        lineHeight: 1.3,
-        letterSpacing: "0.005em",
-        fontWeight: "$regular",
+        textStyle: "caption",
       },
     },
   },
 
   defaultVariants: {
-    size: "md",
+    size: "medium",
   },
 });

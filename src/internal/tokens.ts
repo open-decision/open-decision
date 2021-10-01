@@ -14,28 +14,35 @@ import {
   yellow,
   yellowA,
 } from "@radix-ui/colors";
-import { aliasColor, SystemColors } from "./utils";
+import { aliasColor, TextStyles, SystemColors } from "./utils";
 
 export const space = {
-  1: "8px",
-  2: "16px",
-  3: "24px",
-  4: "32px",
-  5: "40px",
-  6: "48px",
-  7: "56px",
-  8: "64px",
-  9: "128px",
-  10: "256px",
+  1: "4px",
+  2: "8px",
+  3: "12px",
+  4: "16px",
+  5: "20px",
+  6: "24px",
+  7: "28px",
+  8: "32px",
+  9: "48px",
+  10: "64px",
+  11: "96px",
+  12: "128px",
 } as const;
 
-export const fontSizes = {
-  base: "$md",
-  xs: "0.75rem",
-  sm: "0.875rem",
-  md: "1rem",
-  lg: "1.125rem",
-  xl: "1.625rem",
+export const fontSizes: Record<TextStyles, string> = {
+  "large-heading": "1.625rem",
+  "medium-heading": "1.25rem",
+  "small-heading": "1rem",
+  "extra-small-heading": "0.875rem",
+  button: "1rem",
+  badge: "0.75rem",
+  overline: "0.875rem",
+  "large-text": "1.125rem",
+  "medium-text": "1rem",
+  "small-text": "0.875rem",
+  caption: "0.75rem",
 } as const;
 
 export const zIndices = {
@@ -48,23 +55,32 @@ export const zIndices = {
   50: "50",
 } as const;
 
-export const letterSpacings = {
-  base: "$0",
-  "-2": "-0.05em",
-  "-1": "-0.025em",
-  0: "0em",
-  1: "0.025em",
-  2: "0.05em",
-  4: "0.1em",
+export const letterSpacings: Record<TextStyles, string> = {
+  "large-heading": "0.012em",
+  "medium-heading": "0",
+  "small-heading": "0",
+  "extra-small-heading": "0.01em",
+  button: "0.025em",
+  badge: "0.08em",
+  overline: "0.035em",
+  "large-text": "0",
+  "medium-text": "0",
+  "small-text": "0",
+  caption: "0.04em",
 } as const;
 
-export const lineHeights = {
-  none: "1",
-  tight: "1.25",
-  snug: "1.375",
-  normal: "1.5",
-  relaxed: "1.625",
-  loose: "2",
+export const lineHeights: Record<TextStyles, string> = {
+  "large-heading": "1.25em",
+  "medium-heading": "1.2em",
+  "small-heading": "1.5em",
+  "extra-small-heading": "1.75em",
+  button: "1.5em",
+  badge: "1.3em",
+  overline: "1.75em",
+  "large-text": "1.3em",
+  "medium-text": "1.5em",
+  "small-text": "1.15em",
+  caption: "1.3em",
 } as const;
 
 export const shadows = {
@@ -80,15 +96,17 @@ export const shadows = {
 } as const;
 
 export const fontWeights = {
-  thin: "100",
-  extralight: "200",
-  light: "300",
-  normal: "400",
-  medium: "500",
-  semibold: "600",
-  bold: "700",
-  extrabold: "800",
-  black: "900",
+  "large-heading": "600",
+  "medium-heading": "600",
+  "small-heading": "600",
+  "extra-small-heading": "600",
+  button: "500",
+  badge: "600",
+  overline: "500",
+  "large-text": "400",
+  "medium-text": "400",
+  "small-text": "400",
+  caption: "400",
 } as const;
 
 export const radii = {

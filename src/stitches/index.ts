@@ -16,7 +16,7 @@ import {
   yellowDark,
   yellowDarkA,
 } from "@radix-ui/colors";
-import { ColorKeys, aliasColor } from "../internal/utils";
+import { ColorKeys, aliasColor, TextStyles } from "../internal/utils";
 
 const { colors, ...otherTokens } = tokens;
 
@@ -40,7 +40,7 @@ export const designSystem = createStitches({
     ...otherTokens,
     fonts: {
       sans:
-        "-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif;",
+        "poppins, -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif;",
       serif:
         "Iowan Old Style, Apple Garamond, Baskerville, Times New Roman, Droid Serif, Times, Source Serif Pro, serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol",
       heading: "$sans",
@@ -64,6 +64,28 @@ export const designSystem = createStitches({
         "--colors-colorScheme11": `$colors$${value}11`,
         "--colors-colorScheme12": `$colors$${value}12`,
       };
+    },
+    textStyle: (value: TextStyles) => {
+      const sharedTextStyles = {
+        fontSize: `$${value}`,
+        lineHeight: `$${value}`,
+        letterSpacing: `$${value}`,
+        fontWeight: `$${value}`,
+      };
+
+      switch (value) {
+        case "large-heading":
+        case "medium-heading":
+        case "small-heading":
+        case "extra-small-heading":
+          return {
+            fontFamily: "$heading",
+            ...sharedTextStyles,
+          };
+
+        default:
+          return { fontFamily: "$text", ...sharedTextStyles };
+      }
     },
   },
 });

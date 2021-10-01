@@ -3,11 +3,9 @@ import { styled } from "../stitches";
 
 export const StyledBadge = styled("span", {
   colorScheme: "primary",
+  textStyle: "badge",
   borderRadius: "$full",
-  fontWeight: "$semibold",
-  fontSize: "$xs",
   paddingBlock: "$1",
-  fontFamily: "$text",
   paddingInline: "$3",
   border: "1px solid transparent",
 

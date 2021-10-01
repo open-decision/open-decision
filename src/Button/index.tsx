@@ -7,8 +7,8 @@ export const Button = styled("button", {
   //Mini reset
   appearance: "none",
   colorScheme: "primary",
-  fontFamily: "$text",
   borderRadius: "$md",
+  textStyle: "button",
 
   //The small animation pressing the Button down on click.
   transition: "transform background-color",
@@ -23,11 +23,9 @@ export const Button = styled("button", {
     opacity: 0.4,
   },
 
-  fontWeight: "$semibold",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  fontSize: "$base",
   border: "$$borderWidth solid transparent",
   paddingInline: "$$paddingInline",
 
@@ -42,12 +40,12 @@ export const Button = styled("button", {
         paddingBlock: "$1",
       },
       lg: {
-        $$paddingInline: "$space$6",
+        $$paddingInline: "$space$4",
         fontSize: "$lg",
         paddingBlock: "$2",
       },
       xl: {
-        $$paddingInline: "$space$8",
+        $$paddingInline: "$space$6",
         fontSize: "$xl",
         paddingBlock: "$3",
       },

@@ -2,35 +2,40 @@ import * as React from "react";
 import * as AccessibleIcon from "@radix-ui/react-accessible-icon";
 import { Button } from "../Button";
 import { styled } from "../stitches";
-import { VariantProps } from "../stitches";
 
 const StyledButton = styled(Button, {
   display: "flex",
-  gap: "$2",
+  gap: "$1",
   padding: "$$paddingInline",
+  width: "max-content",
 
   variants: {
     size: {
       sm: {
-        $$paddingInline: "0",
-        paddingBlock: "$$paddingInline",
-        fontSize: "$sm",
-      },
-      md: {
         $$paddingInline: "$space$1",
         paddingBlock: "$$paddingInline",
+
+        "& > svg": {
+          width: "16px",
+          height: "16px",
+        },
       },
-      lg: {
+      md: {
         $$paddingInline: "$space$2",
-        paddingBlock: "$$paddingInline",
-      },
-      xl: {
-        $$paddingInline: "$space$4",
         paddingBlock: "$$paddingInline",
 
         "& > svg": {
           width: "20px",
           height: "20px",
+        },
+      },
+      lg: {
+        $$paddingInline: "$space$3",
+        paddingBlock: "$$paddingInline",
+
+        "& > svg": {
+          width: "24px",
+          height: "24px",
         },
       },
     },
