@@ -32,7 +32,9 @@ type ColorSpectrum<TAlias extends string> = `${TAlias}${ColorLevels}`;
 
 type AllColorsKeys = `${ColorKeys}${ColorLevels}`;
 
-export type SystemColors = Record<AllColorsKeys, string>;
+export type SystemColors = Record<AllColorsKeys, string> & {
+  shadowColor: string;
+};
 
 export const aliasColor = <TAlias extends string>(
   alias: TAlias,

@@ -84,15 +84,14 @@ export const lineHeights: Record<TextStyles, string> = {
 } as const;
 
 export const shadows = {
-  xs: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-  sm: "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
-  md: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-  lg: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
-  xl:
-    "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-  "2xl": "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+  1: "0px 1px 2px $colors$shadowColor",
+  2: "0px 1px 4px $colors$shadowColor",
+  3: "0px 1px 6px $colors$shadowColor",
+  4: "0px 1px 8px $colors$shadowColor",
+  5: "0px 1px 10px $colors$shadowColor",
+  6: "0px 1px 15px $colors$shadowColor",
+  7: "0px 1px 30px $colors$shadowColor",
   inner: "inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)",
-  none: "none",
 } as const;
 
 export const fontWeights = {
@@ -137,6 +136,7 @@ export const colors: SystemColors = {
   ...aliasColor("warningA", yellowA),
   ...aliasColor("info", blue),
   ...aliasColor("infoA", blueA),
+  shadowColor: "rgba(17, 24, 28, 0.3)",
 };
 
 export const media = {

@@ -53,7 +53,7 @@ export const Button = styled("button", {
 
     variant: {
       primary: {
-        boxShadow: "$sm",
+        boxShadow: "$3",
         backgroundColor: "$colorScheme9",
         color: "$colorScheme1",
 
