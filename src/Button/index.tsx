@@ -3,21 +3,21 @@ import { styled } from "../stitches";
 export type ButtonProps = React.ComponentProps<typeof Button>;
 export const Button = styled("button", {
   $$borderWidth: "1px",
-  $$paddingInline: "$space$3",
+  $$paddingInline: "$space$6",
+  $$paddingBlock: "$space$3",
+  $$YTranslation: "0px",
+  $$XTranslation: "0px",
   //Mini reset
   appearance: "none",
   colorScheme: "primary",
   borderRadius: "$md",
   textStyle: "button",
+  maxWidth: "max-content",
 
   //The small animation pressing the Button down on click.
   transition: "transform background-color",
   transitionDuration: "0.1s",
-
-  "&:active": {
-    transform: "translateY(2px)",
-    boxShadow: "$inner",
-  },
+  transform: "translate($$XTranslation, $$YTranslation)",
 
   "&:disabled": {
     opacity: 0.4,
@@ -27,27 +27,22 @@ export const Button = styled("button", {
   justifyContent: "center",
   alignItems: "center",
   border: "$$borderWidth solid transparent",
-  paddingInline: "$$paddingInline",
+  padding: "$$paddingBlock $$paddingInline",
 
   variants: {
     size: {
-      sm: {
-        $$paddingInline: "$space$2",
-        paddingBlock: "$1",
-        fontSize: "$sm",
-      },
-      md: {
-        paddingBlock: "$1",
-      },
-      lg: {
+      small: {
         $$paddingInline: "$space$4",
-        fontSize: "$lg",
-        paddingBlock: "$2",
+        $$paddingBlock: "$space$2",
+        fontSize: "$small-text",
       },
-      xl: {
-        $$paddingInline: "$space$6",
-        fontSize: "$xl",
-        paddingBlock: "$3",
+      medium: {
+        fontSize: "$medium-text",
+      },
+      large: {
+        $$paddingInline: "$space$8",
+        $$paddingBlock: "$space$4",
+        fontSize: "$large-text",
       },
     },
 
@@ -95,26 +90,41 @@ export const Button = styled("button", {
         },
       },
       ghost: {
-        color: "currentcolor",
+        colorScheme: "gray",
+        color: "$colorScheme10",
         backgroundColor: "unset",
         boxShadow: "unset",
 
         "&:hover, &:focus": {
           backgroundColor: "unset",
           boxShadow: "unset",
+          color: "$colorScheme11",
+        },
+      },
+    },
+
+    pressable: {
+      true: {
+        "&:active": {
+          $$YTranslation: "1px",
+          boxShadow: "none",
         },
       },
     },
 
     alignContent: {
-      true: {
-        transform: "translateX(calc(($$borderWidth + $$paddingInline) * -1))",
+      left: {
+        $$XTranslation: "calc(($$borderWidth + $$paddingInline) * -1)",
+      },
+      right: {
+        $$XTranslation: "calc($$borderWidth + $$paddingInline)",
       },
     },
   },
 
   defaultVariants: {
     variant: "primary",
-    size: "md",
+    size: "medium",
+    pressable: true,
   },
 });

@@ -12,12 +12,12 @@ export default {
 
 const SingleIconButtonTemplate: Story<IconButtonProps> = (props) => (
   <Box css={{ display: "grid", gap: "$2", width: "max-content" }}>
-    <IconButton size="sm" {...props} />
+    <IconButton size="small" {...props} />
     <IconButton {...props} />
-    <IconButton size="lg" {...props} />
-    <IconButton round size="sm" {...props} />
+    <IconButton size="large" {...props} />
+    <IconButton round size="small" {...props} />
     <IconButton round {...props} />
-    <IconButton round size="lg" {...props} />
+    <IconButton round size="large" {...props} />
   </Box>
 );
 
@@ -29,3 +29,5 @@ Secondary.args = { variant: "secondary", Icon: <Users /> };
 
 export const Tertiary = SingleIconButtonTemplate.bind({});
 Tertiary.args = { variant: "tertiary", Icon: <Users /> };
+export const Ghost = SingleIconButtonTemplate.bind({});
+Ghost.args = { variant: "ghost", Icon: <Users /> };

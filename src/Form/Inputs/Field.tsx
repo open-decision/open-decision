@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import * as React from "react";
-import { Heading } from "../Heading";
+import { Text } from "../Text";
 import { styled, StyleObject } from "../stitches";
 
 import { ValidationMessage } from "./ValidationMessage";
@@ -10,10 +10,10 @@ function getResponsiveFieldStyles(layout: Layouts): StyleObject {
   switch (layout) {
     case "responsive":
       return {
-        "@sm": {
+        "@largePhone": {
           alignItems: "center",
           gridTemplateColumns: "max-content 1fr",
-          gap: "$2 $4",
+          gap: "$1 $2",
         },
       };
 
@@ -23,7 +23,7 @@ function getResponsiveFieldStyles(layout: Layouts): StyleObject {
       };
 
     case "row":
-      return { gridTemplateColumns: "max-content 1fr" };
+      return { gridTemplateColumns: "max-content 1fr", alignItems: "center" };
 
     default:
       return {};
@@ -32,20 +32,20 @@ function getResponsiveFieldStyles(layout: Layouts): StyleObject {
 
 const FieldBox = styled("div", {
   display: "grid",
-  gap: "$1",
+  gap: "$2",
 });
 
 export type FieldProps = {
   label: string;
   children: React.ReactElement;
-  layout?: Layouts;
+  // layout?: Layouts;
   style?: React.CSSProperties;
 };
 
 export function Field({
   label,
   children,
-  layout = "column",
+  // layout = "column",
   style,
 }: FieldProps) {
   if (!React.Children.only(children)) {
@@ -61,10 +61,15 @@ export function Field({
   }
 
   return (
-    <FieldBox css={getResponsiveFieldStyles(layout)} style={style}>
-      <Heading size="sm">{label}</Heading>
+    <FieldBox
+      // css={getResponsiveFieldStyles(layout)}
+      style={style}
+    >
+      <Text size="small" css={{ fontWeight: 600 }}>
+        {label}
+      </Text>
       {children}
-      <ValidationMessage name={name} />
+      <ValidationMessage name={name} css={{ gridColumn: "1/ -1" }} />
     </FieldBox>
   );
 }

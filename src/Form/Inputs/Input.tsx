@@ -2,14 +2,28 @@
 import * as React from "react";
 import { styled } from "../../stitches";
 import { baseInputStyles } from "../shared/styles";
-
 import { useInput } from "../useForm";
 
 const StyledInput = styled("input", {
   ...baseInputStyles,
-  backgroundColor: "$gray1",
   borderRadius: "$md",
-  padding: "$1",
+  textStyle: "medium-text",
+  minWidth: 0,
+
+  variants: {
+    size: {
+      medium: {
+        padding: "$2 $3",
+      },
+      large: {
+        padding: "$3",
+      },
+    },
+  },
+
+  defaultVariants: {
+    size: "medium",
+  },
 });
 
 export type InputProps = Omit<
@@ -18,12 +32,6 @@ export type InputProps = Omit<
 > & {
   name: string;
   value?: string;
-  validationMessages?: {
-    required?: string;
-    minLength?: string;
-    regex?: string;
-    maxLength?: string;
-  };
   regex?: string;
 };
 
@@ -35,7 +43,6 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       maxLength,
       regex,
       required,
-      validationMessages,
       onChange,
       onBlur,
       value,
@@ -63,27 +70,19 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       const errors: string[] = [];
 
       if (required && inputValue.length === 0) {
-        errors.push(
-          validationMessages?.required ?? defaultValidationmessages.required
-        );
+        errors.push(defaultValidationmessages.required);
       }
 
       if (minLength && inputValue.length < minLength) {
-        errors.push(
-          validationMessages?.minLength ?? defaultValidationmessages.minLength
-        );
+        errors.push(defaultValidationmessages.minLength);
       }
 
       if (regex && !new RegExp(regex).test(inputValue)) {
-        errors.push(
-          validationMessages?.regex ?? defaultValidationmessages.regex
-        );
+        errors.push(defaultValidationmessages.regex);
       }
 
       if (maxLength && inputValue.length === maxLength) {
-        errors.push(
-          validationMessages?.maxLength ?? defaultValidationmessages.maxLength
-        );
+        errors.push(defaultValidationmessages.maxLength);
       }
 
       return errors;
@@ -97,6 +96,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <StyledInput
+        name={name}
         ref={forwardedRef}
         value={value ?? formValue}
         onChange={(event) => {

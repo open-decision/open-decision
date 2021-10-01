@@ -1,5 +1,5 @@
 import * as React from "react";
-import { styled } from "../stitches";
+import { styled, StyleObject } from "../stitches";
 
 import { useInput } from "./useForm";
 
@@ -24,10 +24,15 @@ const StyledMessage = styled("li", {
 
 export type ValidationMessageProps = {
   name: string;
+  css: StyleObject;
   className?: string;
 };
 
-export function ValidationMessage({ name, className }: ValidationMessageProps) {
+export function ValidationMessage({
+  name,
+  css,
+  className,
+}: ValidationMessageProps) {
   const { errors } = useInput(name);
 
   if (!errors.length) {
@@ -35,7 +40,7 @@ export function ValidationMessage({ name, className }: ValidationMessageProps) {
   }
 
   return (
-    <StyledErrorList className={className}>
+    <StyledErrorList css={css} className={className}>
       {errors.map((message: string) =>
         message.length ? (
           <StyledMessage key={message}>{message}</StyledMessage>

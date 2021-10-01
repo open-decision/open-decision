@@ -10,6 +10,7 @@ export * from "./Heading";
 export * from "./IconButton";
 export * from "./Text";
 export * from "./Form";
+export * from "./Link";
 
 // Styling solutions
 export * from "./stitches";

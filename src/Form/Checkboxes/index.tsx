@@ -62,7 +62,7 @@ function Box({ value, style, disabled }: CheckboxProps) {
 const StyledCheckboxContainer = styled("div", {
   display: "flex",
   alignItems: "center",
-  gap: "$2",
+  gap: "$3",
 });
 
 export type CheckboxFieldProps = {

@@ -4,32 +4,39 @@ import { Button } from "../Button";
 import { styled } from "../stitches";
 
 const StyledButton = styled(Button, {
-  display: "flex",
-  gap: "$1",
   padding: "$$paddingInline",
-  width: "max-content",
 
   variants: {
     size: {
-      sm: {
-        $$paddingInline: "$space$1",
-        paddingBlock: "$$paddingInline",
-
-        "& > svg": {
-          width: "16px",
-          height: "16px",
-        },
-      },
-      md: {
+      small: {
         $$paddingInline: "$space$2",
         paddingBlock: "$$paddingInline",
 
         "& > svg": {
-          width: "20px",
-          height: "20px",
+          width: "22px",
+          height: "22px",
+        },
+
+        "@laptop": {
+          $$paddingInline: "$space$1",
+          paddingBlock: "$$paddingInline",
+
+          "& > svg": {
+            width: "16px",
+            height: "16px",
+          },
         },
       },
-      lg: {
+      medium: {
+        $$paddingInline: "$space$2",
+        paddingBlock: "$$paddingInline",
+
+        "& > svg": {
+          width: "22px",
+          height: "22px",
+        },
+      },
+      large: {
         $$paddingInline: "$space$3",
         paddingBlock: "$$paddingInline",
 
@@ -47,7 +54,7 @@ const StyledButton = styled(Button, {
   },
 
   defaultVariants: {
-    size: "md",
+    size: "medium",
   },
 });
 

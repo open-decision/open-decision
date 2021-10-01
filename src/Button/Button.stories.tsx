@@ -11,8 +11,38 @@ export default {
 
 const ButtonGrid: Story<ButtonProps> = (props) => (
   <Box css={{ display: "grid", gap: "$2", width: "max-content" }}>
+    <Button size="small" {...props} />
     <Button {...props} />
-    <Button disabled {...props} />
+    <Button size="large" {...props} />
+    <Button css={{ colorScheme: "error" }} size="small" {...props} />
+    <Button css={{ colorScheme: "error" }} {...props} />
+    <Button css={{ colorScheme: "error" }} size="large" {...props} />
+    <Button css={{ colorScheme: "success" }} size="small" {...props} />
+    <Button css={{ colorScheme: "success" }} {...props} />
+    <Button css={{ colorScheme: "success" }} size="large" {...props} />
+    <Button
+      css={{
+        colorScheme: "warning",
+        color: "$colorScheme12",
+      }}
+      size="small"
+      {...props}
+    />
+    <Button
+      css={{
+        colorScheme: "warning",
+        color: "$colorScheme12",
+      }}
+      {...props}
+    />
+    <Button
+      css={{
+        colorScheme: "warning",
+        color: "$colorScheme12",
+      }}
+      size="large"
+      {...props}
+    />
   </Box>
 );
 
@@ -27,3 +57,5 @@ Secondary.args = {
 
 export const Tertiary = ButtonGrid.bind({});
 Tertiary.args = { variant: "tertiary", children: "Button" };
+export const Ghost = ButtonGrid.bind({});
+Ghost.args = { variant: "ghost", children: "Button" };

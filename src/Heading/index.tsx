@@ -1,7 +1,7 @@
 import { styled, StyleObject } from "../stitches";
 import { Text } from "../Text";
 
-const responsiveFontSize: StyleObject = {
+const responsiveFontSize = {
   variants: {
     size: {
       large: {
@@ -24,7 +24,7 @@ const responsiveFontSize: StyleObject = {
   },
 } as const;
 
-const Container = styled("header", { ...responsiveFontSize });
+const Container = styled("header", responsiveFontSize);
 
 export type HeadingProps = React.ComponentProps<typeof Heading>;
 /**
@@ -37,12 +37,15 @@ export type HeadingProps = React.ComponentProps<typeof Heading>;
  * @example
  * <Heading as="h4">My Heading</Heading>
  */
-export const Heading = styled("h2", {
-  fontFamily: "$heading",
-  color: "var(--color, $gray12)",
-  margin: "unset",
-  ...responsiveFontSize,
-});
+export const Heading = styled(
+  "h2",
+  {
+    fontFamily: "$heading",
+    color: "var(--color, $gray12)",
+    margin: "unset",
+  },
+  responsiveFontSize
+);
 
 /**
  * ### Paragraph based Headings

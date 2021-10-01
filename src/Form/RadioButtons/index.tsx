@@ -49,7 +49,7 @@ function Button({ value, ...props }: ButtonProps) {
 const StyledRadioBox = styled("div", {
   display: "flex",
   alignItems: "center",
-  gap: "$2",
+  gap: "$3",
 });
 
 type FieldProps = ButtonProps & { label: string };

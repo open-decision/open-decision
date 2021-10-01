@@ -1,9 +1,9 @@
 import * as React from "react";
 import { Meta, Story } from "@storybook/react";
 import { InputWithButton as SystemInputWithButton } from "./index";
-import { Input } from "../Input";
-import { Button } from "../../../Button";
-import { Form } from "../../Form";
+import { Input } from "./Input";
+import { Button } from "../../Button";
+import { Form } from "../Form";
 
 export default {
   component: SystemInputWithButton,

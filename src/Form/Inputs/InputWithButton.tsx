@@ -1,9 +1,8 @@
 import * as React from "react";
-import { merge } from "remeda";
-import { styled } from "../../../stitches";
-import { Box } from "../../../Box";
-import { Input as SystemInput } from "../Input";
-import { Button as SystemButton } from "../../../Button";
+import { styled } from "../../stitches";
+import { Box } from "../../Box";
+import { Input as SystemInput } from "./Input";
+import { Button as SystemButton } from "../../Button";
 
 const StyledBox = styled(Box, {
   display: "flex",
@@ -51,6 +50,7 @@ export const InputWithButton = ({
           borderTopLeftRadius: 0,
           borderBottomRightRadius: "var(--radius)",
           borderBottomLeftRadius: "var(--radius)",
+          maxWidth: "unset",
 
           "@largePhone": {
             flex: "1 0",

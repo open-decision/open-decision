@@ -1,6 +1,6 @@
 import * as React from "react";
 import { styled } from "../stitches";
-import { Input } from "./Input/Input";
+import { Input } from "./Inputs/Input";
 import { useInput } from "./useForm";
 
 const StyledTextarea = styled(Input, {

@@ -14,10 +14,11 @@ export const baseInputStyles: StyleObject = {
 
   "&:focus-visible": {
     boxShadow: "inset 0 0 0 1px $colors$primary9",
+    borderColor: "$primary9",
     outline: "none",
   },
 
-  "&:disabled": {
+  "&:disabled, &[data-disabled='true']": {
     opacity: 0.4,
     borderColor: "$gray8",
   },
