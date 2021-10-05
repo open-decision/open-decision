@@ -1,7 +1,5 @@
 import * as React from "react";
-import { styled } from "../stitches";
-import { Input } from "./Inputs/Input";
-import { useInput } from "./useForm";
+import { styled } from "../../stitches";
 
 const StyledTextarea = styled(Input, {
   "&:hover": {

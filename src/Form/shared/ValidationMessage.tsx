@@ -1,7 +1,7 @@
 import * as React from "react";
-import { styled, StyleObject } from "../stitches";
+import { styled, StyleObject } from "../../stitches";
 
-import { useInput } from "./useForm";
+import { useInput } from "../useForm";
 
 const StyledErrorList = styled("ul", {
   listStyle: "none",

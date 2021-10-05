@@ -3,7 +3,7 @@ import { Meta, Story } from "@storybook/react";
 import { Input as SystemInput } from "./Input";
 import { VariantProps } from "@stitches/react";
 import { Form } from "../Form";
-import { Field } from "../Field";
+import { Field } from "./Field";
 
 export default {
   component: SystemInput,

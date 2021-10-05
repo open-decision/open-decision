@@ -1,9 +1,9 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import * as React from "react";
-import { Text } from "../Text";
-import { styled, StyleObject } from "../stitches";
+import { Text } from "../../Text";
+import { styled, StyleObject } from "../../stitches";
 
-import { ValidationMessage } from "./ValidationMessage";
+import { ValidationMessage } from "../shared/ValidationMessage";
 
 type Layouts = "column" | "row" | "responsive";
 function getResponsiveFieldStyles(layout: Layouts): StyleObject {
