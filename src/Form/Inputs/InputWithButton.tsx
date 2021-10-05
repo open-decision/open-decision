@@ -12,11 +12,13 @@ const StyledBox = styled(Box, {
 export type InputWithButtonProps = React.ComponentProps<typeof Box> & {
   Input: React.ReactElement<React.ComponentProps<typeof SystemInput>>;
   Button: React.ReactElement<React.ComponentProps<typeof SystemButton>>;
+  radius?: string;
 };
 
 export const InputWithButton = ({
   Input,
   Button,
+  radius = "$radii$md",
   ...props
 }: InputWithButtonProps) => {
   return (
@@ -26,8 +28,8 @@ export const InputWithButton = ({
           ...Input.props?.css,
           flex: "1 1 100%",
           borderRadius: "$none",
-          borderTopLeftRadius: "var(--radius)",
-          borderTopRightRadius: "var(--radius)",
+          borderTopLeftRadius: radius,
+          borderTopRightRadius: radius,
           borderBottomLeftRadius: 0,
           borderBottomRightRadius: 0,
 
@@ -35,8 +37,8 @@ export const InputWithButton = ({
             flex: "1 1 70%",
             borderTopRightRadius: 0,
             borderBottomRightRadius: 0,
-            borderBottomLeftRadius: "var(--radius)",
-            borderTopLeftRadius: "var(--radius)",
+            borderBottomLeftRadius: radius,
+            borderTopLeftRadius: radius,
           },
         },
       })}
@@ -48,8 +50,8 @@ export const InputWithButton = ({
           borderRadius: "$none",
           borderTopRightRadius: 0,
           borderTopLeftRadius: 0,
-          borderBottomRightRadius: "var(--radius)",
-          borderBottomLeftRadius: "var(--radius)",
+          borderBottomRightRadius: radius,
+          borderBottomLeftRadius: radius,
           maxWidth: "unset",
 
           "@largePhone": {
@@ -57,8 +59,8 @@ export const InputWithButton = ({
             maxWidth: "max-content",
             borderBottomLeftRadius: 0,
             borderTopLeftRadius: 0,
-            borderTopRightRadius: "var(--radius)",
-            borderBottomRightRadius: "var(--radius)",
+            borderTopRightRadius: radius,
+            borderBottomRightRadius: radius,
           },
         },
       })}

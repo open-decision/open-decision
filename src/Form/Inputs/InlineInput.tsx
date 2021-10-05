@@ -1,13 +1,10 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import * as React from "react";
-import { Check, X } from "react-feather";
 import { styled } from "../../stitches";
 import { Box } from "../../Box";
 import { useInput } from "../useForm";
 import { InputProps } from "./Input";
-import { baseInputStyles } from "../shared/styles";
-import { IconButton } from "../../IconButton";
-import { Input } from "./Input";
+import { baseInputStyles, baseTextInputStyle } from "../shared/styles";
 
 const StyledBox = styled(Box, {
   ...baseInputStyles,
@@ -24,7 +21,8 @@ const StyledBox = styled(Box, {
   },
 });
 
-const StyledInput = styled(Input, {
+const StyledInput = styled("input", {
+  ...baseTextInputStyle,
   backgroundColor: "transparent",
   outline: "none",
   //FIXME Stitches has an open issue in regards to the order in which classNames are applied -> https://github.com/modulz/stitches/issues/671
@@ -51,6 +49,7 @@ export const InlineInput = React.forwardRef<HTMLInputElement, InputProps>(
       disabled,
       css,
       alignByContent = "left",
+      Buttons,
       ...props
     },
     forwardedRef
@@ -119,24 +118,7 @@ export const InlineInput = React.forwardRef<HTMLInputElement, InputProps>(
           alignByContent={alignByContent}
           {...props}
         />
-        <IconButton
-          alignByContent="right"
-          css={{ colorScheme: "error" }}
-          Icon={<X />}
-          size="small"
-          variant="ghost"
-          label="Editieren abrrechen"
-          disabled={disabled}
-        />
-        <IconButton
-          alignByContent="right"
-          css={{ colorScheme: "success" }}
-          Icon={<Check />}
-          size="small"
-          variant="ghost"
-          label="Änderungen speichern"
-          disabled={disabled}
-        />
+        {Buttons}
       </StyledBox>
     );
   }

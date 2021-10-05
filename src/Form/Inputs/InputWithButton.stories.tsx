@@ -15,7 +15,6 @@ export const InputWithButton: Story<
 > = (props) => (
   <Form onSubmit={({ values }) => alert(values)} initialValues={{ test: "" }}>
     <SystemInputWithButton
-      css={{ $radius: "$radii$md" }}
       {...props}
       Input={<Input name="test" />}
       Button={<Button>Senden</Button>}

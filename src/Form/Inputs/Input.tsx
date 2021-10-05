@@ -1,37 +1,29 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import * as React from "react";
-import { styled } from "../../stitches";
-import { alignByContent } from "../../stitches/utils";
-import { baseInputStyles } from "../shared/styles";
+import { styled, VariantProps } from "../../stitches";
+import { baseInputStyles, baseTextInputStyle } from "../shared/styles";
 import { useInput } from "../useForm";
+import { Box } from "../../Box";
 
-const StyledInput = styled("input", {
+const StyledBox = styled(Box, {
   ...baseInputStyles,
+  ...baseTextInputStyle,
   $$paddingInline: "$space$2",
   paddingInline: "$$paddingInline",
   borderRadius: "$md",
+  display: "flex",
+  alignItems: "center",
   focusStyle: "inner",
+});
+
+const StyledInput = styled("input", {
+  border: "none",
+  height: "100%",
+  width: "100%",
   textStyle: "medium-text",
   minWidth: 0,
   transform: "translateX($$XTranslation)",
-
-  variants: {
-    size: {
-      medium: {
-        paddingBlock: "$3",
-      },
-      large: {
-        $$paddingInline: "$space$3",
-        paddingBlock: "$3",
-      },
-    },
-
-    alignByContent,
-  },
-
-  defaultVariants: {
-    size: "medium",
-  },
+  outline: "none",
 });
 
 export type InputProps = Omit<
@@ -41,7 +33,8 @@ export type InputProps = Omit<
   name: string;
   value?: string;
   regex?: string;
-};
+  Buttons?: JSX.Element | JSX.Element[];
+} & VariantProps<typeof StyledBox>;
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   (
@@ -54,6 +47,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       onChange,
       onBlur,
       value,
+      Buttons,
+      disabled,
       ...props
     },
     forwardedRef
@@ -103,19 +98,26 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     }, [value, blur, submitting]);
 
     return (
-      <StyledInput
-        name={name}
-        ref={forwardedRef}
-        value={value ?? formValue}
-        onChange={(event) => {
-          onChange ? onChange?.(event) : setValue(event.target.value ?? "");
-        }}
-        onBlur={(event) => {
-          onBlur?.(event);
-          setBlur(true);
-        }}
-        {...props}
-      />
+      <StyledBox
+        css={{ color: disabled ? "$gray8" : "$gray11" }}
+        data-disabled={disabled}
+      >
+        <StyledInput
+          name={name}
+          ref={forwardedRef}
+          value={value ?? formValue}
+          onChange={(event) => {
+            onChange ? onChange?.(event) : setValue(event.target.value ?? "");
+          }}
+          onBlur={(event) => {
+            onBlur?.(event);
+            setBlur(true);
+          }}
+          disabled={disabled}
+          {...props}
+        />
+        {Buttons}
+      </StyledBox>
     );
   }
 );
