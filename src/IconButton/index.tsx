@@ -64,11 +64,17 @@ export type IconButtonProps = React.ComponentProps<typeof StyledButton> & {
 };
 
 export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
-  ({ label, children, variant = "primary", Icon, ...props }, ref) => {
+  ({ label, children, variant = "primary", Icon, disabled, ...props }, ref) => {
+    const EnhancedIcon = React.isValidElement(Icon)
+      ? React.cloneElement(Icon, {
+          style: { pointerEvents: disabled ? "none" : null },
+        })
+      : Icon;
+
     return (
-      <StyledButton variant={variant} ref={ref} {...props}>
+      <StyledButton variant={variant} disabled={disabled} ref={ref} {...props}>
         {children}
-        <AccessibleIcon.Root label={label}>{Icon}</AccessibleIcon.Root>
+        <AccessibleIcon.Root label={label}>{EnhancedIcon}</AccessibleIcon.Root>
       </StyledButton>
     );
   }

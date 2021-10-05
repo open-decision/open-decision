@@ -14,6 +14,9 @@ const ButtonGrid: Story<ButtonProps> = (props) => (
     <Button size="small" {...props} />
     <Button {...props} />
     <Button size="large" {...props} />
+    <Button size="small" disabled {...props} />
+    <Button {...props} disabled />
+    <Button size="large" disabled {...props} />
     <Button css={{ colorScheme: "error" }} size="small" {...props} />
     <Button css={{ colorScheme: "error" }} {...props} />
     <Button css={{ colorScheme: "error" }} size="large" {...props} />

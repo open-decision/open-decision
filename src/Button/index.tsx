@@ -62,6 +62,7 @@ export const Button = styled("button", {
 
         "&:disabled": {
           opacity: 0.2,
+          backgroundColor: "$colorScheme9",
         },
       },
       secondary: {
@@ -74,6 +75,10 @@ export const Button = styled("button", {
 
         "&:active": {
           backgroundColor: "$colorScheme7",
+        },
+
+        "&:disabled": {
+          backgroundColor: "$colorScheme3",
         },
       },
       tertiary: {
@@ -88,6 +93,10 @@ export const Button = styled("button", {
         "&:active": {
           backgroundColor: "$colorScheme5",
         },
+
+        "&:disabled": {
+          backgroundColor: "$colorScheme1",
+        },
       },
       ghost: {
         colorScheme: "gray",
@@ -99,6 +108,10 @@ export const Button = styled("button", {
           backgroundColor: "unset",
           boxShadow: "unset",
           color: "$colorScheme11",
+        },
+
+        "&:disabled": {
+          backgroundColor: "unset",
         },
       },
     },

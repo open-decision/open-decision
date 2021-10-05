@@ -15,6 +15,9 @@ const SingleIconButtonTemplate: Story<IconButtonProps> = (props) => (
     <IconButton size="small" {...props} />
     <IconButton {...props} />
     <IconButton size="large" {...props} />
+    <IconButton size="small" disabled {...props} />
+    <IconButton disabled {...props} />
+    <IconButton size="large" disabled {...props} />
     <IconButton round size="small" {...props} />
     <IconButton round {...props} />
     <IconButton round size="large" {...props} />
