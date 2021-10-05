@@ -1,7 +1,8 @@
 import { StyleObject } from "../../stitches";
 
 export const baseInputStyles: StyleObject = {
-  border: "1px solid $colors$gray8",
+  $$borderWidth: "1px",
+  border: "$$borderWidth solid $colors$gray8",
 
   transition: "all 0.2s",
 

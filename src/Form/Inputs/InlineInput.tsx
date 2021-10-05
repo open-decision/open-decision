@@ -16,7 +16,6 @@ const StyledBox = styled(Box, {
   display: "flex",
   alignItems: "center",
   padding: "$1",
-  paddingBottom: 0,
 
   "&:focus-within": {
     boxShadow: "none",
@@ -27,9 +26,8 @@ const StyledBox = styled(Box, {
 
 const StyledInput = styled(Input, {
   backgroundColor: "transparent",
-  padding: "$1",
   outline: "none",
-  border: "none",
+  $$borderWidth: "0px",
 
   "&:focus-visible": {
     boxShadow: "none",
@@ -49,6 +47,7 @@ export const InlineInput = React.forwardRef<HTMLInputElement, InputProps>(
       value,
       disabled,
       css,
+      alignByContent = "left",
       ...props
     },
     forwardedRef
@@ -114,10 +113,11 @@ export const InlineInput = React.forwardRef<HTMLInputElement, InputProps>(
             onBlur?.(event);
             setBlur(true);
           }}
+          alignByContent={alignByContent}
           {...props}
         />
         <IconButton
-          alignContent="right"
+          alignByContent="right"
           css={{ colorScheme: "error" }}
           Icon={<X />}
           size="small"
@@ -126,7 +126,7 @@ export const InlineInput = React.forwardRef<HTMLInputElement, InputProps>(
           disabled={disabled}
         />
         <IconButton
-          alignContent="right"
+          alignByContent="right"
           css={{ colorScheme: "success" }}
           Icon={<Check />}
           size="small"

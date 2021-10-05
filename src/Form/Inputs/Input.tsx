@@ -1,24 +1,31 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import * as React from "react";
 import { styled } from "../../stitches";
+import { alignByContent } from "../../stitches/utils";
 import { baseInputStyles } from "../shared/styles";
 import { useInput } from "../useForm";
 
 const StyledInput = styled("input", {
   ...baseInputStyles,
+  $$paddingInline: "$space$2",
+  paddingInline: "$$paddingInline",
   borderRadius: "$md",
   textStyle: "medium-text",
   minWidth: 0,
+  transform: "translateX($$XTranslation)",
 
   variants: {
     size: {
       medium: {
-        padding: "$2 $3",
+        paddingBlock: "$3",
       },
       large: {
-        padding: "$3",
+        $$paddingInline: "$space$3",
+        paddingBlock: "$3",
       },
     },
+
+    alignByContent,
   },
 
   defaultVariants: {

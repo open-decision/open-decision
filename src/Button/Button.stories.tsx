@@ -9,7 +9,7 @@ export default {
   title: "Components/Button",
 } as Meta;
 
-const ButtonGrid: Story<ButtonProps> = (props) => (
+const ButtonGrid: Story<Omit<ButtonProps, "css">> = (props) => (
   <Box css={{ display: "grid", gap: "$2", width: "max-content" }}>
     <Button size="small" {...props} />
     <Button {...props} />

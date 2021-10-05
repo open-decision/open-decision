@@ -1,3 +1,4 @@
+import { alignByContent } from "../stitches/utils";
 import { styled } from "../stitches";
 
 export type ButtonProps = React.ComponentProps<typeof Button>;
@@ -125,14 +126,7 @@ export const Button = styled("button", {
       },
     },
 
-    alignContent: {
-      left: {
-        $$XTranslation: "calc(($$borderWidth + $$paddingInline) * -1)",
-      },
-      right: {
-        $$XTranslation: "calc($$borderWidth + $$paddingInline)",
-      },
-    },
+    alignByContent,
   },
 
   defaultVariants: {
