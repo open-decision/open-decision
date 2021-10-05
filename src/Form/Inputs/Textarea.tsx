@@ -1,9 +1,27 @@
 import * as React from "react";
 import { styled } from "../../stitches";
+import { baseInputStyles } from "../shared/styles";
+import { useInput } from "../useForm";
 
-const StyledTextarea = styled(Input, {
-  "&:hover": {
-    boxShadow: "none",
+const StyledTextarea = styled("textarea", {
+  ...baseInputStyles,
+  borderRadius: "$md",
+  textStyle: "medium-text",
+  minWidth: 0,
+
+  variants: {
+    size: {
+      medium: {
+        padding: "$2 $3",
+      },
+      large: {
+        padding: "$3",
+      },
+    },
+  },
+
+  defaultVariants: {
+    size: "medium",
   },
 });
 
