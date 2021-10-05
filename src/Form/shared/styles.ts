@@ -25,12 +25,9 @@ export const baseInputStyles = {
 export const baseTextInputStyle = {
   variants: {
     size: {
-      medium: {
-        paddingBlock: "$3",
-      },
+      medium: {},
       large: {
         $$paddingInline: "$space$3",
-        paddingBlock: "$3",
       },
     },
 

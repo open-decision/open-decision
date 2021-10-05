@@ -12,7 +12,6 @@ const StyledBox = styled(Box, {
   borderBottom: "1px solid $colors$gray8",
   display: "flex",
   alignItems: "center",
-  padding: "$1",
 
   "&:focus-within": {
     boxShadow: "none",
@@ -23,6 +22,10 @@ const StyledBox = styled(Box, {
 
 const StyledInput = styled("input", {
   ...baseTextInputStyle,
+  $$paddingInline: "$space$2",
+  $$paddingBlock: "$space$2",
+  paddingInline: "$$paddingInline",
+  paddingBlock: "$$paddingBlock",
   backgroundColor: "transparent",
   outline: "none",
   //FIXME Stitches has an open issue in regards to the order in which classNames are applied -> https://github.com/modulz/stitches/issues/671

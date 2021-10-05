@@ -4,7 +4,7 @@ import { Input as SystemInput } from "./Input";
 import { VariantProps } from "@stitches/react";
 import { Form } from "../Form";
 import { Field } from "./Field";
-import { X } from "../../icons";
+import { ArrowRight } from "../../icons";
 import { IconButton } from "../../IconButton";
 
 export default {
@@ -36,7 +36,11 @@ export const Input: Story<Props> = (props) => (
       <SystemInput
         name="test2"
         Buttons={[
-          <IconButton variant="tertiary" label="Remove Content" Icon={<X />} />,
+          <IconButton
+            variant="tertiary"
+            label="Remove Content"
+            Icon={<ArrowRight />}
+          />,
         ]}
         {...props}
       />

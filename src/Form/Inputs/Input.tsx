@@ -8,17 +8,21 @@ import { Box } from "../../Box";
 const StyledBox = styled(Box, {
   ...baseInputStyles,
   ...baseTextInputStyle,
-  $$paddingInline: "$space$2",
-  paddingInline: "$$paddingInline",
   borderRadius: "$md",
   display: "flex",
   alignItems: "center",
   focusStyle: "inner",
+  overflow: "hidden",
+  padding: "1px",
+  $$paddingInline: "$space$2",
+  $$paddingBlock: "$space$3",
+  paddingInline: "$$paddingInline",
 });
 
 const StyledInput = styled("input", {
+  borderRadius: "$md",
+  paddingBlock: "$$paddingBlock",
   border: "none",
-  height: "100%",
   width: "100%",
   textStyle: "medium-text",
   minWidth: 0,
