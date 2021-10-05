@@ -19,11 +19,9 @@ export const Input: Story<Props> = (props) => {
     { id: "12312", label: "last one" },
     { id: "3524523", label: "whatever" },
     { id: "34564356", label: "oho" },
-  ] as const;
+  ];
 
-  const [selectedItemId, setSelectedItemId] = React.useState<
-    typeof items[number]["id"] | undefined
-  >(undefined);
+  const [selectedItemId, setSelectedItemId] = React.useState("");
 
   return (
     <Form
@@ -38,7 +36,7 @@ export const Input: Story<Props> = (props) => {
         items={items}
         selectedItemId={selectedItemId}
         onSelectedItemChange={({ selectedItem }) =>
-          setSelectedItemId(selectedItem.id)
+          setSelectedItemId(selectedItem?.id ?? "")
         }
       />
     </Form>

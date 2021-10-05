@@ -1,16 +1,19 @@
 import * as React from "react";
 import { useCombobox, UseComboboxProps } from "downshift";
-import { Input } from "../Input/Input";
+import { Input } from "../Inputs/Input";
 import { Box } from "../../Box";
 import { Mutable } from "utility-types";
 import { Text } from "../../Text";
 import { matchSorter } from "match-sorter";
+import { IconButton } from "../../IconButton";
+import { X } from "../../icons";
 
 type Props<
   TItems extends readonly { readonly id: string; readonly label: string }[]
 > = {
   name: string;
   items: TItems;
+  size: React.ComponentProps<typeof Input>["size"];
   selectedItemId?: TItems[number]["id"];
 } & Omit<
   UseComboboxProps<TItems[number]>,
@@ -24,7 +27,7 @@ const fallbackSelectedItem = {
 
 export function Combobox<
   TItems extends readonly { readonly id: string; readonly label: string }[]
->({ name, items, selectedItemId, ...props }: Props<TItems>) {
+>({ name, items, selectedItemId, size, ...props }: Props<TItems>) {
   const [inputItems, setInputItems] = React.useState(items);
 
   const {
@@ -34,10 +37,11 @@ export function Combobox<
     getComboboxProps,
     highlightedIndex,
     getItemProps,
+    reset,
   } = useCombobox({
     items: inputItems as Mutable<TItems>,
     selectedItem: selectedItemId
-      ? items.find((item) => item.id === selectedItemId)
+      ? items.find((item) => item?.id === selectedItemId)
       : fallbackSelectedItem,
     itemToString: (item) => item?.label ?? "",
     onInputValueChange: ({ inputValue }) => {
@@ -53,9 +57,19 @@ export function Combobox<
   return (
     <Box css={{ position: "relative" }} {...getComboboxProps()}>
       <Input
+        size={size}
         {...getInputProps()}
         name={name}
-        css={{ borderRadius: "$md", width: "100%" }}
+        Buttons={
+          <IconButton
+            label="Entferne die momentan ausgewählte Option"
+            Icon={<X />}
+            size="small"
+            variant="ghost"
+            type="button"
+            onClick={() => reset()}
+          />
+        }
       />
       <Box
         {...getMenuProps()}
@@ -82,10 +96,10 @@ export function Combobox<
                   highlightedIndex === index ? "$primary3" : null,
                 padding: "$1 $2",
               }}
-              key={`${item.id}${index}`}
+              key={`${item?.id}${index}`}
               {...getItemProps({ item, index })}
             >
-              {item.label}
+              {item?.label}
             </Text>
           ))}
       </Box>

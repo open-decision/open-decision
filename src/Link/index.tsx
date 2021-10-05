@@ -1,5 +1,4 @@
 import * as React from "react";
-import { offsetFocus } from "../stitches/utils";
 import { styled } from "../stitches";
 
 export type LinkProps = React.ComponentProps<typeof Link>;
