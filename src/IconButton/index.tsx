@@ -2,6 +2,7 @@ import * as React from "react";
 import * as AccessibleIcon from "@radix-ui/react-accessible-icon";
 import { Button } from "../Button";
 import { styled } from "../stitches";
+import { Link } from "../Link";
 
 const StyledButton = styled(Button, {
   padding: "$$paddingInline",
@@ -58,10 +59,18 @@ const StyledButton = styled(Button, {
   },
 });
 
-export type IconButtonProps = React.ComponentProps<typeof StyledButton> & {
+export type IconButtonProps = {
   label: string;
   Icon: React.ReactNode;
-};
+} & React.ComponentProps<typeof StyledButton> &
+  (
+    | {
+        as?: "button";
+      }
+    | (React.ComponentProps<typeof Link> & {
+        as?: "a";
+      })
+  );
 
 export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
   ({ label, children, variant = "primary", Icon, disabled, ...props }, ref) => {

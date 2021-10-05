@@ -5,6 +5,7 @@ import {
   ContactButtons as SystemContactButtons,
   ContactButtonsContainerProps,
 } from "./index";
+import { Link } from "../Link";
 
 export default {
   component: SystemContactButtons.Container,
@@ -13,8 +14,8 @@ export default {
 
 export const ContactButtons: Story<ContactButtonsContainerProps> = (props) => (
   <SystemContactButtons.Container {...props}>
-    {SystemContactButtons.Buttons.map(({ link, Component }) => {
-      return <a href={link}>{Component}</a>;
+    {SystemContactButtons.Buttons.map((Component) => {
+      return Component;
     })}
   </SystemContactButtons.Container>
 );
