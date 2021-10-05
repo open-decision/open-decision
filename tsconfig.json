@@ -15,6 +15,7 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "incremental": true,
+    "baseUrl": ".",
     "paths": {
       // This is a workaround to make storybook work with stitches. https://github.com/modulz/stitches/issues/248
       "@emotion/core": ["./node_modules/@emotion/react"]
