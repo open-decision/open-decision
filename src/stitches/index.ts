@@ -121,5 +121,6 @@ export const darkTheme = createTheme("dark", {
     ...aliasColor("warningA", yellowDarkA),
     ...aliasColor("info", blueDark),
     ...aliasColor("infoA", blueDarkA),
+    ...aliasColor("colorScheme", slateDark),
   },
 });
