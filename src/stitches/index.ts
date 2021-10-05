@@ -63,6 +63,7 @@ export const designSystem = createStitches({
         "--colors-colorScheme10": `$colors$${value}10`,
         "--colors-colorScheme11": `$colors$${value}11`,
         "--colors-colorScheme12": `$colors$${value}12`,
+        "--colors-colorScheme-text": `$colors$${value}-text`,
       };
     },
     textStyle: (value: TextStyles) => {
@@ -85,6 +86,26 @@ export const designSystem = createStitches({
 
         default:
           return { fontFamily: "$text", ...sharedTextStyles };
+      }
+    },
+    focusStyle: (value: "inner" | "outer") => {
+      switch (value) {
+        case "outer":
+          return {
+            "&:focus-visible, &:focus-within": {
+              outlineOffset: "$space$1",
+              outlineColor: "$primary9",
+            },
+          };
+
+        default:
+          return {
+            "&:focus-visible, &:focus-within": {
+              boxShadow: "inset 0 0 0 1px $colors$primary9",
+              borderColor: "$primary9",
+              outline: "none",
+            },
+          };
       }
     },
   },

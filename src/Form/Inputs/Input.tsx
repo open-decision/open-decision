@@ -10,6 +10,7 @@ const StyledInput = styled("input", {
   $$paddingInline: "$space$2",
   paddingInline: "$$paddingInline",
   borderRadius: "$md",
+  focusStyle: "inner",
   textStyle: "medium-text",
   minWidth: 0,
   transform: "translateX($$XTranslation)",

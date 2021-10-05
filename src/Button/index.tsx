@@ -29,6 +29,7 @@ export const Button = styled("button", {
   alignItems: "center",
   border: "$$borderWidth solid transparent",
   padding: "$$paddingBlock $$paddingInline",
+  focusStyle: "outer",
 
   variants: {
     size: {
@@ -51,7 +52,7 @@ export const Button = styled("button", {
       primary: {
         boxShadow: "$3",
         backgroundColor: "$colorScheme9",
-        color: "$colorScheme1",
+        color: "$colorScheme-text",
 
         "&:hover, &:focus-visible": {
           backgroundColor: "$colorScheme10",

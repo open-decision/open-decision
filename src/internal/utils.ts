@@ -38,7 +38,8 @@ export type SystemColors = Record<AllColorsKeys, string> & {
 
 export const aliasColor = <TAlias extends string>(
   alias: TAlias,
-  color: Record<ColorSpectrum<string>, string>
+  color: Record<ColorSpectrum<string>, string>,
+  bright = false
 ): Record<ColorSpectrum<TAlias>, string> => {
   const colors = Object.values<string>(color);
 
@@ -55,6 +56,7 @@ export const aliasColor = <TAlias extends string>(
     [`${alias}10`]: colors[9],
     [`${alias}11`]: colors[10],
     [`${alias}12`]: colors[11],
+    [`${alias}-text`]: bright ? colors[11] : colors[0],
   } as Record<ColorSpectrum<TAlias>, string>;
 };
 

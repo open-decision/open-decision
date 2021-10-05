@@ -1,3 +1,4 @@
+import { borderFocus } from "../../stitches/utils";
 import { StyleObject } from "../../stitches";
 
 export const baseInputStyles: StyleObject = {
@@ -13,11 +14,7 @@ export const baseInputStyles: StyleObject = {
     borderColor: "$primary9",
   },
 
-  "&:focus-visible": {
-    boxShadow: "inset 0 0 0 1px $colors$primary9",
-    borderColor: "$primary9",
-    outline: "none",
-  },
+  focusStyle: "inner",
 
   "&:disabled, &[data-disabled='true']": {
     opacity: 0.4,
