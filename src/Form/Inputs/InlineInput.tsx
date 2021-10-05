@@ -27,7 +27,10 @@ const StyledBox = styled(Box, {
 const StyledInput = styled(Input, {
   backgroundColor: "transparent",
   outline: "none",
-  $$borderWidth: "0px",
+  //FIXME Stitches has an open issue in regards to the order in which classNames are applied -> https://github.com/modulz/stitches/issues/671
+  // Since Input is not directly a styled component the order of the styles is not controlled correctly.
+  borderColor: "transparent !important",
+  boxShadow: "none !important",
 
   "&:focus-visible": {
     boxShadow: "none",
