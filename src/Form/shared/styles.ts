@@ -28,10 +28,8 @@ export const baseTextInputStyle = {
 
   variants: {
     size: {
-      medium: {},
-      large: {
-        $$paddingInline: "$space$3",
-      },
+      medium: { $$paddingBlock: "$space$2" },
+      large: { $$paddingInline: "$space$3" },
     },
 
     alignByContent,
@@ -40,7 +38,7 @@ export const baseTextInputStyle = {
   defaultVariants: {
     size: "medium",
   },
-} as const;
+};
 
 export const baseInputBoxStyles: StyleObject = {
   width: "24px",

@@ -5,19 +5,22 @@ import { baseInputStyles, baseTextInputStyle } from "../shared/styles";
 import { useInput } from "../useForm";
 import { Box } from "../../Box";
 
-const StyledBox = styled(Box, {
-  ...baseInputStyles,
-  ...baseTextInputStyle,
-  borderRadius: "$md",
-  display: "flex",
-  alignItems: "center",
-  focusStyle: "inner",
-  overflow: "hidden",
-  padding: "1px",
-  $$paddingInline: "$space$2",
-  $$paddingBlock: "$space$3",
-  paddingInline: "$$paddingInline",
-});
+const StyledBox = styled(
+  Box,
+  {
+    ...baseInputStyles,
+    borderRadius: "$md",
+    display: "flex",
+    alignItems: "center",
+    focusStyle: "inner",
+    overflow: "hidden",
+    padding: "1px",
+    $$paddingInline: "$space$2",
+    $$paddingBlock: "$space$3",
+    paddingInline: "$$paddingInline",
+  },
+  baseTextInputStyle
+);
 
 const StyledInput = styled("input", {
   borderRadius: "$md",
@@ -33,7 +36,7 @@ const StyledInput = styled("input", {
 
 export type InputProps = Omit<
   React.ComponentProps<typeof StyledInput>,
-  "value"
+  "value" | "size"
 > & {
   name: string;
   value?: string;
@@ -55,6 +58,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       Buttons,
       disabled,
       css,
+      size,
       ...props
     },
     forwardedRef
@@ -107,6 +111,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <StyledBox
         css={{ color: disabled ? "$gray8" : "$gray11", ...css }}
         data-disabled={disabled}
+        size={size}
       >
         <StyledInput
           name={name}

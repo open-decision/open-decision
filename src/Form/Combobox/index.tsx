@@ -7,14 +7,16 @@ import { Text } from "../../Text";
 import { matchSorter } from "match-sorter";
 import { IconButton } from "../../IconButton";
 import { X } from "../../icons";
+import { StyleObject } from "src";
 
 type Props<
   TItems extends readonly { readonly id: string; readonly label: string }[]
 > = {
   name: string;
   items: TItems;
-  size: React.ComponentProps<typeof Input>["size"];
+  size?: React.ComponentProps<typeof Input>["size"];
   selectedItemId?: TItems[number]["id"];
+  css?: StyleObject;
 } & Omit<
   UseComboboxProps<TItems[number]>,
   "selectedItem" | "items" | "onInputValueChange"
@@ -27,7 +29,7 @@ const fallbackSelectedItem = {
 
 export function Combobox<
   TItems extends readonly { readonly id: string; readonly label: string }[]
->({ name, items, selectedItemId, size, ...props }: Props<TItems>) {
+>({ name, items, selectedItemId, size, css, ...props }: Props<TItems>) {
   const [inputItems, setInputItems] = React.useState(items);
 
   const {
@@ -60,6 +62,7 @@ export function Combobox<
         size={size}
         {...getInputProps()}
         name={name}
+        css={css}
         Buttons={
           <IconButton
             label="Entferne die momentan ausgewählte Option"

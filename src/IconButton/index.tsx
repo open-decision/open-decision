@@ -14,18 +14,8 @@ const StyledButton = styled(Button, {
         paddingBlock: "$$paddingInline",
 
         "& > svg": {
-          width: "22px",
-          height: "22px",
-        },
-
-        "@laptop": {
-          $$paddingInline: "$space$1",
-          paddingBlock: "$$paddingInline",
-
-          "& > svg": {
-            width: "16px",
-            height: "16px",
-          },
+          width: "18px",
+          height: "18px",
         },
       },
       medium: {

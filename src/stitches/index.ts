@@ -13,8 +13,6 @@ import {
   greenDarkA,
   blueDark,
   blueDarkA,
-  yellowDark,
-  yellowDarkA,
 } from "@radix-ui/colors";
 import { ColorKeys, aliasColor, TextStyles } from "../internal/utils";
 

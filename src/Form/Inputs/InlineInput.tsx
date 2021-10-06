@@ -12,7 +12,6 @@ const StyledBox = styled(Box, {
   borderBottom: "1px solid $colors$gray8",
   display: "flex",
   alignItems: "center",
-  paddingInline: "$2",
 
   "&:focus-within": {
     boxShadow: "none",
@@ -53,7 +52,6 @@ export const InlineInput = React.forwardRef<HTMLInputElement, InputProps>(
       onBlur,
       value,
       disabled,
-      css,
       alignByContent = "left",
       Buttons,
       ...props
