@@ -23,29 +23,9 @@ const ButtonGrid: Story<Omit<ButtonProps, "css">> = (props) => (
     <Button css={{ colorScheme: "success" }} size="small" {...props} />
     <Button css={{ colorScheme: "success" }} {...props} />
     <Button css={{ colorScheme: "success" }} size="large" {...props} />
-    <Button
-      css={{
-        colorScheme: "warning",
-        color: "$colorScheme12",
-      }}
-      size="small"
-      {...props}
-    />
-    <Button
-      css={{
-        colorScheme: "warning",
-        color: "$colorScheme12",
-      }}
-      {...props}
-    />
-    <Button
-      css={{
-        colorScheme: "warning",
-        color: "$colorScheme12",
-      }}
-      size="large"
-      {...props}
-    />
+    <Button css={{ colorScheme: "warning" }} size="small" {...props} />
+    <Button css={{ colorScheme: "warning" }} {...props} />
+    <Button css={{ colorScheme: "warning" }} size="large" {...props} />
   </Box>
 );
 

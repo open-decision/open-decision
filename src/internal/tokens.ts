@@ -11,8 +11,6 @@ import {
   greenA,
   blue,
   blueA,
-  yellow,
-  yellowA,
 } from "@radix-ui/colors";
 import { aliasColor, TextStyles, SystemColors } from "./utils";
 
@@ -136,6 +134,8 @@ export const colors: SystemColors = {
   ...aliasColor("warningA", amberA, true),
   ...aliasColor("info", blue),
   ...aliasColor("infoA", blueA),
+  black: "$colors$gray12",
+  white: "$colors$gray1",
   shadowColor: "rgba(17, 24, 28, 0.3)",
 };
 

@@ -72,6 +72,7 @@ export const designSystem = createStitches({
         lineHeight: `$${value}`,
         letterSpacing: `$${value}`,
         fontWeight: `$${value}`,
+        color: "$gray12",
       };
 
       switch (value) {
