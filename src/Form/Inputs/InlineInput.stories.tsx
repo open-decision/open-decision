@@ -53,6 +53,6 @@ export const Input: Story<Props> = (props) => (
       {...sharedProps}
       {...props}
     />
-    <InlineInput name="test3" minLength={5} {...sharedProps} {...props} />
+    <InlineInput name="test3" minLength={5} {...props} />
   </Form>
 );

@@ -23,6 +23,9 @@ export const baseInputStyles = {
 } as const;
 
 export const baseTextInputStyle = {
+  $$XTranslation: "0px",
+  transform: "translateX($$XTranslation)",
+
   variants: {
     size: {
       medium: {},

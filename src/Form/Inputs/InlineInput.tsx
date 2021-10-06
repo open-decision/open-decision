@@ -12,6 +12,7 @@ const StyledBox = styled(Box, {
   borderBottom: "1px solid $colors$gray8",
   display: "flex",
   alignItems: "center",
+  paddingInline: "$2",
 
   "&:focus-within": {
     boxShadow: "none",
@@ -22,6 +23,7 @@ const StyledBox = styled(Box, {
 
 const StyledInput = styled("input", {
   ...baseTextInputStyle,
+  textStyle: "medium-text",
   $$paddingInline: "$space$2",
   $$paddingBlock: "$space$2",
   paddingInline: "$$paddingInline",
@@ -32,6 +34,7 @@ const StyledInput = styled("input", {
   // Since Input is not directly a styled component the order of the styles is not controlled correctly.
   borderColor: "transparent !important",
   boxShadow: "none !important",
+  flex: 1,
 
   "&:focus-visible": {
     boxShadow: "none",

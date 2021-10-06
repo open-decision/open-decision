@@ -5,6 +5,8 @@ import { useInput } from "../useForm";
 
 const StyledTextarea = styled("textarea", {
   ...baseInputStyles,
+  backgroundColor: "transparent",
+
   borderRadius: "$md",
   textStyle: "medium-text",
   minWidth: 0,

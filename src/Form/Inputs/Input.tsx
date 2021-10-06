@@ -28,6 +28,7 @@ const StyledInput = styled("input", {
   minWidth: 0,
   transform: "translateX($$XTranslation)",
   outline: "none",
+  backgroundColor: "transparent",
 });
 
 export type InputProps = Omit<
@@ -53,6 +54,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       value,
       Buttons,
       disabled,
+      css,
       ...props
     },
     forwardedRef
@@ -103,7 +105,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <StyledBox
-        css={{ color: disabled ? "$gray8" : "$gray11" }}
+        css={{ color: disabled ? "$gray8" : "$gray11", ...css }}
         data-disabled={disabled}
       >
         <StyledInput
