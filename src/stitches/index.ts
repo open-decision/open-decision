@@ -94,6 +94,7 @@ export const designSystem = createStitches({
         case "outer":
           return {
             "&:focus-visible, &:focus-within": {
+              outlineWidth: "2px",
               outlineOffset: "$space$1",
               outlineColor: "$primary9",
             },
@@ -133,16 +134,18 @@ export const darkTheme = createTheme("dark", {
     ...aliasColor("grayA", slateDarkA),
     ...aliasColor("primary", indigoDark),
     ...aliasColor("primaryA", indigoDarkA),
-    ...aliasColor("accent", amberDark),
-    ...aliasColor("accentA", amberDarkA),
+    ...aliasColor("accent", amberDark, true),
+    ...aliasColor("accentA", amberDarkA, true),
     ...aliasColor("error", redDark),
     ...aliasColor("errorA", redDarkA),
     ...aliasColor("success", greenDark),
     ...aliasColor("successA", greenDarkA),
-    ...aliasColor("warning", yellowDark),
-    ...aliasColor("warningA", yellowDarkA),
+    ...aliasColor("warning", amberDark, true),
+    ...aliasColor("warningA", amberDarkA, true),
     ...aliasColor("info", blueDark),
     ...aliasColor("infoA", blueDarkA),
     ...aliasColor("colorScheme", slateDark),
+    black: "$colors$gray1",
+    white: "$colors$gray12",
   },
 });
