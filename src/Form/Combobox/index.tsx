@@ -27,7 +27,7 @@ const fallbackSelectedItem = {
 
 export function Combobox<
   TItems extends readonly { readonly id: string; readonly label: string }[]
->({ name, items, selectedItemId, css, Input, ...props }: Props<TItems>) {
+>({ items, selectedItemId, css, Input, ...props }: Props<TItems>) {
   const [inputItems, setInputItems] = React.useState(items);
 
   const {
@@ -57,7 +57,7 @@ export function Combobox<
   const EnhancedInput = React.isValidElement(Input)
     ? React.cloneElement(Input, {
         ...getInputProps(),
-        Buttons: [
+        Buttons: (
           <IconButton
             label="Entferne die momentan ausgewählte Option"
             Icon={<X />}
@@ -65,8 +65,8 @@ export function Combobox<
             variant="ghost"
             type="button"
             onClick={() => reset()}
-          />,
-        ],
+          />
+        ),
       })
     : Input;
 
