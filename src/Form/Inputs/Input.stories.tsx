@@ -4,8 +4,8 @@ import { Input as SystemInput } from "./Input";
 import { VariantProps } from "@stitches/react";
 import { Form } from "../Form";
 import { Field } from "./Field";
-import { ArrowRight } from "../../icons";
-import { IconButton } from "../../IconButton";
+import { ArrowRight, Search } from "../../icons";
+import { IconButton, Icon } from "../../IconButton";
 
 export default {
   component: SystemInput,
@@ -14,36 +14,55 @@ export default {
 
 type Props = VariantProps<typeof SystemInput>;
 
-export const Input: Story<Props> = (props) => (
+const Input: Story<Props> = (props) => (
   <Form
     initialValues={{
       test: "",
-      another: "",
-      test2: "existing value",
-      test3: "",
     }}
     onSubmit={({ values }) => alert(values)}
     css={{ display: "grid", gap: "$2", width: "max-content" }}
   >
     <SystemInput name="test" {...props} />
-    <SystemInput name="test" size="large" {...props} />
-    <SystemInput name="another" disabled {...props} />
-    <SystemInput name="test2" minLength={5} required {...props} />
     <Field label="Testinput">
-      <SystemInput name="test2" {...props} />
-    </Field>
-    <Field label="Input with Buttons">
-      <SystemInput
-        name="test2"
-        Buttons={[
-          <IconButton
-            variant="tertiary"
-            label="Remove Content"
-            Icon={<ArrowRight />}
-          />,
-        ]}
-        {...props}
-      />
+      <SystemInput name="test" {...props} />
     </Field>
   </Form>
 );
+
+export const Default = Input.bind({});
+export const WithIcon = Input.bind({});
+WithIcon.args = {
+  Icon: (
+    <Icon label="Suche" alignByContent="left">
+      <Search />
+    </Icon>
+  ),
+};
+
+export const WithButtons = Input.bind({});
+WithButtons.args = {
+  Buttons: [
+    <IconButton
+      size="small"
+      variant="tertiary"
+      label="Remove Content"
+      Icon={<ArrowRight />}
+    />,
+  ],
+};
+export const WithButtonsAndIcons = Input.bind({});
+WithButtonsAndIcons.args = {
+  Icon: (
+    <Icon label="Suche" alignByContent="left">
+      <Search />
+    </Icon>
+  ),
+  Buttons: [
+    <IconButton
+      size="small"
+      variant="tertiary"
+      label="Remove Content"
+      Icon={<ArrowRight />}
+    />,
+  ],
+};

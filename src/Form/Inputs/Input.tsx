@@ -42,6 +42,7 @@ export type InputProps = Omit<
   value?: string;
   regex?: string;
   Buttons?: JSX.Element | JSX.Element[];
+  Icon?: JSX.Element;
 } & VariantProps<typeof StyledBox>;
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
@@ -59,6 +60,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       disabled,
       css,
       size,
+      Icon,
       ...props
     },
     forwardedRef
@@ -113,6 +115,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         data-disabled={disabled}
         size={size}
       >
+        {Icon}
         <StyledInput
           name={name}
           ref={forwardedRef}
@@ -125,6 +128,10 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             setBlur(true);
           }}
           disabled={disabled}
+          minLength={minLength}
+          maxLength={maxLength}
+          pattern={regex}
+          required={required}
           {...props}
         />
         {Buttons}

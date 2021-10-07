@@ -7,7 +7,13 @@ export const baseInputStyles = {
 
   transition: "all 0.2s",
 
-  "&:hover": { borderColor: "$primary9" },
+  "&:hover": {
+    borderColor: "$primary9",
+
+    ".icon > svg": {
+      stroke: "$primary9",
+    },
+  },
 
   "&[data-state='checked']": {
     backgroundColor: "$primary9",

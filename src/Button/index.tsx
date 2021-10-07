@@ -8,6 +8,7 @@ export const Button = styled("button", {
   $$paddingBlock: "$space$3",
   $$YTranslation: "0px",
   $$XTranslation: "0px",
+
   //Mini reset
   appearance: "none",
   colorScheme: "primary",

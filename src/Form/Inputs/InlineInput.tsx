@@ -9,14 +9,14 @@ import { baseInputStyles, baseTextInputStyle } from "../shared/styles";
 const StyledBox = styled(Box, {
   ...baseInputStyles,
   border: 0,
-  borderBottom: "1px solid $colors$gray8",
+  $$borderWidth: "2px",
+  borderBottom: "$$borderWidth solid $colors$gray8",
   display: "flex",
   alignItems: "center",
 
   "&:focus-within": {
     boxShadow: "none",
-    borderColor: "$primary9",
-    borderWidth: "2px",
+    borderColor: "$colors$primary10",
   },
 });
 
@@ -40,7 +40,11 @@ const StyledInput = styled("input", {
   },
 });
 
-export const InlineInput = React.forwardRef<HTMLInputElement, InputProps>(
+export type InlineInputProps =
+  | (InputProps & { borderless?: boolean })
+  | (InputProps & { borderless: true; Icon: JSX.Element });
+
+export const InlineInput = React.forwardRef<HTMLInputElement, InlineInputProps>(
   (
     {
       name,
@@ -52,8 +56,10 @@ export const InlineInput = React.forwardRef<HTMLInputElement, InputProps>(
       onBlur,
       value,
       disabled,
-      alignByContent = "left",
+      alignByContent = "center",
+      borderless,
       Buttons,
+      Icon,
       ...props
     },
     forwardedRef
@@ -104,9 +110,13 @@ export const InlineInput = React.forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <StyledBox
-        css={{ color: disabled ? "$gray8" : "$gray11" }}
+        css={{
+          color: disabled ? "$gray8" : "$gray11",
+          $$borderWidth: borderless ? "0px" : undefined,
+        }}
         data-disabled={disabled}
       >
+        {Icon}
         <StyledInput
           disabled={disabled}
           name={name}
@@ -120,6 +130,10 @@ export const InlineInput = React.forwardRef<HTMLInputElement, InputProps>(
             setBlur(true);
           }}
           alignByContent={alignByContent}
+          minLength={minLength}
+          maxLength={maxLength}
+          pattern={regex}
+          required={required}
           {...props}
         />
         {Buttons}

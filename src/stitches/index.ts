@@ -94,16 +94,24 @@ export const designSystem = createStitches({
             "&:focus-visible, &:focus-within": {
               outlineWidth: "2px",
               outlineOffset: "$space$1",
-              outlineColor: "$primary9",
+              outlineColor: "$primary10",
+
+              ".icon > svg": {
+                stroke: "$primary10",
+              },
             },
           };
 
         default:
           return {
             "&:focus-visible, &:focus-within": {
-              boxShadow: "inset 0 0 0 1px $colors$primary9",
-              borderColor: "$primary9",
+              boxShadow: "inset 0 0 0 1px $colors$primary10",
+              borderColor: "$primary10",
               outline: "none",
+
+              ".icon > svg": {
+                stroke: "$primary10",
+              },
             },
           };
       }
