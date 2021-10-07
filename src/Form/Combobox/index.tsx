@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useCombobox, UseComboboxProps } from "downshift";
-import { Input } from "../Inputs/Input";
 import { Box } from "../../Box";
 import { Mutable } from "utility-types";
 import { Text } from "../../Text";
@@ -12,9 +11,8 @@ import { StyleObject } from "src";
 type Props<
   TItems extends readonly { readonly id: string; readonly label: string }[]
 > = {
-  name: string;
+  Input: JSX.Element;
   items: TItems;
-  size?: React.ComponentProps<typeof Input>["size"];
   selectedItemId?: TItems[number]["id"];
   css?: StyleObject;
 } & Omit<
@@ -29,7 +27,7 @@ const fallbackSelectedItem = {
 
 export function Combobox<
   TItems extends readonly { readonly id: string; readonly label: string }[]
->({ name, items, selectedItemId, size, css, ...props }: Props<TItems>) {
+>({ name, items, selectedItemId, css, Input, ...props }: Props<TItems>) {
   const [inputItems, setInputItems] = React.useState(items);
 
   const {
@@ -56,14 +54,10 @@ export function Combobox<
     ...props,
   });
 
-  return (
-    <Box css={{ position: "relative" }} {...getComboboxProps()}>
-      <Input
-        size={size}
-        {...getInputProps()}
-        name={name}
-        css={css}
-        Buttons={
+  const EnhancedInput = React.isValidElement(Input)
+    ? React.cloneElement(Input, {
+        ...getInputProps(),
+        Buttons: [
           <IconButton
             label="Entferne die momentan ausgewählte Option"
             Icon={<X />}
@@ -71,9 +65,17 @@ export function Combobox<
             variant="ghost"
             type="button"
             onClick={() => reset()}
-          />
-        }
-      />
+          />,
+        ],
+      })
+    : Input;
+
+  return (
+    <Box
+      css={{ position: "relative", isolation: "isolate" }}
+      {...getComboboxProps()}
+    >
+      {EnhancedInput}
       <Box
         {...getMenuProps()}
         as="ul"
@@ -88,6 +90,7 @@ export function Combobox<
           display: "grid",
           gap: "$1",
           overflow: "hidden",
+          zIndex: 10,
         }}
       >
         {isOpen &&
