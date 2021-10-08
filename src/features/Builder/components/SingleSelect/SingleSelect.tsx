@@ -1,26 +1,25 @@
 import {
   Box,
-  Button,
+  Combobox,
+  Form,
   Heading,
   IconButton,
+  IconButtonProps,
+  InlineInput,
   Input,
-  styled,
 } from "@open-legal-tech/design-system";
 import { useSelector } from "@xstate/react";
 import { useEditor } from "features/Builder/state/useEditor";
 import { useTree } from "features/Builder/state/useTree";
 import * as React from "react";
-import { createNewAssociatedNode } from "features/Builder/state/assignUtils";
 import * as Node from "features/Builder/types/Node";
 import * as Tree from "features/Builder/types/Tree";
 import * as Record from "fp-ts/Record";
+import * as Array from "fp-ts/Array";
 import { pipe } from "fp-ts/lib/function";
-import { ChevronDown, CornerDownRight, Plus, Trash, X } from "react-feather";
-
-const StyledAccordionRoot = styled(Box, {
-  display: "grid",
-  gap: "$2",
-});
+import { Plus, Trash, Crosshair } from "react-feather";
+import { useNode } from "features/Builder/state/useNode";
+import { DragHandle } from "./DragHandle";
 
 type SingleSelectProps = { node: Node.TNode };
 
@@ -34,9 +33,10 @@ export function SingleSelectInputs({ node }: SingleSelectProps) {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          marginBottom: "$2",
         }}
       >
-        <Heading>
+        <Heading size="extra-small" css={{ textTransform: "uppercase" }}>
           Pfade{" "}
           <Box css={{ color: "$gray11" }} as="span">
             / Einfachauswahl
@@ -44,13 +44,13 @@ export function SingleSelectInputs({ node }: SingleSelectProps) {
         </Heading>
         <IconButton
           variant="tertiary"
-          css={{ colorScheme: "success" }}
-          Icon={<Plus style={{ width: "30px", height: "30px" }} />}
+          round
+          Icon={<Plus />}
           label="Neue Antwortmöglichkeit hinzufügen"
           onClick={() => service.send({ type: "addRelation", nodeId: node.id })}
         />
       </Box>
-      <StyledAccordionRoot>
+      <Box css={{ display: "grid", gap: "$4" }}>
         {Object.values(node.data.relations).map((relation) => (
           <SingleSelectInput
             key={relation.id}
@@ -73,30 +73,10 @@ export function SingleSelectInputs({ node }: SingleSelectProps) {
             nodeId={node.id}
           />
         ))}
-      </StyledAccordionRoot>
+      </Box>
     </>
   );
 }
-
-const StyledAccordionContainer = styled(Box, {
-  display: "grid",
-  gridTemplateColumns: "max-content 1fr 50px",
-  gap: "$2",
-
-  "&[data-state=open]": {
-    gridTemplateRows: "1fr 1fr",
-  },
-  "&[data-state=closed]": {
-    gridTemplateRows: "1fr",
-  },
-});
-
-const StyledAccordionContent = styled(Box, {
-  gridColumn: "1 / -1",
-  display: "flex",
-  alignItems: "center",
-});
-
 type SingleSelectInputProps = {
   input: Node.TRelation;
   nodeId: string;
@@ -110,163 +90,125 @@ export function SingleSelectInput({
   onChange,
   onDelete,
 }: SingleSelectInputProps): JSX.Element {
-  return (
-    <StyledAccordionContainer>
-      <Box
-        css={{
-          display: "grid",
-          gridColumn: "1 / -1",
-          gridTemplateColumns: "inherit",
-          $$radius: "$radii$lg",
-          $$border: "2px solid $colors$gray5",
-        }}
-      >
-        <IconButton
-          css={{
-            border: "$$border",
-            borderRadius: "$none",
-            borderTopLeftRadius: "$$radius",
-            borderBottomLeftRadius: "$$radius",
-          }}
-          label="Öffne die Verbindungen"
-          variant="ghost"
-          Icon={<ChevronDown />}
-        />
-        <Input
-          css={{
-            marginRight: "$2",
-            boxShadow: "$none",
-            border: "$$border",
-            borderLeft: "$none",
-            gridColumn: 2,
-            borderTopRightRadius: "$$radius",
-            borderBottomRightRadius: "$$radius",
-          }}
-          value={input.value ?? ""}
-          onChange={onChange}
-        />
-        <IconButton
-          css={{ colorScheme: "error", gridColumn: 3 }}
-          variant="tertiary"
-          label="Entferne den Input"
-          Icon={
-            <Trash
-              style={{
-                width: "30px",
-                height: "30px",
-              }}
-            />
-          }
-          onClick={(_event) => onDelete(input.id)}
-        />
-      </Box>
-      <StyledAccordionContent>
-        <Box css={{ width: "45px" }}>
-          <CornerDownRight
-            style={{
-              width: "30px",
-              height: "30px",
-              transform: "translate(10px, -6px)",
-            }}
-          />
-        </Box>
-        <Box css={{ gridColumn: 2, display: "flex", gap: "$1" }}>
-          <NodeLink target={input.target} />
-          <SelectNodeDropdown nodeId={nodeId} input={input} />
-        </Box>
-      </StyledAccordionContent>
-    </StyledAccordionContainer>
-  );
-}
-
-type SelectNodeDropDownProps = {
-  nodeId: string;
-  input: Node.TRelation;
-};
-
-const StyledSelect = styled("select", {
-  backgroundColor: "$gray4",
-  borderRadius: "$md",
-  padding: "$1 $2",
-});
-
-function SelectNodeDropdown({ nodeId, input }: SelectNodeDropDownProps) {
   const service = useTree();
   const tree = useSelector(service, (state) => state.context);
   const node = useSelector(service, (state) => state.context.nodes[nodeId]);
   const nodeOptions = pipe(
     Tree.getConnectableNodes(node)(tree),
-    Record.map((node) => ({ target: node.id, label: node.data.label }))
+    Record.toArray,
+    Array.map(([, node]) => ({ id: node.id, label: node.data.label }))
   );
 
   return (
-    <Box css={{ display: "flex", gap: "$2" }}>
-      {/* eslint-disable-next-line jsx-a11y/no-onchange */}
-      <StyledSelect
-        value={input.target ?? ""}
-        onChange={(event) =>
-          service.send({
-            type: "updateRelation",
-            nodeId,
-            relationId: input.id,
-            value: { target: event.target.value },
-          })
-        }
+    <Form
+      onSubmit={() => {
+        return;
+      }}
+      initialValues={{ value: input.value ?? "", target: input.target ?? "" }}
+      css={{
+        display: "flex",
+        gap: "$2",
+        position: "relative",
+      }}
+    >
+      <Box
+        css={{
+          flex: 1,
+          display: "grid",
+          gridTemplateColumns: "max-content 1fr",
+          border: "1px solid $gray8",
+          borderRadius: "$md",
+          backgroundColor: "$gray1",
+        }}
       >
-        <option value="">Wähle den Zielknoten</option>
-        {Object.values(nodeOptions).map((option) => (
-          <option
-            disabled={option.target === nodeId}
-            value={option.target}
-            key={option.target}
-          >
-            {option.label}
-          </option>
-        ))}
-      </StyledSelect>
-      {input.target ? (
-        <IconButton
-          variant="tertiary"
-          css={{ colorScheme: "error" }}
-          onClick={() =>
+        <Input
+          css={{
+            borderRadius: "0",
+            borderTopLeftRadius: "inherit",
+            borderTopRightRadius: "inherit",
+            gridColumn: "1 / -1",
+            border: 0,
+            borderBottom: "inherit",
+          }}
+          name="value"
+          value={input.value ?? ""}
+          onChange={onChange}
+          placeholder="Antwort"
+        />
+        <NodeLink target={input.target} />
+        <Combobox
+          Input={
+            <InlineInput
+              name="target"
+              borderless
+              placeholder="Zielknoten auswählen"
+            />
+          }
+          menuCss={{
+            backgroundColor: "$gray1",
+            "&[data-state='open']": { border: "1px solid $gray8" },
+          }}
+          items={nodeOptions}
+          selectedItemId={input.target}
+          onSelectedItemChange={({ selectedItem }) =>
             service.send({
               type: "updateRelation",
               nodeId,
               relationId: input.id,
-              value: {
-                target: undefined,
-              },
+              value: { target: selectedItem?.id ?? "" },
             })
           }
-          Icon={<X />}
-          label="Entferne den Zielknoten"
         />
-      ) : (
+      </Box>
+      <Box css={{ display: "flex", alignItems: "center" }}>
         <IconButton
-          variant="tertiary"
-          css={{ colorScheme: "success" }}
-          Icon={<Plus />}
-          label="Füge einen neuen Knoten hinzu und verknüpfe ihn mit diesem Input"
-          onClick={() => service.send(createNewAssociatedNode(node))}
+          css={{ colorScheme: "error" }}
+          variant="ghost"
+          size="small"
+          label="Entferne den Input"
+          Icon={<Trash />}
+          onClick={() => onDelete(input.id)}
         />
-      )}
-    </Box>
+        <IconButton
+          variant="ghost"
+          size="small"
+          label="Entferne den Input"
+          Icon={<DragHandle />}
+        />
+      </Box>
+    </Form>
   );
 }
 
-type NodeLinkProps = { target?: string };
+type NodeLinkProps = { target?: string } & Omit<
+  IconButtonProps,
+  "label" | "Icon"
+>;
 
-function NodeLink({ target }: NodeLinkProps) {
+function NodeLink({ target, ...props }: NodeLinkProps) {
   const { setSelectedNodeId } = useEditor();
+  const node = useNode(target ?? "");
 
   return (
-    <Button
-      variant={target ? "tertiary" : "ghost"}
-      size="sm"
+    // @ts-expect-error
+    <IconButton
+      css={{
+        borderRadius: "0",
+        borderBottomLeftRadius: "inherit",
+        border: "none",
+        borderRight: "inherit",
+        focusStyle: "inner",
+        width: "40px",
+        maxWidth: "100%",
+        colorScheme: target ? "primary" : "gray",
+      }}
+      size="small"
+      variant="secondary"
       onClick={() => (target ? setSelectedNodeId(target) : null)}
       disabled={!target}
-    >
-      GEHT ZU:
-    </Button>
+      label={node ? `Gehe zu Node: ${node.data.label}` : "Keine Node verbunden"}
+      Icon={<Crosshair />}
+      {...props}
+    />
   );
 }

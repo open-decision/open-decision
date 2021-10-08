@@ -1,4 +1,5 @@
 import { Box, IconButton, styled } from "@open-legal-tech/design-system";
+import { Type } from "react-feather";
 import * as React from "react";
 import * as Separator from "@radix-ui/react-separator";
 import { insertLink } from "./utils";
@@ -16,12 +17,8 @@ import {
   Italic,
   Link,
   List,
-  Type,
   Underline,
 } from "react-feather";
-
-const ToolbarIconButton = IconButton;
-ToolbarIconButton.defaultProps = { variant: "ghost" };
 
 const StyledSeparator = styled(Separator.Root, {
   backgroundColor: "$gray8",
@@ -36,55 +33,83 @@ export function Toolbar(): JSX.Element {
   const toggleEditorElementUnionMark = toggleElementUnionMark(editor);
 
   return (
-    <Box css={{ display: "flex", backgroundColor: "$gray6", padding: "$1" }}>
-      <ToolbarIconButton
-        label="Füge einen neuen Link hinzu"
-        onClick={() =>
-          insertLink(editor, prompt("url") ?? "www.open-decision.org")
-        }
-        Icon={<Link />}
-      />
-      <StyledSeparator orientation="vertical" decorative />
-      <ToolbarIconButton
+    <Box
+      css={{
+        display: "flex",
+        backgroundColor: "$gray2",
+        padding: "$1",
+        boxShadow: "$1",
+        gap: "$1",
+      }}
+    >
+      <IconButton
+        size="small"
+        variant="ghost"
         label="Konvertiere den ausgewählten Text in eine Überschrift"
         onClick={() => toggleEditorElement("h1")}
         Icon={<Type />}
       />
-      <ToolbarIconButton
+      <StyledSeparator orientation="vertical" decorative />
+      <IconButton
+        size="small"
+        variant="ghost"
+        label="Markiere den ausgewählten Text dick"
+        onClick={() => toggleEditorMark("bold")}
+        Icon={<Bold />}
+      />
+      <IconButton
+        size="small"
+        variant="ghost"
+        label="Markiere den ausgewählten Text kursiv"
+        onClick={() => toggleEditorMark("italic")}
+        Icon={<Italic />}
+      />
+      <IconButton
+        size="small"
+        variant="ghost"
+        label="Unterstreiche den ausgewählten Text"
+        onClick={() => toggleEditorMark("underline")}
+        Icon={<Underline />}
+      />
+      <StyledSeparator orientation="vertical" decorative />
+      <IconButton
+        size="small"
+        variant="ghost"
         label="Erstelle eine unnumerierte Liste"
         onClick={() => toggleEditorElement("ul")}
         Icon={<List />}
       />
       <StyledSeparator orientation="vertical" decorative />
-      <ToolbarIconButton
-        label="Markiere den ausgewählten Text dick"
-        onClick={() => toggleEditorMark("bold")}
-        Icon={<Bold />}
-      />
-      <ToolbarIconButton
-        label="Markiere den ausgewählten Text kursiv"
-        onClick={() => toggleEditorMark("italic")}
-        Icon={<Italic />}
-      />
-      <ToolbarIconButton
-        label="Unterstreiche den ausgewählten Text"
-        onClick={() => toggleEditorMark("underline")}
-        Icon={<Underline />}
-      />
-      <ToolbarIconButton
+      <IconButton
+        size="small"
+        variant="ghost"
         label="Orientiere den ausgewählten Block links"
         onClick={() => toggleEditorElementUnionMark("justify", "left")}
         Icon={<AlignLeft />}
       />
-      <ToolbarIconButton
+      <IconButton
+        size="small"
+        variant="ghost"
         label="Orientiere den ausgewählten Block mittig"
         onClick={() => toggleEditorElementUnionMark("justify", "center")}
         Icon={<AlignJustify />}
       />
-      <ToolbarIconButton
+      <IconButton
+        size="small"
+        variant="ghost"
         label="Orientiere den ausgewählten Block rechts"
         onClick={() => toggleEditorElementUnionMark("justify", "right")}
         Icon={<AlignRight />}
+      />
+      <StyledSeparator orientation="vertical" decorative />
+      <IconButton
+        size="small"
+        variant="ghost"
+        label="Füge einen neuen Link hinzu"
+        onClick={() =>
+          insertLink(editor, prompt("url") ?? "www.open-decision.org")
+        }
+        Icon={<Link />}
       />
     </Box>
   );

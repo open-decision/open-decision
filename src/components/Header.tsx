@@ -4,19 +4,15 @@ import {
   StyleObject,
   styled,
   Box,
-  Input,
   Text,
+  Form,
+  darkTheme,
+  InlineInput,
 } from "@open-legal-tech/design-system";
-import { ChevronDown, Menu } from "react-feather";
 
 const Container = styled("div", {
-  backgroundColor: "$gray12",
+  backgroundColor: "$gray2",
   paddingInline: "$4",
-  paddingBlock: "$2",
-
-  "@md": {
-    paddingInline: "$8",
-  },
 });
 
 const Content = styled("header", {
@@ -33,25 +29,27 @@ type HeaderProps = {
 
 export const Header: React.FC<HeaderProps> = ({ css }) => {
   return (
-    <Container css={css}>
+    <Container css={css} className={darkTheme}>
       <Content>
-        <Logo variant="dark" />
-        <Box css={{ display: "flex", alignItems: "center", gap: "$4" }}>
-          <Text as="h2" size="md">
-            Projektname:{" "}
+        <Logo />
+        <Box css={{ display: "flex", alignItems: "center" }}>
+          <Text
+            as="h2"
+            size="medium"
+            css={{ color: "$gray11", fontWeight: 600 }}
+          >
+            Project File /
           </Text>
-          <Input
-            css={{
-              backgroundColor: "transparent",
-              padding: "$1 $2",
-              color: "white",
+          <Form
+            onSubmit={() => {
+              return;
             }}
-          />
+            initialValues={{ projectName: "" }}
+          >
+            <InlineInput borderless name="projectName" />
+          </Form>
         </Box>
-        <Box css={{ color: "white", display: "flex", gap: "$2" }}>
-          <ChevronDown />
-          <Menu />
-        </Box>
+        <Box />
       </Content>
     </Container>
   );

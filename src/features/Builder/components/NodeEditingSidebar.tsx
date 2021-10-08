@@ -1,8 +1,16 @@
-import { Box, Heading, Input } from "@open-legal-tech/design-system";
+import {
+  Box,
+  Button,
+  Form,
+  Heading,
+  Icon,
+  InlineInput,
+} from "@open-legal-tech/design-system";
 import { RichTextEditor } from "components/RichTextEditor";
 import { SingleSelectInputs } from "features/Builder/components/SingleSelect/SingleSelect";
 import { useTree } from "features/Builder/state/useTree";
 import * as React from "react";
+import { Edit2 } from "react-feather";
 import { useNode } from "../state/useNode";
 
 type NodeEditingSidebarProps = { nodeId: string };
@@ -13,27 +21,62 @@ export function NodeEditingSidebar({
   const service = useTree();
   const node = useNode(nodeId);
 
-  return node ? (
+  return (
     <>
       <Box as="header">
-        <Heading>Titel</Heading>
-        <Input
-          css={{ width: "100%" }}
-          value={node.data?.label ?? ""}
-          onChange={(event) =>
+        <Form
+          onChange={({ values }) => {
             service.send({
               type: "updateNodeData",
               nodeId,
-              data: { label: event.target.value },
-            })
-          }
-          maxLength={70}
-        />
+              data: { label: values.nodeName },
+            });
+          }}
+          onSubmit={(data) => console.log(data)}
+          initialValues={{ nodeName: node.data?.label ?? "" }}
+        >
+          <InlineInput
+            borderless
+            Icon={
+              <Icon size="small" label="Editiere den Projektnamen">
+                <Edit2 />
+              </Icon>
+            }
+            css={{ textStyle: "medium-heading" }}
+            name="nodeName"
+            maxLength={70}
+            alignByContent="left"
+          />
+        </Form>
       </Box>
       <Box as="section">
-        <Heading>Inhalt</Heading>
+        <Heading size="extra-small" css={{ textTransform: "uppercase" }}>
+          Parent-Nodes
+        </Heading>
+        <Box
+          css={{
+            display: "flex",
+            gap: "$2",
+            marginTop: "$2",
+            flexWrap: "wrap",
+          }}
+        >
+          <Button size="small" variant="tertiary">
+            Asylrecht
+          </Button>
+          <Button size="small" variant="tertiary">
+            Verkehrsrecht
+          </Button>
+        </Box>
+      </Box>
+      <Box as="section">
+        <Heading
+          size="extra-small"
+          css={{ textTransform: "uppercase", marginBottom: "$2" }}
+        >
+          Inhalt
+        </Heading>
         <RichTextEditor
-          css={{ minHeight: "500px" }}
           value={node.data.content}
           setValue={(newValue) =>
             service.send({
@@ -48,7 +91,5 @@ export function NodeEditingSidebar({
         <SingleSelectInputs node={node} />
       </Box>
     </>
-  ) : (
-    <p>Bitte wähle einen Knoten aus</p>
   );
 }

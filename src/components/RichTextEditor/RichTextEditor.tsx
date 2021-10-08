@@ -10,7 +10,11 @@ import { Toolbar } from "./Toolbar";
 const initialValues: Descendant[] = [
   {
     type: "p",
-    children: [{ text: "" }],
+    children: [
+      {
+        text: "",
+      },
+    ],
   },
 ];
 
@@ -34,21 +38,26 @@ export function RichTextEditor({
   if (value.length <= 0) value = initialValues;
 
   return (
-    <Box css={{ css }}>
+    <Box
+      css={{
+        ...css,
+        display: "grid",
+        gap: "$2",
+        borderRadius: "$md",
+        overflow: "hidden",
+        border: "1px solid $gray8",
+        backgroundColor: "$primary1",
+      }}
+    >
       <Slate
         editor={editor}
         value={value}
         onChange={(newValue) => setValue(newValue)}
       >
         <Toolbar />
-        <Box
-          css={{
-            padding: "$4",
-            backgroundColor: "white",
-          }}
-          {...props}
-        >
+        <Box css={{ padding: "$2" }} {...props}>
           <Editable
+            style={{ minHeight: "200px" }}
             renderElement={renderElement}
             renderLeaf={renderLeaf}
             onKeyDown={onKeyDownHandler(editor)}

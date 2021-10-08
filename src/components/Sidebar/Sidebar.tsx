@@ -83,11 +83,10 @@ export const SidebarContent = styled(Collapsible.Content, {
   display: "flex",
   flexDirection: "column",
   backgroundColor: "$gray2",
-  boxShadow: "$xl",
   gap: "$6",
-  overflowY: "scroll",
-
-  "&[data-state='open']": {
-    padding: "$4",
-  },
+  overflowY: "auto",
+  boxShadow: "$1",
+  paddingInlineEnd: "$5",
+  paddingInlineStart: "calc($space$5 - 1px)",
+  paddingBlock: "$6",
 });

@@ -1,4 +1,4 @@
-import { Box, styled } from "@open-legal-tech/design-system";
+import { Box, styled, Text } from "@open-legal-tech/design-system";
 import React, { memo } from "react";
 import { Handle, NodeProps, Position } from "react-flow-renderer";
 import { TNodeData } from "../types/Node";
@@ -6,19 +6,63 @@ import { TNodeData } from "../types/Node";
 const Port = styled(Handle, {
   backgroundColor: "$gray1 !important",
   border: "1px solid $gray11 !important",
-  height: "10px !important",
-  width: "10px !important",
+  height: "12px !important",
+  width: "12px !important",
 });
 
-export const Node = memo(({ id, data }: NodeProps<TNodeData>) => {
+export const Node = memo(({ id, data, selected }: NodeProps<TNodeData>) => {
   return (
-    <>
-      <Port type="target" position={Position.Top} css={{ top: "-6px" }} />
-      <Box data-nodeid={id} css={{ padding: "$4", minHeight: "50px" }}>
-        {data.label}
+    <Box
+      data-nodeid={id}
+      css={{
+        backgroundColor: "$primary1",
+        borderRadius: "$md",
+        boxShadow: selected ? "0px 0px 0px 1px $colors$primary9, $2" : "$2",
+        border: selected ? "1px solid $primary9" : "1px solid $gray9",
+        width: "200px",
+        height: "80px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+
+        "&:hover": {
+          borderColor: "$primary9",
+        },
+      }}
+    >
+      <Port
+        type="target"
+        position={Position.Top}
+        css={{ top: "-6px !important" }}
+      />
+      <Box
+        data-nodeid={id}
+        css={{
+          padding: "$4",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text
+          css={{
+            textAlign: "center",
+            wordBreak: "break-word",
+            hyphens: "auto",
+          }}
+          data-nodeid={id}
+          size="small"
+          as="span"
+        >
+          {data.label}
+        </Text>
       </Box>
-      <Port type="source" position={Position.Bottom} css={{ bottom: "-6px" }} />
-    </>
+      <Port
+        type="source"
+        position={Position.Bottom}
+        css={{ bottom: "-6px !important" }}
+      />
+    </Box>
   );
 });
 

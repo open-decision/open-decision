@@ -1,6 +1,11 @@
-import { Box, styled, StyleObject } from "@open-legal-tech/design-system";
+import {
+  Box,
+  darkTheme,
+  styled,
+  StyleObject,
+} from "@open-legal-tech/design-system";
 import { useActor } from "@xstate/react";
-import { SidebarContent, SidebarRoot, SidebarToggle } from "components/Sidebar";
+import { SidebarContent, SidebarRoot } from "components/Sidebar";
 import React, { useRef } from "react";
 import { NewNodeButton } from "./components/NewNodeButton";
 import { Node } from "./components/Node";
@@ -12,11 +17,14 @@ import { useEditor } from "./state/useEditor";
 import { useTree } from "./state/useTree";
 import * as NodeType from "./types/Node";
 
+const customNodes = { customNode: Node };
+
 const Container = styled("div", {
   display: "grid",
   height: "100%",
   width: "100vw",
   position: "relative",
+  backgroundColor: "$gray1",
 });
 
 type NodeEditorProps = {
@@ -42,7 +50,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
     reactFlowInstance,
     setReactFlowInstance,
     isNodeEditingSidebarOpen,
-    setNodeEditingSidebarOpen,
+    closeNodeEditingSidebar,
   } = useEditor();
 
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
@@ -81,7 +89,6 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
   const elements = [
     ...Object.values(tree.nodes).map((node) => ({
       ...node,
-      style: { padding: 0, stroke: "transparent" },
     })),
     ...createEdges(tree.nodes),
   ];
@@ -91,9 +98,9 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
       <Container ref={reactFlowWrapper} css={css}>
         <Stage
           onPaneClick={() => {
-            setNodeEditingSidebarOpen(false);
+            closeNodeEditingSidebar();
           }}
-          nodeTypes={{ default: Node }}
+          nodeTypes={customNodes}
           elements={elements}
           onElementsRemove={(elementsToRemove) =>
             send([
@@ -110,7 +117,8 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
           }}
           onConnectEnd={(event) => {
             if (
-              event.target instanceof HTMLDivElement &&
+              (event.target instanceof HTMLDivElement ||
+                event.target instanceof HTMLSpanElement) &&
               event.target.dataset.nodeid &&
               sourceNodeId.current
             ) {
@@ -125,7 +133,6 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
           onDrop={onDrop}
           onLoad={setReactFlowInstance}
           onElementClick={(_event, node) => {
-            setNodeEditingSidebarOpen(true);
             setSelectedNodeId(node.id);
           }}
           // onEdgeUpdate={(oldEdge, newConnection) => {
@@ -154,6 +161,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
           style={{
             gridColumn: "1 / -1",
             gridRow: "1",
+            isolation: "isolate",
           }}
         />
         <NewNodeButton
@@ -161,45 +169,42 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
             position: "absolute",
             top: "20px",
             left: "20px",
-            colorScheme: "success",
-            borderRadius: "$full",
-            backgroundColor: "$colorScheme2",
-            zIndex: "$10",
           }}
         />
       </Container>
       <SidebarRoot
         css={{
-          zIndex: 5,
+          position: "relative",
           display: "grid",
           gridTemplateRows: "inherit",
           gridRow: "1 / -1",
           gridColumn: "2",
+          paddingInlineStart: "$1",
         }}
+        onClick={(event) => event.stopPropagation()}
         open={isNodeEditingSidebarOpen}
-        onOpenChange={(newOpenState = false) =>
-          setNodeEditingSidebarOpen(newOpenState)
-        }
+        onOpenChange={() => closeNodeEditingSidebar()}
       >
         <Box
           css={{
-            backgroundColor: "$gray12",
+            backgroundColor: "$gray2",
             gridRow: "1",
             gap: "$4",
-            display: "flex",
+            display: "grid",
             alignItems: "center",
-            paddingInline: "$4",
-            borderLeft: "2px solid $gray8",
+            paddingInline: "$5",
+            marginLeft: "-$1",
           }}
+          className={darkTheme}
         >
           <NodeSearch />
-          <SidebarToggle
-            position="right"
-            css={{ width: "40px", height: "40px" }}
-          />
         </Box>
         <SidebarContent css={{ gridRow: "2" }}>
-          <NodeEditingSidebar nodeId={selectedNodeId} />
+          {selectedNodeId ? (
+            <NodeEditingSidebar nodeId={selectedNodeId} />
+          ) : (
+            <p>Bitte wähle einen Knoten aus</p>
+          )}
         </SidebarContent>
       </SidebarRoot>
     </>
