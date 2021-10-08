@@ -35,7 +35,7 @@ const TreeCard: React.FC<TreeCard> = ({ tree }) => {
 
       <div className="flex items-baseline">
         <HeadingGroup.Container className="flex-grow">
-          <Heading as="h3" size="sm">
+          <Heading as="h3" size="small">
             {tree.name}
           </Heading>
           <HeadingGroup.SubHeading>

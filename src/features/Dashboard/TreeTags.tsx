@@ -14,10 +14,10 @@ export const TreeTags: React.FC<TreeTagsProps> = ({ tree }) => {
         </Badge>
       ))}
       <IconButton
-        alignContent
+        alignByContent="left"
         variant="ghost"
-        rounded="full"
-        size="sm"
+        round
+        size="small"
         label="Tag hinzufügen"
         Icon={<Plus className="w-6 h-6" />}
       />

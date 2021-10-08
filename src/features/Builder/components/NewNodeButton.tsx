@@ -24,10 +24,12 @@ export const NewNodeButton = ({ css }: Props) => {
 
   return (
     <IconButton
-      variant="secondary"
-      css={css}
+      variant="tertiary"
+      size="large"
+      round
+      css={{ boxShadow: "$2", ...css }}
       label="Füge einen neuen Knoten hinzu"
-      onDragStart={(event) => onDragStart(event)}
+      onDragStart={(event: any) => onDragStart(event)}
       onClick={() =>
         service.send({
           type: "addNode",

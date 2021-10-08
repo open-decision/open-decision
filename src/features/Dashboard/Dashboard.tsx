@@ -22,7 +22,7 @@ export const Dashboard: FC<DashboardProps> = ({ css }) => {
   return (
     <DashboardGrid css={css}>
       <div className="col-start-2 mt-24 mx-4 md:mx-8 flex flex-col justify-end items-start">
-        <Heading className="mb-6" size="xl">
+        <Heading className="mb-6" size="large">
           Hallo!
         </Heading>
         <NewTreeButton />

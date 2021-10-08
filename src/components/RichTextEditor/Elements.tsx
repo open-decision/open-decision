@@ -13,7 +13,7 @@ export const renderElement = (props: RenderElementProps): JSX.Element => {
       return (
         <Heading
           className={elementMarks(props.element)}
-          size="lg"
+          size="large"
           {...props.attributes}
         >
           {props.children}
@@ -22,11 +22,19 @@ export const renderElement = (props: RenderElementProps): JSX.Element => {
     }
     case "h2":
       return (
-        <Heading className={elementMarks(props.element)} size="md" {...props} />
+        <Heading
+          className={elementMarks(props.element)}
+          size="medium"
+          {...props}
+        />
       );
     case "h3":
       return (
-        <Heading className={elementMarks(props.element)} size="xs" {...props} />
+        <Heading
+          className={elementMarks(props.element)}
+          size="extra-small"
+          {...props}
+        />
       );
     case "ul":
       return (

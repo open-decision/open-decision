@@ -1,6 +1,5 @@
 import React from "react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { Field } from "components";
 import { styled, Button } from "@open-legal-tech/design-system";
 import { useTreeStore } from "./hooks/useTrees";
 import { PlusCircle } from "react-feather";
@@ -40,7 +39,7 @@ const Form = styled("form", {
   flexDirection: "column",
 });
 
-const DialogButton = styled(Dialog.Trigger, {
+const DialogButton = styled(Button, {
   display: "flex",
   alignItems: "center",
 });
@@ -53,10 +52,12 @@ export const NewTreeButton: React.FC = () => {
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
-      <DialogButton as={Button} variant="secondary" className="my-8" size="xl">
-        <PlusCircle className="w-6 h-6 mr-2 inline" />
-        Neue Anwendung erstellen
-      </DialogButton>
+      <Dialog.Trigger asChild>
+        <DialogButton variant="secondary" className="my-8" size="large">
+          <PlusCircle className="w-6 h-6 mr-2 inline" />
+          Neue Anwendung erstellen
+        </DialogButton>
+      </Dialog.Trigger>
       <Overlay />
       <Content>
         {/* <Box
@@ -81,13 +82,13 @@ export const NewTreeButton: React.FC = () => {
             createTree({ name }, () => setOpen(false));
           }}
         >
-          <Field
+          {/* <Field
             label="Name"
             layout="inline"
             name="name"
             value={name}
             onChange={(event) => setName(event.target.value)}
-          />
+          /> */}
           <Button
             variant="secondary"
             css={{ marginTop: "$6", alignSelf: "flex-end" }}
