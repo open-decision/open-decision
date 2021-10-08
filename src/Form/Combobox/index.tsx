@@ -6,15 +6,17 @@ import { Text } from "../../Text";
 import { matchSorter } from "match-sorter";
 import { IconButton } from "../../IconButton";
 import { X } from "../../icons";
-import { StyleObject } from "src";
+import { StyleObject } from "../../stitches";
+import { InputProps } from "../Inputs";
 
 type Props<
   TItems extends readonly { readonly id: string; readonly label: string }[]
 > = {
-  Input: JSX.Element;
+  Input: React.ReactElement<InputProps>;
   items: TItems;
   selectedItemId?: TItems[number]["id"];
   css?: StyleObject;
+  menuCss?: StyleObject;
 } & Omit<
   UseComboboxProps<TItems[number]>,
   "selectedItem" | "items" | "onInputValueChange"
@@ -27,7 +29,7 @@ const fallbackSelectedItem = {
 
 export function Combobox<
   TItems extends readonly { readonly id: string; readonly label: string }[]
->({ items, selectedItemId, css, Input, ...props }: Props<TItems>) {
+>({ items, selectedItemId, css, menuCss, Input, ...props }: Props<TItems>) {
   const [inputItems, setInputItems] = React.useState(items);
 
   const {
@@ -54,25 +56,24 @@ export function Combobox<
     ...props,
   });
 
-  const EnhancedInput = React.isValidElement(Input)
-    ? React.cloneElement(Input, {
-        ...getInputProps(),
-        Buttons: (
-          <IconButton
-            label="Entferne die momentan ausgewählte Option"
-            Icon={<X />}
-            size="small"
-            variant="ghost"
-            type="button"
-            onClick={() => reset()}
-          />
-        ),
-      })
-    : Input;
+  const EnhancedInput = React.cloneElement(Input, {
+    ...getInputProps(),
+    Buttons: (
+      <IconButton
+        label="Entferne die momentan ausgewählte Option"
+        Icon={<X />}
+        size="small"
+        variant="ghost"
+        type="button"
+        onClick={() => reset()}
+      />
+    ),
+    ...Input.props,
+  });
 
   return (
     <Box
-      css={{ position: "relative", isolation: "isolate" }}
+      css={{ position: "relative", isolation: "isolate", ...css }}
       {...getComboboxProps()}
     >
       {EnhancedInput}
@@ -89,8 +90,9 @@ export function Combobox<
           borderRadius: "$md",
           display: "grid",
           gap: "$1",
-          overflow: "hidden",
-          zIndex: 10,
+          overflowY: "auto",
+          zIndex: 1,
+          ...menuCss,
         }}
       >
         {isOpen &&
