@@ -4,7 +4,6 @@ import { exampleNodeTypes, examplePortTypes } from "../testData/nodes";
 import * as Node from "./Node";
 import * as Record from "fp-ts/Record";
 import * as Array from "fp-ts/Array";
-import { mapValues } from "remeda";
 
 // ------------------------------------------------------------------
 // Tree Config

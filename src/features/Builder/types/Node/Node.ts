@@ -55,7 +55,7 @@ export function create(
 ): TNode {
   return {
     id: nanoid(5),
-    type: "default",
+    type: "customNode",
     ...node,
     data: {
       relations: {},

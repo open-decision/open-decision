@@ -3,12 +3,12 @@ import { OnLoadParams } from "react-flow-renderer";
 import { TNodeData } from "../types/Node";
 
 type EditorState = {
-  selectedNodeId: string;
-  setSelectedNodeId: (newSelectedNodeId: string) => void;
+  selectedNodeId: string | undefined;
+  setSelectedNodeId: (newSelectedNodeId?: string) => void;
   reactFlowInstance?: OnLoadParams<any>;
   setReactFlowInstance?: (newInstance: OnLoadParams<any>) => void;
   isNodeEditingSidebarOpen: boolean;
-  setNodeEditingSidebarOpen: (newState: boolean) => void;
+  closeNodeEditingSidebar: () => void;
 };
 
 export const EditorContext = React.createContext<EditorState | null>(null);
@@ -18,7 +18,8 @@ type TreeProviderProps = Omit<
   "value"
 >;
 export function EditorProvider({ children }: TreeProviderProps) {
-  const [selectedNodeId, setSelectedNodeId] = React.useState("");
+  const [selectedNodeId, setSelectedNodeId] =
+    React.useState<EditorState["selectedNodeId"]>(undefined);
   const [reactFlowInstance, setReactFlowInstance] = React.useState<
     OnLoadParams<TNodeData> | undefined
   >();
@@ -30,8 +31,8 @@ export function EditorProvider({ children }: TreeProviderProps) {
         setSelectedNodeId,
         reactFlowInstance,
         setReactFlowInstance,
-        isNodeEditingSidebarOpen: Boolean(selectedNodeId || undefined),
-        setNodeEditingSidebarOpen: () => setSelectedNodeId(""),
+        isNodeEditingSidebarOpen: Boolean(selectedNodeId),
+        closeNodeEditingSidebar: () => setSelectedNodeId(undefined),
       }}
     >
       {children}

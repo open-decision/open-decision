@@ -7,5 +7,8 @@ export const examplePortTypes: TPortTypes = {
 };
 
 export const exampleNodeTypes: TNodeTypes = {
-  default: { type: "default", label: "Default" },
+  default: {
+    type: "customNode",
+    label: "Default",
+  },
 };
