@@ -65,19 +65,24 @@ export function Combobox<
         size="small"
         variant="ghost"
         type="button"
+        css={{ focusStyle: "inner" }}
         onClick={() => reset()}
       />
     ),
     ...Input.props,
   });
 
+  const openState = isOpen ? "open" : "closed";
+
   return (
     <Box
-      css={{ position: "relative", isolation: "isolate", ...css }}
+      css={{ position: "relative", ...css }}
+      data-state={openState}
       {...getComboboxProps()}
     >
       {EnhancedInput}
       <Box
+        data-state={openState}
         {...getMenuProps()}
         as="ul"
         css={{
@@ -98,6 +103,7 @@ export function Combobox<
         {isOpen &&
           inputItems.map((item, index) => (
             <Text
+              data-state={openState}
               as="li"
               css={{
                 backgroundColor:
