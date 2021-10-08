@@ -1,5 +1,5 @@
 import React from "react";
-import { Field, Logo } from "components";
+import { Logo } from "components";
 import * as Tabs from "@radix-ui/react-tabs";
 import { styled } from "@open-legal-tech/design-system";
 import {
@@ -71,7 +71,7 @@ const LoginForm: React.FunctionComponent = () => {
   return (
     <form className="flex flex-col">
       <div className="p-6 space-y-4">
-        <Field
+        {/* <Field
           name="email"
           label="E-Mail"
           value={email}
@@ -96,7 +96,7 @@ const LoginForm: React.FunctionComponent = () => {
           >
             Passwort vergessen?
           </a>
-        </div>
+        </div>*/}
       </div>
       {/* <Button
         rounded="none"
@@ -131,7 +131,7 @@ const SignupForm: React.FunctionComponent = () => {
     <form className="flex flex-col">
       <div className="p-6 space-y-8">
         <div className="space-y-2">
-          <Field
+          {/* <Field
             name="email"
             label="E-Mail"
             value={email}
@@ -164,7 +164,7 @@ const SignupForm: React.FunctionComponent = () => {
             type="password"
             required
             autoComplete="new-password"
-          />
+          /> */}
         </div>
         <div>
           Indem Sie auf registrieren klicken akzeptieren Sie unsere{" "}

@@ -2,7 +2,6 @@ import React from "react";
 import { matchSorter } from "match-sorter";
 import { readableDate } from "./utils";
 import { parseISO } from "date-fns";
-import { Field } from "components";
 import { InlinedValidTreeNode, Tag } from "./types";
 
 type GlobalFilter = {
@@ -16,14 +15,15 @@ export const Search: React.FunctionComponent<GlobalFilter> = ({
   setValue,
   ...props
 }) => (
-  <Field
-    layout="inline"
-    name="search"
-    label="Suche: "
-    value={value || ""}
-    onChange={(e) => setValue(e.target.value)}
-    {...props}
-  />
+  <div></div>
+  // <Field
+  //   layout="inline"
+  //   name="search"
+  //   label="Suche: "
+  //   value={value || ""}
+  //   onChange={(e) => setValue(e.target.value)}
+  //   {...props}
+  // />
 );
 
 export const fuzzySearch = (
