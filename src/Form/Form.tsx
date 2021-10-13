@@ -5,6 +5,7 @@ import { styled } from "../stitches";
 
 import type { FormStateValue, FormStateValuesList } from "./types";
 import { FormProvider } from "./useForm";
+import { useDeepCompareEffect } from "react-use";
 
 const StyledForm = styled("form", {});
 
@@ -66,9 +67,14 @@ function FormComponent<TValues extends FormStateValuesList>(
   }: FormProps<TValues>,
   ref: React.ForwardedRef<HTMLFormElement>
 ) {
-  const [data, setData] = React.useState(
+  const [data, setData] = React.useState<FormState<TValues>>(
     createInitialFormState(initialValues, visible)
   );
+
+  useDeepCompareEffect(() => {
+    setData(createInitialFormState(initialValues, visible));
+  }, [initialValues]);
+
   const [status, setStatus] = React.useState<Status>("unsubmitted");
 
   React.useEffect(() => {
@@ -92,10 +98,6 @@ function FormComponent<TValues extends FormStateValuesList>(
   }, [data.errors]);
 
   React.useEffect(() => {
-    onChange?.(data);
-  }, [data]);
-
-  React.useEffect(() => {
     if (status === "validated") {
       onSubmit?.(data);
       setStatus("submitted");
@@ -107,31 +109,42 @@ function FormComponent<TValues extends FormStateValuesList>(
       value={{
         ...data,
         submitting: status === "submitting",
-        setValue: (name) => (newValue) =>
-          setData({
+        setValue: (name) => (newValue) => {
+          const newState = {
             ...data,
             values: {
               ...data.values,
               [name]: newValue,
             },
-          }),
+          };
+
+          onChange?.(newState);
+          setData(newState);
+        },
         setErrors: (name) => (errors) => {
-          return setData((prevState) => ({
-            ...prevState,
+          const newState = {
+            ...data,
             errors: {
-              ...prevState.errors,
+              ...data.errors,
               [name]: { validated: true, errors },
             },
-          }));
+          };
+
+          onChange?.(newState);
+          setData(newState);
         },
-        setBlur: (name) => (newBlur) =>
-          setData({
+        setBlur: (name) => (newBlur) => {
+          const newState = {
             ...data,
             blur: {
               ...data.blur,
               [name]: newBlur,
             },
-          }),
+          };
+
+          onChange?.(newState);
+          setData(newState);
+        },
       }}
     >
       <StyledForm
