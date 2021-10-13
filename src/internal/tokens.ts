@@ -83,12 +83,12 @@ export const lineHeights: Record<TextStyles, string> = {
 
 export const shadows = {
   1: "0px 1px 2px $colors$shadowColor",
-  2: "0px 1px 4px $colors$shadowColor",
-  3: "0px 1px 6px $colors$shadowColor",
-  4: "0px 1px 8px $colors$shadowColor",
-  5: "0px 1px 10px $colors$shadowColor",
-  6: "0px 1px 15px $colors$shadowColor",
-  7: "0px 1px 30px $colors$shadowColor",
+  2: "0px 2px 4px $colors$shadowColor",
+  3: "0px 3px 6px $colors$shadowColor",
+  4: "0px 4px 8px $colors$shadowColor",
+  5: "0px 5px 10px $colors$shadowColor",
+  6: "0px 5px 15px $colors$shadowColor",
+  7: "0px 5px 30px $colors$shadowColor",
   inner: "inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)",
 } as const;
 
