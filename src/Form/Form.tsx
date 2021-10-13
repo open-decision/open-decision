@@ -93,7 +93,7 @@ function FormComponent<TValues extends FormStateValuesList>(
 
   React.useEffect(() => {
     onChange?.(data);
-  }, []);
+  }, [data]);
 
   React.useEffect(() => {
     if (status === "validated") {
@@ -139,7 +139,6 @@ function FormComponent<TValues extends FormStateValuesList>(
           event.preventDefault();
           setStatus("submitting");
         }}
-        onChange={() => onChange?.(data)}
         {...props}
         noValidate
         ref={ref}

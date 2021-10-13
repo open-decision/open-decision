@@ -19,7 +19,7 @@ const Input: Story<Props> = (props) => (
     initialValues={{
       test: "",
     }}
-    onSubmit={({ values }) => alert(values)}
+    onChange={({ values }) => console.log(values)}
     css={{ display: "grid", gap: "$2", width: "max-content" }}
   >
     <SystemInput name="test" {...props} />
