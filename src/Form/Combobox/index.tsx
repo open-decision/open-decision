@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useCombobox, UseComboboxProps } from "downshift";
+import { useCombobox } from "downshift";
 import { Box } from "../../Box";
 import { Mutable } from "utility-types";
 import { Text } from "../../Text";
@@ -8,6 +8,7 @@ import { IconButton } from "../../IconButton";
 import { X } from "../../icons";
 import { StyleObject } from "../../stitches";
 import { InputProps } from "../Inputs";
+import { useInput } from "../useForm";
 
 type Props<
   TItems extends readonly { readonly id: string; readonly label: string }[]
@@ -18,10 +19,7 @@ type Props<
   css?: StyleObject;
   menuCss?: StyleObject;
   onReset?: () => void;
-} & Omit<
-  UseComboboxProps<TItems[number]>,
-  "selectedItem" | "items" | "onInputValueChange"
->;
+};
 
 const fallbackSelectedItem = {
   id: "",
@@ -30,16 +28,9 @@ const fallbackSelectedItem = {
 
 export function Combobox<
   TItems extends readonly { readonly id: string; readonly label: string }[]
->({
-  items,
-  selectedItemId,
-  css,
-  menuCss,
-  Input,
-  onReset,
-  ...props
-}: Props<TItems>) {
+>({ items, css, menuCss, Input, onReset }: Props<TItems>) {
   const [inputItems, setInputItems] = React.useState(items);
+  const { value, setValue } = useInput(Input.props.name, "string");
 
   const {
     isOpen,
@@ -51,8 +42,8 @@ export function Combobox<
     reset,
   } = useCombobox({
     items: inputItems as Mutable<TItems>,
-    selectedItem: selectedItemId
-      ? items.find((item) => item?.id === selectedItemId)
+    selectedItem: value
+      ? items.find((item) => item?.id === value)
       : fallbackSelectedItem,
     itemToString: (item) => item?.label ?? "",
     onInputValueChange: ({ inputValue }) => {
@@ -62,7 +53,9 @@ export function Combobox<
 
       setInputItems(filteredItems as Mutable<TItems>);
     },
-    ...props,
+    onSelectedItemChange: (changes) => {
+      setValue(changes?.selectedItem?.id ?? "");
+    },
   });
 
   const EnhancedInput = React.cloneElement(Input, {
@@ -81,7 +74,6 @@ export function Combobox<
         }}
       />
     ),
-    ...Input.props,
   });
 
   const openState = isOpen ? "open" : "closed";

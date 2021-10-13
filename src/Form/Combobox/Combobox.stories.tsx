@@ -22,24 +22,15 @@ const items = [
 ];
 
 const Template: Story<Props> = (props) => {
-  const [selectedItemId, setSelectedItemId] = React.useState("");
-
   return (
     <Form
       initialValues={{
-        test: "",
+        test: "123",
       }}
-      onSubmit={({ values }) => alert(values)}
+      onChange={({ values }) => console.log(values)}
       css={{ display: "grid", gap: "$2", width: "max-content" }}
     >
-      <Combobox
-        items={items}
-        selectedItemId={selectedItemId}
-        onSelectedItemChange={({ selectedItem }) =>
-          setSelectedItemId(selectedItem?.id ?? "")
-        }
-        {...props}
-      />
+      <Combobox items={items} Input={<Input name="test" />} {...props} />
     </Form>
   );
 };
