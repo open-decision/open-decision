@@ -37,6 +37,7 @@ const StyledInput = styled("input", {
 
   "&:focus-visible": {
     boxShadow: "none",
+    outline: "none",
   },
 });
 

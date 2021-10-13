@@ -32,6 +32,10 @@ const StyledInput = styled("input", {
   transform: "translateX($$XTranslation)",
   outline: "none",
   backgroundColor: "transparent",
+
+  "&:focus-visible": {
+    outline: "none",
+  },
 });
 
 export type InputProps = Omit<
