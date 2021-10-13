@@ -17,6 +17,7 @@ type Props<
   selectedItemId?: TItems[number]["id"];
   css?: StyleObject;
   menuCss?: StyleObject;
+  onReset?: () => void;
 } & Omit<
   UseComboboxProps<TItems[number]>,
   "selectedItem" | "items" | "onInputValueChange"
@@ -29,7 +30,15 @@ const fallbackSelectedItem = {
 
 export function Combobox<
   TItems extends readonly { readonly id: string; readonly label: string }[]
->({ items, selectedItemId, css, menuCss, Input, ...props }: Props<TItems>) {
+>({
+  items,
+  selectedItemId,
+  css,
+  menuCss,
+  Input,
+  onReset,
+  ...props
+}: Props<TItems>) {
   const [inputItems, setInputItems] = React.useState(items);
 
   const {
@@ -66,7 +75,10 @@ export function Combobox<
         variant="ghost"
         type="button"
         css={{ focusStyle: "inner" }}
-        onClick={() => reset()}
+        onClick={() => {
+          onReset?.();
+          reset();
+        }}
       />
     ),
     ...Input.props,
