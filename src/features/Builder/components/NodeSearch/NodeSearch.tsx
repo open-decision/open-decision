@@ -3,6 +3,9 @@ import { useTree } from "features/Builder/state/useTree";
 import * as React from "react";
 import { Form, Combobox, Input } from "@open-legal-tech/design-system";
 import { useEditor } from "features/Builder/state/useEditor";
+import * as Node from "features/Builder/types/Node";
+import { useCenter } from "features/Builder/utilities/useCenter";
+import { nodeHeight, nodeWidth } from "features/Builder/utilities/constants";
 
 export function NodeSearch() {
   const service = useTree();
@@ -13,21 +16,25 @@ export function NodeSearch() {
     label: node.data.label,
   }));
 
+  const center = useCenter({ x: nodeWidth / 2, y: nodeHeight / 2 });
+
   return (
     <Form
-      onSubmit={() => {
-        return;
-      }}
-      initialValues={{ search: "" }}
+      onChange={({ values }) => setSelectedNodeId(values.search)}
+      initialValues={{ search: selectedNodeId ?? "" }}
     >
       <Combobox
         Input={<Input name="search" />}
         css={{ backgroundColor: "$gray1", zIndex: "1" }}
         items={items}
-        selectedItemId={selectedNodeId}
-        onSelectedItemChange={({ selectedItem }) =>
-          selectedItem && setSelectedNodeId(selectedItem.id)
-        }
+        onCreate={(label) => {
+          const newNode = Node.create({
+            position: center,
+            data: { label },
+          });
+          service.send({ type: "addNode", value: newNode });
+          return { id: newNode.id, label: newNode.data.label };
+        }}
       />
     </Form>
   );

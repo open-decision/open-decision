@@ -2,6 +2,7 @@ import { Box, styled, Text } from "@open-legal-tech/design-system";
 import React, { memo } from "react";
 import { Handle, NodeProps, Position } from "react-flow-renderer";
 import { TNodeData } from "../types/Node";
+import { nodeHeight, nodeWidth } from "../utilities/constants";
 
 const Port = styled(Handle, {
   backgroundColor: "$gray1 !important",
@@ -19,8 +20,8 @@ export const Node = memo(({ id, data, selected }: NodeProps<TNodeData>) => {
         borderRadius: "$md",
         boxShadow: selected ? "0px 0px 0px 1px $colors$primary9, $2" : "$2",
         border: selected ? "1px solid $primary9" : "1px solid $gray9",
-        width: "200px",
-        height: "80px",
+        width: nodeWidth,
+        height: nodeHeight,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

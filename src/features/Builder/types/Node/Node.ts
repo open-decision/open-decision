@@ -73,3 +73,4 @@ export type TNode = T.TypeOf<typeof Type>;
 export type TNodeData = T.TypeOf<typeof Data>;
 export type TNodesRecord = T.TypeOf<typeof NodeRecord>;
 export type TRelation = T.TypeOf<typeof Relation>;
+export type TCoordinates = T.TypeOf<typeof Coordinates>;

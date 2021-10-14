@@ -11,7 +11,7 @@ export default function Tree(): JSX.Element {
       css={{
         overflow: "hidden",
         display: "grid",
-        gridTemplateColumns: "5fr 2fr",
+        gridTemplateColumns: "1fr 430px",
         gridTemplateRows: "70px 1fr",
       }}
     >

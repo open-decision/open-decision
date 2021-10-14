@@ -135,26 +135,6 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
           onElementClick={(_event, node) => {
             setSelectedNodeId(node.id);
           }}
-          // onEdgeUpdate={(oldEdge, newConnection) => {
-          //   return send({
-          //     type: "updatePath",
-          //     nodeId,
-          //   });
-          // }}
-          // onEdgeUpdateEnd={(event, edge) => {
-          //   if (
-          //     event.target instanceof HTMLDivElement &&
-          //     event.target.dataset.nodeid
-          //   ) {
-          //     send({
-          //       type: "updateEdge",
-          //       id: edge.id,
-          //       data: {
-          //         target: event.target.dataset.nodeid,
-          //       },
-          //     });
-          //   }
-          // }}
           onNodeDragStop={(_event, node) =>
             send({ type: "updateNode", id: node.id, node })
           }

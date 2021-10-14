@@ -20,6 +20,7 @@ import { pipe } from "fp-ts/lib/function";
 import { Plus, Trash, Crosshair } from "react-feather";
 import { useNode } from "features/Builder/state/useNode";
 import { DragHandle } from "./DragHandle";
+import { createNewAssociatedNode } from "features/Builder/state/assignUtils";
 
 type SingleSelectProps = { node: Node.TNode };
 
@@ -55,12 +56,12 @@ export function SingleSelectInputs({ node }: SingleSelectProps) {
           <SingleSelectInput
             key={relation.id}
             input={relation}
-            onChange={(event) =>
+            onChange={(newData) =>
               service.send({
                 type: "updateRelation",
                 nodeId: node.id,
                 relationId: relation.id,
-                value: { value: event.target.value },
+                relation: newData,
               })
             }
             onDelete={() =>
@@ -80,7 +81,7 @@ export function SingleSelectInputs({ node }: SingleSelectProps) {
 type SingleSelectInputProps = {
   input: Node.TRelation;
   nodeId: string;
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  onChange: (relation: Omit<Node.TRelation, "id">) => void;
   onDelete: (id: string) => void;
 };
 
@@ -101,8 +102,8 @@ export function SingleSelectInput({
 
   return (
     <Form
-      onSubmit={() => {
-        return;
+      onChange={({ values }) => {
+        onChange(values);
       }}
       initialValues={{ value: input.value ?? "", target: input.target ?? "" }}
       css={{
@@ -131,8 +132,6 @@ export function SingleSelectInput({
             borderBottom: "inherit",
           }}
           name="value"
-          value={input.value ?? ""}
-          onChange={onChange}
           placeholder="Antwort"
         />
         <NodeLink target={input.target} />
@@ -144,20 +143,30 @@ export function SingleSelectInput({
               placeholder="Zielknoten auswählen"
             />
           }
+          onCreate={(label) => {
+            const newNode = createNewAssociatedNode(node, { label });
+            service.send([
+              {
+                type: "addNode",
+                value: newNode,
+              },
+              {
+                type: "updateRelation",
+                nodeId: node.id,
+                relationId: input.id,
+                relation: {
+                  target: newNode.id,
+                },
+              },
+            ]);
+
+            return { id: newNode.id, label: newNode.data.label };
+          }}
           menuCss={{
             backgroundColor: "$gray1",
             "&[data-state='open']": { border: "1px solid $gray8" },
           }}
           items={nodeOptions}
-          selectedItemId={input.target}
-          onSelectedItemChange={({ selectedItem }) =>
-            service.send({
-              type: "updateRelation",
-              nodeId,
-              relationId: input.id,
-              value: { target: selectedItem?.id ?? "" },
-            })
-          }
         />
       </Box>
       <Box css={{ display: "flex", alignItems: "center" }}>
@@ -190,7 +199,7 @@ function NodeLink({ target, ...props }: NodeLinkProps) {
   const node = useNode(target ?? "");
 
   return (
-    // @ts-expect-error
+    // @ts-expect-error - IconButton has broken polymorphism
     <IconButton
       css={{
         borderRadius: "0",

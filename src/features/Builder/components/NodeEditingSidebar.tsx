@@ -32,7 +32,6 @@ export function NodeEditingSidebar({
               data: { label: values.nodeName },
             });
           }}
-          onSubmit={(data) => console.log(data)}
           initialValues={{ nodeName: node.data?.label ?? "" }}
         >
           <InlineInput

@@ -1,10 +1,11 @@
 import { assign as immerAssign } from "@xstate/immer";
 import { nanoid } from "nanoid/non-secure";
-import { Context, sendToTreePayload } from "./treeMachine";
+import { Context } from "./treeMachine";
 import * as Node from "../types/Node";
 import * as Tree from "../types/Tree";
 import produce from "immer";
 import { assign } from "xstate";
+import { nodeHeight } from "../utilities/constants";
 
 export type CreateTreeEvent = { type: "createTree" };
 
@@ -118,16 +119,16 @@ export type UpdateRelationEvent = {
   type: "updateRelation";
   nodeId: string;
   relationId: string;
-  value?: Partial<Node.TRelation>;
+  relation?: Partial<Node.TRelation>;
 };
 
 export const updateRelation = immerAssign(
-  (context: Context, { nodeId, relationId, value }: UpdateRelationEvent) => {
+  (context: Context, { nodeId, relationId, relation }: UpdateRelationEvent) => {
     const oldValue = context.nodes[nodeId].data.relations[relationId];
 
     context.nodes[nodeId].data.relations[relationId] = {
       ...oldValue,
-      ...value,
+      ...relation,
     };
   }
 );
@@ -146,27 +147,28 @@ export const deleteRelation = immerAssign(
   }
 );
 
-export function createNewAssociatedNode(node: Node.TNode): sendToTreePayload {
+export function createNewAssociatedNode(
+  node: Node.TNode,
+  newNodeData: Partial<Node.TNode["data"]>
+): Node.TNode {
   const id = nanoid(5);
-  const position = { x: node.position.x, y: node.position.y + 80 };
+  const deplacement = Object.values(node.data.relations).length;
+  const position = {
+    x: node.position.x + 5 * deplacement,
+    y: node.position.y + nodeHeight + nodeHeight / 3 + 5 * deplacement,
+  };
 
-  return [
-    {
-      type: "addNode",
-      value: {
-        id,
-        position,
-        type: "default",
-        data: { relations: {}, content: [], label: "Neuer Knoten" },
-      },
+  const newNode = {
+    id,
+    position,
+    type: "customNode",
+    data: {
+      relations: {},
+      content: [],
+      label: "Neue Node",
+      ...newNodeData,
     },
-    {
-      type: "addRelation",
-      nodeId: node.id,
-      value: {
-        value: "",
-        target: id,
-      },
-    },
-  ];
+  };
+
+  return newNode;
 }

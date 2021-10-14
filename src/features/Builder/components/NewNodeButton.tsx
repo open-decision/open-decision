@@ -2,8 +2,9 @@ import React from "react";
 import { IconButton, StyleObject } from "@open-legal-tech/design-system";
 import { useTree } from "../state/useTree";
 import * as Node from "../types/Node";
-import { useStoreState } from "react-flow-renderer";
 import { Plus } from "react-feather";
+import { useCenter } from "../utilities/useCenter";
+import { nodeHeight, nodeWidth } from "../utilities/constants";
 
 type Props = { css?: StyleObject };
 
@@ -14,13 +15,7 @@ export const NewNodeButton = ({ css }: Props) => {
     event.dataTransfer.effectAllowed = "move";
   };
 
-  const [[xTransform, yTransform, zoom], width, height] = useStoreState(
-    (state) => [state.transform, state.width, state.height]
-  );
-  const center = {
-    x: (width / 2 - xTransform) / zoom,
-    y: (height / 2 - yTransform) / zoom,
-  };
+  const center = useCenter({ x: nodeWidth / 2, y: nodeHeight / 2 });
 
   return (
     <IconButton
