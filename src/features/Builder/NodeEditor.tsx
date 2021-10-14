@@ -95,7 +95,10 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
 
   return (
     <>
-      <Container ref={reactFlowWrapper} css={css}>
+      <Container
+        ref={reactFlowWrapper}
+        css={{ zIndex: isNodeEditingSidebarOpen ? undefined : 2, ...css }}
+      >
         <Stage
           onPaneClick={() => {
             closeNodeEditingSidebar();
