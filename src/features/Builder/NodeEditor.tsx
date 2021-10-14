@@ -110,7 +110,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
               },
             ])
           }
-          onConnectStart={(event) => {
+          onConnectStart={(event, { handleType }) => {
             if (event.target instanceof HTMLDivElement) {
               sourceNodeId.current = event.target.dataset.nodeid;
             }

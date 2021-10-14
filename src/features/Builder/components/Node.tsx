@@ -1,6 +1,11 @@
 import { Box, styled, Text } from "@open-legal-tech/design-system";
 import React, { memo } from "react";
-import { Handle, NodeProps, Position } from "react-flow-renderer";
+import {
+  Handle,
+  NodeProps,
+  Position,
+  useStoreState,
+} from "react-flow-renderer";
 import { TNodeData } from "../types/Node";
 import { nodeHeight, nodeWidth } from "../utilities/constants";
 
@@ -12,6 +17,10 @@ const Port = styled(Handle, {
 });
 
 export const Node = memo(({ id, data, selected }: NodeProps<TNodeData>) => {
+  const isConnecting = useStoreState(
+    (state) => state.connectionHandleType != null
+  );
+
   return (
     <Box
       data-nodeid={id}
@@ -35,6 +44,7 @@ export const Node = memo(({ id, data, selected }: NodeProps<TNodeData>) => {
         type="target"
         position={Position.Top}
         css={{ top: "-6px !important" }}
+        isConnectable={isConnecting}
       />
       <Box
         data-nodeid={id}
