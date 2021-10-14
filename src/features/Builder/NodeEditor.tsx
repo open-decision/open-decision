@@ -105,14 +105,15 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
           }}
           nodeTypes={customNodes}
           elements={elements}
-          onElementsRemove={(elementsToRemove) =>
+          onElementsRemove={(elementsToRemove) => {
+            setSelectedNodeId();
             send([
               {
                 type: "deleteNode",
                 ids: elementsToRemove.map((element) => element.id),
               },
-            ])
-          }
+            ]);
+          }}
           onConnectStart={(event) => {
             if (event.target instanceof HTMLDivElement) {
               sourceNodeId.current = event.target.dataset.nodeid;
