@@ -1,6 +1,6 @@
 import React from "react";
 import { IconButton, StyleObject } from "@open-legal-tech/design-system";
-import { useTree } from "../state/useTree";
+import { useTreeService } from "../state/useTree";
 import * as Node from "../types/Node";
 import { Plus } from "react-feather";
 import { useCenter } from "../utilities/useCenter";
@@ -9,7 +9,7 @@ import { nodeHeight, nodeWidth } from "../utilities/constants";
 type Props = { css?: StyleObject };
 
 export const NewNodeButton = ({ css }: Props) => {
-  const service = useTree();
+  const service = useTreeService();
   const onDragStart = (event: React.DragEvent<HTMLButtonElement>) => {
     event.dataTransfer.setData("application/reactflow", "default");
     event.dataTransfer.effectAllowed = "move";

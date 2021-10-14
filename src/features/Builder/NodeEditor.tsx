@@ -14,7 +14,7 @@ import { NodeSearch } from "./components/NodeSearch/NodeSearch";
 import { createEdges } from "./edgeCreationEngine/edgeCreationEngine";
 import { Stage } from "./Stage";
 import { useEditor } from "./state/useEditor";
-import { useTree } from "./state/useTree";
+import { useTreeService } from "./state/useTree";
 import * as NodeType from "./types/Node";
 
 const customNodes = { customNode: Node };
@@ -40,7 +40,7 @@ type NodeEditorProps = {
 };
 
 export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
-  const service = useTree();
+  const service = useTreeService();
   const [state, send] = useActor(service);
   const tree = state.context;
 

@@ -10,7 +10,7 @@ import {
 } from "@open-legal-tech/design-system";
 import { useSelector } from "@xstate/react";
 import { useEditor } from "features/Builder/state/useEditor";
-import { useTree } from "features/Builder/state/useTree";
+import { useTreeService } from "features/Builder/state/useTree";
 import * as React from "react";
 import * as Node from "features/Builder/types/Node";
 import * as Tree from "features/Builder/types/Tree";
@@ -25,7 +25,7 @@ import { createNewAssociatedNode } from "features/Builder/state/assignUtils";
 type SingleSelectProps = { node: Node.TNode };
 
 export function OptionTargetInputs({ node }: SingleSelectProps) {
-  const service = useTree();
+  const service = useTreeService();
 
   return (
     <>
@@ -91,7 +91,7 @@ export function OptionTargetInput({
   onChange,
   onDelete,
 }: SingleSelectInputProps): JSX.Element {
-  const service = useTree();
+  const service = useTreeService();
   const tree = useSelector(service, (state) => state.context);
   const node = useSelector(service, (state) => state.context.nodes[nodeId]);
   const nodeOptions = pipe(

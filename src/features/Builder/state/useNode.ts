@@ -1,9 +1,19 @@
 import { useSelector } from "@xstate/react";
-import { useTree } from "./useTree";
+import { TNode } from "../types/Node";
+import { useTreeService } from "./useTree";
 
-export function useNode(id: string) {
-  const service = useTree();
-  const node = useSelector(service, (state) => state.context.nodes[id]);
+export function useNode(ids: string): TNode {
+  const service = useTreeService();
+  const nodes = useSelector(service, (state) => {
+    return state.context.nodes[ids];
+  });
 
-  return node;
+  return nodes;
+}
+
+export function useNodes(ids: string[]): TNode[] {
+  const service = useTreeService();
+  const nodes = useSelector(service, (state) => state.context.nodes);
+
+  return ids.map((id) => nodes[id]);
 }

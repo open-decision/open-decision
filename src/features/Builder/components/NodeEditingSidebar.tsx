@@ -8,18 +8,24 @@ import {
 } from "@open-legal-tech/design-system";
 import { RichTextEditor } from "components/RichTextEditor";
 import { OptionTargetInputs } from "features/Builder/components/OptionTargetInput/OptionTargetInput";
-import { useTree } from "features/Builder/state/useTree";
+import { useTree, useTreeService } from "features/Builder/state/useTree";
 import * as React from "react";
 import { Edit2 } from "react-feather";
-import { useNode } from "../state/useNode";
+import { useNode, useNodes } from "../state/useNode";
+import * as Tree from "features/Builder/types/Tree";
+import { useEditor } from "../state/useEditor";
 
 type NodeEditingSidebarProps = { nodeId: string };
 
 export function NodeEditingSidebar({
   nodeId,
 }: NodeEditingSidebarProps): JSX.Element {
-  const service = useTree();
+  const service = useTreeService();
+  const tree = useTree();
   const node = useNode(nodeId);
+  const parentNodesIds = Tree.getParents(node)(tree);
+  const { setSelectedNodeId } = useEditor();
+  const parentNodes = useNodes(parentNodesIds);
 
   return (
     <>
@@ -48,26 +54,32 @@ export function NodeEditingSidebar({
           />
         </Form>
       </Box>
-      <Box as="section">
-        <Heading size="extra-small" css={{ textTransform: "uppercase" }}>
-          Parent-Nodes
-        </Heading>
-        <Box
-          css={{
-            display: "flex",
-            gap: "$2",
-            marginTop: "$2",
-            flexWrap: "wrap",
-          }}
-        >
-          <Button size="small" variant="tertiary">
-            Asylrecht
-          </Button>
-          <Button size="small" variant="tertiary">
-            Verkehrsrecht
-          </Button>
+      {Object.values(parentNodes).length > 0 ? (
+        <Box as="section">
+          <Heading size="extra-small" css={{ textTransform: "uppercase" }}>
+            Parent-Nodes
+          </Heading>
+          <Box
+            css={{
+              display: "flex",
+              gap: "$2",
+              marginTop: "$2",
+              flexWrap: "wrap",
+            }}
+          >
+            {Object.values(parentNodes).map((parentNode) => (
+              <Button
+                size="small"
+                variant="tertiary"
+                key={parentNode.id}
+                onClick={() => setSelectedNodeId(parentNode.id)}
+              >
+                {parentNode.data.label}
+              </Button>
+            ))}
+          </Box>
         </Box>
-      </Box>
+      ) : null}
       <Box as="section">
         <Heading
           size="extra-small"

@@ -1,5 +1,5 @@
 import { useSelector } from "@xstate/react";
-import { useTree } from "features/Builder/state/useTree";
+import { useTreeService } from "features/Builder/state/useTree";
 import * as React from "react";
 import { Form, Combobox, Input } from "@open-legal-tech/design-system";
 import { useEditor } from "features/Builder/state/useEditor";
@@ -8,7 +8,7 @@ import { useCenter } from "features/Builder/utilities/useCenter";
 import { nodeHeight, nodeWidth } from "features/Builder/utilities/constants";
 
 export function NodeSearch() {
-  const service = useTree();
+  const service = useTreeService();
   const nodes = useSelector(service, (state) => state.context.nodes);
   const { selectedNodeId, setSelectedNodeId } = useEditor();
   const items = Object.values(nodes).map((node) => ({

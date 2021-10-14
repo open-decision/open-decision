@@ -1,4 +1,4 @@
-import { useInterpret } from "@xstate/react";
+import { useInterpret, useSelector } from "@xstate/react";
 import * as React from "react";
 import { assign } from "xstate";
 import * as Tree from "../types/Tree";
@@ -20,7 +20,7 @@ export function TreeProvider({ children }: TreeProviderProps) {
   );
 }
 
-export function useTree() {
+export function useTreeService() {
   const treeService = React.useContext(TreeContext);
 
   if (!treeService) {
@@ -28,4 +28,11 @@ export function useTree() {
   }
 
   return treeService;
+}
+
+export function useTree() {
+  const treeService = useTreeService();
+  const tree = useSelector(treeService, (state) => state.context);
+
+  return tree;
 }
