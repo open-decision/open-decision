@@ -16,6 +16,7 @@ import { Stage } from "./Stage";
 import { useEditor } from "./state/useEditor";
 import { useTreeService } from "./state/useTree";
 import * as NodeType from "./types/Node";
+import * as Connection from "./types/Connection";
 
 const customNodes = { customNode: Node };
 
@@ -90,7 +91,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
     ...Object.values(tree.nodes).map((node) => ({
       ...node,
     })),
-    ...createEdges(tree.nodes),
+    ...createEdges(tree.nodes, selectedNodeId),
   ];
 
   return (
@@ -137,11 +138,19 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
           onDrop={onDrop}
           onLoad={setReactFlowInstance}
           onElementClick={(_event, node) => {
-            setSelectedNodeId(node.id);
+            if (Connection.Type.is(node)) {
+              return setSelectedNodeId(node.source);
+            }
+
+            return setSelectedNodeId(node.id);
           }}
-          onNodeDragStop={(_event, node) =>
-            send({ type: "updateNode", id: node.id, node })
-          }
+          onNodeDragStart={() => {
+            setSelectedNodeId();
+          }}
+          onNodeDragStop={(_event, node) => {
+            setSelectedNodeId();
+            return send({ type: "updateNode", id: node.id, node });
+          }}
           style={{
             gridColumn: "1 / -1",
             gridRow: "1",

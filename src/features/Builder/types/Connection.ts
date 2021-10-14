@@ -1,3 +1,4 @@
+import * as React from "react";
 import * as T from "io-ts";
 import { Required } from "utility-types";
 import { ArrowHeadType } from "react-flow-renderer";
@@ -29,7 +30,6 @@ export const create = (
 ): TConnection => {
   return {
     ...connectionParams,
-    arrowHeadType: ArrowHeadType.Arrow,
     id: createId(connectionParams),
   };
 };
@@ -39,4 +39,5 @@ export const ConnectionsRecord = T.record(T.string, Type);
 export type TConnectionsRecord = T.TypeOf<typeof ConnectionsRecord>;
 export type TConnection = T.TypeOf<typeof Type> & {
   arrowHeadType?: ArrowHeadType;
+  style?: React.CSSProperties;
 };

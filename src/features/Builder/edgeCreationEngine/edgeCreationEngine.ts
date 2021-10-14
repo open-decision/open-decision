@@ -9,7 +9,7 @@ import { pipe } from "fp-ts/function";
 export const eqEdge = (a: Connection.TConnection, b: Connection.TConnection) =>
   a.source === b.source && a.target === b.target;
 
-export const createEdges = (nodes: TNodesRecord) => {
+export const createEdges = (nodes: TNodesRecord, selectedNodeId?: string) => {
   return pipe(
     nodes,
     Record.toArray,
@@ -20,7 +20,18 @@ export const createEdges = (nodes: TNodesRecord) => {
         Array.filterMap(([, relation]) =>
           Option.fromNullable(
             relation.target
-              ? Connection.create({ source: node.id, target: relation.target })
+              ? Connection.create({
+                  source: node.id,
+                  target: relation.target,
+                  style: {
+                    stroke:
+                      selectedNodeId === node.id
+                        ? "var(--colors-primary9)"
+                        : relation.value
+                        ? "var(--colors-gray9)"
+                        : "var(--colors-gray8)",
+                  },
+                })
               : null
           )
         ),
