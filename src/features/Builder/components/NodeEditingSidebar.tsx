@@ -7,7 +7,7 @@ import {
   InlineInput,
 } from "@open-legal-tech/design-system";
 import { RichTextEditor } from "components/RichTextEditor";
-import { SingleSelectInputs } from "features/Builder/components/SingleSelect/SingleSelect";
+import { OptionTargetInputs } from "features/Builder/components/OptionTargetInput/OptionTargetInput";
 import { useTree } from "features/Builder/state/useTree";
 import * as React from "react";
 import { Edit2 } from "react-feather";
@@ -87,7 +87,7 @@ export function NodeEditingSidebar({
         />
       </Box>
       <Box as="section">
-        <SingleSelectInputs node={node} />
+        <OptionTargetInputs node={node} />
       </Box>
     </>
   );

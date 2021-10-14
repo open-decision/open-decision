@@ -24,7 +24,7 @@ import { createNewAssociatedNode } from "features/Builder/state/assignUtils";
 
 type SingleSelectProps = { node: Node.TNode };
 
-export function SingleSelectInputs({ node }: SingleSelectProps) {
+export function OptionTargetInputs({ node }: SingleSelectProps) {
   const service = useTree();
 
   return (
@@ -53,7 +53,7 @@ export function SingleSelectInputs({ node }: SingleSelectProps) {
       </Box>
       <Box css={{ display: "grid", gap: "$4" }}>
         {Object.values(node.data.relations).map((relation) => (
-          <SingleSelectInput
+          <OptionTargetInput
             key={relation.id}
             input={relation}
             onChange={(newData) =>
@@ -85,7 +85,7 @@ type SingleSelectInputProps = {
   onDelete: (id: string) => void;
 };
 
-export function SingleSelectInput({
+export function OptionTargetInput({
   input,
   nodeId,
   onChange,
@@ -211,6 +211,7 @@ function NodeLink({ target, ...props }: NodeLinkProps) {
         maxWidth: "100%",
         colorScheme: target ? "primary" : "gray",
       }}
+      pressable={false}
       size="small"
       variant="secondary"
       onClick={() => (target ? setSelectedNodeId(target) : null)}
