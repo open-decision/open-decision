@@ -14,12 +14,18 @@ const Port = styled(Handle, {
   border: "1px solid $gray11 !important",
   height: "12px !important",
   width: "12px !important",
+
+  "&[data-active='true']": {
+    boxShadow: "0px 0px 0px 1px $colors$primary9, $2",
+    border: "1px solid $primary9",
+  },
 });
 
 export const Node = memo(({ id, data, selected }: NodeProps<TNodeData>) => {
-  const isConnecting = useStoreState(
-    (state) => state.connectionHandleType != null
-  );
+  const [isConnecting, connectionNodeId] = useStoreState((state) => [
+    state.connectionHandleType != null,
+    state.connectionNodeId,
+  ]);
 
   return (
     <Box
@@ -43,7 +49,15 @@ export const Node = memo(({ id, data, selected }: NodeProps<TNodeData>) => {
       <Port
         type="target"
         position={Position.Top}
-        css={{ top: "-6px !important" }}
+        css={{
+          top: "-6px !important",
+          "&:hover": isConnecting
+            ? {
+                border: "1px solid $colors$primary9 !important",
+                boxShadow: "0px 0px 0px 1px $colors$primary9, $2",
+              }
+            : {},
+        }}
         isConnectable={isConnecting}
       />
       <Box
@@ -72,6 +86,7 @@ export const Node = memo(({ id, data, selected }: NodeProps<TNodeData>) => {
         type="source"
         position={Position.Bottom}
         css={{ bottom: "-6px !important" }}
+        data-active={isConnecting && connectionNodeId === id}
       />
     </Box>
   );
