@@ -57,7 +57,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
   const sourceNodeId = useRef<string | undefined>(undefined);
 
   if (state.matches("pending")) {
-    return <div>Loading</div>;
+    return <Box css={css}>Loading</Box>;
   }
 
   const onDragOver = (event: React.DragEvent<HTMLDivElement>) => {
@@ -110,7 +110,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
               },
             ])
           }
-          onConnectStart={(event, { handleType }) => {
+          onConnectStart={(event) => {
             if (event.target instanceof HTMLDivElement) {
               sourceNodeId.current = event.target.dataset.nodeid;
             }

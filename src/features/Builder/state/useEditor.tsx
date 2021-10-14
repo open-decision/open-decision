@@ -1,6 +1,7 @@
 import * as React from "react";
 import { OnLoadParams } from "react-flow-renderer";
 import { TNodeData } from "../types/Node";
+import { useStoreActions } from "react-flow-renderer";
 
 type EditorState = {
   selectedNodeId: string | undefined;
@@ -24,11 +25,19 @@ export function EditorProvider({ children }: TreeProviderProps) {
     OnLoadParams<TNodeData> | undefined
   >();
 
+  const setSelectedElements = useStoreActions(
+    (state) => state.setSelectedElements
+  );
+  const updateNodeId = (selectedNodeId: EditorState["selectedNodeId"]) => {
+    setSelectedElements([{ id: selectedNodeId }]);
+    setSelectedNodeId(selectedNodeId);
+  };
+
   return (
     <EditorContext.Provider
       value={{
         selectedNodeId,
-        setSelectedNodeId,
+        setSelectedNodeId: updateNodeId,
         reactFlowInstance,
         setReactFlowInstance,
         isNodeEditingSidebarOpen: Boolean(selectedNodeId),

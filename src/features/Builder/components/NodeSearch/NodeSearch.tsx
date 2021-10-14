@@ -20,7 +20,9 @@ export function NodeSearch() {
 
   return (
     <Form
-      onChange={({ values }) => setSelectedNodeId(values.search)}
+      onChange={({ values }) => {
+        setSelectedNodeId(values.search);
+      }}
       initialValues={{ search: selectedNodeId ?? "" }}
     >
       <Combobox
