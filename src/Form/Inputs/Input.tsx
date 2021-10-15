@@ -47,7 +47,7 @@ export type InputProps = Omit<
   value?: string;
   regex?: string;
   Buttons?: JSX.Element | JSX.Element[];
-  Icon: React.ReactNode;
+  Icon?: React.ReactNode;
 } & VariantProps<typeof StyledBox>;
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
