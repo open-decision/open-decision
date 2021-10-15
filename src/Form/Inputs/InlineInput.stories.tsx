@@ -21,7 +21,7 @@ const Input: Story<Omit<InlineInputProps, "css">> = (props) => (
     <InlineInput
       IndicatorButton={
         <IconButton
-          variant="ghost"
+          variant="tertiary"
           size="small"
           label="Editieren"
           css={{ colorScheme: "primary" }}
@@ -35,5 +35,3 @@ const Input: Story<Omit<InlineInputProps, "css">> = (props) => (
 );
 
 export const Default = Input.bind({});
-export const Borderless = Input.bind({});
-Borderless.args = {};

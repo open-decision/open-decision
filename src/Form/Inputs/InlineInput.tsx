@@ -154,7 +154,7 @@ export const InlineInput = React.forwardRef<HTMLInputElement, InlineInputProps>(
     }, [isEditing]);
 
     const EnhancedIndicatorButton = React.cloneElement(IndicatorButton, {
-      "data-focus": isEditing,
+      "data-active": isEditing,
       onClick: () =>
         dispatch({ type: "startEditing", originalValue: formValue }),
       type: "button",

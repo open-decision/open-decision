@@ -85,6 +85,10 @@ const StyledIcon = styled("span", {
   paddingInline: "$$paddingInline",
   transform: "translate($$XTranslation)",
 
+  "&[data-active='true'] > svg": {
+    stroke: "$primary10",
+  },
+
   variants: {
     size: iconSizes,
     alignByContent,

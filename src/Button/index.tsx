@@ -60,7 +60,7 @@ export const Button = styled("button", {
           backgroundColor: "$colorScheme10",
         },
 
-        "&:active": {
+        "&:active, &[data-active='true']": {
           backgroundColor: "$colorScheme11",
         },
 
@@ -77,7 +77,7 @@ export const Button = styled("button", {
           backgroundColor: "$colorScheme5",
         },
 
-        "&:active": {
+        "&:active, &[data-active='true']": {
           backgroundColor: "$colorScheme7",
         },
 
@@ -94,7 +94,7 @@ export const Button = styled("button", {
           backgroundColor: "$colorScheme3",
         },
 
-        "&:active": {
+        "&:active, &[data-active='true']": {
           backgroundColor: "$colorScheme5",
         },
 
@@ -109,7 +109,7 @@ export const Button = styled("button", {
         boxShadow: "unset",
         focusStyle: "inner",
 
-        "&:hover, &:focus-visible, &[data-focus='true']": {
+        "&:hover, &:focus-visible, &[data-active='true']": {
           color: "$colorScheme11",
         },
 

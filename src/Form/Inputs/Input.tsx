@@ -13,7 +13,7 @@ const StyledBox = styled(
     borderRadius: "$md",
     display: "flex",
     alignItems: "center",
-    focusStyle: "inner-within",
+    focusStyle: "inner",
     overflow: "hidden",
     padding: "1px",
     $$paddingInline: "$space$2",
@@ -47,7 +47,7 @@ export type InputProps = Omit<
   value?: string;
   regex?: string;
   Buttons?: JSX.Element | JSX.Element[];
-  Icon?: JSX.Element;
+  Icon: React.ReactNode;
 } & VariantProps<typeof StyledBox>;
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
@@ -126,6 +126,12 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       }
     }, [value, blur, submitting]);
 
+    const EnhancedIcon = React.isValidElement(Icon)
+      ? React.cloneElement(Icon, {
+          "data-active": hasFocus,
+        })
+      : Icon;
+
     return (
       <StyledBox
         css={{ color: disabled ? "$gray8" : "$gray11", ...css }}
@@ -133,7 +139,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         data-focus={hasFocus}
         size={size}
       >
-        {Icon}
+        {EnhancedIcon}
         <StyledInput
           name={name}
           ref={innerRef}
@@ -144,12 +150,14 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           onBlur={(event) => {
             onBlur?.(event);
             setBlur(true);
+            setHasFocus(false);
           }}
           disabled={disabled}
           minLength={minLength}
           maxLength={maxLength}
           pattern={regex}
           required={required}
+          onFocus={() => setHasFocus(true)}
           {...props}
         />
         {Buttons}
