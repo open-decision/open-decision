@@ -29,7 +29,7 @@ export const createEdges = (nodes: TNodesRecord, selectedNodeId?: string) => {
                         ? "var(--colors-primary9)"
                         : relation.value
                         ? "var(--colors-gray9)"
-                        : "var(--colors-gray8)",
+                        : "var(--colors-gray7)",
                   },
                 })
               : null

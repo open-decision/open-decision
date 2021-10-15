@@ -144,11 +144,8 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
 
             return setSelectedNodeId(node.id);
           }}
-          onNodeDragStart={() => {
-            setSelectedNodeId();
-          }}
           onNodeDragStop={(_event, node) => {
-            setSelectedNodeId();
+            setSelectedNodeId(selectedNodeId);
             return send({ type: "updateNode", id: node.id, node });
           }}
           style={{

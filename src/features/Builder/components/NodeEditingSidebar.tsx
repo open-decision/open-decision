@@ -54,6 +54,24 @@ export function NodeEditingSidebar({
           />
         </Form>
       </Box>
+      <Box as="section">
+        <Heading
+          size="extra-small"
+          css={{ textTransform: "uppercase", marginBottom: "$2" }}
+        >
+          Inhalt
+        </Heading>
+        <RichTextEditor
+          value={node.data.content}
+          setValue={(newValue) =>
+            service.send({
+              type: "updateNodeData",
+              nodeId,
+              data: { content: newValue },
+            })
+          }
+        />
+      </Box>
       {Object.values(parentNodes).length > 0 ? (
         <Box as="section">
           <Heading size="extra-small" css={{ textTransform: "uppercase" }}>
@@ -80,24 +98,6 @@ export function NodeEditingSidebar({
           </Box>
         </Box>
       ) : null}
-      <Box as="section">
-        <Heading
-          size="extra-small"
-          css={{ textTransform: "uppercase", marginBottom: "$2" }}
-        >
-          Inhalt
-        </Heading>
-        <RichTextEditor
-          value={node.data.content}
-          setValue={(newValue) =>
-            service.send({
-              type: "updateNodeData",
-              nodeId,
-              data: { content: newValue },
-            })
-          }
-        />
-      </Box>
       <Box as="section">
         <OptionTargetInputs node={node} />
       </Box>

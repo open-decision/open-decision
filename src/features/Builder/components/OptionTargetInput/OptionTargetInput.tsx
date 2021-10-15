@@ -176,12 +176,14 @@ export function OptionTargetInput({
           size="small"
           label="Entferne den Input"
           Icon={<Trash />}
+          type="button"
           onClick={() => onDelete(input.id)}
         />
         <IconButton
           variant="ghost"
           size="small"
           label="Entferne den Input"
+          type="button"
           Icon={<DragHandle />}
         />
       </Box>
