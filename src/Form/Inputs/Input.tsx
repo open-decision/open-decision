@@ -4,6 +4,7 @@ import { styled, VariantProps } from "../../stitches";
 import { baseInputStyles, baseTextInputStyle } from "../shared/styles";
 import { useInput } from "../useForm";
 import { Box } from "../../Box";
+import { useComposedRefs } from "../../internal/utils";
 
 const StyledBox = styled(
   Box,
@@ -12,7 +13,7 @@ const StyledBox = styled(
     borderRadius: "$md",
     display: "flex",
     alignItems: "center",
-    focusStyle: "inner",
+    focusStyle: "inner-within",
     overflow: "hidden",
     padding: "1px",
     $$paddingInline: "$space$2",
@@ -69,6 +70,18 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     },
     forwardedRef
   ) => {
+    const innerRef = useComposedRefs(forwardedRef);
+    const [hasFocus, setHasFocus] = React.useState(false);
+
+    React.useEffect(() => {
+      if (
+        document.hasFocus() &&
+        innerRef.current?.contains(document.activeElement)
+      ) {
+        setHasFocus(true);
+      }
+    }, []);
+
     const {
       value: formValue,
       blur,
@@ -117,12 +130,13 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <StyledBox
         css={{ color: disabled ? "$gray8" : "$gray11", ...css }}
         data-disabled={disabled}
+        data-focus={hasFocus}
         size={size}
       >
         {Icon}
         <StyledInput
           name={name}
-          ref={forwardedRef}
+          ref={innerRef}
           value={value ?? formValue}
           onChange={(event) => {
             onChange ? onChange?.(event) : setValue(event.target.value ?? "");

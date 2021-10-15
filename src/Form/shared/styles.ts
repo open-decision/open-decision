@@ -20,8 +20,6 @@ export const baseInputStyles = {
     borderColor: "$primary9",
   },
 
-  focusStyle: "inner",
-
   "&:disabled, &[data-disabled='true']": {
     opacity: 0.4,
     borderColor: "$gray8",

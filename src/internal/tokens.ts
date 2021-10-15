@@ -137,6 +137,7 @@ export const colors: SystemColors = {
   black: "$colors$gray12",
   white: "$colors$gray1",
   shadowColor: "rgba(17, 24, 28, 0.3)",
+  background: "$colors$gray1",
 };
 
 export const media = {

@@ -104,13 +104,12 @@ export const Button = styled("button", {
       },
       ghost: {
         colorScheme: "gray",
-        color: "$colorScheme10",
+        color: "$gray11",
         backgroundColor: "unset",
         boxShadow: "unset",
+        focusStyle: "inner",
 
-        "&:hover, &:focus": {
-          backgroundColor: "unset",
-          boxShadow: "unset",
+        "&:hover, &:focus-visible, &[data-focus='true']": {
           color: "$colorScheme11",
         },
 

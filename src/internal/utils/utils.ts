@@ -36,6 +36,7 @@ export type SystemColors = Record<AllColorsKeys, string> & {
   shadowColor: string;
   black: string;
   white: string;
+  background: string;
 };
 
 export const aliasColor = <TAlias extends string>(

@@ -5,18 +5,39 @@ import { Box } from "../../Box";
 import { useInput } from "../useForm";
 import { InputProps } from "./Input";
 import { baseInputStyles, baseTextInputStyle } from "../shared/styles";
+import { useComposedRefs } from "../../internal/utils";
+import { useKey } from "react-use";
+
+type Actions =
+  | { type: "startEditing"; originalValue: string }
+  | { type: "endEditing" };
+
+type State = { isEditing: boolean; originalValue?: string };
+
+function reducer(state: State, action: Actions): State {
+  switch (action.type) {
+    case "startEditing":
+      return {
+        isEditing: true,
+        originalValue: action.originalValue,
+      };
+    case "endEditing": {
+      return { ...state, isEditing: false };
+    }
+
+    default:
+      return state;
+  }
+}
 
 const StyledBox = styled(Box, {
   ...baseInputStyles,
   border: 0,
-  $$borderWidth: "2px",
-  borderBottom: "$$borderWidth solid $colors$gray8",
   display: "flex",
   alignItems: "center",
 
   "&:focus-within": {
     boxShadow: "none",
-    borderColor: "$colors$primary10",
   },
 });
 
@@ -41,9 +62,7 @@ const StyledInput = styled("input", {
   },
 });
 
-export type InlineInputProps =
-  | (InputProps & { borderless?: boolean })
-  | (InputProps & { borderless: true; Icon: JSX.Element });
+export type InlineInputProps = InputProps & { IndicatorButton: JSX.Element };
 
 export const InlineInput = React.forwardRef<HTMLInputElement, InlineInputProps>(
   (
@@ -58,13 +77,19 @@ export const InlineInput = React.forwardRef<HTMLInputElement, InlineInputProps>(
       value,
       disabled,
       alignByContent = "center",
-      borderless,
       Buttons,
-      Icon,
+      IndicatorButton,
       ...props
     },
     forwardedRef
   ) => {
+    const inputRef = useComposedRefs(forwardedRef);
+
+    const [state, dispatch] = React.useReducer(reducer, {
+      isEditing: false,
+    });
+    const isEditing = disabled !== undefined ? !disabled : state.isEditing;
+
     const {
       value: formValue,
       blur,
@@ -103,25 +128,50 @@ export const InlineInput = React.forwardRef<HTMLInputElement, InlineInputProps>(
       return errors;
     };
 
+    useKey("Enter", () => dispatch({ type: "endEditing" }));
+    useKey(
+      "Escape",
+      () => {
+        state.originalValue != null && setValue(state.originalValue);
+        dispatch({ type: "endEditing" });
+      },
+      undefined,
+      [state]
+    );
+
     React.useEffect(() => {
       if (blur || submitting) {
         setErrors(validate(value ?? ""));
       }
     }, [value, blur, submitting]);
 
+    React.useEffect(() => {
+      if (isEditing) {
+        inputRef.current?.select();
+      } else {
+        window.getSelection()?.removeAllRanges();
+      }
+    }, [isEditing]);
+
+    const EnhancedIndicatorButton = React.cloneElement(IndicatorButton, {
+      "data-focus": isEditing,
+      onClick: () =>
+        dispatch({ type: "startEditing", originalValue: formValue }),
+      type: "button",
+      disabled,
+    });
+
     return (
       <StyledBox
-        css={{
-          color: disabled ? "$gray8" : "$gray11",
-          $$borderWidth: borderless ? "0px" : undefined,
-        }}
+        css={{ color: disabled ? "$gray8" : "$gray11" }}
         data-disabled={disabled}
       >
-        {Icon}
+        {EnhancedIndicatorButton}
         <StyledInput
-          disabled={disabled}
+          autoFocus={isEditing}
+          disabled={!isEditing}
           name={name}
-          ref={forwardedRef}
+          ref={inputRef}
           value={value ?? formValue}
           onChange={(event) => {
             onChange ? onChange?.(event) : setValue(event.target.value ?? "");
@@ -129,6 +179,7 @@ export const InlineInput = React.forwardRef<HTMLInputElement, InlineInputProps>(
           onBlur={(event) => {
             onBlur?.(event);
             setBlur(true);
+            dispatch({ type: "endEditing" });
           }}
           alignByContent={alignByContent}
           minLength={minLength}

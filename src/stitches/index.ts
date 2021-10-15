@@ -87,38 +87,41 @@ export const designSystem = createStitches({
           return { fontFamily: "$text", ...sharedTextStyles };
       }
     },
-    focusStyle: (value: "inner" | "outer") => {
+    focusStyle: (
+      value: "inner-within" | "outer-within" | "outer" | "inner"
+    ) => {
       switch (value) {
         case "outer":
-          return {
-            "&:focus-visible, &:focus-within": {
-              outlineWidth: "2px",
-              outlineOffset: "$space$1",
-              outlineColor: "$primary10",
+        case "outer-within": {
+          const focusWithin =
+            value === "outer-within" ? "&:focus-within" : undefined;
 
-              ".icon > svg": {
-                stroke: "$primary10",
-              },
+          return {
+            [`&:focus-visible, ${focusWithin}, &[data-focus='true']`]: {
+              boxShadow:
+                "0 0 0 1px $colors$background, 0 0 0 3px $colors$primary10",
+              borderColor: "$background",
+              outline: "none",
             },
           };
+        }
 
-        default:
+        default: {
+          const focusWithin =
+            value === "inner-within" ? "&:focus-within" : undefined;
+
           return {
-            "&:focus-visible, &:focus-within": {
+            [`&:focus-visible, ${focusWithin}, &[data-focus='true']`]: {
               boxShadow: "inset 0 0 0 1px $colors$primary10",
               borderColor: "$primary10",
               outline: "none",
-
-              ".icon > svg": {
-                stroke: "$primary10",
-              },
             },
           };
+        }
       }
     },
   },
 });
-
 export type StyleObject = CSS<typeof designSystem>;
 
 export * from "@stitches/react";
@@ -153,5 +156,6 @@ export const darkTheme = createTheme("dark", {
     ...aliasColor("colorScheme", slateDark),
     black: "$colors$gray1",
     white: "$colors$gray12",
+    background: "$colors$gray3",
   },
 });
