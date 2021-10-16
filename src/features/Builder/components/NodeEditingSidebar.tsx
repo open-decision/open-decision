@@ -3,7 +3,7 @@ import {
   Button,
   Form,
   Heading,
-  Icon,
+  IconButton,
   InlineInput,
 } from "@open-legal-tech/design-system";
 import { RichTextEditor } from "components/RichTextEditor";
@@ -41,16 +41,18 @@ export function NodeEditingSidebar({
           initialValues={{ nodeName: node.data?.label ?? "" }}
         >
           <InlineInput
-            borderless
-            Icon={
-              <Icon size="small" label="Editiere den Projektnamen">
-                <Edit2 />
-              </Icon>
+            IndicatorButton={
+              <IconButton
+                size="small"
+                variant="ghost"
+                label="Editiere den Namen"
+                Icon={<Edit2 />}
+                css={{ colorScheme: "primary" }}
+              />
             }
             css={{ textStyle: "medium-heading" }}
             name="nodeName"
             maxLength={70}
-            alignByContent="left"
           />
         </Form>
       </Box>

@@ -43,7 +43,7 @@ export const SidebarRoot = ({
   onOpenChange,
   ...props
 }: SidebarProps): JSX.Element => {
-  useKeyPressEvent("Escape", () => (onOpenChange ? onOpenChange(false) : null));
+  // useKeyPressEvent("Escape", () => (onOpenChange ? onOpenChange(false) : null));
 
   return (
     <Sidebar open={open} onOpenChange={onOpenChange} {...props}>

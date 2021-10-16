@@ -11,7 +11,7 @@ type Props = { css?: StyleObject };
 export const NewNodeButton = ({ css }: Props) => {
   const service = useTreeService();
   const onDragStart = (event: React.DragEvent<HTMLButtonElement>) => {
-    event.dataTransfer.setData("application/reactflow", "default");
+    event.dataTransfer.setData("application/reactflow", "customNode");
     event.dataTransfer.effectAllowed = "move";
   };
 

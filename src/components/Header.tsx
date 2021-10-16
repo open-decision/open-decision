@@ -8,7 +8,9 @@ import {
   Form,
   darkTheme,
   InlineInput,
+  IconButton,
 } from "@open-legal-tech/design-system";
+import { Edit2 } from "react-feather";
 
 const Container = styled("div", {
   backgroundColor: "$gray2",
@@ -46,7 +48,19 @@ export const Header: React.FC<HeaderProps> = ({ css }) => {
             }}
             initialValues={{ projectName: "" }}
           >
-            <InlineInput borderless name="projectName" />
+            <InlineInput
+              IndicatorButton={
+                <IconButton
+                  size="small"
+                  variant="ghost"
+                  label="Editiere den Projektnamen"
+                  Icon={<Edit2 />}
+                  css={{ colorScheme: "primary" }}
+                />
+              }
+              alignByContent="left"
+              name="projectName"
+            />
           </Form>
         </Box>
         <Box />

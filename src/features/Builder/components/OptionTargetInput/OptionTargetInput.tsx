@@ -137,10 +137,10 @@ export function OptionTargetInput({
         <NodeLink target={input.target} />
         <Combobox
           Input={
-            <InlineInput
+            <Input
               name="target"
-              borderless
               placeholder="Zielknoten auswählen"
+              css={{ border: 0, borderRadius: 0 }}
             />
           }
           onCreate={(label) => {
