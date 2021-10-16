@@ -88,9 +88,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
   };
 
   const elements = [
-    ...Object.values(tree.nodes).map((node) => ({
-      ...node,
-    })),
+    ...Object.values(tree.nodes).map((node) => node),
     ...createEdges(tree.nodes, selectedNodeId),
   ];
 
@@ -101,9 +99,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
         css={{ zIndex: isNodeEditingSidebarOpen ? undefined : 2, ...css }}
       >
         <Stage
-          onPaneClick={() => {
-            closeNodeEditingSidebar();
-          }}
+          onPaneClick={() => closeNodeEditingSidebar()}
           nodeTypes={customNodes}
           elements={elements}
           onElementsRemove={(elementsToRemove) => {

@@ -1,7 +1,7 @@
 import * as E from "fp-ts/lib/Either";
 import * as A from "fp-ts/lib/Array";
 import { flow, identity, pipe } from "fp-ts/lib/function";
-import { All_TreesQuery } from "internalTypes/index";
+// import { All_TreesQuery } from "internalTypes/index";
 import { Tags, TreeNode, ValidTreeNode } from "./types";
 
 const parseTags = (tags: string) =>
@@ -36,24 +36,24 @@ const splitTreeData = (
   return { invalidData, validData };
 };
 
-export const validateTreeData = (
-  data: All_TreesQuery
-): { invalidData: string[]; validData: ValidTreeNode[] } => {
-  const trees = data?.allDecisionTrees?.edges?.map((x) => x?.node) ?? [];
+// export const validateTreeData = (
+//   data: All_TreesQuery
+// ): { invalidData: string[]; validData: ValidTreeNode[] } => {
+//   const trees = data?.allDecisionTrees?.edges?.map((x) => x?.node) ?? [];
 
-  const decodedData = pipe(
-    trees,
-    A.map(
-      flow(
-        (value) =>
-          value && {
-            ...value,
-            tags: value?.tags ? parseTags(value.tags) : [],
-          },
-        TreeNode.decode
-      )
-    )
-  );
+//   const decodedData = pipe(
+//     trees,
+//     A.map(
+//       flow(
+//         (value) =>
+//           value && {
+//             ...value,
+//             tags: value?.tags ? parseTags(value.tags) : [],
+//           },
+//         TreeNode.decode
+//       )
+//     )
+//   );
 
-  return splitTreeData(decodedData);
-};
+//   return splitTreeData(decodedData);
+// };
