@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   darkTheme,
   styled,
   StyleObject,
@@ -170,6 +171,19 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
             left: "20px",
           }}
         />
+        <Button
+          variant="tertiary"
+          css={{
+            colorScheme: "error",
+            position: "absolute",
+            bottom: "20px",
+            left: "20px",
+          }}
+          //FIXME Needs Confirmation Dialog
+          onClick={() => send({ type: "clearTree" })}
+        >
+          Baum löschen
+        </Button>
       </Container>
       <SidebarRoot
         css={{

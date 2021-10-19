@@ -9,6 +9,7 @@ import {
   addRelation,
   updateRelation,
   deleteRelation,
+  selectNode,
 } from "./assignUtils";
 import { fold } from "fp-ts/Either";
 import { pipe } from "fp-ts/lib/function";
@@ -42,7 +43,7 @@ export type sendToTreePayload = Parameters<
   Interpreter<Context, any, Events, TreeState>["send"]
 >[0];
 
-export type Context = { id: string } & Tree.TTree;
+export type Context = Tree.TTree;
 
 export type TreeService = Interpreter<Context, any, Events, TreeState>;
 
@@ -94,6 +95,14 @@ export const treeMachine = createMachine<Context, Events, TreeState>(
           deleteRelation: {
             target: "sync",
             actions: deleteRelation,
+          },
+          clearTree: {
+            target: "sync",
+            actions: "createNewTree",
+          },
+          selectNode: {
+            target: "sync",
+            actions: selectNode,
           },
         },
       },

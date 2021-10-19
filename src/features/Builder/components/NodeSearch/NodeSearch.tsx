@@ -35,6 +35,7 @@ export function NodeSearch() {
             data: { label },
           });
           service.send({ type: "addNode", value: newNode });
+
           return { id: newNode.id, label: newNode.data.label };
         }}
       />

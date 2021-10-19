@@ -2,13 +2,14 @@ import * as React from "react";
 import { OnLoadParams, useZoomPanHelper } from "react-flow-renderer";
 import { TNodeData } from "../types/Node";
 import { useStoreActions } from "react-flow-renderer";
-import { useTree } from "./useTree";
+import { useTreeService, useTree } from "./useTree";
 import { calculateCenterOfNode } from "../utilities/useCenter";
 import { sidebarWidth, transitionDuration } from "../utilities/constants";
 import { useUpdateEffect } from "react-use";
+import { useSelector } from "@xstate/react";
 
 type EditorState = {
-  selectedNodeId: string | undefined;
+  selectedNodeId: string;
   setSelectedNodeId: (newSelectedNodeId?: string) => void;
   reactFlowInstance?: OnLoadParams<any>;
   setReactFlowInstance: (newInstance: OnLoadParams<any>) => void;
@@ -24,14 +25,16 @@ type TreeProviderProps = Omit<
   "value"
 >;
 export function EditorProvider({ children }: TreeProviderProps) {
-  const [selectedNodeId, setSelectedNodeId] =
-    React.useState<EditorState["selectedNodeId"]>(undefined);
+  const treeService = useTreeService();
+  const selectedNodeId = useSelector(
+    treeService,
+    (state) => state.context.selectedNodeId
+  );
   const [reactFlowInstance, setReactFlowInstance] = React.useState<
     OnLoadParams<TNodeData> | undefined
   >();
 
   const [isTransitioning, setIsTransitioning] = React.useState(false);
-
   const tree = useTree();
 
   const setSelectedElements = useStoreActions(
@@ -58,9 +61,12 @@ export function EditorProvider({ children }: TreeProviderProps) {
     return () => clearTimeout(timer);
   }, [selectedNodeId]);
 
-  const updateNodeId = (selectedNodeId: EditorState["selectedNodeId"]) => {
+  const updateNodeId: EditorState["setSelectedNodeId"] = (selectedNodeId) => {
     setSelectedElements([{ id: selectedNodeId }]);
-    setSelectedNodeId(selectedNodeId);
+    treeService.send({
+      type: "selectNode",
+      nodeId: selectedNodeId ?? "",
+    });
   };
 
   return (
@@ -71,7 +77,8 @@ export function EditorProvider({ children }: TreeProviderProps) {
         reactFlowInstance,
         setReactFlowInstance,
         isNodeEditingSidebarOpen: Boolean(selectedNodeId),
-        closeNodeEditingSidebar: () => setSelectedNodeId(undefined),
+        closeNodeEditingSidebar: () =>
+          treeService.send({ type: "selectNode", nodeId: "" }),
         isTransitioning,
       }}
     >

@@ -21,11 +21,11 @@
     "@graphql-codegen/typescript-react-query": "^3.0.3",
     "@tailwindcss/jit": "^0.1.18",
     "@types/d3-shape": "^3.0.2",
-    "@types/node": "^16.11.0",
+    "@types/node": "^16.11.1",
     "@types/react": "^17.0.30",
     "@types/react-dom": "^17.0.9",
-    "@typescript-eslint/eslint-plugin": "^5.0.0",
-    "@typescript-eslint/parser": "^5.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.1.0",
+    "@typescript-eslint/parser": "^5.1.0",
     "@xstate/inspect": "^0.5.0",
     "autoprefixer": "^10.3.7",
     "eslint": "^8.0.1",
@@ -43,8 +43,8 @@
   },
   "dependencies": {
     "@fontsource/poppins": "^4.5.0",
-    "@open-legal-tech/design-system": "^0.10.17",
-    "@open-legal-tech/tailwind": "^0.10.17",
+    "@open-legal-tech/design-system": "^0.10.18",
+    "@open-legal-tech/tailwind": "^0.10.18",
     "@radix-ui/react-accordion": "^0.1.1",
     "@radix-ui/react-avatar": "^0.1.1",
     "@radix-ui/react-collapsible": "^0.1.1",
@@ -75,7 +75,7 @@
     "fp-ts": "^2.11.5",
     "framer-motion": "^4.1.17",
     "graphql": "^15.6.1",
-    "graphql-request": "^3.6.0",
+    "graphql-request": "^3.6.1",
     "history": "5",
     "immer": "^9.0.6",
     "io-ts": "^2.2.16",
@@ -95,10 +95,10 @@
     "react-use-gesture": "^9.1.3",
     "remeda": "^0.0.30",
     "slate": "^0.66.5",
-    "slate-react": "^0.66.7",
+    "slate-react": "^0.67.0",
     "utility-types": "^3.10.0",
     "uuid": "^8.3.2",
     "xstate": "^4.25.0",
-    "zustand": "^3.5.13"
+    "zustand": "^3.5.14"
   }
 }
