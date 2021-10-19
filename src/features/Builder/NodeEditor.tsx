@@ -12,11 +12,12 @@ import { Node } from "./components/Node";
 import { NodeEditingSidebar } from "./components/NodeEditingSidebar";
 import { NodeSearch } from "./components/NodeSearch/NodeSearch";
 import { createEdges } from "./edgeCreationEngine/edgeCreationEngine";
-import { Stage } from "./Stage";
 import { useEditor } from "./state/useEditor";
 import { useTreeService } from "./state/useTree";
 import * as NodeType from "./types/Node";
 import * as Connection from "./types/Connection";
+import ReactFlow from "react-flow-renderer";
+import { transitionDuration } from "./utilities/constants";
 
 const customNodes = { customNode: Node };
 
@@ -26,6 +27,13 @@ const Container = styled("div", {
   width: "100vw",
   position: "relative",
   backgroundColor: "$gray1",
+});
+
+const Canvas = styled(ReactFlow, {
+  "&[data-transition='true'] .react-flow__nodes,&[data-transition='true'] .react-flow__edges > g":
+    {
+      transition: `transform ${transitionDuration / 2}ms ease-in-out`,
+    },
 });
 
 type NodeEditorProps = {
@@ -52,6 +60,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
     setReactFlowInstance,
     isNodeEditingSidebarOpen,
     closeNodeEditingSidebar,
+    isTransitioning,
   } = useEditor();
 
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
@@ -98,10 +107,12 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
         ref={reactFlowWrapper}
         css={{ zIndex: isNodeEditingSidebarOpen ? undefined : 2, ...css }}
       >
-        <Stage
+        <Canvas
+          data-transition={isTransitioning}
           onPaneClick={() => closeNodeEditingSidebar()}
           nodeTypes={customNodes}
           elements={elements}
+          deleteKeyCode={46}
           onElementsRemove={(elementsToRemove) => {
             setSelectedNodeId();
             send([
@@ -132,7 +143,9 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
           }}
           onDragOver={onDragOver}
           onDrop={onDrop}
-          onLoad={setReactFlowInstance}
+          onLoad={(instance) => {
+            setReactFlowInstance(instance);
+          }}
           onElementClick={(_event, node) => {
             if (Connection.Type.is(node)) {
               return setSelectedNodeId(node.source);

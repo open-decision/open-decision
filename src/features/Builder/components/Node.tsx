@@ -6,6 +6,7 @@ import {
   Position,
   useStoreState,
 } from "react-flow-renderer";
+import { useEditor } from "../state/useEditor";
 import { TNodeData } from "../types/Node";
 import { nodeHeight, nodeWidth } from "../utilities/constants";
 
@@ -21,11 +22,13 @@ const Port = styled(Handle, {
   },
 });
 
-export const Node = memo(({ id, data, selected }: NodeProps<TNodeData>) => {
+export const Node = memo(({ id, data }: NodeProps<TNodeData>) => {
   const [isConnecting, connectionNodeId] = useStoreState((state) => [
     state.connectionHandleType != null,
     state.connectionNodeId,
   ]);
+  const { selectedNodeId } = useEditor();
+  const selected = selectedNodeId === id;
 
   return (
     <Box

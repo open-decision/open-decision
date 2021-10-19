@@ -3,6 +3,7 @@ import { MainContent } from "components/Layout";
 import { NodeEditor } from "features/Builder/NodeEditor";
 import { EditorProvider } from "features/Builder/state/useEditor";
 import { TreeProvider } from "features/Builder/state/useTree";
+import { sidebarWidth } from "features/Builder/utilities/constants";
 import { ReactFlowProvider } from "react-flow-renderer";
 
 export default function Tree(): JSX.Element {
@@ -11,7 +12,7 @@ export default function Tree(): JSX.Element {
       css={{
         overflow: "hidden",
         display: "grid",
-        gridTemplateColumns: "1fr 430px",
+        gridTemplateColumns: `1fr ${sidebarWidth}px`,
         gridTemplateRows: "70px 1fr",
       }}
     >
