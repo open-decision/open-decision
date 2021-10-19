@@ -51,7 +51,7 @@ export function Combobox<TItem extends Item>({
   } = useCombobox({
     items: inputItems,
     selectedItem: value
-      ? items.find((item) => item?.id === value)
+      ? items.find((item) => item?.id === value) ?? fallbackSelectedItem
       : fallbackSelectedItem,
     itemToString: (item) => (item?.label ?? "").replace("Erstelle ", ""),
     onInputValueChange: ({ inputValue }) => {

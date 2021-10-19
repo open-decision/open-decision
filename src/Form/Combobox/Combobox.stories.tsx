@@ -31,7 +31,6 @@ const Template: Story<ComboboxProps<Item>> = ({ Input }) => {
       initialValues={{
         test: "123",
       }}
-      // onChange={({ values }) => console.log(values)}
       css={{ display: "grid", gap: "$2", width: "max-content" }}
     >
       <Combobox items={items} onCreate={handleItemCreate} Input={Input} />
