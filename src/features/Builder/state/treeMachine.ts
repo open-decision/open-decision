@@ -9,6 +9,7 @@ import {
   addRelation,
   updateRelation,
   deleteRelation,
+  clearTree,
 } from "./assignUtils";
 import { fold } from "fp-ts/Either";
 import { pipe } from "fp-ts/lib/function";
@@ -94,6 +95,10 @@ export const treeMachine = createMachine<Context, Events, TreeState>(
           deleteRelation: {
             target: "sync",
             actions: deleteRelation,
+          },
+          clearTree: {
+            target: "sync",
+            actions: clearTree,
           },
         },
       },

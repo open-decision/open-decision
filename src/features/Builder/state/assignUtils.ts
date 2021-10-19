@@ -17,7 +17,8 @@ export type Events =
   | DeleteNodeEvent
   | AddRelationEvent
   | UpdateRelationEvent
-  | DeleteRelationEvent;
+  | DeleteRelationEvent
+  | ClearTreeEvent;
 
 export type AddNodeEvent = { type: "addNode"; value: Node.TNode };
 export const addNode = immerAssign(
@@ -172,3 +173,12 @@ export function createNewAssociatedNode(
 
   return newNode;
 }
+
+type ClearTreeEvent = { type: "clearTree" };
+
+export const clearTree = immerAssign(
+  (context: Context, _event: ClearTreeEvent) => {
+    context.nodes = {};
+    context.treeName = "";
+  }
+);
