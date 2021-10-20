@@ -3,7 +3,6 @@ import * as React from "react";
 import { Meta, Story } from "@storybook/react";
 import { Heading, HeadingProps } from "./index";
 import { Box } from "../Box";
-import { ClassNamesArg } from "@emotion/core";
 
 export default {
   component: Heading,

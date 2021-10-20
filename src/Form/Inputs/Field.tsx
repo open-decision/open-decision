@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Text } from "../../Text";
-import { styled, StyleObject } from "../../stitches";
+import { styled } from "../../stitches";
 
 import { ValidationMessage } from "../shared/ValidationMessage";
 
