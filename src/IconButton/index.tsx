@@ -8,29 +8,32 @@ import { alignByContent } from "../stitches/utils";
 const iconSizes = {
   small: {
     $$paddingInline: "$space$2",
+    $$iconSize: "18px",
     paddingBlock: "$$paddingInline",
 
     "& > svg": {
-      width: "18px",
-      height: "18px",
+      width: "$$iconSize",
+      height: "$$iconSize",
     },
   },
   medium: {
     $$paddingInline: "$space$2",
+    $$iconSize: "22px",
     paddingBlock: "$$paddingInline",
 
     "& > svg": {
-      width: "22px",
-      height: "22px",
+      width: "$$iconSize",
+      height: "$$iconSize",
     },
   },
   large: {
     $$paddingInline: "$space$3",
+    $$iconSize: "24px",
     paddingBlock: "$$paddingInline",
 
     "& > svg": {
-      width: "24px",
-      height: "24px",
+      width: "$$iconSize",
+      height: "$$iconSize",
     },
   },
 } as const;
@@ -82,8 +85,13 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
 );
 
 const StyledIcon = styled("span", {
+  $$iconSize: "0px",
   paddingInline: "$$paddingInline",
   transform: "translate($$XTranslation)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  minWidth: "calc($$iconSize + $$paddingInline)",
 
   "&[data-active='true'] > svg": {
     stroke: "$primary10",

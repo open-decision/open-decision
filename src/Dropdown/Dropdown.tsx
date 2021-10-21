@@ -30,7 +30,7 @@ const Item = styled(DropdownMenuPrimitives.Item, {
   gridTemplateColumns: "max-content 1fr",
   alignItems: "center",
   borderRadius: "$md",
-  paddingRight: "$4",
+  paddingInline: "$4",
   paddingBlock: "$2",
   gap: "$3",
 
@@ -66,7 +66,7 @@ const TriggerItem = styled(DropdownMenuPrimitives.TriggerItem, Item);
 
 const ItemIndicator = () => {
   return (
-    <Icon label="Checked" css={{ paddingBlock: 0 }}>
+    <Icon label="Checked" css={{ padding: 0 }}>
       <DropdownMenuPrimitives.ItemIndicator asChild>
         <Check />
       </DropdownMenuPrimitives.ItemIndicator>
