@@ -11,7 +11,7 @@ export * from "./IconButton";
 export * from "./Text";
 export * from "./Form";
 export * from "./Link";
-export * from "./Dropdown/Dropdown";
+export * from "./Menus";
 
 // Styling solutions
 export * from "./stitches";

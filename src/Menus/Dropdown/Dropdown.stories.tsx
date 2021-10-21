@@ -2,8 +2,8 @@ import * as React from "react";
 
 import { Meta, Story } from "@storybook/react";
 import { DropdownMenu } from "./Dropdown";
-import { IconButton, Icon } from "../IconButton";
-import { Menu } from "../icons";
+import { IconButton, Icon } from "../../IconButton";
+import { Menu } from "../../icons";
 import { Settings } from "react-feather";
 
 export default {
