@@ -1,5 +1,13 @@
-import { Box, styled, Text } from "@open-legal-tech/design-system";
+import {
+  Box,
+  styled,
+  Text,
+  DropdownMenu,
+  IconButton,
+  Icon,
+} from "@open-legal-tech/design-system";
 import React, { memo } from "react";
+import { MoreHorizontal, Trash } from "react-feather";
 import {
   Handle,
   NodeProps,
@@ -7,6 +15,7 @@ import {
   useStoreState,
 } from "react-flow-renderer";
 import { useEditor } from "../state/useEditor";
+import { useTreeService } from "../state/useTree";
 import { TNodeData } from "../types/Node";
 import { nodeHeight, nodeWidth } from "../utilities/constants";
 
@@ -27,6 +36,7 @@ export const Node = memo(({ id, data }: NodeProps<TNodeData>) => {
     state.connectionHandleType != null,
     state.connectionNodeId,
   ]);
+  const treeService = useTreeService();
   const { selectedNodeId } = useEditor();
   const selected = selectedNodeId === id;
 
@@ -72,6 +82,30 @@ export const Node = memo(({ id, data }: NodeProps<TNodeData>) => {
           alignItems: "center",
         }}
       >
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger asChild>
+            <IconButton
+              size="small"
+              variant="ghost"
+              css={{ position: "absolute", top: 0, right: 0 }}
+              Icon={<MoreHorizontal />}
+              label={`Öffne Menü Node: ${data.label}`}
+            />
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content>
+            <DropdownMenu.Item
+              css={{ colorScheme: "error" }}
+              onSelect={() =>
+                treeService.send({ type: "deleteNode", ids: [id] })
+              }
+            >
+              <Icon label="Löschen Icon" css={{ padding: 0 }}>
+                <Trash />
+              </Icon>
+              Node löschen
+            </DropdownMenu.Item>
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
         <Text
           css={{
             textAlign: "center",

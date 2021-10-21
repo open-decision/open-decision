@@ -5,7 +5,6 @@ import {
   Heading,
   IconButton,
   IconButtonProps,
-  InlineInput,
   Input,
 } from "@open-legal-tech/design-system";
 import { useSelector } from "@xstate/react";

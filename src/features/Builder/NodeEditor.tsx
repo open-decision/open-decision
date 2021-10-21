@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  css,
   darkTheme,
   styled,
   StyleObject,
@@ -30,7 +31,7 @@ const Container = styled("div", {
   backgroundColor: "$gray1",
 });
 
-const Canvas = styled(ReactFlow, {
+const canvasStyles = css({
   "&[data-transition='true'] .react-flow__nodes,&[data-transition='true'] .react-flow__edges > g":
     {
       transition: `transform ${transitionDuration / 2}ms ease-in-out`,
@@ -108,14 +109,14 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
         ref={reactFlowWrapper}
         css={{ zIndex: isNodeEditingSidebarOpen ? undefined : 2, ...css }}
       >
-        <Canvas
+        <ReactFlow
+          className={canvasStyles()}
           data-transition={isTransitioning}
           onPaneClick={() => closeNodeEditingSidebar()}
           nodeTypes={customNodes}
           elements={elements}
           deleteKeyCode={46}
           onElementsRemove={(elementsToRemove) => {
-            setSelectedNodeId();
             send([
               {
                 type: "deleteNode",
@@ -147,7 +148,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
           onLoad={(instance) => {
             setReactFlowInstance(instance);
           }}
-          onElementClick={(_event, node) => {
+          onElementClick={(event, node) => {
             if (Connection.Type.is(node)) {
               return setSelectedNodeId(node.source);
             }

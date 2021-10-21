@@ -68,6 +68,7 @@ export const deleteNode = immerAssign(
   (context: Context, { ids }: DeleteNodeEvent) => {
     ids.forEach((id) => {
       delete context.nodes[id];
+      if (id === context.selectedNodeId) context.selectedNodeId = "";
 
       // Remove the node from all the targets of other nodes
       for (const key in context.nodes) {
