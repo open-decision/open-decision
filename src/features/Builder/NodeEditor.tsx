@@ -110,7 +110,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
         css={{ zIndex: isNodeEditingSidebarOpen ? undefined : 2, ...css }}
       >
         <ReactFlow
-          className={canvasStyles()}
+          className={canvasStyles().className}
           data-transition={isTransitioning}
           onPaneClick={() => closeNodeEditingSidebar()}
           nodeTypes={customNodes}

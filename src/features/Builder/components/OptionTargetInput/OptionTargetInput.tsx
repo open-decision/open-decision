@@ -33,7 +33,7 @@ export function OptionTargetInputs({ node }: SingleSelectProps) {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: "$2",
+          marginBottom: "$4",
         }}
       >
         <Heading size="extra-small" css={{ textTransform: "uppercase" }}>
@@ -107,7 +107,6 @@ export function OptionTargetInput({
       initialValues={{ value: input.value ?? "", target: input.target ?? "" }}
       css={{
         display: "flex",
-        gap: "$2",
         position: "relative",
       }}
     >
@@ -168,24 +167,22 @@ export function OptionTargetInput({
           items={nodeOptions}
         />
       </Box>
-      <Box css={{ display: "flex", alignItems: "center" }}>
-        <IconButton
-          css={{ colorScheme: "error" }}
-          variant="ghost"
-          size="small"
-          label="Entferne den Input"
-          Icon={<Trash />}
-          type="button"
-          onClick={() => onDelete(input.id)}
-        />
-        <IconButton
-          variant="ghost"
-          size="small"
-          label="Entferne den Input"
-          type="button"
-          Icon={<DragHandle />}
-        />
-      </Box>
+      <IconButton
+        css={{ colorScheme: "error" }}
+        variant="ghost"
+        size="small"
+        label="Entferne den Input"
+        Icon={<Trash />}
+        type="button"
+        onClick={() => onDelete(input.id)}
+      />
+      <IconButton
+        variant="ghost"
+        size="small"
+        label="Entferne den Input"
+        type="button"
+        Icon={<DragHandle />}
+      />
     </Form>
   );
 }
