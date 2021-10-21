@@ -2,7 +2,7 @@ import * as React from "react";
 import { styled } from "../../stitches";
 import { Box } from "../../Box";
 import { Input as SystemInput } from "./Input";
-import { Button as SystemButton } from "../../Button";
+import { Button as SystemButton } from "../../Button/Button";
 
 const StyledBox = styled(Box, {
   display: "flex",

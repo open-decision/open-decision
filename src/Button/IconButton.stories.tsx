@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { Meta, Story } from "@storybook/react";
 
-import { IconButton, IconButtonProps } from "./index";
+import { IconButton, IconButtonProps } from "./IconButton";
 import { Users } from "react-feather";
 import { Box } from "../Box";
 export default {

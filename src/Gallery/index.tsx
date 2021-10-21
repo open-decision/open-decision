@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Box } from "../Box";
-import { IconButton } from "../IconButton";
+import { IconButton } from "../Button/IconButton";
 import { merge } from "remeda";
 import { styled } from "../stitches";
 import { ChevronLeft, ChevronRight } from "react-feather";

@@ -3,7 +3,7 @@ import { useCombobox } from "downshift";
 import { Box } from "../../Box";
 import { Text } from "../../Text";
 import { matchSorter } from "match-sorter";
-import { IconButton } from "../../IconButton";
+import { IconButton } from "../../Button/IconButton";
 import { X } from "../../icons";
 import { StyleObject } from "../../stitches";
 import { InputProps } from "../Inputs";

@@ -1,18 +1,19 @@
 import * as React from "react";
-import { Meta, Story } from "@storybook/react";
+import { Meta } from "@storybook/react";
 import { InputWithButton as SystemInputWithButton } from "./index";
 import { Input } from "./Input";
-import { Button } from "../../Button";
+import { Button } from "../../Button/Button";
 import { Form } from "../Form";
-import { Icon } from "../../IconButton";
+import { Icon } from "../../Button/IconButton";
 import { Search } from "../../icons";
+import { StoryWithoutCSS } from "../../../types/utils";
 
 export default {
   component: SystemInputWithButton,
   title: "Components/Inputs/InputWithButton",
 } as Meta;
 
-const InputWithButton: Story<
+const InputWithButton: StoryWithoutCss<
   React.ComponentProps<typeof SystemInputWithButton>
 > = (props) => (
   <Form onSubmit={({ values }) => alert(values)} initialValues={{ test: "" }}>

@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Collapsible from "@radix-ui/react-collapsible";
-import { IconButton } from "../../IconButton";
+import { IconButton } from "../../Button/IconButton";
 import { keyframes, styled } from "../../stitches";
 import { Box } from "../../Box";
 

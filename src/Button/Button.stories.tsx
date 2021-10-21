@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { Meta, Story } from "@storybook/react";
-import { Button, ButtonProps } from "./index";
+import { Button, ButtonProps } from "./Button";
 import { Box } from "../Box";
 
 export default {

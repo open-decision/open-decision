@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as AccessibleIcon from "@radix-ui/react-accessible-icon";
-import { Button } from "../Button";
+import { Button } from "../Button/Button";
 import { styled } from "../stitches";
 import { Link } from "../Link";
 import { alignByContent } from "../stitches/utils";

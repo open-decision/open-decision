@@ -2,7 +2,7 @@ import * as React from "react";
 import { Meta, Story } from "@storybook/react";
 import { InlineInput, InlineInputProps } from "./InlineInput";
 import { Form } from "../Form";
-import { IconButton } from "../../IconButton";
+import { IconButton } from "../../Button/IconButton";
 import { X, Check, Edit2 } from "../../icons";
 
 export default {

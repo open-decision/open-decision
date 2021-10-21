@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Link } from "../Link";
-import { IconButton } from "../IconButton";
+import { IconButton } from "../Button/IconButton";
 import { styled } from "../stitches";
 import { AtIcon } from "./icons/AtIcon";
 import { GithubIcon } from "./icons/Github";

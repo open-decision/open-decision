@@ -5,7 +5,7 @@ import { VariantProps } from "@stitches/react";
 import { Form } from "../Form";
 import { Field } from "./Field";
 import { ArrowRight, Search } from "../../icons";
-import { IconButton, Icon } from "../../IconButton";
+import { IconButton, Icon } from "../../Button/IconButton";
 
 export default {
   component: SystemInput,

@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as DropdownMenuPrimitives from "@radix-ui/react-dropdown-menu";
 import { styled } from "../../stitches";
-import { Icon } from "../../IconButton";
+import { Icon } from "../../Button/IconButton";
 import { Check } from "../../icons";
 import {
   menuContainerStyles,
