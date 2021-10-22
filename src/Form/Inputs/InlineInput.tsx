@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import * as React from "react";
 import { styled } from "../../stitches";
 import { Box } from "../../Box";
@@ -6,7 +5,7 @@ import { useInput } from "../useForm";
 import { InputProps } from "./Input";
 import { baseInputStyles, baseTextInputStyle } from "../shared/styles";
 import { useComposedRefs } from "../../internal/utils";
-import { useKey } from "react-use";
+import { useKey, useMeasure } from "react-use";
 
 type Actions =
   | { type: "startEditing"; originalValue: string }
@@ -46,6 +45,7 @@ const StyledInput = styled("input", {
   textStyle: "medium-text",
   $$paddingInline: "$space$2",
   $$paddingBlock: "$space$2",
+  $$width: "0px",
   paddingInline: "$$paddingInline",
   paddingBlock: "$$paddingBlock",
   backgroundColor: "transparent",
@@ -54,7 +54,7 @@ const StyledInput = styled("input", {
   // Since Input is not directly a styled component the order of the styles is not controlled correctly.
   borderColor: "transparent !important",
   boxShadow: "none !important",
-  flex: 1,
+  boxSizing: "content-box",
 
   "&:focus-visible": {
     boxShadow: "none",
@@ -62,7 +62,13 @@ const StyledInput = styled("input", {
   },
 });
 
-export type InlineInputProps = InputProps & { IndicatorButton: JSX.Element };
+const SizingSpan = styled("span", {
+  paddingInline: "$2",
+  textStyle: "medium-text",
+  whiteSpace: "pre-wrap",
+});
+
+export type InlineInputProps = InputProps & { IndicatorButton?: JSX.Element };
 
 export const InlineInput = React.forwardRef<HTMLInputElement, InlineInputProps>(
   (
@@ -79,11 +85,13 @@ export const InlineInput = React.forwardRef<HTMLInputElement, InlineInputProps>(
       alignByContent = "center",
       Buttons,
       IndicatorButton,
+      css,
       ...props
     },
     forwardedRef
   ) => {
     const inputRef = useComposedRefs(forwardedRef);
+    const [wrapperRef, { width }] = useMeasure<HTMLSpanElement>();
 
     const [state, dispatch] = React.useReducer(reducer, {
       isEditing: false,
@@ -149,27 +157,27 @@ export const InlineInput = React.forwardRef<HTMLInputElement, InlineInputProps>(
       if (isEditing) {
         inputRef.current?.select();
       } else {
-        window.getSelection()?.removeAllRanges();
+        inputRef.current?.setSelectionRange(null, null);
       }
     }, [isEditing]);
 
-    const EnhancedIndicatorButton = React.cloneElement(IndicatorButton, {
-      "data-active": isEditing,
-      onClick: () =>
-        dispatch({ type: "startEditing", originalValue: formValue }),
-      type: "button",
-      disabled,
-    });
+    const EnhancedIndicatorButton = IndicatorButton
+      ? React.cloneElement(IndicatorButton, {
+          "data-active": isEditing,
+          onClick: () =>
+            dispatch({ type: "startEditing", originalValue: formValue }),
+          type: "button",
+          disabled,
+        })
+      : IndicatorButton;
 
     return (
       <StyledBox
         css={{ color: disabled ? "$gray8" : "$gray11" }}
         data-disabled={disabled}
       >
-        {EnhancedIndicatorButton}
         <StyledInput
           autoFocus={isEditing}
-          disabled={!isEditing}
           name={name}
           ref={inputRef}
           value={value ?? formValue}
@@ -181,13 +189,31 @@ export const InlineInput = React.forwardRef<HTMLInputElement, InlineInputProps>(
             setBlur(true);
             dispatch({ type: "endEditing" });
           }}
+          onClick={() =>
+            dispatch({ type: "startEditing", originalValue: formValue })
+          }
           alignByContent={alignByContent}
           minLength={minLength}
           maxLength={maxLength}
           pattern={regex}
           required={required}
+          css={{
+            width: `${width}px`,
+            ...css,
+          }}
           {...props}
         />
+        <SizingSpan
+          ref={wrapperRef}
+          style={{
+            position: "absolute",
+            left: "-9999px",
+            display: "inline-block",
+          }}
+        >
+          {formValue}
+        </SizingSpan>
+        {EnhancedIndicatorButton}
         {Buttons}
       </StyledBox>
     );

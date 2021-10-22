@@ -57,18 +57,21 @@ const StyledButton = styled(Button, {
 export type IconButtonProps = {
   label: string;
   Icon: React.ReactNode;
-} & React.ComponentProps<typeof StyledButton> &
-  (
-    | {
-        as?: "button";
-      }
-    | (React.ComponentProps<typeof Link> & {
-        as?: "a";
-      })
-  );
+} & React.ComponentProps<typeof StyledButton>;
 
 export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
-  ({ label, children, variant = "primary", Icon, disabled, ...props }, ref) => {
+  (
+    {
+      label,
+      children,
+      variant = "primary",
+
+      Icon,
+      disabled,
+      ...props
+    },
+    ref
+  ) => {
     const EnhancedIcon = React.isValidElement(Icon)
       ? React.cloneElement(Icon, {
           style: { pointerEvents: disabled ? "none" : null },

@@ -16,7 +16,7 @@ const Input: Story<Omit<InlineInputProps, "css">> = (props) => (
       test: "Verfassungsrecht",
     }}
     onSubmit={({ values }) => alert(values)}
-    css={{ display: "grid", gap: "$2", width: "max-content" }}
+    css={{ display: "grid", gap: "$2" }}
   >
     <InlineInput
       IndicatorButton={

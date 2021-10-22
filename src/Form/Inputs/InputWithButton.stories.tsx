@@ -13,7 +13,7 @@ export default {
   title: "Components/Inputs/InputWithButton",
 } as Meta;
 
-const InputWithButton: StoryWithoutCss<
+const InputWithButton: StoryWithoutCSS<
   React.ComponentProps<typeof SystemInputWithButton>
 > = (props) => (
   <Form onSubmit={({ values }) => alert(values)} initialValues={{ test: "" }}>

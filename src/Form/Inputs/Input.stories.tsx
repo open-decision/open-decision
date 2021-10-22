@@ -16,10 +16,8 @@ type Props = VariantProps<typeof SystemInput>;
 
 const Input: Story<Props> = (props) => (
   <Form
-    initialValues={{
-      test: "",
-    }}
-    onChange={({ values }) => console.log(values)}
+    initialValues={{ test: "" }}
+    onChange={({ values }) => console.log(values.test)}
     css={{ display: "grid", gap: "$2", width: "max-content" }}
   >
     <SystemInput name="test" {...props} />

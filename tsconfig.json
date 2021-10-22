@@ -21,12 +21,13 @@
       "@emotion/core": ["./node_modules/@emotion/react"]
     }
   },
-  "include": ["src/**/*", "types"],
+  "include": ["src"],
   "exclude": [
-    "node_modules",
+    "**/lib",
+    "**/node_modules",
     "**/__tests__/*",
     "**/__e2e__/*",
     "**/*.stories.tsx",
-    "dist"
+    "../.*/"
   ]
 }
