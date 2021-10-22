@@ -11,23 +11,25 @@ export function NodeSearch() {
   const service = useTreeService();
   const nodes = useSelector(service, (state) => state.context.nodes);
   const { selectedNodeId, setSelectedNodeId } = useEditor();
-  const items = Object.values(nodes).map((node) => ({
-    id: node.id,
-    label: node.data.label,
-  }));
+  const items = React.useMemo(
+    () =>
+      Object.values(nodes).map((node) => ({
+        id: node.id,
+        label: node.data.label,
+      })),
+    [nodes]
+  );
 
   const center = useCenter({ x: nodeWidth / 2, y: nodeHeight / 2 });
 
   return (
     <Form
-      onChange={({ values }) => {
-        setSelectedNodeId(values.search);
-      }}
-      initialValues={{ search: selectedNodeId ?? "" }}
+      onChange={({ values }) => setSelectedNodeId(values.search)}
+      initialValues={{ search: selectedNodeId }}
     >
       <Combobox
         Input={<Input name="search" />}
-        css={{ backgroundColor: "$gray1", zIndex: "1" }}
+        css={{ backgroundColor: "$gray1", zIndex: "5" }}
         items={items}
         onCreate={(label) => {
           const newNode = Node.create({
