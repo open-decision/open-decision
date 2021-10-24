@@ -18,6 +18,10 @@ export type ComboboxProps<TItem extends Item> = {
   menuCss?: StyleObject;
   onReset?: () => void;
   onCreate?: (itemLabel: string) => Item;
+  inputValue?: string;
+  onInputValueChange?: (inputValue: string) => void;
+  isCreating?: boolean;
+  onIsCreatingChange?: (isCreating: boolean) => void;
 };
 
 const fallbackSelectedItem = {
@@ -32,10 +36,21 @@ export function Combobox<TItem extends Item>({
   Input,
   onReset,
   onCreate,
+  inputValue,
+  onInputValueChange,
+  isCreating: controlledIsCreating = false,
+  onIsCreatingChange,
 }: ComboboxProps<TItem>) {
   const [inputItems, setInputItems] = React.useState(items);
   const { value, setValue } = useInput(Input.props.name, "string");
-  const [isCreating, setIsCreating] = React.useState(false);
+
+  const [innerIsCreating, setIsCreating] = React.useState(false);
+  const onIsCreatingControlled =
+    controlledIsCreating != null && onIsCreatingChange != null;
+  const isCreating = onIsCreatingControlled
+    ? controlledIsCreating
+    : innerIsCreating;
+
   const validIsCreating = (isCreating: boolean) => {
     return onCreate != null ? isCreating : false;
   };
@@ -48,31 +63,47 @@ export function Combobox<TItem extends Item>({
     highlightedIndex,
     getItemProps,
     reset,
+    inputValue: innerInputValue,
   } = useCombobox({
     items: inputItems,
+
     selectedItem: value
       ? items.find((item) => item?.id === value) ?? fallbackSelectedItem
       : fallbackSelectedItem,
+
     itemToString: (item) => (item?.label ?? "").replace("Erstelle ", ""),
+
     onInputValueChange: ({ inputValue }) => {
-      const filteredItems = matchSorter(items, inputValue ?? "", {
+      let filteredItems = matchSorter(items, inputValue ?? "", {
         keys: ["label"],
       });
 
-      const isCreating = validIsCreating(filteredItems.length === 0);
-      setIsCreating(validIsCreating(isCreating));
-
-      setInputItems(
-        !isCreating
-          ? filteredItems
-          : [
-              {
-                label: inputValue ? `Erstelle ${inputValue}` : "",
-                id: inputValue,
-              } as TItem,
-            ]
+      const nonEmptyInputValue = (inputValue?.length ?? 0) > 0;
+      const nonEmptyFilteredItems = filteredItems.length === 0;
+      const nonEqualInputValueAndFilteredItem = filteredItems.some(
+        (filteredItem) => {
+          return filteredItem.label !== inputValue;
+        }
       );
+
+      const isCreating = validIsCreating(
+        nonEmptyInputValue &&
+          (nonEmptyFilteredItems || nonEqualInputValueAndFilteredItem)
+      );
+      onIsCreatingControlled
+        ? onIsCreatingChange(isCreating)
+        : setIsCreating(validIsCreating(isCreating));
+
+      if (isCreating)
+        filteredItems.unshift({
+          label: inputValue ? `Erstelle ${inputValue}` : "",
+          id: inputValue,
+        } as TItem);
+
+      setInputItems(filteredItems);
+      onInputValueChange?.(inputValue ?? "");
     },
+
     onSelectedItemChange: (changes) => {
       if (isCreating) {
         const newItem = onCreate?.(changes.selectedItem?.id ?? "");
@@ -81,6 +112,8 @@ export function Combobox<TItem extends Item>({
 
       return setValue(changes.selectedItem?.id ?? "");
     },
+
+    inputValue,
   });
 
   const EnhancedInput = React.cloneElement(Input, {
@@ -92,7 +125,11 @@ export function Combobox<TItem extends Item>({
         size="small"
         variant="ghost"
         type="button"
-        css={{ focusStyle: "inner" }}
+        disabled={!innerInputValue}
+        css={{
+          focusStyle: "inner",
+          opacity: innerInputValue ? 1 : "0 !important",
+        }}
         onClick={() => {
           onReset?.();
           reset();

@@ -10,6 +10,8 @@ export default {
 } as Meta;
 
 const Template: Story<ComboboxProps<Item>> = ({ Input }) => {
+  const [selectedNode, setSelectedNode] = React.useState("");
+  const [inputValue, setInputValue] = React.useState("");
   const [items, setItems] = React.useState([
     { id: "123", label: "test" },
     { id: "1234", label: "another one" },
@@ -28,12 +30,19 @@ const Template: Story<ComboboxProps<Item>> = ({ Input }) => {
 
   return (
     <Form
-      initialValues={{
-        test: "123",
+      initialValues={{ test: selectedNode }}
+      onChange={({ values }) => {
+        return setSelectedNode(values.test);
       }}
       css={{ display: "grid", gap: "$2", width: "max-content" }}
     >
-      <Combobox items={items} onCreate={handleItemCreate} Input={Input} />
+      <Combobox
+        inputValue={inputValue}
+        items={items}
+        onCreate={handleItemCreate}
+        onInputValueChange={(inputValue) => setInputValue(inputValue)}
+        Input={Input}
+      />
     </Form>
   );
 };
