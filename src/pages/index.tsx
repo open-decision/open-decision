@@ -16,7 +16,7 @@ export default function Tree(): JSX.Element {
         gridTemplateRows: "70px 1fr",
       }}
     >
-      <Header css={{ gridColumn: "1", gridRow: "1" }} />
+      <Header css={{ gridColumn: "1 / -1", gridRow: "1" }} />
       <ReactFlowProvider>
         <TreeProvider>
           <EditorProvider>

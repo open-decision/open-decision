@@ -58,7 +58,6 @@ export const Header: React.FC<HeaderProps> = ({ css }) => {
                   css={{ colorScheme: "primary" }}
                 />
               }
-              alignByContent="left"
               name="projectName"
             />
           </Form>

@@ -189,9 +189,8 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
       <SidebarRoot
         css={{
           position: "relative",
-          display: "grid",
-          gridTemplateRows: "inherit",
-          gridRow: "1 / -1",
+          display: "flex",
+          gridRow: "2",
           gridColumn: "2",
           paddingInlineStart: "$1",
         }}
@@ -199,23 +198,9 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
         open={isNodeEditingSidebarOpen}
         onOpenChange={() => closeNodeEditingSidebar()}
       >
-        <Box
-          css={{
-            backgroundColor: "$gray2",
-            gridRow: "1",
-            gap: "$4",
-            display: "grid",
-            alignItems: "center",
-            paddingInline: "$5",
-            marginLeft: "-$1",
-          }}
-          className={darkTheme}
-        >
-          <NodeSearch />
-        </Box>
-        <SidebarContent css={{ gridRow: "2" }}>
-          {selectedNodeId ? (
-            <NodeEditingSidebar nodeId={selectedNodeId} />
+        <SidebarContent css={{ width: "100%" }}>
+          {state.context.selectedNodeId ? (
+            <NodeEditingSidebar nodeId={state.context.selectedNodeId} />
           ) : (
             <p>Bitte wähle einen Knoten aus</p>
           )}
