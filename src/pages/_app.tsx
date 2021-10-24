@@ -4,10 +4,15 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import type { AppProps } from "next/app";
 import "../index.css";
 import { IdProvider } from "@radix-ui/react-id";
+import { globalCss } from "@open-legal-tech/design-system";
+import { opinionated } from "stitches-normalize-css";
 
 const queryClient = new QueryClient();
+const globalStyles = globalCss(...opinionated);
 
 export default function App({ Component, pageProps }: AppProps): JSX.Element {
+  globalStyles();
+
   return (
     <QueryClientProvider client={queryClient}>
       <IdProvider>
