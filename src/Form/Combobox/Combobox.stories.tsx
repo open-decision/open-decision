@@ -28,6 +28,8 @@ const Template: Story<ComboboxProps<Item>> = ({ Input }) => {
     return newItem;
   };
 
+  const [isCreating, setIsCreating] = React.useState(false);
+
   return (
     <Form
       initialValues={{ test: selectedNode }}
@@ -42,6 +44,8 @@ const Template: Story<ComboboxProps<Item>> = ({ Input }) => {
         onCreate={handleItemCreate}
         onInputValueChange={(inputValue) => setInputValue(inputValue)}
         Input={Input}
+        isCreating={isCreating}
+        onIsCreatingChange={(isCreating) => setIsCreating(isCreating)}
       />
     </Form>
   );

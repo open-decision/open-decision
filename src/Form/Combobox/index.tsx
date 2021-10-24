@@ -51,6 +51,11 @@ export function Combobox<TItem extends Item>({
     ? controlledIsCreating
     : innerIsCreating;
 
+  const updateIsCreating = (isCreating: boolean) =>
+    onIsCreatingControlled
+      ? onIsCreatingChange(isCreating)
+      : setIsCreating(validIsCreating(isCreating));
+
   const validIsCreating = (isCreating: boolean) => {
     return onCreate != null ? isCreating : false;
   };
@@ -90,9 +95,6 @@ export function Combobox<TItem extends Item>({
         nonEmptyInputValue &&
           (nonEmptyFilteredItems || nonEqualInputValueAndFilteredItem)
       );
-      onIsCreatingControlled
-        ? onIsCreatingChange(isCreating)
-        : setIsCreating(validIsCreating(isCreating));
 
       if (isCreating)
         filteredItems.unshift({
@@ -100,12 +102,13 @@ export function Combobox<TItem extends Item>({
           id: inputValue,
         } as TItem);
 
+      updateIsCreating(isCreating);
       setInputItems(filteredItems);
       onInputValueChange?.(inputValue ?? "");
     },
 
     onSelectedItemChange: (changes) => {
-      if (isCreating) {
+      if (isCreating && (changes.inputValue?.length ?? 0) > 0) {
         const newItem = onCreate?.(changes.selectedItem?.id ?? "");
         return setValue(newItem?.id ?? "");
       }
@@ -133,6 +136,7 @@ export function Combobox<TItem extends Item>({
         onClick={() => {
           onReset?.();
           reset();
+          updateIsCreating(false);
         }}
       />
     ),
