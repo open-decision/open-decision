@@ -3,28 +3,23 @@ import {
   Button,
   Form,
   Heading,
-  IconButton,
-  InlineInput,
+  Input,
 } from "@open-legal-tech/design-system";
 import { RichTextEditor } from "components/RichTextEditor";
 import { OptionTargetInputs } from "features/Builder/components/OptionTargetInput/OptionTargetInput";
-import { useTree, useTreeService } from "features/Builder/state/useTree";
 import * as React from "react";
-import { Edit2 } from "react-feather";
 import { useNode, useNodes } from "../state/useNode";
 import * as Tree from "features/Builder/types/Tree";
-import { useEditor } from "../state/useEditor";
+import { useTree } from "../state/useTree";
 
 type NodeEditingSidebarProps = { nodeId: string };
 
 export function NodeEditingSidebar({
   nodeId,
 }: NodeEditingSidebarProps): JSX.Element {
-  const service = useTreeService();
-  const tree = useTree();
+  const [tree, send] = useTree();
   const node = useNode(nodeId);
-  const parentNodesIds = Tree.getParents(node)(tree);
-  const { setSelectedNodeId } = useEditor();
+  const parentNodesIds = Tree.getParents(node)(tree.context);
   const parentNodes = useNodes(parentNodesIds);
 
   return (
@@ -32,7 +27,7 @@ export function NodeEditingSidebar({
       <Box as="header">
         <Form
           onChange={({ values }) => {
-            service.send({
+            send({
               type: "updateNodeData",
               nodeId,
               data: { label: values.nodeName },
@@ -40,16 +35,7 @@ export function NodeEditingSidebar({
           }}
           initialValues={{ nodeName: node.data?.label ?? "" }}
         >
-          <InlineInput
-            IndicatorButton={
-              <IconButton
-                size="small"
-                variant="ghost"
-                label="Editiere den Namen"
-                Icon={<Edit2 />}
-                css={{ colorScheme: "primary" }}
-              />
-            }
+          <Input
             css={{ textStyle: "medium-heading" }}
             name="nodeName"
             maxLength={70}
@@ -66,7 +52,7 @@ export function NodeEditingSidebar({
         <RichTextEditor
           value={node.data.content}
           setValue={(newValue) =>
-            service.send({
+            send({
               type: "updateNodeData",
               nodeId,
               data: { content: newValue },
@@ -92,7 +78,9 @@ export function NodeEditingSidebar({
                 size="small"
                 variant="tertiary"
                 key={parentNode.id}
-                onClick={() => setSelectedNodeId(parentNode.id)}
+                onClick={() =>
+                  send({ type: "selectNode", nodeId: parentNode.id })
+                }
               >
                 {parentNode.data.label}
               </Button>

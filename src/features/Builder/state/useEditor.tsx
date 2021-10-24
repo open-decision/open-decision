@@ -2,21 +2,20 @@ import * as React from "react";
 import { OnLoadParams, useZoomPanHelper } from "react-flow-renderer";
 import { TNodeData } from "../types/Node";
 import { useStoreActions } from "react-flow-renderer";
-import { useTreeService, useTree } from "./useTree";
 import { calculateCenterOfNode } from "../utilities/useCenter";
 import { sidebarWidth, transitionDuration } from "../utilities/constants";
 import { useUpdateEffect } from "react-use";
-import { useSelector } from "@xstate/react";
+import { useTree } from "./useTree";
+import { Context, SendFn } from "./treeMachine";
 
 type EditorState = {
-  selectedNodeId: string;
-  setSelectedNodeId: (newSelectedNodeId?: string) => void;
+  send: SendFn;
   reactFlowInstance?: OnLoadParams<any>;
   setReactFlowInstance: (newInstance: OnLoadParams<any>) => void;
   isNodeEditingSidebarOpen: boolean;
   closeNodeEditingSidebar: () => void;
   isTransitioning: boolean;
-};
+} & Context;
 
 export const EditorContext = React.createContext<EditorState | null>(null);
 
@@ -25,32 +24,30 @@ type TreeProviderProps = Omit<
   "value"
 >;
 export function EditorProvider({ children }: TreeProviderProps) {
-  const treeService = useTreeService();
-  const selectedNodeId = useSelector(
-    treeService,
-    (state) => state.context.selectedNodeId
-  );
+  const [state, send] = useTree();
+  const selectedNodeId = state?.context?.selectedNodeId;
+
   const [reactFlowInstance, setReactFlowInstance] = React.useState<
     OnLoadParams<TNodeData> | undefined
   >();
 
   const [isTransitioning, setIsTransitioning] = React.useState(false);
-  const tree = useTree();
 
   const setSelectedElements = useStoreActions(
     (state) => state.setSelectedElements
   );
 
   const { setCenter } = useZoomPanHelper();
-  useUpdateEffect(() => {
+  React.useEffect(() => {
     if (selectedNodeId) {
       setIsTransitioning(true);
-      const position = tree.nodes[selectedNodeId].position;
+      const position = state.context.nodes[selectedNodeId].position;
       const positionOfNodeFromCenter = calculateCenterOfNode(
         position,
         selectedNodeId ? { x: sidebarWidth / 2, y: 0 } : undefined
       );
       setCenter?.(positionOfNodeFromCenter.x, positionOfNodeFromCenter.y, 1);
+      setSelectedElements([{ id: selectedNodeId }]);
     }
 
     // After the animation ends smoothPan is set back to inactive.
@@ -61,29 +58,22 @@ export function EditorProvider({ children }: TreeProviderProps) {
     return () => clearTimeout(timer);
   }, [selectedNodeId]);
 
-  const updateNodeId: EditorState["setSelectedNodeId"] = (selectedNodeId) => {
-    setSelectedElements([{ id: selectedNodeId }]);
-    treeService.send({
-      type: "selectNode",
-      nodeId: selectedNodeId ?? "",
-    });
-  };
-
-  return (
+  return state.matches("idle") ? (
     <EditorContext.Provider
       value={{
-        selectedNodeId,
-        setSelectedNodeId: updateNodeId,
+        send,
         reactFlowInstance,
         setReactFlowInstance,
         isNodeEditingSidebarOpen: Boolean(selectedNodeId),
-        closeNodeEditingSidebar: () =>
-          treeService.send({ type: "selectNode", nodeId: "" }),
+        closeNodeEditingSidebar: () => send({ type: "selectNode", nodeId: "" }),
         isTransitioning,
+        ...state.context,
       }}
     >
       {children}
     </EditorContext.Provider>
+  ) : (
+    <div>Temporary Fallback</div>
   );
 }
 

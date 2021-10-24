@@ -2,24 +2,21 @@ import {
   Box,
   Button,
   css,
-  darkTheme,
   styled,
   StyleObject,
 } from "@open-legal-tech/design-system";
-import { useActor } from "@xstate/react";
 import { SidebarContent, SidebarRoot } from "components/Sidebar";
 import React, { useRef } from "react";
-import { NewNodeButton } from "./components/NewNodeButton";
+import { NodeCreator } from "./components/NodeCreator";
 import { Node } from "./components/Node";
 import { NodeEditingSidebar } from "./components/NodeEditingSidebar";
-import { NodeSearch } from "./components/NodeSearch/NodeSearch";
 import { createEdges } from "./edgeCreationEngine/edgeCreationEngine";
 import { useEditor } from "./state/useEditor";
-import { useTreeService } from "./state/useTree";
 import * as NodeType from "./types/Node";
 import * as Connection from "./types/Connection";
 import ReactFlow from "react-flow-renderer";
 import { transitionDuration } from "./utilities/constants";
+import { useTree } from "./state/useTree";
 
 const customNodes = { customNode: Node };
 
@@ -50,20 +47,16 @@ type NodeEditorProps = {
   css?: StyleObject;
 };
 
-export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
-  const service = useTreeService();
-  const [state, send] = useActor(service);
-  const tree = state.context;
-
+export const NodeEditor = ({ css }: NodeEditorProps) => {
   const {
-    selectedNodeId,
-    setSelectedNodeId,
     reactFlowInstance,
     setReactFlowInstance,
     isNodeEditingSidebarOpen,
     closeNodeEditingSidebar,
     isTransitioning,
   } = useEditor();
+
+  const [state, send] = useTree();
 
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
   const sourceNodeId = useRef<string | undefined>(undefined);
@@ -79,9 +72,10 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
 
   const onDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    const type = event.dataTransfer.getData("application/reactflow");
+    console.log(event.dataTransfer.getData("nodeLabel"));
+    const label = event.dataTransfer.getData("nodeLabel");
 
-    if (reactFlowWrapper.current && reactFlowInstance && type) {
+    if (reactFlowWrapper.current && reactFlowInstance) {
       const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
 
       const position = reactFlowInstance.project({
@@ -93,14 +87,15 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
         type: "addNode",
         value: NodeType.create({
           position,
+          data: { label },
         }),
       });
     }
   };
 
   const elements = [
-    ...Object.values(tree.nodes).map((node) => node),
-    ...createEdges(tree.nodes, selectedNodeId),
+    ...Object.values(state.context?.nodes ?? {}),
+    ...createEdges(state.context?.nodes ?? {}, state.context.selectedNodeId),
   ];
 
   return (
@@ -149,14 +144,16 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
             setReactFlowInstance(instance);
           }}
           onElementClick={(event, node) => {
-            if (Connection.Type.is(node)) {
-              return setSelectedNodeId(node.source);
-            }
-
-            return setSelectedNodeId(node.id);
+            if (
+              event.target instanceof HTMLElement &&
+              event.target.dataset?.nodeid === node.id
+            )
+              send({
+                type: "selectNode",
+                nodeId: Connection.Type.is(node) ? node.source : node.id,
+              });
           }}
           onNodeDragStop={(_event, node) => {
-            setSelectedNodeId(selectedNodeId);
             return send({ type: "updateNode", id: node.id, node });
           }}
           style={{
@@ -165,7 +162,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ css }) => {
             isolation: "isolate",
           }}
         />
-        <NewNodeButton
+        <NodeCreator
           css={{
             position: "absolute",
             top: "20px",

@@ -15,7 +15,7 @@ import {
   useStoreState,
 } from "react-flow-renderer";
 import { useEditor } from "../state/useEditor";
-import { useTreeService } from "../state/useTree";
+import { useTree } from "../state/useTree";
 import { TNodeData } from "../types/Node";
 import { nodeHeight, nodeWidth } from "../utilities/constants";
 
@@ -36,8 +36,8 @@ export const Node = memo(({ id, data }: NodeProps<TNodeData>) => {
     state.connectionHandleType != null,
     state.connectionNodeId,
   ]);
-  const treeService = useTreeService();
   const { selectedNodeId } = useEditor();
+  const [, send] = useTree();
   const selected = selectedNodeId === id;
 
   return (
@@ -95,9 +95,7 @@ export const Node = memo(({ id, data }: NodeProps<TNodeData>) => {
           <DropdownMenu.Content>
             <DropdownMenu.Item
               css={{ colorScheme: "error" }}
-              onSelect={() =>
-                treeService.send({ type: "deleteNode", ids: [id] })
-              }
+              onSelect={() => send({ type: "deleteNode", ids: [id] })}
             >
               <Icon label="Löschen Icon" css={{ padding: 0 }}>
                 <Trash />

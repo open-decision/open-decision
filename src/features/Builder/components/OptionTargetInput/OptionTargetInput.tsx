@@ -7,9 +7,6 @@ import {
   IconButtonProps,
   Input,
 } from "@open-legal-tech/design-system";
-import { useSelector } from "@xstate/react";
-import { useEditor } from "features/Builder/state/useEditor";
-import { useTreeService } from "features/Builder/state/useTree";
 import * as React from "react";
 import * as Node from "features/Builder/types/Node";
 import * as Tree from "features/Builder/types/Tree";
@@ -20,11 +17,12 @@ import { Plus, Trash, Crosshair } from "react-feather";
 import { useNode } from "features/Builder/state/useNode";
 import { DragHandle } from "./DragHandle";
 import { createNewAssociatedNode } from "features/Builder/state/assignUtils";
+import { usePartOfTree, useTree } from "features/Builder/state/useTree";
 
 type SingleSelectProps = { node: Node.TNode };
 
 export function OptionTargetInputs({ node }: SingleSelectProps) {
-  const service = useTreeService();
+  const [, send] = useTree();
 
   return (
     <>
@@ -47,7 +45,7 @@ export function OptionTargetInputs({ node }: SingleSelectProps) {
           round
           Icon={<Plus />}
           label="Neue Antwortmöglichkeit hinzufügen"
-          onClick={() => service.send({ type: "addRelation", nodeId: node.id })}
+          onClick={() => send({ type: "addRelation", nodeId: node.id })}
         />
       </Box>
       <Box css={{ display: "grid", gap: "$4" }}>
@@ -56,7 +54,7 @@ export function OptionTargetInputs({ node }: SingleSelectProps) {
             key={relation.id}
             input={relation}
             onChange={(newData) =>
-              service.send({
+              send({
                 type: "updateRelation",
                 nodeId: node.id,
                 relationId: relation.id,
@@ -64,7 +62,7 @@ export function OptionTargetInputs({ node }: SingleSelectProps) {
               })
             }
             onDelete={() =>
-              service.send({
+              send({
                 type: "deleteRelation",
                 nodeId: node.id,
                 relationIds: [relation.id],
@@ -90,9 +88,8 @@ export function OptionTargetInput({
   onChange,
   onDelete,
 }: SingleSelectInputProps): JSX.Element {
-  const service = useTreeService();
-  const tree = useSelector(service, (state) => state.context);
-  const node = useSelector(service, (state) => state.context.nodes[nodeId]);
+  const [tree, send] = usePartOfTree((state) => state.context);
+  const node = useNode(nodeId);
   const nodeOptions = pipe(
     Tree.getConnectableNodes(node)(tree),
     Record.toArray,
@@ -143,7 +140,7 @@ export function OptionTargetInput({
           }
           onCreate={(label) => {
             const newNode = createNewAssociatedNode(node, { label });
-            service.send([
+            send([
               {
                 type: "addNode",
                 value: newNode,
@@ -193,11 +190,10 @@ type NodeLinkProps = { target?: string } & Omit<
 >;
 
 function NodeLink({ target, ...props }: NodeLinkProps) {
-  const { setSelectedNodeId } = useEditor();
   const node = useNode(target ?? "");
+  const [, send] = useTree();
 
   return (
-    // @ts-expect-error - IconButton has broken polymorphism
     <IconButton
       css={{
         borderRadius: "0",
@@ -212,7 +208,9 @@ function NodeLink({ target, ...props }: NodeLinkProps) {
       pressable={false}
       size="small"
       variant="secondary"
-      onClick={() => (target ? setSelectedNodeId(target) : null)}
+      onClick={() =>
+        target ? send({ type: "selectNode", nodeId: target }) : null
+      }
       disabled={!target}
       label={node ? `Gehe zu Node: ${node.data.label}` : "Keine Node verbunden"}
       Icon={<Crosshair />}

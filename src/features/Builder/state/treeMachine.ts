@@ -35,9 +35,8 @@ async function getTreeFromStorage(id: string) {
 
 export type TreeState =
   | { value: "pending"; context: never }
-  | { value: "missing"; context: Context }
   | { value: "idle"; context: Context }
-  | { value: "creation"; context: never };
+  | { value: "empty"; context: never };
 
 export type sendToTreePayload = Parameters<
   Interpreter<Context, any, Events, TreeState>["send"]
@@ -46,6 +45,8 @@ export type sendToTreePayload = Parameters<
 export type Context = Tree.TTree;
 
 export type TreeService = Interpreter<Context, any, Events, TreeState>;
+export type SendFn = TreeService["send"];
+export type InterpretedTreeState = TreeService["state"];
 
 export const treeMachine = createMachine<Context, Events, TreeState>(
   {
@@ -62,7 +63,7 @@ export const treeMachine = createMachine<Context, Events, TreeState>(
             actions: assign((_context, event) => event.data),
           },
           onError: {
-            target: "creation",
+            target: "empty",
           },
         },
       },
@@ -103,20 +104,21 @@ export const treeMachine = createMachine<Context, Events, TreeState>(
           selectNode: {
             target: "sync",
             actions: selectNode,
+            cond: (context, event) => {
+              return Boolean(context.nodes[event.nodeId]);
+            },
           },
         },
       },
       sync: {
-        always: [
-          {
-            target: "idle",
-            actions: async (context, _event) => {
-              await updateTreeInStorage(context.id, context);
-            },
+        always: {
+          target: "idle",
+          actions: async (context, _event) => {
+            await updateTreeInStorage(context.id, context);
           },
-        ],
+        },
       },
-      creation: {
+      empty: {
         always: {
           target: "idle",
           actions: "createNewTree",

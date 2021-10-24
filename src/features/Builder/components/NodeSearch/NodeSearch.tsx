@@ -1,16 +1,15 @@
-import { useSelector } from "@xstate/react";
-import { useTreeService } from "features/Builder/state/useTree";
 import * as React from "react";
 import { Form, Combobox, Input } from "@open-legal-tech/design-system";
-import { useEditor } from "features/Builder/state/useEditor";
 import * as Node from "features/Builder/types/Node";
 import { useCenter } from "features/Builder/utilities/useCenter";
 import { nodeHeight, nodeWidth } from "features/Builder/utilities/constants";
+import { usePartOfTree } from "features/Builder/state/useTree";
 
 export function NodeSearch() {
-  const service = useTreeService();
-  const nodes = useSelector(service, (state) => state.context.nodes);
-  const { selectedNodeId, setSelectedNodeId } = useEditor();
+  const [nodes, send] = usePartOfTree((state) => state.context.nodes);
+  const [selectedNodeId] = usePartOfTree(
+    (state) => state.context.selectedNodeId
+  );
   const items = React.useMemo(
     () =>
       Object.values(nodes).map((node) => ({
@@ -24,11 +23,13 @@ export function NodeSearch() {
 
   return (
     <Form
-      onChange={({ values }) => setSelectedNodeId(values.search)}
+      onChange={({ values }) =>
+        send({ type: "selectNode", nodeId: values.search })
+      }
       initialValues={{ search: selectedNodeId }}
     >
       <Combobox
-        Input={<Input name="search" />}
+        Input={<Input name="search" size="large" />}
         css={{ backgroundColor: "$gray1", zIndex: "5" }}
         items={items}
         onCreate={(label) => {
@@ -36,7 +37,7 @@ export function NodeSearch() {
             position: center,
             data: { label },
           });
-          service.send({ type: "addNode", value: newNode });
+          send({ type: "addNode", value: newNode });
 
           return { id: newNode.id, label: newNode.data.label };
         }}

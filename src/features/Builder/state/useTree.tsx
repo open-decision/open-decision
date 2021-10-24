@@ -1,19 +1,20 @@
-import { useInterpret, useSelector } from "@xstate/react";
 import * as React from "react";
-import { assign } from "xstate";
-import * as Tree from "../types/Tree";
-import { treeMachine, TreeService } from "./treeMachine";
+import { useActor, useInterpret, useSelector } from "@xstate/react";
+import { Subscribable } from "xstate";
+import {
+  InterpretedTreeState,
+  SendFn,
+  treeMachine,
+  TreeService,
+} from "./treeMachine";
 
 export const TreeContext = React.createContext<TreeService | null>(null);
-
 type TreeProviderProps = Omit<
   React.ComponentProps<typeof TreeContext.Provider>,
   "value"
 >;
 export function TreeProvider({ children }: TreeProviderProps) {
-  const service = useInterpret(treeMachine, {
-    actions: { createNewTree: assign(Tree.create) },
-  });
+  const service = useInterpret(treeMachine);
 
   return (
     <TreeContext.Provider value={service}>{children}</TreeContext.Provider>
@@ -30,9 +31,27 @@ export function useTreeService() {
   return treeService;
 }
 
-export function useTree() {
-  const treeService = useTreeService();
-  const tree = useSelector(treeService, (state) => state.context);
+type usePartOfTree = <
+  T,
+  TEmitted = TreeService extends Subscribable<infer Emitted> ? Emitted : never
+>(
+  selector: (emitted: TEmitted) => T,
+  compare?: (a: T, b: T) => boolean,
+  getSnapshot?: (a: TreeService) => TEmitted
+) => [T, SendFn];
+export const usePartOfTree: usePartOfTree = (
+  selectorFn,
+  compare,
+  getSnapshot
+) => {
+  const service = useTreeService();
+  const data = useSelector(service, selectorFn, compare, getSnapshot);
 
-  return tree;
-}
+  return [data, service.send];
+};
+
+export const useTree = (): [InterpretedTreeState, SendFn] => {
+  const service = useTreeService();
+
+  return useActor(service);
+};
