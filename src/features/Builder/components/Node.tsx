@@ -27,7 +27,7 @@ const Port = styled(Handle, {
 
   "&[data-active='true']": {
     boxShadow: "0px 0px 0px 1px $colors$primary9, $2",
-    border: "1px solid $primary9",
+    border: "1px solid $primary9 !important",
   },
 });
 
