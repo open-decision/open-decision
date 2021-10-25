@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Text } from "../../Text";
-import { styled } from "../../stitches";
+import { Label } from "../../Label/Label";
+import { styled, StyleObject } from "../../stitches";
 
 import { ValidationMessage } from "../shared/ValidationMessage";
 
@@ -12,10 +12,10 @@ const FieldBox = styled("div", {
 export type FieldProps = {
   label: string;
   children: React.ReactElement;
-  style?: React.CSSProperties;
+  css?: StyleObject;
 };
 
-export function Field({ label, children, style }: FieldProps) {
+export function Field({ label, children, css }: FieldProps) {
   if (!React.Children.only(children)) {
     throw new Error(
       "The Field component can only ever wrap one Input as a child."
@@ -28,12 +28,16 @@ export function Field({ label, children, style }: FieldProps) {
     throw new Error("The Input inside of a Field needs a name.");
   }
 
+  const EnhancedInput = React.cloneElement(children, {
+    id: name,
+  });
+
   return (
-    <FieldBox style={style}>
-      <Text size="small" css={{ fontWeight: 600 }}>
+    <FieldBox css={css}>
+      <Label htmlFor={name} size="small">
         {label}
-      </Text>
-      {children}
+      </Label>
+      {EnhancedInput}
       <ValidationMessage name={name} css={{ gridColumn: "1/ -1" }} />
     </FieldBox>
   );

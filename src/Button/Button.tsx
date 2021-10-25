@@ -77,6 +77,7 @@ export const Button = styled("button", {
       secondary: {
         backgroundColor: "$colorScheme3",
         color: "$colorScheme11 !important",
+        boxShadow: "$1",
 
         "&:hover, &:focus-visible": {
           backgroundColor: "$colorScheme5",
@@ -91,7 +92,7 @@ export const Button = styled("button", {
         },
       },
       tertiary: {
-        backgroundColor: "$colorScheme1",
+        backgroundColor: "transparent",
         color: "$colorScheme11 !important",
         borderColor: "currentcolor",
 
