@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   css,
   styled,
@@ -61,10 +60,6 @@ export const NodeEditor = ({ css }: NodeEditorProps) => {
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
   const sourceNodeId = useRef<string | undefined>(undefined);
 
-  if (state.matches("pending")) {
-    return <Box css={css}>Loading</Box>;
-  }
-
   const onDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = "move";
@@ -72,7 +67,6 @@ export const NodeEditor = ({ css }: NodeEditorProps) => {
 
   const onDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    console.log(event.dataTransfer.getData("nodeLabel"));
     const label = event.dataTransfer.getData("nodeLabel");
 
     if (reactFlowWrapper.current && reactFlowInstance) {

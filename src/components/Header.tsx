@@ -11,6 +11,7 @@ import {
   IconButton,
 } from "@open-legal-tech/design-system";
 import { Edit2 } from "react-feather";
+import { usePartOfTree } from "features/Builder/state/useTree";
 
 const Container = styled("div", {
   backgroundColor: "$gray2",
@@ -25,11 +26,9 @@ const Content = styled("header", {
   $color: "$colors$gray1",
 });
 
-type HeaderProps = {
-  css?: StyleObject;
-};
+type BaseHeaderProps = { children?: React.ReactNode; css?: StyleObject };
 
-export const Header: React.FC<HeaderProps> = ({ css }) => {
+export const BaseHeader = ({ children, css }: BaseHeaderProps) => {
   return (
     <Container css={css} className={darkTheme}>
       <Content>
@@ -42,28 +41,48 @@ export const Header: React.FC<HeaderProps> = ({ css }) => {
           >
             Project File /
           </Text>
-          <Form
-            onSubmit={() => {
-              return;
-            }}
-            initialValues={{ projectName: "" }}
-          >
-            <InlineInput
-              IndicatorButton={
-                <IconButton
-                  size="small"
-                  variant="ghost"
-                  label="Editiere den Projektnamen"
-                  Icon={<Edit2 />}
-                  css={{ colorScheme: "primary" }}
-                />
-              }
-              name="projectName"
-            />
-          </Form>
+          {children}
         </Box>
         <Box />
       </Content>
     </Container>
+  );
+};
+
+type HeaderProps = {
+  css?: StyleObject;
+};
+
+export const EditorHeader: React.FC<HeaderProps> = ({ css }) => {
+  const [treeName, send] = usePartOfTree((state) => state.context.treeName);
+
+  return (
+    <BaseHeader css={css}>
+      <Form
+        onChange={({ values }) =>
+          send({
+            type: "updateTree",
+            tree: {
+              treeName: values.projectName,
+            },
+          })
+        }
+        initialValues={{ projectName: treeName ?? "" }}
+      >
+        <InlineInput
+          IndicatorButton={
+            <IconButton
+              size="small"
+              variant="ghost"
+              label="Editiere den Projektnamen"
+              Icon={<Edit2 />}
+              css={{ colorScheme: "primary" }}
+              alignByContent="left"
+            />
+          }
+          name="projectName"
+        />
+      </Form>
+    </BaseHeader>
   );
 };

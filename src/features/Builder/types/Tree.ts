@@ -51,7 +51,7 @@ export const Type = T.intersection([
 // ------------------------------------------------------------------
 // Tree Methods
 
-export function create(): TTree {
+export function create(name: string): TTree {
   return {
     id: "tree",
     config: {
@@ -59,7 +59,7 @@ export function create(): TTree {
       portTypes: examplePortTypes,
     },
     nodes: {},
-    treeName: "Unbenannt",
+    treeName: name,
     selectedNodeId: "",
   };
 }

@@ -10,6 +10,8 @@ import {
   updateRelation,
   deleteRelation,
   selectNode,
+  createTree,
+  updateTree,
 } from "./assignUtils";
 import { fold } from "fp-ts/Either";
 import { pipe } from "fp-ts/lib/function";
@@ -48,87 +50,85 @@ export type TreeService = Interpreter<Context, any, Events, TreeState>;
 export type SendFn = TreeService["send"];
 export type InterpretedTreeState = TreeService["state"];
 
-export const treeMachine = createMachine<Context, Events, TreeState>(
-  {
-    context: undefined,
-    id: "tree",
-    initial: "pending",
-    states: {
-      pending: {
-        invoke: {
-          id: "getTree",
-          src: (_context, _event) => getTreeFromStorage("tree"),
-          onDone: {
-            target: "idle",
-            actions: assign((_context, event) => event.data),
-          },
-          onError: {
-            target: "empty",
-          },
-        },
-      },
-      idle: {
-        on: {
-          addNode: {
-            target: "sync",
-            actions: addNode,
-          },
-          updateNode: {
-            target: "sync",
-            actions: updateNode,
-          },
-          updateNodeData: {
-            target: "sync",
-            actions: updateNodeData,
-          },
-          deleteNode: {
-            target: "sync",
-            actions: deleteNode,
-          },
-          addRelation: {
-            target: "sync",
-            actions: addRelation,
-          },
-          updateRelation: {
-            target: "sync",
-            actions: updateRelation,
-          },
-          deleteRelation: {
-            target: "sync",
-            actions: deleteRelation,
-          },
-          clearTree: {
-            target: "sync",
-            actions: "createNewTree",
-          },
-          selectNode: {
-            target: "sync",
-            actions: selectNode,
-            cond: (context, event) => {
-              return Boolean(context.nodes[event.nodeId]);
-            },
-          },
-        },
-      },
-      sync: {
-        always: {
+export const treeMachine = createMachine<Context, Events, TreeState>({
+  context: undefined,
+  id: "tree",
+  initial: "pending",
+  states: {
+    pending: {
+      invoke: {
+        id: "getTree",
+        src: (_context, _event) => getTreeFromStorage("tree"),
+        onDone: {
           target: "idle",
-          actions: async (context, _event) => {
-            await updateTreeInStorage(context.id, context);
+          actions: assign((_context, event) => event.data),
+        },
+        onError: {
+          target: "empty",
+        },
+      },
+    },
+    idle: {
+      on: {
+        addNode: {
+          target: "sync",
+          actions: addNode,
+        },
+        updateNode: {
+          target: "sync",
+          actions: updateNode,
+        },
+        updateNodeData: {
+          target: "sync",
+          actions: updateNodeData,
+        },
+        deleteNode: {
+          target: "sync",
+          actions: deleteNode,
+        },
+        addRelation: {
+          target: "sync",
+          actions: addRelation,
+        },
+        updateRelation: {
+          target: "sync",
+          actions: updateRelation,
+        },
+        deleteRelation: {
+          target: "sync",
+          actions: deleteRelation,
+        },
+        updateTree: {
+          target: "sync",
+          actions: updateTree,
+        },
+        clearTree: {
+          target: "empty",
+        },
+        selectNode: {
+          target: "sync",
+          actions: selectNode,
+          cond: (context, event) => {
+            return Boolean(context.nodes[event.nodeId]);
           },
         },
       },
-      empty: {
-        always: {
-          target: "idle",
-          actions: "createNewTree",
+    },
+    sync: {
+      always: {
+        target: "idle",
+        actions: async (context, _event) => {
+          await updateTreeInStorage(context.id, context);
+        },
+      },
+    },
+    empty: {
+      on: {
+        createTree: {
+          target: "sync",
+          actions: createTree,
         },
       },
     },
   },
-  {
-    actions: {
-      createNewTree: assign(Tree.create),
-    },
-  }
-);
+});

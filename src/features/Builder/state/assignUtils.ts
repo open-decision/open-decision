@@ -6,11 +6,10 @@ import * as Tree from "../types/Tree";
 import produce from "immer";
 import { assign } from "xstate";
 import { nodeHeight } from "../utilities/constants";
-
-export type CreateTreeEvent = { type: "createTree" };
+import { DeepPartial } from "utility-types";
+import { merge } from "remeda";
 
 export type Events =
-  | CreateTreeEvent
   | AddNodeEvent
   | UpdateNodeEvent
   | UpdateNodeDataEvent
@@ -19,7 +18,9 @@ export type Events =
   | UpdateRelationEvent
   | DeleteRelationEvent
   | ClearTreeEvent
-  | SelectNodeEvent;
+  | SelectNodeEvent
+  | CreateTreeEvent
+  | UpdateTreeEvent;
 
 export type AddNodeEvent = { type: "addNode"; value: Node.TNode };
 export const addNode = immerAssign(
@@ -184,4 +185,18 @@ export const selectNode = immerAssign(
   (context: Context, { nodeId }: SelectNodeEvent) => {
     context.selectedNodeId = nodeId;
   }
+);
+
+type CreateTreeEvent = { type: "createTree"; name: string };
+
+export const createTree = assign(
+  (context: Context, { name }: CreateTreeEvent) => Tree.create(name)
+);
+
+type UpdateTreeEvent = {
+  type: "updateTree";
+  tree: DeepPartial<Pick<Tree.TTree, "config" | "treeName">>;
+};
+export const updateTree = assign(
+  (context: Context, { tree }: UpdateTreeEvent) => merge(context, tree)
 );

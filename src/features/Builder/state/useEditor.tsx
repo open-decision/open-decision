@@ -4,7 +4,6 @@ import { TNodeData } from "../types/Node";
 import { useStoreActions } from "react-flow-renderer";
 import { calculateCenterOfNode } from "../utilities/useCenter";
 import { sidebarWidth, transitionDuration } from "../utilities/constants";
-import { useUpdateEffect } from "react-use";
 import { useTree } from "./useTree";
 import { Context, SendFn } from "./treeMachine";
 
@@ -58,7 +57,7 @@ export function EditorProvider({ children }: TreeProviderProps) {
     return () => clearTimeout(timer);
   }, [selectedNodeId]);
 
-  return state.matches("idle") ? (
+  return (
     <EditorContext.Provider
       value={{
         send,
@@ -72,8 +71,6 @@ export function EditorProvider({ children }: TreeProviderProps) {
     >
       {children}
     </EditorContext.Provider>
-  ) : (
-    <div>Temporary Fallback</div>
   );
 }
 
