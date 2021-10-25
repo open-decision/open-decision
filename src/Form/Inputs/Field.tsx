@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Label } from "../../Label/Label";
 import { styled, StyleObject } from "../../stitches";
+import { Box } from "../../Box";
 
 import { ValidationMessage } from "../shared/ValidationMessage";
 
@@ -11,7 +12,7 @@ const FieldBox = styled("div", {
 
 export type FieldProps = {
   label: string;
-  children: React.ReactElement;
+  children: JSX.Element;
   css?: StyleObject;
 };
 
@@ -28,16 +29,14 @@ export function Field({ label, children, css }: FieldProps) {
     throw new Error("The Input inside of a Field needs a name.");
   }
 
-  const EnhancedInput = React.cloneElement(children, {
-    id: name,
-  });
-
   return (
     <FieldBox css={css}>
-      <Label htmlFor={name} size="small">
-        {label}
+      <Label size="small">
+        <Box css={{ marginBottom: "$2", display: "block" }} as="span">
+          {label}
+        </Box>
+        {children}
       </Label>
-      {EnhancedInput}
       <ValidationMessage name={name} css={{ gridColumn: "1/ -1" }} />
     </FieldBox>
   );
