@@ -3,7 +3,6 @@ import { styled } from "../stitches";
 
 export const StyledBadge = styled("span", {
   colorScheme: "primary",
-  textStyle: "badge",
   borderRadius: "$full",
   border: "1px solid transparent",
   textAlign: "center",
@@ -18,15 +17,26 @@ export const StyledBadge = styled("span", {
       small: {
         paddingBlock: "$1",
         paddingInline: "$2",
+        textStyle: "extra-small-text",
+        letterSpacing: "0.0625em",
+        fontWeight: 500,
+        lineHeight: "1.25em",
       },
       medium: {
         paddingBlock: "$2",
         paddingInline: "$4",
+        textStyle: "small-text",
+        letterSpacing: "0.0625em",
+        fontWeight: 500,
+        lineHeight: "1.25em",
       },
       large: {
         paddingBlock: "$2",
         paddingInline: "$6",
-        fontSize: "$button",
+        textStyle: "small-text",
+        letterSpacing: "0.0625em",
+        fontWeight: 500,
+        lineHeight: "1.25em",
       },
     },
   },

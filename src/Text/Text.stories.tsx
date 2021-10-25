@@ -36,6 +36,14 @@ export const List: Story<TextProps> = (props) => (
       cillum amet deserunt id ipsum est magna occaecat adipisicing consequat ea
       adipisicing cupidatat.
     </Text>
+    <Text size="extra-small" {...props}>
+      Culpa qui ipsum nisi eu elit Lorem esse aliquip irure adipisicing anim
+      adipisicing. Esse nisi magna eu reprehenderit qui duis magna. Officia non
+      sit id aliqua sint qui aute minim sint cupidatat. Sunt sunt excepteur enim
+      laboris non laborum occaecat non irure cupidatat dolor do. Lorem dolore
+      cillum amet deserunt id ipsum est magna occaecat adipisicing consequat ea
+      adipisicing cupidatat.
+    </Text>
   </Box>
 );
 

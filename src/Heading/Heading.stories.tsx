@@ -12,17 +12,18 @@ export default {
 
 export const List: Story<HeadingProps> = (props) => (
   <Box css={{ display: "grid", gap: "$4" }}>
+    <Heading size="extra-large" {...props}>
+      Headline XL
+    </Heading>
     <Heading size="large" {...props}>
-      Almost before we knew it, we had left the ground.
+      Headline Large
     </Heading>
-    <Heading {...props}>
-      Almost before we knew it, we had left the ground.
-    </Heading>
+    <Heading {...props}>Headline Medium</Heading>
     <Heading size="small" {...props}>
-      Almost before we knew it, we had left the ground.
+      Headline Small
     </Heading>
     <Heading size="extra-small" {...props}>
-      Almost before we knew it, we had left the ground.
+      Headline ExtraSmall
     </Heading>
   </Box>
 );

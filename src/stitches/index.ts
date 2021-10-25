@@ -64,16 +64,24 @@ export const designSystem = createStitches({
         "--colors-colorScheme-text": `$colors$${value}-text`,
       };
     },
-    textStyle: (value: TextStyles) => {
+    textStyle: (value: TextStyles | "inherit") => {
       const sharedTextStyles = {
         fontSize: `$${value}`,
         lineHeight: `$${value}`,
         letterSpacing: `$${value}`,
         fontWeight: `$${value}`,
-        color: "$gray12",
+      };
+
+      const inheritStyles = {
+        fontSize: "inherit",
+        lineHeight: "inherit",
+        letterSpacing: "inherit",
+        fontWeight: "inherit",
+        fontFamily: "inherit",
       };
 
       switch (value) {
+        case "extra-large-heading":
         case "large-heading":
         case "medium-heading":
         case "small-heading":
@@ -82,6 +90,9 @@ export const designSystem = createStitches({
             fontFamily: "$heading",
             ...sharedTextStyles,
           };
+
+        case "inherit":
+          return inheritStyles;
 
         default:
           return { fontFamily: "$text", ...sharedTextStyles };

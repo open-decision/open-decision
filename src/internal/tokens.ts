@@ -30,17 +30,15 @@ export const space = {
 } as const;
 
 export const fontSizes: Record<TextStyles, string> = {
-  "large-heading": "1.625rem",
-  "medium-heading": "1.25rem",
-  "small-heading": "1rem",
-  "extra-small-heading": "0.875rem",
-  button: "1rem",
-  badge: "0.75rem",
-  overline: "0.875rem",
+  "extra-large-heading": "4.5rem",
+  "large-heading": "3rem",
+  "medium-heading": "2rem",
+  "small-heading": "1.5rem",
+  "extra-small-heading": "1.25rem",
   "large-text": "1.125rem",
   "medium-text": "1rem",
   "small-text": "0.875rem",
-  caption: "0.75rem",
+  "extra-small-text": "0.75rem",
 } as const;
 
 export const zIndices = {
@@ -54,31 +52,27 @@ export const zIndices = {
 } as const;
 
 export const letterSpacings: Record<TextStyles, string> = {
-  "large-heading": "0.012em",
+  "extra-large-heading": "-0.012em",
+  "large-heading": "- 0.012em",
   "medium-heading": "0",
   "small-heading": "0",
-  "extra-small-heading": "0.01em",
-  button: "0.025em",
-  badge: "0.08em",
-  overline: "0.035em",
+  "extra-small-heading": "0",
   "large-text": "0",
   "medium-text": "0",
   "small-text": "0",
-  caption: "0.04em",
+  "extra-small-text": "0.04em",
 } as const;
 
 export const lineHeights: Record<TextStyles, string> = {
+  "extra-large-heading": "1.25em",
   "large-heading": "1.25em",
-  "medium-heading": "1.2em",
-  "small-heading": "1.5em",
-  "extra-small-heading": "1.75em",
-  button: "1.5em",
-  badge: "1.3em",
-  overline: "1.75em",
-  "large-text": "1.3em",
+  "medium-heading": "1.25em",
+  "small-heading": "1.25em",
+  "extra-small-heading": "1.25em",
+  "large-text": "1.5em",
   "medium-text": "1.5em",
-  "small-text": "1.15em",
-  caption: "1.3em",
+  "small-text": "1.5em",
+  "extra-small-text": "1.5em",
 } as const;
 
 export const shadows = {
@@ -92,18 +86,16 @@ export const shadows = {
   inner: "inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)",
 } as const;
 
-export const fontWeights = {
-  "large-heading": "600",
-  "medium-heading": "600",
-  "small-heading": "600",
+export const fontWeights: Record<TextStyles, string> = {
+  "extra-large-heading": "700",
+  "large-heading": "700",
+  "medium-heading": "700",
+  "small-heading": "700",
   "extra-small-heading": "600",
-  button: "500",
-  badge: "600",
-  overline: "500",
   "large-text": "400",
   "medium-text": "400",
   "small-text": "400",
-  caption: "400",
+  "extra-small-text": "400",
 } as const;
 
 export const radii = {

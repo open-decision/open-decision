@@ -13,7 +13,6 @@ export const Button = styled("button", {
   appearance: "none",
   colorScheme: "primary",
   borderRadius: "$md",
-  textStyle: "button",
   maxWidth: "max-content",
 
   //The small animation pressing the Button down on click.
@@ -38,15 +37,21 @@ export const Button = styled("button", {
       small: {
         $$paddingInline: "$space$4",
         $$paddingBlock: "$space$2",
-        fontSize: "$small-text",
+        textStyle: "small-text",
+        fontWeight: 600,
+        letterSpacing: "0.025em",
       },
       medium: {
-        fontSize: "$medium-text",
+        textStyle: "medium-text",
+        fontWeight: 600,
+        letterSpacing: "0.025em",
       },
       large: {
         $$paddingInline: "$space$8",
         $$paddingBlock: "$space$4",
-        fontSize: "$large-text",
+        textStyle: "large-text",
+        fontWeight: 600,
+        letterSpacing: "0.025em",
       },
     },
 
@@ -54,7 +59,7 @@ export const Button = styled("button", {
       primary: {
         boxShadow: "$3",
         backgroundColor: "$colorScheme9",
-        color: "$colorScheme-text",
+        color: "$colorScheme-text !important",
 
         "&:hover, &:focus-visible": {
           backgroundColor: "$colorScheme10",
@@ -71,7 +76,7 @@ export const Button = styled("button", {
       },
       secondary: {
         backgroundColor: "$colorScheme3",
-        color: "$colorScheme11",
+        color: "$colorScheme11 !important",
 
         "&:hover, &:focus-visible": {
           backgroundColor: "$colorScheme5",
@@ -87,7 +92,7 @@ export const Button = styled("button", {
       },
       tertiary: {
         backgroundColor: "$colorScheme1",
-        color: "$colorScheme11",
+        color: "$colorScheme11 !important",
         borderColor: "currentcolor",
 
         "&:hover, &:focus-visible": {
@@ -104,13 +109,13 @@ export const Button = styled("button", {
       },
       ghost: {
         colorScheme: "gray",
-        color: "$gray11",
+        color: "$gray11 !important",
         backgroundColor: "unset",
         boxShadow: "unset",
         focusStyle: "inner",
 
         "&:hover, &:focus-visible, &[data-active='true']": {
-          color: "$colorScheme11",
+          color: "$colorScheme11 !important",
         },
 
         "&:disabled": {

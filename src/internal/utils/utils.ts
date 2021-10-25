@@ -64,14 +64,12 @@ export const aliasColor = <TAlias extends string>(
 };
 
 export type TextStyles =
+  | "extra-large-heading"
   | "large-heading"
   | "medium-heading"
   | "small-heading"
   | "extra-small-heading"
-  | "button"
-  | "badge"
-  | "overline"
   | "large-text"
   | "medium-text"
   | "small-text"
-  | "caption";
+  | "extra-small-text";

@@ -19,6 +19,7 @@ const StyledBox = styled(
     $$paddingInline: "$space$2",
     $$paddingBlock: "$space$3",
     paddingInline: "$$paddingInline",
+    textStyle: "medium-text",
   },
   baseTextInputStyle
 );
@@ -28,11 +29,11 @@ const StyledInput = styled("input", {
   paddingBlock: "$$paddingBlock",
   border: "none",
   width: "100%",
-  textStyle: "medium-text",
   minWidth: 0,
   transform: "translateX($$XTranslation)",
   outline: "none",
   backgroundColor: "transparent",
+  textStyle: "inherit",
 
   "&:focus-visible": {
     outline: "none",
@@ -134,7 +135,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <StyledBox
-        css={{ color: disabled ? "$gray8" : "$gray11", ...css }}
+        css={{ color: disabled ? "$gray8" : "$gray12", ...css }}
         data-disabled={disabled}
         data-focus={hasFocus}
         size={size}

@@ -4,6 +4,9 @@ import { Text } from "../Text";
 const responsiveFontSize = {
   variants: {
     size: {
+      "extra-large": {
+        textStyle: "extra-large-heading",
+      },
       large: {
         textStyle: "large-heading",
       },

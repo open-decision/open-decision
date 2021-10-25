@@ -10,14 +10,7 @@ export const Text = styled("p", {
       large: { textStyle: "large-text" },
       medium: { textStyle: "medium-text" },
       small: { textStyle: "small-text" },
-    },
-    type: {
-      overline: {
-        textStyle: "overline",
-      },
-      caption: {
-        textStyle: "caption",
-      },
+      "extra-small": { textStyle: "extra-small-text" },
     },
   },
 
