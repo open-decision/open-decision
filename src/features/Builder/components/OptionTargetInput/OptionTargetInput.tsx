@@ -123,8 +123,9 @@ export function OptionTargetInput({
             borderTopLeftRadius: "inherit",
             borderTopRightRadius: "inherit",
             gridColumn: "1 / -1",
-            border: 0,
             borderBottom: "inherit",
+            margin: "-1px",
+            marginBottom: 0,
           }}
           name="value"
           placeholder="Antwort"
