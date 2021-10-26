@@ -1,9 +1,10 @@
 import {
   Box,
   Button,
+  Field,
   Form,
-  Heading,
   Input,
+  Label,
 } from "@open-legal-tech/design-system";
 import { RichTextEditor } from "components/RichTextEditor";
 import { OptionTargetInputs } from "features/Builder/components/OptionTargetInput/OptionTargetInput";
@@ -35,20 +36,28 @@ export function NodeEditingSidebar({
           }}
           initialValues={{ nodeName: node.data?.label ?? "" }}
         >
-          <Input
-            css={{ textStyle: "medium-heading" }}
-            name="nodeName"
-            maxLength={70}
-          />
+          <Field label="Knotenname" css={{ color: "$gray11" }}>
+            <Input
+              css={{ fontWeight: 500, backgroundColor: "$gray1" }}
+              name="nodeName"
+              maxLength={70}
+            />
+          </Field>
         </Form>
       </Box>
       <Box as="section">
-        <Heading
-          size="extra-small"
-          css={{ textTransform: "uppercase", marginBottom: "$2" }}
+        <Label
+          size="small"
+          as="h2"
+          css={{
+            margin: 0,
+            marginBottom: "$2",
+            display: "block",
+            color: "$gray11",
+          }}
         >
           Inhalt
-        </Heading>
+        </Label>
         <RichTextEditor
           value={node.data.content}
           setValue={(newValue) =>
@@ -62,9 +71,18 @@ export function NodeEditingSidebar({
       </Box>
       {Object.values(parentNodes).length > 0 ? (
         <Box as="section">
-          <Heading size="extra-small" css={{ textTransform: "uppercase" }}>
-            Parent-Nodes
-          </Heading>
+          <Label
+            size="small"
+            as="h2"
+            css={{
+              margin: 0,
+              marginBottom: "$2",
+              display: "block",
+              color: "$gray11",
+            }}
+          >
+            Elternknoten
+          </Label>
           <Box
             css={{
               display: "flex",

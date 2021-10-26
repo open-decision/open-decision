@@ -89,7 +89,11 @@ export const NodeEditor = ({ css }: NodeEditorProps) => {
 
   const elements = [
     ...Object.values(state.context?.nodes ?? {}),
-    ...createEdges(state.context?.nodes ?? {}, state.context.selectedNodeId),
+    ...createEdges(
+      state.context?.nodes ?? {},
+      state.context.selectedNodeId,
+      state.context.selectedRelation
+    ),
   ];
 
   return (
@@ -174,7 +178,7 @@ export const NodeEditor = ({ css }: NodeEditorProps) => {
           //FIXME Needs Confirmation Dialog
           onClick={() => send({ type: "clearTree" })}
         >
-          Baum löschen
+          Projekt löschen
         </Button>
       </Container>
       <SidebarRoot

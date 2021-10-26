@@ -2,10 +2,10 @@ import {
   Box,
   Combobox,
   Form,
-  Heading,
   IconButton,
   IconButtonProps,
   Input,
+  Label,
 } from "@open-legal-tech/design-system";
 import * as React from "react";
 import * as Node from "features/Builder/types/Node";
@@ -18,6 +18,7 @@ import { useNode } from "features/Builder/state/useNode";
 import { DragHandle } from "./DragHandle";
 import { createNewAssociatedNode } from "features/Builder/state/assignUtils";
 import { usePartOfTree, useTree } from "features/Builder/state/useTree";
+import { useClickAway, useUnmount } from "react-use";
 
 type SingleSelectProps = { node: Node.TNode };
 
@@ -34,12 +35,13 @@ export function OptionTargetInputs({ node }: SingleSelectProps) {
           marginBottom: "$4",
         }}
       >
-        <Heading size="extra-small" css={{ textTransform: "uppercase" }}>
-          Pfade{" "}
-          <Box css={{ color: "$gray11" }} as="span">
-            / Einfachauswahl
-          </Box>
-        </Heading>
+        <Label
+          size="small"
+          as="h2"
+          css={{ margin: 0, display: "block", color: "$gray11" }}
+        >
+          Pfade
+        </Label>
         <IconButton
           variant="tertiary"
           round
@@ -96,11 +98,14 @@ export function OptionTargetInput({
     Array.map(([, node]) => ({ id: node.id, label: node.data.label }))
   );
 
+  const ref = React.useRef<HTMLDivElement | null>(null);
+
+  useClickAway(ref, () => send({ type: "selectRelation", id: "" }));
+  useUnmount(() => send({ type: "selectRelation", id: "" }));
+
   return (
     <Form
-      onChange={({ values }) => {
-        onChange(values);
-      }}
+      onChange={({ values }) => onChange(values)}
       initialValues={{ value: input.value ?? "", target: input.target ?? "" }}
       css={{
         display: "flex",
@@ -108,6 +113,8 @@ export function OptionTargetInput({
       }}
     >
       <Box
+        onClick={() => send({ type: "selectRelation", id: input.id })}
+        ref={ref}
         css={{
           flex: 1,
           display: "grid",
@@ -197,6 +204,7 @@ function NodeLink({ target, ...props }: NodeLinkProps) {
   return (
     <IconButton
       css={{
+        boxShadow: "none",
         borderRadius: "0",
         borderBottomLeftRadius: "inherit",
         border: "none",
@@ -209,9 +217,12 @@ function NodeLink({ target, ...props }: NodeLinkProps) {
       pressable={false}
       size="small"
       variant="secondary"
-      onClick={() =>
-        target ? send({ type: "selectNode", nodeId: target }) : null
-      }
+      onClick={() => {
+        if (target) {
+          send({ type: "selectNode", nodeId: target });
+        }
+      }}
+      type="button"
       disabled={!target}
       label={node ? `Gehe zu Node: ${node.data.label}` : "Keine Node verbunden"}
       Icon={<Crosshair />}

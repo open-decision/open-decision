@@ -39,6 +39,7 @@ const State = T.type({
   id: T.string,
   nodes: Node.NodeRecord,
   selectedNodeId: T.string,
+  selectedRelation: T.string,
 });
 
 export const Type = T.intersection([
@@ -61,6 +62,7 @@ export function create(name: string): TTree {
     nodes: {},
     treeName: name,
     selectedNodeId: "",
+    selectedRelation: "",
   };
 }
 

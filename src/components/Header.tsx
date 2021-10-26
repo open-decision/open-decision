@@ -8,9 +8,7 @@ import {
   Form,
   darkTheme,
   InlineInput,
-  IconButton,
 } from "@open-legal-tech/design-system";
-import { Edit2 } from "react-feather";
 import { usePartOfTree } from "features/Builder/state/useTree";
 
 const Container = styled("div", {
@@ -32,14 +30,14 @@ export const BaseHeader = ({ children, css }: BaseHeaderProps) => {
   return (
     <Container css={css} className={darkTheme}>
       <Content>
-        <Logo />
-        <Box css={{ display: "flex", alignItems: "center" }}>
+        <Logo css={{ width: "40px", height: "40px" }} />
+        <Box css={{ display: "flex", alignItems: "center", color: "$gray11" }}>
           <Text
             as="h2"
             size="medium"
-            css={{ color: "$gray11", fontWeight: 600 }}
+            css={{ color: "inherit", fontWeight: 600 }}
           >
-            Project File /
+            Projekt:
           </Text>
           {children}
         </Box>
@@ -69,19 +67,7 @@ export const EditorHeader: React.FC<HeaderProps> = ({ css }) => {
         }
         initialValues={{ projectName: treeName ?? "" }}
       >
-        <InlineInput
-          IndicatorButton={
-            <IconButton
-              size="small"
-              variant="ghost"
-              label="Editiere den Projektnamen"
-              Icon={<Edit2 />}
-              css={{ colorScheme: "primary" }}
-              alignByContent="left"
-            />
-          }
-          name="projectName"
-        />
+        <InlineInput css={{ color: "inherit" }} name="projectName" />
       </Form>
     </BaseHeader>
   );

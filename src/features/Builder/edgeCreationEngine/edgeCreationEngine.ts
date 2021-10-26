@@ -9,7 +9,11 @@ import { pipe } from "fp-ts/function";
 export const eqEdge = (a: Connection.TConnection, b: Connection.TConnection) =>
   a.source === b.source && a.target === b.target;
 
-export const createEdges = (nodes: TNodesRecord, selectedNodeId?: string) => {
+export const createEdges = (
+  nodes: TNodesRecord,
+  selectedNodeId?: string,
+  selectedRelation?: string
+) => {
   return pipe(
     nodes,
     Record.toArray,
@@ -25,7 +29,8 @@ export const createEdges = (nodes: TNodesRecord, selectedNodeId?: string) => {
                   target: relation.target,
                   style: {
                     stroke:
-                      selectedNodeId === node.id
+                      selectedNodeId === node.id &&
+                      selectedRelation === relation.id
                         ? "var(--colors-primary9)"
                         : relation.value
                         ? "var(--colors-gray9)"

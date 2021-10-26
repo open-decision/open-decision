@@ -15,7 +15,7 @@ export default function Tree(): JSX.Element {
         overflow: "hidden",
         display: "grid",
         gridTemplateColumns: `1fr ${sidebarWidth}px`,
-        gridTemplateRows: "70px 1fr",
+        gridTemplateRows: "60px 1fr",
       }}
     >
       <ReactFlowProvider>
@@ -55,7 +55,9 @@ const Editor = () => {
             flexDirection: "column",
           }}
         >
-          <Image src="/EmptyIllustration.png" width={700} height={500} />
+          <Box css={{ transform: "scaleX(-1)" }}>
+            <Image src="/EmptyIllustration.png" width={700} height={500} />
+          </Box>
           <Box
             as="header"
             css={{
@@ -66,7 +68,7 @@ const Editor = () => {
               marginTop: "$7",
             }}
           >
-            <Heading size="large">Kein aktives Projekt</Heading>
+            <Heading>Kein aktives Projekt</Heading>
             <Text size="large" css={{ color: "$gray11" }}>
               Erstelle oder importiere dein erstes Projekt um zu starten.
             </Text>

@@ -12,6 +12,7 @@ import {
   selectNode,
   createTree,
   updateTree,
+  selectRelation,
 } from "./assignUtils";
 import { fold } from "fp-ts/Either";
 import { pipe } from "fp-ts/lib/function";
@@ -111,6 +112,10 @@ export const treeMachine = createMachine<Context, Events, TreeState>({
           cond: (context, event) => {
             return Boolean(context.nodes[event.nodeId]);
           },
+        },
+        selectRelation: {
+          target: "sync",
+          actions: selectRelation,
         },
       },
     },
