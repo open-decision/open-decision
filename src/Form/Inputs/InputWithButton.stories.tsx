@@ -4,7 +4,7 @@ import { InputWithButton as SystemInputWithButton } from "./index";
 import { Input } from "./Input";
 import { Button } from "../../Button/Button";
 import { Form } from "../Form";
-import { Icon } from "../../Button/IconButton";
+import { Icon } from "../../Icon/Icon";
 import { Search } from "../../icons";
 import { StoryWithoutCSS } from "../../../types/utils";
 

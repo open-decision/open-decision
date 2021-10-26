@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { Meta, Story } from "@storybook/react";
 import { ContextMenu } from "./ContextMenu";
-import { Icon } from "../../Button/IconButton";
+import { Icon } from "../../Icon/Icon";
 import { Box } from "../../Box";
 import { Settings } from "react-feather";
 

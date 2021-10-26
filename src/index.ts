@@ -14,6 +14,7 @@ export * from "./Link";
 export * from "./Menus";
 export * from "./Label/Label";
 export * from "./Button/ToggleButton";
+export * from "./Icon/Icon";
 
 // Styling solutions
 export * from "./stitches";

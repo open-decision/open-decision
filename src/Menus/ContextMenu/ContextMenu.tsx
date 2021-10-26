@@ -8,7 +8,7 @@ import {
   menuSeparatorStyles,
 } from "../shared";
 import { Check } from "../../icons";
-import { Icon } from "../../Button/IconButton";
+import { Icon } from "../../Icon/Icon";
 
 const ItemIndicator = () => {
   return (

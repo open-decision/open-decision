@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Meta, Story } from "@storybook/react";
+import { Meta } from "@storybook/react";
 
 import { IconButton, IconButtonProps } from "./IconButton";
 import { Users } from "react-feather";
@@ -21,6 +21,7 @@ const SingleIconButtonTemplate: StoryWithoutCSS<IconButtonProps> = (props) => (
     <IconButton size="large" disabled {...props} />
     <IconButton round size="small" {...props} />
     <IconButton round {...props} />
+    <IconButton round size="large" {...props} />
     <IconButton round size="large" {...props} />
   </Box>
 );
