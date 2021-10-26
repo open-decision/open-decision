@@ -54,7 +54,6 @@ export const Button = styled("button", {
         letterSpacing: "0.025em",
       },
     },
-
     variant: {
       primary: {
         boxShadow: "$3",
@@ -69,11 +68,17 @@ export const Button = styled("button", {
           backgroundColor: "$colorScheme11",
         },
 
+        "&[data-state=on]": {
+          backgroundColor: "$colorScheme11",
+          boxShadow: "none",
+        },
+
         "&:disabled": {
           opacity: 0.2,
           backgroundColor: "$colorScheme9",
         },
       },
+
       secondary: {
         backgroundColor: "$colorScheme3",
         color: "$colorScheme11 !important",
@@ -87,10 +92,16 @@ export const Button = styled("button", {
           backgroundColor: "$colorScheme7",
         },
 
+        "&[data-state=on]": {
+          backgroundColor: "$colorScheme7",
+          boxShadow: "none",
+        },
+
         "&:disabled": {
           backgroundColor: "$colorScheme3",
         },
       },
+
       tertiary: {
         backgroundColor: "transparent",
         color: "$colorScheme11 !important",
@@ -104,10 +115,15 @@ export const Button = styled("button", {
           backgroundColor: "$colorScheme5",
         },
 
+        "&[data-state=on]": {
+          backgroundColor: "$colorScheme5",
+        },
+
         "&:disabled": {
           backgroundColor: "$colorScheme1",
         },
       },
+
       ghost: {
         colorScheme: "gray",
         color: "$gray11 !important",

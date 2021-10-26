@@ -13,6 +13,7 @@ export * from "./Form";
 export * from "./Link";
 export * from "./Menus";
 export * from "./Label/Label";
+export * from "./Button/ToggleButton";
 
 // Styling solutions
 export * from "./stitches";
