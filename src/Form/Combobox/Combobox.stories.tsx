@@ -1,16 +1,16 @@
 import * as React from "react";
-import { Meta, Story } from "@storybook/react";
-import { Combobox, ComboboxProps, Item } from "./index";
-import { Form } from "../Form";
+import { Meta } from "@storybook/react";
+import { Combobox } from "./index";
 import { Input, InlineInput } from "../Inputs";
+import { Form } from "../Form";
 
 export default {
-  component: Combobox,
+  component: Combobox.Root,
   title: "Components/Inputs/Combobox",
 } as Meta;
 
-const Template: Story<ComboboxProps<Item>> = ({ Input }) => {
-  const [selectedNode, setSelectedNode] = React.useState("");
+const Template = ({ Input }) => {
+  const [selectedItem, setSelectedItem] = React.useState("123");
   const [inputValue, setInputValue] = React.useState("");
   const [items, setItems] = React.useState([
     { id: "123", label: "test" },
@@ -28,35 +28,30 @@ const Template: Story<ComboboxProps<Item>> = ({ Input }) => {
     return newItem;
   };
 
-  const [isCreating, setIsCreating] = React.useState(false);
-
   return (
     <Form
-      initialValues={{ test: selectedNode }}
-      onChange={({ values }) => {
-        return setSelectedNode(values.test);
-      }}
-      css={{ display: "grid", gap: "$2", width: "max-content" }}
+      initialValues={{ combobox: selectedItem ?? "" }}
+      onChange={({ values }) => setSelectedItem(values.combobox)}
     >
-      <Combobox
-        inputValue={inputValue}
-        items={items}
+      <Combobox.Root
+        name="combobox"
         onCreate={handleItemCreate}
         onInputValueChange={(inputValue) => setInputValue(inputValue)}
-        Input={Input}
-        isCreating={isCreating}
-        onIsCreatingChange={(isCreating) => setIsCreating(isCreating)}
-      />
+        resetOnBlur
+        items={items}
+      >
+        <Combobox.Input>{Input}</Combobox.Input>
+      </Combobox.Root>
     </Form>
   );
 };
 
 export const Default = Template.bind({});
 Default.args = {
-  Input: <Input name="test" />,
+  Input: <Input name="combobox" />,
 };
 
 export const Inline = Template.bind({});
 Inline.args = {
-  Input: <InlineInput name="test" />,
+  Input: <InlineInput name="combobox" />,
 };
