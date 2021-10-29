@@ -52,43 +52,57 @@ const Editor = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            flexDirection: "column",
           }}
         >
-          <Box css={{ transform: "scaleX(-1)" }}>
-            <Image src="/EmptyIllustration.png" width={700} height={500} />
-          </Box>
           <Box
-            as="header"
             css={{
-              gap: "$4",
               display: "flex",
               flexDirection: "column",
-              alignItems: "center",
-              marginTop: "$7",
             }}
           >
-            <Heading>Kein aktives Projekt</Heading>
-            <Text size="large" css={{ color: "$gray11" }}>
-              Erstelle oder importiere dein erstes Projekt um zu starten.
-            </Text>
-          </Box>
-          <Box css={{ display: "flex", gap: "$4", marginTop: "$7" }}>
-            <Button variant="secondary" disabled>
-              Importieren
-            </Button>
-            <Button
-              onClick={() =>
-                send({
-                  type: "createTree",
-                  name:
-                    prompt("Bitte gib deinem Projekt einen Namen") ??
-                    "Unbennantes Projekt",
-                })
-              }
+            <Box css={{ transform: "scaleX(-1)" }}>
+              <Image src="/EmptyIllustration.png" width={700} height={500} />
+            </Box>
+            <Box
+              as="header"
+              css={{
+                gap: "$4",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                marginTop: "$7",
+              }}
             >
-              Neues Projekt erstellen
-            </Button>
+              <Heading>Kein aktives Projekt</Heading>
+              <Text size="large" css={{ color: "$gray11" }}>
+                Erstelle oder importiere dein erstes Projekt um zu starten.
+              </Text>
+            </Box>
+            <Box
+              css={{
+                display: "flex",
+                width: "100%",
+                gap: "$4",
+                marginTop: "$7",
+                justifyContent: "center",
+              }}
+            >
+              <Button variant="secondary" disabled>
+                Importieren
+              </Button>
+              <Button
+                onClick={() =>
+                  send({
+                    type: "createTree",
+                    name:
+                      prompt("Bitte gib deinem Projekt einen Namen") ??
+                      "Unbennantes Projekt",
+                  })
+                }
+              >
+                Neues Projekt erstellen
+              </Button>
+            </Box>
           </Box>
         </Box>
       </>
