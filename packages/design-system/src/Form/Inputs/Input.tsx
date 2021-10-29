@@ -51,118 +51,120 @@ export type InputProps = Omit<
   Icon?: React.ReactNode;
 } & VariantProps<typeof StyledBox>;
 
+const InputComponent = (
+  {
+    name,
+    minLength,
+    maxLength,
+    regex,
+    required,
+    onChange,
+    onBlur,
+    value,
+    Buttons,
+    disabled,
+    css,
+    size,
+    Icon,
+    ...props
+  }: InputProps,
+  forwardedRef: React.Ref<HTMLInputElement>
+) => {
+  const innerRef = useComposedRefs(forwardedRef);
+  const [hasFocus, setHasFocus] = React.useState(false);
+
+  React.useEffect(() => {
+    if (
+      document.hasFocus() &&
+      innerRef.current?.contains(document.activeElement)
+    ) {
+      setHasFocus(true);
+    }
+  }, []);
+
+  const {
+    value: formValue,
+    blur,
+    setBlur,
+    setValue,
+    setErrors,
+    submitting,
+  } = useInput(name, "string");
+
+  const defaultValidationmessages = {
+    required: "The field is required and can't be empty",
+    minLength: `Please enter at least ${minLength} chars.`,
+    regex: `The input doesn't fulfill the requirements.`,
+    maxLength: `You've reached the maximum allowed characters (${maxLength}).`,
+  };
+
+  const validate = (inputValue: string) => {
+    const errors: string[] = [];
+
+    if (required && inputValue.length === 0) {
+      errors.push(defaultValidationmessages.required);
+    }
+
+    if (minLength && inputValue.length < minLength) {
+      errors.push(defaultValidationmessages.minLength);
+    }
+
+    if (regex && !new RegExp(regex).test(inputValue)) {
+      errors.push(defaultValidationmessages.regex);
+    }
+
+    if (maxLength && inputValue.length === maxLength) {
+      errors.push(defaultValidationmessages.maxLength);
+    }
+
+    return errors;
+  };
+
+  React.useEffect(() => {
+    if (blur || submitting) {
+      setErrors(validate(value ?? ""));
+    }
+  }, [value, blur, submitting]);
+
+  const EnhancedIcon = React.isValidElement(Icon)
+    ? React.cloneElement(Icon, {
+        "data-active": hasFocus,
+      })
+    : Icon;
+
+  return (
+    <StyledBox
+      css={{ color: disabled ? "$gray8" : "$gray12", ...css }}
+      data-disabled={disabled}
+      data-focus={hasFocus}
+      size={size}
+    >
+      {EnhancedIcon}
+      <StyledInput
+        name={name}
+        ref={innerRef}
+        value={value ?? formValue}
+        onChange={(event) => {
+          onChange ? onChange?.(event) : setValue(event.target.value ?? "");
+        }}
+        onBlur={(event) => {
+          onBlur?.(event);
+          setBlur(true);
+          setHasFocus(false);
+        }}
+        disabled={disabled}
+        minLength={minLength}
+        maxLength={maxLength}
+        pattern={regex}
+        required={required}
+        onFocus={() => setHasFocus(true)}
+        {...props}
+      />
+      {Buttons}
+    </StyledBox>
+  );
+};
+
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  (
-    {
-      name,
-      minLength,
-      maxLength,
-      regex,
-      required,
-      onChange,
-      onBlur,
-      value,
-      Buttons,
-      disabled,
-      css,
-      size,
-      Icon,
-      ...props
-    },
-    forwardedRef
-  ) => {
-    const innerRef = useComposedRefs(forwardedRef);
-    const [hasFocus, setHasFocus] = React.useState(false);
-
-    React.useEffect(() => {
-      if (
-        document.hasFocus() &&
-        innerRef.current?.contains(document.activeElement)
-      ) {
-        setHasFocus(true);
-      }
-    }, []);
-
-    const {
-      value: formValue,
-      blur,
-      setBlur,
-      setValue,
-      setErrors,
-      submitting,
-    } = useInput(name, "string");
-
-    const defaultValidationmessages = {
-      required: "The field is required and can't be empty",
-      minLength: `Please enter at least ${minLength} chars.`,
-      regex: `The input doesn't fulfill the requirements.`,
-      maxLength: `You've reached the maximum allowed characters (${maxLength}).`,
-    };
-
-    const validate = (inputValue: string) => {
-      const errors: string[] = [];
-
-      if (required && inputValue.length === 0) {
-        errors.push(defaultValidationmessages.required);
-      }
-
-      if (minLength && inputValue.length < minLength) {
-        errors.push(defaultValidationmessages.minLength);
-      }
-
-      if (regex && !new RegExp(regex).test(inputValue)) {
-        errors.push(defaultValidationmessages.regex);
-      }
-
-      if (maxLength && inputValue.length === maxLength) {
-        errors.push(defaultValidationmessages.maxLength);
-      }
-
-      return errors;
-    };
-
-    React.useEffect(() => {
-      if (blur || submitting) {
-        setErrors(validate(value ?? ""));
-      }
-    }, [value, blur, submitting]);
-
-    const EnhancedIcon = React.isValidElement(Icon)
-      ? React.cloneElement(Icon, {
-          "data-active": hasFocus,
-        })
-      : Icon;
-
-    return (
-      <StyledBox
-        css={{ color: disabled ? "$gray8" : "$gray12", ...css }}
-        data-disabled={disabled}
-        data-focus={hasFocus}
-        size={size}
-      >
-        {EnhancedIcon}
-        <StyledInput
-          name={name}
-          ref={innerRef}
-          value={value ?? formValue}
-          onChange={(event) => {
-            onChange ? onChange?.(event) : setValue(event.target.value ?? "");
-          }}
-          onBlur={(event) => {
-            onBlur?.(event);
-            setBlur(true);
-            setHasFocus(false);
-          }}
-          disabled={disabled}
-          minLength={minLength}
-          maxLength={maxLength}
-          pattern={regex}
-          required={required}
-          onFocus={() => setHasFocus(true)}
-          {...props}
-        />
-        {Buttons}
-      </StyledBox>
-    );
-  }
+  InputComponent
 );

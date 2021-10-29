@@ -39,7 +39,6 @@ export const NodeCreator = ({ css }: Props) => {
   const center = useCenter({ x: nodeWidth / 2, y: nodeHeight / 2 });
 
   return (
-    // @ts-expect-error - complex union type
     <Form
       css={css}
       onChange={({ values }) =>
