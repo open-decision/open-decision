@@ -39,16 +39,19 @@ export const NodeCreator = ({ css }: Props) => {
   const center = useCenter({ x: nodeWidth / 2, y: nodeHeight / 2 });
 
   return (
+    // @ts-expect-error - complex union type
     <Form
-      css={{ display: "flex", alignItems: "center", gap: "$2", ...css }}
+      css={css}
       onChange={({ values }) =>
         send({ type: "selectNode", nodeId: values.search })
       }
       initialValues={{ search: selectedNodeId }}
     >
-      <Combobox
-        Input={<Input name="search" size="large" />}
-        css={{ backgroundColor: "$gray1", zIndex: "5" }}
+      <Combobox.Root
+        css={{ display: "flex", alignItems: "center", gap: "$2" }}
+        name="search"
+        onInputValueChange={(inputValue) => setInputValue(inputValue)}
+        onIsCreatingChange={(isCreating) => setIsCreating(isCreating)}
         items={items}
         onCreate={(label) => {
           const newNode = Node.create({
@@ -59,31 +62,33 @@ export const NodeCreator = ({ css }: Props) => {
 
           return { id: newNode.id, label: newNode.data.label };
         }}
-        inputValue={inputValue}
-        onInputValueChange={(inputValue) => setInputValue(inputValue)}
-        isCreating={isCreating}
-        onIsCreatingChange={(isCreating) => setIsCreating(isCreating)}
-      />
-      <IconButton
-        size="large"
-        css={{ boxShadow: "$1" }}
-        label="Füge einen neuen Knoten hinzu"
-        onDragStart={(event) => onDragStart(event)}
-        disabled={!isCreating}
-        onClick={() =>
-          send({
-            type: "addNode",
-            value: Node.create({
-              position: center,
-              data: {
-                label: inputValue,
-              },
-            }),
-          })
-        }
-        draggable
-        Icon={<Plus style={{ width: "30px", height: "30px" }} />}
-      />
+        resetOnBlur
+      >
+        <Combobox.Input css={{ backgroundColor: "$gray1", zIndex: "5" }}>
+          <Input name="search" size="large" />
+        </Combobox.Input>
+
+        <IconButton
+          size="large"
+          css={{ boxShadow: "$1" }}
+          label="Füge einen neuen Knoten hinzu"
+          onDragStart={(event) => onDragStart(event)}
+          disabled={!isCreating}
+          onClick={() =>
+            send({
+              type: "addNode",
+              value: Node.create({
+                position: center,
+                data: {
+                  label: inputValue,
+                },
+              }),
+            })
+          }
+          draggable
+          Icon={<Plus style={{ width: "30px", height: "30px" }} />}
+        />
+      </Combobox.Root>
     </Form>
   );
 };
