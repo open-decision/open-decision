@@ -2,11 +2,11 @@ import { TNode } from "../types/Node";
 import { usePartOfTree } from "./useTree";
 
 export function useNode(id: string): TNode {
-  const [nodes] = usePartOfTree((state) => {
+  const [node] = usePartOfTree((state) => {
     return state.context.nodes[id];
   });
 
-  return nodes;
+  return node;
 }
 
 export function useNodes(ids: string[]): TNode[] {

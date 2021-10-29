@@ -109,9 +109,6 @@ export const treeMachine = createMachine<Context, Events, TreeState>({
         selectNode: {
           target: "sync",
           actions: selectNode,
-          cond: (context, event) => {
-            return Boolean(context.nodes[event.nodeId]);
-          },
         },
         selectRelation: {
           target: "sync",

@@ -28,7 +28,7 @@ const Container = styled("div", {
 });
 
 const canvasStyles = css({
-  "&[data-transition='true'] .react-flow__nodes,&[data-transition='true'] .react-flow__edges > g":
+  "&[data-transition='true'] .react-flow__nodes,&[data-transition='true'] .react-flow__edges *":
     {
       transition: `transform ${transitionDuration / 2}ms ease-in-out`,
     },
