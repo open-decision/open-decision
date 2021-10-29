@@ -1,33 +1,14 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "target": "ES2018",
     "outDir": "lib",
-    "rootDir": "src",
-    "allowJs": false,
-    "noImplicitAny": false,
-    "declaration": true,
-    "declarationMap": true,
-    "emitDeclarationOnly": true,
-    "jsx": "react",
-    "isolatedModules": true,
-    "strict": true,
-    "moduleResolution": "node",
-    "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true,
-    "incremental": true,
-    "baseUrl": ".",
+    "baseUrl": "../.",
     "paths": {
       // This is a workaround to make storybook work with stitches. https://github.com/modulz/stitches/issues/248
-      "@emotion/core": ["./node_modules/@emotion/react"]
-    }
+      "@emotion/core": ["./node_modules/@emotion/react"],
+      "@stitches/react": ["node_modules/.pnpm/@stitches*"]
+    },
+    "composite": true
   },
-  "include": ["src"],
-  "exclude": [
-    "**/lib",
-    "**/node_modules",
-    "**/__tests__/*",
-    "**/__e2e__/*",
-    "**/*.stories.tsx",
-    "../.*/"
-  ]
+  "include": ["./src", "./types"]
 }

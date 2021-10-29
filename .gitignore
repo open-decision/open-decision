@@ -11,6 +11,8 @@ src/types/generated/*
 tsconfig.tsbuildinfo
 compiled.css
 storybook-static
+packages/*/dist
+packages/*/lib
 
 # misc
 .DS_Store
@@ -23,15 +25,19 @@ storybook-static
 package-lock.json
 yarn.lock
 .next
-.vscode/settings.json
-.vscode/launch.json
+.vscode/
 
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 example/.docz/.cache
 .eslintcache
+lerna-debug.log
 
 # Local Netlify folder
 .docz
 .netlify
+
+# Tests
+packages/*/coverage
+.idea

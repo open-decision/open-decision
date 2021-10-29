@@ -10,7 +10,8 @@
   ],
   "env": {
     "browser": true,
-    "es6": true
+    "es6": true,
+    "node": true
   },
   "globals": {
     "Atomics": "readonly",
@@ -22,9 +23,16 @@
     "ecmaFeatures": {
       "jsx": true
     },
-    "sourceType": "module"
+    "sourceType": "module",
+    "project": "./tsconfig.json"
   },
-  "plugins": ["react", "@typescript-eslint"],
+  "plugins": [
+    "react",
+    "@typescript-eslint",
+    "react-hooks",
+    "prettier",
+    "simple-import-sort"
+  ],
   "rules": {
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",
@@ -44,5 +52,5 @@
       "version": "detect"
     }
   },
-  "ignorePatterns": ["src/types/generated/*", "*.config*", "node_modules/*"]
+  "ignorePatterns": ["generated/*", "*.config*", "node_modules/*"]
 }
