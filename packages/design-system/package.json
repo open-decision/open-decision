@@ -1,28 +1,25 @@
 {
   "name": "@open-legal-tech/design-system-test",
-  "version": "0.0.2",
-  "main": "./lib/umd.js",
-  "module": "./lib/es.js",
+  "version": "0.0.3",
+  "main": "./lib/index.cjs",
+  "module": "./lib/index.mjs",
+  "types": "./lib/index.d.ts",
   "exports": {
     ".": {
-      "import": "./lib/es.js",
-      "require": "./lib/umd.js"
+      "import": "./lib/index.mjs",
+      "require": "./lib/index.cjs",
+      "types": "./lib/index.d.ts"
     }
   },
   "files": [
     "/lib",
     "/src"
   ],
-  "publishConfig": {
-    "access": "public",
-    "main": "lib/index.js",
-    "typings": "lib/index.d.ts"
-  },
   "description": "The open legal tech design system",
   "sideEffects": false,
   "scripts": {
     "build:icons": "svgr ./src/icons/svgs -d ./src/icons/ --replace-attr-values '#2329D6=currentcolor' --typescript --no-dimensions --svg-props 'width=1.1em','height=1.1em' --ignore-existing",
-    "build": "rm -rf lib && vite build && tsc",
+    "build": "rm -rf lib && vite build & tsc --composite false --incremental false",
     "prepublish": "yarn build",
     "prettier": "prettier --check src/",
     "prettier:fix": "prettier --write src/",

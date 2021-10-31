@@ -7,7 +7,7 @@ module.exports = defineConfig({
     lib: {
       entry: path.resolve(__dirname, "./src/index.ts"),
       name: "design-system",
-      fileName: (format) => `${format}.js`,
+      fileName: (format) => `index.${format === "es" ? "mjs" : "cjs"}`,
     },
     rollupOptions: {
       external: ["react", "react-dom"],
