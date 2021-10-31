@@ -1,6 +1,6 @@
 {
-  "name": "@open-legal-tech/design-system",
-  "version": "0.13.0",
+  "name": "@open-legal-tech/design-system-test",
+  "version": "0.0.1",
   "main": "src/index.ts",
   "files": [
     "/lib",
