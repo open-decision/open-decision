@@ -1,8 +1,7 @@
 import * as React from "react";
 
 import { Meta, Story } from "@storybook/react";
-import { Button, ButtonProps } from "./Button";
-import { Box } from "../Box";
+import { Box, Button, ButtonProps } from "@open-legal-tech/design-system";
 
 export default {
   component: Button,
@@ -11,7 +10,7 @@ export default {
 
 const ButtonGrid: Story<Omit<ButtonProps, "css">> = (props) => (
   <Box css={{ display: "grid", gap: "$2", width: "max-content" }}>
-    <Button size="small" {...props} />
+    <Button size="small" {...props} />,
     <Button {...props} />
     <Button size="large" {...props} />
     <Button size="small" disabled {...props} />

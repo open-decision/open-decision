@@ -1,21 +1,21 @@
 import * as React from "react";
-import { Meta } from "@storybook/react";
-import { InputWithButton as SystemInputWithButton } from "./index";
-import { Input } from "./Input";
-import { Button } from "../../Button/Button";
-import { Form } from "../Form";
-import { Icon } from "../../Icon/Icon";
-import { Search } from "../../icons";
-import { StoryWithoutCSS } from "../../../types/utils";
+import { Meta, Story } from "@storybook/react";
+import {
+  Button,
+  Form,
+  Icon,
+  Input,
+  InputWithButton as SystemInputWithButton,
+  InputWithButtonProps,
+} from "@open-legal-tech/design-system";
+import { Search } from "react-feather";
 
 export default {
   component: SystemInputWithButton,
   title: "Components/Inputs/InputWithButton",
 } as Meta;
 
-const InputWithButton: StoryWithoutCSS<
-  React.ComponentProps<typeof SystemInputWithButton>
-> = (props) => (
+const InputWithButton: Story<InputWithButtonProps> = (props) => (
   <Form onSubmit={({ values }) => alert(values)} initialValues={{ test: "" }}>
     <SystemInputWithButton {...props}>Senden</SystemInputWithButton>
   </Form>

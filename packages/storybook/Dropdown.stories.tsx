@@ -1,11 +1,13 @@
 import * as React from "react";
 
 import { Meta, Story } from "@storybook/react";
-import { DropdownMenu } from "./Dropdown";
-import { IconButton } from "../../Button/IconButton";
-import { Icon } from "../../Icon/Icon";
-import { Menu } from "../../icons";
-import { Settings } from "react-feather";
+import { Menu, Settings } from "react-feather";
+import {
+  IconButton,
+  Icon,
+  DropdownMenu,
+  DropdownMenuRootProps,
+} from "@open-legal-tech/design-system";
 
 export default {
   component: DropdownMenu.Root,
@@ -13,9 +15,7 @@ export default {
   decorators: [(Component) => <Component />],
 } as Meta;
 
-const Template: Story<
-  Omit<React.ComponentProps<typeof DropdownMenu.Root>, "css">
-> = (props) => {
+const Template: Story<DropdownMenuRootProps> = (props) => {
   const [bookmarksChecked, setBookmarksChecked] = React.useState(false);
 
   return (

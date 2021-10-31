@@ -1,8 +1,7 @@
 import * as React from "react";
+import { Box, Badge, BadgeProps } from "@open-legal-tech/design-system";
 
 import { Meta, Story } from "@storybook/react";
-import { Badge, BadgeProps } from "./index";
-import { Box } from "../Box";
 
 export default {
   component: Badge,

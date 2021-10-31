@@ -1,15 +1,13 @@
 import * as React from "react";
 
 import { Meta, Story } from "@storybook/react";
-import { Checkbox } from "./index";
-import { Form } from "../Form";
-
+import { Checkbox, Form, CheckboxFieldProps } from "@open-legal-tech/design-system";
 export default {
   component: Checkbox.Field,
   title: "Components/Checkbox",
 } as Meta;
 
-const CheckboxTemplate: Story<React.ComponentProps<typeof Checkbox.Field>> = (
+const CheckboxTemplate: Story<CheckboxFieldProps> = (
   props
 ) => (
   <Form
@@ -17,8 +15,8 @@ const CheckboxTemplate: Story<React.ComponentProps<typeof Checkbox.Field>> = (
     initialValues={{ test: { box1: false, box2: false } }}
   >
     <Checkbox.Group name="test">
-      <Checkbox.Field value="box1" label="Test" {...props} />
-      <Checkbox.Field value="box2" label="A disabled one" disabled {...props} />
+      <Checkbox.Field {...props} value="box1" label="Test" />
+      <Checkbox.Field {...props} value="box2" label="A disabled one" disabled />
     </Checkbox.Group>
   </Form>
 );

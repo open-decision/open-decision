@@ -1,8 +1,7 @@
 import * as React from "react";
 
 import { Meta, Story } from "@storybook/react";
-import { Label, LabelProps } from "./Label";
-import { Box } from "../Box";
+import { Label, LabelProps, Box } from "@open-legal-tech/design-system";
 
 export default {
   component: Label,

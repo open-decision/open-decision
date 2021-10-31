@@ -1,4 +1,4 @@
-import { darkTheme } from "../src/stitches";
+import { darkTheme } from "@open-legal-tech/design-system";
 import { useDarkMode } from "storybook-dark-mode";
 import { DocsContainer } from "./components/DocsContainer";
 import "@fontsource/poppins/100.css";

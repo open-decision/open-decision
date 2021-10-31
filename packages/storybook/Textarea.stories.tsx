@@ -1,9 +1,7 @@
 import * as React from "react";
 import { Meta, Story } from "@storybook/react";
-import { Textarea } from "./Textarea";
+import { Field, Form, Textarea } from "@open-legal-tech/design-system";
 import { VariantProps } from "@stitches/react";
-import { Form } from "../Form";
-import { Field } from "./Field";
 
 export default {
   component: Textarea,
@@ -23,10 +21,10 @@ export const Input: Story<Props> = (props) => (
     onSubmit={({ values }) => alert(values)}
     css={{ display: "grid", gap: "$2", width: "max-content" }}
   >
-    <Textarea name="test" {...props} />
-    <Textarea name="another" disabled {...props} />
+    <Textarea {...props} name="test" />
+    <Textarea {...props} name="another" disabled />
     <Field label="Testinput">
-      <Textarea name="test2" size="large" rows={10} {...props} />
+      <Textarea {...props} name="test2" size="large" rows={10} />
     </Field>
   </Form>
 );

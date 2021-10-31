@@ -1,9 +1,7 @@
 import * as React from "react";
 
 import { Meta, Story } from "@storybook/react";
-import { Text, TextProps } from "./index";
-import { Box } from "../Box";
-import { VariantProps } from "@stitches/react";
+import { Text, TextProps, Box } from "@open-legal-tech/design-system";
 
 export default {
   component: Text,
@@ -47,7 +45,7 @@ export const List: Story<TextProps> = (props) => (
   </Box>
 );
 
-const Template: Story<Props> = (props) => (
+const Template: Story<TextProps> = (props) => (
   <Text {...props}>
     Culpa qui ipsum nisi eu elit Lorem esse aliquip irure adipisicing anim
     adipisicing. Esse nisi magna eu reprehenderit qui duis magna. Officia non
@@ -63,11 +61,3 @@ Large.args = { size: "large" };
 export const Default = Template.bind({});
 export const Small = Template.bind({});
 Small.args = { size: "small" };
-
-const ShortTemplate: Story<Props> = (props) => (
-  <Text {...props}>Culpa qui ipsum</Text>
-);
-export const Overline = ShortTemplate.bind({});
-Overline.args = { type: "overline" };
-export const Caption = ShortTemplate.bind({});
-Caption.args = { type: "caption" };

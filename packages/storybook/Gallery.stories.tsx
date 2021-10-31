@@ -1,8 +1,11 @@
 import * as React from "react";
 
 import { Meta, Story } from "@storybook/react";
-import { Gallery as GalleryComponent, GalleryContainerProps } from "./index";
-import { styled } from "../stitches";
+import {
+  styled,
+  Gallery as GalleryComponent,
+  GalleryContainerProps,
+} from "@open-legal-tech/design-system";
 
 export default {
   component: GalleryComponent.Container,

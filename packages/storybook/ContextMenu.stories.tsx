@@ -1,10 +1,8 @@
 import * as React from "react";
 
 import { Meta, Story } from "@storybook/react";
-import { ContextMenu } from "./ContextMenu";
-import { Icon } from "../../Icon/Icon";
-import { Box } from "../../Box";
 import { Settings } from "react-feather";
+import { Box, ContextMenu, Icon } from "@open-legal-tech/design-system";
 
 export default {
   component: ContextMenu.Root,
@@ -12,9 +10,9 @@ export default {
   decorators: [(Component) => <Component />],
 } as Meta;
 
-const Template: Story<
-  Omit<React.ComponentProps<typeof ContextMenu.Root>, "css">
-> = (props) => {
+const Template: Story<React.ComponentProps<typeof ContextMenu.Root>> = (
+  props
+) => {
   const [bookmarksChecked, setBookmarksChecked] = React.useState(false);
 
   return (

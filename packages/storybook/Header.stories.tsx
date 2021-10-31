@@ -1,8 +1,11 @@
 import * as React from "react";
 import { Meta, Story } from "@storybook/react";
-import { Header as SystemHeader, HeaderContainerProps } from "./index";
-import { Heading } from "../Heading";
-import { styled } from "../stitches";
+import {
+  Header as SystemHeader,
+  HeaderContainerProps,
+  Heading,
+  styled,
+} from "@open-legal-tech/design-system";
 import { Menu, X } from "react-feather";
 
 const MenuItems = () => (
@@ -30,7 +33,10 @@ const StyledHeaderContainer = styled(SystemHeader.Container, {
 export const Header: Story<HeaderContainerProps> = (props) => (
   <StyledHeaderContainer {...props}>
     <SystemHeader.Content>
-      <Heading size="xs" css={{ minWidth: "max-content", paddingBlock: "$3" }}>
+      <Heading
+        size="extra-small"
+        css={{ minWidth: "max-content", paddingBlock: "$3" }}
+      >
         Open Legal Tech e.V.
       </Heading>
       <SystemHeader.ListMenu>

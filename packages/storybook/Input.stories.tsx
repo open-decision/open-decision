@@ -1,29 +1,29 @@
 import * as React from "react";
 import { Meta, Story } from "@storybook/react";
-import { Input as SystemInput } from "./Input";
-import { VariantProps } from "@stitches/react";
-import { Form } from "../Form";
-import { Field } from "./Field";
-import { ArrowRight, Search } from "../../icons";
-import { IconButton } from "../../Button/IconButton";
-import { Icon } from "../../Icon/Icon";
+import {
+  Field,
+  Form,
+  Icon,
+  IconButton,
+  Input as SystemInput,
+  InputProps,
+} from "@open-legal-tech/design-system";
+import { Search, ArrowRight } from "react-feather";
 
 export default {
   component: SystemInput,
   title: "Components/Inputs/Input",
 } as Meta;
 
-type Props = VariantProps<typeof SystemInput>;
-
-const Input: Story<Props> = (props) => (
+const Input: Story<InputProps> = (props) => (
   <Form
     initialValues={{ test: "" }}
     onChange={({ values }) => console.log(values.test)}
     css={{ display: "grid", gap: "$2", width: "max-content" }}
   >
-    <SystemInput name="test" {...props} />
+    <SystemInput {...props} name="test" />
     <Field label="Testinput">
-      <SystemInput name="test" {...props} />
+      <SystemInput {...props} name="test" />
     </Field>
   </Form>
 );
@@ -42,6 +42,7 @@ export const WithButtons = Input.bind({});
 WithButtons.args = {
   Buttons: [
     <IconButton
+      key="button"
       size="small"
       variant="tertiary"
       label="Remove Content"
@@ -58,6 +59,7 @@ WithButtonsAndIcons.args = {
   ),
   Buttons: [
     <IconButton
+      key="button"
       size="small"
       variant="tertiary"
       label="Remove Content"

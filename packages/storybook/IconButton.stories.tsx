@@ -1,17 +1,20 @@
 import * as React from "react";
 
-import { Meta } from "@storybook/react";
+import { Meta, Story } from "@storybook/react";
 
-import { IconButton, IconButtonProps } from "./IconButton";
+import {
+  IconButton,
+  IconButtonProps,
+  Box,
+} from "@open-legal-tech/design-system";
 import { Users } from "react-feather";
-import { Box } from "../Box";
-import { StoryWithoutCSS } from "../../types/utils";
+
 export default {
   component: IconButton,
   title: "Components/IconButton",
 } as Meta;
 
-const SingleIconButtonTemplate: StoryWithoutCSS<IconButtonProps> = (props) => (
+const SingleIconButtonTemplate: Story<IconButtonProps> = (props) => (
   <Box css={{ display: "grid", gap: "$2", width: "max-content" }}>
     <IconButton size="small" {...props} />
     <IconButton {...props} />

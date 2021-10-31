@@ -1,15 +1,19 @@
 import * as React from "react";
-import { Meta } from "@storybook/react";
-import { Combobox } from "./index";
-import { Input, InlineInput } from "../Inputs";
-import { Form } from "../Form";
+import { Meta, Story } from "@storybook/react";
+import {
+  Combobox,
+  Form,
+  InlineInput,
+  Input,
+  ComboboxInputProps,
+} from "@open-legal-tech/design-system";
 
 export default {
   component: Combobox.Root,
   title: "Components/Inputs/Combobox",
 } as Meta;
 
-const Template = ({ Input }) => {
+const Template: Story<ComboboxInputProps> = ({ children }) => {
   const [selectedItem, setSelectedItem] = React.useState("123");
   const [inputValue, setInputValue] = React.useState("");
   const [items, setItems] = React.useState([
@@ -40,7 +44,7 @@ const Template = ({ Input }) => {
         resetOnBlur
         items={items}
       >
-        <Combobox.Input>{Input}</Combobox.Input>
+        <Combobox.Input>{children}</Combobox.Input>
       </Combobox.Root>
     </Form>
   );
@@ -48,10 +52,10 @@ const Template = ({ Input }) => {
 
 export const Default = Template.bind({});
 Default.args = {
-  Input: <Input name="combobox" />,
+  children: <Input name="combobox" />,
 };
 
 export const Inline = Template.bind({});
 Inline.args = {
-  Input: <InlineInput name="combobox" />,
+  children: <InlineInput name="combobox" />,
 };
