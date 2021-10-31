@@ -13,6 +13,7 @@ compiled.css
 storybook-static
 packages/*/dist
 packages/*/lib
+.rollup*
 
 # misc
 .DS_Store
