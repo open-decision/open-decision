@@ -24,13 +24,13 @@ const StyledCheckbox = styled(CheckboxPrimitive.Root, {
 });
 
 // eslint-disable-next-line react/require-default-props
-type CheckboxProps = {
+type CheckboxBoxProps = {
   value: string;
   disabled?: boolean;
   style?: React.CSSProperties;
 };
 
-function Box({ value, style, disabled }: CheckboxProps) {
+function Box({ value, style, disabled }: CheckboxBoxProps) {
   const { name: groupName, values, createId } = useInputGroup("checkbox");
   const { setValue } = useInput(groupName ?? "", "object");
 
@@ -67,7 +67,7 @@ const StyledCheckboxContainer = styled("div", {
 
 export type CheckboxFieldProps = {
   label: string;
-} & CheckboxProps;
+} & CheckboxBoxProps;
 
 function Field({ value, label, disabled, ...props }: CheckboxFieldProps) {
   const { name: groupName, values, createId } = useInputGroup("checkbox");

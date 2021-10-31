@@ -1,6 +1,6 @@
 {
   "name": "@open-legal-tech/design-system",
-  "version": "0.0.1",
+  "version": "0.13.0",
   "main": "src/index.ts",
   "files": [
     "/lib",
@@ -14,9 +14,7 @@
   "description": "The open legal tech design system",
   "sideEffects": false,
   "scripts": {
-    "build:icons": "svgr ./src/assets/icons/svgs -d ./src/assets/icons/ --replace-attr-values '#2329D6=currentcolor' --typescript --no-dimensions --svg-props 'width=1.1em','height=1.1em' --ignore-existing",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook",
+    "build:icons": "svgr ./src/icons/svgs -d ./src/icons/ --replace-attr-values '#2329D6=currentcolor' --typescript --no-dimensions --svg-props 'width=1.1em','height=1.1em' --ignore-existing",
     "build": "rm -rf lib && rollup -c",
     "prepublish": "yarn build",
     "prettier": "prettier --check src/",
@@ -26,7 +24,6 @@
     "verify": "run-p prettier lint",
     "verify:fix": "yarn prettier:fix && yarn lint:fix"
   },
-  "dependencies": {},
   "peerDependencies": {
     "@fontsource/poppins": "^4.5.0",
     "@radix-ui/colors": "^0.1.7",
@@ -84,6 +81,8 @@
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-rename": "^1.0.1",
     "rollup-plugin-rename-node-modules": "^1.2.0",
+    "rollup-plugin-typescript2": "^0.30.0",
+    "typescript": "^4.4.4",
     "utility-types": "^3.10.0"
   }
 }

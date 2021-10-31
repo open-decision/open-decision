@@ -13,7 +13,7 @@ const fallbackSelectedItem = {
   label: "",
 };
 
-type RootProps = {
+export type ComboboxRootProps = {
   css?: StyleObject;
   items: Item[];
   onReset?: () => void;
@@ -40,7 +40,7 @@ export function Root({
   resetOnBlur = false,
   children,
   name,
-}: RootProps) {
+}: ComboboxRootProps) {
   const [inputItems, setInputItems] = React.useState(items);
   const { value, setValue } = useInput(name, "string");
 
@@ -84,7 +84,7 @@ export function Root({
     itemToString: (item) => cleanLabel(item?.label ?? ""),
 
     onInputValueChange: ({ inputValue }) => {
-      let filteredItems = matchSorter(items, inputValue ?? "", {
+      const filteredItems = matchSorter(items, inputValue ?? "", {
         keys: ["label"],
       });
 

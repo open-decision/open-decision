@@ -25,8 +25,7 @@ const StyledCheckboxItem = styled(
   menuItemStyles
 );
 
-type CheckboxItemProps = React.ComponentProps<typeof StyledCheckboxItem>;
-const CheckboxItem = ({ children, ...props }: CheckboxItemProps) => {
+const CheckboxItem = ({ children, ...props }: DropdownCheckboxItemProps) => {
   return (
     <StyledCheckboxItem {...props}>
       <ItemIndicator />
@@ -34,6 +33,28 @@ const CheckboxItem = ({ children, ...props }: CheckboxItemProps) => {
     </StyledCheckboxItem>
   );
 };
+
+export type DropdownMenuRootProps = DropdownMenuPrimitives.DropdownMenuProps;
+export type DropdownMenuTriggerProps =
+  DropdownMenuPrimitives.DropdownMenuTriggerProps;
+export type DropdownMenuContentProps = React.ComponentProps<
+  typeof DropdownMenu.Content
+>;
+export type DropdownMenuItemProps = React.ComponentProps<
+  typeof DropdownMenu.Item
+>;
+export type DropdownCheckboxItemProps = React.ComponentProps<
+  typeof StyledCheckboxItem
+>;
+export type DropdownMenuLabelProps = React.ComponentProps<
+  typeof DropdownMenu.Label
+>;
+export type DropdownMenuTriggerItemProps = React.ComponentProps<
+  typeof DropdownMenu.TriggerItem
+>;
+export type DropdownMenuSeparatorProps = React.ComponentProps<
+  typeof DropdownMenu.Separator
+>;
 
 export const DropdownMenu = {
   Root: DropdownMenuPrimitives.Root,

@@ -10,6 +10,8 @@ const Container = styled("div", { display: "flex", gap: "$4" });
 
 const Buttons = [
   <IconButton
+    //FIXME
+    //@ts-expect-error - missing as capability
     as="a"
     href="https://slack.open-decision.org"
     target="_blank"
@@ -23,6 +25,8 @@ const Buttons = [
     }
   />,
   <IconButton
+    //FIXME
+    //@ts-expect-error - missing as capability
     as="a"
     href="https://github.com/open-decision"
     target="_blank"
@@ -33,6 +37,8 @@ const Buttons = [
     }
   />,
   <IconButton
+    //FIXME
+    //@ts-expect-error - missing as capability
     as="a"
     href="/#contact"
     label="Schreib uns direkt bei allen Fragen."

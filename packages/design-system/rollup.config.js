@@ -7,7 +7,7 @@ import glob from "glob";
 /** @type {import('rollup').RollupOptions} */
 const options = {
   input: glob.sync("src/**/*.ts?(x)", {
-    ignore: ["src/**/*.stories.ts?(x)", "src/internal/**"],
+    ignore: ["src/internal/**"],
   }),
   output: [
     {
@@ -27,7 +27,7 @@ const options = {
       entryFileNames: "[name].mjs",
     },
   ],
-  plugins: [commonjs(), typescript(), resolve(), peerDepsExternal()],
+  plugins: [commonjs(), resolve(), peerDepsExternal(), typescript()],
 };
 
 export default options;

@@ -1,4 +1,4 @@
-import { styled, StyleObject } from "../stitches";
+import { styled } from "../stitches";
 import { Text } from "../Text";
 
 const responsiveFontSize = {

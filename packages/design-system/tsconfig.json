@@ -1,14 +1,16 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "baseUrl": ".",
     "outDir": "lib",
-    "baseUrl": "../.",
+    "rootDir": "src",
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "jsx": "react",
     "paths": {
-      // This is a workaround to make storybook work with stitches. https://github.com/modulz/stitches/issues/248
-      "@emotion/core": ["./node_modules/@emotion/react"],
       "@stitches/react": ["node_modules/.pnpm/@stitches*"]
     },
     "composite": true
   },
-  "include": ["./src", "./types"]
+  "include": ["src"]
 }

@@ -25,8 +25,7 @@ const StyledCheckboxItem = styled(
   menuItemStyles
 );
 
-type CheckboxItemProps = React.ComponentProps<typeof StyledCheckboxItem>;
-const CheckboxItem = ({ children, ...props }: CheckboxItemProps) => {
+const CheckboxItem = ({ children, ...props }: ContextMenuCheckboxItemProps) => {
   return (
     <StyledCheckboxItem {...props}>
       <ItemIndicator />
@@ -34,6 +33,26 @@ const CheckboxItem = ({ children, ...props }: CheckboxItemProps) => {
     </StyledCheckboxItem>
   );
 };
+
+export type ContextMenuRootProps = ContextMenuPrimitives.ContextMenuProps;
+export type ContextMenuTriggerProps =
+  ContextMenuPrimitives.ContextMenuTriggerProps;
+export type ContextMenuContentProps = React.ComponentProps<
+  typeof ContextMenu.Content
+>;
+export type ContextMenuCheckboxItemProps = React.ComponentProps<
+  typeof StyledCheckboxItem
+>;
+
+export type ContextMenuLabelProps = React.ComponentProps<
+  typeof ContextMenu.Label
+>;
+export type ContextMenuTriggerItemProps = React.ComponentProps<
+  typeof ContextMenu.TriggerItem
+>;
+export type ContextMenuSeparatorProps = React.ComponentProps<
+  typeof ContextMenu.Separator
+>;
 
 export const ContextMenu = {
   Root: ContextMenuPrimitives.Root,

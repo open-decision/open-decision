@@ -7,13 +7,13 @@ import { StyleObject } from "../../stitches";
 import { InputProps } from "../Inputs";
 import { useCombobox } from "./useCombobox";
 
-export type ComboboxProps = {
+export type ComboboxInputProps = {
   children: React.ReactElement<InputProps>;
   css?: StyleObject;
   menuCss?: StyleObject;
 };
 
-export function Input({ children, css, menuCss }: ComboboxProps) {
+export function Input({ children, css, menuCss }: ComboboxInputProps) {
   const {
     inputValue,
     isOpen,

@@ -49,6 +49,11 @@ export const StyledBadge = styled("span", {
 
 export type BadgeProps = React.ComponentProps<typeof StyledBadge>;
 
-export const Badge = React.forwardRef<HTMLButtonElement, BadgeProps>(
-  ({ ...props }, ref) => <StyledBadge ref={ref} {...props} />
+export const BadgeComponent = (
+  props: BadgeProps,
+  ref: React.Ref<HTMLSpanElement>
+) => <StyledBadge ref={ref} {...props} />;
+
+export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
+  BadgeComponent
 );
