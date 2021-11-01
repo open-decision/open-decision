@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "declaration": true,
     "noImplicitAny": false,
     "removeComments": true,
     "noLib": false,
@@ -16,11 +15,10 @@
     "lib": ["dom", "dom.iterable", "esnext", "webworker"],
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "baseUrl": ".",
+    "downlevelIteration": true
   },
   "exclude": ["node_modules"],
-  "references": [
-    { "path": "./packages/design-system" },
-    { "path": "./packages/builder" }
-  ]
+  "references": [{ "path": "./packages/design-system" }]
 }

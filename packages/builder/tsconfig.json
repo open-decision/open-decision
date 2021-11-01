@@ -3,20 +3,33 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "internalTypes/*": ["types/*"],
-      "component/s*": ["components/*"],
-      "features/*": ["features/*"],
-      "utils/*": ["utils/*"]
+      "components": ["src/components/index"],
+      "features": ["src/features/index"],
+      "utils": ["src/utils/index"],
+      "internalTypes": ["src/types/index"],
+      "internalTypes/*": ["src/types/*"],
+      "components/*": ["src/components/*"],
+      "features/*": ["src/features/*"],
+      "utils/*": ["src/utils/*"],
+      "@stitches*": ["../../node_modules/.pnpm/@stitches*"]
     },
     "incremental": true,
-    "composite": true,
     "allowJs": true,
-    "noEmit": false
+    "noEmit": true,
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "skipLibCheck": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "declaration": false
   },
   "include": ["src"],
-  "references": [
-    {
-      "path": "../design-system/tsconfig.json"
-    }
-  ]
+  "references": [{ "path": "../design-system/tsconfig.json" }],
+  "exclude": ["node_modules"]
 }

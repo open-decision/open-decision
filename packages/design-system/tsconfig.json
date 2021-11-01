@@ -5,11 +5,9 @@
     "outDir": "lib",
     "rootDir": "src",
     "declarationMap": true,
+    "declaration": true,
     "emitDeclarationOnly": true,
     "jsx": "react",
-    "paths": {
-      "@stitches/react": ["node_modules/.pnpm/@stitches*"]
-    },
     "composite": true
   },
   "include": ["src"]
