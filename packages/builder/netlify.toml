@@ -1,3 +1,8 @@
+[build.environment]
+  NPM_FLAGS = "--version"
 [build]
-  command = "npm run build"
-  publish = "out"
+  command = "npx pnpm install --store=node_modules/.pnpm-store && npx pnpm build"
+[[plugins]]
+  package = "./plugins/pnpm-preinstaller"
+[[plugin]]
+  package = "@netlify/plugin-nextjs"
