@@ -4,5 +4,5 @@
   command = "npx pnpm install --store=node_modules/.pnpm-store && npx pnpm build"
 [[plugins]]
   package = "./plugins/pnpm-preinstaller"
-[[plugin]]
+[[plugins]]
   package = "@netlify/plugin-nextjs"
