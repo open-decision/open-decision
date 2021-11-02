@@ -22,6 +22,7 @@
   "exclude": ["node_modules"],
   "references": [
     { "path": "./packages/design-system" },
-    { "path": "./packages/type-classes" }
+    { "path": "./packages/type-classes" },
+    { "path": "./packages/interpreter" }
   ]
 }
