@@ -1,6 +1,5 @@
 import { pipe } from "fp-ts/function";
 import * as T from "io-ts";
-import { exampleNodeTypes, examplePortTypes } from "../testData/nodes";
 import * as Node from "./Node";
 import * as Record from "fp-ts/Record";
 import * as Array from "fp-ts/Array";
@@ -56,8 +55,8 @@ export function create(name: string): TTree {
   return {
     id: "tree",
     config: {
-      nodeTypes: exampleNodeTypes,
-      portTypes: examplePortTypes,
+      nodeTypes: {},
+      portTypes: {},
     },
     nodes: {},
     treeName: name,

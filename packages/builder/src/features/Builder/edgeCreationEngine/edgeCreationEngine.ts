@@ -1,16 +1,15 @@
-import * as Connection from "../types/Connection";
-import { TNodesRecord } from "../types/Node";
 import * as Record from "fp-ts/Record";
 import * as Array from "fp-ts/Array";
 import * as Option from "fp-ts/Option";
 import { fromEquals } from "fp-ts/Eq";
 import { pipe } from "fp-ts/function";
+import { Connection, Node } from "@open-decision/type-classes";
 
 export const eqEdge = (a: Connection.TConnection, b: Connection.TConnection) =>
   a.source === b.source && a.target === b.target;
 
 export const createEdges = (
-  nodes: TNodesRecord,
+  nodes: Node.TNodesRecord,
   selectedNodeId?: string,
   selectedRelation?: string
 ) => {

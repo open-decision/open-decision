@@ -26,6 +26,7 @@
     "@graphql-codegen/typescript-react-query": "^3.0.3",
     "@next/eslint-plugin-next": "^12.0.2",
     "@types/d3-shape": "^3.0.2",
+    "@types/dagre": "^0.7.46",
     "@types/node": "^16.11.6",
     "@types/ramda": "^0.27.46",
     "@types/react": "^17.0.33",
@@ -36,11 +37,11 @@
     "local-cors-proxy": "^1.1.0",
     "next": "^12.0.1",
     "prettier": "2.4.1",
-    "typescript": "^4.4.4",
-    "@types/dagre": "^0.7.46"
+    "typescript": "^4.4.4"
   },
   "dependencies": {
     "@fontsource/poppins": "^4.5.0",
+    "@open-decision/type-classes": "workspace:^0.0.1",
     "@open-legal-tech/design-system": "workspace:^",
     "@radix-ui/colors": "^0.1.7",
     "@radix-ui/react-avatar": "^0.1.1",

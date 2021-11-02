@@ -2,7 +2,7 @@ import { assign as immerAssign } from "@xstate/immer";
 import { nanoid } from "nanoid/non-secure";
 import { Context } from "./treeMachine";
 import * as Node from "../types/Node";
-import * as Tree from "../types/Tree";
+import { Tree } from "@open-decision/type-classes";
 import produce from "immer";
 import { assign } from "xstate";
 import { nodeHeight } from "../utilities/constants";

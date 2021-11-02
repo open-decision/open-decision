@@ -17,7 +17,7 @@ import {
 import { fold } from "fp-ts/Either";
 import { pipe } from "fp-ts/lib/function";
 import { Errors } from "io-ts";
-import * as Tree from "../types/Tree";
+import { Tree } from "@open-decision/type-classes";
 
 async function updateTreeInStorage(id: string, tree: Tree.TTree) {
   localForage.setItem(id, tree);

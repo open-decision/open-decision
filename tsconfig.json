@@ -20,5 +20,8 @@
     "downlevelIteration": true
   },
   "exclude": ["node_modules"],
-  "references": [{ "path": "./packages/design-system" }]
+  "references": [
+    { "path": "./packages/design-system" },
+    { "path": "./packages/type-classes" }
+  ]
 }

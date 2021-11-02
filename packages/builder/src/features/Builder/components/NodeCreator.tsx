@@ -7,11 +7,11 @@ import {
   Input,
   useCombobox,
 } from "@open-legal-tech/design-system";
-import * as Node from "../types/Node";
 import { Plus } from "react-feather";
 import { useCenter } from "../utilities/useCenter";
 import { nodeHeight, nodeWidth } from "../utilities/constants";
 import { usePartOfTree } from "../state/useTree";
+import { Node } from "@open-decision/type-classes";
 
 type Props = { css?: StyleObject };
 

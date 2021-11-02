@@ -10,7 +10,7 @@ import {
 } from "@open-legal-tech/design-system";
 import * as React from "react";
 import * as Node from "features/Builder/types/Node";
-import * as Tree from "features/Builder/types/Tree";
+import { Tree } from "@open-decision/type-classes";
 import * as Record from "fp-ts/Record";
 import * as Array from "fp-ts/Array";
 import { pipe } from "fp-ts/lib/function";

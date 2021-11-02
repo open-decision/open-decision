@@ -10,8 +10,8 @@ import { RichTextEditor } from "components/RichTextEditor";
 import { OptionTargetInputs } from "features/Builder/components/OptionTargetInput/OptionTargetInput";
 import * as React from "react";
 import { useNode, useNodes } from "../state/useNode";
-import * as Tree from "features/Builder/types/Tree";
 import { useTree } from "../state/useTree";
+import { Tree } from "@open-decision/type-classes";
 
 type NodeEditingSidebarProps = { nodeId: string };
 
