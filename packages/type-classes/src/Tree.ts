@@ -3,6 +3,8 @@ import * as T from "io-ts";
 import * as Node from "./Node";
 import * as Record from "fp-ts/Record";
 import * as Array from "fp-ts/Array";
+import stringify from "json-stable-stringify";
+import * as murmur from "murmurhash-js";
 
 // ------------------------------------------------------------------
 // Tree Config
@@ -156,6 +158,15 @@ export const getConnectableNodes = (node: Node.TNode) => (tree: TTree) => {
         iteratedNode.id !== node.id && !nodesOnPath.includes(iteratedNode.id)
     )
   );
+};
+
+const getTreeHash = (tree: TTree) => {
+  //TODO: include startNode once its added to the type
+  // const dataToHash = (({ id, startNode, nodes}) => ({ id, startNode, nodes }))(tree)
+  const dataToHash = (({ id, nodes }) => ({ id, nodes }))(tree);
+  // Use "json-stable-stringify" to get a deterministic JSON
+  // than hash using murmur3 as hash-algo, as it's lightweight and small, seed is 0
+  return murmur.murmur3(stringify(dataToHash), 0);
 };
 
 // ------------------------------------------------------------------

@@ -346,10 +346,14 @@ importers:
 
   packages/type-classes:
     specifiers:
+      '@types/json-stable-stringify': ^1.0.33
+      '@types/murmurhash-js': ^1.0.3
       fp-ts: ^2.11.5
       io-ts: ^2.2.16
       io-ts-types: ^0.5.16
+      json-stable-stringify: ^1.0.1
       monocle-ts: ^2.3.11
+      murmurhash-js: 1.0.0
       nanoid: ^3.1.30
       remeda: ^0.0.30
       typescript: ^4.4.4
@@ -357,8 +361,12 @@ importers:
       vite: ^2.6.13
     dependencies:
       fp-ts: 2.11.5
+      json-stable-stringify: 1.0.1
+      murmurhash-js: 1.0.0
       nanoid: 3.1.30
     devDependencies:
+      '@types/json-stable-stringify': 1.0.33
+      '@types/murmurhash-js': 1.0.3
       io-ts: 2.2.16_fp-ts@2.11.5
       io-ts-types: 0.5.16_36f5ccb6f9c8cc080c886b4323d68eae
       monocle-ts: 2.3.11_fp-ts@2.11.5
@@ -6562,6 +6570,10 @@ packages:
     resolution: {integrity: sha512-Klz949h02Gz2uZCMGwDUSDS1YBlTdDDgbWHi+81l29tQALUtvz4rAYi5uoVhE5Lagoq6DeqAUlbrHvW/mXDgdQ==}
     dev: true
 
+  /@types/murmurhash-js/1.0.3:
+    resolution: {integrity: sha512-PxJwTlcFOBRPqv9pSoC3O1FpKN8GnM5hMJIkG6U3omH8b4GAh28fO1c+TMR4oxj0BG43/ICbrIK3KBfzad2heg==}
+    dev: true
+
   /@types/node-fetch/2.5.12:
     resolution: {integrity: sha512-MKgC4dlq4kKNa/mYrwpKfzQMB5X3ee5U6fSprkKpToBqBmX4nFZL9cW5jl6sWn+xpRJ7ypWh2yyqqr8UUCstSw==}
     dependencies:
@@ -12601,7 +12613,6 @@ packages:
     resolution: {integrity: sha1-mnWdOcXy/1A/1TAGRu1EX4jE+a8=}
     dependencies:
       jsonify: 0.0.0
-    dev: true
 
   /json-stringify-safe/5.0.1:
     resolution: {integrity: sha1-Epai1Y/UXxmg9s4B1lcB4sc1tus=}
@@ -12650,7 +12661,6 @@ packages:
 
   /jsonify/0.0.0:
     resolution: {integrity: sha1-LHS27kHZPKUbe1qu6PUDYx0lKnM=}
-    dev: true
 
   /jsonwebtoken/8.5.1:
     resolution: {integrity: sha512-XjwVfRS6jTMsqYs0EsuJ4LGxXV14zQybNd4L2r0UvbVnSF9Af8x7p5MzbJ90Ioz/9TI41/hTCvznF/loiSzn8w==}
@@ -13509,6 +13519,10 @@ packages:
   /ms/2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
     dev: true
+
+  /murmurhash-js/1.0.0:
+    resolution: {integrity: sha1-sGJ44h/Gw3+lMTcysEEry2rhX1E=}
+    dev: false
 
   /mute-stream/0.0.8:
     resolution: {integrity: sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==}
