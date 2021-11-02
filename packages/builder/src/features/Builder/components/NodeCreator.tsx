@@ -5,6 +5,7 @@ import {
   IconButton,
   StyleObject,
   Input,
+  useCombobox,
 } from "@open-legal-tech/design-system";
 import * as Node from "../types/Node";
 import { Plus } from "react-feather";
@@ -20,9 +21,6 @@ export const NodeCreator = ({ css }: Props) => {
     (state) => state.context.selectedNodeId
   );
 
-  const [inputValue, setInputValue] = React.useState("");
-  const [isCreating, setIsCreating] = React.useState(false);
-
   const items = React.useMemo(
     () =>
       Object.values(nodes).map((node) => ({
@@ -31,63 +29,69 @@ export const NodeCreator = ({ css }: Props) => {
       })),
     [nodes]
   );
-  const onDragStart = (event: React.DragEvent<HTMLButtonElement>) => {
-    event.dataTransfer.setData("nodeLabel", inputValue);
-    event.dataTransfer.effectAllowed = "move";
-  };
 
   const center = useCenter({ x: nodeWidth / 2, y: nodeHeight / 2 });
+
+  function createHandler(label: string) {
+    const newNode = Node.create({
+      position: center,
+      data: { label },
+    });
+    send({ type: "addNode", value: newNode });
+
+    return { id: newNode.id, label: newNode.data.label };
+  }
 
   return (
     <Form
       css={css}
-      onChange={({ values }) =>
-        send({ type: "selectNode", nodeId: values.search })
-      }
+      onChange={({ values }) => {
+        return send({ type: "selectNode", nodeId: values.search });
+      }}
       initialValues={{ search: selectedNodeId }}
     >
       <Combobox.Root
         css={{ display: "flex", alignItems: "center", gap: "$2" }}
         name="search"
-        onInputValueChange={(inputValue) => setInputValue(inputValue)}
-        onIsCreatingChange={(isCreating) => setIsCreating(isCreating)}
         items={items}
-        onCreate={(label) => {
-          const newNode = Node.create({
-            position: center,
-            data: { label },
-          });
-          send({ type: "addNode", value: newNode });
-
-          return { id: newNode.id, label: newNode.data.label };
-        }}
+        onCreate={createHandler}
         resetOnBlur
       >
-        <Combobox.Input css={{ backgroundColor: "$gray1", zIndex: "5" }}>
-          <Input name="search" size="large" />
-        </Combobox.Input>
-
-        <IconButton
-          size="large"
-          css={{ boxShadow: "$1" }}
-          label="Füge einen neuen Knoten hinzu"
-          onDragStart={(event) => onDragStart(event)}
-          disabled={!isCreating}
-          onClick={() =>
-            send({
-              type: "addNode",
-              value: Node.create({
-                position: center,
-                data: {
-                  label: inputValue,
-                },
-              }),
-            })
-          }
-          draggable
-          Icon={<Plus style={{ width: "30px", height: "30px" }} />}
-        />
+        <NodeCreatorInput createHandler={createHandler} />
       </Combobox.Root>
     </Form>
+  );
+};
+const NodeCreatorInput = ({ createHandler }) => {
+  const [, send] = usePartOfTree((state) => state.context.nodes);
+
+  const onDragStart = (event: React.DragEvent<HTMLButtonElement>) => {
+    event.dataTransfer.setData("nodeLabel", inputValue);
+    event.dataTransfer.effectAllowed = "move";
+  };
+
+  const { isCreating, inputValue, setInputValue } = useCombobox();
+
+  return (
+    <>
+      <Combobox.Input css={{ backgroundColor: "$gray1", zIndex: "5" }}>
+        <Input name="search" size="large" />
+      </Combobox.Input>
+
+      <IconButton
+        size="large"
+        css={{ boxShadow: "$1" }}
+        label="Füge einen neuen Knoten hinzu"
+        onDragStart={(event) => onDragStart(event)}
+        disabled={!isCreating}
+        onClick={() => {
+          const newNode = createHandler(inputValue);
+          send({ type: "selectNode", nodeId: newNode.id });
+          setInputValue("");
+        }}
+        draggable
+        Icon={<Plus style={{ width: "30px", height: "30px" }} />}
+      />
+    </>
   );
 };

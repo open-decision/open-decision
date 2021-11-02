@@ -18,6 +18,8 @@ type Context = {
   isOpen: boolean;
   inputItems: Item[];
   resetState: () => void;
+  isCreating: boolean;
+  setInputValue: (inputValue: string) => void;
   propGetters: {
     getMenuProps: (
       options?: UseComboboxGetMenuPropsOptions,

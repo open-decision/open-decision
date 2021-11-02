@@ -154,6 +154,8 @@ export function Root({
         selectedItem,
         isOpen,
         resetState,
+        setInputValue,
+        isCreating,
         propGetters: {
           getMenuProps,
           getInputProps,
