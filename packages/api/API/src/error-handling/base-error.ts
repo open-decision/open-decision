@@ -20,6 +20,6 @@ export class BaseError extends Error {
     this.isOperational = isOperational;
     this.additionalErrorData = additionalErrorData;
 
-    Error.captureStackTrace(this);
+    // Error.captureStackTrace(this);
   }
 }

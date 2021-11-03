@@ -1,4 +1,4 @@
-import { PrismaClient, User } from "@prisma/client";
+import { PrismaClient, User, Prisma } from "@prisma/client";
 import bcrypt, { compare } from "bcryptjs";
 import sha256 from "crypto-js/sha256";
 import Base64 from "crypto-js/enc-base64";
@@ -25,11 +25,21 @@ export async function signup(
       data: { email, password: hashedPassword },
     });
   } catch (err) {
-    return new Api400Error({
-      name: "EmailAlreadyUsed",
-      message:
-        "The e-mail adress is already being used. Please choose another e-mail address.",
-    });
+    if (
+      err instanceof Prisma.PrismaClientKnownRequestError &&
+      err.code === "P2002"
+    ) {
+      return new Api400Error({
+        name: "EmailAlreadyUsed",
+        message:
+          "The e-mail adress is already being used. Please choose another e-mail address.",
+      });
+    } else {
+      return new Api400Error({
+        name: err.name,
+        message: err.message,
+      });
+    }
   }
 
   const accessToken = generateAccessToken(user);

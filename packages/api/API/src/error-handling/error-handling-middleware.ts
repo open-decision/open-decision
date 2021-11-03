@@ -2,7 +2,8 @@ import express, { NextFunction, Request, Response, response } from "express";
 import { BaseError } from "./base-error";
 
 export function logError(err: BaseError) {
-  console.error(err);
+  console.error(err.name);
+  console.error(err.message);
 }
 
 export function logErrorMiddleware(

@@ -14,10 +14,11 @@ import {
   returnError,
 } from "./error-handling/error-handling-middleware";
 import { TreeResolver } from "./graphql/resolvers";
+import { BaseError } from "./error-handling/base-error";
 
-const app = express();
+export const app = express();
 const port = process.env.PORT || 4000;
-const prisma: PrismaClient = new PrismaClient();
+export const prisma: PrismaClient = new PrismaClient();
 
 app.locals.prisma = prisma;
 app.use(cookieParser());
@@ -28,11 +29,22 @@ app.use(cors());
 app.use(helmet());
 
 let schema: any;
-async function bootstrap() {
+
+async function asyncPreparation() {
   schema = await buildSchema({
     resolvers: [TreeResolver],
     emitSchemaFile: true,
   });
+
+  try {
+    await prisma.$connect();
+  } catch (e) {
+    const err = new BaseError({
+      name: "DatabaseConnectionFailed",
+      message: "Could not connect to the database.",
+    });
+    logError(err);
+  }
 }
 
 app.use("/auth", authRouter);
@@ -57,11 +69,11 @@ app.use(
   }))
 );
 
-app.use(logError);
+// app.use(logError);
 app.use(returnError);
 
-app.listen({ port: port }, () => {
+export const server = app.listen({ port: port }, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
 
-bootstrap();
+asyncPreparation();
