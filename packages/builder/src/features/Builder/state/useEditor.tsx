@@ -1,11 +1,11 @@
 import * as React from "react";
 import { OnLoadParams, useZoomPanHelper } from "react-flow-renderer";
-import { TNodeData } from "../types/Node";
 import { useStoreActions } from "react-flow-renderer";
 import { calculateCenterOfNode } from "../utilities/useCenter";
 import { sidebarWidth, transitionDuration } from "../utilities/constants";
 import { useTree } from "./useTree";
 import { Context, SendFn } from "./treeMachine";
+import { Node } from "@open-decision/type-classes";
 
 type EditorState = {
   send: SendFn;
@@ -27,7 +27,7 @@ export function EditorProvider({ children }: TreeProviderProps) {
   const selectedNodeId = state?.context?.selectedNodeId;
 
   const [reactFlowInstance, setReactFlowInstance] = React.useState<
-    OnLoadParams<TNodeData> | undefined
+    OnLoadParams<Node.TNode> | undefined
   >();
 
   const [isTransitioning, setIsTransitioning] = React.useState(false);

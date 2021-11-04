@@ -3,13 +3,13 @@ import * as Array from "fp-ts/Array";
 import * as Option from "fp-ts/Option";
 import { fromEquals } from "fp-ts/Eq";
 import { pipe } from "fp-ts/function";
-import { Connection, Node } from "@open-decision/type-classes";
+import { Connection, BuilderNode } from "@open-decision/type-classes";
 
 export const eqEdge = (a: Connection.TConnection, b: Connection.TConnection) =>
   a.source === b.source && a.target === b.target;
 
-export const createEdges = (
-  nodes: Node.TNodesRecord,
+export const transformToReactFlowEdges = (
+  nodes: BuilderNode.TNodesRecord,
   selectedNodeId?: string,
   selectedRelation?: string
 ) => {
@@ -18,7 +18,7 @@ export const createEdges = (
     Record.toArray,
     Array.chain(([, node]) =>
       pipe(
-        node.data.relations,
+        node.relations,
         Record.toArray,
         Array.filterMap(([, relation]) =>
           Option.fromNullable(
@@ -31,7 +31,7 @@ export const createEdges = (
                       selectedNodeId === node.id &&
                       selectedRelation === relation.id
                         ? "var(--colors-primary9)"
-                        : relation.value
+                        : relation.answer
                         ? "var(--colors-gray9)"
                         : "var(--colors-gray7)",
                   },

@@ -1,18 +1,18 @@
 import { assign as immerAssign } from "@xstate/immer";
-import { nanoid } from "nanoid/non-secure";
 import { Context } from "./treeMachine";
-import * as Node from "../types/Node";
-import { Tree } from "@open-decision/type-classes";
-import produce from "immer";
 import { assign } from "xstate";
-import { nodeHeight } from "../utilities/constants";
 import { DeepPartial } from "utility-types";
 import { merge } from "remeda";
+import {
+  BuilderTree,
+  BuilderNode,
+  BuilderRelation,
+} from "@open-decision/type-classes";
+import produce from "immer";
 
 export type Events =
   | AddNodeEvent
   | UpdateNodeEvent
-  | UpdateNodeDataEvent
   | DeleteNodeEvent
   | AddRelationEvent
   | UpdateRelationEvent
@@ -23,7 +23,7 @@ export type Events =
   | UpdateTreeEvent
   | SelectRelationEvent;
 
-export type AddNodeEvent = { type: "addNode"; value: Node.TNode };
+export type AddNodeEvent = { type: "addNode"; value: BuilderNode.TNode };
 export const addNode = immerAssign(
   (context: Context, { value }: AddNodeEvent) => {
     context.nodes[value.id] = value;
@@ -33,7 +33,7 @@ export const addNode = immerAssign(
 export type UpdateNodeEvent = {
   type: "updateNode";
   id: string;
-  node: Omit<Partial<Node.TNode>, "data">;
+  node: Partial<BuilderNode.TNode>;
 };
 export const updateNode = immerAssign(
   (context: Context, { id, node }: UpdateNodeEvent) => {
@@ -42,25 +42,6 @@ export const updateNode = immerAssign(
     context.nodes[id] = {
       ...oldElement,
       ...node,
-    };
-  }
-);
-
-export type UpdateNodeDataEvent = {
-  type: "updateNodeData";
-  nodeId: string;
-  data: Partial<Node.TNodeData>;
-};
-export const updateNodeData = immerAssign(
-  (context: Context, { nodeId, data }: UpdateNodeDataEvent) => {
-    const oldElement = context.nodes[nodeId];
-
-    context.nodes[nodeId] = {
-      ...oldElement,
-      data: {
-        ...oldElement.data,
-        ...data,
-      },
     };
   }
 );
@@ -76,8 +57,8 @@ export const deleteNode = immerAssign(
       for (const key in context.nodes) {
         const node = context.nodes[key];
 
-        for (const key in node.data.relations) {
-          const relation = node.data.relations[key];
+        for (const key in node.relations) {
+          const relation = node.relations[key];
 
           if (relation.target === id) {
             delete relation.target;
@@ -91,26 +72,20 @@ export const deleteNode = immerAssign(
 export type AddRelationEvent = {
   type: "addRelation";
   nodeId: string;
-  value?: Omit<Partial<Node.TRelation>, "id">;
+  relation?: Omit<BuilderRelation.TRelation, "id">;
 };
 
-const produceRelation = (
-  context: Context,
-  { nodeId, value }: AddRelationEvent
-) =>
-  produce(context, (draftState) => {
-    const id = nanoid(5);
-    draftState.nodes[nodeId].data.relations[id] = { id, ...value };
-  });
-
 export const addRelation = assign(
-  (context: Context, event: AddRelationEvent) => {
-    const newContext = produceRelation(context, event);
+  (context: Context, { nodeId, relation }: AddRelationEvent) => {
+    const newRelation = BuilderRelation.create(relation);
+    const newContext = produce(context, (draftState) => {
+      draftState.nodes[nodeId].relations[newRelation.id] = newRelation;
+    });
 
-    if (event.value?.target) {
-      const circular = Tree.circularConnection(newContext)({
-        source: event.nodeId,
-        target: event.value.target,
+    if (relation?.target) {
+      const circular = BuilderTree.circularConnection(newContext)({
+        source: nodeId,
+        target: relation.target,
       });
 
       if (circular) return context;
@@ -124,14 +99,14 @@ export type UpdateRelationEvent = {
   type: "updateRelation";
   nodeId: string;
   relationId: string;
-  relation?: Partial<Node.TRelation>;
+  relation?: Partial<BuilderRelation.TRelation>;
 };
 
 export const updateRelation = immerAssign(
   (context: Context, { nodeId, relationId, relation }: UpdateRelationEvent) => {
-    const oldValue = context.nodes[nodeId].data.relations[relationId];
+    const oldValue = context.nodes[nodeId].relations[relationId];
 
-    context.nodes[nodeId].data.relations[relationId] = {
+    context.nodes[nodeId].relations[relationId] = {
       ...oldValue,
       ...relation,
     };
@@ -147,36 +122,10 @@ export type DeleteRelationEvent = {
 export const deleteRelation = immerAssign(
   (context: Context, { nodeId, relationIds }: DeleteRelationEvent) => {
     relationIds.forEach((relationId) => {
-      delete context.nodes[nodeId].data.relations[relationId];
+      delete context.nodes[nodeId].relations[relationId];
     });
   }
 );
-
-export function createNewAssociatedNode(
-  node: Node.TNode,
-  newNodeData: Partial<Node.TNode["data"]>
-): Node.TNode {
-  const id = nanoid(5);
-  const deplacement = Object.values(node.data.relations).length;
-  const position = {
-    x: node.position.x + 5 * deplacement,
-    y: node.position.y + nodeHeight + nodeHeight / 3 + 5 * deplacement,
-  };
-
-  const newNode = {
-    id,
-    position,
-    type: "customNode",
-    data: {
-      relations: {},
-      content: [],
-      label: "Neue Node",
-      ...newNodeData,
-    },
-  };
-
-  return newNode;
-}
 
 type ClearTreeEvent = { type: "clearTree" };
 
@@ -191,12 +140,12 @@ export const selectNode = immerAssign(
 type CreateTreeEvent = { type: "createTree"; name: string };
 
 export const createTree = assign(
-  (context: Context, { name }: CreateTreeEvent) => Tree.create(name)
+  (context: Context, { name }: CreateTreeEvent) => BuilderTree.create(name)
 );
 
 type UpdateTreeEvent = {
   type: "updateTree";
-  tree: DeepPartial<Pick<Tree.TTree, "config" | "treeName">>;
+  tree: DeepPartial<BuilderTree.TTree>;
 };
 export const updateTree = assign(
   (context: Context, { tree }: UpdateTreeEvent) => merge(context, tree)
@@ -206,6 +155,6 @@ type SelectRelationEvent = { type: "selectRelation"; id: string };
 
 export const selectRelation = immerAssign(
   (context: Context, { id }: SelectRelationEvent) => {
-    context.selectedRelation = id;
+    context.selectedRelationId = id;
   }
 );

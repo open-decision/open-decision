@@ -5,7 +5,6 @@ import {
   deleteNode,
   Events,
   updateNode,
-  updateNodeData,
   addRelation,
   updateRelation,
   deleteRelation,
@@ -14,26 +13,19 @@ import {
   updateTree,
   selectRelation,
 } from "./assignUtils";
-import { fold } from "fp-ts/Either";
-import { pipe } from "fp-ts/lib/function";
-import { Errors } from "io-ts";
-import { Tree } from "@open-decision/type-classes";
+import { BuilderTree } from "@open-decision/type-classes";
 
-async function updateTreeInStorage(id: string, tree: Tree.TTree) {
-  localForage.setItem(id, tree);
+async function updateTreeInStorage(id: string, tree: BuilderTree.TTree) {
+  localForage.setItem("tree", tree);
 }
 
 async function getTreeFromStorage(id: string) {
-  function onFailure(error: Errors) {
-    return Promise.reject(error);
-  }
+  const possibleTree = await localForage.getItem("tree");
+  const parsedTree = BuilderTree.Type.safeParse(possibleTree);
 
-  function onSuccess(value: Tree.TTree) {
-    return Promise.resolve(value);
-  }
+  if (parsedTree.success) return Promise.resolve(parsedTree.data);
 
-  const possibleTree = await localForage.getItem(id);
-  return pipe(possibleTree, Tree.Type.decode, fold(onFailure, onSuccess));
+  return Promise.reject(parsedTree.error);
 }
 
 export type TreeState =
@@ -45,7 +37,7 @@ export type sendToTreePayload = Parameters<
   Interpreter<Context, any, Events, TreeState>["send"]
 >[0];
 
-export type Context = Tree.TTree;
+export type Context = BuilderTree.TTree;
 
 export type TreeService = Interpreter<Context, any, Events, TreeState>;
 export type SendFn = TreeService["send"];
@@ -78,10 +70,6 @@ export const treeMachine = createMachine<Context, Events, TreeState>({
         updateNode: {
           target: "sync",
           actions: updateNode,
-        },
-        updateNodeData: {
-          target: "sync",
-          actions: updateNodeData,
         },
         deleteNode: {
           target: "sync",

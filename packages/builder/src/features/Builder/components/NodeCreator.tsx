@@ -11,7 +11,7 @@ import { Plus } from "react-feather";
 import { useCenter } from "../utilities/useCenter";
 import { nodeHeight, nodeWidth } from "../utilities/constants";
 import { usePartOfTree } from "../state/useTree";
-import { Node } from "@open-decision/type-classes";
+import { BuilderNode } from "@open-decision/type-classes";
 
 type Props = { css?: StyleObject };
 
@@ -25,7 +25,7 @@ export const NodeCreator = ({ css }: Props) => {
     () =>
       Object.values(nodes).map((node) => ({
         id: node.id,
-        label: node.data.label,
+        label: node.name,
       })),
     [nodes]
   );
@@ -33,16 +33,17 @@ export const NodeCreator = ({ css }: Props) => {
   const center = useCenter({ x: nodeWidth / 2, y: nodeHeight / 2 });
 
   function createHandler(label: string) {
-    const newNode = Node.create({
+    const newNode = BuilderNode.create({
       position: center,
-      data: { label },
+      name: label,
     });
     send({ type: "addNode", value: newNode });
 
-    return { id: newNode.id, label: newNode.data.label };
+    return { id: newNode.id, label: newNode.name };
   }
 
   return (
+    // @ts-expect-error - Too complex Union type
     <Form
       css={css}
       onChange={({ values }) => {

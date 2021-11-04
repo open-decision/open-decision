@@ -1,20 +1,16 @@
 import * as React from "react";
-import * as T from "io-ts";
+import { z } from "zod";
 import { Required } from "utility-types";
 
-export const Type = T.intersection([
-  T.type({
-    id: T.string,
-    source: T.string,
-    target: T.string,
-  }),
-  T.partial({
-    type: T.string,
-    label: T.string,
-    animated: T.boolean,
-    isHidden: T.boolean,
-  }),
-]);
+export const Type = z.object({
+  id: z.string(),
+  source: z.string(),
+  target: z.string(),
+  type: z.string().optional(),
+  label: z.string().optional(),
+  animated: z.boolean().optional(),
+  isHidden: z.boolean().optional(),
+});
 
 type getConnectionParameters = Required<
   Partial<TConnection>,
@@ -33,9 +29,9 @@ export const create = (
   };
 };
 
-export const ConnectionsRecord = T.record(T.string, Type);
+export const ConnectionsRecord = z.record(Type);
 
-export type TConnectionsRecord = T.TypeOf<typeof ConnectionsRecord>;
-export type TConnection = T.TypeOf<typeof Type> & {
+export type TConnectionsRecord = z.infer<typeof ConnectionsRecord>;
+export type TConnection = z.infer<typeof Type> & {
   style?: React.CSSProperties;
 };

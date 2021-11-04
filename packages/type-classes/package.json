@@ -33,19 +33,14 @@
     "verify:fix": "yarn prettier:fix && yarn lint:fix"
   },
   "dependencies": {
-    "fp-ts": "^2.11.5",
-    "nanoid": "^3.1.30"
+    "zod": "^3.11.6"
   },
   "peerDependencies": {
-    "io-ts": "^2.2.16",
-    "io-ts-types": "^0.5.16",
-    "monocle-ts": "^2.3.11",
+    "ramda": "^0.27.1",
     "remeda": "^0.0.30"
   },
   "devDependencies": {
-    "io-ts": "^2.2.16",
-    "io-ts-types": "^0.5.16",
-    "monocle-ts": "^2.3.11",
+    "@types/ramda": "^0.27.46",
     "remeda": "^0.0.30",
     "typescript": "^4.4.4",
     "utility-types": "^3.10.0",

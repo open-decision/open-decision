@@ -112,6 +112,7 @@ importers:
       utility-types: ^3.10.0
       uuid: ^8.3.2
       xstate: ^4.25.0
+      zod: ^3.11.6
       zustand: ^3.6.1
     dependencies:
       '@fontsource/poppins': 4.5.0
@@ -164,6 +165,7 @@ importers:
       utility-types: 3.10.0
       uuid: 8.3.2
       xstate: 4.25.0
+      zod: 3.11.6
       zustand: 3.6.1_react@17.0.2
     devDependencies:
       '@graphql-codegen/cli': 2.2.1_63e8f647b2791d6b5cbc01c63ce66aee
@@ -359,18 +361,24 @@ importers:
 
   packages/type-classes:
     specifiers:
+      '@types/ramda': ^0.27.46
       fp-ts: ^2.11.5
       io-ts: ^2.2.16
       io-ts-types: ^0.5.16
       monocle-ts: ^2.3.11
       nanoid: ^3.1.30
+      ramda: ^0.27.1
       remeda: ^0.0.30
       typescript: ^4.4.4
       utility-types: ^3.10.0
       vite: ^2.6.13
+      zod: ^3.11.6
     dependencies:
+      '@types/ramda': 0.27.46
       fp-ts: 2.11.5
       nanoid: 3.1.30
+      ramda: 0.27.1
+      zod: 3.11.6
     devDependencies:
       io-ts: 2.2.16_fp-ts@2.11.5
       io-ts-types: 0.5.16_36f5ccb6f9c8cc080c886b4323d68eae
@@ -6628,7 +6636,6 @@ packages:
     resolution: {integrity: sha512-PpHUGfV3AkUT57kP9GzS6NIHHebd5wHuA19tV/SDqrVNkHrJJSfNEq/imyt7JGKBdn7VgktXUN137mrI/shzkw==}
     dependencies:
       ts-toolbelt: 6.15.5
-    dev: true
 
   /@types/reach__router/1.3.9:
     resolution: {integrity: sha512-N6rqQqTTAV/zKLfK3iq9Ww3wqCEhTZvsilhl0zI09zETdVq1QGmJH6+/xnj8AFUWIrle2Cqo+PGM/Ltr1vBb9w==}
@@ -17150,7 +17157,6 @@ packages:
 
   /ts-toolbelt/6.15.5:
     resolution: {integrity: sha512-FZIXf1ksVyLcfr7M317jbB67XFJhOO1YqdTcuGaq9q5jLUoTikukZ+98TPjKiP2jC5CgmYdWWYs0s2nLSU0/1A==}
-    dev: true
 
   /tsconfig-paths/3.11.0:
     resolution: {integrity: sha512-7ecdYDnIdmv639mmDwslG6KQg1Z9STTz1j7Gcz0xa+nshh/gKDAHcPxRbWOsA3SPp0tXP2leTcY9Kw+NAkfZzA==}
@@ -18139,6 +18145,10 @@ packages:
   /yocto-queue/0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
+
+  /zod/3.11.6:
+    resolution: {integrity: sha512-daZ80A81I3/9lIydI44motWe6n59kRBfNzTuS2bfzVh1nAXi667TOTWWtatxyG+fwgNUiagSj/CWZwRRbevJIg==}
+    dev: false
 
   /zustand/3.6.1_react@17.0.2:
     resolution: {integrity: sha512-2ghTWZhOx3xUK7drIa/1fVbuzyG70XKfCXIATrRBFDPcRRV4V/9uptNOKgyCvPwCDYgLpla4EtFbXNbdLpfPcw==}

@@ -16,8 +16,8 @@ import {
 } from "react-flow-renderer";
 import { useEditor } from "../state/useEditor";
 import { useTree } from "../state/useTree";
-import { TNodeData } from "../types/Node";
 import { nodeHeight, nodeWidth } from "../utilities/constants";
+import { NodeData } from "../types/react-flow";
 
 const Port = styled(Handle, {
   backgroundColor: "$gray1 !important",
@@ -31,7 +31,7 @@ const Port = styled(Handle, {
   },
 });
 
-export const Node = memo(({ id, data }: NodeProps<TNodeData>) => {
+export const Node = memo(({ id, data }: NodeProps<NodeData>) => {
   const [isConnecting, connectionNodeId] = useStoreState((state) => [
     state.connectionHandleType != null,
     state.connectionNodeId,
@@ -89,7 +89,7 @@ export const Node = memo(({ id, data }: NodeProps<TNodeData>) => {
               variant="ghost"
               css={{ position: "absolute", top: 0, right: 0 }}
               Icon={<MoreHorizontal />}
-              label={`Öffne Menü Node: ${data.label}`}
+              label={`Öffne Menü Node: ${data.name}`}
             />
           </DropdownMenu.Trigger>
           <DropdownMenu.Content>
@@ -114,7 +114,7 @@ export const Node = memo(({ id, data }: NodeProps<TNodeData>) => {
           size="small"
           as="span"
         >
-          {data.label}
+          {data.name}
         </Text>
       </Box>
       <Port

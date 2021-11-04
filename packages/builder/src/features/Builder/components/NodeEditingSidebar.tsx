@@ -11,7 +11,7 @@ import { OptionTargetInputs } from "features/Builder/components/OptionTargetInpu
 import * as React from "react";
 import { useNode, useNodes } from "../state/useNode";
 import { useTree } from "../state/useTree";
-import { Tree } from "@open-decision/type-classes";
+import { BuilderTree } from "@open-decision/type-classes";
 
 type NodeEditingSidebarProps = { nodeId: string };
 
@@ -20,7 +20,7 @@ export function NodeEditingSidebar({
 }: NodeEditingSidebarProps): JSX.Element {
   const [tree, send] = useTree();
   const node = useNode(nodeId);
-  const parentNodesIds = Tree.getParents(node)(tree.context);
+  const parentNodesIds = BuilderTree.getParents(node)(tree.context);
   const parentNodes = useNodes(parentNodesIds);
 
   return (
@@ -29,12 +29,12 @@ export function NodeEditingSidebar({
         <Form
           onChange={({ values }) => {
             send({
-              type: "updateNodeData",
-              nodeId,
-              data: { label: values.nodeName },
+              type: "updateNode",
+              id: nodeId,
+              node: { name: values.nodeName },
             });
           }}
-          initialValues={{ nodeName: node.data?.label ?? "" }}
+          initialValues={{ nodeName: node?.name ?? "" }}
         >
           <Field label="Knotenname" css={{ color: "$gray11" }}>
             <Input
@@ -59,12 +59,12 @@ export function NodeEditingSidebar({
           Inhalt
         </Label>
         <RichTextEditor
-          value={node.data.content}
+          value={node.content}
           setValue={(newValue) =>
             send({
-              type: "updateNodeData",
-              nodeId,
-              data: { content: newValue },
+              type: "updateNode",
+              id: nodeId,
+              node: { content: newValue },
             })
           }
         />
@@ -100,7 +100,7 @@ export function NodeEditingSidebar({
                   send({ type: "selectNode", nodeId: parentNode.id })
                 }
               >
-                {parentNode.data.label}
+                {parentNode.label}
               </Button>
             ))}
           </Box>

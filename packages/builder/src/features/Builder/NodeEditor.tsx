@@ -9,12 +9,13 @@ import React, { useRef } from "react";
 import { NodeCreator } from "./components/NodeCreator";
 import { Node } from "./components/Node";
 import { NodeEditingSidebar } from "./components/NodeEditingSidebar";
-import { createEdges } from "./edgeCreationEngine/edgeCreationEngine";
+import { transformToReactFlowEdges } from "./utilities/transformToReactFlowEdges";
 import { useEditor } from "./state/useEditor";
-import { Node as NodeType, Connection } from "@open-decision/type-classes";
+import { BuilderNode, Connection } from "@open-decision/type-classes";
 import ReactFlow from "react-flow-renderer";
 import { transitionDuration } from "./utilities/constants";
 import { useTree } from "./state/useTree";
+import { transformToReactFlowNodes } from "./utilities/transformToReactFlowNodes";
 
 const customNodes = { customNode: Node };
 
@@ -66,7 +67,7 @@ export const NodeEditor = ({ css }: NodeEditorProps) => {
 
   const onDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    const label = event.dataTransfer.getData("nodeLabel");
+    const name = event.dataTransfer.getData("nodeLabel");
 
     if (reactFlowWrapper.current && reactFlowInstance) {
       const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
@@ -78,20 +79,20 @@ export const NodeEditor = ({ css }: NodeEditorProps) => {
 
       send({
         type: "addNode",
-        value: NodeType.create({
+        value: BuilderNode.create({
           position,
-          data: { label },
+          name,
         }),
       });
     }
   };
 
   const elements = [
-    ...Object.values(state.context?.nodes ?? {}),
-    ...createEdges(
+    ...transformToReactFlowNodes(state.context?.nodes ?? {}),
+    ...transformToReactFlowEdges(
       state.context?.nodes ?? {},
       state.context.selectedNodeId,
-      state.context.selectedRelation
+      state.context.selectedRelationId
     ),
   ];
 
@@ -131,7 +132,7 @@ export const NodeEditor = ({ css }: NodeEditorProps) => {
               send({
                 type: "addRelation",
                 nodeId: sourceNodeId.current,
-                value: { target: event.target.dataset.nodeid },
+                relation: { target: event.target.dataset.nodeid },
               });
             }
           }}
