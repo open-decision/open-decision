@@ -9,33 +9,13 @@ const elementMarks = (element: Element) =>
 
 export const renderElement = (props: RenderElementProps): JSX.Element => {
   switch (props.element.type) {
-    case "h1": {
+    case "heading": {
       return (
-        <Heading
-          className={elementMarks(props.element)}
-          size="large"
-          {...props.attributes}
-        >
+        <Heading className={elementMarks(props.element)} {...props.attributes}>
           {props.children}
         </Heading>
       );
     }
-    case "h2":
-      return (
-        <Heading
-          className={elementMarks(props.element)}
-          size="medium"
-          {...props}
-        />
-      );
-    case "h3":
-      return (
-        <Heading
-          className={elementMarks(props.element)}
-          size="extra-small"
-          {...props}
-        />
-      );
     case "ul":
       return (
         <ul

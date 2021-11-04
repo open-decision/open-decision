@@ -148,7 +148,9 @@ export const NodeEditor = ({ css }: NodeEditorProps) => {
             )
               send({
                 type: "selectNode",
-                nodeId: Connection.Type.is(node) ? node.source : node.id,
+                nodeId: Connection.Type.safeParse(node).success
+                  ? node.source
+                  : node.id,
               });
           }}
           onNodeDragStop={(_event, node) => {

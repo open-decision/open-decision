@@ -1,29 +1,26 @@
-import {
-  CustomElement,
-  CustomText,
-  GroupElementType,
-  LinkElement,
-  TextElements,
-} from "features/Builder/types/Node";
+import { RichTextContent } from "@open-decision/type-classes";
 import { Editor, Element, Path, Range, Transforms } from "slate";
 import { ReactEditor } from "slate-react";
 import { Overwrite } from "utility-types";
 
 export const createGroupElement = (
-  children: CustomElement[]
-): GroupElementType => ({
+  children: RichTextContent.CustomElement[]
+): RichTextContent.GroupElementType => ({
   type: "group",
   children,
 });
 
 export const createParagraphNode = (
-  children: CustomText[] = [{ text: "" }]
-): Overwrite<TextElements, { type: "p" }> => ({
+  children: RichTextContent.CustomText[] = [{ text: "" }]
+): Overwrite<RichTextContent.TextElements, { type: "p" }> => ({
   type: "p",
   children,
 });
 
-const createLinkNode = (href: string, text: string): LinkElement => ({
+const createLinkNode = (
+  href: string,
+  text: string
+): RichTextContent.LinkElement => ({
   type: "a",
   href,
   children: [{ text }],

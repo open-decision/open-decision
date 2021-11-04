@@ -1,14 +1,19 @@
 import { z } from "zod";
 
-export const CustomText = z.object({
-  text: z.string(),
+export const TextBooleanMarks = z.object({
   bold: z.boolean().optional(),
   italic: z.boolean().optional(),
   underline: z.boolean().optional(),
 });
 
+export const CustomText = z
+  .object({
+    text: z.string(),
+  })
+  .and(TextBooleanMarks);
+
 export const ElementUnionMarks = z.object({
-  justify: z.enum(["left", "center", "right"]),
+  justify: z.enum(["left", "center", "right"]).optional(),
 });
 
 export const Element = z
@@ -56,6 +61,7 @@ export const Descendants = z.array(z.union([CustomElement, CustomText]));
 // ------------------------------------------------------------------
 // Types
 
+export type TextBooleanMarks = z.infer<typeof TextBooleanMarks>;
 export type CustomText = z.infer<typeof CustomText>;
 export type ElementUnionMarks = z.infer<typeof ElementUnionMarks>;
 export type TextTags = z.infer<typeof TextTags>;

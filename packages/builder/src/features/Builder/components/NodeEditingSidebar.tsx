@@ -20,7 +20,7 @@ export function NodeEditingSidebar({
 }: NodeEditingSidebarProps): JSX.Element {
   const [tree, send] = useTree();
   const node = useNode(nodeId);
-  const parentNodesIds = BuilderTree.getParents(node)(tree.context);
+  const parentNodesIds = BuilderTree.getParents(node.id)(tree.context);
   const parentNodes = useNodes(parentNodesIds);
 
   return (
@@ -100,7 +100,7 @@ export function NodeEditingSidebar({
                   send({ type: "selectNode", nodeId: parentNode.id })
                 }
               >
-                {parentNode.label}
+                {parentNode.name}
               </Button>
             ))}
           </Box>

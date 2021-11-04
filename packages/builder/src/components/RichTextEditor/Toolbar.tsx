@@ -46,7 +46,7 @@ export function Toolbar(): JSX.Element {
         size="small"
         variant="ghost"
         label="Konvertiere den ausgewählten Text in eine Überschrift"
-        onClick={() => toggleEditorElement("h1")}
+        onClick={() => toggleEditorElement("heading")}
         Icon={<Type />}
       />
       <StyledSeparator orientation="vertical" decorative />

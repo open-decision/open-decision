@@ -5,7 +5,7 @@ import { calculateCenterOfNode } from "../utilities/useCenter";
 import { sidebarWidth, transitionDuration } from "../utilities/constants";
 import { useTree } from "./useTree";
 import { Context, SendFn } from "./treeMachine";
-import { Node } from "@open-decision/type-classes";
+import { BuilderNode } from "@open-decision/type-classes";
 
 type EditorState = {
   send: SendFn;
@@ -27,7 +27,7 @@ export function EditorProvider({ children }: TreeProviderProps) {
   const selectedNodeId = state?.context?.selectedNodeId;
 
   const [reactFlowInstance, setReactFlowInstance] = React.useState<
-    OnLoadParams<Node.TNode> | undefined
+    OnLoadParams<BuilderNode.TNode> | undefined
   >();
 
   const [isTransitioning, setIsTransitioning] = React.useState(false);
@@ -55,7 +55,7 @@ export function EditorProvider({ children }: TreeProviderProps) {
     }, transitionDuration);
 
     return () => clearTimeout(timer);
-  }, [selectedNodeId]);
+  }, [selectedNodeId, setCenter, setSelectedElements, state.context.nodes]);
 
   return (
     <EditorContext.Provider

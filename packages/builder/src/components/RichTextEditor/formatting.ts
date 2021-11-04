@@ -1,20 +1,18 @@
-import {
-  Elements,
-  ElementUnionMarks,
-  LinkElement,
-  ListTags,
-  TextBooleanMarks,
-} from "features/Builder/types/Node";
+import { RichTextContent } from "@open-decision/type-classes";
 import { Editor, Element, Text, Transforms } from "slate";
 import { ValuesType } from "utility-types";
 
 const LIST_TYPES = ["ol", "ul"];
 
-function isList(elemType: Elements): elemType is ListTags {
+function isList(
+  elemType: RichTextContent.Elements
+): elemType is RichTextContent.ListTags {
   return LIST_TYPES.includes(elemType);
 }
 
-function isLink(elemType: Elements): elemType is LinkElement["type"] {
+function isLink(
+  elemType: RichTextContent.Elements
+): elemType is RichTextContent.LinkElement["type"] {
   return elemType === "a";
 }
 
@@ -45,19 +43,9 @@ export function onKeyDownHandler(editor: Editor): onKeyDownHandler {
         toggleEditorMark("underline");
         break;
       }
-      case "1": {
+      case "h": {
         event.preventDefault();
-        toggleEditorElement("h1");
-        break;
-      }
-      case "2": {
-        event.preventDefault();
-        toggleEditorElement("h2");
-        break;
-      }
-      case "3": {
-        event.preventDefault();
-        toggleEditorElement("h3");
+        toggleEditorElement("heading");
         break;
       }
       case "l": {
@@ -74,7 +62,7 @@ export function onKeyDownHandler(editor: Editor): onKeyDownHandler {
   };
 }
 
-const isElement = (editor: Editor) => (elemType: Elements) => {
+const isElement = (editor: Editor) => (elemType: RichTextContent.Elements) => {
   const [match] = Editor.nodes(editor, {
     match: (n) => Element.isElement(n) && n.type === elemType,
   });
@@ -83,7 +71,7 @@ const isElement = (editor: Editor) => (elemType: Elements) => {
 };
 
 const isBooleanMarkActive =
-  (editor: Editor) => (mark: keyof TextBooleanMarks) => {
+  (editor: Editor) => (mark: keyof RichTextContent.TextBooleanMarks) => {
     const [match] = Editor.nodes(editor, {
       match: (n) => Text.isText(n) && n[mark] === true,
       universal: true,
@@ -94,7 +82,7 @@ const isBooleanMarkActive =
 
 export const toggleBooleanMark =
   (editor: Editor) =>
-  (mark: keyof TextBooleanMarks): void => {
+  (mark: keyof RichTextContent.TextBooleanMarks): void => {
     const isActive = isBooleanMarkActive(editor)(mark);
     Transforms.setNodes(
       editor,
@@ -105,7 +93,7 @@ export const toggleBooleanMark =
 
 const isElementUnionMarkActive =
   (editor: Editor) =>
-  <TMark extends keyof ElementUnionMarks>(
+  <TMark extends keyof RichTextContent.ElementUnionMarks>(
     mark: TMark,
     markValue: ValuesType<TMark>
   ) => {
@@ -119,7 +107,7 @@ const isElementUnionMarkActive =
 
 export const toggleElementUnionMark =
   (editor: Editor) =>
-  <TMark extends keyof ElementUnionMarks>(
+  <TMark extends keyof RichTextContent.ElementUnionMarks>(
     mark: TMark,
     markValue: ValuesType<TMark>
   ): void => {
@@ -134,7 +122,7 @@ export const toggleElementUnionMark =
 
 export const toggleElement =
   (editor: Editor) =>
-  (elemType: Elements): void => {
+  (elemType: RichTextContent.Elements): void => {
     const isElemOfType = isElement(editor)(elemType);
     const isListElem = isList(elemType);
     const isLinkElem = isLink(elemType);
@@ -163,7 +151,6 @@ export const toggleElement =
     Transforms.setNodes(editor, newProperties);
 
     if (!isElemOfType && isListElem) {
-      const block = { type: elemType, children: [] };
-      Transforms.wrapNodes(editor, block);
+      Transforms.wrapNodes(editor, { type: elemType, children: [] });
     }
   };

@@ -115,28 +115,6 @@ export const InlineInput = React.forwardRef<HTMLInputElement, InlineInputProps>(
       maxLength: `You've reached the maximum allowed characters (${maxLength}).`,
     };
 
-    const validate = (inputValue: string) => {
-      const errors: string[] = [];
-
-      if (required && inputValue.length === 0) {
-        errors.push(defaultValidationmessages.required);
-      }
-
-      if (minLength && inputValue.length < minLength) {
-        errors.push(defaultValidationmessages.minLength);
-      }
-
-      if (regex && !new RegExp(regex).test(inputValue)) {
-        errors.push(defaultValidationmessages.regex);
-      }
-
-      if (maxLength && inputValue.length === maxLength) {
-        errors.push(defaultValidationmessages.maxLength);
-      }
-
-      return errors;
-    };
-
     useKey("Enter", () => dispatch({ type: "endEditing" }));
     useKey(
       "Escape",
@@ -149,10 +127,45 @@ export const InlineInput = React.forwardRef<HTMLInputElement, InlineInputProps>(
     );
 
     React.useEffect(() => {
+      const validate = (inputValue: string) => {
+        const errors: string[] = [];
+
+        if (required && inputValue.length === 0) {
+          errors.push(defaultValidationmessages.required);
+        }
+
+        if (minLength && inputValue.length < minLength) {
+          errors.push(defaultValidationmessages.minLength);
+        }
+
+        if (regex && !new RegExp(regex).test(inputValue)) {
+          errors.push(defaultValidationmessages.regex);
+        }
+
+        if (maxLength && inputValue.length === maxLength) {
+          errors.push(defaultValidationmessages.maxLength);
+        }
+
+        return errors;
+      };
+
       if (blur || submitting) {
         setErrors(validate(value ?? ""));
       }
-    }, [value, blur, submitting]);
+    }, [
+      value,
+      blur,
+      submitting,
+      setErrors,
+      required,
+      minLength,
+      regex,
+      maxLength,
+      defaultValidationmessages.required,
+      defaultValidationmessages.minLength,
+      defaultValidationmessages.regex,
+      defaultValidationmessages.maxLength,
+    ]);
 
     React.useEffect(() => {
       if (isEditing) {
@@ -160,7 +173,7 @@ export const InlineInput = React.forwardRef<HTMLInputElement, InlineInputProps>(
       } else {
         inputRef.current?.setSelectionRange(null, null);
       }
-    }, [isEditing]);
+    }, [inputRef, isEditing]);
 
     const EnhancedIndicatorButton = IndicatorButton
       ? React.cloneElement(IndicatorButton, {

@@ -17,14 +17,14 @@
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "baseUrl": ".",
-    "downlevelIteration": true,
-    "noEmit": true
+    "downlevelIteration": true
   },
   "include": ["src"],
   "exclude": ["node_modules"],
   "references": [
     { "path": "./packages/design-system" },
     { "path": "./packages/type-classes" },
-    { "path": "./packages/interpreter" }
+    { "path": "./packages/interpreter" },
+    { "path": "./packages/builder" }
   ]
 }
