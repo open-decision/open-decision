@@ -11,6 +11,5 @@ export function useNode(id: string): BuilderNode.TNode {
 
 export function useNodes(ids: string[]): BuilderNode.TNode[] {
   const [nodes] = usePartOfTree((state) => state.context.nodes);
-
   return ids.map((id) => nodes[id]);
 }

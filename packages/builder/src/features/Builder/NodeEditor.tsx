@@ -11,11 +11,12 @@ import { Node } from "./components/Node";
 import { NodeEditingSidebar } from "./components/NodeEditingSidebar";
 import { transformToReactFlowEdges } from "./utilities/transformToReactFlowEdges";
 import { useEditor } from "./state/useEditor";
-import { BuilderNode, Connection } from "@open-decision/type-classes";
-import ReactFlow from "react-flow-renderer";
+import { BuilderNode } from "@open-decision/type-classes";
+import ReactFlow, { Node as NodeType } from "react-flow-renderer";
 import { transitionDuration } from "./utilities/constants";
 import { useTree } from "./state/useTree";
 import { transformToReactFlowNodes } from "./utilities/transformToReactFlowNodes";
+import { NodeData } from "./types/react-flow";
 
 const customNodes = { customNode: Node };
 
@@ -127,7 +128,8 @@ export const NodeEditor = ({ css }: NodeEditorProps) => {
               (event.target instanceof HTMLDivElement ||
                 event.target instanceof HTMLSpanElement) &&
               event.target.dataset.nodeid &&
-              sourceNodeId.current
+              sourceNodeId.current &&
+              sourceNodeId.current !== event.target.dataset.nodeid
             ) {
               send({
                 type: "addRelation",
@@ -141,16 +143,14 @@ export const NodeEditor = ({ css }: NodeEditorProps) => {
           onLoad={(instance) => {
             setReactFlowInstance(instance);
           }}
-          onElementClick={(event, node) => {
+          onElementClick={(event, node: NodeType<NodeData>) => {
             if (
               event.target instanceof HTMLElement &&
               event.target.dataset?.nodeid === node.id
             )
               send({
                 type: "selectNode",
-                nodeId: Connection.Type.safeParse(node).success
-                  ? node.source
-                  : node.id,
+                nodeId: node.id,
               });
           }}
           onNodeDragStop={(_event, node) => {

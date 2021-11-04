@@ -2,14 +2,15 @@ import * as BuilderNode from "../Node/BuilderNode";
 import * as PublicNode from "../Node/PublicNode";
 import * as BuilderTree from "../Tree/BuilderTree";
 import * as PublicTree from "../Tree/PublicTree";
-import { pipe, flatMap, filter, map } from "remeda";
+import { pipe, flatMap, filter, map, reduce, uniq } from "remeda";
 import { values } from "ramda";
 import { createAdjacencyList, depthFirstSearch } from "./utils";
 import stringify from "json-stable-stringify";
 import * as murmur from "murmurhash-js";
 
 export const getParents =
-  (id: string) => (tree: PublicTree.TTree | BuilderTree.TTree) =>
+  (id: string) =>
+  (tree: PublicTree.TTree | BuilderTree.TTree): string[] =>
     pipe(
       tree.nodes,
       values,
@@ -17,10 +18,15 @@ export const getParents =
         pipe(
           node.relations,
           values,
-          filter((relation) => relation.id === id),
-          map((relation) => relation.id)
+          reduce((acc: string[], relation) => {
+            if (relation.target != null && relation.target === id)
+              return [...acc, relation.target];
+
+            return acc;
+          }, [])
         )
-      )
+      ),
+      uniq()
     );
 
 export const getChildren =

@@ -5,8 +5,6 @@ import { NodeData } from "../types/react-flow";
 export function transformToReactFlowNodes(
   nodes: BuilderNode.TNodesRecord
 ): Elements<NodeData> {
-  console.log(nodes);
-
   return Object.values(nodes).map((node) => ({
     data: { name: node.name, relations: node.relations, content: node.content },
     id: node.id,
