@@ -17,8 +17,10 @@
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "baseUrl": ".",
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "noEmit": true
   },
+  "include": ["src"],
   "exclude": ["node_modules"],
   "references": [
     { "path": "./packages/design-system" },

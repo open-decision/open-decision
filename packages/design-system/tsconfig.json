@@ -6,7 +6,6 @@
     "rootDir": "src",
     "declarationMap": true,
     "declaration": true,
-    "emitDeclarationOnly": true,
     "jsx": "react",
     "composite": true
   },
