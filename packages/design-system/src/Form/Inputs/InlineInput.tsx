@@ -178,7 +178,6 @@ export const InlineInput = React.forwardRef<HTMLInputElement, InlineInputProps>(
         data-disabled={disabled}
       >
         <StyledInput
-          autoFocus={isEditing}
           name={name}
           ref={inputRef}
           value={value ?? formValue}
