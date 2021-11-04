@@ -15,7 +15,8 @@ const REFRESH_TOKEN_SECRET =
 
 export function generateAccessToken(user: User): string {
   return jwt.sign({ userUuid: user.uuid }, ACCESS_TOKEN_SECRET, {
-    expiresIn: "7d",
+    expiresIn: "15m",
+    algorithm: "HS256",
   });
 }
 
@@ -24,12 +25,15 @@ export function generateRefreshToken(): string {
 }
 
 export function verifyAccessTokenAndGetUserUuid(token: string) {
-  const verifiedToken = jwt.verify(token, ACCESS_TOKEN_SECRET);
+  //TODO: whath happens if this fails?
+  const verifiedToken = jwt.verify(token, ACCESS_TOKEN_SECRET, {
+    algorithms: ["HS256"],
+  });
   const uuid = new UUID((verifiedToken as TokenInterface).userUuid);
   if (uuid.isValid()) {
     return uuid;
   } else {
-    // Switch to return
+    //TODO:Switch to return, change in callers too
     throw new BaseError({
       name: "InvalidUUID",
       message: "Invalid UUID in access token.",

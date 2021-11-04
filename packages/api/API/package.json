@@ -1,5 +1,5 @@
 {
-  "name": "Node-Backend",
+  "name": "NodeBackend",
   "version": "1.0.0",
   "description": "",
   "main": "./src/index.js",
@@ -15,7 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "@prisma/client": "^2.27.0",
-    "bcryptjs": "^2.4.3",
+    "argon2": "^0.28.2",
     "class-validator": "^0.13.1",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
@@ -31,7 +31,6 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@types/bcryptjs": "^2.4.2",
     "@types/cookie-parser": "^1.4.2",
     "@types/cors": "^2.8.12",
     "@types/crypto-js": "^4.0.2",

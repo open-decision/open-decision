@@ -1,5 +1,5 @@
 import { PrismaClient, User, Prisma } from "@prisma/client";
-import bcrypt, { compare } from "bcryptjs";
+import * as argon2 from "argon2";
 import sha256 from "crypto-js/sha256";
 import Base64 from "crypto-js/enc-base64";
 import { Api400Error } from "../error-handling/api-errors";
@@ -18,9 +18,14 @@ export async function signup(
   prisma: PrismaClient
 ) {
   //Has password and create user
-  const hashedPassword = await bcrypt.hash(password, 10);
+
   let user: User;
   try {
+    const hashedPassword = await argon2.hash("password", {
+      type: argon2.argon2id,
+      timeCost: 2,
+      memoryCost: 15360,
+    });
     user = await prisma.user.create({
       data: { email, password: hashedPassword },
     });
@@ -65,7 +70,7 @@ export async function signup(
 
 export async function login(
   email: string,
-  password: string,
+  plainPassword: string,
   prisma: PrismaClient
 ) {
   // Find user in database
@@ -75,12 +80,11 @@ export async function login(
   if (!user) {
     return new BaseError({
       name: "InvalidCredentials",
-      message:
-        "The user does not exist or the password and e-mail do not match.",
+      message: "Your e-mail and password combination is invalid.",
     });
   }
 
-  const passwordIsvalid = await bcrypt.compare(password, user.password);
+  const passwordIsvalid = await argon2.verify(user.password, plainPassword);
   if (passwordIsvalid) {
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken();
@@ -104,11 +108,64 @@ export async function login(
   } else {
     return new BaseError({
       name: "InvalidCredentials",
-      message:
-        "The user does not exist or the password and e-mail do not match.",
+      message: "Your e-mail and password combination is invalid.",
     });
   }
 }
+
+export async function updateEmail(
+  email: string,
+  prisma: PrismaClient,
+  user: User
+) {
+  //TODO: verify that e-mail is valid and lowercase, check authentication
+  try {
+    const updateResult = await prisma.user.update({
+      where: { uuid: user.uuid },
+      data: {
+        email: email,
+      },
+    });
+    return updateResult.email;
+  } catch (err) {
+    if (
+      err instanceof Prisma.PrismaClientKnownRequestError &&
+      err.code === "P2002"
+    ) {
+      return new Api400Error({
+        name: "EmailAlreadyUsed",
+        message:
+          "The e-mail adress is already being used. Please choose another e-mail address.",
+      });
+    } else {
+      return new Api400Error({
+        name: err.name,
+        message: err.message,
+      });
+    }
+  }
+}
+
+export async function changePasswordWhenLoggedIn(
+  //TODO: verify password, check authentication
+  newPassword: string,
+  prisma: PrismaClient,
+  user: User
+) {
+  const hashedPassword = await argon2.hash("password", {
+    type: argon2.argon2id,
+    timeCost: 2,
+    memoryCost: 15360,
+  });
+}
+
+export async function resetForgottenPassword(
+  //TODO: verify password
+  newPassword: string,
+  prisma: PrismaClient,
+  user: User,
+  resetCode: string
+) {}
 
 export async function refreshAndStoreNewToken(
   refreshToken: string,

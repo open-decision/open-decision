@@ -8,7 +8,7 @@ authRouter.post(
   "/signup",
   body("email", "Invalid E-Mail address.").isEmail().normalizeEmail().trim(),
   body("password", "The password must be at least 8 characters long.").isLength(
-    { min: 8 }
+    { min: 8, max: 100 }
   ),
   async (req, res, next) => {
     const errors = validationResult(req);
