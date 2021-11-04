@@ -12,7 +12,7 @@ import { NodeEditingSidebar } from "./components/NodeEditingSidebar";
 import { transformToReactFlowEdges } from "./utilities/transformToReactFlowEdges";
 import { useEditor } from "./state/useEditor";
 import { BuilderNode } from "@open-decision/type-classes";
-import ReactFlow, { Node as NodeType } from "react-flow-renderer";
+import ReactFlow, { FlowElement } from "react-flow-renderer";
 import { transitionDuration } from "./utilities/constants";
 import { useTree } from "./state/useTree";
 import { transformToReactFlowNodes } from "./utilities/transformToReactFlowNodes";
@@ -143,14 +143,14 @@ export const NodeEditor = ({ css }: NodeEditorProps) => {
           onLoad={(instance) => {
             setReactFlowInstance(instance);
           }}
-          onElementClick={(event, node: NodeType<NodeData>) => {
+          onElementClick={(event, element: FlowElement<NodeData>) => {
             if (
               event.target instanceof HTMLElement &&
-              event.target.dataset?.nodeid === node.id
+              event.target.dataset?.nodeid === element.id
             )
               send({
                 type: "selectNode",
-                nodeId: node.id,
+                nodeId: element.id,
               });
           }}
           onNodeDragStop={(_event, node) => {
