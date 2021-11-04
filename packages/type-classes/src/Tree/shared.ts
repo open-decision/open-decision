@@ -5,6 +5,8 @@ import * as PublicTree from "../Tree/PublicTree";
 import { pipe, flatMap, filter, map } from "remeda";
 import { values } from "ramda";
 import { createAdjacencyList, depthFirstSearch } from "./utils";
+import stringify from "json-stable-stringify";
+import * as murmur from "murmurhash-js";
 
 export const getParents =
   (id: string) => (tree: PublicTree.TTree | BuilderTree.TTree) =>
@@ -67,3 +69,12 @@ export const getConnectableNodes =
       )
     );
   };
+
+export const getTreeHash = (tree: PublicTree.TTree | BuilderTree.TTree) => {
+  //TODO: include startNode once its added to the type by uncommenting
+  // const dataToHash = (({ id, startNode, nodes}) => ({ id, startNode, nodes }))(tree)
+  const dataToHash = (({ id, nodes }) => ({ id, nodes }))(tree);
+  // Use "json-stable-stringify" to get a deterministic JSON string
+  // then hash using murmur3 as hash-algo, as it's lightweight and small, seed is 0
+  return murmur.murmur3(stringify(dataToHash), 0);
+};

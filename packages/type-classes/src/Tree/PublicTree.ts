@@ -21,6 +21,7 @@ export {
   getConnectableNodes,
   getParents,
   getPaths,
+  getTreeHash,
 } from "./shared";
 
 // ------------------------------------------------------------------

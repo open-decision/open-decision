@@ -27,6 +27,7 @@ export {
   getConnectableNodes,
   getParents,
   getPaths,
+  getTreeHash,
 } from "./shared";
 
 export type TTree = z.infer<typeof Type>;
