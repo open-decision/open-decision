@@ -1,4 +1,4 @@
-import { signup, login, refreshAndStoreNewToken } from "./../auth/auth-handler";
+import { signup, login, refreshAndStoreNewToken } from "../auth/auth-functions";
 import { prismaMock } from "./prisma-tests/singleton";
 import { Role, Prisma } from "@prisma/client";
 import { Api400Error } from "../error-handling/api-errors";

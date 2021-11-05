@@ -41,6 +41,25 @@ export function verifyAccessTokenAndGetUserUuid(token: string) {
   }
 }
 
+export function verifyAccessTokenAndGetUserUUIDAndExpiration(token: string) {
+  try {
+    const verifiedToken = jwt.verify(token, ACCESS_TOKEN_SECRET, {
+      algorithms: ["HS256"],
+    });
+    const uuid = new UUID((verifiedToken as TokenInterface).userUuid);
+    if (uuid.isValid()) {
+      return {
+        expiration: (verifiedToken as TokenInterface).exp,
+        UUID: uuid,
+      };
+    } else {
+      return Error("Invalid UUID.");
+    }
+  } catch {
+    return Error("Token is invalid.");
+  }
+}
+
 export async function issueNewToken(
   refreshToken: string,
   prisma: PrismaClient

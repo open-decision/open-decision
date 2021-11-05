@@ -29,7 +29,7 @@ export async function signup(
     user = await prisma.user.create({
       data: { email, password: hashedPassword },
     });
-  } catch (err) {
+  } catch (err: any) {
     if (
       err instanceof Prisma.PrismaClientKnownRequestError &&
       err.code === "P2002"
@@ -37,7 +37,8 @@ export async function signup(
       return new Api400Error({
         name: "EmailAlreadyUsed",
         message:
-          "The e-mail adress is already being used. Please choose another e-mail address.",
+          // "The e-mail adress is already being used. Please choose another e-mail address.",
+          "A link to activate your account has been emailed to the address provided.",
       });
     } else {
       return new Api400Error({
@@ -120,14 +121,14 @@ export async function updateEmail(
 ) {
   //TODO: verify that e-mail is valid and lowercase, check authentication
   try {
-    const updateResult = await prisma.user.update({
+    const updatedUser = await prisma.user.update({
       where: { uuid: user.uuid },
       data: {
         email: email,
       },
     });
-    return updateResult.email;
-  } catch (err) {
+    return updatedUser.email;
+  } catch (err: any) {
     if (
       err instanceof Prisma.PrismaClientKnownRequestError &&
       err.code === "P2002"
@@ -148,15 +149,33 @@ export async function updateEmail(
 
 export async function changePasswordWhenLoggedIn(
   //TODO: verify password, check authentication
+  oldPassword: string,
   newPassword: string,
   prisma: PrismaClient,
   user: User
 ) {
-  const hashedPassword = await argon2.hash("password", {
-    type: argon2.argon2id,
-    timeCost: 2,
-    memoryCost: 15360,
-  });
+  const oldPasswordIsValid = await argon2.verify(user.password, oldPassword);
+  if (oldPasswordIsValid) {
+    const hashedPassword = await argon2.hash("password", {
+      type: argon2.argon2id,
+      timeCost: 2,
+      memoryCost: 15360,
+    });
+
+    const updatedUser = await prisma.user.update({
+      where: { uuid: user.uuid },
+      data: {
+        password: hashedPassword,
+      },
+    });
+    //TODO: call logout here!
+    return true;
+  } else {
+    return new BaseError({
+      name: "InvalidCredentials",
+      message: "Your e-mail and password combination is invalid.",
+    });
+  }
 }
 
 export async function resetForgottenPassword(

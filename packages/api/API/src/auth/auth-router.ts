@@ -1,15 +1,16 @@
 import express, { response } from "express";
 import { body, cookie, validationResult } from "express-validator";
-import { signup, login, refreshAndStoreNewToken } from "./auth-handler";
+import { signup, login, refreshAndStoreNewToken } from "./auth-functions";
 import { Api400Error } from "../error-handling/api-errors";
 
 export const authRouter = express.Router();
 authRouter.post(
   "/signup",
   body("email", "Invalid E-Mail address.").isEmail().normalizeEmail().trim(),
-  body("password", "The password must be at least 8 characters long.").isLength(
-    { min: 8, max: 100 }
-  ),
+  body(
+    "password",
+    "The password must be at least 8 characters and at most 100 characters long."
+  ).isLength({ min: 8, max: 100 }),
   async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

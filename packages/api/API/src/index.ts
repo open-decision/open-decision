@@ -15,6 +15,7 @@ import {
 } from "./error-handling/error-handling-middleware";
 import { TreeResolver } from "./graphql/resolvers";
 import { BaseError } from "./error-handling/base-error";
+import { cleanBlocklist } from "./auth/utils/access-token-blocklist";
 
 export const app = express();
 const port = process.env.PORT || 4000;
@@ -45,6 +46,7 @@ async function asyncPreparation() {
     });
     logError(err);
   }
+  cleanBlocklist(prisma);
 }
 
 app.use("/auth", authRouter);

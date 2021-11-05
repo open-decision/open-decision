@@ -32,6 +32,12 @@ model User {
   DecisionTrees         DecisionTree[]
 }
 
+model blockedAccessToken {
+  token                 String         @unique @id
+  uuid                  String         @db.Uuid
+  expiry                Int
+}
+
 enum Role {
   USER
   STAFF
