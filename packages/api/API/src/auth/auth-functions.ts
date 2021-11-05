@@ -2,6 +2,7 @@ import { PrismaClient, User, Prisma } from "@prisma/client";
 import * as argon2 from "argon2";
 import sha256 from "crypto-js/sha256";
 import Base64 from "crypto-js/enc-base64";
+import cryptoRandomString from "crypto-random-string";
 import { Api400Error } from "../error-handling/api-errors";
 import { BaseError } from "../error-handling/base-error";
 import {
@@ -25,7 +26,7 @@ export async function signup(
 
   let user: User;
   try {
-    const hashedPassword = await argon2.hash("password", {
+    const hashedPassword = await argon2.hash(password, {
       type: argon2.argon2id,
       timeCost: 2,
       memoryCost: 15360,
@@ -229,13 +230,79 @@ export async function changePasswordWhenLoggedIn(
   }
 }
 
-export async function resetForgottenPassword(
+export async function requestPasswordResetMail(
+  email: string,
+  prisma: PrismaClient
+) {
+  const user = await prisma.user.findUnique({
+    where: {
+      email: email,
+    },
+  });
+  if (user) {
+    const resetCode = cryptoRandomString(100);
+    await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        //TODO: is encryption needed?
+        passwordResetCode: resetCode,
+        passwordResetExpiry: Math.floor(Date.now() / 1000) + 3600,
+      },
+    });
+    //TODO: sent e-mail with reset code here
+  }
+}
+
+export async function resetPasswordWithCode(
   //TODO: verify password
   newPassword: string,
-  prisma: PrismaClient,
-  user: User,
-  resetCode: string
-) {}
+  resetCode: string,
+  prisma: PrismaClient
+) {
+  const user = await prisma.user.findFirst({
+    where: {
+      passwordResetCode: resetCode,
+    },
+  });
+  if (user) {
+    const resetCodeIsNotExpired =
+      user.passwordResetExpiry! > Math.floor(Date.now() / 1000);
+
+    if (resetCodeIsNotExpired) {
+      const hashedPassword = await argon2.hash(newPassword, {
+        type: argon2.argon2id,
+        timeCost: 2,
+        memoryCost: 15360,
+      });
+
+      await prisma.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          password: hashedPassword,
+          passwordResetCode: null,
+          passwordResetExpiry: null,
+        },
+      });
+
+      logout({ prisma: prisma, user: user });
+    } else {
+      throw new BaseError({
+        name: "ExpiredResetLink",
+        message:
+          "Your password reset link is expired. Please request a new one.",
+      });
+    }
+  } else {
+    throw new BaseError({
+      name: "InvalidResetLink",
+      message: "Your password reset link is invalid. Please request a new one.",
+    });
+  }
+}
 
 export async function refreshAndStoreNewToken(
   refreshToken: string,
