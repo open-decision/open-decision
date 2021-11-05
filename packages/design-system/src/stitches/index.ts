@@ -34,11 +34,11 @@ export const designSystem = createStitches({
       colorScheme10: `$colors$gray10`,
       colorScheme11: `$colors$gray11`,
       colorScheme12: `$colors$gray12`,
+      "colorScheme-text": "$colors$black",
     },
     ...otherTokens,
     fonts: {
-      sans:
-        "poppins, -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif;",
+      sans: "poppins, -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif;",
       serif:
         "Iowan Old Style, Apple Garamond, Baskerville, Times New Roman, Droid Serif, Times, Source Serif Pro, serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol",
       heading: "$sans",

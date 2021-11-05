@@ -76,6 +76,7 @@ export function Input({ children, css, menuCss }: ComboboxInputProps) {
           gap: "$1",
           overflowY: "auto",
           zIndex: 1,
+          boxShadow: "$2",
           ...menuCss,
         }}
       >
@@ -87,7 +88,8 @@ export function Input({ children, css, menuCss }: ComboboxInputProps) {
                 as="li"
                 css={{
                   backgroundColor:
-                    highlightedIndex === index ? "$primary3" : null,
+                    highlightedIndex === index ? "$primary9" : null,
+                  color: highlightedIndex === index ? "$primary1" : null,
                   padding: "$1 $2",
                 }}
                 key={`${item?.id}${index}`}
