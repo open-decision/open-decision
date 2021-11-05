@@ -25,7 +25,7 @@ const checkAuthorization = function (
     // If everything is okay, continue
     res.locals.user = userUuid;
     return next();
-  } catch (err) {
+  } catch (err: any) {
     // Return error if any of the steps fails
     return next(
       new Api401Error({

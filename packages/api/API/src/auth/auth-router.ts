@@ -1,7 +1,15 @@
 import express, { response } from "express";
 import { body, cookie, validationResult } from "express-validator";
-import { signup, login, refreshAndStoreNewToken } from "./auth-functions";
+import {
+  signup,
+  login,
+  logout,
+  refreshAndStoreNewToken,
+} from "./auth-functions";
 import { Api400Error } from "../error-handling/api-errors";
+import isJWT from "validator/lib/isJWT";
+import isUUID from "validator/lib/isUUID";
+import { LogoutInterface } from "./types/auth-interfaces";
 
 export const authRouter = express.Router();
 authRouter.post(
@@ -56,6 +64,28 @@ authRouter.post(
     });
   }
 );
+
+authRouter.post("/logout", async (req, res, next) => {
+  const accessToken = req.headers.authorization;
+  const refreshToken = req.cookies.refreshCookie;
+
+  const logoutData: LogoutInterface = {
+    prisma: req.app.locals.prisma,
+  };
+
+  if (accessToken && isJWT(accessToken)) {
+    logoutData.accessToken = accessToken;
+  }
+
+  if (refreshToken && isUUID(refreshToken)) {
+    logoutData.refreshToken = refreshToken;
+  }
+  //There is no real failing here. If the accessToken is still valid, it's blacklisted. If it's invalid, we don't do anything.
+  //If the refreshToken is valid, it's being deleted from the database. If not, we don't do anything.
+
+  await logout(logoutData);
+  res.json({ status: "ok" });
+});
 
 authRouter.post(
   "/login",

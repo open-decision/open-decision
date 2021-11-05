@@ -18,7 +18,7 @@ export async function cleanBlocklist(prisma: PrismaClient) {
   });
 }
 
-export async function blocklistAccessToken(
+export async function blockAccessToken(
   accessToken: string,
   prisma: PrismaClient
 ) {

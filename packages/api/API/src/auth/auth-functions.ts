@@ -4,13 +4,17 @@ import sha256 from "crypto-js/sha256";
 import Base64 from "crypto-js/enc-base64";
 import { Api400Error } from "../error-handling/api-errors";
 import { BaseError } from "../error-handling/base-error";
-
-import { issueNewToken } from "./utils/generate-and-verifyToken";
+import {
+  issueNewToken,
+  verifyAccessTokenAndGetUserUuid,
+} from "./utils/generate-and-verifyToken";
 
 import {
   generateAccessToken,
   generateRefreshToken,
 } from "./utils/generate-and-verifyToken";
+import { blockAccessToken } from "./utils/access-token-blocklist";
+import { LogoutInterface } from "./types/auth-interfaces";
 
 export async function signup(
   email: string,
@@ -114,6 +118,52 @@ export async function login(
   }
 }
 
+export async function logout(logoutData: LogoutInterface) {
+  let userUuid: string | undefined = undefined;
+
+  if (logoutData.user) {
+    userUuid = logoutData.user.uuid;
+  }
+  if (logoutData.accessToken) {
+    //Handle Access Token: add to blocklist if it's valid
+    try {
+      userUuid = verifyAccessTokenAndGetUserUuid(
+        logoutData.accessToken
+      ).toString();
+      blockAccessToken(logoutData.accessToken, logoutData.prisma);
+    } catch {
+      //No need to logout if access token is already invalid
+    }
+  }
+  resetLogin(userUuid, logoutData.prisma);
+  //TODO: This is kinda redundant. If we receive an user as well as an refresh token, both should refer to the same user
+  //But there may be some edge cases, were we want to be sure that the refresh token is definitely revoked
+  if (logoutData.refreshToken) {
+    const user = await logoutData.prisma.user.findFirst({
+      where: {
+        refreshToken: Base64.stringify(sha256(logoutData.refreshToken)),
+      },
+    });
+    userUuid = user?.uuid;
+    resetLogin(userUuid, logoutData.prisma);
+  }
+}
+
+function resetLogin(userUuid: string | undefined, prisma: PrismaClient) {
+  if (userUuid) {
+    prisma.user.update({
+      where: {
+        uuid: userUuid,
+      },
+      data: {
+        refreshToken: null,
+        refreshTokenExpiry: null,
+        loginExpiry: null,
+      },
+    });
+  }
+}
+
 export async function updateEmail(
   email: string,
   prisma: PrismaClient,
@@ -156,7 +206,7 @@ export async function changePasswordWhenLoggedIn(
 ) {
   const oldPasswordIsValid = await argon2.verify(user.password, oldPassword);
   if (oldPasswordIsValid) {
-    const hashedPassword = await argon2.hash("password", {
+    const hashedPassword = await argon2.hash(newPassword, {
       type: argon2.argon2id,
       timeCost: 2,
       memoryCost: 15360,
@@ -168,7 +218,8 @@ export async function changePasswordWhenLoggedIn(
         password: hashedPassword,
       },
     });
-    //TODO: call logout here!
+
+    await logout({ prisma: prisma, user: user });
     return true;
   } else {
     return new BaseError({
