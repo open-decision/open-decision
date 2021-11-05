@@ -2,8 +2,9 @@ import express, { Request, Response, NextFunction } from "express";
 import { verifyAccessTokenAndGetUserUuid } from "./utils/generate-and-verifyToken";
 import { header, validationResult } from "express-validator";
 import { Api400Error, Api401Error } from "./../error-handling/api-errors";
+import { isAccessTokenBlocked } from "./utils/access-token-blocklist";
 
-const checkAuthorization = function (
+const checkAuthorization = async function (
   req: Request,
   res: Response,
   next: NextFunction
@@ -22,9 +23,22 @@ const checkAuthorization = function (
   let userUuid;
   try {
     userUuid = verifyAccessTokenAndGetUserUuid(token);
-    // If everything is okay, continue
-    res.locals.user = userUuid;
-    return next();
+    const tokenIsBlocked = await isAccessTokenBlocked(
+      token,
+      req.app.locals.prisma
+    );
+    if (!tokenIsBlocked) {
+      // If everything is okay, continue
+      res.locals.user = userUuid;
+      return next();
+    } else {
+      return next(
+        new Api401Error({
+          name: "InvalidAccessToken",
+          message: "Invalid Access Token.",
+        })
+      );
+    }
   } catch (err: any) {
     // Return error if any of the steps fails
     return next(
