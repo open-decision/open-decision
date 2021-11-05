@@ -43,7 +43,6 @@ export const NodeCreator = ({ css }: Props) => {
   }
 
   return (
-    // @ts-expect-error - Too complex Union type
     <Form
       css={css}
       onChange={({ values }) => {

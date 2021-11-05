@@ -1,92 +1,42 @@
 import React from "react";
-import { useKeyPressEvent } from "react-use";
-import {
-  IconButton,
-  keyframes,
-  styled,
-  StyleObject,
-} from "@open-legal-tech/design-system";
-import * as Collapsible from "@radix-ui/react-collapsible";
-import { ChevronLeft, ChevronRight } from "react-feather";
+import { css, StyleObject } from "@open-legal-tech/design-system";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEditor } from "features/Builder/state/useEditor";
 
-const Sidebar = styled(Collapsible.Root, {
-  overflow: "hidden",
-});
-
-const rotateLeft = keyframes({
-  from: { transform: "rotate(0deg)" },
-  to: { transform: "rotate(180deg)" },
-});
-
-const rotateRight = keyframes({
-  from: { transform: "rotate(180deg)" },
-  to: { transform: "rotate(0deg)" },
-});
-
-const ToggleButton = styled(IconButton, {
-  colorScheme: "gray",
-
-  '&[data-state="open"] > .icon': {
-    animation: `${rotateLeft} 200ms ease-in forwards`,
-  },
-
-  '&[data-state="closed"] > .icon': {
-    animation: `${rotateRight} 200ms ease-in forwards`,
-  },
-});
-
-type SidebarProps = React.ComponentProps<typeof Sidebar>;
-
-export const SidebarRoot = ({
-  children,
-  open,
-  onOpenChange,
-  ...props
-}: SidebarProps): JSX.Element => {
-  // useKeyPressEvent("Escape", () => (onOpenChange ? onOpenChange(false) : null));
-
-  return (
-    <Sidebar open={open} onOpenChange={onOpenChange} {...props}>
-      {children}
-    </Sidebar>
-  );
-};
-
-type ToggleProps = React.ComponentProps<typeof Collapsible.Trigger> & {
-  position?: "left" | "right";
-  css?: StyleObject;
-};
-export function SidebarToggle({
-  position = "left",
-  css,
-  ...props
-}: ToggleProps): JSX.Element {
-  return (
-    <Collapsible.Trigger asChild {...props}>
-      <ToggleButton
-        variant="primary"
-        css={css}
-        label="Öffne die Sidebar"
-        Icon={
-          position === "left" ? (
-            <ChevronRight className="icon" />
-          ) : (
-            <ChevronLeft className="icon" />
-          )
-        }
-      />
-    </Collapsible.Trigger>
-  );
-}
-
-export const SidebarContent = styled(Collapsible.Content, {
+const styledMotionDiv = css({
   display: "flex",
   flexDirection: "column",
+  overflowY: "auto",
+  position: "relative",
   backgroundColor: "$gray2",
   gap: "$6",
-  overflowY: "auto",
   boxShadow: "$1",
   paddingInlineEnd: "$5",
   paddingInlineStart: "calc($space$5 - 1px)",
   paddingBlock: "$6",
 });
+
+type SidebarProps = {
+  open: boolean;
+  css?: StyleObject;
+  children: React.ReactNode;
+};
+
+export const Sidebar = ({ children, open, css }: SidebarProps): JSX.Element => {
+  return (
+    <AnimatePresence exitBeforeEnter>
+      {open && (
+        <motion.div
+          key="sidebar"
+          initial={{ x: "100%" }}
+          animate={{ x: 0 }}
+          exit={{ x: "100%" }}
+          transition={{ duration: 0.3, type: "spring", bounce: 0 }}
+          className={styledMotionDiv({ css }).className}
+        >
+          {children}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};

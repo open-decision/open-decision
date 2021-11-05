@@ -4,7 +4,7 @@ import {
   styled,
   StyleObject,
 } from "@open-legal-tech/design-system";
-import { SidebarContent, SidebarRoot } from "components/Sidebar";
+import { Sidebar } from "components/Sidebar";
 import React, { useRef } from "react";
 import { NodeCreator } from "./components/NodeCreator";
 import { Node } from "./components/Node";
@@ -99,10 +99,7 @@ export const NodeEditor = ({ css }: NodeEditorProps) => {
 
   return (
     <>
-      <Container
-        ref={reactFlowWrapper}
-        css={{ zIndex: isNodeEditingSidebarOpen ? undefined : 2, ...css }}
-      >
+      <Container ref={reactFlowWrapper} css={css}>
         <ReactFlow
           className={canvasStyles().className}
           data-transition={isTransitioning}
@@ -183,26 +180,19 @@ export const NodeEditor = ({ css }: NodeEditorProps) => {
           Projekt löschen
         </Button>
       </Container>
-      <SidebarRoot
+      <Sidebar
         css={{
-          position: "relative",
-          display: "flex",
           gridRow: "2",
           gridColumn: "2",
-          paddingInlineStart: "$1",
         }}
-        onClick={(event) => event.stopPropagation()}
         open={isNodeEditingSidebarOpen}
-        onOpenChange={() => closeNodeEditingSidebar()}
       >
-        <SidebarContent css={{ width: "100%" }}>
-          {state.context.selectedNodeId ? (
-            <NodeEditingSidebar nodeId={state.context.selectedNodeId} />
-          ) : (
-            <p>Bitte wähle einen Knoten aus</p>
-          )}
-        </SidebarContent>
-      </SidebarRoot>
+        {state.context.selectedNodeId ? (
+          <NodeEditingSidebar nodeId={state.context.selectedNodeId} />
+        ) : (
+          <p>Bitte wähle einen Knoten aus</p>
+        )}
+      </Sidebar>
     </>
   );
 };
