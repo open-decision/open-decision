@@ -1,10 +1,12 @@
-import { mapObjIndexed } from "ramda";
-
 export function createAdjacencyList<
-  T extends Record<string, { relations: Record<string, { target?: string }> }>
+  T extends Record<
+    string,
+    { id: string; relations: Record<string, { target?: string }> }
+  >
 >(obj: T) {
-  return mapObjIndexed((node, key) => {
-    const list: Record<string, string[]> = {};
+  const list = {};
+
+  Object.entries(obj).forEach(([key, node]) => {
     const relations = node.relations;
     if (!list[key]) list[key] = [];
 
@@ -17,9 +19,9 @@ export function createAdjacencyList<
         list[relation.target].push(key);
       }
     });
+  });
 
-    return list[1];
-  }, obj);
+  return list;
 }
 
 export function depthFirstSearch(

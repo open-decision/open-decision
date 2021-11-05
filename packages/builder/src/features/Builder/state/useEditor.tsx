@@ -1,6 +1,5 @@
 import * as React from "react";
 import { OnLoadParams, useZoomPanHelper } from "react-flow-renderer";
-import { useStoreActions } from "react-flow-renderer";
 import { calculateCenterOfNode } from "../utilities/useCenter";
 import { sidebarWidth, transitionDuration } from "../utilities/constants";
 import { useTree } from "./useTree";
@@ -32,10 +31,6 @@ export function EditorProvider({ children }: TreeProviderProps) {
 
   const [isTransitioning, setIsTransitioning] = React.useState(false);
 
-  const setSelectedElements = useStoreActions(
-    (state) => state.setSelectedElements
-  );
-
   const { setCenter } = useZoomPanHelper();
   React.useEffect(() => {
     if (selectedNodeId) {
@@ -46,7 +41,6 @@ export function EditorProvider({ children }: TreeProviderProps) {
         selectedNodeId ? { x: sidebarWidth / 2, y: 0 } : undefined
       );
       setCenter?.(positionOfNodeFromCenter.x, positionOfNodeFromCenter.y, 1);
-      setSelectedElements([{ id: selectedNodeId }]);
     }
 
     // After the animation ends smoothPan is set back to inactive.
@@ -55,7 +49,7 @@ export function EditorProvider({ children }: TreeProviderProps) {
     }, transitionDuration);
 
     return () => clearTimeout(timer);
-  }, [selectedNodeId, setCenter, setSelectedElements, state.context.nodes]);
+  }, [selectedNodeId, setCenter, state.context.nodes]);
 
   return (
     <EditorContext.Provider

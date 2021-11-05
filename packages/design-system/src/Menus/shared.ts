@@ -26,9 +26,9 @@ export const menuItemStyles = css({
   gridTemplateColumns: "max-content 1fr",
   alignItems: "center",
   borderRadius: "$md",
-  paddingInline: "$4",
+  paddingInline: "$2",
   paddingBlock: "$2",
-  gap: "$3",
+  gap: "$2",
 
   "&:focus": {
     backgroundColor: "$colorScheme9",

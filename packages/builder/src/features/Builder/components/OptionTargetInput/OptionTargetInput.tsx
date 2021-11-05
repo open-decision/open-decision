@@ -23,7 +23,7 @@ import { useClickAway, useUnmount } from "react-use";
 import { Reorder, useDragControls } from "framer-motion";
 import { map, values } from "remeda";
 
-const StyledReorderGroup = styled(Reorder.Group, {
+const StyledReorderGroup = styled(Box, {
   listStyle: "none",
   padding: 0,
   display: "grid",
@@ -64,19 +64,19 @@ export function OptionTargetInputs({ node }: SingleSelectProps) {
       </Box>
       <StyledReorderGroup
         ref={ref}
-        axis="y"
-        values={relations}
-        onReorder={(newOrder: BuilderRelation.TRelation[]) =>
-          send({
-            type: "updateNode",
-            id: node.id,
-            node: {
-              relations: Object.fromEntries(
-                newOrder.map((relation) => [relation.id, relation])
-              ),
-            },
-          })
-        }
+        // axis="y"
+        // values={relations}
+        // onReorder={(newOrder: BuilderRelation.TRelation[]) =>
+        //   send({
+        //     type: "updateNode",
+        //     id: node.id,
+        //     node: {
+        //       relations: Object.fromEntries(
+        //         newOrder.map((relation) => [relation.id, relation])
+        //       ),
+        //     },
+        //   })
+        // }
       >
         {relations.map((relation) => (
           <OptionTargetInput
@@ -138,107 +138,107 @@ export function OptionTargetInput({
   return (
     // FIXME Open issue -> https://github.com/framer/motion/issues/1313
     // The Reorder.Item creates a stacking context which makes it impossible to have the Combobox overlap other Reorder.Items
-    <Reorder.Item
-      value={input}
-      dragListener={false}
-      dragControls={controls}
-      dragConstraints={groupRef}
+    // <Reorder.Item
+    //   value={input}
+    //   dragListener={false}
+    //   dragControls={controls}
+    //   dragConstraints={groupRef}
+    // >
+    <Form
+      onChange={({ values }) => onChange(values)}
+      initialValues={{
+        answer: input.answer ?? "",
+        target: input.target ?? "",
+      }}
+      css={{
+        display: "flex",
+        position: "relative",
+      }}
     >
-      <Form
-        onChange={({ values }) => onChange(values)}
-        initialValues={{
-          answer: input.answer ?? "",
-          target: input.target ?? "",
-        }}
+      <Box
+        onClick={() => send({ type: "selectRelation", id: input.id })}
+        ref={ref}
         css={{
-          display: "flex",
-          position: "relative",
+          flex: 1,
+          display: "grid",
+          gridTemplateColumns: "max-content 1fr",
+          border: "1px solid $gray8",
+          borderRadius: "$md",
+          backgroundColor: "$gray1",
         }}
       >
-        <Box
-          onClick={() => send({ type: "selectRelation", id: input.id })}
-          ref={ref}
+        <Input
           css={{
-            flex: 1,
-            display: "grid",
-            gridTemplateColumns: "max-content 1fr",
-            border: "1px solid $gray8",
-            borderRadius: "$md",
-            backgroundColor: "$gray1",
+            borderRadius: "0",
+            borderTopLeftRadius: "inherit",
+            borderTopRightRadius: "inherit",
+            gridColumn: "1 / -1",
+            borderBottom: "inherit",
+            margin: "-1px",
+            marginBottom: 0,
           }}
-        >
-          <Input
-            css={{
-              borderRadius: "0",
-              borderTopLeftRadius: "inherit",
-              borderTopRightRadius: "inherit",
-              gridColumn: "1 / -1",
-              borderBottom: "inherit",
-              margin: "-1px",
-              marginBottom: 0,
-            }}
-            name="answer"
-            placeholder="Antwort"
-          />
-          <NodeLink target={input.target} />
-          <Combobox.Root
-            name="target"
-            onCreate={(name) => {
-              const newNode = BuilderNode.createNewAssociatedNode(node, {
-                name,
-              });
-              send([
-                {
-                  type: "addNode",
-                  value: newNode,
+          name="answer"
+          placeholder="Antwort"
+        />
+        <NodeLink target={input.target} />
+        <Combobox.Root
+          name="target"
+          onCreate={(name) => {
+            const newNode = BuilderNode.createNewAssociatedNode(node, {
+              name,
+            });
+            send([
+              {
+                type: "addNode",
+                value: newNode,
+              },
+              {
+                type: "updateRelation",
+                nodeId: node.id,
+                relationId: input.id,
+                relation: {
+                  target: newNode.id,
                 },
-                {
-                  type: "updateRelation",
-                  nodeId: node.id,
-                  relationId: input.id,
-                  relation: {
-                    target: newNode.id,
-                  },
-                },
-              ]);
+              },
+            ]);
 
-              return { id: newNode.id, label: newNode.name };
+            return { id: newNode.id, label: newNode.name };
+          }}
+          items={nodeOptions}
+        >
+          <Combobox.Input
+            menuCss={{
+              backgroundColor: "$gray1",
+              "&[data-state='open']": { border: "1px solid $gray8" },
             }}
-            items={nodeOptions}
           >
-            <Combobox.Input
-              menuCss={{
-                backgroundColor: "$gray1",
-                "&[data-state='open']": { border: "1px solid $gray8" },
-              }}
-            >
-              <Input
-                name="target"
-                placeholder="Zielknoten auswählen"
-                css={{ border: 0, borderRadius: 0 }}
-              />
-            </Combobox.Input>
-          </Combobox.Root>
-        </Box>
-        <IconButton
-          css={{ colorScheme: "error" }}
-          variant="ghost"
-          size="small"
-          label="Entferne den Input"
-          Icon={<Trash />}
-          type="button"
-          onClick={() => onDelete(input.id)}
-        />
-        <IconButton
-          variant="ghost"
-          size="small"
-          label="Entferne den Input"
-          type="button"
-          Icon={<DragHandle />}
-          onPointerDown={(event) => controls.start(event)}
-        />
-      </Form>
-    </Reorder.Item>
+            <Input
+              name="target"
+              placeholder="Zielknoten auswählen"
+              css={{ border: 0, borderRadius: 0 }}
+            />
+          </Combobox.Input>
+        </Combobox.Root>
+      </Box>
+      <IconButton
+        css={{ colorScheme: "error" }}
+        variant="ghost"
+        size="small"
+        label="Entferne den Input"
+        Icon={<Trash />}
+        type="button"
+        onClick={() => onDelete(input.id)}
+      />
+      <IconButton
+        variant="ghost"
+        size="small"
+        label="Entferne den Input"
+        type="button"
+        Icon={<DragHandle />}
+        onPointerDown={(event) => controls.start(event)}
+      />
+    </Form>
+    // </Reorder.Item>
   );
 }
 

@@ -8,6 +8,7 @@ import {
   Form,
   darkTheme,
   InlineInput,
+  Label,
 } from "@open-legal-tech/design-system";
 import { usePartOfTree } from "features/Builder/state/useTree";
 
@@ -19,8 +20,8 @@ const Container = styled("div", {
 const Content = styled("header", {
   display: "flex",
   alignItems: "center",
-  justifyContent: "space-between",
   height: "100%",
+  gap: "$6",
   $color: "$colors$gray1",
 });
 
@@ -32,13 +33,6 @@ export const BaseHeader = ({ children, css }: BaseHeaderProps) => {
       <Content>
         <Logo css={{ width: "40px", height: "40px" }} />
         <Box css={{ display: "flex", alignItems: "center", color: "$gray11" }}>
-          <Text
-            as="h2"
-            size="medium"
-            css={{ color: "inherit", fontWeight: 600 }}
-          >
-            Projekt:
-          </Text>
           {children}
         </Box>
         <Box />
@@ -56,6 +50,15 @@ export const EditorHeader: React.FC<HeaderProps> = ({ css }) => {
 
   return (
     <BaseHeader css={css}>
+      {treeName ? (
+        <Label
+          htmlFor="projectName"
+          size="medium"
+          css={{ color: "inherit", fontWeight: 600 }}
+        >
+          Projekt:
+        </Label>
+      ) : null}
       <Form
         onChange={({ values }) =>
           send({
@@ -67,7 +70,11 @@ export const EditorHeader: React.FC<HeaderProps> = ({ css }) => {
         }
         initialValues={{ projectName: treeName ?? "" }}
       >
-        <InlineInput css={{ color: "inherit" }} name="projectName" />
+        <InlineInput
+          css={{ color: "inherit" }}
+          name="projectName"
+          id="projectName"
+        />
       </Form>
     </BaseHeader>
   );

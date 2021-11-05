@@ -20,7 +20,7 @@ export const getParents =
           values,
           reduce((acc: string[], relation) => {
             if (relation.target != null && relation.target === id)
-              return [...acc, relation.target];
+              return [...acc, node.id];
 
             return acc;
           }, [])

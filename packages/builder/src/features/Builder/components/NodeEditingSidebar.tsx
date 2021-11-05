@@ -38,7 +38,7 @@ export function NodeEditingSidebar({
         >
           <Field label="Knotenname" css={{ color: "$gray11" }}>
             <Input
-              css={{ fontWeight: 500, backgroundColor: "$gray1" }}
+              css={{ backgroundColor: "$gray1" }}
               name="nodeName"
               maxLength={70}
             />
@@ -91,18 +91,20 @@ export function NodeEditingSidebar({
               flexWrap: "wrap",
             }}
           >
-            {Object.values(parentNodes).map((parentNode) => (
-              <Button
-                size="small"
-                variant="tertiary"
-                key={parentNode.id}
-                onClick={() =>
-                  send({ type: "selectNode", nodeId: parentNode.id })
-                }
-              >
-                {parentNode.name}
-              </Button>
-            ))}
+            {Object.values(parentNodes).map((parentNode) => {
+              return (
+                <Button
+                  size="small"
+                  variant="tertiary"
+                  key={parentNode.id}
+                  onClick={() =>
+                    send({ type: "selectNode", nodeId: parentNode.id })
+                  }
+                >
+                  {parentNode.name}
+                </Button>
+              );
+            })}
           </Box>
         </Box>
       ) : null}

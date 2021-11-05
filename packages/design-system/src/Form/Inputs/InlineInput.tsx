@@ -108,12 +108,12 @@ export const InlineInput = React.forwardRef<HTMLInputElement, InlineInputProps>(
       submitting,
     } = useInput(name, "string");
 
-    const defaultValidationmessages = {
-      required: "The field is required and can't be empty",
-      minLength: `Please enter at least ${minLength} chars.`,
-      regex: `The input doesn't fulfill the requirements.`,
-      maxLength: `You've reached the maximum allowed characters (${maxLength}).`,
-    };
+    // const defaultValidationmessages = {
+    //   required: "The field is required and can't be empty",
+    //   minLength: `Please enter at least ${minLength} chars.`,
+    //   regex: `The input doesn't fulfill the requirements.`,
+    //   maxLength: `You've reached the maximum allowed characters (${maxLength}).`,
+    // };
 
     useKey("Enter", () => dispatch({ type: "endEditing" }));
     useKey(
@@ -126,46 +126,33 @@ export const InlineInput = React.forwardRef<HTMLInputElement, InlineInputProps>(
       [state]
     );
 
-    React.useEffect(() => {
-      const validate = (inputValue: string) => {
-        const errors: string[] = [];
+    // const validate = (inputValue: string) => {
+    //   const errors: string[] = [];
 
-        if (required && inputValue.length === 0) {
-          errors.push(defaultValidationmessages.required);
-        }
+    //   if (required && inputValue.length === 0) {
+    //     errors.push(defaultValidationmessages.required);
+    //   }
 
-        if (minLength && inputValue.length < minLength) {
-          errors.push(defaultValidationmessages.minLength);
-        }
+    //   if (minLength && inputValue.length < minLength) {
+    //     errors.push(defaultValidationmessages.minLength);
+    //   }
 
-        if (regex && !new RegExp(regex).test(inputValue)) {
-          errors.push(defaultValidationmessages.regex);
-        }
+    //   if (regex && !new RegExp(regex).test(inputValue)) {
+    //     errors.push(defaultValidationmessages.regex);
+    //   }
 
-        if (maxLength && inputValue.length === maxLength) {
-          errors.push(defaultValidationmessages.maxLength);
-        }
+    //   if (maxLength && inputValue.length === maxLength) {
+    //     errors.push(defaultValidationmessages.maxLength);
+    //   }
 
-        return errors;
-      };
+    //   return errors;
+    // };
 
-      if (blur || submitting) {
-        setErrors(validate(value ?? ""));
-      }
-    }, [
-      value,
-      blur,
-      submitting,
-      setErrors,
-      required,
-      minLength,
-      regex,
-      maxLength,
-      defaultValidationmessages.required,
-      defaultValidationmessages.minLength,
-      defaultValidationmessages.regex,
-      defaultValidationmessages.maxLength,
-    ]);
+    // React.useEffect(() => {
+    //   if (blur || submitting) {
+    //     setErrors(validate(value ?? ""));
+    //   }
+    // }, [value, blur, submitting, validate, setErrors]);
 
     React.useEffect(() => {
       if (isEditing) {

@@ -163,7 +163,7 @@ export const NodeEditor = ({ css }: NodeEditorProps) => {
           css={{
             position: "absolute",
             top: "20px",
-            left: "20px",
+            left: "$space$4",
           }}
         />
         <Button

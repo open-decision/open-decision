@@ -72,11 +72,11 @@ export function Input({ children, css, menuCss }: ComboboxInputProps) {
           backgroundColor: "$gray2",
           marginTop: "$1",
           borderRadius: "$md",
-          display: "grid",
           gap: "$1",
           overflowY: "auto",
           zIndex: 1,
           boxShadow: "$2",
+          display: inputItems.length > 0 ? "grid" : "none",
           ...menuCss,
         }}
       >

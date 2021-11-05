@@ -6,6 +6,7 @@ import {
   StyleObject,
   Input,
   useCombobox,
+  Box,
 } from "@open-legal-tech/design-system";
 import { Plus } from "react-feather";
 import { useCenter } from "../utilities/useCenter";
@@ -43,6 +44,7 @@ export const NodeCreator = ({ css }: Props) => {
   }
 
   return (
+    // @ts-expect-error - complex union type
     <Form
       css={css}
       onChange={({ values }) => {
@@ -73,13 +75,12 @@ const NodeCreatorInput = ({ createHandler }) => {
   const { isCreating, inputValue, setInputValue } = useCombobox();
 
   return (
-    <>
+    <Box css={{ display: "flex", gap: "$2" }}>
       <Combobox.Input css={{ backgroundColor: "$gray1", zIndex: "5" }}>
-        <Input name="search" size="large" />
+        <Input name="search" />
       </Combobox.Input>
 
       <IconButton
-        size="large"
         css={{ boxShadow: "$1" }}
         label="Füge einen neuen Knoten hinzu"
         onDragStart={(event) => onDragStart(event)}
@@ -92,6 +93,6 @@ const NodeCreatorInput = ({ createHandler }) => {
         draggable
         Icon={<Plus style={{ width: "30px", height: "30px" }} />}
       />
-    </>
+    </Box>
   );
 };

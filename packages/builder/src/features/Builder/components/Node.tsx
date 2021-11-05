@@ -97,7 +97,11 @@ export const Node = memo(({ id, data }: NodeProps<NodeData>) => {
               css={{ colorScheme: "error" }}
               onSelect={() => send({ type: "deleteNode", ids: [id] })}
             >
-              <Icon label="Löschen Icon" css={{ padding: 0 }}>
+              <Icon
+                label="Löschen Icon"
+                size="small"
+                css={{ $$paddingInline: 0 }}
+              >
                 <Trash />
               </Icon>
               Node löschen
