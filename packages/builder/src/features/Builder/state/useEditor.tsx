@@ -30,12 +30,12 @@ export function EditorProvider({ children }: TreeProviderProps) {
   >();
 
   const [isTransitioning, setIsTransitioning] = React.useState(false);
+  const position = state.context.nodes?.[selectedNodeId]?.position;
 
   const { setCenter } = useZoomPanHelper();
   React.useEffect(() => {
     if (selectedNodeId) {
       setIsTransitioning(true);
-      const position = state.context.nodes[selectedNodeId].position;
       const positionOfNodeFromCenter = calculateCenterOfNode(
         position,
         selectedNodeId ? { x: sidebarWidth / 2, y: 0 } : undefined
@@ -49,7 +49,7 @@ export function EditorProvider({ children }: TreeProviderProps) {
     }, transitionDuration);
 
     return () => clearTimeout(timer);
-  }, [selectedNodeId, setCenter, state.context.nodes]);
+  }, [position, selectedNodeId, setCenter]);
 
   return (
     <EditorContext.Provider

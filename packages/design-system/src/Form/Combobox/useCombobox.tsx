@@ -17,7 +17,7 @@ type Context = {
   selectedItem: Item | null;
   isOpen: boolean;
   inputItems: Item[];
-  resetState: () => void;
+  reset: () => void;
   isCreating: boolean;
   setInputValue: (inputValue: string) => void;
   propGetters: {

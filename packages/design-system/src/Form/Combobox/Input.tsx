@@ -19,7 +19,7 @@ export function Input({ children, css, menuCss }: ComboboxInputProps) {
     isOpen,
     highlightedIndex,
     inputItems,
-    resetState,
+    reset,
     propGetters: {
       getInputProps,
       getComboboxProps,
@@ -46,7 +46,7 @@ export function Input({ children, css, menuCss }: ComboboxInputProps) {
             focusStyle: "inner",
             opacity: inputValue ? 1 : "0 !important",
           }}
-          onClick={() => resetState()}
+          onClick={() => reset()}
         />
       ),
     });

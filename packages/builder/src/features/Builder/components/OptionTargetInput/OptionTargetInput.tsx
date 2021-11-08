@@ -122,6 +122,11 @@ export function OptionTargetInput({
 }: SingleSelectInputProps): JSX.Element {
   const [tree, send] = usePartOfTree((state) => state.context);
   const node = useNode(nodeId);
+  const allOptions = pipe(
+    tree.nodes,
+    values,
+    map((node) => ({ id: node.id, label: node.name }))
+  );
   const nodeOptions = pipe(
     BuilderTree.getConnectableNodes(node)(tree),
     values,
@@ -187,6 +192,7 @@ export function OptionTargetInput({
             const newNode = BuilderNode.createNewAssociatedNode(node, {
               name,
             });
+
             send([
               {
                 type: "addNode",
@@ -204,7 +210,8 @@ export function OptionTargetInput({
 
             return { id: newNode.id, label: newNode.name };
           }}
-          items={nodeOptions}
+          items={allOptions}
+          subsetOfItems={nodeOptions}
         >
           <Combobox.Input
             menuCss={{

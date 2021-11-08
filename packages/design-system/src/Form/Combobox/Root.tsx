@@ -16,6 +16,7 @@ const fallbackSelectedItem = {
 export type ComboboxRootProps = {
   css?: StyleObject;
   items: Item[];
+  subsetOfItems?: Item[];
   onReset?: () => void;
   onCreate?: (itemLabel: string) => Item;
   onInputValueChange?: (inputValue: string) => void;
@@ -33,7 +34,7 @@ export type ComboboxRootProps = {
 export function Root({
   css,
   items,
-  onReset,
+  subsetOfItems,
   onCreate,
   onInputValueChange,
   onIsCreatingChange,
@@ -41,8 +42,12 @@ export function Root({
   children,
   name,
 }: ComboboxRootProps) {
-  const [inputItems, setInputItems] = React.useState(items);
+  const itemSubset = subsetOfItems ?? items;
+  const [inputItems, setInputItems] = React.useState(itemSubset);
   const { value, setValue } = useInput(name, "string");
+  const [selectedItem, setSelectedItem] = React.useState(
+    inputItems.find((item) => item.id === value) ?? fallbackSelectedItem
+  );
 
   const cleanLabel = (label: string) => label.replace("Erstelle ", "");
 
@@ -60,6 +65,7 @@ export function Root({
   const validIsCreating = (isCreating: boolean) => {
     return onCreate != null ? isCreating : false;
   };
+
   // ------------------------------------------------------------------
 
   const {
@@ -70,35 +76,39 @@ export function Root({
     getLabelProps,
     getToggleButtonProps,
     highlightedIndex,
-    selectedItem,
     getItemProps,
     reset,
     inputValue,
     setInputValue,
   } = useComboboxPrimitive({
     items: inputItems,
-    defaultSelectedItem: !resetOnBlur
-      ? items.find((item) => item.id === value)
-      : null,
-
+    selectedItem,
     itemToString: (item) => cleanLabel(item?.label ?? ""),
+    onSelectedItemChange: (changes) => {
+      if (isCreating && (changes.inputValue?.length ?? 0) > 0 && onCreate) {
+        const newItem = onCreate(cleanLabel(changes.selectedItem?.label ?? ""));
+        setSelectedItem(newItem);
+        return setValue(newItem.id);
+      }
 
+      setSelectedItem(changes.selectedItem ?? fallbackSelectedItem);
+      return setValue(changes.selectedItem?.id ?? fallbackSelectedItem.id);
+    },
     onInputValueChange: ({ inputValue }) => {
-      const filteredItems = matchSorter(items, inputValue ?? "", {
+      const filteredItems = matchSorter(itemSubset, inputValue ?? "", {
         keys: ["label"],
       });
 
       const nonEmptyInputValue = (inputValue?.length ?? 0) > 0;
       const emptyFilteredItems = filteredItems.length === 0;
-      const nonEqualInputValueAndFilteredItem = filteredItems.some(
-        (filteredItem) => {
-          return filteredItem.label !== inputValue;
-        }
-      );
+      const nonEqualInputValueAndFilteredItem = items.some((item) => {
+        return item.label !== inputValue?.trim();
+      });
 
       const isCreating = validIsCreating(
         nonEmptyInputValue &&
-          (emptyFilteredItems || nonEqualInputValueAndFilteredItem)
+          emptyFilteredItems &&
+          nonEqualInputValueAndFilteredItem
       );
 
       if (isCreating)
@@ -111,22 +121,7 @@ export function Root({
       setInputItems(filteredItems);
       onInputValueChange?.(inputValue ?? "");
     },
-
-    onSelectedItemChange: (changes) => {
-      if (isCreating && (changes.inputValue?.length ?? 0) > 0 && onCreate) {
-        const newItem = onCreate(cleanLabel(changes.selectedItem?.label ?? ""));
-        return setValue(newItem.id);
-      }
-
-      return setValue(changes.selectedItem?.id ?? fallbackSelectedItem.id);
-    },
   });
-
-  const resetState = () => {
-    onReset?.();
-    reset();
-    updateIsCreating(false);
-  };
 
   const ref = React.useRef<HTMLDivElement | null>(null);
   useClickAway(
@@ -153,7 +148,7 @@ export function Root({
         highlightedIndex,
         selectedItem,
         isOpen,
-        resetState,
+        reset,
         setInputValue,
         isCreating,
         propGetters: {

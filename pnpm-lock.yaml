@@ -205,6 +205,7 @@ importers:
       '@svgr/cli': ^5.5.0
       '@types/react': ^17.0.27
       '@types/react-dom': ^17.0.9
+      '@xstate/react': ^1.6.1
       cross-env: ^7.0.3
       downshift: ^6.1.7
       glob: ^7.2.0
@@ -218,6 +219,7 @@ importers:
       typescript: ^4.4.4
       utility-types: ^3.10.0
       vite: ^2.6.13
+      xstate: ^4.25.0
     dependencies:
       '@radix-ui/colors': 0.1.7
       '@radix-ui/react-accessible-icon': 0.1.1_react@17.0.2
@@ -232,10 +234,12 @@ importers:
       '@radix-ui/react-toggle-group': 0.1.1_react@17.0.2
       '@radix-ui/react-tooltip': 0.1.1_react-dom@17.0.2+react@17.0.2
       '@stitches/react': 1.2.5_react@17.0.2
+      '@xstate/react': 1.6.1_17156a311e46b4f972708934c5250ac1
       downshift: 6.1.7_react@17.0.2
       match-sorter: 6.3.1
       react-feather: 2.0.9_react@17.0.2
       react-use: 17.3.1_react-dom@17.0.2+react@17.0.2
+      xstate: 4.25.0
     devDependencies:
       '@fontsource/poppins': 4.5.0
       '@svgr/cli': 5.5.0
