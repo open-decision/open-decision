@@ -1,5 +1,12 @@
 {
-  "files.exclude": { "**/node_modules": true, "**/node_modules.*": true },
-  "conventionalCommits.scopes": ["builder", "type-classes", "design-system"],
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/node_modules.*": true
+  },
+  "conventionalCommits.scopes": [
+    "builder",
+    "type-classes",
+    "design-system"
+  ],
   "typescript.tsdk": "node_modules/typescript/lib"
 }

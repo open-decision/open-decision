@@ -10,7 +10,7 @@ export default {
 
 const ButtonGrid: Story<Omit<ButtonProps, "css">> = (props) => (
   <Box css={{ display: "grid", gap: "$2", width: "max-content" }}>
-    <Button size="small" {...props} />,
+    <Button size="small" {...props} />
     <Button {...props} />
     <Button size="large" {...props} />
     <Button size="small" disabled {...props} />

@@ -1,8 +1,7 @@
 import { alignByContent } from "../stitches/utils";
-import { styled } from "../stitches";
+import { styled, css } from "../stitches";
 
-export type ButtonProps = React.ComponentProps<typeof Button>;
-export const Button = styled("button", {
+export const buttonStyles = css({
   $$borderWidth: "1px",
   $$paddingInline: "$space$6",
   $$paddingBlock: "$space$3",
@@ -159,3 +158,6 @@ export const Button = styled("button", {
     pressable: true,
   },
 });
+
+export type ButtonProps = React.ComponentProps<typeof Button>;
+export const Button = styled("button", buttonStyles);

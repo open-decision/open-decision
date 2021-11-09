@@ -27,7 +27,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "declaration": false
+    "declaration": false,
+    "composite": true
   },
   "include": ["src"],
   "exclude": ["node_modules"],

@@ -1,16 +1,13 @@
 import * as React from "react";
 import { Meta, Story } from "@storybook/react";
 import { Field, Form, Textarea } from "@open-legal-tech/design-system";
-import { VariantProps } from "@stitches/react";
 
 export default {
   component: Textarea,
   title: "Components/Inputs/Textarea",
 } as Meta;
 
-type Props = VariantProps<typeof Textarea>;
-
-export const Input: Story<Props> = (props) => (
+export const Input: Story = (props) => (
   <Form
     initialValues={{
       test: "",

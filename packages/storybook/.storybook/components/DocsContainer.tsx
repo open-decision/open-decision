@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { DocsContainer as BaseContainer } from "@storybook/addon-docs/blocks";
 import { useDarkMode } from "storybook-dark-mode";
 import { themes } from "@storybook/theming";

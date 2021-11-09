@@ -6,12 +6,10 @@ import { iconSizes } from "./shared";
 
 const StyledIcon = styled("span", {
   $$iconSize: "0px",
-  paddingInline: "$$paddingInline",
   transform: "translate($$XTranslation)",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  minWidth: "calc($$iconSize + $$paddingInline)",
 
   "&[data-active='true'] > svg": {
     stroke: "$primary10",
