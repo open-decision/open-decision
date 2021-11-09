@@ -38,6 +38,7 @@
     "@radix-ui/react-accessible-icon": "^0.1.0",
     "@radix-ui/react-checkbox": "^0.1.0",
     "@radix-ui/react-collapsible": "^0.1.0",
+    "@radix-ui/react-dialog": "^0.1.1",
     "@radix-ui/react-dropdown-menu": "^0.1.1",
     "@radix-ui/react-radio-group": "^0.1.0",
     "@radix-ui/react-toggle": "^0.1.1",
@@ -49,10 +50,10 @@
     "react-use": "^17.3.1"
   },
   "peerDependencies": {
-    "remeda": "^0.0.30",
     "@fontsource/poppins": "^4.5.0",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "remeda": "^0.0.30"
   },
   "devDependencies": {
     "@fontsource/poppins": "^4.5.0",

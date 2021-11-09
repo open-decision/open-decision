@@ -194,6 +194,7 @@ importers:
       '@radix-ui/react-checkbox': ^0.1.0
       '@radix-ui/react-collapsible': ^0.1.0
       '@radix-ui/react-context-menu': ^0.1.1
+      '@radix-ui/react-dialog': ^0.1.1
       '@radix-ui/react-dropdown-menu': ^0.1.1
       '@radix-ui/react-radio-group': ^0.1.0
       '@radix-ui/react-toggle': ^0.1.1
@@ -220,6 +221,7 @@ importers:
       '@radix-ui/react-accessible-icon': 0.1.1_react@17.0.2
       '@radix-ui/react-checkbox': 0.1.1_react@17.0.2
       '@radix-ui/react-collapsible': 0.1.1_react@17.0.2
+      '@radix-ui/react-dialog': 0.1.1_14fc3c4d570feae7d722fbbd1b906730
       '@radix-ui/react-dropdown-menu': 0.1.1_14fc3c4d570feae7d722fbbd1b906730
       '@radix-ui/react-radio-group': 0.1.1_react@17.0.2
       '@radix-ui/react-toggle': 0.1.1_react@17.0.2
