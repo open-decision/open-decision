@@ -1,6 +1,6 @@
 {
   "name": "@open-legal-tech/design-system",
-  "version": "0.20.0",
+  "version": "0.20.1",
   "main": "./src/index.ts",
   "module": "./src/index.ts",
   "types": "./src/index.ts",
@@ -14,7 +14,14 @@
   "publishConfig": {
     "main": "./lib/index.cjs",
     "module": "./lib/index.mjs",
-    "typings": "./lib/index.d.ts"
+    "typings": "./lib/index.d.ts",
+    "exports": {
+      ".": {
+        "import": "./src/index.mjs",
+        "require": "./src/index.cjs",
+        "types": "./src/index.d.ts"
+      }
+    }
   },
   "files": [
     "/lib",
