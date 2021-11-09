@@ -15,7 +15,6 @@
     },
     "incremental": true,
     "allowJs": true,
-    "noEmit": true,
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "skipLibCheck": true,
@@ -27,8 +26,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "declaration": false,
-    "composite": true
+    "composite": true,
+    "noEmit": false
   },
   "include": ["src"],
   "exclude": ["node_modules"],

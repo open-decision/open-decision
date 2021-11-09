@@ -16,11 +16,11 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
-    "baseUrl": ".",
-    "downlevelIteration": true
+    "baseUrl": "./packages",
+    "downlevelIteration": true,
+    "composite": true
   },
-  "include": ["src"],
-  "exclude": ["**/node_modules/**", "plugins"],
+  "exclude": ["node_modules", "plugins"],
   "references": [
     { "path": "./packages/design-system" },
     { "path": "./packages/type-classes" },
