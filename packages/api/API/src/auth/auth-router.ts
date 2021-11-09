@@ -1,18 +1,20 @@
-import express, { response } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import { body, cookie, validationResult } from "express-validator";
 import {
   signup,
   login,
   logout,
+  refreshAndStoreNewToken,
   requestPasswordResetMail,
   resetPasswordWithCode,
-  refreshAndStoreNewToken,
+  changePasswordWhenLoggedIn,
+  updateEmail,
 } from "./auth-functions";
 import { Api400Error } from "../error-handling/api-errors";
 import isJWT from "validator/lib/isJWT";
 import isUUID from "validator/lib/isUUID";
 import { LogoutInterface } from "./types/auth-interfaces";
-
+import { isAuthorized } from "./authentication-middleware";
 export const authRouter = express.Router();
 
 //Base routes
@@ -23,7 +25,7 @@ authRouter.post(
     "password",
     "The password must be at least 8 characters and at most 100 characters long."
   ).isLength({ min: 8, max: 100 }),
-  async (req, res, next) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return next(
@@ -38,7 +40,7 @@ authRouter.post(
     signupResult = await signup(
       req.body.email,
       req.body.password,
-      req.app.locals.prisma
+      req.app.locals.prisma!
     );
 
     if (signupResult instanceof Error) {
@@ -72,7 +74,7 @@ authRouter.post(
 authRouter.post(
   "/login",
   body("email", "Invalid E-Mail address.").isEmail().normalizeEmail().trim(),
-  async (req, res, next) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return next(
@@ -87,7 +89,7 @@ authRouter.post(
     const loginResult = await login(
       req.body.email,
       req.body.password,
-      req.app.locals.prisma
+      req.app.locals.prisma!
     );
     if (loginResult instanceof Error) {
       return next(
@@ -113,27 +115,30 @@ authRouter.post(
   }
 );
 
-authRouter.post("/logout", async (req, res, next) => {
-  const accessToken = req.headers.authorization;
-  const refreshToken = req.cookies.refreshCookie;
+authRouter.post(
+  "/logout",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const accessToken = req.headers.authorization;
+    const refreshToken = req.cookies.refreshCookie;
 
-  const logoutData: LogoutInterface = {
-    prisma: req.app.locals.prisma,
-  };
+    const logoutData: LogoutInterface = {
+      prisma: req.app.locals.prisma!,
+    };
 
-  if (accessToken && isJWT(accessToken)) {
-    logoutData.accessToken = accessToken;
+    if (accessToken && isJWT(accessToken)) {
+      logoutData.accessToken = accessToken;
+    }
+
+    if (refreshToken && isUUID(refreshToken)) {
+      logoutData.refreshToken = refreshToken;
+    }
+    //There is no real failing here. If the accessToken is still valid, it's blacklisted. If it's invalid, we don't do anything.
+    //If the refreshToken is valid, it's being deleted from the database. If not, we don't do anything.
+
+    await logout(logoutData);
+    res.json({ status: "ok" });
   }
-
-  if (refreshToken && isUUID(refreshToken)) {
-    logoutData.refreshToken = refreshToken;
-  }
-  //There is no real failing here. If the accessToken is still valid, it's blacklisted. If it's invalid, we don't do anything.
-  //If the refreshToken is valid, it's being deleted from the database. If not, we don't do anything.
-
-  await logout(logoutData);
-  res.json({ status: "ok" });
-});
+);
 
 authRouter.post(
   "/refresh",
@@ -142,7 +147,7 @@ authRouter.post(
     "Didn't find a valid refreshToken in the refreshCookie."
   ).isUUID(4),
 
-  async (req, res, next) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return next(
@@ -157,7 +162,7 @@ authRouter.post(
 
       const refreshHandlerReturn = await refreshAndStoreNewToken(
         refreshToken,
-        req.app.locals.prisma
+        req.app.locals.prisma!
       );
 
       if (refreshHandlerReturn instanceof Error) {
@@ -188,17 +193,83 @@ authRouter.post(
 );
 
 //Methods which require the user to be signed in
-authRouter.get("/profile", async (req, res, next) => {});
+authRouter.get(
+  "/profile",
+  isAuthorized,
+  async (req: Request, res: Response, next: NextFunction) => {}
+);
 
-authRouter.post("/settings/password", async (req, res, next) => {});
+authRouter.post(
+  "/settings/password",
+  isAuthorized,
+  body("oldPassword", "The old password seems to be invalid..").isLength({
+    min: 8,
+    max: 100,
+  }),
+  body(
+    "newPassword",
+    "The new password must be at least 8 characters and at most 100 characters long."
+  ).isLength({ min: 8, max: 100 }),
+  async (req: Request, res: Response, next: NextFunction) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return next(
+        new Api400Error({
+          name: "InvalidPassword",
+          message: "The old or new password is in an invalid format.",
+          additionalErrorData: errors.array(),
+        })
+      );
+    } else {
+      //Even though the user is already signed-in, we want to request the password again
+      //to prevent abuse by a third party using a logged-in account
+      const result = changePasswordWhenLoggedIn(
+        req.body.oldPassword,
+        req.body.newPassword,
+        res.locals.userUuid!,
+        req.app.locals.prisma!
+      );
+    }
+  }
+);
 
-authRouter.post("/settings/email", async (req, res, next) => {});
+authRouter.post(
+  "/settings/email",
+  isAuthorized,
+  body("email", "Invalid E-Mail address.").isEmail().normalizeEmail().trim(),
+  async (req: Request, res: Response, next: NextFunction) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return next(
+        new Api400Error({
+          name: "InvalidEmail",
+          message: "Missing or incorrect email data.",
+          additionalErrorData: errors.array(),
+        })
+      );
+    } else {
+      const result = await updateEmail(
+        req.body.email,
+        res.locals.userUuid!,
+        req.app.locals.prisma!
+      );
+      if (result instanceof Api400Error) {
+        return next(result);
+      } else {
+        res.json({
+          message: `E-Mail was changed to ${result}`,
+          status: "ok",
+        });
+      }
+    }
+  }
+);
 
 //Reset password routes
 authRouter.post(
   "/request-password-reset/",
   body("email", "Invalid E-Mail address.").isEmail().normalizeEmail().trim(),
-  async (req, res, next) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return next(
@@ -209,7 +280,7 @@ authRouter.post(
         })
       );
     } else {
-      requestPasswordResetMail(req.body.email, req.app.locals.prisma);
+      requestPasswordResetMail(req.body.email, req.app.locals.prisma!);
       res.json({
         message:
           "If this account exists in our database, we will send you an e-mail to reset your password.",
@@ -230,7 +301,7 @@ authRouter.post(
   )
     .isString()
     .isLength({ min: 8, max: 100 }),
-  async (req, res, next) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return next(
@@ -245,7 +316,7 @@ authRouter.post(
     const newPassword: string = req.body.newPassword;
     if (resetCode) {
       try {
-        resetPasswordWithCode(newPassword, resetCode, req.app.locals.prisma);
+        resetPasswordWithCode(newPassword, resetCode, req.app.locals.prisma!);
         res.json({
           message:
             "You're password has been reset. You can now log-in with your new password.",

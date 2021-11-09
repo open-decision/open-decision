@@ -9,6 +9,7 @@
     "rootDir": ".",
     "outDir": "dist",
     "sourceMap": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "typeRoots": ["./src/types", "./node_modules/@types"]
   }
 }

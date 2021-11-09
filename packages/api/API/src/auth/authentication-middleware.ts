@@ -25,11 +25,11 @@ const checkAuthorization = async function (
     userUuid = verifyAccessTokenAndGetUserUuid(token);
     const tokenIsBlocked = await isAccessTokenBlocked(
       token,
-      req.app.locals.prisma
+      req.app.locals.prisma!
     );
     if (!tokenIsBlocked) {
       // If everything is okay, continue
-      res.locals.user = userUuid;
+      res.locals.userUuid = userUuid;
       return next();
     } else {
       return next(

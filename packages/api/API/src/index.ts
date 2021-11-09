@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import { PrismaClient } from "@prisma/client";
-import express, { Request, Response } from "express";
+import express, { Request, Response, NextFunction } from "express";
+
 import { graphqlHTTP } from "express-graphql";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
@@ -65,7 +66,7 @@ app.use(
       return {
         ...req,
         prisma,
-        userUuid: res.locals.user,
+        userUuid: res.locals.userUuid,
       };
     },
   }))

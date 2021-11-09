@@ -16,6 +16,7 @@ import {
 } from "./utils/generate-and-verifyToken";
 import { blockAccessToken } from "./utils/access-token-blocklist";
 import { LogoutInterface } from "./types/auth-interfaces";
+import { UUID } from "../types/uuid-class";
 
 export async function signup(
   email: string,
@@ -167,13 +168,13 @@ function resetLogin(userUuid: string | undefined, prisma: PrismaClient) {
 
 export async function updateEmail(
   email: string,
-  prisma: PrismaClient,
-  user: User
+  userUuid: UUID,
+  prisma: PrismaClient
 ) {
   //TODO: verify that e-mail is valid and lowercase, check authentication
   try {
     const updatedUser = await prisma.user.update({
-      where: { uuid: user.uuid },
+      where: { uuid: userUuid.toString() },
       data: {
         email: email,
       },
@@ -202,26 +203,36 @@ export async function changePasswordWhenLoggedIn(
   //TODO: verify password, check authentication
   oldPassword: string,
   newPassword: string,
-  prisma: PrismaClient,
-  user: User
+  userUuid: UUID,
+  prisma: PrismaClient
 ) {
-  const oldPasswordIsValid = await argon2.verify(user.password, oldPassword);
-  if (oldPasswordIsValid) {
-    const hashedPassword = await argon2.hash(newPassword, {
-      type: argon2.argon2id,
-      timeCost: 2,
-      memoryCost: 15360,
-    });
+  const user = await prisma.user.findUnique({
+    where: { uuid: userUuid.toString() },
+  });
+  if (user) {
+    const oldPasswordIsValid = await argon2.verify(user.password, oldPassword);
+    if (oldPasswordIsValid) {
+      const hashedPassword = await argon2.hash(newPassword, {
+        type: argon2.argon2id,
+        timeCost: 2,
+        memoryCost: 15360,
+      });
 
-    const updatedUser = await prisma.user.update({
-      where: { uuid: user.uuid },
-      data: {
-        password: hashedPassword,
-      },
-    });
+      const updatedUser = await prisma.user.update({
+        where: { uuid: userUuid.toString() },
+        data: {
+          password: hashedPassword,
+        },
+      });
 
-    await logout({ prisma: prisma, user: user });
-    return true;
+      await logout({ prisma: prisma, user: user });
+      return true;
+    } else {
+      return new BaseError({
+        name: "InvalidCredentials",
+        message: "Your e-mail and password combination is invalid.",
+      });
+    }
   } else {
     return new BaseError({
       name: "InvalidCredentials",
