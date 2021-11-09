@@ -19,8 +19,7 @@
     "baseUrl": ".",
     "downlevelIteration": true
   },
-  "include": ["src"],
-  "exclude": ["**/node_modules/**"],
+  "exclude": ["**/node_modules/**", "plugins"],
   "references": [
     { "path": "./packages/design-system" },
     { "path": "./packages/type-classes" },
