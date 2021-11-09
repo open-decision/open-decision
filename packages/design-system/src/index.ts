@@ -15,6 +15,7 @@ export * from "./Label/Label";
 export * from "./Button/ToggleButton";
 export * from "./Icon/Icon";
 export * from "./Dialog/Dialog";
+export * from "./Tooltip/Tooltip";
 
 // Styling solutions
 export * from "./stitches";
