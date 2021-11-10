@@ -1,7 +1,8 @@
-import { styled } from "../stitches";
+import { styled, css } from "../stitches";
 
 export type TextProps = React.ComponentProps<typeof Text>;
-export const Text = styled("p", {
+
+export const textStyles = css({
   color: "var(--color, $gray12)",
   margin: "unset",
 
@@ -18,3 +19,5 @@ export const Text = styled("p", {
     size: "medium",
   },
 });
+
+export const Text = styled("p", textStyles);

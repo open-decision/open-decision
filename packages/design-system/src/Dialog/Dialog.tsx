@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { IconButton } from "../index";
+import { IconButton, IconButtonProps } from "../index";
 import { X } from "../icons";
 import { styled, keyframes } from "../stitches";
 
@@ -23,6 +23,7 @@ const StyledContent = styled(DialogPrimitive.Content, {
   borderRadius: "$md",
   backgroundColor: "$gray1",
   padding: "$5",
+  minWidth: "200px",
 
   position: "fixed",
   top: "50%",
@@ -51,20 +52,20 @@ const StyledOverlay = styled(DialogPrimitive.Overlay, {
   },
 });
 
-const StyledClose = styled(DialogPrimitive.Close, {
-  position: "absolute",
-  right: 5,
-  top: 5,
-});
-
 function DialogContent({ children, ...props }: DialogContentProps) {
+  return <StyledContent {...props}>{children}</StyledContent>;
+}
+
+function CloseButton(props: Partial<IconButtonProps>) {
   return (
-    <StyledContent {...props}>
-      {children}
-      <StyledClose asChild>
-        <IconButton variant="ghost" Icon={<X />} label="Schließe den Dialog" />
-      </StyledClose>
-    </StyledContent>
+    <DialogPrimitive.Close asChild>
+      <IconButton
+        variant="ghost"
+        Icon={<X />}
+        label="Schließe den Dialog"
+        {...props}
+      />
+    </DialogPrimitive.Close>
   );
 }
 
@@ -75,12 +76,14 @@ export const Dialog = {
   Title: DialogPrimitive.Title,
   Description: DialogPrimitive.Description,
   Close: DialogPrimitive.Close,
+  CloseButton,
 };
 
 export type DialogRootProps = DialogPrimitive.DialogProps;
 
 export type DialogTriggerProps = DialogPrimitive.DialogTriggerProps;
-export type DialogContentProps = DialogPrimitive.DialogContentProps;
+export type DialogContentProps = React.ComponentProps<typeof StyledContent>;
 export type DialogTitleProps = DialogPrimitive.DialogTitleProps;
 export type DialogDescriptionProps = DialogPrimitive.DialogDescriptionProps;
 export type DialogCloseProps = DialogPrimitive.DialogCloseProps;
+export type DialogCloseButtonProps = Partial<IconButtonProps>;

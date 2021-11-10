@@ -60,7 +60,6 @@ const InputComponent = (
     required,
     onChange,
     onBlur,
-    value,
     Buttons,
     disabled,
     css,
@@ -82,14 +81,10 @@ const InputComponent = (
     }
   }, []);
 
-  const {
-    value: formValue,
-    blur,
-    setBlur,
-    setValue,
-    setErrors,
-    submitting,
-  } = useInput(name, "string");
+  const { value, blur, setBlur, setValue, setErrors, submitting } = useInput(
+    name,
+    "string"
+  );
 
   const defaultValidationmessages = {
     required: "The field is required and can't be empty",
@@ -143,7 +138,7 @@ const InputComponent = (
       <StyledInput
         name={name}
         ref={innerRef}
-        value={value ?? formValue}
+        value={value}
         onChange={(event) => {
           onChange ? onChange?.(event) : setValue(event.target.value ?? "");
         }}

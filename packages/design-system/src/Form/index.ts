@@ -4,3 +4,4 @@ export type { FormProps } from "./Form";
 export * from "./RadioButtons";
 export * from "./Checkboxes";
 export * from "./Combobox";
+export * from "./ValidationMessage";

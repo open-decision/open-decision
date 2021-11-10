@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "description": "The open legal tech design system storybook",
   "scripts": {
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook",
+    "dev": "start-storybook -p 6006",
+    "build": "build-storybook",
     "prettier": "prettier --check src/",
     "prettier:fix": "prettier --write src/",
     "lint": "eslint . --ext .ts,.tsx",

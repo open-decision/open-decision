@@ -3,7 +3,7 @@ import { Label } from "../../Label/Label";
 import { styled, StyleObject } from "../../stitches";
 import { Box } from "../../Box";
 
-import { ValidationMessage } from "../shared/ValidationMessage";
+import { ValidationMessage } from "../ValidationMessage";
 
 const FieldBox = styled("div", {
   display: "grid",
@@ -11,7 +11,7 @@ const FieldBox = styled("div", {
 });
 
 export type FieldProps = {
-  label: string;
+  label: React.ReactNode;
   children: JSX.Element;
   css?: StyleObject;
 };

@@ -2,7 +2,7 @@ import * as React from "react";
 import {
   Box,
   Button,
-  Dialog,
+  Dialog as DialogPrimitive,
   DialogRootProps,
   Heading,
   Text,
@@ -11,35 +11,35 @@ import {
 import { Meta, Story } from "@storybook/react";
 
 export default {
-  component: Dialog.Root,
+  component: DialogPrimitive.Root,
   title: "Components/Dialog",
 } as Meta;
 
-export const DialogTemplate: Story<DialogRootProps> = (props) => (
-  <Dialog.Root {...props}>
-    <Dialog.Trigger asChild>
-      <Button>Open Dialog</Button>
-    </Dialog.Trigger>
-    <Dialog.Content>
-      <Dialog.Title asChild>
+export const Dialog: Story<DialogRootProps> = (props) => (
+  <DialogPrimitive.Root {...props}>
+    <DialogPrimitive.Trigger asChild>
+      <Button>Open DialogPrimitive</Button>
+    </DialogPrimitive.Trigger>
+    <DialogPrimitive.Content>
+      <DialogPrimitive.Title asChild>
         <Heading css={{ marginBottom: "$3" }} size="extra-small">
           Sind sie absolut sicher?
         </Heading>
-      </Dialog.Title>
-      <Dialog.Description asChild>
+      </DialogPrimitive.Title>
+      <DialogPrimitive.Description asChild>
         <Text css={{ marginBottom: "$6", color: "$gray11" }}>
           Diese Aktion kann nicht rückgängig gemacht werden.
           <br />
           Trotzdem löschen?
         </Text>
-      </Dialog.Description>
+      </DialogPrimitive.Description>
       <Box css={{ display: "flex", gap: "$4", justifyContent: "end" }}>
-        <Dialog.Close asChild>
+        <DialogPrimitive.Close asChild>
           <Button size="small" variant="secondary">
             Abbrechen
           </Button>
-        </Dialog.Close>
-        <Dialog.Close asChild>
+        </DialogPrimitive.Close>
+        <DialogPrimitive.Close asChild>
           <Button
             size="small"
             variant="secondary"
@@ -47,8 +47,8 @@ export const DialogTemplate: Story<DialogRootProps> = (props) => (
           >
             Löschen
           </Button>
-        </Dialog.Close>
+        </DialogPrimitive.Close>
       </Box>
-    </Dialog.Content>
-  </Dialog.Root>
+    </DialogPrimitive.Content>
+  </DialogPrimitive.Root>
 );

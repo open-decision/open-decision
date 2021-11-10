@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as TooltipPrimtive from "@radix-ui/react-tooltip";
-import { styled, keyframes } from "../index";
+import { styled, keyframes } from "../stitches";
 
 const slideUpAndFade = keyframes({
   "0%": { opacity: 0, transform: "translateY(2px)" },

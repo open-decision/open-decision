@@ -1,7 +1,8 @@
 import * as React from "react";
-import { styled, StyleObject } from "../../stitches";
+import { styled, StyleObject } from "../stitches";
+import { textStyles } from "../Text";
 
-import { useInput } from "../useForm";
+import { useInput } from "./useForm";
 
 const StyledErrorList = styled("ul", {
   listStyle: "none",
@@ -12,7 +13,7 @@ const StyledErrorList = styled("ul", {
   margin: "0",
 });
 
-const StyledMessage = styled("li", {
+const StyledMessage = styled("li", textStyles, {
   color: "$error11",
   border: "1px solid $colors$error5",
   backgroundColor: "$error1",
@@ -24,15 +25,11 @@ const StyledMessage = styled("li", {
 
 export type ValidationMessageProps = {
   name: string;
-  css: StyleObject;
+  css?: StyleObject;
   className?: string;
 };
 
-export function ValidationMessage({
-  name,
-  css,
-  className,
-}: ValidationMessageProps) {
+export function ValidationMessage({ name, css }: ValidationMessageProps) {
   const { errors } = useInput(name);
 
   if (!errors.length) {
@@ -40,14 +37,12 @@ export function ValidationMessage({
   }
 
   return (
-    <StyledErrorList css={css} className={className}>
-      {errors.map((message: string) =>
-        message.length ? (
-          <StyledMessage key={message}>{message}</StyledMessage>
-        ) : (
-          <></>
-        )
-      )}
+    <StyledErrorList css={css}>
+      {errors.map((message) => (
+        <StyledMessage size="extra-small" key={message}>
+          {message}
+        </StyledMessage>
+      ))}
     </StyledErrorList>
   );
 }
