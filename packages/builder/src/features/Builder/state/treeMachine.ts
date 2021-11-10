@@ -14,13 +14,18 @@ import {
   selectRelation,
 } from "./assignUtils";
 import { BuilderTree } from "@open-decision/type-classes";
+import localforage from "localforage";
+
+async function deleteTreeFromStorage(id: string) {
+  localforage.removeItem(id);
+}
 
 async function updateTreeInStorage(id: string, tree: BuilderTree.TTree) {
-  localForage.setItem("tree", tree);
+  localForage.setItem(id, tree);
 }
 
 async function getTreeFromStorage(id: string) {
-  const possibleTree = await localForage.getItem("tree");
+  const possibleTree = await localForage.getItem(id);
   const parsedTree = BuilderTree.Type.safeParse(possibleTree);
 
   if (parsedTree.success) return Promise.resolve(parsedTree.data);
@@ -108,11 +113,14 @@ export const treeMachine = createMachine<Context, Events, TreeState>({
       always: {
         target: "idle",
         actions: async (context, _event) => {
-          await updateTreeInStorage(context.id, context);
+          await updateTreeInStorage("tree", context);
         },
       },
     },
     empty: {
+      entry: async () => {
+        await deleteTreeFromStorage("tree");
+      },
       on: {
         createTree: {
           target: "sync",

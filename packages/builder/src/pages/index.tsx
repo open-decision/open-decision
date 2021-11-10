@@ -1,4 +1,14 @@
-import { Box, Button, Heading, Text } from "@open-legal-tech/design-system";
+import {
+  Box,
+  Button,
+  Heading,
+  Text,
+  Dialog,
+  Label,
+  Input,
+  Form,
+  ValidationMessage,
+} from "@open-legal-tech/design-system";
 import { BaseHeader, EditorHeader } from "components/Header";
 import { MainContent } from "components/Layout";
 import { NodeEditor } from "features/Builder/NodeEditor";
@@ -90,18 +100,64 @@ const Editor = () => {
               <Button variant="secondary" disabled>
                 Importieren
               </Button>
-              <Button
-                onClick={() =>
-                  send({
-                    type: "createTree",
-                    name:
-                      prompt("Bitte gib deinem Projekt einen Namen") ??
-                      "Unbennantes Projekt",
-                  })
-                }
-              >
-                Neues Projekt erstellen
-              </Button>
+              <Dialog.Root>
+                <Dialog.Trigger asChild>
+                  <Button>Neues Projekt erstellen</Button>
+                </Dialog.Trigger>
+                <Dialog.Content css={{ minWidth: "350px", paddingTop: "$2" }}>
+                  <Box
+                    css={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      marginBottom: "$6",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Dialog.Title asChild>
+                      <Heading size="extra-small">
+                        Neues Projekt erstellen
+                      </Heading>
+                    </Dialog.Title>
+                    <Dialog.CloseButton />
+                  </Box>
+                  <Form
+                    initialValues={{ treeName: "" }}
+                    css={{ display: "flex", flexDirection: "column" }}
+                    onSubmit={({ values }) => {
+                      return send({
+                        type: "createTree",
+                        name: values.treeName,
+                      });
+                    }}
+                  >
+                    <Dialog.Description asChild>
+                      <Label size="small" htmlFor="treeName">
+                        Projektname
+                      </Label>
+                    </Dialog.Description>
+                    <Input
+                      name="treeName"
+                      id="treeName"
+                      css={{ marginBlock: "$2" }}
+                      required
+                    />
+                    <ValidationMessage name="treeName" />
+
+                    <Button
+                      size="small"
+                      variant="secondary"
+                      css={{
+                        colorScheme: "success",
+                        alignSelf: "end",
+                        marginTop: "$6",
+                      }}
+                      type="submit"
+                    >
+                      Erstellen
+                    </Button>
+                  </Form>
+                </Dialog.Content>
+              </Dialog.Root>
             </Box>
           </Box>
         </Box>
