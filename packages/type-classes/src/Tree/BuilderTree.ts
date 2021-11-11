@@ -1,24 +1,23 @@
-import * as PublicTree from "./PublicTree";
 import * as BuilderNode from "../Node/BuilderNode";
 import { z } from "zod";
 import { v4 as uuidV4 } from "uuid";
+import { BaseTree } from "./shared";
 
-export const Type = PublicTree.Type.extend({
-  selectedNodeId: z.string(),
-  selectedRelationId: z.string(),
+export const Type = BaseTree.extend({
+  selectedNodeId: z.string().optional(),
+  selectedRelationId: z.string().optional(),
+  startNode: z.string().optional(),
   nodes: BuilderNode.Record,
 });
 
 export function create(name: string): TTree {
-  return {
+  const newTree = {
     id: uuidV4(),
-    checksum: "",
     nodes: {},
-    startNode: "",
     treeName: name,
-    selectedNodeId: "",
-    selectedRelationId: "",
   };
+
+  return newTree;
 }
 
 export {
@@ -27,7 +26,6 @@ export {
   getConnectableNodes,
   getParents,
   getPaths,
-  getTreeHash,
 } from "./shared";
 
 export type TTree = z.infer<typeof Type>;

@@ -1,12 +1,9 @@
-import { Descendants } from "./RichTextContent";
 import { z } from "zod";
 import * as PublicRelation from "../Relation/PublicRelation";
+import { BaseNode } from "./shared";
 
-export const Type = z.object({
-  id: z.string(),
-  name: z.string(),
+export const Type = BaseNode.extend({
   relations: z.record(PublicRelation.Type),
-  content: Descendants,
 });
 
 export const Record = z.record(Type);

@@ -6,7 +6,7 @@ import { z } from "zod";
 import { Descendants } from "./RichTextContent";
 
 export const BaseNode = z.object({
-  id: z.string(),
+  id: z.string().uuid(),
   name: z.string(),
   content: Descendants,
 });

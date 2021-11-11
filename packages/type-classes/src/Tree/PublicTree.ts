@@ -1,15 +1,11 @@
-import * as Node from "../Node/PublicNode";
 import { z } from "zod";
+import { BaseTree } from "./shared";
 
 // ------------------------------------------------------------------
 // Tree State
 
-export const Type = z.object({
-  id: z.string(),
-  treeName: z.string(),
-  checksum: z.string(),
-  nodes: Node.Record,
-  startNode: z.string(),
+export const Type = BaseTree.extend({
+  checksum: z.number(),
 });
 
 // ------------------------------------------------------------------
