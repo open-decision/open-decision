@@ -111,7 +111,7 @@ export const designSystem = createStitches({
           return {
             [`&:focus-visible, ${focusWithin}, &[data-focus='true']`]: {
               boxShadow:
-                "0 0 0 1px $colors$background, 0 0 0 3px $colors$primary10",
+                "0 0 0 1px $colors$background, 0 0 0 3px var(--focusColor, $colors$primary10)",
               borderColor: "$background",
               outline: "none",
             },
@@ -124,8 +124,8 @@ export const designSystem = createStitches({
 
           return {
             [`&:focus-visible, ${focusWithin}, &[data-focus='true']`]: {
-              boxShadow: "inset 0 0 0 1px $colors$primary10",
-              borderColor: "$primary10",
+              boxShadow: "inset 0 0 0 1px var(--focusColor, $colors$primary10)",
+              borderColor: "var(--focusColor, $colors$primary10)",
               outline: "none",
             },
           };
