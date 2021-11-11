@@ -128,7 +128,7 @@ const InputComponent = (
 
   return (
     <StyledBox
-      css={{ color: disabled ? "$gray8" : "$gray12", ...css }}
+      css={{ color: disabled ? "$gray8" : undefined, ...css }}
       data-disabled={disabled}
       data-focus={hasFocus}
       size={size}
