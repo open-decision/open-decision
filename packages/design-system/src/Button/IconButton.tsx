@@ -4,25 +4,22 @@ import { Button, buttonStyles } from "../Button/Button";
 import { styled, css } from "../stitches";
 import { iconSizes } from "../Icon/shared";
 
-export const iconButtonStyles = css(
-  {
-    padding: "$$paddingInline",
+export const iconButtonStyles = css(buttonStyles, {
+  padding: "$$paddingInline",
 
-    variants: {
-      size: iconSizes,
-      round: {
-        true: {
-          borderRadius: "$full",
-        },
+  variants: {
+    size: iconSizes,
+    round: {
+      true: {
+        borderRadius: "$full",
       },
     },
-
-    defaultVariants: {
-      size: "medium",
-    },
   },
-  buttonStyles
-);
+
+  defaultVariants: {
+    size: "medium",
+  },
+});
 
 const StyledButton = styled(Button, iconButtonStyles);
 

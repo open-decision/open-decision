@@ -12,7 +12,6 @@ export const buttonStyles = css({
   appearance: "none",
   colorScheme: "primary",
   borderRadius: "$md",
-  maxWidth: "max-content",
 
   //The small animation pressing the Button down on click.
   transition: "transform background-color",

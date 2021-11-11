@@ -14,19 +14,22 @@ export type FieldProps = {
   label: React.ReactNode;
   children: JSX.Element;
   css?: StyleObject;
+  name?: string;
 };
 
-export function Field({ label, children, css }: FieldProps) {
+export function Field({ label, children, css, name }: FieldProps) {
   if (!React.Children.only(children)) {
     throw new Error(
       "The Field component can only ever wrap one Input as a child."
     );
   }
 
-  const name = children.props?.name;
+  const inputName = children.props?.name ?? name;
 
-  if (!name) {
-    throw new Error("The Input inside of a Field needs a name.");
+  if (!inputName) {
+    throw new Error(
+      "The Input inside of a Field needs a name. If the Input is not a direct child of the Field then pass the same name to the Field component"
+    );
   }
 
   return (
@@ -37,7 +40,7 @@ export function Field({ label, children, css }: FieldProps) {
         </Box>
         {children}
       </Label>
-      <ValidationMessage name={name} css={{ gridColumn: "1/ -1" }} />
+      <ValidationMessage name={inputName} css={{ gridColumn: "1/ -1" }} />
     </FieldBox>
   );
 }
