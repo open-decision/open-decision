@@ -19,7 +19,6 @@ const StyledBox = styled(
     $$paddingInline: "$space$2",
     $$paddingBlock: "$space$3",
     paddingInline: "$$paddingInline",
-    textStyle: "medium-text",
   },
   baseTextInputStyle
 );

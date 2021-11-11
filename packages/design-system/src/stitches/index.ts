@@ -78,6 +78,7 @@ export const designSystem = createStitches({
         letterSpacing: "inherit",
         fontWeight: "inherit",
         fontFamily: "inherit",
+        color: "inherit",
       };
 
       switch (value) {

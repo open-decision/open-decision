@@ -34,7 +34,6 @@ const StyledBox = styled(Box, {
   border: 0,
   display: "flex",
   alignItems: "center",
-  textStyle: "medium-text",
 
   "&:focus-within": {
     boxShadow: "none",
