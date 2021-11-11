@@ -36,11 +36,11 @@ const Link = styled("a", {
   textDecoration: "none",
 
   [`${ListMenu} & `]: {
-    fontSize: "$sm",
+    textStyle: "small-text",
   },
 
   [`${FullscreenMenu} & `]: {
-    fontSize: "$xl",
+    textStyle: "large-text",
   },
 
   variants: {
