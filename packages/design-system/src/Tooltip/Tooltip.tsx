@@ -27,7 +27,7 @@ const StyledContent = styled(TooltipPrimtive.Content, {
   backgroundColor: "var(--bgColor)",
   borderRadius: "$md",
   boxShadow: "$2",
-  padding: "$4",
+  padding: "$2 $3",
 
   "@media (prefers-reduced-motion: no-preference)": {
     animationDuration: "400ms",

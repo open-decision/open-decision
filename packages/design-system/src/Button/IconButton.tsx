@@ -5,7 +5,12 @@ import { styled, css } from "../stitches";
 import { iconSizes } from "../Icon/shared";
 
 export const iconButtonStyles = css(buttonStyles, {
+  $$iconSize: "0px",
   padding: "$$paddingInline",
+  aspectRatio: "1 / 1",
+  width: "$$iconSize",
+  height: "$$iconSize",
+  boxSizing: "content-box",
 
   variants: {
     size: iconSizes,

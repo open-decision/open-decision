@@ -8,6 +8,8 @@ import {
   Input,
   Form,
   ValidationMessage,
+  iconButtonStyles,
+  Tooltip,
 } from "@open-legal-tech/design-system";
 import { BaseHeader, EditorHeader } from "components/Header";
 import { MainContent } from "components/Layout";
@@ -17,6 +19,9 @@ import { TreeProvider, useTree } from "features/Builder/state/useTree";
 import { sidebarWidth } from "features/Builder/utilities/constants";
 import { ReactFlowProvider } from "react-flow-renderer";
 import Image from "next/image";
+import { FileInput } from "components";
+import { Upload } from "react-feather";
+import { BuilderTree } from "@open-decision/type-classes";
 
 export default function Tree(): JSX.Element {
   return (
@@ -97,9 +102,46 @@ const Editor = () => {
                 justifyContent: "center",
               }}
             >
-              <Button variant="secondary" disabled>
-                Importieren
-              </Button>
+              <Tooltip.Root>
+                <Tooltip.Trigger asChild>
+                  <FileInput
+                    className={iconButtonStyles({
+                      variant: "secondary",
+                      size: "large",
+                    })}
+                    onChange={(event) => {
+                      if (!event.currentTarget.files?.[0]) return;
+
+                      const fileReader = new FileReader();
+                      fileReader.onload = function (event) {
+                        const result = event.target?.result;
+                        if (typeof result !== "string") return;
+
+                        const parsedResult = JSON.parse(result);
+
+                        const validatedResult =
+                          BuilderTree.Type.safeParse(parsedResult);
+
+                        if (!validatedResult.success)
+                          return alert("wrong file");
+
+                        return send({
+                          type: "loadTree",
+                          tree: validatedResult.data,
+                        });
+                      };
+
+                      fileReader.readAsText(event.currentTarget.files?.[0]);
+                    }}
+                  >
+                    <Upload />
+                  </FileInput>
+                </Tooltip.Trigger>
+                <Tooltip.Content sideOffset={5}>
+                  <Tooltip.Arrow />
+                  <Text>Importiere ein Projekt</Text>
+                </Tooltip.Content>
+              </Tooltip.Root>
               <Dialog.Root>
                 <Dialog.Trigger asChild>
                   <Button>Neues Projekt erstellen</Button>

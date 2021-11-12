@@ -14,7 +14,7 @@ type TreeProviderProps = Omit<
   "value"
 >;
 export function TreeProvider({ children }: TreeProviderProps) {
-  const service = useInterpret(treeMachine);
+  const service = useInterpret(treeMachine, { devTools: true });
 
   return (
     <TreeContext.Provider value={service}>{children}</TreeContext.Provider>

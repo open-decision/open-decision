@@ -101,8 +101,8 @@ export function Root({
 
       const nonEmptyInputValue = (inputValue?.length ?? 0) > 0;
       const emptyFilteredItems = filteredItems.length === 0;
-      const nonEqualInputValueAndFilteredItem = items.some((item) => {
-        return item.label !== inputValue?.trim();
+      const nonEqualInputValueAndFilteredItem = !items.some((item) => {
+        return item.label === inputValue?.trim();
       });
 
       const isCreating = validIsCreating(

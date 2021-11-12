@@ -1,10 +1,17 @@
 import { Layout } from "components/Layout";
 import { QueryClient, QueryClientProvider } from "react-query";
 import type { AppProps } from "next/app";
-import "../index.css";
+import "../design/index.css";
 import { IdProvider } from "@radix-ui/react-id";
 import { globalCss } from "@open-legal-tech/design-system";
 import { opinionated } from "stitches-normalize-css";
+import { inspect } from "@xstate/inspect";
+
+if (typeof window !== "undefined") {
+  inspect({
+    iframe: false,
+  });
+}
 
 const queryClient = new QueryClient();
 const globalStyles = globalCss(...opinionated);

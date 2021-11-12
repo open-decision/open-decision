@@ -21,7 +21,8 @@ export type Events =
   | SelectNodeEvent
   | CreateTreeEvent
   | UpdateTreeEvent
-  | SelectRelationEvent;
+  | SelectRelationEvent
+  | LoadTreeEvent;
 
 export type AddNodeEvent = { type: "addNode"; value: BuilderNode.TNode };
 export const addNode = immerAssign(
@@ -142,13 +143,22 @@ type CreateTreeEvent = { type: "createTree"; name: string };
 export const createTree = assign(
   (context: Context, { name }: CreateTreeEvent) => BuilderTree.create(name)
 );
+type LoadTreeEvent = {
+  type: "loadTree";
+  tree: BuilderTree.TTree;
+};
 
+export const loadTree = assign(
+  (context: Context, { tree }: LoadTreeEvent) => tree
+);
 type UpdateTreeEvent = {
   type: "updateTree";
   tree: DeepPartial<BuilderTree.TTree>;
 };
 export const updateTree = assign(
-  (context: Context, { tree }: UpdateTreeEvent) => merge(context, tree)
+  (context: Context, { tree }: UpdateTreeEvent) => {
+    return merge(context, tree);
+  }
 );
 
 type SelectRelationEvent = { type: "selectRelation"; id: string };

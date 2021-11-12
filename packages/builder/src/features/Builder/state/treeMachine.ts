@@ -12,6 +12,7 @@ import {
   createTree,
   updateTree,
   selectRelation,
+  loadTree,
 } from "./assignUtils";
 import { BuilderTree } from "@open-decision/type-classes";
 import localforage from "localforage";
@@ -125,6 +126,10 @@ export const treeMachine = createMachine<Context, Events, TreeState>({
         createTree: {
           target: "sync",
           actions: createTree,
+        },
+        loadTree: {
+          target: "sync",
+          actions: loadTree,
         },
       },
     },

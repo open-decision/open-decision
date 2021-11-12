@@ -1,31 +1,42 @@
-import clsx from "clsx";
-import React, { HTMLAttributes } from "react";
+import { Label, styled, StyleObject } from "@open-legal-tech/design-system";
+import React, { ForwardedRef, HTMLAttributes } from "react";
 
-export type FileInputProps = HTMLAttributes<HTMLInputElement>;
+const StyledLabel = styled(Label, {
+  focusStyle: "outer-within",
+});
+
+const HiddenInput = styled("input", {
+  border: "0",
+  clip: "rect(0, 0, 0, 0)",
+  height: "1px",
+  overflow: "hidden",
+  padding: "0",
+  position: "absolute !important",
+  whiteSpace: "nowrap",
+  width: "1px",
+});
+
+export type FileInputProps = Omit<
+  HTMLAttributes<HTMLLabelElement>,
+  "onChange"
+> & {
+  css?: StyleObject;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+};
 
 /**
  * A custom Form element wrapping the native file input type.
  */
-export const FileInput: React.FC<FileInputProps> = ({
-  className,
-  children,
-  ...props
-}) => (
-  <label
-    className={clsx(
-      className,
-      "min-w-max flex flex-col items-center px-4 py-6 text-primary11 rounded-lg tracking-wide uppercase border-2 border-primary9 cursor-pointer hover:bg-primary-2 clickable shadow-inner bg-gray2"
-    )}
-  >
-    <svg
-      className="w-8 h-8"
-      fill="currentColor"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 20 20"
-    >
-      <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
-    </svg>
-    <span className="mt-2 text-base leading-normal">{children}</span>
-    <input type="file" className="hidden" {...props} />
-  </label>
-);
+const FileInputImpl = (
+  { className, children, css, onChange, ...props }: FileInputProps,
+  ref: ForwardedRef<HTMLLabelElement>
+) => {
+  return (
+    <StyledLabel css={css} className={className} ref={ref} {...props}>
+      {children}
+      <HiddenInput type="file" onChange={onChange} />
+    </StyledLabel>
+  );
+};
+
+export const FileInput = React.forwardRef(FileInputImpl);
