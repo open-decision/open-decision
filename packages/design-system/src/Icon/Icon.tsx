@@ -10,6 +10,8 @@ const StyledIcon = styled("span", {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+  width: "$$iconSize",
+  height: "$$iconSize",
 
   "&[data-active='true'] > svg": {
     stroke: "$primary10",
@@ -31,8 +33,10 @@ export type IconProps = {
 } & React.ComponentProps<typeof StyledIcon>;
 export const Icon = ({ children, label, ...props }: IconProps) => {
   return (
-    <StyledIcon className="icon" {...props}>
-      <AccessibleIcon.Root label={label ?? ""}>{children}</AccessibleIcon.Root>
-    </StyledIcon>
+    <AccessibleIcon.Root label={label ?? ""}>
+      <StyledIcon className="icon" {...props}>
+        {children}
+      </StyledIcon>
+    </AccessibleIcon.Root>
   );
 };

@@ -5,6 +5,7 @@ import "../design/index.css";
 import { IdProvider } from "@radix-ui/react-id";
 import { globalStyles } from "@open-legal-tech/design-system";
 import { inspect } from "@xstate/inspect";
+import { TreeProvider } from "features/Builder/state/useTree";
 
 if (typeof window !== "undefined") {
   inspect({
@@ -20,9 +21,11 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
   return (
     <QueryClientProvider client={queryClient}>
       <IdProvider>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <TreeProvider>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </TreeProvider>
       </IdProvider>
     </QueryClientProvider>
   );

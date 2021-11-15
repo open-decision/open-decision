@@ -11,17 +11,18 @@ import {
   iconButtonStyles,
   Tooltip,
 } from "@open-legal-tech/design-system";
-import { BaseHeader, EditorHeader } from "components/Header";
+import { BaseHeader } from "components/Header";
 import { MainContent } from "components/Layout";
 import { NodeEditor } from "features/Builder/NodeEditor";
 import { EditorProvider } from "features/Builder/state/useEditor";
-import { TreeProvider, useTree } from "features/Builder/state/useTree";
+import { useTree } from "features/Builder/state/useTree";
 import { sidebarWidth } from "features/Builder/utilities/constants";
 import { ReactFlowProvider } from "react-flow-renderer";
 import Image from "next/image";
 import { FileInput } from "components";
 import { Upload } from "react-feather";
 import { BuilderTree } from "@open-decision/type-classes";
+import { EditorHeader } from "features/Builder/components/EditorHeader";
 
 export default function Tree(): JSX.Element {
   return (
@@ -30,15 +31,13 @@ export default function Tree(): JSX.Element {
         overflow: "hidden",
         display: "grid",
         gridTemplateColumns: `1fr ${sidebarWidth}px`,
-        gridTemplateRows: "60px 1fr",
+        gridTemplateRows: "max-content 1fr",
       }}
     >
       <ReactFlowProvider>
-        <TreeProvider>
-          <EditorProvider>
-            <Editor />
-          </EditorProvider>
-        </TreeProvider>
+        <EditorProvider>
+          <Editor />
+        </EditorProvider>
       </ReactFlowProvider>
     </MainContent>
   );

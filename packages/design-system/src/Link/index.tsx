@@ -4,6 +4,8 @@ import { styled } from "../stitches";
 export type LinkProps = React.ComponentProps<typeof Link>;
 
 export const Link = styled("a", {
+  display: "flex",
+  alignItems: "center",
   textStyle: "medium-text",
   color: "$primary9",
   textDecoration: "none",
