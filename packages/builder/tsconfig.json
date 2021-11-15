@@ -10,8 +10,7 @@
       "internalTypes/*": ["src/types/*"],
       "components/*": ["src/components/*"],
       "features/*": ["src/features/*"],
-      "utils/*": ["src/utils/*"],
-      "@stitches*": ["../../node_modules/.pnpm/@stitches*"]
+      "utils/*": ["src/utils/*"]
     },
     "incremental": true,
     "allowJs": true,
@@ -22,12 +21,12 @@
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "composite": true,
-    "noEmit": false
+    "noEmit": true,
+    "composite": false,
+    "declaration": false
   },
   "include": ["src"],
   "exclude": ["node_modules"],

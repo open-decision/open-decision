@@ -16,7 +16,6 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
-    "baseUrl": "./packages",
     "downlevelIteration": true,
     "composite": true
   },
@@ -24,7 +23,6 @@
   "references": [
     { "path": "./packages/design-system" },
     { "path": "./packages/type-classes" },
-    { "path": "./packages/interpreter" },
-    { "path": "./packages/builder" }
+    { "path": "./packages/interpreter" }
   ]
 }
