@@ -3,8 +3,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import type { AppProps } from "next/app";
 import "../design/index.css";
 import { IdProvider } from "@radix-ui/react-id";
-import { globalCss } from "@open-legal-tech/design-system";
-import { opinionated } from "stitches-normalize-css";
+import { globalStyles } from "@open-legal-tech/design-system";
 import { inspect } from "@xstate/inspect";
 
 if (typeof window !== "undefined") {
@@ -14,7 +13,6 @@ if (typeof window !== "undefined") {
 }
 
 const queryClient = new QueryClient();
-const globalStyles = globalCss(...opinionated);
 
 export default function App({ Component, pageProps }: AppProps): JSX.Element {
   globalStyles();

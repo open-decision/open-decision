@@ -15,6 +15,7 @@ import {
   blueDarkA,
 } from "@radix-ui/colors";
 import { ColorKeys, aliasColor, TextStyles } from "../internal/utils";
+import { opinionated } from "stitches-normalize-css";
 
 const { colors, ...otherTokens } = tokens;
 
@@ -134,9 +135,10 @@ export const designSystem = createStitches({
     },
   },
 });
+
 export type StyleObject = CSS<typeof designSystem>;
 
-export * from "@stitches/react";
+// export * from "@stitches/react";
 
 export const {
   styled,
@@ -149,6 +151,7 @@ export const {
   getCssText,
 } = designSystem;
 
+export const globalStyles = globalCss(...opinionated);
 export const darkTheme = createTheme("dark", {
   colors: {
     ...aliasColor("gray", slateDark),
