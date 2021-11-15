@@ -50,7 +50,7 @@ export const NodeCreator = ({ css }: Props) => {
       onChange={({ values }) => {
         return send({ type: "selectNode", nodeId: values.search });
       }}
-      initialValues={{ search: selectedNodeId }}
+      initialValues={{ search: selectedNodeId ?? "" }}
     >
       <Combobox.Root
         css={{ display: "flex", alignItems: "center", gap: "$2" }}

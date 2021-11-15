@@ -27,12 +27,12 @@ const StyledIcon = styled("span", {
 
 export type IconProps = {
   children: React.ReactNode;
-  label: string;
+  label?: string;
 } & React.ComponentProps<typeof StyledIcon>;
 export const Icon = ({ children, label, ...props }: IconProps) => {
   return (
     <StyledIcon className="icon" {...props}>
-      <AccessibleIcon.Root label={label}>{children}</AccessibleIcon.Root>
+      <AccessibleIcon.Root label={label ?? ""}>{children}</AccessibleIcon.Root>
     </StyledIcon>
   );
 };

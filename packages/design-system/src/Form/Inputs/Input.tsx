@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import * as React from "react";
-import { styled, VariantProps } from "../../stitches";
+import { styled } from "../../stitches";
 import { baseInputStyles, baseTextInputStyle } from "../shared/styles";
 import { useInput } from "../useForm";
 import { Box } from "../../Box";
@@ -48,7 +48,7 @@ export type InputProps = Omit<
   regex?: string;
   Buttons?: JSX.Element | JSX.Element[];
   Icon?: React.ReactNode;
-} & VariantProps<typeof StyledBox>;
+} & React.ComponentProps<typeof StyledBox>;
 
 const InputComponent = (
   {

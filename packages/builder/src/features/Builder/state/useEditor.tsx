@@ -30,11 +30,13 @@ export function EditorProvider({ children }: TreeProviderProps) {
   >();
 
   const [isTransitioning, setIsTransitioning] = React.useState(false);
-  const position = state.context.nodes?.[selectedNodeId]?.position;
+  const position = selectedNodeId
+    ? state.context.nodes?.[selectedNodeId]?.position
+    : undefined;
 
   const { setCenter } = useZoomPanHelper();
   React.useEffect(() => {
-    if (selectedNodeId) {
+    if (selectedNodeId && position) {
       setIsTransitioning(true);
       const positionOfNodeFromCenter = calculateCenterOfNode(
         position,
