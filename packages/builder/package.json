@@ -24,6 +24,7 @@
     "@graphql-codegen/typescript": "2.2.4",
     "@graphql-codegen/typescript-operations": "2.1.8",
     "@graphql-codegen/typescript-react-query": "^3.0.3",
+    "@next/bundle-analyzer": "^12.0.3",
     "@next/eslint-plugin-next": "^12.0.2",
     "@types/d3-shape": "^3.0.2",
     "@types/dagre": "^0.7.46",
@@ -36,6 +37,7 @@
     "eslint-config-next": "^12.0.2",
     "local-cors-proxy": "^1.1.0",
     "next": "^12.0.1",
+    "next-compose-plugins": "^2.2.1",
     "prettier": "2.4.1",
     "typescript": "^4.4.4"
   },
@@ -86,7 +88,6 @@
     "remeda": "^0.0.30",
     "slate": "^0.66.5",
     "slate-react": "^0.69.0",
-    "stitches-normalize-css": "^1.2.0",
     "utility-types": "^3.10.0",
     "uuid": "^8.3.2",
     "xstate": "^4.25.0",
