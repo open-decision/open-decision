@@ -1,8 +1,8 @@
 import create from "zustand";
 import produce from "immer";
-import { nanoid } from "nanoid/non-secure";
+import { v4 as uuidV4 } from "uuid";
 
-export type notificationVariants = "success" | "danger" | "neutral" | "warning";
+export type notificationVariants = "success" | "error" | "info" | "warning";
 
 export type notification = {
   variant: notificationVariants;
@@ -22,7 +22,7 @@ export const useNotificationStore = create<NotificationState>((set) => ({
   addNotification: (notification) =>
     set(
       produce((state: NotificationState) => {
-        state.notifications[nanoid(5)] = notification;
+        state.notifications[uuidV4()] = notification;
       })
     ),
   removeNotification: (id) =>

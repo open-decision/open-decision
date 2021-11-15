@@ -1,16 +1,23 @@
 import React, { useEffect } from "react";
-import { styled, IconButton } from "@open-legal-tech/design-system";
+import {
+  styled,
+  IconButton,
+  Box,
+  Text,
+  Heading,
+  Icon,
+} from "@open-legal-tech/design-system";
 import { notification, useNotificationStore } from "./NotificationState";
 import * as Progress from "@radix-ui/react-progress";
 import { motion, useAnimation } from "framer-motion";
 import { useGesture } from "react-use-gesture";
-import { AlertTriangle, Bell, CheckCircle, Slash, X } from "react-feather";
+import { Info, XCircle, CheckCircle, HelpCircle, X } from "react-feather";
 
 const icons = {
-  danger: Slash,
-  neutral: Bell,
+  error: XCircle,
+  info: HelpCircle,
   success: CheckCircle,
-  warning: AlertTriangle,
+  warning: Info,
 } as const;
 
 type NotificationProps = {
@@ -19,30 +26,11 @@ type NotificationProps = {
 };
 
 const Container = styled(motion.div, {
-  boxShadow: "$lg",
+  $color: "$colors$colorScheme11",
+  boxShadow: "$5",
   borderRadius: "$md",
-  border: "2px solid",
-
-  variants: {
-    variant: {
-      neutral: {
-        backgroundColor: "$gray2",
-        color: "$gray9",
-      },
-      danger: {
-        backgroundColor: "$red50",
-        color: "$red800",
-      },
-      warning: {
-        backgroundColor: "$amber50",
-        color: "$amber800",
-      },
-      success: {
-        backgroundColor: "$green50",
-        color: "$green800",
-      },
-    },
-  },
+  backgroundColor: "$colorScheme3",
+  color: "var(--color)",
 
   defaultVariants: {
     variant: "neutral",
@@ -50,19 +38,10 @@ const Container = styled(motion.div, {
 });
 
 const Header = styled("header", {
-  fontSize: "$lg",
-  fontWeight: "$semibold",
   display: "flex",
   alignItems: "center",
-  justifyContent: "space-between",
-
-  "& div": {
-    display: "flex",
-    alignItems: "center",
-  },
+  gap: "$3",
 });
-
-const Content = styled("div", {});
 
 const ProgressBar = styled(Progress.Root, {
   height: 3,
@@ -73,18 +52,14 @@ const ProgressIndicator = styled(Progress.Indicator, {
   backgroundColor: "currentColor",
 });
 
-export const Notification: React.FC<NotificationProps> = ({
-  notification,
-  id,
-  ...props
-}) => {
+export const Notification = ({ notification, id }: NotificationProps) => {
   const animation = useAnimation();
 
   useEffect(() => {
     animation.start("empty");
   }, []);
 
-  const Icon = icons[notification.variant];
+  const IconSVG = icons[notification.variant];
   const removeNotification = useNotificationStore(
     (state) => state.removeNotification
   );
@@ -114,10 +89,9 @@ export const Notification: React.FC<NotificationProps> = ({
       initial="hidden"
       animate="visible"
       exit="exit"
-      variant={notification.variant}
-      {...gestures()}
+      css={{ colorScheme: notification.variant }}
       role="alert"
-      {...props}
+      {...gestures()}
     >
       <ProgressBar>
         <ProgressIndicator
@@ -129,22 +103,24 @@ export const Notification: React.FC<NotificationProps> = ({
           onAnimationComplete={() => removeNotification(id)}
         />
       </ProgressBar>
-      <div className="px-4 py-2">
+      <Box css={{ padding: "$5" }}>
         <Header>
-          <div>
-            <Icon
-              style={{ width: "1.3em", marginRight: "8px", display: "inline" }}
-            />
+          <Icon css={{ marginBottom: "-2px" }}>
+            <IconSVG />
+          </Icon>
+          <Heading size="small" css={{ flex: 1 }}>
             {notification.title}
-          </div>
+          </Heading>
           <IconButton
+            alignByContent="right"
+            variant="ghost"
             onClick={() => removeNotification(id)}
             label="Benachrichtigung schließen"
-            Icon={<X style={{ width: "1.3em" }} />}
+            Icon={<X />}
           />
         </Header>
-        <Content css={{ marginTop: "$2" }}>{notification.content}</Content>
-      </div>
+        <Text css={{ marginTop: "$2" }}>{notification.content}</Text>
+      </Box>
     </Container>
   );
 };
