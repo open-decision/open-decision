@@ -32,6 +32,7 @@ export function RichTextEditor({
   const editorRef = React.useRef<Editor>();
   if (!editorRef.current) editorRef.current = withReact(createEditor());
   const editor = editorRef.current;
+  editor.children = value;
 
   // Slate does not accept an empty array. Since an empty array does not count as undefined we
   // cannot use the default value in the props destructuring.
