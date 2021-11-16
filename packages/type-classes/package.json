@@ -14,7 +14,14 @@
   "publishConfig": {
     "main": "./lib/index.cjs",
     "module": "./lib/index.mjs",
-    "typings": "./lib/index.d.ts"
+    "typings": "./lib/index.d.ts",
+    "exports": {
+      ".": {
+        "import": "./lib/index.mjs",
+        "require": "./lib/index.cjs",
+        "types": "./lib/index.d.ts"
+      }
+    }
   },
   "files": [
     "/lib",

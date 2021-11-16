@@ -1,25 +1,16 @@
-import { Node, Tree } from "@open-decision/type-classes";
-import { isLeft } from "fp-ts/lib/Either";
+import {
+  BuilderNode,
+  BuilderRelation,
+  BuilderTree,
+} from "@open-decision/type-classes";
 
-export class Interpreter {
-  tree: Tree.TTree;
-  currentNode: string;
+class Interpreter {
   history: { nodes: string[]; answers: Record<string, string> };
   state: "initialized" | "idle" | "error" | "interpreting";
+  currentNode: string;
+  hasHistory: boolean;
 
-  constructor(json) {
-    const decodedJSON = Tree.Type.decode(json);
-
-    if (isLeft(decodedJSON))
-      throw new Error(`The provided tree is not in the correct format`);
-    /**
-     * Represents the entire decision tree.
-     */
-    this.tree = decodedJSON.right;
-    /**
-     * The state of the currently active node for this instance of the interpretation.
-     */
-    this.currentNode = this.tree.startNode;
+  constructor() {
     /**
      * The log of visited nodes and given answers.
      */
@@ -28,6 +19,24 @@ export class Interpreter {
      * Represents the current state of the interpretation.
      */
     this.state = "initialized";
+    this.currentNode = "";
+    this.hasHistory = this.history.nodes.length > 0;
+  }
+}
+
+export class BuilderInterpreter extends Interpreter {
+  tree: BuilderTree.TTree;
+
+  constructor(json) {
+    const decodedJSON = BuilderTree.Type.safeParse(json);
+
+    if (!decodedJSON.success)
+      throw new Error(`The provided tree is not in the correct format`);
+
+    super();
+
+    this.tree = decodedJSON.data;
+    this.currentNode = this.tree.startNode;
   }
 
   /**
@@ -41,22 +50,13 @@ export class Interpreter {
   /**
    * Interprets the answer received from the user to determine the next node.
    */
-  evaluateUserInput(answer: string) {
+  evaluateUserInput(relation: BuilderRelation.TRelation) {
     this.state = "interpreting";
 
-    this.history["nodes"].push(this.currentNode);
-    this.history["answers"][this.currentNode] = answer;
+    this._addToHistory(relation.answer ?? "");
+    this.currentNode = relation.target ?? "";
 
-    const nextNode = Node.getNextNodeId(this.tree[this.currentNode], answer);
-
-    if (nextNode instanceof Error) {
-      this.state = "error";
-      return nextNode;
-    } else {
-      this.currentNode = nextNode;
-      this.state = "idle";
-      return this.getCurrentNode();
-    }
+    return this.getCurrentNode();
   }
 
   //Helper functions
@@ -73,7 +73,9 @@ export class Interpreter {
     if (previousNode) {
       delete this.history.answers[this.currentNode];
       this.currentNode = previousNode;
+      this.hasHistory = this.history.nodes.length > 0;
     } else {
+      this.hasHistory = this.history.nodes.length > 0;
       return this.reset();
     }
 
@@ -92,7 +94,6 @@ export class Interpreter {
   getInterpretationState() {
     // Save log and current node
     return {
-      treeChecksum: this.tree.checksum,
       history: this.history,
       currentNode: this.currentNode,
     };
@@ -100,17 +101,16 @@ export class Interpreter {
 
   //Load the JSON file storing the progress
   setInterpretationState(
-    savedState: ReturnType<Interpreter["getInterpretationState"]>
+    savedState: ReturnType<BuilderInterpreter["getInterpretationState"]>
   ) {
-    if (savedState.treeChecksum === this.tree.checksum) {
-      this.currentNode = savedState.currentNode;
-      this.history = savedState.history;
-      return this.getCurrentNode();
-    } else {
-      this.state = "error";
-      return new Error(
-        `The provided savedStates checksum is not equal to this trees checksum.`
-      );
-    }
+    this.currentNode = savedState.currentNode;
+    this.history = savedState.history;
+    return this.getCurrentNode();
+  }
+
+  _addToHistory(answer: string) {
+    this.history["nodes"].push(this.currentNode);
+    this.history["answers"][this.currentNode] = answer;
+    this.hasHistory = this.history.nodes.length > 0;
   }
 }

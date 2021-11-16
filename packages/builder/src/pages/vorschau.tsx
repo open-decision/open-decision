@@ -11,8 +11,22 @@ import * as React from "react";
 import Link from "next/link";
 import { ChevronLeft } from "react-feather";
 import { Preview } from "features/Preview/Preview";
+import { useEditorMachine, useTree } from "features/Builder/state/useTree";
+import { BuilderInterpreter } from "@open-decision/interpreter";
 
 export default function Vorschau() {
+  const [state] = useEditorMachine();
+
+  if (state.matches("empty")) {
+    return <Box>Empty</Box>;
+  }
+
+  if (state.matches("pending")) {
+    return <Box>Loading...</Box>;
+  }
+
+  const InterpreterInstance = new BuilderInterpreter(state.context.tree);
+
   return (
     <MainContent
       css={{
@@ -75,7 +89,10 @@ export default function Vorschau() {
         </Box>
         <Box />
       </Box>
-      <Preview css={{ width: "100vw" }} />
+      <Preview
+        css={{ width: "100vw" }}
+        InterpreterInstance={InterpreterInstance}
+      />
     </MainContent>
   );
 }

@@ -4,9 +4,6 @@ import { v4 as uuidV4 } from "uuid";
 import { BaseTree } from "./shared";
 
 export const Type = BaseTree.extend({
-  selectedNodeId: z.string().optional(),
-  selectedRelationId: z.string().optional(),
-  startNode: z.string().optional(),
   nodes: BuilderNode.Record,
 });
 
@@ -15,6 +12,7 @@ export function create(name: string): TTree {
     id: uuidV4(),
     nodes: {},
     treeName: name,
+    startNode: "",
   };
 
   return newTree;

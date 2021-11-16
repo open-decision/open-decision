@@ -16,7 +16,7 @@ export const BaseTree = z.object({
   id: z.string().uuid(),
   treeName: z.string().min(1),
   nodes: Node.Record,
-  // startNode: z.string(),
+  startNode: z.string(),
 });
 
 // ------------------------------------------------------------------

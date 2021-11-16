@@ -16,7 +16,8 @@
     "lint:fix": "yarn lint --fix",
     "verify": "run-p prettier lint",
     "verify:fix": "yarn prettier:fix && yarn lint:fix",
-    "prebuild": "[[ $CI = true ]] && npx pnpm install -r --store=node_modules/.pnpm-store || echo skiping pnpm install"
+    "prebuild": "[[ $CI = true ]] && npx pnpm install -r --store=node_modules/.pnpm-store || echo skiping pnpm install",
+    "typecheck": "tsc -w"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "2.2.1",
@@ -43,6 +44,7 @@
   },
   "dependencies": {
     "@fontsource/poppins": "^4.5.0",
+    "@open-decision/interpreter": "workspace:^0.0.1",
     "@open-decision/type-classes": "workspace:^0.0.1",
     "@open-legal-tech/design-system": "workspace:^",
     "@radix-ui/colors": "^0.1.7",
@@ -86,8 +88,8 @@
     "react-use": "^17.3.1",
     "react-use-gesture": "^9.1.3",
     "remeda": "^0.0.30",
-    "slate": "^0.66.5",
-    "slate-react": "^0.69.0",
+    "slate": "^0.70.0",
+    "slate-react": "^0.70.1",
     "utility-types": "^3.10.0",
     "uuid": "^8.3.2",
     "xstate": "^4.25.0",
