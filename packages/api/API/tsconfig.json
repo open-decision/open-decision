@@ -6,6 +6,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "strict": true,
+    "forceConsistentCasingInFileNames": true,
     "rootDir": ".",
     "outDir": "dist",
     "sourceMap": true,

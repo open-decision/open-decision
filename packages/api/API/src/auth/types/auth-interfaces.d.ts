@@ -6,7 +6,6 @@ export interface TokenInterface {
   exp: number;
 }
 export interface LogoutInterface {
-  prisma: PrismaClient;
   user?: User;
   accessToken?: string | null;
   refreshToken?: string | null;

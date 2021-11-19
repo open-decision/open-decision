@@ -3,8 +3,9 @@ import { PrismaClient, Prisma } from ".prisma/client";
 import { BaseError } from "../../error-handling/base-error";
 import { verifyAccessTokenAndGetUserUUIDAndExpiration } from "./generate-and-verifyToken";
 import * as schedule from "node-schedule";
+import prisma from "../../init-prisma-client";
 
-export async function cleanBlocklist(prisma: PrismaClient) {
+export async function cleanBlocklist() {
   //Runs every half hour and cleans all expired token from the blocklist
   const job = schedule.scheduleJob("30 * * * *", async function () {
     const currentTime = Math.floor(Date.now() / 1000);
@@ -18,10 +19,7 @@ export async function cleanBlocklist(prisma: PrismaClient) {
   });
 }
 
-export async function blockAccessToken(
-  accessToken: string,
-  prisma: PrismaClient
-) {
+export async function blockAccessToken(accessToken: string) {
   const tokenData = verifyAccessTokenAndGetUserUUIDAndExpiration(accessToken);
 
   if (!(tokenData instanceof Error)) {
@@ -54,10 +52,7 @@ export async function blockAccessToken(
   }
 }
 
-export async function isAccessTokenBlocked(
-  accessToken: string,
-  prisma: PrismaClient
-) {
+export async function isAccessTokenBlocked(accessToken: string) {
   const isBlocked = await prisma.blockedAccessToken.findUnique({
     where: {
       token: accessToken,

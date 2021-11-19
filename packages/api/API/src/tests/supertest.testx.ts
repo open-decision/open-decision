@@ -3,7 +3,7 @@
 import { doesNotMatch } from "assert";
 import request from "supertest";
 import { app, server } from "../index";
-import { prismaMock as prisma } from "./prisma-tests/singleton";
+import { prismaMock as prisma } from "../singleton";
 
 afterAll((done) => {
   server.close();

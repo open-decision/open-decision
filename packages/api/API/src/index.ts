@@ -1,7 +1,8 @@
 import "reflect-metadata";
-import { PrismaClient } from "@prisma/client";
-import express, { Request, Response, NextFunction } from "express";
 
+import prisma from "./init-prisma-client";
+import express, { Request, Response, NextFunction } from "express";
+import dotenv from "dotenv";
 import { graphqlHTTP } from "express-graphql";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
@@ -17,12 +18,10 @@ import {
 import { TreeResolver } from "./graphql/resolvers";
 import { BaseError } from "./error-handling/base-error";
 import { cleanBlocklist } from "./auth/utils/access-token-blocklist";
-
+dotenv.config();
 export const app = express();
 const port = process.env.PORT || 4000;
-export const prisma: PrismaClient = new PrismaClient();
 
-app.locals.prisma = prisma;
 app.use(cookieParser());
 
 app.use(express.json());
@@ -47,7 +46,7 @@ async function asyncPreparation() {
     });
     logError(err);
   }
-  cleanBlocklist(prisma);
+  cleanBlocklist();
 }
 
 app.use("/auth", authRouter);
@@ -66,7 +65,7 @@ app.use(
       return {
         ...req,
         prisma,
-        userUuid: res.locals.userUuid,
+        userUuid: res.context.userUuid,
       };
     },
   }))

@@ -1,12 +1,12 @@
 import { signup, login, refreshAndStoreNewToken } from "../auth/auth-functions";
-import { prismaMock } from "./prisma-tests/singleton";
-import { Role, Prisma } from "@prisma/client";
+import { prismaMock } from "../singleton";
+import { Role, User, Prisma } from "@prisma/client";
 import { Api400Error } from "../error-handling/api-errors";
 import { BaseError } from "../error-handling/base-error";
 
 describe("Authentication - test login", () => {
   it("should login user ", async () => {
-    const user = {
+    const user: User = {
       email: "hello@prisma.io",
       name: "fsd",
       password: "$2a$10$i8w3.o3Rr41Pe5/sRBqIRekwwJ9vsY5UbxCbEZjO2Sqmdho06j1Ca",
@@ -16,13 +16,13 @@ describe("Authentication - test login", () => {
       refreshToken: "",
       refreshTokenExpiry: null,
       loginExpiry: null,
+      passwordResetCode: null,
+      passwordResetExpiry: null,
     };
 
     prismaMock.user.findUnique.mockResolvedValue(user);
 
-    await expect(
-      login("helloprisma.io", "allemeineentchen", prismaMock)
-    ).resolves.toEqual(
+    await expect(login("helloprisma.io", "allemeineentchen")).resolves.toEqual(
       expect.objectContaining({
         accessToken: expect.stringMatching(
           /^^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$/
@@ -38,7 +38,7 @@ describe("Authentication - test login", () => {
 
 describe("Authentication - test login", () => {
   it("should fail as password does not match", async () => {
-    const user = {
+    const user: User = {
       email: "hello@prisma.io",
       name: "fsd",
       password: "$2a$10$i8w3.o3Rr41Pe5sRBqIRekwwJ9vsY5UbxCbEZjO2Sqmdho06j1Ca",
@@ -48,13 +48,13 @@ describe("Authentication - test login", () => {
       refreshToken: "",
       refreshTokenExpiry: null,
       loginExpiry: null,
+      passwordResetCode: null,
+      passwordResetExpiry: null,
     };
 
     prismaMock.user.findUnique.mockResolvedValue(user);
 
-    await expect(
-      login("helloprisma.io", "allemeineentchen", prismaMock)
-    ).resolves.toEqual(
+    await expect(login("helloprisma.io", "allemeineentchen")).resolves.toEqual(
       new BaseError({
         name: "InvalidCredentials",
         message:
@@ -68,9 +68,7 @@ describe("Authentication - test login", () => {
   it("should fail for unknown user ", async () => {
     prismaMock.user.findUnique.mockResolvedValue(null);
 
-    await expect(
-      login("unknown@od.io", "allemeineentchen", prismaMock)
-    ).resolves.toEqual(
+    await expect(login("unknown@od.io", "allemeineentchen")).resolves.toEqual(
       new BaseError({
         name: "InvalidCredentials",
         message:
@@ -86,9 +84,7 @@ describe("Authentication - test sign-up", () => {
       throw new Prisma.PrismaClientKnownRequestError("fsdf", "P2002", "Mocked");
     });
 
-    await expect(
-      signup("helloprisma.io", "allemeineentchen", prismaMock)
-    ).resolves.toEqual(
+    await expect(signup("helloprisma.io", "allemeineentchen")).resolves.toEqual(
       new Api400Error({
         name: "EmailAlreadyUsed",
         message:
@@ -100,7 +96,7 @@ describe("Authentication - test sign-up", () => {
 
 describe("Authentication - test sign-up", () => {
   it("should login user ", async () => {
-    const user = {
+    const user: User = {
       email: "hello@prisma.io",
       name: "fsd",
       password: "$2a$10$i8w3.o3Rr41Pe5/sRBqIRekwwJ9vsY5UbxCbEZjO2Sqmdho06j1Ca",
@@ -110,13 +106,13 @@ describe("Authentication - test sign-up", () => {
       refreshToken: "",
       refreshTokenExpiry: null,
       loginExpiry: null,
+      passwordResetCode: null,
+      passwordResetExpiry: null,
     };
 
     prismaMock.user.create.mockResolvedValue(user);
 
-    await expect(
-      signup("helloprisma.io", "allemeineentchen", prismaMock)
-    ).resolves.toEqual(
+    await expect(signup("helloprisma.io", "allemeineentchen")).resolves.toEqual(
       expect.objectContaining({
         accessToken: expect.stringMatching(
           /^^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$/

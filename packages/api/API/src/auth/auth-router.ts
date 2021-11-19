@@ -37,11 +37,7 @@ authRouter.post(
       );
     }
     let signupResult;
-    signupResult = await signup(
-      req.body.email,
-      req.body.password,
-      req.app.locals.prisma!
-    );
+    signupResult = await signup(req.body.email, req.body.password);
 
     if (signupResult instanceof Error) {
       return next(
@@ -86,11 +82,7 @@ authRouter.post(
       );
     }
 
-    const loginResult = await login(
-      req.body.email,
-      req.body.password,
-      req.app.locals.prisma!
-    );
+    const loginResult = await login(req.body.email, req.body.password);
     if (loginResult instanceof Error) {
       return next(
         new Api400Error({
@@ -121,9 +113,7 @@ authRouter.post(
     const accessToken = req.headers.authorization;
     const refreshToken = req.cookies.refreshCookie;
 
-    const logoutData: LogoutInterface = {
-      prisma: req.app.locals.prisma!,
-    };
+    const logoutData: LogoutInterface = {};
 
     if (accessToken && isJWT(accessToken)) {
       logoutData.accessToken = accessToken;
@@ -136,6 +126,8 @@ authRouter.post(
     //If the refreshToken is valid, it's being deleted from the database. If not, we don't do anything.
 
     await logout(logoutData);
+
+    //TODO: send delete cookie command to client
     res.json({ status: "ok" });
   }
 );
@@ -160,10 +152,7 @@ authRouter.post(
     } else {
       const refreshToken = req.cookies.refreshCookie;
 
-      const refreshHandlerReturn = await refreshAndStoreNewToken(
-        refreshToken,
-        req.app.locals.prisma!
-      );
+      const refreshHandlerReturn = await refreshAndStoreNewToken(refreshToken);
 
       if (refreshHandlerReturn instanceof Error) {
         next(
@@ -202,7 +191,7 @@ authRouter.get(
 authRouter.post(
   "/settings/password",
   isAuthorized,
-  body("oldPassword", "The old password seems to be invalid..").isLength({
+  body("oldPassword", "The old password seems to be invalid.").isLength({
     min: 8,
     max: 100,
   }),
@@ -226,8 +215,7 @@ authRouter.post(
       const result = changePasswordWhenLoggedIn(
         req.body.oldPassword,
         req.body.newPassword,
-        res.locals.userUuid!,
-        req.app.locals.prisma!
+        res.context.userUuid!
       );
     }
   }
@@ -248,11 +236,7 @@ authRouter.post(
         })
       );
     } else {
-      const result = await updateEmail(
-        req.body.email,
-        res.locals.userUuid!,
-        req.app.locals.prisma!
-      );
+      const result = await updateEmail(req.body.email, res.context.userUuid!);
       if (result instanceof Api400Error) {
         return next(result);
       } else {
@@ -280,7 +264,7 @@ authRouter.post(
         })
       );
     } else {
-      requestPasswordResetMail(req.body.email, req.app.locals.prisma!);
+      requestPasswordResetMail(req.body.email);
       res.json({
         message:
           "If this account exists in our database, we will send you an e-mail to reset your password.",
@@ -316,7 +300,7 @@ authRouter.post(
     const newPassword: string = req.body.newPassword;
     if (resetCode) {
       try {
-        resetPasswordWithCode(newPassword, resetCode, req.app.locals.prisma!);
+        resetPasswordWithCode(newPassword, resetCode);
         res.json({
           message:
             "You're password has been reset. You can now log-in with your new password.",

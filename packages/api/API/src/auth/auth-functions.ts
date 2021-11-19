@@ -17,12 +17,10 @@ import {
 import { blockAccessToken } from "./utils/access-token-blocklist";
 import { LogoutInterface } from "./types/auth-interfaces";
 import { UUID } from "../types/uuid-class";
+import { sendPasswordResetMail } from "../services/mail-service";
+import prisma from "../init-prisma-client";
 
-export async function signup(
-  email: string,
-  password: string,
-  prisma: PrismaClient
-) {
+export async function signup(email: string, password: string) {
   //Has password and create user
 
   let user: User;
@@ -75,11 +73,7 @@ export async function signup(
   };
 }
 
-export async function login(
-  email: string,
-  plainPassword: string,
-  prisma: PrismaClient
-) {
+export async function login(email: string, plainPassword: string) {
   // Find user in database
   const user = await prisma.user.findUnique({
     where: { email: email },
@@ -132,26 +126,26 @@ export async function logout(logoutData: LogoutInterface) {
       userUuid = verifyAccessTokenAndGetUserUuid(
         logoutData.accessToken
       ).toString();
-      blockAccessToken(logoutData.accessToken, logoutData.prisma);
+      blockAccessToken(logoutData.accessToken);
     } catch {
       //No need to logout if access token is already invalid
     }
   }
-  resetLogin(userUuid, logoutData.prisma);
+  resetLogin(userUuid);
   //TODO: This is kinda redundant. If we receive an user as well as an refresh token, both should refer to the same user
   //But there may be some edge cases, were we want to be sure that the refresh token is definitely revoked
   if (logoutData.refreshToken) {
-    const user = await logoutData.prisma.user.findFirst({
+    const user = await prisma.user.findFirst({
       where: {
         refreshToken: Base64.stringify(sha256(logoutData.refreshToken)),
       },
     });
     userUuid = user?.uuid;
-    resetLogin(userUuid, logoutData.prisma);
+    resetLogin(userUuid);
   }
 }
 
-function resetLogin(userUuid: string | undefined, prisma: PrismaClient) {
+function resetLogin(userUuid: string | undefined) {
   if (userUuid) {
     prisma.user.update({
       where: {
@@ -166,11 +160,7 @@ function resetLogin(userUuid: string | undefined, prisma: PrismaClient) {
   }
 }
 
-export async function updateEmail(
-  email: string,
-  userUuid: UUID,
-  prisma: PrismaClient
-) {
+export async function updateEmail(email: string, userUuid: UUID) {
   //TODO: verify that e-mail is valid and lowercase, check authentication
   try {
     const updatedUser = await prisma.user.update({
@@ -203,8 +193,7 @@ export async function changePasswordWhenLoggedIn(
   //TODO: verify password, check authentication
   oldPassword: string,
   newPassword: string,
-  userUuid: UUID,
-  prisma: PrismaClient
+  userUuid: UUID
 ) {
   const user = await prisma.user.findUnique({
     where: { uuid: userUuid.toString() },
@@ -225,7 +214,7 @@ export async function changePasswordWhenLoggedIn(
         },
       });
 
-      await logout({ prisma: prisma, user: user });
+      await logout({ user: user });
       return true;
     } else {
       return new BaseError({
@@ -241,10 +230,7 @@ export async function changePasswordWhenLoggedIn(
   }
 }
 
-export async function requestPasswordResetMail(
-  email: string,
-  prisma: PrismaClient
-) {
+export async function requestPasswordResetMail(email: string) {
   const user = await prisma.user.findUnique({
     where: {
       email: email,
@@ -262,15 +248,20 @@ export async function requestPasswordResetMail(
         passwordResetExpiry: Math.floor(Date.now() / 1000) + 3600,
       },
     });
-    //TODO: sent e-mail with reset code here
+
+    const mailResult = await sendPasswordResetMail(resetCode, user.email);
+  } else {
+    return new Api400Error({
+      name: "InvaldidEmail",
+      message: "The e-mail adress is not in the database.",
+    });
   }
 }
 
 export async function resetPasswordWithCode(
   //TODO: verify password
   newPassword: string,
-  resetCode: string,
-  prisma: PrismaClient
+  resetCode: string
 ) {
   const user = await prisma.user.findFirst({
     where: {
@@ -299,7 +290,7 @@ export async function resetPasswordWithCode(
         },
       });
 
-      logout({ prisma: prisma, user: user });
+      logout({ user: user });
     } else {
       throw new BaseError({
         name: "ExpiredResetLink",
@@ -315,10 +306,7 @@ export async function resetPasswordWithCode(
   }
 }
 
-export async function refreshAndStoreNewToken(
-  refreshToken: string,
-  prisma: PrismaClient
-) {
+export async function refreshAndStoreNewToken(refreshToken: string) {
   const refreshReturn = await issueNewToken(refreshToken, prisma);
 
   if (refreshReturn instanceof Error) {

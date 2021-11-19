@@ -23,13 +23,10 @@ const checkAuthorization = async function (
   let userUuid;
   try {
     userUuid = verifyAccessTokenAndGetUserUuid(token);
-    const tokenIsBlocked = await isAccessTokenBlocked(
-      token,
-      req.app.locals.prisma!
-    );
+    const tokenIsBlocked = await isAccessTokenBlocked(token);
     if (!tokenIsBlocked) {
       // If everything is okay, continue
-      res.locals.userUuid = userUuid;
+      res.context.userUuid = userUuid;
       return next();
     } else {
       return next(
