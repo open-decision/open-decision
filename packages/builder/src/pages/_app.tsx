@@ -7,11 +7,11 @@ import { globalStyles } from "@open-legal-tech/design-system";
 import { inspect } from "@xstate/inspect";
 import { TreeProvider } from "features/Builder/state/useTree";
 
-if (typeof window !== "undefined") {
-  inspect({
-    iframe: false,
-  });
-}
+// if (typeof window !== "undefined") {
+//   inspect({
+//     iframe: false,
+//   });
+// }
 
 const queryClient = new QueryClient();
 

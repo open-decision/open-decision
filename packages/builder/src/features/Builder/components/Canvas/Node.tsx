@@ -7,17 +7,16 @@ import {
   Icon,
 } from "@open-legal-tech/design-system";
 import React, { memo } from "react";
-import { MoreHorizontal, Trash } from "react-feather";
+import { MoreHorizontal, Star, Trash } from "react-feather";
 import {
   Handle,
   NodeProps,
   Position,
   useStoreState,
 } from "react-flow-renderer";
-import { useEditor } from "../state/useEditor";
-import { useTree } from "../state/useTree";
-import { nodeHeight, nodeWidth } from "../utilities/constants";
-import { NodeData } from "../types/react-flow";
+import { useTree } from "../../state/useTree";
+import { nodeHeight, nodeWidth } from "../../utilities/constants";
+import { NodeData } from "../../types/react-flow";
 
 const Port = styled(Handle, {
   backgroundColor: "$gray1 !important",
@@ -36,9 +35,12 @@ export const Node = memo(({ id, data }: NodeProps<NodeData>) => {
     state.connectionHandleType != null,
     state.connectionNodeId,
   ]);
-  const { selectedNodeId } = useEditor();
-  const [, send] = useTree();
+
+  const [selectedNodeId, send] = useTree((state) => state.selectedNodeId);
+  const [startNode] = useTree((state) => state.startNode);
+
   const selected = selectedNodeId === id;
+  const isStartNode = startNode === id;
 
   return (
     <Box
@@ -59,6 +61,18 @@ export const Node = memo(({ id, data }: NodeProps<NodeData>) => {
         },
       }}
     >
+      {isStartNode ? (
+        <Icon
+          size="small"
+          css={{
+            position: "absolute",
+            top: 10,
+            left: 10,
+          }}
+        >
+          <Star style={{ fill: "orange", stroke: "orange" }} />
+        </Icon>
+      ) : null}
       <Port
         type="target"
         position={Position.Top}
@@ -94,12 +108,27 @@ export const Node = memo(({ id, data }: NodeProps<NodeData>) => {
           </DropdownMenu.Trigger>
           <DropdownMenu.Content>
             <DropdownMenu.Item
+              css={{ colorScheme: "primary" }}
+              onSelect={() =>
+                send({ type: "updateTree", tree: { startNode: id } })
+              }
+            >
+              <Icon
+                label="Zur Startnode machen"
+                size="extra-small"
+                css={{ $$paddingInline: 0 }}
+              >
+                <Star />
+              </Icon>
+              Zur Startnode machen
+            </DropdownMenu.Item>
+            <DropdownMenu.Item
               css={{ colorScheme: "error" }}
               onSelect={() => send({ type: "deleteNode", ids: [id] })}
             >
               <Icon
                 label="Löschen Icon"
-                size="small"
+                size="extra-small"
                 css={{ $$paddingInline: 0 }}
               >
                 <Trash />

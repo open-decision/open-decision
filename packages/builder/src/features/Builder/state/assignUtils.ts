@@ -140,17 +140,15 @@ export const selectNode = immerAssign(
 
 type CreateTreeEvent = { type: "createTree"; name: string };
 
-export const createTree = assign(
-  (context: Context, { name }: CreateTreeEvent) => BuilderTree.create(name)
+export const createTree = assign((_: Context, { name }: CreateTreeEvent) =>
+  BuilderTree.create(name)
 );
 type LoadTreeEvent = {
   type: "loadTree";
   tree: BuilderTree.TTree;
 };
 
-export const loadTree = assign(
-  (context: Context, { tree }: LoadTreeEvent) => tree
-);
+export const loadTree = assign((_: Context, { tree }: LoadTreeEvent) => tree);
 type UpdateTreeEvent = {
   type: "updateTree";
   tree: DeepPartial<BuilderTree.TTree>;
