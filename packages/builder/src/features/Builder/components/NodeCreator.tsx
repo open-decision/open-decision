@@ -11,16 +11,14 @@ import {
 import { Plus } from "react-feather";
 import { useCenter } from "../utilities/useCenter";
 import { nodeHeight, nodeWidth } from "../utilities/constants";
-import { usePartOfTree } from "../state/useTree";
+import { useTree } from "../state/useTree";
 import { BuilderNode } from "@open-decision/type-classes";
 
 type Props = { css?: StyleObject };
 
 export const NodeCreator = ({ css }: Props) => {
-  const [nodes, send] = usePartOfTree((state) => state.context.nodes);
-  const [selectedNodeId] = usePartOfTree(
-    (state) => state.context.selectedNodeId
-  );
+  const [nodes, send] = useTree((state) => state.nodes);
+  const [selectedNodeId] = useTree((state) => state.selectedNodeId);
 
   const items = React.useMemo(
     () =>
@@ -65,7 +63,7 @@ export const NodeCreator = ({ css }: Props) => {
   );
 };
 const NodeCreatorInput = ({ createHandler }) => {
-  const [, send] = usePartOfTree((state) => state.context.nodes);
+  const [, send] = useTree((state) => state.nodes);
 
   const onDragStart = (event: React.DragEvent<HTMLButtonElement>) => {
     event.dataTransfer.setData("nodeLabel", inputValue);

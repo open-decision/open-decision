@@ -1,15 +1,13 @@
 import { BuilderNode } from "@open-decision/type-classes";
-import { usePartOfTree } from "./useTree";
+import { useTree } from "./useTree";
 
 export function useNode(id: string): BuilderNode.TNode {
-  const [node] = usePartOfTree((state) => {
-    return state.context.nodes[id];
-  });
+  const [node] = useTree((state) => state.nodes[id]);
 
   return node;
 }
 
 export function useNodes(ids: string[]): BuilderNode.TNode[] {
-  const [nodes] = usePartOfTree((state) => state.context.nodes);
+  const [nodes] = useTree((state) => state.nodes);
   return ids.map((id) => nodes[id]);
 }

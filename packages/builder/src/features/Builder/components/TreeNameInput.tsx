@@ -6,7 +6,7 @@ import {
   styled,
   StyleObject,
 } from "@open-legal-tech/design-system";
-import { usePartOfTree } from "features/Builder/state/useTree";
+import { useTree } from "features/Builder/state/useTree";
 import * as React from "react";
 
 const Container = styled(Box, {
@@ -17,7 +17,7 @@ const Container = styled(Box, {
 type Props = { css?: StyleObject };
 
 export function TreeNameInput({ css }: Props) {
-  const [treeName, send] = usePartOfTree((state) => state.context.treeName);
+  const [treeName, send] = useTree((state) => state.treeName);
 
   return (
     <Container css={css}>

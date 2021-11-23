@@ -120,15 +120,15 @@ export function OptionTargetInput({
   onDelete,
   groupRef,
 }: SingleSelectInputProps): JSX.Element {
-  const [tree, send] = usePartOfTree((state) => state.context);
+  const [tree, send] = useTree();
   const node = useNode(nodeId);
   const allOptions = pipe(
-    tree.nodes,
+    tree.context.nodes,
     values,
     map((node) => ({ id: node.id, label: node.name }))
   );
   const nodeOptions = pipe(
-    BuilderTree.getConnectableNodes(node)(tree),
+    BuilderTree.getConnectableNodes(node)(tree.context),
     values,
     map((node) => ({ id: node.id, label: node.name }))
   );

@@ -3,17 +3,15 @@ import { OnLoadParams, useZoomPanHelper } from "react-flow-renderer";
 import { calculateCenterOfNode } from "../utilities/useCenter";
 import { sidebarWidth, transitionDuration } from "../utilities/constants";
 import { useTree } from "./useTree";
-import { Context, SendFn } from "./treeMachine";
 import { BuilderNode } from "@open-decision/type-classes";
 
 type EditorState = {
-  send: SendFn;
   reactFlowInstance?: OnLoadParams<any>;
   setReactFlowInstance: (newInstance: OnLoadParams<any>) => void;
   isNodeEditingSidebarOpen: boolean;
   closeNodeEditingSidebar: () => void;
   isTransitioning: boolean;
-} & Context;
+};
 
 export const EditorContext = React.createContext<EditorState | null>(null);
 
@@ -56,13 +54,11 @@ export function EditorProvider({ children }: TreeProviderProps) {
   return (
     <EditorContext.Provider
       value={{
-        send,
         reactFlowInstance,
         setReactFlowInstance,
         isNodeEditingSidebarOpen: Boolean(selectedNodeId),
         closeNodeEditingSidebar: () => send({ type: "selectNode", nodeId: "" }),
         isTransitioning,
-        ...state.context,
       }}
     >
       {children}

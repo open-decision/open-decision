@@ -11,11 +11,11 @@ import * as React from "react";
 import Link from "next/link";
 import { ChevronLeft } from "react-feather";
 import { Preview } from "features/Preview/Preview";
-import { useEditorMachine, useTree } from "features/Builder/state/useTree";
+import { useTree } from "features/Builder/state/useTree";
 import { BuilderInterpreter } from "@open-decision/interpreter";
 
 export default function Vorschau() {
-  const [state] = useEditorMachine();
+  const [state] = useTree();
 
   if (state.matches("empty")) {
     return <Box>Empty</Box>;
@@ -25,7 +25,7 @@ export default function Vorschau() {
     return <Box>Loading...</Box>;
   }
 
-  const InterpreterInstance = new BuilderInterpreter(state.context.tree);
+  const InterpreterInstance = new BuilderInterpreter(state.context);
 
   return (
     <MainContent
@@ -53,6 +53,8 @@ export default function Vorschau() {
               color: "$gray11",
               fontWeight: "$extra-small-heading",
               padding: "var(--padding)",
+              maxWidth: "max-content",
+              marginBottom: "-1px",
             }}
           >
             <Icon label="Zurück">

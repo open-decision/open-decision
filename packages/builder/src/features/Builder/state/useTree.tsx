@@ -7,6 +7,7 @@ import {
   treeMachine,
   TreeService,
 } from "./treeMachine";
+import { BuilderTree } from "@open-decision/type-classes";
 
 export const TreeContext = React.createContext<TreeService | null>(null);
 type TreeProviderProps = Omit<
@@ -31,27 +32,19 @@ export function useTreeService() {
   return treeService;
 }
 
-type usePartOfTree = <
-  T,
-  TEmitted = TreeService extends Subscribable<infer Emitted> ? Emitted : never
->(
-  selector: (emitted: TEmitted) => T,
-  compare?: (a: T, b: T) => boolean,
-  getSnapshot?: (a: TreeService) => TEmitted
-) => [T, SendFn];
-export const usePartOfTree: usePartOfTree = (
-  selectorFn,
-  compare,
-  getSnapshot
-) => {
+export function useTree(): [InterpretedTreeState, SendFn];
+export function useTree<T>(
+  selectorFn?: (tree: BuilderTree.TTree) => T
+): [T, SendFn];
+export function useTree<T>(
+  selectorFn?: (tree: BuilderTree.TTree) => T
+): [InterpretedTreeState | T, SendFn] {
   const service = useTreeService();
-  const data = useSelector(service, selectorFn, compare, getSnapshot);
+  const hasSelector = selectorFn != null;
+
+  const data = useSelector(service, (state) =>
+    hasSelector ? selectorFn(state.context) : state
+  );
 
   return [data, service.send];
-};
-
-export const useTree = (): [InterpretedTreeState, SendFn] => {
-  const service = useTreeService();
-
-  return useActor(service);
-};
+}
