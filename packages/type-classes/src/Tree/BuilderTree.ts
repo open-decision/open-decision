@@ -5,6 +5,9 @@ import { BaseTree } from "./shared";
 
 export const Type = BaseTree.extend({
   nodes: BuilderNode.Record,
+  selectedNodeId: z.string(),
+  selectedRelationId: z.string(),
+  transform: z.object({ x: z.number(), y: z.number(), zoom: z.number() }),
 });
 
 export function create(name: string): TTree {
@@ -13,7 +16,10 @@ export function create(name: string): TTree {
     nodes: {},
     treeName: name,
     startNode: "",
-  };
+    transform: { x: 0, y: 0, zoom: 1 },
+    selectedNodeId: "",
+    selectedRelationId: "",
+  } as TTree;
 
   return newTree;
 }
