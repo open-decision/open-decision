@@ -11,6 +11,10 @@ export const Link = styled("a", {
   textDecoration: "none",
   position: "relative",
 
+  "&:hover": {
+    color: "$gray12",
+  },
+
   "&::before": {
     content: '""',
     position: "absolute",
