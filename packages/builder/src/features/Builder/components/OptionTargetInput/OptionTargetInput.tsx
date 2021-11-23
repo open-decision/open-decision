@@ -18,7 +18,7 @@ import { pipe } from "fp-ts/lib/function";
 import { Plus, Trash, Crosshair } from "react-feather";
 import { useNode } from "features/Builder/state/useNode";
 import { DragHandle } from "./DragHandle";
-import { usePartOfTree, useTree } from "features/Builder/state/useTree";
+import { useTree } from "features/Builder/state/useTree";
 import { useClickAway, useUnmount } from "react-use";
 import { Reorder, useDragControls } from "framer-motion";
 import { map, values } from "remeda";

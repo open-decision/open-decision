@@ -1,6 +1,6 @@
 import { BuilderNode } from "@open-decision/type-classes";
+import { NodeData } from "features/Builder/types/react-flow";
 import { Elements } from "react-flow-renderer";
-import { NodeData } from "../types/react-flow";
 
 export function transformToReactFlowNodes(
   nodes: BuilderNode.TNodesRecord
