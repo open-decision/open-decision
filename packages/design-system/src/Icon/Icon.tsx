@@ -18,7 +18,18 @@ const StyledIcon = styled("span", {
   },
 
   variants: {
-    size: iconSizes,
+    size: {
+      ...iconSizes,
+      "extra-small": {
+        $$paddingInline: "$space$1",
+        $$iconSize: "16px",
+
+        "& > svg": {
+          width: "$$iconSize",
+          height: "$$iconSize",
+        },
+      },
+    },
     alignByContent,
   },
 
