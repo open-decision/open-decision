@@ -160,6 +160,7 @@ export function Root({
           getItemProps,
         },
       }}
+      key={items.length}
     >
       <Box css={css} ref={ref}>
         {children}

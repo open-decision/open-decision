@@ -8,15 +8,11 @@ import {
 } from "@open-legal-tech/design-system";
 import React, { memo } from "react";
 import { MoreHorizontal, Star, Trash } from "react-feather";
-import {
-  Handle,
-  NodeProps,
-  Position,
-  useStoreState,
-} from "react-flow-renderer";
+import { Handle, NodeProps, Position } from "react-flow-renderer";
 import { useTree } from "../../state/useTree";
 import { nodeHeight, nodeWidth } from "../../utilities/constants";
 import { NodeData } from "../../types/react-flow";
+import { useEditor } from "features/Builder/state/useEditor";
 
 const Port = styled(Handle, {
   backgroundColor: "$gray1 !important",
@@ -31,13 +27,9 @@ const Port = styled(Handle, {
 });
 
 export const Node = memo(({ id, data }: NodeProps<NodeData>) => {
-  const [isConnecting, connectionNodeId] = useStoreState((state) => [
-    state.connectionHandleType != null,
-    state.connectionNodeId,
-  ]);
-
   const [selectedNodeId, send] = useTree((state) => state.selectedNodeId);
   const [startNode] = useTree((state) => state.startNode);
+  const { isConnecting, connectingNodeId } = useEditor();
 
   const selected = selectedNodeId === id;
   const isStartNode = startNode === id;
@@ -154,7 +146,7 @@ export const Node = memo(({ id, data }: NodeProps<NodeData>) => {
         type="source"
         position={Position.Bottom}
         css={{ bottom: "-6px !important" }}
-        data-active={isConnecting && connectionNodeId === id}
+        data-active={isConnecting && connectingNodeId === id}
       />
     </Box>
   );

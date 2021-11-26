@@ -32,10 +32,11 @@ type Props = { children?: React.ReactNode; css?: StyleObject };
 export function Canvas({ children, css }: Props) {
   const [state, send] = useTree();
   const {
-    reactFlowInstance,
+    reactFlowWrapperRef,
     setReactFlowInstance,
     closeNodeEditingSidebar,
     isTransitioning,
+    projectCoordinates,
   } = useEditor();
 
   const elements = [
@@ -48,7 +49,6 @@ export function Canvas({ children, css }: Props) {
   ];
 
   const sourceNodeId = React.useRef<string | undefined>(undefined);
-  const reactFlowWrapper = React.useRef<HTMLDivElement | null>(null);
 
   const onDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -59,18 +59,16 @@ export function Canvas({ children, css }: Props) {
     event.preventDefault();
     const name = event.dataTransfer.getData("nodeLabel");
 
-    if (reactFlowWrapper.current && reactFlowInstance) {
-      const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
+    const coordinates = projectCoordinates({
+      x: event.clientX,
+      y: event.clientY,
+    });
 
-      const position = reactFlowInstance.project({
-        x: event.clientX - reactFlowBounds.left,
-        y: event.clientY - reactFlowBounds.top,
-      });
-
+    if (coordinates) {
       send({
         type: "addNode",
         value: BuilderNode.create({
-          position,
+          position: coordinates,
           name,
         }),
       });
@@ -78,14 +76,14 @@ export function Canvas({ children, css }: Props) {
   };
 
   return (
-    <Container ref={reactFlowWrapper} css={css}>
+    <Container ref={reactFlowWrapperRef} css={css}>
       <ReactFlow
         className={canvasStyles().className}
         data-transition={isTransitioning}
         onPaneClick={() => closeNodeEditingSidebar()}
         nodeTypes={customNodes}
         elements={elements}
-        deleteKeyCode={46}
+        // deleteKeyCode={46}
         paneMoveable={!isTransitioning}
         zoomOnPinch={!isTransitioning}
         zoomOnScroll={!isTransitioning}
@@ -124,6 +122,7 @@ export function Canvas({ children, css }: Props) {
         onDrop={onDrop}
         onLoad={(instance) => {
           setReactFlowInstance(instance);
+          instance.fitView({ maxZoom: 1, minZoom: 1 });
         }}
         onElementClick={(event, element: FlowElement<NodeData>) => {
           if (
@@ -143,7 +142,9 @@ export function Canvas({ children, css }: Props) {
           gridRow: "1",
           isolation: "isolate",
         }}
-      />
+      >
+        {/* <Controls style={{ display: "flex", left: "50%" }} /> */}
+      </ReactFlow>
       {children}
     </Container>
   );

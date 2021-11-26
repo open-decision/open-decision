@@ -9,9 +9,8 @@ import {
   Box,
 } from "@open-legal-tech/design-system";
 import { Plus } from "react-feather";
-import { useCenter } from "../utilities/useCenter";
-import { nodeHeight, nodeWidth } from "../utilities/constants";
 import { useTree } from "../state/useTree";
+import { useEditor } from "../state/useEditor";
 import { BuilderNode } from "@open-decision/type-classes";
 
 type Props = { css?: StyleObject };
@@ -19,6 +18,7 @@ type Props = { css?: StyleObject };
 export const NodeCreator = ({ css }: Props) => {
   const [nodes, send] = useTree((state) => state.nodes);
   const [selectedNodeId] = useTree((state) => state.selectedNodeId);
+  const { getCenter } = useEditor();
 
   const items = React.useMemo(
     () =>
@@ -29,11 +29,9 @@ export const NodeCreator = ({ css }: Props) => {
     [nodes]
   );
 
-  const center = useCenter({ x: nodeWidth / 2, y: nodeHeight / 2 });
-
   function createHandler(label: string) {
     const newNode = BuilderNode.create({
-      position: center,
+      position: getCenter(),
       name: label,
     });
     send({ type: "addNode", value: newNode });
@@ -56,12 +54,14 @@ export const NodeCreator = ({ css }: Props) => {
         items={items}
         onCreate={createHandler}
         resetOnBlur
+        key={items.length}
       >
         <NodeCreatorInput createHandler={createHandler} />
       </Combobox.Root>
     </Form>
   );
 };
+
 const NodeCreatorInput = ({ createHandler }) => {
   const [, send] = useTree((state) => state.nodes);
 

@@ -11,3 +11,11 @@ export function useNodes(ids: string[]): BuilderNode.TNode[] {
   const [nodes] = useTree((state) => state.nodes);
   return ids.map((id) => nodes[id]);
 }
+
+export function useSelectedNode() {
+  const [node] = useTree((state) => state.nodes[state.selectedNodeId]);
+
+  if (!node) return undefined;
+
+  return node;
+}

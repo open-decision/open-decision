@@ -9,17 +9,16 @@ import {
 import { RichTextEditor } from "components/RichTextEditor";
 import { OptionTargetInputs } from "features/Builder/components/OptionTargetInput/OptionTargetInput";
 import * as React from "react";
-import { useNode, useNodes } from "../state/useNode";
+import { useNodes } from "../state/useNode";
 import { useTree } from "../state/useTree";
-import { BuilderTree } from "@open-decision/type-classes";
+import { BuilderNode, BuilderTree } from "@open-decision/type-classes";
 
-type NodeEditingSidebarProps = { nodeId: string };
+type NodeEditingSidebarProps = { node: BuilderNode.TNode };
 
 export function NodeEditingSidebar({
-  nodeId,
+  node,
 }: NodeEditingSidebarProps): JSX.Element {
   const [tree, send] = useTree();
-  const node = useNode(nodeId);
   const parentNodesIds = BuilderTree.getParents(node.id)(tree.context);
   const parentNodes = useNodes(parentNodesIds);
 
@@ -30,7 +29,7 @@ export function NodeEditingSidebar({
           onChange={({ values }) => {
             send({
               type: "updateNode",
-              id: nodeId,
+              id: node.id,
               node: { name: values.nodeName },
             });
           }}
@@ -63,7 +62,7 @@ export function NodeEditingSidebar({
           setValue={(newValue) =>
             send({
               type: "updateNode",
-              id: nodeId,
+              id: node.id,
               node: { content: newValue },
             })
           }

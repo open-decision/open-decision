@@ -43,6 +43,7 @@ importers:
 
   packages/builder:
     specifiers:
+      '@agney/react-loading': ^0.1.2
       '@fontsource/poppins': ^4.5.0
       '@graphql-codegen/cli': 2.2.1
       '@graphql-codegen/introspection': 2.1.0
@@ -116,6 +117,7 @@ importers:
       xstate: ^4.25.0
       zustand: ^3.6.1
     dependencies:
+      '@agney/react-loading': 0.1.2_react@17.0.2
       '@fontsource/poppins': 4.5.0
       '@open-decision/interpreter': link:../interpreter
       '@open-decision/type-classes': link:../type-classes
@@ -367,6 +369,16 @@ importers:
       vite: 2.6.13
 
 packages:
+
+  /@agney/react-loading/0.1.2_react@17.0.2:
+    resolution: {integrity: sha512-kkMpNtdGPfkPXoJQyulJsiapgdbZA0AkMEMOoVYE+10hC151Lvzdjpmg5EITxw+HTNkZ6yGa2EScI+lU/I9UgQ==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>=16'
+    dependencies:
+      react: 17.0.2
+      tiny-invariant: 1.2.0
+    dev: false
 
   /@babel/code-frame/7.10.4:
     resolution: {integrity: sha512-vG6SvB6oYEhvgisZNFRmRCUkLz11c7rp+tbNTynGqc6mS1d5ATd/sGyV6W0KZZnXRKMTzZDRgQT3Ou9jhpAfUg==}
@@ -17342,6 +17354,10 @@ packages:
 
   /tiny-invariant/1.0.6:
     resolution: {integrity: sha512-FOyLWWVjG+aC0UqG76V53yAWdXfH8bO6FNmyZOuUrzDzK8DI3/JRY25UD7+g49JWM1LXwymsKERB+DzI0dTEQA==}
+    dev: false
+
+  /tiny-invariant/1.2.0:
+    resolution: {integrity: sha512-1Uhn/aqw5C6RI4KejVeTg6mIS7IqxnLJ8Mv2tV5rTc0qWobay7pDUz6Wi392Cnc8ak1H0F2cjoRzb2/AW4+Fvg==}
     dev: false
 
   /tiny-warning/1.0.3:

@@ -43,6 +43,7 @@
     "typescript": "^4.4.4"
   },
   "dependencies": {
+    "@agney/react-loading": "^0.1.2",
     "@fontsource/poppins": "^4.5.0",
     "@open-decision/interpreter": "workspace:^0.0.1",
     "@open-decision/type-classes": "workspace:^0.0.1",

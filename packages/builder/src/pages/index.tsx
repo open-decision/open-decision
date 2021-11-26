@@ -217,9 +217,7 @@ const Editor = () => {
           justifyContent: "center",
           alignItems: "center",
         }}
-      >
-        <Heading size="large">Der Editor konnte nicht gestartet werden</Heading>
-      </Box>
+      ></Box>
     </>
   );
 };

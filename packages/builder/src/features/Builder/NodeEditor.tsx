@@ -3,17 +3,19 @@ import { Sidebar } from "components/Sidebar";
 import React from "react";
 import { NodeCreator } from "./components/NodeCreator";
 import { NodeEditingSidebar } from "./components/NodeEditingSidebar";
-import { useEditor } from "./state/useEditor";
 import { useTree } from "./state/useTree";
 import { Canvas } from "./components/Canvas/Canvas";
+import { useSelectedNode } from "./state/useNode";
 
 type NodeEditorProps = {
   css?: StyleObject;
 };
 
 export const NodeEditor = ({ css }: NodeEditorProps) => {
-  const { isNodeEditingSidebarOpen } = useEditor();
-  const [state, send] = useTree();
+  const [, send] = useTree();
+  const selectedNode = useSelectedNode();
+
+  const sidebarOpen = selectedNode != null;
 
   return (
     <>
@@ -44,13 +46,9 @@ export const NodeEditor = ({ css }: NodeEditorProps) => {
           gridRow: "2",
           gridColumn: "2",
         }}
-        open={isNodeEditingSidebarOpen}
+        open={sidebarOpen}
       >
-        {state.context.selectedNodeId ? (
-          <NodeEditingSidebar nodeId={state.context.selectedNodeId} />
-        ) : (
-          <p>Bitte wähle einen Knoten aus</p>
-        )}
+        {sidebarOpen ? <NodeEditingSidebar node={selectedNode} /> : null}
       </Sidebar>
     </>
   );

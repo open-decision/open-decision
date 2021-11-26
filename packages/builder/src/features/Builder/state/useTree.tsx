@@ -1,6 +1,5 @@
 import * as React from "react";
-import { useActor, useInterpret, useSelector } from "@xstate/react";
-import { Subscribable } from "xstate";
+import { useInterpret, useSelector } from "@xstate/react";
 import {
   InterpretedTreeState,
   SendFn,
@@ -45,6 +44,8 @@ export function useTree<T>(
   const data = useSelector(service, (state) =>
     hasSelector ? selectorFn(state.context) : state
   );
+
+  React.useDebugValue("Tree");
 
   return [data, service.send];
 }
