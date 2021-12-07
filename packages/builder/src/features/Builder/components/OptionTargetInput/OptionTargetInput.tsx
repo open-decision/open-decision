@@ -1,7 +1,9 @@
 import {
   Box,
+  Button,
   Combobox,
   Form,
+  Icon,
   IconButton,
   IconButtonProps,
   Input,
@@ -23,7 +25,7 @@ import { useClickAway, useUnmount } from "react-use";
 import { Reorder, useDragControls } from "framer-motion";
 import { map, values } from "remeda";
 
-const StyledReorderGroup = styled(Box, {
+const StyledReorderGroup = styled(Reorder.Group, {
   listStyle: "none",
   padding: 0,
   display: "grid",
@@ -54,29 +56,32 @@ export function OptionTargetInputs({ node }: SingleSelectProps) {
         >
           Pfade
         </Label>
-        <IconButton
+        <Button
           variant="tertiary"
           round
-          Icon={<Plus />}
-          label="Neue Antwortmöglichkeit hinzufügen"
+          square
           onClick={() => send({ type: "addRelation", nodeId: node.id })}
-        />
+        >
+          <Icon label="Neue Antwortmöglichkeit hinzufügen">
+            <Plus />
+          </Icon>
+        </Button>
       </Box>
       <StyledReorderGroup
         ref={ref}
-        // axis="y"
-        // values={relations}
-        // onReorder={(newOrder: BuilderRelation.TRelation[]) =>
-        //   send({
-        //     type: "updateNode",
-        //     id: node.id,
-        //     node: {
-        //       relations: Object.fromEntries(
-        //         newOrder.map((relation) => [relation.id, relation])
-        //       ),
-        //     },
-        //   })
-        // }
+        axis="y"
+        values={relations}
+        onReorder={(newOrder: BuilderRelation.TRelation[]) =>
+          send({
+            type: "updateNode",
+            id: node.id,
+            node: {
+              relations: Object.fromEntries(
+                newOrder.map((relation) => [relation.id, relation])
+              ),
+            },
+          })
+        }
       >
         {relations.map((relation) => (
           <OptionTargetInput
@@ -143,109 +148,109 @@ export function OptionTargetInput({
   return (
     // FIXME Open issue -> https://github.com/framer/motion/issues/1313
     // The Reorder.Item creates a stacking context which makes it impossible to have the Combobox overlap other Reorder.Items
-    // <Reorder.Item
-    //   value={input}
-    //   dragListener={false}
-    //   dragControls={controls}
-    //   dragConstraints={groupRef}
-    // >
-    <Form
-      onChange={({ values }) => onChange(values)}
-      initialValues={{
-        answer: input.answer ?? "",
-        target: input.target ?? "",
-      }}
-      css={{
-        display: "flex",
-        position: "relative",
-      }}
+    <Reorder.Item
+      value={input}
+      dragListener={false}
+      dragControls={controls}
+      dragConstraints={groupRef}
     >
-      <Box
-        onClick={() => send({ type: "selectRelation", id: input.id })}
-        ref={ref}
+      <Form
+        onChange={({ values }) => onChange(values)}
+        initialValues={{
+          answer: input.answer ?? "",
+          target: input.target ?? "",
+        }}
         css={{
-          flex: 1,
-          display: "grid",
-          gridTemplateColumns: "max-content 1fr",
-          border: "1px solid $gray8",
-          borderRadius: "$md",
-          backgroundColor: "$gray1",
+          display: "flex",
+          position: "relative",
         }}
       >
-        <Input
+        <Box
+          onClick={() => send({ type: "selectRelation", id: input.id })}
+          ref={ref}
           css={{
-            borderRadius: "0",
-            borderTopLeftRadius: "inherit",
-            borderTopRightRadius: "inherit",
-            gridColumn: "1 / -1",
-            borderBottom: "inherit",
-            margin: "-1px",
-            marginBottom: 0,
+            flex: 1,
+            display: "grid",
+            gridTemplateColumns: "max-content 1fr",
+            border: "1px solid $gray8",
+            borderRadius: "$md",
+            backgroundColor: "$gray1",
           }}
-          name="answer"
-          placeholder="Antwort"
-        />
-        <NodeLink target={input.target} />
-        <Combobox.Root
-          name="target"
-          onCreate={(name) => {
-            const newNode = BuilderNode.createNewAssociatedNode(node, {
-              name,
-            });
-
-            send([
-              {
-                type: "addNode",
-                value: newNode,
-              },
-              {
-                type: "updateRelation",
-                nodeId: node.id,
-                relationId: input.id,
-                relation: {
-                  target: newNode.id,
-                },
-              },
-            ]);
-
-            return { id: newNode.id, label: newNode.name };
-          }}
-          items={allOptions}
-          subsetOfItems={nodeOptions}
         >
-          <Combobox.Input
-            menuCss={{
-              backgroundColor: "$gray1",
-              "&[data-state='open']": { border: "1px solid $gray8" },
+          <Input
+            css={{
+              borderRadius: "0",
+              borderTopLeftRadius: "inherit",
+              borderTopRightRadius: "inherit",
+              gridColumn: "1 / -1",
+              borderBottom: "inherit",
+              margin: "-1px",
+              marginBottom: 0,
             }}
+            name="answer"
+            placeholder="Antwort"
+          />
+          <NodeLink target={input.target} />
+          <Combobox.Root
+            name="target"
+            onCreate={(name) => {
+              const newNode = BuilderNode.createNewAssociatedNode(node, {
+                name,
+              });
+
+              send([
+                {
+                  type: "addNode",
+                  value: newNode,
+                },
+                {
+                  type: "updateRelation",
+                  nodeId: node.id,
+                  relationId: input.id,
+                  relation: {
+                    target: newNode.id,
+                  },
+                },
+              ]);
+
+              return { id: newNode.id, label: newNode.name };
+            }}
+            items={allOptions}
+            subsetOfItems={nodeOptions}
           >
-            <Input
-              name="target"
-              placeholder="Zielknoten auswählen"
-              css={{ border: 0, borderRadius: 0 }}
-            />
-          </Combobox.Input>
-        </Combobox.Root>
-      </Box>
-      <IconButton
-        css={{ colorScheme: "error" }}
-        variant="ghost"
-        size="small"
-        label="Entferne den Input"
-        Icon={<Trash />}
-        type="button"
-        onClick={() => onDelete(input.id)}
-      />
-      <IconButton
-        variant="ghost"
-        size="small"
-        label="Entferne den Input"
-        type="button"
-        Icon={<DragHandle />}
-        onPointerDown={(event) => controls.start(event)}
-      />
-    </Form>
-    // </Reorder.Item>
+            <Combobox.Input
+              menuCss={{
+                backgroundColor: "$gray1",
+                "&[data-state='open']": { border: "1px solid $gray8" },
+              }}
+            >
+              <Input
+                name="target"
+                placeholder="Zielknoten auswählen"
+                css={{ border: 0, borderRadius: 0 }}
+              />
+            </Combobox.Input>
+          </Combobox.Root>
+        </Box>
+        <IconButton
+          css={{ colorScheme: "error" }}
+          variant="ghost"
+          size="small"
+          label="Entferne den Input"
+          Icon={<Trash />}
+          type="button"
+          onClick={() => onDelete(input.id)}
+        />
+        <IconButton
+          variant="ghost"
+          size="small"
+          label="Entferne den Input"
+          type="button"
+          Icon={<DragHandle />}
+          onPointerDown={(event) => controls.start(event)}
+        />
+      </Form>
+    </Reorder.Item>
   );
 }
 
