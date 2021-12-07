@@ -5,7 +5,7 @@ import { ReactEditor } from "slate-react";
 declare module "slate" {
   interface CustomTypes {
     Editor: BaseEditor & ReactEditor;
-    Element: RichTextContent.CustomElement;
-    Text: RichTextContent.CustomText;
+    Element: RichTextContent.TElement;
+    Text: RichTextContent.TText;
   }
 }

@@ -1,79 +1,87 @@
 import { z } from "zod";
 
-export const TextBooleanMarks = z.object({
+// ------------------------------------------------------------------
+// Text
+
+export const BooleanMarks = z.object({
   bold: z.boolean().optional(),
   italic: z.boolean().optional(),
   underline: z.boolean().optional(),
 });
 
-export const CustomText = z
+export const Text = z
   .object({
     text: z.string(),
   })
-  .and(TextBooleanMarks);
+  .and(BooleanMarks);
 
-export const ElementUnionMarks = z.object({
-  justify: z.enum(["left", "center", "right"]).optional(),
+// ------------------------------------------------------------------
+// Inline ELements
+export const LinkTag = z.literal("link");
+export const InlineTags = LinkTag;
+
+export const LinkElement = z.object({
+  type: LinkTag,
+  url: z.string().url(),
+  children: z.array(Text),
 });
 
-export const Element = z
-  .object({
-    children: z.array(CustomText),
-  })
-  .and(ElementUnionMarks);
+export const InlineElements = LinkElement;
 
-export const TextTags = z.enum(["p", "heading"]);
+// ------------------------------------------------------------------
+// Block Elements
 
-export const ListTags = z.enum(["ul", "ol", "li"]);
+const BaseElement = z.object({
+  children: z.array(z.union([Text, LinkElement])),
+});
 
-export const LinkTag = z.literal("a");
+export const TextTags = z.enum(["paragraph", "heading"]);
+export const ListTags = z.enum(["unordered_list", "ordered_list"]);
+export const ListItemTag = z.literal("list_item");
+export const CombinedListTags = z.enum([
+  "unordered_list",
+  "ordered_list",
+  "list_item",
+]);
+export const BlockTags = z.union([TextTags, ListTags]);
 
-export const TextElements = Element.and(z.object({ type: TextTags }));
+export const TextElements = BaseElement.extend({
+  type: TextTags,
+});
 
-export const ListElements = Element.and(z.object({ type: ListTags }));
+export const ListItemElement = BaseElement.extend({
+  type: ListItemTag,
+});
 
-export const LinkElement = Element.and(
-  z.object({ type: LinkTag, href: z.string() })
-);
+export const ListElements = z.object({
+  type: ListTags,
+  children: z.array(ListItemElement),
+});
 
-export const GroupElement: z.ZodSchema<GroupElementType> = z.lazy(() =>
-  ElementUnionMarks.and(
-    z.object({
-      type: z.literal("group"),
-      children: z.union([
-        z.array(CustomElement),
-        z.array(GroupElement),
-        z.array(CustomText),
-      ]),
-    })
-  )
-);
+// ------------------------------------------------------------------
 
-export const CustomElement = z.union([
+export const Element = z.union([
   TextElements,
   ListElements,
   LinkElement,
-  GroupElement,
+  ListItemElement,
 ]);
 
-export const Descendants = z.array(z.union([CustomElement, CustomText]));
+export const Descendants = z.array(Element);
 
 // ------------------------------------------------------------------
 // Types
 
-export type TextBooleanMarks = z.infer<typeof TextBooleanMarks>;
-export type CustomText = z.infer<typeof CustomText>;
-export type ElementUnionMarks = z.infer<typeof ElementUnionMarks>;
-export type TextTags = z.infer<typeof TextTags>;
-export type ListTags = z.infer<typeof ListTags>;
-export type LinkTags = z.infer<typeof LinkTag>;
-export type TextElements = z.infer<typeof TextElements>;
-export type ListElements = z.infer<typeof ListElements>;
-export type LinkElement = z.infer<typeof LinkElement>;
-export type GroupElementType = ElementUnionMarks & {
-  type: "group";
-  children: CustomText[] | CustomElement[] | GroupElementType[];
-};
-export type CustomElement = z.infer<typeof CustomElement>;
-
-export type Elements = CustomElement["type"];
+export type TBooleanMarks = z.infer<typeof BooleanMarks>;
+export type TText = z.infer<typeof Text>;
+export type TTextTags = z.infer<typeof TextTags>;
+export type TListTags = z.infer<typeof CombinedListTags>;
+export type TLinkTags = z.infer<typeof LinkTag>;
+export type TTextElements = z.infer<typeof TextElements>;
+export type TListElements = z.infer<typeof ListElements>;
+export type TListItemElement = z.infer<typeof ListItemElement>;
+export type TLinkElement = z.infer<typeof LinkElement>;
+export type TBlockElements = z.infer<typeof BlockTags>;
+export type TInlineElements = z.infer<typeof InlineTags>;
+export type TElement = z.infer<typeof Element>;
+export type TElements = TElement["type"];

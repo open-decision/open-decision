@@ -1,65 +1,45 @@
 import { Box, css, Heading, Text } from "@open-legal-tech/design-system";
-import { Element } from "slate";
 import { RenderElementProps } from "slate-react";
+import { Link } from "./elements/Link";
 
-const elementMarks = (element: Element) =>
-  css({
-    textAlign: element?.justify ?? "match-parent",
-  })();
+const listStyles = css({
+  listStyle: "revert",
+  textStyle: "small-text",
+  paddingInlineStart: "$6",
+});
 
 export const renderElement = (props: RenderElementProps): JSX.Element => {
   switch (props.element.type) {
     case "heading": {
       return (
-        <Heading className={elementMarks(props.element)} {...props.attributes}>
+        <Heading size="extra-small" {...props.attributes}>
           {props.children}
         </Heading>
       );
     }
-    case "ul":
+    case "unordered_list":
       return (
-        <ul
-          className={elementMarks(props.element)}
-          style={{ listStyle: "revert", marginLeft: "5px" }}
-          {...props.attributes}
-        >
+        <ul className={listStyles()} {...props.attributes}>
           {props.children}
         </ul>
       );
-    case "ol":
+    case "ordered_list":
       return (
-        <ol
-          className={elementMarks(props.element)}
-          style={{ listStyle: "revert", marginLeft: "5px" }}
-          {...props.attributes}
-        >
+        <ol className={listStyles()} {...props.attributes}>
           {props.children}
         </ol>
       );
-    case "li":
+    case "list_item":
+      return <li {...props.attributes}>{props.children}</li>;
+    case "link":
+      return <Link {...props} />;
+    case "paragraph":
       return (
-        <li className={elementMarks(props.element)} {...props.attributes}>
-          {props.children}
-        </li>
-      );
-    case "a":
-      return (
-        <a
-          className={elementMarks(props.element)}
-          style={{ all: "revert" }}
-          href={props.element.href}
-          {...props.attributes}
-        >
-          {props.children}
-        </a>
-      );
-    case "p":
-      return (
-        <Text className={elementMarks(props.element)} {...props.attributes}>
+        <Text size="small" {...props.attributes}>
           {props.children}
         </Text>
       );
     default:
-      return <Box className={elementMarks(props.element)} {...props} />;
+      return <Box {...props} />;
   }
 };

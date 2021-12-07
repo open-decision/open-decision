@@ -1,24 +1,24 @@
-import { Box, IconButton, styled } from "@open-legal-tech/design-system";
+import {
+  Box,
+  Button,
+  Icon,
+  styled,
+  ToggleButton,
+} from "@open-legal-tech/design-system";
 import { Type } from "react-feather";
 import * as React from "react";
 import * as Separator from "@radix-ui/react-separator";
-import { insertLink } from "./utils";
-import { useSlateStatic } from "slate-react";
+import { useSlate } from "slate-react";
 import {
+  isBooleanMarkActive,
+  isElement,
   toggleBooleanMark,
   toggleElement,
-  toggleElementUnionMark,
+  toggleList,
 } from "./formatting";
-import {
-  AlignJustify,
-  AlignLeft,
-  AlignRight,
-  Bold,
-  Italic,
-  Link,
-  List,
-  Underline,
-} from "react-feather";
+import { Bold, Italic, Link, List, Underline } from "react-feather";
+import { HeadingIcon, QuestionMarkIcon } from "@radix-ui/react-icons";
+import { toggleLink } from "./contentTypes/link";
 
 const StyledSeparator = styled(Separator.Root, {
   backgroundColor: "$gray8",
@@ -27,10 +27,16 @@ const StyledSeparator = styled(Separator.Root, {
 });
 
 export function Toolbar(): JSX.Element {
-  const editor = useSlateStatic();
+  const editor = useSlate();
   const toggleEditorMark = toggleBooleanMark(editor);
   const toggleEditorElement = toggleElement(editor);
-  const toggleEditorElementUnionMark = toggleElementUnionMark(editor);
+  const toggleListElement = toggleList(editor);
+
+  const isMarkActive = isBooleanMarkActive(editor);
+  const isHeading = isElement(editor)("heading");
+  const isNumberedList = isElement(editor)("ordered_list");
+  const isList = isElement(editor)("unordered_list");
+  const isLink = isElement(editor)("link");
 
   return (
     <Box
@@ -42,75 +48,78 @@ export function Toolbar(): JSX.Element {
         gap: "$1",
       }}
     >
-      <IconButton
+      <Button
         size="small"
         variant="ghost"
-        label="Konvertiere den ausgewählten Text in eine Überschrift"
-        onClick={() => toggleEditorElement("heading")}
-        Icon={<Type />}
-      />
-      <StyledSeparator orientation="vertical" decorative />
-      <IconButton
-        size="small"
-        variant="ghost"
-        label="Markiere den ausgewählten Text dick"
-        onClick={() => toggleEditorMark("bold")}
-        Icon={<Bold />}
-      />
-      <IconButton
-        size="small"
-        variant="ghost"
-        label="Markiere den ausgewählten Text kursiv"
-        onClick={() => toggleEditorMark("italic")}
-        Icon={<Italic />}
-      />
-      <IconButton
-        size="small"
-        variant="ghost"
-        label="Unterstreiche den ausgewählten Text"
-        onClick={() => toggleEditorMark("underline")}
-        Icon={<Underline />}
-      />
-      <StyledSeparator orientation="vertical" decorative />
-      <IconButton
-        size="small"
-        variant="ghost"
-        label="Erstelle eine unnumerierte Liste"
-        onClick={() => toggleEditorElement("ul")}
-        Icon={<List />}
-      />
-      <StyledSeparator orientation="vertical" decorative />
-      <IconButton
-        size="small"
-        variant="ghost"
-        label="Orientiere den ausgewählten Block links"
-        onClick={() => toggleEditorElementUnionMark("justify", "left")}
-        Icon={<AlignLeft />}
-      />
-      <IconButton
-        size="small"
-        variant="ghost"
-        label="Orientiere den ausgewählten Block mittig"
-        onClick={() => toggleEditorElementUnionMark("justify", "center")}
-        Icon={<AlignJustify />}
-      />
-      <IconButton
-        size="small"
-        variant="ghost"
-        label="Orientiere den ausgewählten Block rechts"
-        onClick={() => toggleEditorElementUnionMark("justify", "right")}
-        Icon={<AlignRight />}
-      />
-      <StyledSeparator orientation="vertical" decorative />
-      <IconButton
-        size="small"
-        variant="ghost"
-        label="Füge einen neuen Link hinzu"
+        square
         onClick={() =>
-          insertLink(editor, prompt("url") ?? "www.open-decision.org")
+          isHeading
+            ? toggleEditorElement("paragraph")
+            : toggleEditorElement("heading")
         }
-        Icon={<Link />}
-      />
+      >
+        <Icon
+          size="small"
+          label="Konvertiere den ausgewählten Text in eine Überschrift"
+        >
+          {isHeading ? <Type /> : <HeadingIcon />}
+        </Icon>
+      </Button>
+
+      <StyledSeparator orientation="vertical" decorative />
+      <ToggleButton
+        pressed={isMarkActive("bold")}
+        onClick={() => toggleEditorMark("bold")}
+      >
+        <Icon size="small" label="Markiere den ausgewählten Text fett">
+          <Bold />
+        </Icon>
+      </ToggleButton>
+      <ToggleButton
+        pressed={isMarkActive("italic")}
+        onClick={() => toggleEditorMark("italic")}
+      >
+        <Icon size="small" label="Markiere den ausgewählten Text kursiv">
+          <Italic />
+        </Icon>
+      </ToggleButton>
+      <ToggleButton
+        pressed={isMarkActive("underline")}
+        onClick={() => toggleEditorMark("underline")}
+      >
+        <Icon size="small" label="Unterstreiche den ausgewählten Text">
+          <Underline />
+        </Icon>
+      </ToggleButton>
+      <ToggleButton
+        pressed={isList}
+        onClick={() => toggleListElement("unordered_list")}
+      >
+        <Icon label="Erstelle eine unnumerierte Liste">
+          <List />
+        </Icon>
+      </ToggleButton>
+
+      <ToggleButton
+        pressed={isNumberedList}
+        onClick={() => toggleListElement("ordered_list")}
+      >
+        <Icon size="small" label="Erstelle eine numerierte Liste">
+          <QuestionMarkIcon />
+        </Icon>
+      </ToggleButton>
+      <StyledSeparator orientation="vertical" decorative />
+      <ToggleButton
+        pressed={isLink}
+        onMouseDown={(event) => {
+          event.preventDefault();
+          return toggleLink(editor);
+        }}
+      >
+        <Icon size="small" label="Erstelle eine numerierte Liste">
+          <Link />
+        </Icon>
+      </ToggleButton>
     </Box>
   );
 }

@@ -3,13 +3,14 @@ import { Box } from "@open-legal-tech/design-system";
 import { Editable, Slate, withReact } from "slate-react";
 import { createEditor, Descendant, Editor } from "slate";
 import { renderElement } from "./Elements";
-import { onKeyDownHandler } from "./formatting";
 import { renderLeaf } from "./Leaf";
 import { Toolbar } from "./Toolbar";
+import { onKeyDownHandler } from "./keyboardShortcuts";
+import { withInlines } from "./editorConfig";
 
 const initialValues: Descendant[] = [
   {
-    type: "p",
+    type: "paragraph",
     children: [
       {
         text: "",
@@ -30,7 +31,8 @@ export function RichTextEditor({
   ...props
 }: RichTextEditorProps): JSX.Element {
   const editorRef = React.useRef<Editor>();
-  if (!editorRef.current) editorRef.current = withReact(createEditor());
+  if (!editorRef.current)
+    editorRef.current = withInlines(withReact(createEditor()));
   const editor = editorRef.current;
 
   // Slate does not accept an empty array. Since an empty array does not count as undefined we
@@ -58,7 +60,12 @@ export function RichTextEditor({
         <Toolbar />
         <Box css={{ padding: "$2" }} {...props}>
           <Editable
-            style={{ minHeight: "200px" }}
+            style={{
+              minHeight: "200px",
+              gap: "10px",
+              display: "flex",
+              flexDirection: "column",
+            }}
             renderElement={renderElement}
             renderLeaf={renderLeaf}
             onKeyDown={onKeyDownHandler(editor)}

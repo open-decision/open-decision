@@ -1,77 +1,28 @@
 import { RichTextContent } from "@open-decision/type-classes";
-import { Editor, Element, Text, Transforms } from "slate";
-import { ValuesType } from "utility-types";
+import { Editor, Element, Path, Text, Transforms } from "slate";
+import { ReactEditor } from "slate-react";
+import { isLink } from "./contentTypes/link";
+import { createListUtility, isList } from "./contentTypes/lists";
 
-const LIST_TYPES = ["ol", "ul"];
-
-function isList(
-  elemType: RichTextContent.Elements
-): elemType is RichTextContent.ListTags {
-  return LIST_TYPES.includes(elemType);
+export function isBlockType(
+  elemType: RichTextContent.TElements
+): elemType is RichTextContent.TBlockElements {
+  return RichTextContent.BlockTags.safeParse(elemType).success;
 }
 
-function isLink(
-  elemType: RichTextContent.Elements
-): elemType is RichTextContent.LinkElement["type"] {
-  return elemType === "a";
-}
+export const isElement =
+  (editor: Editor) => (elemType: RichTextContent.TElements) => {
+    const [match] = Editor.nodes(editor, {
+      match: (n) => {
+        return Element.isElement(n) && n.type === elemType;
+      },
+    });
 
-type onKeyDownHandler = (event: React.KeyboardEvent<HTMLDivElement>) => void;
-
-export function onKeyDownHandler(editor: Editor): onKeyDownHandler {
-  const toggleEditorMark = toggleBooleanMark(editor);
-  const toggleEditorElement = toggleElement(editor);
-
-  return (event) => {
-    if (!event.ctrlKey) {
-      return;
-    }
-
-    switch (event.key) {
-      case "b": {
-        event.preventDefault();
-        toggleEditorMark("bold");
-        break;
-      }
-      case "i": {
-        event.preventDefault();
-        toggleEditorMark("italic");
-        break;
-      }
-      case "u": {
-        event.preventDefault();
-        toggleEditorMark("underline");
-        break;
-      }
-      case "h": {
-        event.preventDefault();
-        toggleEditorElement("heading");
-        break;
-      }
-      case "l": {
-        event.preventDefault();
-        toggleEditorElement("ul");
-        break;
-      }
-      case "o": {
-        event.preventDefault();
-        toggleEditorElement("ol");
-        break;
-      }
-    }
+    return Boolean(match);
   };
-}
 
-const isElement = (editor: Editor) => (elemType: RichTextContent.Elements) => {
-  const [match] = Editor.nodes(editor, {
-    match: (n) => Element.isElement(n) && n.type === elemType,
-  });
-
-  return Boolean(match);
-};
-
-const isBooleanMarkActive =
-  (editor: Editor) => (mark: keyof RichTextContent.TextBooleanMarks) => {
+export const isBooleanMarkActive =
+  (editor: Editor) => (mark: keyof RichTextContent.TBooleanMarks) => {
     const [match] = Editor.nodes(editor, {
       match: (n) => Text.isText(n) && n[mark] === true,
       universal: true,
@@ -82,75 +33,64 @@ const isBooleanMarkActive =
 
 export const toggleBooleanMark =
   (editor: Editor) =>
-  (mark: keyof RichTextContent.TextBooleanMarks): void => {
+  (mark: keyof RichTextContent.TBooleanMarks): void => {
     const isActive = isBooleanMarkActive(editor)(mark);
     Transforms.setNodes(
       editor,
       { [mark]: isActive ? undefined : true },
       { match: (n) => Text.isText(n), split: true }
     );
-  };
-
-const isElementUnionMarkActive =
-  (editor: Editor) =>
-  <TMark extends keyof RichTextContent.ElementUnionMarks>(
-    mark: TMark,
-    markValue: ValuesType<TMark>
-  ) => {
-    const [match] = Editor.nodes(editor, {
-      match: (n) => Element.isElement(n) && n[mark] === markValue,
-      universal: true,
-    });
-
-    return Boolean(match);
-  };
-
-export const toggleElementUnionMark =
-  (editor: Editor) =>
-  <TMark extends keyof RichTextContent.ElementUnionMarks>(
-    mark: TMark,
-    markValue: ValuesType<TMark>
-  ): void => {
-    const isActive = isElementUnionMarkActive(editor)(mark, markValue);
-
-    Transforms.setNodes(
-      editor,
-      { [mark]: isActive ? undefined : markValue },
-      { match: (n) => Element.isElement(n) }
-    );
+    ReactEditor.focus(editor);
   };
 
 export const toggleElement =
   (editor: Editor) =>
-  (elemType: RichTextContent.Elements): void => {
-    const isElemOfType = isElement(editor)(elemType);
-    const isListElem = isList(elemType);
-    const isLinkElem = isLink(elemType);
+  (elemType: RichTextContent.TElements): void => {
+    const isActive = isElement(editor)(elemType);
+    const isListElement = isList(elemType);
+    const isLinkElement = isLink(elemType);
 
     Transforms.unwrapNodes(editor, {
-      match: (n) =>
-        !Editor.isEditor(n) &&
-        Element.isElement(n) &&
-        LIST_TYPES.includes(n.type),
+      match: (n) => {
+        return !Editor.isEditor(n) && Element.isElement(n) && isList(n.type);
+      },
       split: true,
     });
 
-    let newProperties: Partial<Element>;
-
-    newProperties = {
-      type: isElemOfType ? "p" : isListElem ? "li" : elemType,
+    const newProperties: Partial<Element> = {
+      type: isActive ? "paragraph" : isListElement ? "list_item" : elemType,
     };
 
-    if (!isElemOfType && isLinkElem) {
-      newProperties = {
-        type: "a",
-        href: "www.open-decision.org",
-      };
+    Transforms.setNodes<Element>(editor, newProperties);
+
+    if (!isActive && isListElement && !isLinkElement) {
+      const block: Element = { type: elemType, children: [] };
+      Transforms.wrapNodes(editor, block);
     }
 
-    Transforms.setNodes(editor, newProperties);
+    ReactEditor.focus(editor);
+  };
 
-    if (!isElemOfType && isListElem) {
-      Transforms.wrapNodes(editor, { type: elemType, children: [] });
+export const toggleList =
+  (editor: Editor) => (elemType: RichTextContent.TListTags) => {
+    if (!editor.selection) return;
+    const isActive = isElement(editor)(elemType);
+
+    if (isActive) {
+      Transforms.unwrapNodes(editor, {
+        match: (n) =>
+          !Editor.isEditor(n) && Element.isElement(n) && isList(n.type),
+        split: true,
+      });
+
+      Transforms.setNodes(editor, { type: "paragraph" });
     }
+
+    if (!isActive) {
+      Transforms.setNodes(editor, { type: "list_item" });
+      const block: Element = { type: elemType, children: [] };
+      Transforms.wrapNodes(editor, block);
+    }
+
+    ReactEditor.focus(editor);
   };
