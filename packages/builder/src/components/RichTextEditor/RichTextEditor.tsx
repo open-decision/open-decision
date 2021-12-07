@@ -19,7 +19,10 @@ const initialValues: Descendant[] = [
   },
 ];
 
-type RichTextEditorProps = React.ComponentProps<typeof Box> & {
+type RichTextEditorProps = Omit<
+  React.ComponentProps<typeof Box>,
+  "setValue"
+> & {
   value: Descendant[];
   setValue: (newValue: Descendant[]) => void;
 };

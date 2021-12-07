@@ -67,7 +67,7 @@ export const Element = z.union([
   ListItemElement,
 ]);
 
-export const Descendants = z.array(Element);
+export const Descendants = z.array(z.union([Element, Text]));
 
 // ------------------------------------------------------------------
 // Types

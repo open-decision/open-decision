@@ -16,12 +16,11 @@ const HiddenInput = styled("input", {
   width: "1px",
 });
 
-export type FileInputProps = Omit<
-  HTMLAttributes<HTMLLabelElement>,
-  "onChange"
-> & {
+export type FileInputProps = {
   css?: StyleObject;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  children: React.ReactNode;
+  className?: string;
 };
 
 /**
