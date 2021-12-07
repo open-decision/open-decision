@@ -1,8 +1,8 @@
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { IconButton, IconButtonProps } from "../index";
-import { X } from "../icons";
-import { styled, keyframes } from "../stitches";
+import { IconButton, IconButtonProps } from "../../index";
+import { X } from "../../icons";
+import { styled, keyframes } from "../../stitches";
 
 function DialogRoot({ children, ...props }: DialogRootProps) {
   return (

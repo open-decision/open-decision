@@ -1,5 +1,6 @@
 import { alignByContent } from "../stitches/utils";
 import { styled, css } from "../stitches";
+import { iconSizes } from "../Icon/shared";
 
 export const buttonStyles = css({
   $$borderWidth: "1px",
@@ -26,6 +27,7 @@ export const buttonStyles = css({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
+  gap: "$2",
   border: "$$borderWidth solid transparent",
   padding: "$$paddingBlock $$paddingInline",
   focusStyle: "outer",
@@ -91,7 +93,7 @@ export const buttonStyles = css({
         },
 
         "&[data-state=on]": {
-          backgroundColor: "$colorScheme7",
+          backgroundColor: "$colorScheme5",
           boxShadow: "none",
         },
 
@@ -133,6 +135,11 @@ export const buttonStyles = css({
           color: "$colorScheme11 !important",
         },
 
+        "&[data-state=on]": {
+          color: "$primary11 !important",
+          backgroundColor: "$colorScheme2 !important",
+        },
+
         "&:disabled": {
           backgroundColor: "unset",
         },
@@ -148,8 +155,38 @@ export const buttonStyles = css({
       },
     },
 
+    square: {
+      true: {
+        padding: "$$paddingInline",
+      },
+    },
+
+    round: {
+      true: {
+        borderRadius: "$full",
+      },
+    },
+
     alignByContent,
   },
+
+  compoundVariants: [
+    {
+      square: true,
+      size: "small",
+      css: iconSizes.small,
+    },
+    {
+      square: true,
+      size: "medium",
+      css: iconSizes.medium,
+    },
+    {
+      square: true,
+      size: "large",
+      css: iconSizes.large,
+    },
+  ],
 
   defaultVariants: {
     variant: "primary",

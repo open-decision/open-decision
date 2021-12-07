@@ -10,11 +10,6 @@ export const iconButtonStyles = css(buttonStyles, {
 
   variants: {
     size: iconSizes,
-    round: {
-      true: {
-        borderRadius: "$full",
-      },
-    },
   },
 
   defaultVariants: {

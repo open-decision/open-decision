@@ -1,33 +1,31 @@
-import * as React from "react";
-import * as TooltipPrimtive from "@radix-ui/react-tooltip";
-import { styled, keyframes } from "../stitches";
+import { keyframes, css } from "../stitches";
 
-const slideUpAndFade = keyframes({
+export const slideUpAndFade = keyframes({
   "0%": { opacity: 0, transform: "translateY(2px)" },
   "100%": { opacity: 1, transform: "translateY(0)" },
 });
 
-const slideRightAndFade = keyframes({
+export const slideRightAndFade = keyframes({
   "0%": { opacity: 0, transform: "translateX(-2px)" },
   "100%": { opacity: 1, transform: "translateX(0)" },
 });
 
-const slideDownAndFade = keyframes({
+export const slideDownAndFade = keyframes({
   "0%": { opacity: 0, transform: "translateY(-2px)" },
   "100%": { opacity: 1, transform: "translateY(0)" },
 });
 
-const slideLeftAndFade = keyframes({
+export const slideLeftAndFade = keyframes({
   "0%": { opacity: 0, transform: "translateX(2px)" },
   "100%": { opacity: 1, transform: "translateX(0)" },
 });
 
-const StyledContent = styled(TooltipPrimtive.Content, {
+export const overlayCss = css({
   $bgColor: "$colors$gray1",
   backgroundColor: "var(--bgColor)",
   borderRadius: "$md",
   boxShadow: "$2",
-  padding: "$2 $3",
+  padding: "$2",
 
   "@media (prefers-reduced-motion: no-preference)": {
     animationDuration: "400ms",
@@ -41,19 +39,3 @@ const StyledContent = styled(TooltipPrimtive.Content, {
     },
   },
 });
-
-const StyledArrow = styled(TooltipPrimtive.Arrow, {
-  fill: "var(--bgColor)",
-});
-
-export const Tooltip = {
-  Root: TooltipPrimtive.Root,
-  Trigger: TooltipPrimtive.Trigger,
-  Content: StyledContent,
-  Arrow: StyledArrow,
-};
-
-export type TooltipRootProps = TooltipPrimtive.TooltipProps;
-export type TooltipTriggerProps = TooltipPrimtive.TooltipTriggerProps;
-export type TooltipContentProps = React.ComponentProps<typeof StyledContent>;
-export type TooltipArrowProps = TooltipPrimtive.TooltipArrowProps;

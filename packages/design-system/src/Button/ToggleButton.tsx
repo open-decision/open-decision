@@ -2,13 +2,27 @@ import * as React from "react";
 import * as Toggle from "@radix-ui/react-toggle";
 import * as ToggleGroupPrimitives from "@radix-ui/react-toggle-group";
 import { styled } from "../stitches";
+import { Button, ButtonProps } from "..";
 
-export type ToggleButtonProps = Toggle.ToggleProps;
+export type ToggleButtonProps = Toggle.ToggleProps & ButtonProps;
 
-export const ToggleButton = ({ children, ...props }: ToggleButtonProps) => {
+export const ToggleButton = ({
+  children,
+  pressed,
+  defaultPressed,
+  onPressedChange,
+  ...props
+}: ToggleButtonProps) => {
   return (
-    <Toggle.Root asChild {...props}>
-      {children}
+    <Toggle.Root
+      asChild
+      pressed={pressed}
+      defaultPressed={defaultPressed}
+      onPressedChange={onPressedChange}
+    >
+      <Button variant="ghost" square size="small" {...props}>
+        {children}
+      </Button>
     </Toggle.Root>
   );
 };

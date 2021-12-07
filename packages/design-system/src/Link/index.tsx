@@ -1,16 +1,20 @@
 import * as React from "react";
-import { styled } from "../stitches";
+import { textStyles } from "..";
+import { styled, css } from "../stitches";
 
 export type LinkProps = React.ComponentProps<typeof Link>;
 
-export const Link = styled("a", {
+export const baseLinkStyles = css(textStyles, {
   display: "flex",
   alignItems: "center",
-  textStyle: "medium-text",
   color: "$primary9",
   textDecoration: "none",
   position: "relative",
 
+  focusStyle: "outer",
+});
+
+export const Link = styled("a", baseLinkStyles, {
   "&:hover": {
     color: "$gray12",
   },
@@ -36,6 +40,4 @@ export const Link = styled("a", {
   "&:active::before": {
     transform: "scaleX(1)",
   },
-
-  focusStyle: "outer",
 });
