@@ -42,6 +42,12 @@ module.exports = {
       "warn",
       { varsIgnorePattern: "^_", argsIgnorePattern: "^_" },
     ],
+    "jsx-a11y/no-autofocus": [
+      2,
+      {
+        ignoreNonDOM: true,
+      },
+    ],
   },
   settings: {
     react: {

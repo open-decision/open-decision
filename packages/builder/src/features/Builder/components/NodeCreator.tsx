@@ -55,13 +55,16 @@ export const NodeCreator = ({ css }: Props) => {
         resetOnBlur
         key={items.length}
       >
-        <NodeCreatorInput createHandler={createHandler} />
+        <NodeCreatorInput
+          autoFocus={Object.keys(nodes).length === 0}
+          createHandler={createHandler}
+        />
       </Combobox.Root>
     </Form>
   );
 };
 
-const NodeCreatorInput = ({ createHandler }) => {
+const NodeCreatorInput = ({ createHandler, autoFocus }) => {
   const [, send] = useTree((state) => state.nodes);
 
   const onDragStart = (event: React.DragEvent<HTMLButtonElement>) => {
@@ -74,7 +77,7 @@ const NodeCreatorInput = ({ createHandler }) => {
   return (
     <Box css={{ display: "flex", gap: "$2" }}>
       <Combobox.Input css={{ backgroundColor: "$gray1", zIndex: "5" }}>
-        <Input name="search" />
+        <Input autoFocus={autoFocus} name="search" />
       </Combobox.Input>
 
       <IconButton
