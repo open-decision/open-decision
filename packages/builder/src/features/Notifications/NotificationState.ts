@@ -8,7 +8,7 @@ export type notification = {
   variant: notificationVariants;
   title: string;
   content: string;
-  duration: number;
+  duration?: number;
 };
 
 export type NotificationState = {
@@ -22,7 +22,7 @@ export const useNotificationStore = create<NotificationState>((set) => ({
   addNotification: (notification) =>
     set(
       produce((state: NotificationState) => {
-        state.notifications[uuidV4()] = notification;
+        state.notifications[uuidV4()] = { duration: 5, ...notification };
       })
     ),
   removeNotification: (id) =>

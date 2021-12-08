@@ -50,6 +50,7 @@ const ProgressBar = styled(Progress.Root, {
 const ProgressIndicator = styled(Progress.Indicator, {
   height: "100%",
   backgroundColor: "currentColor",
+  borderTopLeftRadius: "$md",
 });
 
 export const Notification = ({ notification, id }: NotificationProps) => {

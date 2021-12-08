@@ -16,7 +16,7 @@ export const Notifications = () => {
         bottom: "25px",
         display: "grid",
         gap: "$4",
-        width: "clamp(250px, 20vw, 400px)",
+        width: "350px",
       }}
     >
       <AnimatePresence>

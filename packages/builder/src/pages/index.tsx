@@ -23,6 +23,7 @@ import { FileInput } from "components";
 import { Upload } from "react-feather";
 import { BuilderTree } from "@open-decision/type-classes";
 import { EditorHeader } from "features/Builder/components/EditorHeader";
+import { useNotificationStore } from "features/Notifications/NotificationState";
 
 export default function Tree(): JSX.Element {
   return (
@@ -45,6 +46,9 @@ export default function Tree(): JSX.Element {
 
 const Editor = () => {
   const [state, send] = useTree();
+  const addNotification = useNotificationStore(
+    (state) => state.addNotification
+  );
 
   if (state.matches("idle"))
     return (
@@ -121,8 +125,14 @@ const Editor = () => {
                         const validatedResult =
                           BuilderTree.Type.safeParse(parsedResult);
 
-                        if (!validatedResult.success)
-                          return alert("wrong file");
+                        if (!validatedResult.success) {
+                          return addNotification({
+                            title: "Ungültiger Inhalt",
+                            content:
+                              "Die importierte Datei ist kein valider Entscheidungsbaum.",
+                            variant: "error",
+                          });
+                        }
 
                         return send({
                           type: "loadTree",
@@ -131,6 +141,7 @@ const Editor = () => {
                       };
 
                       fileReader.readAsText(event.currentTarget.files?.[0]);
+                      event.target.value = "";
                     }}
                   >
                     <Upload />
@@ -177,6 +188,7 @@ const Editor = () => {
                       </Label>
                     </Dialog.Description>
                     <Input
+                      autoFocus
                       name="treeName"
                       id="treeName"
                       css={{ marginBlock: "$2" }}
