@@ -28,6 +28,8 @@ export type AddNodeEvent = { type: "addNode"; value: BuilderNode.TNode };
 export const addNode = immerAssign(
   (context: Context, { value }: AddNodeEvent) => {
     context.nodes[value.id] = value;
+
+    if (context.startNode === "") context.startNode = value.id;
   }
 );
 

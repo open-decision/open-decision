@@ -5,6 +5,7 @@ import {
   DropdownMenu,
   IconButton,
   Icon,
+  Tooltip,
 } from "@open-legal-tech/design-system";
 import React, { memo } from "react";
 import { MoreHorizontal, Star, Trash } from "react-feather";
@@ -99,34 +100,60 @@ export const Node = memo(({ id, data }: NodeProps<NodeData>) => {
             />
           </DropdownMenu.Trigger>
           <DropdownMenu.Content>
-            <DropdownMenu.Item
-              css={{ colorScheme: "primary" }}
-              onSelect={() =>
-                send({ type: "updateTree", tree: { startNode: id } })
-              }
-            >
-              <Icon
-                label="Zur Startnode machen"
-                size="extra-small"
-                css={{ $$paddingInline: 0 }}
-              >
-                <Star />
-              </Icon>
-              Zur Startnode machen
-            </DropdownMenu.Item>
-            <DropdownMenu.Item
-              css={{ colorScheme: "error" }}
-              onSelect={() => send({ type: "deleteNode", ids: [id] })}
-            >
-              <Icon
-                label="Löschen Icon"
-                size="extra-small"
-                css={{ $$paddingInline: 0 }}
-              >
-                <Trash />
-              </Icon>
-              Node löschen
-            </DropdownMenu.Item>
+            {isStartNode ? (
+              <Tooltip.Root>
+                <Tooltip.Trigger>
+                  <DropdownMenu.Item
+                    css={{ colorScheme: "error" }}
+                    onSelect={() => send({ type: "deleteNode", ids: [id] })}
+                    disabled
+                  >
+                    <Icon
+                      label="Löschen Icon"
+                      size="extra-small"
+                      css={{ $$paddingInline: 0 }}
+                    >
+                      <Trash />
+                    </Icon>
+                    Node löschen
+                  </DropdownMenu.Item>
+                </Tooltip.Trigger>
+                <Tooltip.Content>
+                  <Text>Die Startnode kann nicht entfernt werden.</Text>
+                </Tooltip.Content>
+              </Tooltip.Root>
+            ) : (
+              <>
+                <DropdownMenu.Item
+                  css={{ colorScheme: "primary" }}
+                  onSelect={() =>
+                    send({ type: "updateTree", tree: { startNode: id } })
+                  }
+                >
+                  <Icon
+                    label="Zur Startnode machen"
+                    size="extra-small"
+                    css={{ $$paddingInline: 0 }}
+                  >
+                    <Star />
+                  </Icon>
+                  Zur Startnode machen
+                </DropdownMenu.Item>
+                <DropdownMenu.Item
+                  css={{ colorScheme: "error" }}
+                  onSelect={() => send({ type: "deleteNode", ids: [id] })}
+                >
+                  <Icon
+                    label="Löschen Icon"
+                    size="extra-small"
+                    css={{ $$paddingInline: 0 }}
+                  >
+                    <Trash />
+                  </Icon>
+                  Node löschen
+                </DropdownMenu.Item>
+              </>
+            )}
           </DropdownMenu.Content>
         </DropdownMenu.Root>
         <Text

@@ -38,7 +38,7 @@ export const menuItemStyles = css({
   },
 
   "&[data-disabled]": {
-    color: "$primary8",
+    color: "$gray11",
     pointerEvents: "none",
   },
 });

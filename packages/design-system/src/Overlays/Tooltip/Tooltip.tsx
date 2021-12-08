@@ -9,9 +9,13 @@ const StyledArrow = styled(TooltipPrimtive.Arrow, {
   fill: "var(--bgColor)",
 });
 
+const StyledTrigger = styled(TooltipPrimtive.Trigger, {
+  all: "unset",
+});
+
 export const Tooltip = {
   Root: TooltipPrimtive.Root,
-  Trigger: TooltipPrimtive.Trigger,
+  Trigger: StyledTrigger,
   Content: StyledContent,
   Arrow: StyledArrow,
 };
