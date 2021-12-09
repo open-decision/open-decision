@@ -1,5 +1,6 @@
 import {
   Box,
+  BoxProps,
   Button,
   Icon,
   styled,
@@ -26,7 +27,7 @@ const StyledSeparator = styled(Separator.Root, {
   "&[data-orientation=vertical]": { width: 1 },
 });
 
-export function Toolbar(): JSX.Element {
+export function Toolbar({ css, ...props }: BoxProps): JSX.Element {
   const editor = useSlate();
   const toggleEditorMark = toggleBooleanMark(editor);
   const toggleEditorElement = toggleElement(editor);
@@ -46,7 +47,9 @@ export function Toolbar(): JSX.Element {
         padding: "$1",
         boxShadow: "$1",
         gap: "$1",
+        ...css,
       }}
+      {...props}
     >
       <Button
         size="small"

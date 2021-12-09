@@ -1,6 +1,11 @@
 import React from "react";
-import { Box } from "@open-legal-tech/design-system";
-import { Editable, Slate, withReact } from "slate-react";
+import { Box, BoxProps } from "@open-legal-tech/design-system";
+import {
+  Editable as SlateEditable,
+  Slate,
+  useSlate,
+  withReact,
+} from "slate-react";
 import { createEditor, Descendant, Editor } from "slate";
 import { renderElement } from "./Elements";
 import { renderLeaf } from "./Leaf";
@@ -19,18 +24,16 @@ const initialValues: Descendant[] = [
   },
 ];
 
-type RichTextEditorProps = Omit<
-  React.ComponentProps<typeof Box>,
-  "setValue"
-> & {
+type RichTextEditorProps = Omit<BoxProps, "setValue"> & {
   value: Descendant[];
   setValue: (newValue: Descendant[]) => void;
+  children: React.ReactNode;
 };
 
-export function RichTextEditor({
-  css,
+function Root({
   value,
   setValue,
+  children,
   ...props
 }: RichTextEditorProps): JSX.Element {
   const editorRef = React.useRef<Editor>();
@@ -44,37 +47,36 @@ export function RichTextEditor({
   editor.children = value;
 
   return (
-    <Box
-      css={{
-        ...css,
-        display: "grid",
-        gap: "$2",
-        borderRadius: "$md",
-        overflow: "hidden",
-        border: "1px solid $gray8",
-        backgroundColor: "$primary1",
-      }}
-    >
+    <Box {...props}>
       <Slate
         editor={editor}
         value={value}
         onChange={(newValue) => setValue(newValue)}
       >
-        <Toolbar />
-        <Box css={{ padding: "$2" }} {...props}>
-          <Editable
-            style={{
-              minHeight: "200px",
-              gap: "10px",
-              display: "flex",
-              flexDirection: "column",
-            }}
-            renderElement={renderElement}
-            renderLeaf={renderLeaf}
-            onKeyDown={onKeyDownHandler(editor)}
-          />
-        </Box>
+        {children}
       </Slate>
     </Box>
   );
 }
+
+function Editable(props: BoxProps) {
+  const editor = useSlate();
+
+  return (
+    <Box css={{ padding: "$2" }} {...props}>
+      <SlateEditable
+        style={{
+          minHeight: "200px",
+          gap: "10px",
+          display: "flex",
+          flexDirection: "column",
+        }}
+        renderElement={renderElement}
+        renderLeaf={renderLeaf}
+        onKeyDown={onKeyDownHandler(editor)}
+      />
+    </Box>
+  );
+}
+
+export const RichTextEditor = { Root, Editable, Toolbar };

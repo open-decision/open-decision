@@ -57,7 +57,7 @@ export function NodeEditingSidebar({
         >
           Inhalt
         </Label>
-        <RichTextEditor
+        <RichTextEditor.Root
           value={node.content}
           setValue={(newValue) =>
             send({
@@ -66,7 +66,18 @@ export function NodeEditingSidebar({
               node: { content: newValue },
             })
           }
-        />
+          css={{
+            display: "grid",
+            gap: "$2",
+            borderRadius: "$md",
+            overflow: "hidden",
+            border: "1px solid $gray8",
+            backgroundColor: "$primary1",
+          }}
+        >
+          <RichTextEditor.Toolbar />
+          <RichTextEditor.Editable />
+        </RichTextEditor.Root>
       </Box>
       {Object.values(parentNodes).length > 0 ? (
         <Box as="section">

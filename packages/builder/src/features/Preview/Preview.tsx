@@ -1,15 +1,15 @@
 import {
   Box,
   Button,
-  Heading,
   Icon,
   styled,
   StyleObject,
-  Text,
 } from "@open-legal-tech/design-system";
 import * as React from "react";
 import { ThemingButton } from "./components/ThemingButton";
 import { BuilderInterpreter } from "@open-decision/interpreter";
+import { RichTextEditor } from "components";
+import { useTree } from "features/Builder/state/useTree";
 
 const Container = styled(Box, {
   position: "relative",
@@ -23,18 +23,32 @@ export function Preview({ InterpreterInstance, css }: Props) {
   const [currentNode, setCurrentNode] = React.useState(
     InterpreterInstance.getCurrentNode()
   );
+  const [node, send] = useTree((state) => state.nodes[currentNode.id]);
 
   return (
     <Container css={css}>
       <ThemingButton css={{ position: "absolute", top: 28, left: 28 }} />
       <Box css={{ marginTop: "$9", gridColumn: "2" }}>
-        <Heading css={{ marginBottom: "$3" }}>{currentNode.name}</Heading>
-        <Text css={{ marginBottom: "$5" }}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime, est
-          earum. Libero sequi magnam reiciendis fugiat voluptatum! Explicabo,
-          impedit doloribus, asperiores voluptatum molestias sint earum quis,
-          sit culpa recusandae vitae?
-        </Text>
+        <RichTextEditor.Root
+          value={node.content}
+          setValue={(newValue) =>
+            send({
+              type: "updateNode",
+              id: currentNode.id,
+              node: { content: newValue },
+            })
+          }
+          css={{ marginBottom: "$4" }}
+        >
+          <RichTextEditor.Toolbar
+            css={{
+              marginBottom: "$2",
+              maxWidth: "max-content",
+              borderRadius: "$md",
+            }}
+          />
+          <RichTextEditor.Editable />
+        </RichTextEditor.Root>
         <Box
           css={{
             marginBottom: "$8",

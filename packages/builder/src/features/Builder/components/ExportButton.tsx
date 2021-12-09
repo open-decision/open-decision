@@ -1,10 +1,17 @@
 import * as React from "react";
-import { Button, buttonStyles, Link } from "@open-legal-tech/design-system";
+import {
+  Button,
+  buttonStyles,
+  Link,
+  StyleObject,
+} from "@open-legal-tech/design-system";
 import { useTree } from "../state/useTree";
 import { TransformToPublicTree } from "@open-decision/type-classes";
 import { readableDate } from "features/Dashboard/utils";
 
-export function ExportButton() {
+type Props = { css?: StyleObject };
+
+export function ExportButton({ css }: Props) {
   const [tree] = useTree();
   const [file, _setFile] = React.useState(() => {
     const PublicTree = TransformToPublicTree(tree.context);
@@ -27,7 +34,7 @@ export function ExportButton() {
 
   return (
     <Link
-      className={buttonStyles({ size: "small", variant: "secondary" })}
+      className={buttonStyles({ size: "small", variant: "secondary", css })}
       download={
         file
           ? `${tree.context.treeName}_${readableDate(new Date())}.json`
