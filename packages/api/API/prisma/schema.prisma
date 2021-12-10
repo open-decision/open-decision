@@ -26,22 +26,30 @@ model User {
   role                  Role           @default(USER)
   email                 String         @unique
   password              String
-  refreshToken          String?
-  refreshTokenExpiry    Int?
-  loginExpiry           Int?
-  passwordResetCode     String?
-  passwordResetExpiry   Int?
+  emailIsVerified       Boolean       @default(false)
   DecisionTrees         DecisionTree[]
+  Token                 token[]
 }
 
-model blockedAccessToken {
-  token                 String         @unique @id
-  uuid                  String         @db.Uuid
-  expiry                Int
+model token {
+  id                    Int           @id @unique @default(autoincrement())
+  token                 String
+  type                  TokenType
+  owner                 User          @relation(fields: [ownerUuid], references: [uuid])
+  ownerUuid             String        @db.Uuid
+  expires               DateTime
+  blacklisted           Boolean       @default(false)
 }
 
 enum Role {
   USER
   STAFF
   ADMIN
+}
+
+enum TokenType {
+  ACCESS
+  REFRESH
+  RESET_PASSWORD
+  VERIFY_EMAIL
 }

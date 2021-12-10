@@ -1,5 +1,5 @@
-import { BaseError } from "./base-error";
-import { HTTPStatusCodes, CustomErrorInterface } from "./types";
+import { BaseError } from "../utils/ApiError";
+import { HTTPStatusCodes, CustomErrorInterface } from "../types/types";
 
 export class TreeNotFoundError extends BaseError {
   constructor({

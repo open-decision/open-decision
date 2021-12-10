@@ -1,6 +1,6 @@
 //Takes care of blocking access tokens as they cannot be revoked
 import { PrismaClient, Prisma } from ".prisma/client";
-import { BaseError } from "../../error-handling/base-error";
+import { BaseError } from "../../utils/ApiError";
 import { verifyAccessTokenAndGetUserUUIDAndExpiration } from "./generate-and-verifyToken";
 import * as schedule from "node-schedule";
 import prisma from "../../init-prisma-client";

@@ -3,8 +3,8 @@ import * as argon2 from "argon2";
 import sha256 from "crypto-js/sha256";
 import Base64 from "crypto-js/enc-base64";
 import cryptoRandomString from "crypto-random-string";
-import { Api400Error } from "../error-handling/api-errors";
-import { BaseError } from "../error-handling/base-error";
+import { Api400Error } from "../error-handling/api-errors.old";
+import { BaseError } from "../utils/ApiError";
 import {
   issueNewToken,
   verifyAccessTokenAndGetUserUuid,
@@ -15,7 +15,7 @@ import {
   generateRefreshToken,
 } from "./utils/generate-and-verifyToken";
 import { blockAccessToken } from "./utils/access-token-blocklist";
-import { LogoutInterface } from "./types/auth-interfaces";
+import { LogoutInterface } from "../interfaces/AuthInterfaces";
 import { UUID } from "../types/uuid-class";
 import { sendPasswordResetMail } from "../services/mail-service";
 import prisma from "../init-prisma-client";

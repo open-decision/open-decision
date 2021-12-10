@@ -1,5 +1,5 @@
 import express, { NextFunction, Request, Response, response } from "express";
-import { BaseError } from "./base-error";
+import { BaseError } from "../utils/ApiError";
 //FIXME: currently only using baseError, (how) are ApiErrors handled?
 export function logError(err: BaseError) {
   console.error(err.name);

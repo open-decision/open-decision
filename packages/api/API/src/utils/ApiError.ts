@@ -1,25 +1,30 @@
-import { HTTPStatusCodes, CustomErrorInterface } from "./types";
+import { HTTPStatusCodes, CustomErrorInterface } from "../types/types";
 
-export class BaseError extends Error {
+class ApiError extends Error {
   statusCode: HTTPStatusCodes;
   isOperational: boolean;
   additionalErrorData: object;
-
+  stack?: string;
   constructor({
-    name,
+    name = "",
     message,
     additionalErrorData = {},
-    statusCode = HTTPStatusCodes.INTERNAL_SERVER,
+    statusCode = HTTPStatusCodes.INTERNAL_SERVER_ERROR,
     isOperational = true,
+    stack = "",
   }: CustomErrorInterface) {
     super(message);
 
-    Object.setPrototypeOf(this, new.target.prototype);
     this.name = name;
     this.statusCode = statusCode;
     this.isOperational = isOperational;
     this.additionalErrorData = additionalErrorData;
-
-    // Error.captureStackTrace(this);
+    if (stack) {
+      this.stack = stack;
+    } else {
+      Error.captureStackTrace(this, this.constructor);
+    }
   }
 }
+
+export default ApiError;

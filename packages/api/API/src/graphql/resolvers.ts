@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { Arg, Ctx, Resolver, Query, Mutation } from "type-graphql";
 
 import { TreeService } from "./tree-service";
-import { TreeNotFoundError } from "./../error-handling/graphql-errors";
+import { TreeNotFoundError } from "../error-handling/graphql-errors.old";
 import { UUID } from "./../types/uuid-class";
 import { DecisionTree } from "./schema";
 import { NewTreeInput } from "./input-arguments-types";

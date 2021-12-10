@@ -1,8 +1,8 @@
 import express, { Request, Response, NextFunction } from "express";
-import { verifyAccessTokenAndGetUserUuid } from "./utils/generate-and-verifyToken";
+import { verifyAccessTokenAndGetUserUuid } from "../auth.old/utils/generate-and-verifyToken";
 import { header, validationResult } from "express-validator";
-import { Api400Error, Api401Error } from "./../error-handling/api-errors";
-import { isAccessTokenBlocked } from "./utils/access-token-blocklist";
+import { Api400Error, Api401Error } from "../error-handling/api-errors.old";
+import { isAccessTokenBlocked } from "../auth.old/utils/access-token-blocklist";
 
 const checkAuthorization = async function (
   req: Request,
@@ -47,10 +47,12 @@ const checkAuthorization = async function (
   }
 };
 
-export const isAuthorized = [
+const isAuthorized = [
   header(
     "Authorization",
     "Did not find a valid JWT in Authorization header."
   ).isJWT(),
   checkAuthorization,
 ];
+
+export default isAuthorized;

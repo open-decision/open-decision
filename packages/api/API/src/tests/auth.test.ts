@@ -1,8 +1,12 @@
-import { signup, login, refreshAndStoreNewToken } from "../auth/auth-functions";
+import {
+  signup,
+  login,
+  refreshAndStoreNewToken,
+} from "../auth.old/auth-functions";
 import { prismaMock } from "../singleton";
 import { Role, User, Prisma } from "@prisma/client";
-import { Api400Error } from "../error-handling/api-errors";
-import { BaseError } from "../error-handling/base-error";
+import { Api400Error } from "../error-handling/api-errors.old";
+import { BaseError } from "../utils/ApiError";
 
 describe("Authentication - test login", () => {
   it("should login user ", async () => {

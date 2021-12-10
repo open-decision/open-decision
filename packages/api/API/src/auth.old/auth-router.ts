@@ -10,11 +10,11 @@ import {
   changePasswordWhenLoggedIn,
   updateEmail,
 } from "./auth-functions";
-import { Api400Error } from "../error-handling/api-errors";
+import { Api400Error } from "../error-handling/api-errors.old";
 import isJWT from "validator/lib/isJWT";
 import isUUID from "validator/lib/isUUID";
-import { LogoutInterface } from "./types/auth-interfaces";
-import { isAuthorized } from "./authentication-middleware";
+import { LogoutInterface } from "../interfaces/AuthInterfaces";
+import { isAuthorized } from "../middlewares/authentication-middleware";
 export const authRouter = express.Router();
 
 //Base routes

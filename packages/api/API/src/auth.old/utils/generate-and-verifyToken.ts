@@ -5,13 +5,12 @@ import sha256 from "crypto-js/sha256";
 import Base64 from "crypto-js/enc-base64";
 
 import { UUID } from "../../types/uuid-class";
-import { TokenInterface } from "../types/auth-interfaces";
+import { TokenInterface } from "../../interfaces/AuthInterfaces";
 
-import { BaseError } from "../../error-handling/base-error";
+import { BaseError } from "../../utils/ApiError";
 const ACCESS_TOKEN_SECRET =
-  process.env.ACCESS_TOKEN_SECRET || "SUPER_INSECURE_SECRET";
-const REFRESH_TOKEN_SECRET =
-  process.env.REFRESH_TOKEN_SECRET || "EVEN_WORSE_SECRET";
+  config.ACCESS_TOKEN_SECRET || "SUPER_INSECURE_SECRET";
+const REFRESH_TOKEN_SECRET = config.REFRESH_TOKEN_SECRET || "EVEN_WORSE_SECRET";
 
 export function generateAccessToken(user: User): string {
   return jwt.sign({ userUuid: user.uuid }, ACCESS_TOKEN_SECRET, {

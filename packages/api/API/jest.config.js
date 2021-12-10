@@ -1,6 +1,9 @@
 module.exports = {
   testEnvironment: "node",
-  clearMocks: true,
+  testEnvironmentOptions: {
+    NODE_ENV: "test",
+  },
+  restoreMocks: true,
   preset: "ts-jest",
   roots: ["<rootDir>/src"],
   setupFilesAfterEnv: ["<rootDir>/src/tests/prisma-tests/singleton.ts"],
@@ -11,4 +14,11 @@ module.exports = {
   transform: {
     "^.+\\.(ts|tsx)$": "ts-jest",
   },
+  coveragePathIgnorePatterns: [
+    "node_modules",
+    "src/config",
+    "src/app.js",
+    "tests",
+  ],
+  coverageReporters: ["text", "lcov", "clover", "html"],
 };
