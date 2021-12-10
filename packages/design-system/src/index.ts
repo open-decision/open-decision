@@ -17,6 +17,7 @@ export * from "./Icon/Icon";
 export * from "./Overlays/Dialog/Dialog";
 export * from "./Overlays/Tooltip/Tooltip";
 export * from "./Overlays/Popover/Popover";
+export * from "./Tabs/Tabs";
 
 // Styling solutions
 export * from "./stitches";
