@@ -5,6 +5,8 @@ import { TokenType } from ".prisma/client";
 import UserHandler from "../models/user.model";
 import prisma from "../init-prisma-client";
 import { UUID } from "../types/uuid-class";
+import { tokenHandler } from "../models/token.model";
+import { refreshTokens } from "../validations/auth.validation";
 /**
  * Login with username and password
  * @param {string} email
@@ -32,24 +34,19 @@ const loginUserWithEmailAndPassword = async (
  * @returns {Promise}
  */
 const logout = async (refreshToken: string) => {
-  const refreshTokenFromDb = await prisma.token.findFirst({
-    where: {
-      token: refreshToken,
-      type: TokenType.REFRESH,
-      blacklisted: false,
-    },
+  const refreshTokenFromDb = await tokenHandler.findOne({
+    token: refreshToken,
+    type: TokenType.REFRESH,
   });
+
   if (!refreshTokenFromDb) {
     throw new ApiError({
       statusCode: HTTPStatusCodes.NOT_FOUND,
       message: "Not found",
     });
   }
-  await prisma.token.delete({
-    where: {
-      id: refreshTokenFromDb.id,
-    },
-  });
+
+  await tokenHandler.deleteFromDbById(refreshTokenFromDb.id);
 
   //TODO: reimplement accessTokenBlocklist
 };
@@ -65,16 +62,15 @@ const refreshAuth = async (refreshToken: string) => {
       refreshToken,
       TokenType.REFRESH
     );
-    const userUuid = new UUID(refreshTokenFromDb!.ownerUuid);
-    const user = await userService.getUserByUuidOrId(userUuid);
+    const user = await userService.getUserByUuidOrId(
+      refreshTokenFromDb!.ownerUuid
+    );
     if (!user) {
       throw new Error();
     }
-    await prisma.token.delete({
-      where: {
-        id: refreshTokenFromDb?.id,
-      },
-    });
+
+    await tokenHandler.deleteFromDbById(refreshTokenFromDb!.id);
+
     return tokenService.generateAuthTokens(user);
   } catch (error) {
     throw new ApiError({
@@ -99,18 +95,19 @@ const resetPassword = async (
       resetPasswordToken,
       TokenType.RESET_PASSWORD
     );
-    const userUuid = new UUID(resetPasswordTokenFromDb!.ownerUuid);
-    const user = await userService.getUserByUuidOrId(userUuid);
+    const user = await userService.getUserByUuidOrId(
+      resetPasswordTokenFromDb!.ownerUuid
+    );
     if (!user) {
       throw new Error();
     }
     await userService.updateUserByUuidOrId(user.id, { password: newPassword });
-    await prisma.token.deleteMany({
-      where: {
-        ownerUuid: userUuid.toString(),
-        type: TokenType.REFRESH,
-      },
-    });
+
+    await tokenHandler.deleteAllTokenOfUser(
+      resetPasswordTokenFromDb!.ownerUuid,
+      TokenType.REFRESH
+    );
+
     //TODO: add acccessToken to blocklist
   } catch (error) {
     throw new ApiError({
@@ -131,18 +128,18 @@ const verifyEmail = async (verifyEmailToken: string) => {
       verifyEmailToken,
       TokenType.VERIFY_EMAIL
     );
-    const userUuid = new UUID(verifyEmailTokenFromDb!.ownerUuid);
 
-    const user = await userService.getUserByUuidOrId(userUuid);
+    const user = await userService.getUserByUuidOrId(
+      verifyEmailTokenFromDb!.ownerUuid
+    );
     if (!user) {
       throw new Error();
     }
-    await prisma.token.deleteMany({
-      where: {
-        ownerUuid: userUuid.toString(),
-        type: TokenType.VERIFY_EMAIL,
-      },
-    });
+    await tokenHandler.deleteAllTokenOfUser(
+      verifyEmailTokenFromDb!.ownerUuid,
+      TokenType.VERIFY_EMAIL
+    );
+
     await userService.updateUserByUuidOrId(user.id, { emailIsVerified: true });
   } catch (error) {
     throw new ApiError({

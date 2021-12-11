@@ -1,4 +1,4 @@
-import { User } from ".prisma/client";
+import { User, TokenType } from ".prisma/client";
 export enum HTTPStatusCodes {
   OK = 200,
   CREATED = 201,
@@ -29,4 +29,11 @@ export interface CustomErrorInterface {
 
 export interface UserBody extends Partial<User> {
   oldPassword?: string;
+}
+
+export interface FindTokenInterface {
+  token: string;
+  type: TokenType;
+  blacklisted?: boolean;
+  ownerUuid?: string;
 }

@@ -23,14 +23,12 @@ export const getUsers = z.object({
 export const getUser = z.object({
   params: z.object({
     userUuid: z.string().uuid(),
-    // userId: z.string().custom(objectId),
   }),
 });
 
 export const updateUser = z.object({
   params: z.object({
     userUuid: z.string().uuid(),
-    // userId: z.custom(objectId),
   }),
   body: z.object({
     email: z.string().email(),
@@ -41,7 +39,6 @@ export const updateUser = z.object({
 
 export const deleteUser = z.object({
   params: z.object({
-    // userId: z.string().custom(objectId)
     userUuid: z.string().uuid(),
   }),
 });

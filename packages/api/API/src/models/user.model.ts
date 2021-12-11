@@ -3,9 +3,14 @@ import { User as PrismaUser, Prisma } from "@prisma/client";
 import { HTTPStatusCodes, UserBody } from "../types/types";
 import prisma from "../init-prisma-client";
 import * as argon2 from "argon2";
-import { UUID } from "../types/uuid-class";
-import { returnStatement } from "@babel/types";
+import getConstraint from "../utils/getConstraint";
 
+/**
+ * Create a new user
+ * @param {string} email
+ * @param {password} string
+ * @returns {User}
+ */
 async function create(email: string, password: string) {
   let user: PrismaUser;
   if (!isEmailTaken) {
@@ -40,8 +45,13 @@ async function isEmailTaken(email: string) {
   return true;
 }
 
+/**
+ * Hash a plain text password using argon2id hashing algorithm
+ * @param {string} plainPassword
+ * @returns {Promise<string>}
+ */
 async function hashPassword(plainPassword: string) {
-  return await argon2.hash(plainPassword, {
+  return argon2.hash(plainPassword, {
     type: argon2.argon2id,
     timeCost: 2,
     memoryCost: 15360,
@@ -52,28 +62,28 @@ async function hashPassword(plainPassword: string) {
  * Check if password matches the user's password
  * @param {string} password
  * @param {User} user
- * @returns {Promise<boolean>}
+ * @returns {Promise<bool>}
  */
 async function isPasswordMatch(password: string, user: PrismaUser) {
-  return await argon2.verify(user.password, password);
+  return argon2.verify(user.password, password);
 }
 
-async function findByUuidOrId(uuidOrId: UUID | number) {
-  if (uuidOrId instanceof UUID) {
-    return prisma.user.findUnique({
-      where: {
-        uuid: uuidOrId.toString(),
-      },
-    });
-  } else {
-    return prisma.user.findUnique({
-      where: {
-        id: uuidOrId,
-      },
-    });
-  }
+/**
+ * Find user by UUID or id
+ * @param {UUID | number} uuidOrId
+ * @returns {Promise<User>}
+ */
+async function findByUuidOrId(uuidOrId: string | number) {
+  return prisma.user.findUnique({
+    where: getConstraint(uuidOrId),
+  });
 }
 
+/**
+ * Find user by email
+ * @param {string} email
+ * @returns {Promise<User>}
+ */
 async function findByEmail(email: string) {
   return prisma.user.findUnique({
     where: {
@@ -83,6 +93,12 @@ async function findByEmail(email: string) {
 }
 
 //WARNING: careful, check what the user is allowed to modify in the right controller
+/**
+ * Save changes coming from an user body object to an user
+ * @param {UserBody} userBody
+ * @param {User} user
+ * @returns {Promise<User>}
+ */
 async function save(userBody: UserBody, user: PrismaUser) {
   if (userBody.password) {
     userBody.password = await hashPassword(userBody.password);
@@ -98,13 +114,14 @@ async function save(userBody: UserBody, user: PrismaUser) {
   });
 }
 
-async function remove(userIdOrUUID: UUID | number) {
-  const uniqueConstraint =
-    userIdOrUUID instanceof UUID
-      ? { uuid: userIdOrUUID.toString() }
-      : { id: userIdOrUUID };
+/**
+ * Remove an user using its UUID or id
+ * @param {UUID | number} userIdOrUUID
+ * @returns {Promise<User>}
+ */
+async function remove(userIdOrUUID: string | number) {
   return prisma.user.delete({
-    where: uniqueConstraint,
+    where: getConstraint(userIdOrUUID),
   });
 }
 

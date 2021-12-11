@@ -10,7 +10,15 @@
     "rootDir": ".",
     "outDir": "dist",
     "sourceMap": true,
+    "skipLibCheck": true,
     "esModuleInterop": true,
     "typeRoots": ["./src/types", "./node_modules/@types"]
-  }
+  },
+  "exclude": [
+    "./src/auth.old/**",
+    "./src/error-handling.old/**",
+    "./src/tests/**",
+    "./src/middlewares/auth.old.ts",
+    "./src/graphql/"
+  ]
 }

@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
 import dayjs from "dayjs";
 import config from "../config/config";
-import { userService } from "./user.service";
-// import { Token } from "../models/token.model";
+import { userService } from "./index";
+import { tokenHandler } from "../models/token.model";
 import ApiError from "../utils/ApiError";
 import { UUID } from "../types/uuid-class";
 import prisma from "../init-prisma-client";
@@ -50,15 +50,13 @@ const saveToken = async (
   type: TokenType,
   blacklisted = false
 ) => {
-  const storedToken = await prisma.token.create({
-    data: {
-      token,
-      expires: expiry.toISOString(),
-      ownerUuid: userUuid instanceof UUID ? userUuid.toString() : userUuid,
-      type,
-      blacklisted,
-    },
-  });
+  const storedToken = tokenHandler.storeInDb(
+    token,
+    userUuid,
+    expiry,
+    type,
+    blacklisted
+  );
   return storedToken;
 };
 
@@ -78,13 +76,11 @@ const verifyToken = async (token: string, type: TokenType) => {
     algorithms: ["HS256"],
   }) as TokenInterface;
 
-  const tokenFromDatabase = prisma.token.findFirst({
-    where: {
-      token,
-      ownerUuid: verifiedToken.userUuid,
-      blacklisted: false,
-      type,
-    },
+  const tokenFromDatabase = await tokenHandler.findOne({
+    token,
+    ownerUuid: verifiedToken.userUuid,
+    blacklisted: false,
+    type,
   });
 
   if (!tokenFromDatabase) {
@@ -182,14 +178,9 @@ const generateVerifyEmailToken = async (user: User) => {
   const verifyEmailToken = generateToken(
     user.uuid,
     expires,
-    tokenTypes.VERIFY_EMAIL
+    TokenType.VERIFY_EMAIL
   );
-  await saveToken(
-    verifyEmailToken,
-    user.uuid,
-    expires,
-    tokenTypes.VERIFY_EMAIL
-  );
+  await saveToken(verifyEmailToken, user.uuid, expires, TokenType.VERIFY_EMAIL);
   return verifyEmailToken;
 };
 

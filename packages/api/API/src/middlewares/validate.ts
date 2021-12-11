@@ -1,7 +1,7 @@
 import { z, ZodError, ZodErrorMap, ZodIssue, ZodObject, ZodSchema } from "zod";
 import { Request, Response, NextFunction } from "express";
 import * as R from "remeda";
-import { ApiError } from "../utils/ApiError";
+import ApiError from "../utils/ApiError";
 import { HTTPStatusCodes, CustomErrorInterface } from "../types/types";
 
 const validate =

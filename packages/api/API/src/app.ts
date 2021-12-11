@@ -8,10 +8,10 @@ import compression from "compression";
 import { morganSuccessHandler, morganErrorHandler } from "./config/morgan";
 import config from "./config/config";
 import { errorConverter, errorHandler } from "./middlewares/error";
-import { ApiError } from "./utils/ApiError";
+import ApiError from "./utils/ApiError";
 import { authLimiter } from "./middlewares/rateLimiter";
 import { HTTPStatusCodes } from "./types/types";
-
+import router from "./routes";
 export const app = express();
 
 if (config.NODE_ENV !== "test") {
@@ -44,7 +44,7 @@ if (config.NODE_ENV === "production") {
 
 // v1 api routes
 //TODO refactor accordingly
-app.use("/v1", routes);
+app.use("/v1", router);
 
 // app.use("/auth", authRouter);
 

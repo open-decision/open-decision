@@ -1,2 +1,2 @@
 export { authController } from "./auth.controller";
-export { UserController } from "./user.controller";
+export { userController } from "./user.controller";

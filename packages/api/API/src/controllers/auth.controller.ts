@@ -9,6 +9,12 @@ import {
   authService,
 } from "../services/index";
 import { HTTPStatusCodes } from "../types/types";
+import { User } from "prisma/prisma-client";
+namespace Express {
+  export interface Request {
+    user: User;
+  }
+}
 
 const register = catchAsync(async (req: Request, res: Response) => {
   const user = await userService.createUser(
@@ -86,17 +92,17 @@ const resetPassword = catchAsync(async (req: Request, res: Response) => {
 });
 
 const sendVerificationEmail = catchAsync(
-  async (req: Request, res: Response) => {
+  async (req: Express.Request, res: Response) => {
     const verifyEmailToken = await tokenService.generateVerifyEmailToken(
-      req.user
+      req.user!
     );
-    await emailService.sendVerificationEmail(req.user.email, verifyEmailToken);
+    await emailService.sendVerificationEmail(req.user!.email, verifyEmailToken);
     res.status(HTTPStatusCodes.NO_CONTENT).send();
   }
 );
 
 const verifyEmail = catchAsync(async (req: Request, res: Response) => {
-  await authService.verifyEmail(req.body.token);
+  await authService.verifyEmail(res.locals.token);
   res.status(HTTPStatusCodes.NO_CONTENT).send();
 });
 

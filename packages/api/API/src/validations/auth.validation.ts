@@ -1,5 +1,6 @@
 import { z } from "zod";
 import isJWT from "validator/lib/isJWT";
+
 export const register = z.object({
   body: z.object({
     email: z.string().email(),

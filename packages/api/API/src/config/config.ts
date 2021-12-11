@@ -5,7 +5,7 @@ import { EnvVars } from "../validations/env.validation";
 
 dotenv.config({ path: path.join(__dirname, "../../.env") });
 
-const validationResult = EnvVars.safeParse(config);
+const validationResult = EnvVars.safeParse(process.env);
 
 if (!validationResult.success) {
   throw new Error(

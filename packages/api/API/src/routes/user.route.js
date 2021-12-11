@@ -14,7 +14,7 @@ const router = express.Router();
 //   .get(auth('getUsers'), validate(userValidation.getUsers), userController.getUsers);
 
 router
-  .route("/:userId")
+  .route("/:userUuid")
   .get(
     auth("getUsers"),
     validate(userValidation.getUser),

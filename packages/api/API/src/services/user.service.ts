@@ -30,7 +30,7 @@ const createUser = async (email: string, password: string) => {
  * @param {UUID|number} uuidOrId
  * @returns {Promise<User>}
  */
-const getUserByUuidOrId = async (uuidOrId: UUID | number) => {
+const getUserByUuidOrId = async (uuidOrId: string | number) => {
   return UserHandler.findByUuidOrId(uuidOrId);
 };
 
@@ -50,7 +50,7 @@ const getUserByEmail = async (email: string) => {
  * @returns {Promise<User>}
  */
 const updateUserByUuidOrId = async (
-  userIdOrUUID: UUID | number,
+  userIdOrUUID: string | number,
   updateBody: UserBody
 ) => {
   const user = await getUserByUuidOrId(userIdOrUUID);
@@ -76,7 +76,7 @@ const updateUserByUuidOrId = async (
  * @param {UUID | number} userIdOrUUID
  * @returns {Promise<User>}
  */
-const deleteUserByUuidOrId = async (userIdOrUUID: UUID | number) => {
+const deleteUserByUuidOrId = async (userIdOrUUID: string | number) => {
   try {
     return await UserHandler.remove(userIdOrUUID);
   } catch {

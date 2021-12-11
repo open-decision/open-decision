@@ -1,8 +1,8 @@
 import express from "express";
 import validate from "../middlewares/validate";
 import { authValidation } from "../validations/";
-import * as authController from "../controllers/auth.controller";
-import isAuthorized from "../middlewares/authentication-middleware";
+import { authController } from "../controllers/";
+import { auth } from "../middlewares/auth";
 
 const authRouter = express.Router();
 
@@ -32,12 +32,16 @@ authRouter.post(
   validate(authValidation.resetPassword),
   authController.resetPassword
 );
-// authRouter.post('/send-verification-email', auth(), authController.sendVerificationEmail);
-// authRouter.post(
-//   "/verify-email",
-//   validate(authValidation.verifyEmail),
-//   authController.verifyEmail
-// );
+authRouter.post(
+  "/send-verification-email",
+  auth(),
+  authController.sendVerificationEmail
+);
+authRouter.post(
+  "/verify-email",
+  validate(authValidation.verifyEmail),
+  authController.verifyEmail
+);
 
 export default authRouter;
 /**
@@ -60,7 +64,6 @@ export default authRouter;
  *           schema:
  *             type: object
  *             required:
- *               - name
  *               - email
  *               - password
  *             properties:
@@ -74,9 +77,9 @@ export default authRouter;
  *                 type: string
  *                 format: password
  *                 minLength: 8
+ *                 maxLength: 300
  *                 description: At least one number and one letter
  *             example:
- *               name: fake name
  *               email: fake@example.com
  *               password: password1
  *     responses:

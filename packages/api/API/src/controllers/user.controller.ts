@@ -3,8 +3,12 @@ import { HTTPStatusCodes } from "../types/types";
 import ApiError from "../utils/ApiError";
 import catchAsync from "../utils/catchAsync";
 import { userService } from "../services";
-import { UUID } from "../types/uuid-class";
-
+import { User } from "prisma/prisma-client";
+namespace Express {
+  export interface Request {
+    user?: User;
+  }
+}
 const createUser = catchAsync(async (req: Request, res: Response) => {
   const user = await userService.createUser(
     res.locals.email,
@@ -21,33 +25,32 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
 // });
 
 const getUser = catchAsync(async (req: Request, res: Response) => {
-  const uuid = new UUID(res.locals.useruuid);
-  const user = await userService.getUserByUuidOrId(req.params.user);
+  const user = await userService.getUserByUuidOrId(req.params.userUuid);
   if (!user) {
     throw new ApiError({
       statusCode: HTTPStatusCodes.NOT_FOUND,
       message: "User not found",
     });
   }
+  //SECURITY: should we send the whole user object?
   res.send(user);
 });
 
 const updateUser = catchAsync(async (req: Request, res: Response) => {
   const user = await userService.updateUserByUuidOrId(
-    req.params.userId,
+    req.params.userUuid,
     req.body
   );
   res.send(user);
 });
 
 const deleteUser = catchAsync(async (req: Request, res: Response) => {
-  await userService.deleteUserByUuidOrId(req.params.userId);
+  await userService.deleteUserByUuidOrId(req.params.userUuid);
   res.status(HTTPStatusCodes.NO_CONTENT).send();
 });
 
 export const userController = {
   createUser,
-  getUsers,
   getUser,
   updateUser,
   deleteUser,
