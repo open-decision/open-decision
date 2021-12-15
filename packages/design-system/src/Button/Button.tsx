@@ -126,7 +126,7 @@ export const buttonStyles = css({
 
       ghost: {
         colorScheme: "gray",
-        color: "$gray11 !important",
+        color: "$gray12 !important",
         backgroundColor: "unset",
         boxShadow: "unset",
         focusStyle: "inner",
