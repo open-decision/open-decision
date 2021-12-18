@@ -1,5 +1,5 @@
 import { UUID } from "../uuid-class";
-import { PrismaClient } from "prisma/prisma-client";
+import { PrismaClient, User as PrismaUser } from "prisma/prisma-client";
 import { Express } from "express-serve-static-core";
 
 // interface ReqLocals {
@@ -9,10 +9,8 @@ interface Context {
   userUuid?: UUID;
 }
 
-declare global {
-  namespace Express {
-    interface Response {
-      context: Context;
-    }
-  }
-}
+// declare module "express" {
+//   interface Request {
+//     user?: PrismaUser;
+//   }
+// }
