@@ -5,7 +5,7 @@ import { buildSchema } from "type-graphql";
 import { app } from "./app";
 import config from "./config/config";
 import { logger } from "./config/logger";
-import { TreeResolver } from "./graphql/resolvers";
+// import { TreeResolver } from "./graphql/resolvers";
 // import { cleanBlocklist } from "./auth.old/utils/access-token-blocklist";
 
 let schema: any;
