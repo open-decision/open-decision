@@ -1,6 +1,7 @@
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  
 }
 
 generator client {
@@ -26,14 +27,31 @@ model User {
   role                  Role           @default(USER)
   email                 String         @unique
   password              String
-  refreshToken          String?
-  refreshTokenExpiry    Int?
-  loginExpiry           Int?
+  emailIsVerified       Boolean       @default(false)
   DecisionTrees         DecisionTree[]
+  Token                 Token[]
+}
+
+model Token {
+  id                    Int           @id @unique @default(autoincrement())
+  token                 String
+  type                  TokenType
+  owner                 User          @relation(fields: [ownerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade) 
+  ownerUuid             String        @db.Uuid
+  expires               DateTime
+  loginExpiry           DateTime?
+  blacklisted           Boolean       @default(false)
 }
 
 enum Role {
   USER
   STAFF
   ADMIN
+}
+
+enum TokenType {
+  ACCESS
+  REFRESH
+  RESET_PASSWORD
+  VERIFY_EMAIL
 }

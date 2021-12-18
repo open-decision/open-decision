@@ -1,5 +1,5 @@
 import { Field, ObjectType, ID } from "type-graphql";
-import { TreeResolver } from "./resolvers";
+// import { TreeResolver } from "./resolvers";
 import { buildSchema } from "type-graphql";
 
 @ObjectType()

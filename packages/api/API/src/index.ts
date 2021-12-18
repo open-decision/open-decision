@@ -1,67 +1,58 @@
 import "reflect-metadata";
-import { PrismaClient } from "@prisma/client";
-import express, { Request, Response } from "express";
-import { graphqlHTTP } from "express-graphql";
-import cookieParser from "cookie-parser";
-import helmet from "helmet";
-import cors from "cors";
+import prisma from "./init-prisma-client";
 import { buildSchema } from "type-graphql";
-import { authRouter } from "./auth/auth-router";
 
-import { isAuthorized } from "./auth/authentication-middleware";
-import {
-  logError,
-  returnError,
-} from "./error-handling/error-handling-middleware";
-import { TreeResolver } from "./graphql/resolvers";
-
-const app = express();
-const port = process.env.PORT || 4000;
-const prisma: PrismaClient = new PrismaClient();
-
-app.locals.prisma = prisma;
-app.use(cookieParser());
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cors());
-app.use(helmet());
+import { app } from "./app";
+import config from "./config/config";
+import { logger } from "./config/logger";
+// import { TreeResolver } from "./graphql/resolvers";
+// import { cleanBlocklist } from "./auth.old/utils/access-token-blocklist";
 
 let schema: any;
-async function bootstrap() {
-  schema = await buildSchema({
-    resolvers: [TreeResolver],
-    emitSchemaFile: true,
-  });
+
+async function asyncPreparation() {
+  // schema = await buildSchema({
+  //   resolvers: [TreeResolver],
+  //   emitSchemaFile: true,
+  // });
+
+  try {
+    await prisma.$connect();
+    logger.info("Connected to database");
+  } catch (e) {
+    logger.error("Connection to database failed.");
+  }
+  // cleanBlocklist();
 }
 
-app.use("/auth", authRouter);
-
-app.use("/restricted", isAuthorized, async (req: Request, res: Response) => {
-  res.send("Awesome");
+export const server = app.listen({ port: config.PORT }, () => {
+  logger.info(`Listening to port ${config.PORT}`);
 });
 
-app.use(
-  "/graphql",
-  isAuthorized,
-  graphqlHTTP(async (req: any, res: any, graphQLParams: any) => ({
-    schema: schema,
-    graphiql: true,
-    context: (req: any, res: any) => {
-      return {
-        ...req,
-        prisma,
-        userUuid: res.locals.user,
-      };
-    },
-  }))
-);
+asyncPreparation();
 
-app.use(logError);
-app.use(returnError);
+const exitHandler = () => {
+  if (server) {
+    server.close(() => {
+      logger.info("Server closed");
+      process.exit(1);
+    });
+  } else {
+    process.exit(1);
+  }
+};
 
-app.listen({ port: port }, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+const unexpectedErrorHandler = (error: Error) => {
+  logger.error(error);
+  exitHandler();
+};
+
+process.on("uncaughtException", unexpectedErrorHandler);
+process.on("unhandledRejection", unexpectedErrorHandler);
+
+process.on("SIGTERM", () => {
+  logger.info("SIGTERM received");
+  if (server) {
+    server.close();
+  }
 });
-
-bootstrap();

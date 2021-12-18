@@ -2,13 +2,17 @@
   "compilerOptions": {
     "target": "es2018",
     "module": "commonjs",
-    "lib": ["es2018", "esnext.asynciterable"],
+    "lib": ["es2018", "esnext.asynciterable", "dom.iterable"],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "strict": true,
+    "forceConsistentCasingInFileNames": true,
     "rootDir": ".",
     "outDir": "dist",
     "sourceMap": true,
-    "esModuleInterop": true
-  }
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "typeRoots": ["./src/types", "./node_modules/@types"]
+  },
+  "exclude": ["./src/graphql/"]
 }
