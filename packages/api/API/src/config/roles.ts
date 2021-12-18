@@ -1,5 +1,5 @@
 const userRights: string[] = [];
-const adminRights = ["getUsers", "manageUsers"];
+export const adminRights = ["getUsers", "manageUsers"];
 
 const allRoles = {
   USER: userRights,

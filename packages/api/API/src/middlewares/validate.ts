@@ -1,29 +1,34 @@
-import { z, ZodError, ZodErrorMap, ZodIssue, ZodObject, ZodSchema } from "zod";
+import { ZodIssue, ZodSchema } from "zod";
 import { Request, Response, NextFunction } from "express";
-import * as R from "remeda";
 import ApiError from "../utils/ApiError";
-import { HTTPStatusCodes, CustomErrorInterface } from "../types/types";
+import httpStatus from "http-status";
 
 const validate =
   (schema: ZodSchema<any>) =>
-  (req: Request, res: Response, next: NextFunction) => {
-    const validationResult = schema.safeParse(req);
+  async (req: Request, res: Response, next: NextFunction) => {
+    const validationResult = await schema.safeParseAsync(req);
 
     if (!validationResult.success) {
       const errorMessage = validationResult.error.issues
         .map(
           (details: ZodIssue) =>
-            `${details.path[details.path.length]}: ${details.message}`
+            `${details.path[details.path.length - 1]} : ${details.message}`
         )
         .join(", ");
       return next(
         new ApiError({
-          statusCode: HTTPStatusCodes.BAD_REQUEST,
+          statusCode: httpStatus.BAD_REQUEST,
           message: errorMessage,
         })
       );
     }
-    Object.assign(res.locals, validationResult.data);
+    res.locals = {
+      ...validationResult.data.body,
+      ...validationResult.data.params,
+      ...validationResult.data.cookies,
+      ...validationResult.data.query,
+    };
+
     return next();
   };
 

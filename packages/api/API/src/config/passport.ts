@@ -3,7 +3,6 @@ import config from "./config";
 import { TokenType } from "@prisma/client";
 import UserHandler from "../models/user.model";
 import { JwtPayload } from "jsonwebtoken";
-import { UUID } from "../types/uuid-class";
 
 export const jwtStrategy = new JwtStrategy(
   {

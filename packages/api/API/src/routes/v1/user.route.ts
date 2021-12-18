@@ -1,19 +1,24 @@
-//TODO: refactor
+import express from "express";
+import { auth } from "../../middlewares/auth";
+import validate from "../../middlewares/validate";
+import { userValidation } from "../../validations";
+import { userController } from "../../controllers";
+const userRouter = express.Router();
 
-const express = require("express");
-const auth = require("../../middlewares/auth");
-const validate = require("../../middlewares/validate");
-const userValidation = require("../../validations/user.validation");
-const userController = require("../../controllers/user.controller");
+userRouter
+  .route("/")
+  .post(
+    auth("manageUsers"),
+    validate(userValidation.createUser),
+    userController.createUser
+  );
+// .get(
+//   auth("getUsers"),
+//   validate(userValidation.getUsers),
+//   userController.getUsers
+// );
 
-const router = express.Router();
-
-// router
-//   .route('/')
-//   .post(auth('manageUsers'), validate(userValidation.createUser), userController.createUser)
-//   .get(auth('getUsers'), validate(userValidation.getUsers), userController.getUsers);
-
-router
+userRouter
   .route("/:userUuid")
   .get(
     auth("getUsers"),
@@ -31,8 +36,7 @@ router
     userController.deleteUser
   );
 
-module.exports = router;
-
+export default userRouter;
 /**
  * @swagger
  * tags:
@@ -78,7 +82,7 @@ module.exports = router;
  *             example:
  *               name: fake name
  *               email: fake@example.com
- *               password: password1
+ *               password: Th@t!shardToGuess
  *               role: user
  *     responses:
  *       "201":
@@ -224,7 +228,7 @@ module.exports = router;
  *             example:
  *               name: fake name
  *               email: fake@example.com
- *               password: password1
+ *               password: Th@t!shardToGuess
  *     responses:
  *       "200":
  *         description: OK

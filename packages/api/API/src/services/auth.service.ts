@@ -1,12 +1,9 @@
-import { HTTPStatusCodes } from "../types/types";
+import httpStatus from "http-status";
 import { tokenService, userService } from ".";
 import ApiError from "../utils/ApiError";
 import { TokenType } from ".prisma/client";
 import UserHandler from "../models/user.model";
-import prisma from "../init-prisma-client";
-import { UUID } from "../types/uuid-class";
 import { tokenHandler } from "../models/token.model";
-import { refreshTokens } from "../validations/auth.validation";
 /**
  * Login with username and password
  * @param {string} email
@@ -21,7 +18,7 @@ const loginUserWithEmailAndPassword = async (
   const user = await userService.getUserByEmail(email);
   if (!user || !(await UserHandler.isPasswordMatch(password, user))) {
     throw new ApiError({
-      statusCode: HTTPStatusCodes.UNAUTHORIZED,
+      statusCode: httpStatus.UNAUTHORIZED,
       message: "Incorrect email or password",
     });
   }
@@ -37,11 +34,12 @@ const logout = async (refreshToken: string) => {
   const refreshTokenFromDb = await tokenHandler.findOne({
     token: refreshToken,
     type: TokenType.REFRESH,
+    blacklisted: false,
   });
 
   if (!refreshTokenFromDb) {
     throw new ApiError({
-      statusCode: HTTPStatusCodes.NOT_FOUND,
+      statusCode: httpStatus.NOT_FOUND,
       message: "Not found",
     });
   }
@@ -58,23 +56,10 @@ const logout = async (refreshToken: string) => {
  */
 const refreshAuth = async (refreshToken: string) => {
   try {
-    const refreshTokenFromDb = await tokenService.verifyToken(
-      refreshToken,
-      TokenType.REFRESH
-    );
-    const user = await userService.getUserByUuidOrId(
-      refreshTokenFromDb!.ownerUuid
-    );
-    if (!user) {
-      throw new Error();
-    }
-
-    await tokenHandler.deleteFromDbById(refreshTokenFromDb!.id);
-
-    return tokenService.generateAuthTokens(user);
+    return await tokenService.refreshTokens(refreshToken);
   } catch (error) {
     throw new ApiError({
-      statusCode: HTTPStatusCodes.UNAUTHORIZED,
+      statusCode: httpStatus.UNAUTHORIZED,
       message: "Please authenticate",
     });
   }
@@ -108,10 +93,15 @@ const resetPassword = async (
       TokenType.REFRESH
     );
 
+    await tokenHandler.deleteAllTokenOfUser(
+      resetPasswordTokenFromDb!.ownerUuid,
+      TokenType.RESET_PASSWORD
+    );
+
     //TODO: add acccessToken to blocklist
   } catch (error) {
     throw new ApiError({
-      statusCode: HTTPStatusCodes.UNAUTHORIZED,
+      statusCode: httpStatus.UNAUTHORIZED,
       message: "Password reset failed",
     });
   }
@@ -143,7 +133,7 @@ const verifyEmail = async (verifyEmailToken: string) => {
     await userService.updateUserByUuidOrId(user.id, { emailIsVerified: true });
   } catch (error) {
     throw new ApiError({
-      statusCode: HTTPStatusCodes.UNAUTHORIZED,
+      statusCode: httpStatus.UNAUTHORIZED,
       message: "Email verification failed",
     });
   }

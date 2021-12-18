@@ -1,4 +1,4 @@
-import { HTTPStatusCodes } from "../types/types";
+import httpStatus from "http-status";
 import config from "../config/config";
 import { logger } from "../config/logger";
 import ApiError from "../utils/ApiError";
@@ -18,14 +18,14 @@ export const errorConverter = (
 ) => {
   let error = err;
   if (!(error instanceof ApiError)) {
-    let statusCode = HTTPStatusCodes.INTERNAL_SERVER_ERROR;
+    let statusCode = httpStatus.INTERNAL_SERVER_ERROR;
     if (
       error.statusCode ||
       error instanceof PrismaClientKnownRequestError ||
       error instanceof PrismaClientUnknownRequestError ||
       error instanceof PrismaClientValidationError
     ) {
-      statusCode = HTTPStatusCodes.BAD_REQUEST;
+      statusCode = httpStatus.BAD_REQUEST;
     }
 
     const message = error.message || http.STATUS_CODES[statusCode];
@@ -50,9 +50,9 @@ export const errorHandler = (
 ) => {
   let { statusCode, message } = err;
   if (config.NODE_ENV === "production" && !err.isOperational) {
-    statusCode = HTTPStatusCodes.INTERNAL_SERVER_ERROR;
+    statusCode = httpStatus.INTERNAL_SERVER_ERROR;
     message =
-      http.STATUS_CODES[HTTPStatusCodes.INTERNAL_SERVER_ERROR] ||
+      http.STATUS_CODES[httpStatus.INTERNAL_SERVER_ERROR] ||
       "We experienced an internal server errror.";
   }
 

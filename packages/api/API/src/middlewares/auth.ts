@@ -2,10 +2,10 @@ import { Request } from "express";
 import { NextFunction, Response } from "express-serve-static-core";
 import passport from "passport";
 import { Permissions, roleRights } from "../config/roles";
-import UserHandler from "../models/user.model";
 import { User } from "@prisma/client";
 import ApiError from "../utils/ApiError";
-import { HTTPStatusCodes } from "../types/types";
+import httpStatus from "http-status";
+import { jwtStrategy } from "../config/passport";
 namespace Express {
   export interface Request {
     user?: User;
@@ -23,7 +23,7 @@ const verifyCallback =
     if (err || info || !user) {
       return reject(
         new ApiError({
-          statusCode: HTTPStatusCodes.UNAUTHORIZED,
+          statusCode: httpStatus.UNAUTHORIZED,
           message: "Please authenticate",
         })
       );
@@ -35,10 +35,10 @@ const verifyCallback =
       const hasRequiredRights = requiredRights.every((requiredRight) =>
         userRights!.includes(requiredRight)
       );
-      if (!hasRequiredRights && req.params.userUUId !== user.uuid) {
+      if (!hasRequiredRights && req.params.userUuid !== user.uuid) {
         return reject(
           new ApiError({
-            statusCode: HTTPStatusCodes.FORBIDDEN,
+            statusCode: httpStatus.FORBIDDEN,
             message: "Forbidden",
           })
         );
@@ -53,7 +53,7 @@ export const auth =
   async (req: Request, res: Response, next: NextFunction) => {
     return new Promise((resolve, reject) => {
       passport.authenticate(
-        "jwt",
+        jwtStrategy,
         { session: false },
         verifyCallback(req, resolve, reject, requiredRights)
       )(req, res, next);

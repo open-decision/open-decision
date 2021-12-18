@@ -18,7 +18,8 @@ async function storeInDb(
   userUuid: UUID | string,
   expiry: dayjs.Dayjs,
   type: TokenType,
-  blacklisted = false
+  blacklisted = false,
+  loginExpiry: dayjs.Dayjs | null = null
 ) {
   return prisma.token.create({
     data: {
@@ -26,6 +27,7 @@ async function storeInDb(
       expires: expiry.toISOString(),
       ownerUuid: userUuid instanceof UUID ? userUuid.toString() : userUuid,
       type,
+      loginExpiry: loginExpiry ? loginExpiry.toISOString() : null,
       blacklisted,
     },
   });

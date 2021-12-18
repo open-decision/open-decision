@@ -1,10 +1,13 @@
 import { z } from "zod";
-// const { password, objectId } = require('./custom.validation');
-
+import { isPasswordStrongEnough } from "./password.validation";
 export const createUser = z.object({
   body: z.object({
     email: z.string().email(),
-    password: z.string().min(8),
+    password: z
+      .string()
+      .min(8)
+      .max(300)
+      .refine(async (val) => isPasswordStrongEnough(val)),
     name: z.string(),
     role: z.enum(["USER", "STAFF", "ADMIN"]),
   }),
@@ -31,9 +34,14 @@ export const updateUser = z.object({
     userUuid: z.string().uuid(),
   }),
   body: z.object({
-    email: z.string().email(),
-    password: z.string().min(8),
-    name: z.string(),
+    password: z
+      .string()
+      .min(8)
+      .max(300)
+      .refine(async (val) => isPasswordStrongEnough(val))
+      .optional(),
+    email: z.string().email().optional(),
+    name: z.string().optional(),
   }),
 });
 

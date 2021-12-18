@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
-import { HTTPStatusCodes } from "../types/types";
+import * as R from "remeda";
+import httpStatus from "http-status";
 import ApiError from "../utils/ApiError";
 import catchAsync from "../utils/catchAsync";
 import { userService } from "../services";
@@ -14,7 +15,7 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
     res.locals.email,
     res.locals.password
   );
-  res.status(HTTPStatusCodes.CREATED).send(user);
+  res.status(httpStatus.CREATED).send(user);
 });
 
 // const getUsers = catchAsync(async (req: Request, res: Response) => {
@@ -28,25 +29,27 @@ const getUser = catchAsync(async (req: Request, res: Response) => {
   const user = await userService.getUserByUuidOrId(req.params.userUuid);
   if (!user) {
     throw new ApiError({
-      statusCode: HTTPStatusCodes.NOT_FOUND,
+      statusCode: httpStatus.NOT_FOUND,
       message: "User not found",
     });
   }
-  //SECURITY: should we send the whole user object?
-  res.send(user);
+  res.send({ ...user, password: "Password was redacted." });
 });
 
 const updateUser = catchAsync(async (req: Request, res: Response) => {
+  //These are the only values an user is allowed to change, check how to allow editing by admins
+  const updateData = R.pick(req.body, ["name", "email", "password"]);
+
   const user = await userService.updateUserByUuidOrId(
-    req.params.userUuid,
-    req.body
+    res.locals.userUuid,
+    updateData
   );
-  res.send(user);
+  res.send({ ...user, password: "Password was redacted." });
 });
 
 const deleteUser = catchAsync(async (req: Request, res: Response) => {
   await userService.deleteUserByUuidOrId(req.params.userUuid);
-  res.status(HTTPStatusCodes.NO_CONTENT).send();
+  res.status(httpStatus.NO_CONTENT).send();
 });
 
 export const userController = {

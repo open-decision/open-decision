@@ -10,8 +10,8 @@ import config from "./config/config";
 import { errorConverter, errorHandler } from "./middlewares/error";
 import ApiError from "./utils/ApiError";
 import { authLimiter } from "./middlewares/rateLimiter";
-import { HTTPStatusCodes } from "./types/types";
-import router from "./routes";
+import httpStatus from "http-status";
+import router from "./routes/v1";
 export const app = express();
 
 if (config.NODE_ENV !== "test") {
@@ -43,7 +43,6 @@ if (config.NODE_ENV === "production") {
 }
 
 // v1 api routes
-//TODO refactor accordingly
 app.use("/v1", router);
 
 // app.use("/auth", authRouter);
@@ -72,7 +71,7 @@ app.use("/v1", router);
 app.use((req, res, next) => {
   next(
     new ApiError({
-      statusCode: HTTPStatusCodes.NOT_FOUND,
+      statusCode: httpStatus.NOT_FOUND,
       message: "Not found.",
     })
   );

@@ -6,25 +6,23 @@ import { app } from "./app";
 import config from "./config/config";
 import { logger } from "./config/logger";
 import { TreeResolver } from "./graphql/resolvers";
-import { cleanBlocklist } from "./auth.old/utils/access-token-blocklist";
-
-const port = config.PORT || 4000;
+// import { cleanBlocklist } from "./auth.old/utils/access-token-blocklist";
 
 let schema: any;
 
 async function asyncPreparation() {
-  schema = await buildSchema({
-    resolvers: [TreeResolver],
-    emitSchemaFile: true,
-  });
+  // schema = await buildSchema({
+  //   resolvers: [TreeResolver],
+  //   emitSchemaFile: true,
+  // });
 
   try {
     await prisma.$connect();
     logger.info("Connected to database");
   } catch (e) {
-    logger.info("Connection to database failed.");
+    logger.error("Connection to database failed.");
   }
-  cleanBlocklist();
+  // cleanBlocklist();
 }
 
 export const server = app.listen({ port: config.PORT }, () => {

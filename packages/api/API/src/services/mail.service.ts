@@ -4,8 +4,8 @@ import config from "../config/config";
 
 const transporter = nodemailer.createTransport({
   host: config.SMTP_HOST,
-  port: config.PORT,
-  secure: config.PORT == 465 ? true : false, // true for 465, false for other ports
+  port: config.SMTP_PORT,
+  secure: config.SMTP_PORT === 465 ? true : false, // true for 465, false for other ports
   auth: {
     user: config.SMTP_USERNAME,
     pass: config.SMTP_PASSWORD,
@@ -17,7 +17,7 @@ if (config.NODE_ENV !== "test") {
     .verify()
     .then(() => logger.info("Connected to email server"))
     .catch(() =>
-      logger.warn(
+      logger.error(
         "Unable to connect to email server. Make sure you have configured the SMTP options in .env"
       )
     );
@@ -80,6 +80,7 @@ If you did not create an account, then ignore this email.`;
 
 export const emailService = {
   sendEmail,
+  transporter,
   sendResetPasswordEmail,
   sendVerificationEmail,
 };

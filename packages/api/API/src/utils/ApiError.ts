@@ -1,7 +1,8 @@
-import { HTTPStatusCodes, CustomErrorInterface } from "../types/types";
+import { CustomErrorInterface } from "../types/types";
+import httpStatus from "http-status";
 
 class ApiError extends Error {
-  statusCode: HTTPStatusCodes;
+  statusCode: number;
   isOperational: boolean;
   additionalErrorData: object;
   stack?: string;
@@ -9,7 +10,7 @@ class ApiError extends Error {
     name = "",
     message,
     additionalErrorData = {},
-    statusCode = HTTPStatusCodes.INTERNAL_SERVER_ERROR,
+    statusCode = httpStatus.INTERNAL_SERVER_ERROR,
     isOperational = true,
     stack = "",
   }: CustomErrorInterface) {

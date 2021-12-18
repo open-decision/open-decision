@@ -1,9 +1,10 @@
 import ApiError from "../utils/ApiError";
 import { User as PrismaUser, Prisma } from "@prisma/client";
-import { HTTPStatusCodes, UserBody } from "../types/types";
+import { UserBody } from "../types/types";
 import prisma from "../init-prisma-client";
 import * as argon2 from "argon2";
 import getConstraint from "../utils/getConstraint";
+import httpStatus from "http-status";
 
 /**
  * Create a new user
@@ -12,20 +13,20 @@ import getConstraint from "../utils/getConstraint";
  * @returns {User}
  */
 async function create(email: string, password: string) {
-  let user: PrismaUser;
-  if (!isEmailTaken) {
+  if (await emailIsTaken(email)) {
+    //OWASP: use a different error message (OWASP recommendation)?
+    throw new ApiError({
+      name: "EmailAlreadyUsed",
+      statusCode: httpStatus.BAD_REQUEST,
+      message:
+        "The e-mail adress is already being used. Please choose another e-mail address.",
+      // "A link to activate your account has been emailed to the address provided.",
+    });
+  } else {
     return prisma.user.create({
       data: { email, password: await hashPassword(password) },
     });
   }
-  //OWASP: use a different error message (OWASP recommendation)?
-  throw new ApiError({
-    name: "EmailAlreadyUsed",
-    statusCode: HTTPStatusCodes.BAD_REQUEST,
-    message:
-      "The e-mail adress is already being used. Please choose another e-mail address.",
-    // "A link to activate your account has been emailed to the address provided.",
-  });
 }
 
 /**
@@ -33,7 +34,7 @@ async function create(email: string, password: string) {
  * @param {string} email
  * @returns {boolean}
  */
-async function isEmailTaken(email: string) {
+async function emailIsTaken(email: string) {
   const user = await prisma.user.findUnique({
     where: {
       email: email,
@@ -92,7 +93,6 @@ async function findByEmail(email: string) {
   });
 }
 
-//WARNING: careful, check what the user is allowed to modify in the right controller
 /**
  * Save changes coming from an user body object to an user
  * @param {UserBody} userBody
@@ -127,7 +127,7 @@ async function remove(userIdOrUUID: string | number) {
 
 const UserHandler = {
   create,
-  isEmailTaken,
+  emailIsTaken,
   isPasswordMatch,
   findByUuidOrId,
   findByEmail,

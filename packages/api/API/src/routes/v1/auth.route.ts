@@ -1,8 +1,8 @@
 import express from "express";
-import validate from "../middlewares/validate";
-import { authValidation } from "../validations/";
-import { authController } from "../controllers/";
-import { auth } from "../middlewares/auth";
+import validate from "../../middlewares/validate";
+import { authValidation } from "../../validations/";
+import { authController } from "../../controllers/";
+import { auth } from "../../middlewares/auth";
 
 const authRouter = express.Router();
 
@@ -81,7 +81,7 @@ export default authRouter;
  *                 description: At least one number and one letter
  *             example:
  *               email: fake@example.com
- *               password: password1
+ *               password: Th@t!shardToGuess
  *     responses:
  *       "201":
  *         description: Created
@@ -122,7 +122,7 @@ export default authRouter;
  *                 format: password
  *             example:
  *               email: fake@example.com
- *               password: password1
+ *               password: Th@t!shardToGuess
  *     responses:
  *       "200":
  *         description: OK
@@ -258,7 +258,7 @@ export default authRouter;
  *                 minLength: 8
  *                 description: At least one number and one letter
  *             example:
- *               password: password1
+ *               password: Th@t!shardToGuess
  *     responses:
  *       "204":
  *         description: No content

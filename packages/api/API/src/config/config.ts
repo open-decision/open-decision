@@ -1,19 +1,19 @@
 import dotenv from "dotenv";
 import path from "path";
-import { z } from "zod";
 import { EnvVars } from "../validations/env.validation";
 
-dotenv.config({ path: path.join(__dirname, "../../.env") });
+//TODO: properly load env file
+dotenv.config({ path: path.join(__dirname, `../../.env.development`) });
 
 const validationResult = EnvVars.safeParse(process.env);
 
 if (!validationResult.success) {
   throw new Error(
-    `Invalid ENV configuration: ${validationResult.error.issues}`
+    `Invalid ENV configuration: ${JSON.stringify(
+      validationResult.error.issues
+    )}`
   );
 }
-
-type EnvVarsType = z.infer<typeof EnvVars>;
 
 const config = validationResult.data;
 export default config;

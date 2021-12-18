@@ -1,7 +1,7 @@
-import { HTTPStatusCodes, UserBody } from "../types/types";
+import { UserBody } from "../types/types";
 import UserHandler from "../models/user.model";
 import ApiError from "../utils/ApiError";
-import { UUID } from "../types/uuid-class";
+import httpStatus from "http-status";
 /**
  * Create a user
  * @param {Object} userBody
@@ -55,16 +55,25 @@ const updateUserByUuidOrId = async (
 ) => {
   const user = await getUserByUuidOrId(userIdOrUUID);
   if (!user) {
-    //OWASP: use a different error message (OWASP recommendation)?
     throw new ApiError({
-      statusCode: HTTPStatusCodes.NOT_FOUND,
+      statusCode: httpStatus.NOT_FOUND,
       message: "User not found",
     });
   }
-  if (updateBody.email && (await UserHandler.isEmailTaken(updateBody.email))) {
+  if (Object.keys(updateBody).length === 0) {
+    throw new ApiError({
+      statusCode: httpStatus.BAD_REQUEST,
+      message: "The update data is empty",
+    });
+  }
+  if (
+    updateBody.email &&
+    updateBody.email !== user.email &&
+    (await UserHandler.emailIsTaken(updateBody.email))
+  ) {
     //OWASP: use a different error message (OWASP recommendation)?
     throw new ApiError({
-      statusCode: HTTPStatusCodes.BAD_REQUEST,
+      statusCode: httpStatus.BAD_REQUEST,
       message: "Email already taken",
     });
   }
@@ -82,7 +91,7 @@ const deleteUserByUuidOrId = async (userIdOrUUID: string | number) => {
   } catch {
     //OWASP: use a different error message (OWASP recommendation)?
     throw new ApiError({
-      statusCode: HTTPStatusCodes.NOT_FOUND,
+      statusCode: httpStatus.NOT_FOUND,
       message: "User not found",
     });
   }
