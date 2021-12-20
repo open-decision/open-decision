@@ -2,10 +2,14 @@ import { Box, css, Heading, Text } from "@open-legal-tech/design-system";
 import { RenderElementProps } from "slate-react";
 import { Link } from "./elements/Link";
 
-const listStyles = css({
+export const listStyles = css({
   listStyle: "revert",
   textStyle: "small-text",
   paddingInlineStart: "$6",
+});
+
+export const listItemStyles = css({
+  fontSize: "$medium-text",
 });
 
 export const renderElement = (props: RenderElementProps): JSX.Element => {

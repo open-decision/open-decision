@@ -1,6 +1,5 @@
 import {
   Box,
-  BoxProps,
   Button,
   Icon,
   styled,
@@ -27,7 +26,19 @@ const StyledSeparator = styled(Separator.Root, {
   "&[data-orientation=vertical]": { width: 1 },
 });
 
-export function Toolbar({ css, ...props }: BoxProps): JSX.Element {
+const StyledToolbar = styled(Box, {
+  display: "flex",
+  backgroundColor: "$gray2",
+  padding: "$1",
+  boxShadow: "$1",
+  gap: "$1",
+  height: "50px",
+});
+
+export function Toolbar({
+  css,
+  ...props
+}: React.ComponentProps<typeof StyledToolbar>): JSX.Element {
   const editor = useSlate();
   const toggleEditorMark = toggleBooleanMark(editor);
   const toggleEditorElement = toggleElement(editor);
@@ -40,17 +51,7 @@ export function Toolbar({ css, ...props }: BoxProps): JSX.Element {
   const isLink = isElement(editor)("link");
 
   return (
-    <Box
-      css={{
-        display: "flex",
-        backgroundColor: "$gray2",
-        padding: "$1",
-        boxShadow: "$1",
-        gap: "$1",
-        ...css,
-      }}
-      {...props}
-    >
+    <StyledToolbar css={css} {...props}>
       <Button
         size="small"
         variant="ghost"
@@ -123,6 +124,6 @@ export function Toolbar({ css, ...props }: BoxProps): JSX.Element {
           <Link />
         </Icon>
       </ToggleButton>
-    </Box>
+    </StyledToolbar>
   );
 }

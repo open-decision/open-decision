@@ -66,17 +66,22 @@ export function NodeEditingSidebar({
               node: { content: newValue },
             })
           }
-          css={{
-            display: "grid",
-            gap: "$2",
-            borderRadius: "$md",
-            overflow: "hidden",
-            border: "1px solid $gray8",
-            backgroundColor: "$primary1",
-          }}
         >
-          <RichTextEditor.Toolbar />
-          <RichTextEditor.Editable />
+          <Box
+            css={{
+              display: "grid",
+              borderRadius: "$md",
+              overflow: "hidden",
+              border: "1px solid $gray8",
+              maxHeight: "600px",
+              gridTemplateRows: "50px 1fr",
+            }}
+          >
+            <RichTextEditor.Toolbar css={{ borderBottom: "inherit" }} />
+            <RichTextEditor.Editable
+              css={{ padding: "$2", backgroundColor: "$gray1" }}
+            />
+          </Box>
         </RichTextEditor.Root>
       </Box>
       {Object.values(parentNodes).length > 0 ? (

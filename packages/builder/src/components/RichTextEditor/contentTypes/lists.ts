@@ -25,7 +25,11 @@ function isListActive(editor: Editor): boolean | Error {
   if (!Element.isElement(selectedElement))
     return new Error(`The selected Node is not an Element`);
 
-  return isListElement(selectedElement);
+  const isList = isListElement(selectedElement);
+
+  if (!isList) return new Error(`The selectedElement is not a List`);
+
+  return isList;
 }
 
 function getListPath(currentPath: Path) {

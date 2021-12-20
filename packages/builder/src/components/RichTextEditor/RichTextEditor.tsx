@@ -1,14 +1,16 @@
 import React from "react";
-import { Box, BoxProps } from "@open-legal-tech/design-system";
+import { styled } from "@open-legal-tech/design-system";
 import {
   Editable as SlateEditable,
+  RenderElementProps,
+  RenderLeafProps,
   Slate,
   useSlate,
   withReact,
 } from "slate-react";
 import { createEditor, Descendant, Editor } from "slate";
-import { renderElement } from "./Elements";
-import { renderLeaf } from "./Leaf";
+import { renderElement as defaultRenderElement } from "./Elements";
+import { renderLeaf as defaultRenderLeaf } from "./Leaf";
 import { Toolbar } from "./Toolbar";
 import { onKeyDownHandler } from "./keyboardShortcuts";
 import { withInlines } from "./editorConfig";
@@ -24,18 +26,13 @@ const initialValues: Descendant[] = [
   },
 ];
 
-type RichTextEditorProps = Omit<BoxProps, "setValue"> & {
+type RichTextEditorProps = {
   value: Descendant[];
   setValue: (newValue: Descendant[]) => void;
   children: React.ReactNode;
 };
 
-function Root({
-  value,
-  setValue,
-  children,
-  ...props
-}: RichTextEditorProps): JSX.Element {
+function Root({ value, setValue, children }: RichTextEditorProps): JSX.Element {
   const editorRef = React.useRef<Editor>();
   if (!editorRef.current)
     editorRef.current = withInlines(withReact(createEditor()));
@@ -47,35 +44,46 @@ function Root({
   editor.children = value;
 
   return (
-    <Box {...props}>
-      <Slate
-        editor={editor}
-        value={value}
-        onChange={(newValue) => setValue(newValue)}
-      >
-        {children}
-      </Slate>
-    </Box>
+    <Slate
+      editor={editor}
+      value={value}
+      onChange={(newValue) => setValue(newValue)}
+    >
+      {children}
+    </Slate>
   );
 }
 
-function Editable(props: BoxProps) {
+const StyledEditable = styled(SlateEditable, {
+  minHeight: "200px",
+  gap: "10px",
+  display: "flex",
+  flexDirection: "column",
+  overflow: "auto",
+  maxHeight: "100%",
+});
+
+type EditableProps = {
+  renderElement?: (props: RenderElementProps) => JSX.Element;
+  renderLeaf?: (props: RenderLeafProps) => JSX.Element;
+} & React.ComponentProps<typeof StyledEditable>;
+
+function Editable({
+  renderElement = defaultRenderElement,
+  renderLeaf = defaultRenderLeaf,
+  css,
+  ...props
+}: EditableProps) {
   const editor = useSlate();
 
   return (
-    <Box css={{ padding: "$2" }} {...props}>
-      <SlateEditable
-        style={{
-          minHeight: "200px",
-          gap: "10px",
-          display: "flex",
-          flexDirection: "column",
-        }}
-        renderElement={renderElement}
-        renderLeaf={renderLeaf}
-        onKeyDown={onKeyDownHandler(editor)}
-      />
-    </Box>
+    <StyledEditable
+      renderElement={renderElement}
+      renderLeaf={renderLeaf}
+      onKeyDown={onKeyDownHandler(editor)}
+      css={css}
+      {...props}
+    />
   );
 }
 
