@@ -6,7 +6,8 @@
   "conventionalCommits.scopes": [
     "builder",
     "type-classes",
-    "design-system"
+    "design-system",
+    "interpreter"
   ],
   "typescript.tsdk": "node_modules/typescript/lib"
 }

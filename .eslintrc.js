@@ -8,6 +8,7 @@ module.exports = {
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:jsx-a11y/recommended",
     "plugin:react-hooks/recommended",
+    "plugin:valtio/recommended",
   ],
   env: {
     browser: true,

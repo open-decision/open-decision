@@ -1,16 +1,13 @@
-import {
-  BuilderNode,
-  BuilderRelation,
-  BuilderTree,
-} from "@open-decision/type-classes";
+import { BuilderRelation, BuilderTree } from "@open-decision/type-classes";
 
-class Interpreter {
+export class Interpreter {
   history: { nodes: string[]; answers: Record<string, string> };
   state: "initialized" | "idle" | "error" | "interpreting";
   currentNode: string;
   hasHistory: boolean;
+  tree: BuilderTree.TTree;
 
-  constructor() {
+  constructor(json: any) {
     /**
      * The log of visited nodes and given answers.
      */
@@ -21,19 +18,21 @@ class Interpreter {
     this.state = "initialized";
     this.currentNode = "";
     this.hasHistory = this.history.nodes.length > 0;
-  }
-}
 
-export class BuilderInterpreter extends Interpreter {
-  tree: BuilderTree.TTree;
-
-  constructor(json) {
     const decodedJSON = BuilderTree.Type.safeParse(json);
 
     if (!decodedJSON.success)
       throw new Error(`The provided tree is not in the correct format`);
 
-    super();
+    this.tree = decodedJSON.data;
+    this.currentNode = this.tree.startNode;
+  }
+
+  updateTree(json: any) {
+    const decodedJSON = BuilderTree.Type.safeParse(json);
+
+    if (!decodedJSON.success)
+      throw new Error(`The provided tree is not in the correct format`);
 
     this.tree = decodedJSON.data;
     this.currentNode = this.tree.startNode;
@@ -101,7 +100,7 @@ export class BuilderInterpreter extends Interpreter {
 
   //Load the JSON file storing the progress
   setInterpretationState(
-    savedState: ReturnType<BuilderInterpreter["getInterpretationState"]>
+    savedState: ReturnType<Interpreter["getInterpretationState"]>
   ) {
     this.currentNode = savedState.currentNode;
     this.history = savedState.history;
