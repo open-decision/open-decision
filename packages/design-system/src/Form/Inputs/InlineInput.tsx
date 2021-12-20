@@ -29,8 +29,7 @@ function reducer(state: State, action: Actions): State {
   }
 }
 
-const StyledBox = styled(Box, {
-  ...baseInputStyles,
+const StyledBox = styled(Box, baseInputStyles, {
   border: 0,
   display: "flex",
   alignItems: "center",
@@ -40,8 +39,7 @@ const StyledBox = styled(Box, {
   },
 });
 
-const StyledInput = styled("input", {
-  ...baseTextInputStyle,
+const StyledInput = styled("input", baseTextInputStyle, {
   $$paddingInline: "$space$2",
   $$paddingBlock: "$space$2",
   $$width: "0px",

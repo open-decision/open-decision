@@ -1,7 +1,7 @@
-import { StyleObject } from "../../stitches";
+import { css } from "../../stitches";
 import { alignByContent } from "../../stitches/utils";
 
-export const baseInputStyles = {
+export const baseInputStyles = css({
   $$borderWidth: "1px",
   border: "$$borderWidth solid $colors$gray8",
   color: "var(--color, $colorScheme-text)",
@@ -26,31 +26,26 @@ export const baseInputStyles = {
     opacity: 0.4,
     borderColor: "$gray8",
   },
-} as const;
+});
 
-export const baseTextInputStyle = {
-  $$XTranslation: "0px",
-  transform: "translateX($$XTranslation)",
-
+export const baseTextInputStyle = css(alignByContent, {
   variants: {
     size: {
       medium: { $$paddingBlock: "$space$2" },
       large: { $$paddingInline: "$space$3" },
     },
-
-    alignByContent,
   },
 
   defaultVariants: {
     size: "medium",
   },
-};
+});
 
-export const baseInputBoxStyles: StyleObject = {
+export const baseInputBoxStyles = css({
   width: "24px",
   height: "24px",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   color: "white",
-};
+});

@@ -8,8 +8,8 @@ import { useComposedRefs } from "../../internal/utils";
 
 const StyledBox = styled(
   Box,
+  baseInputStyles,
   {
-    ...baseInputStyles,
     borderRadius: "$md",
     display: "flex",
     alignItems: "center",

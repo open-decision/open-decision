@@ -15,7 +15,6 @@ import {
   blueDarkA,
 } from "@radix-ui/colors";
 import { ColorKeys, aliasColor, TextStyles } from "../internal/utils";
-import { opinionated } from "stitches-normalize-css";
 
 const { colors, ...otherTokens } = tokens;
 

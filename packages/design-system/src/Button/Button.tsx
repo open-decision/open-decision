@@ -2,12 +2,11 @@ import { alignByContent } from "../stitches/utils";
 import { styled, css } from "../stitches";
 import { iconSizes } from "../Icon/shared";
 
-export const buttonStyles = css({
+export const buttonStyles = css(alignByContent, {
   $$borderWidth: "1px",
   $$paddingInline: "$space$6",
   $$paddingBlock: "$space$3",
   $$YTranslation: "0px",
-  $$XTranslation: "0px",
 
   //Mini reset
   appearance: "none",
@@ -166,8 +165,6 @@ export const buttonStyles = css({
         borderRadius: "$full",
       },
     },
-
-    alignByContent,
   },
 
   compoundVariants: [

@@ -4,7 +4,7 @@ import { alignByContent } from "../stitches/utils";
 import * as AccessibleIcon from "@radix-ui/react-accessible-icon";
 import { iconSizes } from "./shared";
 
-const StyledIcon = styled("span", {
+const StyledIcon = styled("span", alignByContent, {
   $$iconSize: "0px",
   transform: "translate($$XTranslation)",
   display: "flex",
@@ -30,7 +30,6 @@ const StyledIcon = styled("span", {
         },
       },
     },
-    alignByContent,
   },
 
   defaultVariants: {

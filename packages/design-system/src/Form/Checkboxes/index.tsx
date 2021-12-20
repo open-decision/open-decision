@@ -14,14 +14,17 @@ const Indicator = styled(CheckboxPrimitive.Indicator, {
   justifyContent: "center",
 });
 
-const StyledCheckbox = styled(CheckboxPrimitive.Root, {
-  all: "unset",
-  boxSizing: "border-box",
-  ...baseInputStyles,
-  ...baseInputBoxStyles,
-  borderRadius: "$md",
-  padding: "4px",
-});
+const StyledCheckbox = styled(
+  CheckboxPrimitive.Root,
+  baseInputStyles,
+  baseInputBoxStyles,
+  {
+    all: "unset",
+    boxSizing: "border-box",
+    borderRadius: "$md",
+    padding: "4px",
+  }
+);
 
 // eslint-disable-next-line react/require-default-props
 type CheckboxBoxProps = {

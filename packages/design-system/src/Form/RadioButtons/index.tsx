@@ -8,12 +8,15 @@ import { InputGroupProvider, useInputGroup } from "../shared/Context";
 import { useInput } from "../useForm";
 import { baseInputBoxStyles, baseInputStyles } from "../shared/styles";
 
-const StyledRadio = styled(RadioGroup.Item, {
-  all: "unset",
-  ...baseInputStyles,
-  ...baseInputBoxStyles,
-  borderRadius: "$full",
-});
+const StyledRadio = styled(
+  RadioGroup.Item,
+  {
+    all: "unset",
+    borderRadius: "$full",
+  },
+  baseInputStyles,
+  baseInputBoxStyles
+);
 
 const Indicator = styled(RadioGroup.Indicator, {
   display: "flex",

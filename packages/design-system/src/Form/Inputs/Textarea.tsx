@@ -3,8 +3,7 @@ import { styled } from "../../stitches";
 import { baseInputStyles } from "../shared/styles";
 import { useInput } from "../useForm";
 
-const StyledTextarea = styled("textarea", {
-  ...baseInputStyles,
+const StyledTextarea = styled("textarea", baseInputStyles, {
   backgroundColor: "transparent",
 
   borderRadius: "$md",
