@@ -46,6 +46,7 @@ export default function Tree(): JSX.Element {
 
 const Editor = () => {
   const [state, send] = useTree();
+
   const addNotification = useNotificationStore(
     (state) => state.addNotification
   );

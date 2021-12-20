@@ -39,10 +39,9 @@ export function useTree<T>(
   selectorFn?: (tree: BuilderTree.TTree) => T
 ): [InterpretedTreeState | T, SendFn] {
   const service = useTreeService();
-  const hasSelector = selectorFn != null;
 
   const data = useSelector(service, (state) =>
-    hasSelector ? selectorFn(state.context) : state
+    selectorFn ? selectorFn?.(state.context) : state
   );
 
   React.useDebugValue("Tree");
