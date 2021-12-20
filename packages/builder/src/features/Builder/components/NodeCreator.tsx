@@ -77,7 +77,7 @@ const NodeCreatorInput = ({ createHandler, autoFocus }) => {
   return (
     <Box css={{ display: "flex", gap: "$2" }}>
       <Combobox.Input css={{ backgroundColor: "$gray1", zIndex: "5" }}>
-        <Input autoFocus={autoFocus} name="search" />
+        <Input autoFocus={autoFocus} name="search" placeholder="Knotenname" />
       </Combobox.Input>
 
       <IconButton
