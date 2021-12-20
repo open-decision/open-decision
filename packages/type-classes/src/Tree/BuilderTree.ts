@@ -5,8 +5,8 @@ import { BaseTree } from "./shared";
 
 export const Type = BaseTree.extend({
   nodes: BuilderNode.Record,
-  selectedNodeId: z.string(),
-  selectedRelationId: z.string(),
+  selectedNodeId: z.string().optional(),
+  selectedRelationId: z.string().optional(),
 });
 
 export function create(name: string): TTree {
@@ -15,8 +15,6 @@ export function create(name: string): TTree {
     nodes: {},
     treeName: name,
     startNode: "",
-    selectedNodeId: "",
-    selectedRelationId: "",
   } as TTree;
 
   return newTree;

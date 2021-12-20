@@ -126,6 +126,8 @@ const Editor = () => {
                         const validatedResult =
                           BuilderTree.Type.safeParse(parsedResult);
 
+                        console.log(validatedResult);
+
                         if (!validatedResult.success) {
                           return addNotification({
                             title: "Ungültiger Inhalt",
