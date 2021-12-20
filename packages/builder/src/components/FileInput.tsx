@@ -1,7 +1,12 @@
-import { Label, styled, StyleObject } from "@open-legal-tech/design-system";
-import React, { ForwardedRef, HTMLAttributes } from "react";
+import {
+  iconButtonStyles,
+  Label,
+  styled,
+  StyleObject,
+} from "@open-legal-tech/design-system";
+import React, { ForwardedRef } from "react";
 
-const StyledLabel = styled(Label, {
+const StyledLabel = styled(Label, iconButtonStyles, {
   focusStyle: "outer-within",
 });
 
@@ -31,7 +36,14 @@ const FileInputImpl = (
   ref: ForwardedRef<HTMLLabelElement>
 ) => {
   return (
-    <StyledLabel css={css} className={className} ref={ref} {...props}>
+    <StyledLabel
+      square
+      variant="secondary"
+      css={css}
+      className={className}
+      ref={ref}
+      {...props}
+    >
       {children}
       <HiddenInput type="file" onChange={onChange} />
     </StyledLabel>
