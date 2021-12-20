@@ -1,8 +1,9 @@
 import {
   Box,
+  Button,
   Icon,
   Link as SystemLink,
-  Text,
+  Tabs,
 } from "@open-legal-tech/design-system";
 import { BaseHeader, MainContent } from "components";
 import { TreeNameInput } from "features/Builder/components/TreeNameInput";
@@ -12,7 +13,9 @@ import Link from "next/link";
 import { ChevronLeft } from "react-feather";
 import { Preview } from "features/Preview/Preview";
 import { useTree } from "features/Builder/state/useTree";
-import { BuilderInterpreter } from "@open-decision/interpreter";
+import { InterpreterProvider } from "@open-decision/interpreter";
+import { MobilePreview } from "features/Preview/MobilePreview";
+import { ThemingButton } from "features/Preview/components/ThemingButton";
 
 export default function Vorschau() {
   const [state] = useTree();
@@ -25,76 +28,110 @@ export default function Vorschau() {
     return <Box>Loading...</Box>;
   }
 
-  const InterpreterInstance = new BuilderInterpreter(state.context);
-
   return (
-    <MainContent
-      css={{
-        display: "grid",
-        gridTemplateColumns: "1fr",
-        gridTemplateRows: "max-content max-content 1fr",
-      }}
-    >
-      <BaseHeader>
-        <TreeNameInput />
-        <ExportButton css={{ marginLeft: "auto" }} />
-      </BaseHeader>
-      <Box
+    <InterpreterProvider tree={state.context}>
+      <MainContent
         css={{
-          $padding: "$space$4 $space$2",
           display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
-          borderBottom: "1px solid $gray9",
+          gridTemplateColumns: "1fr",
+          gridTemplateRows: "max-content max-content 1fr",
         }}
       >
-        <Link passHref href="/">
-          <SystemLink
-            css={{
-              color: "$gray11",
-              fontWeight: "$extra-small-heading",
-              padding: "var(--padding)",
-              maxWidth: "max-content",
-              marginBottom: "-1px",
-            }}
-          >
-            <Icon label="Zurück">
-              <ChevronLeft />
-            </Icon>
-            Zurück zum Builder
-          </SystemLink>
-        </Link>
-        <Box
-          css={{
-            display: "flex",
-            gap: "$4",
-            alignItems: "end",
-            justifyContent: "center",
-          }}
-        >
-          <Text
-            css={{
-              marginBottom: "-1px",
-              padding: "var(--padding)",
-              borderBottom: "3px solid $primary9",
-            }}
-          >
-            Desktop
-          </Text>
-          <Text
-            css={{
-              padding: "var(--padding)",
-              borderBottom: "3px solid transparent",
-            }}
-          >
-            Mobile
-          </Text>
-        </Box>
-        <Box />
-      </Box>
-      <Preview
-        css={{ width: "100vw" }}
-        InterpreterInstance={InterpreterInstance}
-      />
-    </MainContent>
+        <BaseHeader>
+          <TreeNameInput />
+          <ExportButton css={{ marginLeft: "auto" }} />
+        </BaseHeader>
+        <Tabs.Root asChild defaultValue="desktop_preview">
+          <>
+            <Box
+              css={{
+                $padding: "$space$4 $space$2",
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                borderBottom: "1px solid $gray9",
+              }}
+            >
+              <Link passHref href="/">
+                <SystemLink
+                  css={{
+                    color: "$gray11",
+                    fontWeight: "$extra-small-heading",
+                    padding: "var(--padding)",
+                    maxWidth: "max-content",
+                    marginBottom: "-1px",
+                  }}
+                >
+                  <Icon label="Zurück">
+                    <ChevronLeft />
+                  </Icon>
+                  Zurück zum Builder
+                </SystemLink>
+              </Link>
+              <Tabs.List>
+                <Box
+                  css={{
+                    display: "flex",
+                    gap: "$4",
+                    alignItems: "end",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Tabs.Trigger value="desktop_preview" asChild>
+                    <Button
+                      variant="ghost"
+                      css={{
+                        padding: "var(--padding)",
+
+                        "&[data-state='active']": {
+                          marginBottom: "-1px",
+                          borderBottom: "3px solid $primary9",
+                        },
+                      }}
+                    >
+                      Desktop
+                    </Button>
+                  </Tabs.Trigger>
+                  <Tabs.Trigger value="mobile_preview" asChild>
+                    <Button
+                      variant="ghost"
+                      css={{
+                        padding: "var(--padding)",
+
+                        "&[data-state='active']": {
+                          marginBottom: "-1px",
+                          borderBottom: "3px solid $primary9",
+                        },
+                      }}
+                    >
+                      Mobil
+                    </Button>
+                  </Tabs.Trigger>
+                </Box>
+              </Tabs.List>
+              <Box />
+            </Box>
+            <Box
+              css={{
+                position: "relative",
+                width: "100vw",
+              }}
+            >
+              <ThemingButton
+                css={{ position: "absolute", top: 28, left: 28 }}
+              />
+              <Tabs.Content value="desktop_preview" css={{ height: "100%" }}>
+                <Preview />
+              </Tabs.Content>
+              <Tabs.Content
+                value="mobile_preview"
+                css={{ backgroundColor: "$gray6", height: "100%" }}
+              >
+                <MobilePreview />
+              </Tabs.Content>
+            </Box>
+          </>
+        </Tabs.Root>
+      </MainContent>
+    </InterpreterProvider>
   );
 }
