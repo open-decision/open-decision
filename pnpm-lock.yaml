@@ -226,6 +226,7 @@ importers:
       react: ^17.0.2
       react-dom: ^17.0.2
       react-feather: ^2.0.9
+      react-hook-form: ^7.22.2
       react-use: ^17.3.1
       remeda: ^0.0.30
       stitches-normalize-css: ^1.2.0
@@ -252,6 +253,7 @@ importers:
       downshift: 6.1.7_react@17.0.2
       match-sorter: 6.3.1
       react-feather: 2.0.9_react@17.0.2
+      react-hook-form: 7.22.2_react@17.0.2
       react-use: 17.3.1_react-dom@17.0.2+react@17.0.2
       stitches-normalize-css: 1.2.0
     devDependencies:
@@ -15660,6 +15662,15 @@ packages:
       react-fast-compare: 3.2.0
       shallowequal: 1.1.0
     dev: true
+
+  /react-hook-form/7.22.2_react@17.0.2:
+    resolution: {integrity: sha512-gdz5dhdOPfd04uj00a+Fw8JHA4m6evn3RQeVEQSZCOrmRC+LqaTwsR97cQfj5vu3yCXhSETrUtiDoXJojW/KGg==}
+    engines: {node: '>=12.22.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17
+    dependencies:
+      react: 17.0.2
+    dev: false
 
   /react-inspector/5.1.1_react@17.0.2:
     resolution: {integrity: sha512-GURDaYzoLbW8pMGXwYPDBIv6nqei4kK7LPRZ9q9HCZF54wqXz/dnylBp/kfE9XmekBhHvLDdcYeyIwSrvtOiWg==}

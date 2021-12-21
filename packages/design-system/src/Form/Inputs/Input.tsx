@@ -1,27 +1,22 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import * as React from "react";
-import { styled } from "../../stitches";
+import { styled, StyleObject } from "../../stitches";
 import { baseInputStyles, baseTextInputStyle } from "../shared/styles";
-import { useInput } from "../useForm";
 import { Box } from "../../Box";
 import { useComposedRefs } from "../../internal/utils";
+import { RegisterOptions, useFormContext } from "react-hook-form";
 
-const StyledBox = styled(
-  Box,
-  baseInputStyles,
-  {
-    borderRadius: "$md",
-    display: "flex",
-    alignItems: "center",
-    focusStyle: "inner",
-    overflow: "hidden",
-    padding: "1px",
-    $$paddingInline: "$space$2",
-    $$paddingBlock: "$space$3",
-    paddingInline: "$$paddingInline",
-  },
-  baseTextInputStyle
-);
+const StyledBox = styled(Box, baseInputStyles, baseTextInputStyle, {
+  borderRadius: "$md",
+  display: "flex",
+  alignItems: "center",
+  focusStyle: "inner",
+  overflow: "hidden",
+  padding: "1px",
+  $$paddingInline: "$space$2",
+  $$paddingBlock: "$space$3",
+  paddingInline: "$$paddingInline",
+});
 
 const StyledInput = styled("input", {
   borderRadius: "$md",
@@ -39,36 +34,22 @@ const StyledInput = styled("input", {
   },
 });
 
-export type InputProps = Omit<
-  React.ComponentProps<typeof StyledInput>,
-  "value" | "size"
-> & {
+export type InputProps = {
   name: string;
-  value?: string;
-  regex?: string;
   Buttons?: JSX.Element | JSX.Element[];
   Icon?: React.ReactNode;
-} & React.ComponentProps<typeof StyledBox>;
+  css?: StyleObject;
+  size?: React.ComponentProps<typeof StyledBox>["size"];
+} & RegisterOptions;
 
 const InputComponent = (
-  {
-    name,
-    minLength,
-    maxLength,
-    regex,
-    required,
-    onChange,
-    onBlur,
-    Buttons,
-    disabled,
-    css,
-    size,
-    Icon,
-    ...props
-  }: InputProps,
+  { name, Buttons, disabled, css, size, Icon, ...props }: InputProps,
   forwardedRef: React.Ref<HTMLInputElement>
 ) => {
+  const { register } = useFormContext();
+  const { ref, ...inputProps } = register(name, { disabled, ...props });
   const innerRef = useComposedRefs(forwardedRef);
+
   const [hasFocus, setHasFocus] = React.useState(false);
 
   React.useEffect(() => {
@@ -78,47 +59,7 @@ const InputComponent = (
     ) {
       setHasFocus(true);
     }
-  }, []);
-
-  const { value, blur, setBlur, setValue, setErrors, submitting } = useInput(
-    name,
-    "string"
-  );
-
-  const defaultValidationmessages = {
-    required: "The field is required and can't be empty",
-    minLength: `Please enter at least ${minLength} chars.`,
-    regex: `The input doesn't fulfill the requirements.`,
-    maxLength: `You've reached the maximum allowed characters (${maxLength}).`,
-  };
-
-  const validate = (inputValue: string) => {
-    const errors: string[] = [];
-
-    if (required && inputValue.length === 0) {
-      errors.push(defaultValidationmessages.required);
-    }
-
-    if (minLength && inputValue.length < minLength) {
-      errors.push(defaultValidationmessages.minLength);
-    }
-
-    if (regex && !new RegExp(regex).test(inputValue)) {
-      errors.push(defaultValidationmessages.regex);
-    }
-
-    if (maxLength && inputValue.length === maxLength) {
-      errors.push(defaultValidationmessages.maxLength);
-    }
-
-    return errors;
-  };
-
-  React.useEffect(() => {
-    if (blur || submitting) {
-      setErrors(validate(value ?? ""));
-    }
-  }, [value, blur, submitting]);
+  }, [innerRef]);
 
   const EnhancedIcon = React.isValidElement(Icon)
     ? React.cloneElement(Icon, {
@@ -135,24 +76,13 @@ const InputComponent = (
     >
       {EnhancedIcon}
       <StyledInput
-        name={name}
-        ref={innerRef}
-        value={value}
-        onChange={(event) => {
-          onChange ? onChange?.(event) : setValue(event.target.value ?? "");
-        }}
-        onBlur={(event) => {
-          onBlur?.(event);
-          setBlur(true);
-          setHasFocus(false);
-        }}
-        disabled={disabled}
-        minLength={minLength}
-        maxLength={maxLength}
-        pattern={regex}
-        required={required}
+        {...inputProps}
         onFocus={() => setHasFocus(true)}
-        {...props}
+        ref={(e) => {
+          ref(e);
+          // @ts-expect-error - by default forwardedRef.current is readonly. Let's ignore it
+          innerRef.current = e;
+        }}
       />
       {Buttons}
     </StyledBox>

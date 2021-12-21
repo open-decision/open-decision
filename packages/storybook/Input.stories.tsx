@@ -17,14 +17,14 @@ export default {
 
 const Input: Story<InputProps> = (props) => (
   <Form
-    initialValues={{ test: "" }}
-    onChange={({ values }) => console.log(values.test)}
+    onSubmit={(data) => console.log(data)}
     css={{ display: "grid", gap: "$2", width: "max-content" }}
   >
-    <SystemInput {...props} name="test" />
+    <SystemInput {...props} name="1" />
     <Field label="Testinput">
-      <SystemInput {...props} name="test" />
+      <SystemInput {...props} name="2" />
     </Field>
+    <Button>Submit</Button>
   </Form>
 );
 

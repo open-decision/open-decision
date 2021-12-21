@@ -12,8 +12,7 @@ export function useComposedRefs<T>(forwardedRef: React.Ref<T>) {
       forwardedRef(innerRef.current);
       return;
     } else {
-      // @ts-ignore
-      // by default forwardedRef.current is readonly. Let's ignore it
+      // @ts-expect-error - by default forwardedRef.current is readonly. Let's ignore it
       forwardedRef.current = innerRef.current;
     }
   });
