@@ -22,7 +22,11 @@ const Input: Story<InputProps> = (props) => (
   >
     <SystemInput {...props} name="1" />
     <Field label="Testinput">
-      <SystemInput {...props} name="2" />
+      <SystemInput
+        {...props}
+        name="2"
+        required={{ value: true, message: "This Input is required" }}
+      />
     </Field>
     <Button>Submit</Button>
   </Form>

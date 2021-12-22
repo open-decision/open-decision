@@ -40,7 +40,7 @@ export function Field({ label, children, css, name }: FieldProps) {
         </Box>
         {children}
       </Label>
-      {/* <ValidationMessage name={inputName} css={{ gridColumn: "1/ -1" }} /> */}
+      <ValidationMessage name={inputName} css={{ gridColumn: "1/ -1" }} />
     </FieldBox>
   );
 }

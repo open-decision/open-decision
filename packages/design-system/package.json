@@ -41,6 +41,7 @@
     "verify:fix": "yarn prettier:fix && yarn lint:fix"
   },
   "dependencies": {
+    "@hookform/error-message": "^2.0.0",
     "@radix-ui/colors": "^0.1.7",
     "@radix-ui/react-accessible-icon": "^0.1.0",
     "@radix-ui/react-checkbox": "^0.1.0",

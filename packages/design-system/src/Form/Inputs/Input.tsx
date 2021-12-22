@@ -40,10 +40,20 @@ export type InputProps = {
   Icon?: React.ReactNode;
   css?: StyleObject;
   size?: React.ComponentProps<typeof StyledBox>["size"];
+  alignByContent?: React.ComponentProps<typeof StyledBox>["alignByContent"];
 } & RegisterOptions;
 
 const InputComponent = (
-  { name, Buttons, disabled, css, size, Icon, ...props }: InputProps,
+  {
+    name,
+    Buttons,
+    disabled,
+    css,
+    size,
+    alignByContent,
+    Icon,
+    ...props
+  }: InputProps,
   forwardedRef: React.Ref<HTMLInputElement>
 ) => {
   const { register } = useFormContext();
@@ -73,6 +83,7 @@ const InputComponent = (
       data-disabled={disabled}
       data-focus={hasFocus}
       size={size}
+      alignByContent={alignByContent}
     >
       {EnhancedIcon}
       <StyledInput

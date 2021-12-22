@@ -1,3 +1,4 @@
+import { ErrorMessage } from "@hookform/error-message";
 import * as React from "react";
 import { styled, StyleObject } from "../stitches";
 import { textStyles } from "../Text";
@@ -30,19 +31,16 @@ export type ValidationMessageProps = {
 };
 
 export function ValidationMessage({ name, css }: ValidationMessageProps) {
-  const { errors } = useInput(name);
-
-  if (!errors.length) {
-    return <></>;
-  }
-
   return (
-    <StyledErrorList css={css}>
-      {errors.map((message) => (
-        <StyledMessage size="extra-small" key={message}>
-          {message}
-        </StyledMessage>
-      ))}
-    </StyledErrorList>
+    <ErrorMessage
+      name={name}
+      render={({ message }) => (
+        <StyledErrorList css={css}>
+          <StyledMessage size="extra-small" key={message}>
+            {message}
+          </StyledMessage>
+        </StyledErrorList>
+      )}
+    />
   );
 }

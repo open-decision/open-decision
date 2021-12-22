@@ -1,11 +1,11 @@
 import * as React from "react";
 import { styled } from "../../stitches";
 import { Box } from "../../Box";
-import { useInput } from "../useForm";
 import { InputProps } from "./Input";
 import { baseInputStyles, baseTextInputStyle } from "../shared/styles";
 import { useComposedRefs } from "../../internal/utils";
 import { useKey, useMeasure } from "react-use";
+import { useFormContext, useWatch } from "react-hook-form";
 
 type Actions =
   | { type: "startEditing"; originalValue: string }
@@ -68,151 +68,91 @@ const SizingSpan = styled("span", {
 
 export type InlineInputProps = InputProps & { IndicatorButton?: JSX.Element };
 
-export const InlineInput = React.forwardRef<HTMLInputElement, InlineInputProps>(
-  (
-    {
-      name,
-      minLength,
-      maxLength,
-      regex,
-      required,
-      onChange,
-      onBlur,
-      value,
-      disabled,
-      alignByContent = "center",
-      Buttons,
-      IndicatorButton,
-      css,
-      ...props
+const InlineInputImpl = (
+  {
+    name,
+    alignByContent,
+    disabled,
+    Buttons,
+    IndicatorButton,
+    css,
+    ...props
+  }: InlineInputProps,
+  forwardedRef: React.Ref<HTMLInputElement>
+) => {
+  const { register, setValue, formState } = useFormContext();
+  const inputValue = useWatch({ name });
+
+  const { ref, ...inputProps } = register(name, { disabled, ...props });
+  const innerRef = useComposedRefs(forwardedRef);
+  const [wrapperRef, { width }] = useMeasure<HTMLSpanElement>();
+
+  const [state, dispatch] = React.useReducer(reducer, {
+    isEditing: false,
+  });
+  const isEditing = disabled !== undefined ? !disabled : state.isEditing;
+
+  useKey("Enter", () => dispatch({ type: "endEditing" }));
+  useKey(
+    "Escape",
+    () => {
+      state.originalValue != null && setValue(name, state.originalValue);
+      dispatch({ type: "endEditing" });
     },
-    forwardedRef
-  ) => {
-    const inputRef = useComposedRefs(forwardedRef);
-    const [wrapperRef, { width }] = useMeasure<HTMLSpanElement>();
+    undefined,
+    [state]
+  );
 
-    const [state, dispatch] = React.useReducer(reducer, {
-      isEditing: false,
-    });
-    const isEditing = disabled !== undefined ? !disabled : state.isEditing;
+  React.useEffect(() => {
+    if (isEditing) {
+      innerRef.current?.select();
+    } else {
+      innerRef.current?.setSelectionRange(null, null);
+    }
+  }, [innerRef, isEditing]);
 
-    const {
-      value: formValue,
-      blur,
-      setBlur,
-      setValue,
-      setErrors,
-      submitting,
-    } = useInput(name, "string");
+  const EnhancedIndicatorButton = IndicatorButton
+    ? React.cloneElement(IndicatorButton, {
+        "data-active": isEditing,
+        onClick: () =>
+          dispatch({ type: "startEditing", originalValue: formState[name] }),
+        type: "button",
+        disabled,
+      })
+    : IndicatorButton;
 
-    // const defaultValidationmessages = {
-    //   required: "The field is required and can't be empty",
-    //   minLength: `Please enter at least ${minLength} chars.`,
-    //   regex: `The input doesn't fulfill the requirements.`,
-    //   maxLength: `You've reached the maximum allowed characters (${maxLength}).`,
-    // };
-
-    useKey("Enter", () => dispatch({ type: "endEditing" }));
-    useKey(
-      "Escape",
-      () => {
-        state.originalValue != null && setValue(state.originalValue);
-        dispatch({ type: "endEditing" });
-      },
-      undefined,
-      [state]
-    );
-
-    // const validate = (inputValue: string) => {
-    //   const errors: string[] = [];
-
-    //   if (required && inputValue.length === 0) {
-    //     errors.push(defaultValidationmessages.required);
-    //   }
-
-    //   if (minLength && inputValue.length < minLength) {
-    //     errors.push(defaultValidationmessages.minLength);
-    //   }
-
-    //   if (regex && !new RegExp(regex).test(inputValue)) {
-    //     errors.push(defaultValidationmessages.regex);
-    //   }
-
-    //   if (maxLength && inputValue.length === maxLength) {
-    //     errors.push(defaultValidationmessages.maxLength);
-    //   }
-
-    //   return errors;
-    // };
-
-    // React.useEffect(() => {
-    //   if (blur || submitting) {
-    //     setErrors(validate(value ?? ""));
-    //   }
-    // }, [value, blur, submitting, validate, setErrors]);
-
-    React.useEffect(() => {
-      if (isEditing) {
-        inputRef.current?.select();
-      } else {
-        inputRef.current?.setSelectionRange(null, null);
-      }
-    }, [inputRef, isEditing]);
-
-    const EnhancedIndicatorButton = IndicatorButton
-      ? React.cloneElement(IndicatorButton, {
-          "data-active": isEditing,
-          onClick: () =>
-            dispatch({ type: "startEditing", originalValue: formValue }),
-          type: "button",
-          disabled,
-        })
-      : IndicatorButton;
-
-    return (
-      <StyledBox
-        css={{ color: disabled ? "$gray8" : "$gray12" }}
-        data-disabled={disabled}
+  return (
+    <StyledBox
+      css={{ color: disabled ? "$gray8" : "$gray12" }}
+      data-disabled={disabled}
+    >
+      <StyledInput
+        {...inputProps}
+        ref={(e) => {
+          ref(e);
+          // @ts-expect-error - by default forwardedRef.current is readonly. Let's ignore it
+          innerRef.current = e;
+        }}
+        alignByContent={alignByContent}
+        css={{
+          width: `${width}px`,
+          ...css,
+        }}
+      />
+      <SizingSpan
+        ref={wrapperRef}
+        style={{
+          position: "absolute",
+          left: "-9999px",
+          display: "inline-block",
+        }}
       >
-        <StyledInput
-          name={name}
-          ref={inputRef}
-          value={value ?? formValue}
-          onChange={(event) => {
-            onChange ? onChange?.(event) : setValue(event.target.value ?? "");
-          }}
-          onBlur={(event) => {
-            onBlur?.(event);
-            setBlur(true);
-            dispatch({ type: "endEditing" });
-          }}
-          onClick={() =>
-            dispatch({ type: "startEditing", originalValue: formValue })
-          }
-          alignByContent={alignByContent}
-          minLength={minLength}
-          maxLength={maxLength}
-          pattern={regex}
-          required={required}
-          css={{
-            width: `${width}px`,
-            ...css,
-          }}
-          {...props}
-        />
-        <SizingSpan
-          ref={wrapperRef}
-          style={{
-            position: "absolute",
-            left: "-9999px",
-            display: "inline-block",
-          }}
-        >
-          {formValue}
-        </SizingSpan>
-        {EnhancedIndicatorButton}
-        {Buttons}
-      </StyledBox>
-    );
-  }
-);
+        {inputValue}
+      </SizingSpan>
+      {EnhancedIndicatorButton}
+      {Buttons}
+    </StyledBox>
+  );
+};
+
+export const InlineInput = React.forwardRef(InlineInputImpl);

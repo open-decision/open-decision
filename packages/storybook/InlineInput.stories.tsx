@@ -16,10 +16,7 @@ export default {
 
 const Input: Story<InlineInputProps> = (props) => (
   <Form
-    initialValues={{
-      test: "Verfassungsrecht",
-    }}
-    onSubmit={({ values }) => alert(values)}
+    onSubmit={(data) => console.log(data)}
     css={{ display: "grid", gap: "$2" }}
   >
     <InlineInput
