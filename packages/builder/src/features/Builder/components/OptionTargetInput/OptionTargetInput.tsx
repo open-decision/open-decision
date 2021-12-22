@@ -284,6 +284,7 @@ function NodeLink({ target, ...props }: NodeLinkProps) {
           send({ type: "selectNode", nodeId: target });
         }
       }}
+      square
       type="button"
       disabled={!target}
       {...props}

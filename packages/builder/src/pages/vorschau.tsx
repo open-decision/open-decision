@@ -120,9 +120,9 @@ export default function Vorschau() {
                 width: "100vw",
               }}
             >
-              <ThemingButton
+              {/* <ThemingButton
                 css={{ position: "absolute", top: 28, left: 28 }}
-              />
+              /> */}
               <Tabs.Content value="desktop_preview" css={{ height: "100%" }}>
                 <Preview />
               </Tabs.Content>

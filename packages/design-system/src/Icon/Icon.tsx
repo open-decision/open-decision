@@ -5,7 +5,6 @@ import * as AccessibleIcon from "@radix-ui/react-accessible-icon";
 import { iconSizes } from "./shared";
 
 const StyledIcon = styled("span", alignByContent, iconSizes, {
-  $$iconSize: "0px",
   transform: "translate($$XTranslation)",
   display: "flex",
   alignItems: "center",
