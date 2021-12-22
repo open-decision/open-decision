@@ -1,12 +1,12 @@
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import * as React from "react";
 import { Text } from "../../Text";
-import { styled } from "../../stitches";
+import { styled, StyleObject } from "../../stitches";
 
 import { InputGroupProvider, useInputGroup } from "../shared/Context";
-import { useInput } from "../useForm";
 import { Check } from "react-feather";
 import { baseInputBoxStyles, baseInputStyles } from "../shared/styles";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
 
 const Indicator = styled(CheckboxPrimitive.Indicator, {
   display: "flex",
@@ -16,49 +16,46 @@ const Indicator = styled(CheckboxPrimitive.Indicator, {
 
 const StyledCheckbox = styled(
   CheckboxPrimitive.Root,
+  { all: "unset" },
   baseInputStyles,
   baseInputBoxStyles,
   {
-    all: "unset",
     boxSizing: "border-box",
     borderRadius: "$md",
     padding: "4px",
   }
 );
 
-// eslint-disable-next-line react/require-default-props
 type CheckboxBoxProps = {
   value: string;
   disabled?: boolean;
-  style?: React.CSSProperties;
+  css?: StyleObject;
+  id?: string;
 };
 
-function Box({ value, style, disabled }: CheckboxBoxProps) {
-  const { name: groupName, values, createId } = useInputGroup("checkbox");
-  const { setValue } = useInput(groupName ?? "", "object");
-
-  if (!(value in values)) {
-    throw new Error(
-      `The value of ${value} on the checkbox is not a valid value of the group ${groupName} with the values ${Object.keys(
-        values
-      ).join(" ")}`
-    );
-  }
+function Box({ value, css, disabled, id }: CheckboxBoxProps) {
+  const { control } = useFormContext();
 
   return (
-    <StyledCheckbox
-      id={createId(value)}
-      checked={values[value]}
-      onCheckedChange={(newChecked) =>
-        setValue({ ...values, [value]: !!newChecked })
-      }
-      style={style}
-      disabled={disabled}
-    >
-      <Indicator>
-        <Check width="100%" height="100%" />
-      </Indicator>
-    </StyledCheckbox>
+    <Controller
+      name={value}
+      control={control}
+      render={({ field: { onBlur, onChange, value, ref } }) => (
+        <StyledCheckbox
+          id={id}
+          checked={value}
+          onCheckedChange={onChange}
+          onBlur={onBlur}
+          css={css}
+          disabled={disabled}
+          ref={ref}
+        >
+          <Indicator>
+            <Check width="100%" height="100%" />
+          </Indicator>
+        </StyledCheckbox>
+      )}
+    />
   );
 }
 
@@ -73,7 +70,10 @@ export type CheckboxFieldProps = {
 } & CheckboxBoxProps;
 
 function Field({ value, label, disabled, ...props }: CheckboxFieldProps) {
-  const { name: groupName, values, createId } = useInputGroup("checkbox");
+  const { name: groupName, createId } = useInputGroup("checkbox");
+  const inputValue = useWatch({ name: value });
+  const id = createId(value);
+  const isActive = inputValue;
 
   if (!groupName) {
     throw new Error(
@@ -82,13 +82,11 @@ function Field({ value, label, disabled, ...props }: CheckboxFieldProps) {
   }
 
   return (
-    <StyledCheckboxContainer
-      data-state={values[value] ? "checked" : "unchecked"}
-    >
-      <Box value={value} disabled={disabled} {...props} />
+    <StyledCheckboxContainer data-state={isActive ? "checked" : "unchecked"}>
+      <Box id={id} value={value} disabled={disabled} {...props} />
       <Text
         as="label"
-        htmlFor={createId(value)}
+        htmlFor={id}
         css={disabled ? { color: "$gray9", opacity: 0.4 } : {}}
       >
         {label}
@@ -105,40 +103,18 @@ const StyledCheckboxGroup = styled("div", {
 export type CheckboxGroupProps = {
   name: string;
   children: React.ReactNode;
-  style?: React.CSSProperties;
+  css?: StyleObject;
   required?: boolean;
 };
 
-function createActiveItems(items: Record<string, boolean>) {
-  return Object.entries(items)
-    .filter((item) => item[1])
-    .map((item) => item[0]);
-}
-
-function Group({ children, name, style }: CheckboxGroupProps) {
-  const { value } = useInput(name, "object");
-  const activeItems = createActiveItems(value);
-
-  function getActive(elemName: string) {
-    return activeItems.some((item) => item === elemName);
-  }
-
-  function createId(elemName: string) {
-    return `${name}-${elemName}`;
+function Group({ children, name, css }: CheckboxGroupProps) {
+  function createId(value: string) {
+    return `${name}-${value}`;
   }
 
   return (
-    <InputGroupProvider
-      value={{
-        type: "checkbox",
-        name,
-        activeItems,
-        getActive,
-        values: value,
-        createId,
-      }}
-    >
-      <StyledCheckboxGroup style={style}>{children}</StyledCheckboxGroup>
+    <InputGroupProvider value={{ type: "checkbox", name, createId }}>
+      <StyledCheckboxGroup css={css}>{children}</StyledCheckboxGroup>
     </InputGroupProvider>
   );
 }

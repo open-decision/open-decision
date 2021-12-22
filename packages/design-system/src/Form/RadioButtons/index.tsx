@@ -38,11 +38,11 @@ const Indicator = styled(RadioGroup.Indicator, {
   },
 });
 
-type ButtonProps = { disabled?: boolean; value: string };
+type ButtonProps = { disabled?: boolean; value: string; id?: string };
 
-function Button({ disabled, value }: ButtonProps) {
+function Button({ disabled, value, id }: ButtonProps) {
   return (
-    <StyledRadio value={value} disabled={disabled}>
+    <StyledRadio id={id} value={value} disabled={disabled}>
       <Indicator />
     </StyledRadio>
   );
@@ -56,18 +56,23 @@ const StyledRadioBox = styled("div", {
 
 type FieldProps = ButtonProps & { label: string };
 
-function Field({ label, disabled, ...props }: FieldProps) {
-  const { name, getActive } = useInputGroup("radio");
+function Field({ label, disabled, value, ...props }: FieldProps) {
+  const { name, getActive, createId } = useInputGroup("radio");
   const inputValue = useWatch({ name });
-  const isActive = getActive(inputValue);
+  const isActive = getActive?.(inputValue);
+  const id = createId(value);
 
   return (
     <StyledRadioBox
       style={{ marginLeft: "5px" }}
       data-state={isActive ? "checked" : "unchecked"}
     >
-      <Button disabled={disabled} {...props} />
-      <Text as="label" css={disabled ? { color: "$gray9", opacity: 0.4 } : {}}>
+      <Button id={id} disabled={disabled} value={value} {...props} />
+      <Text
+        htmlFor={id}
+        as="label"
+        css={disabled ? { color: "$gray9", opacity: 0.4 } : {}}
+      >
         {label}
       </Text>
     </StyledRadioBox>
@@ -95,8 +100,12 @@ function Group({ children, name, css }: RadioGroupProps) {
     return inputValue === elemValue;
   }
 
+  function createId(value: string) {
+    return `${name}-${value}`;
+  }
+
   return (
-    <InputGroupProvider value={{ name, type: "radio", getActive }}>
+    <InputGroupProvider value={{ name, type: "radio", getActive, createId }}>
       <Controller
         name={name}
         control={control}
