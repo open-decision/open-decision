@@ -10,10 +10,7 @@ export default {
 
 const CheckboxTemplate: Story<React.ComponentProps<typeof RadioButtons.Field>> =
   (props) => (
-    <Form
-      onSubmit={({ values }) => alert(values)}
-      initialValues={{ test: "1" }}
-    >
+    <Form onSubmit={(data) => console.log(data)}>
       <RadioButtons.Group name="test">
         <RadioButtons.Field {...props} value="1" label="Test" />
         <RadioButtons.Field {...props} value="2" label="Another one" />

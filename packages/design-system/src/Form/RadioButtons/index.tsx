@@ -2,18 +2,20 @@
 import * as RadioGroup from "@radix-ui/react-radio-group";
 import * as React from "react";
 import { Text } from "../../Text";
-import { styled } from "../../stitches";
+import { styled, StyleObject } from "../../stitches";
 
 import { InputGroupProvider, useInputGroup } from "../shared/Context";
-import { useInput } from "../useForm";
 import { baseInputBoxStyles, baseInputStyles } from "../shared/styles";
+import {
+  Controller,
+  RegisterOptions,
+  useFormContext,
+  useWatch,
+} from "react-hook-form";
 
 const StyledRadio = styled(
   RadioGroup.Item,
-  {
-    all: "unset",
-    borderRadius: "$full",
-  },
+  { all: "unset", borderRadius: "$full" },
   baseInputStyles,
   baseInputBoxStyles
 );
@@ -36,14 +38,11 @@ const Indicator = styled(RadioGroup.Indicator, {
   },
 });
 
-// eslint-disable-next-line react/no-unused-prop-types, react/require-default-props
-type ButtonProps = { value: string } & React.ComponentProps<typeof StyledRadio>;
+type ButtonProps = { disabled?: boolean; value: string };
 
-function Button({ value, ...props }: ButtonProps) {
-  const { createId } = useInputGroup("radio");
-
+function Button({ disabled, value }: ButtonProps) {
   return (
-    <StyledRadio id={createId(value)} value={value} {...props}>
+    <StyledRadio value={value} disabled={disabled}>
       <Indicator />
     </StyledRadio>
   );
@@ -57,21 +56,18 @@ const StyledRadioBox = styled("div", {
 
 type FieldProps = ButtonProps & { label: string };
 
-function Field({ label, value, disabled, ...props }: FieldProps) {
+function Field({ label, disabled, ...props }: FieldProps) {
   const { name, getActive } = useInputGroup("radio");
-  const active = getActive(value);
+  const inputValue = useWatch({ name });
+  const isActive = getActive(inputValue);
 
   return (
     <StyledRadioBox
       style={{ marginLeft: "5px" }}
-      data-state={active ? "checked" : "unchecked"}
+      data-state={isActive ? "checked" : "unchecked"}
     >
-      <Button value={value} disabled={disabled} {...props} />
-      <Text
-        as="label"
-        htmlFor={`${name}-${value}`}
-        css={disabled ? { color: "$gray9", opacity: 0.4 } : {}}
-      >
+      <Button disabled={disabled} {...props} />
+      <Text as="label" css={disabled ? { color: "$gray9", opacity: 0.4 } : {}}>
         {label}
       </Text>
     </StyledRadioBox>
@@ -85,66 +81,40 @@ const StyledRadioGroup = styled(RadioGroup.Root, {
 
 export type RadioGroupProps = {
   name: string;
-  style?: React.CSSProperties;
+  css?: StyleObject;
   children: React.ReactNode;
   required?: boolean;
   validationMessages?: { required?: string };
-};
+} & RegisterOptions;
 
-function Group({
-  children,
-  name,
-  style,
-  required = false,
-  validationMessages,
-}: RadioGroupProps) {
-  const { value, blur, setErrors, setValue, submitting } = useInput(
-    name,
-    "string"
-  );
+function Group({ children, name, css }: RadioGroupProps) {
+  const inputValue = useWatch({ name });
+  const { control } = useFormContext();
 
   function getActive(elemValue: string) {
-    return value === elemValue;
+    return inputValue === elemValue;
   }
-
-  function createId(elemValue: string) {
-    return `${name}-${elemValue}`;
-  }
-
-  const defaultValidationmessages = {
-    required: "The field is required and can't be empty",
-  };
-
-  const validate = (inputValue: string) => {
-    const errors: string[] = [];
-
-    if (required && inputValue.length === 0) {
-      errors.push(
-        validationMessages?.required ?? defaultValidationmessages.required
-      );
-    }
-
-    return errors;
-  };
-
-  React.useEffect(() => {
-    if (blur || submitting) {
-      setErrors(validate(value ?? ""));
-    }
-  }, [value, blur, submitting]);
 
   return (
-    <InputGroupProvider
-      value={{ name, activeItems: [value], type: "radio", getActive, createId }}
-    >
-      <StyledRadioGroup
-        style={style}
+    <InputGroupProvider value={{ name, type: "radio", getActive }}>
+      <Controller
         name={name}
-        value={value}
-        onValueChange={(newValue) => setValue(newValue)}
-      >
-        {children}
-      </StyledRadioGroup>
+        control={control}
+        render={({ field: { value, onBlur, onChange, ref } }) => {
+          return (
+            <StyledRadioGroup
+              value={value}
+              onBlur={onBlur}
+              onValueChange={onChange}
+              ref={ref}
+              css={css}
+              name={name}
+            >
+              {children}
+            </StyledRadioGroup>
+          );
+        }}
+      />
     </InputGroupProvider>
   );
 }
