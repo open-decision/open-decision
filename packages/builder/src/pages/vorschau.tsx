@@ -48,7 +48,7 @@ export default function Vorschau() {
                 $padding: "$space$4 $space$2",
                 display: "grid",
                 gridTemplateColumns: "repeat(3, 1fr)",
-                borderBottom: "1px solid $gray9",
+                borderBottom: "1px solid $gray7",
               }}
             >
               <Link passHref href="/">
@@ -81,8 +81,10 @@ export default function Vorschau() {
                       variant="ghost"
                       css={{
                         padding: "var(--padding)",
+                        borderRadius: "0",
 
                         "&[data-state='active']": {
+                          color: "$gray12",
                           marginBottom: "-1px",
                           borderBottom: "3px solid $primary9",
                         },
@@ -96,8 +98,10 @@ export default function Vorschau() {
                       variant="ghost"
                       css={{
                         padding: "var(--padding)",
+                        borderRadius: "0",
 
                         "&[data-state='active']": {
+                          color: "$gray12",
                           marginBottom: "-1px",
                           borderBottom: "3px solid $primary9",
                         },

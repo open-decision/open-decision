@@ -35,9 +35,9 @@ export function NodeEditingSidebar({
           }}
           initialValues={{ nodeName: node?.name ?? "" }}
         >
-          <Field label="Knotenname" css={{ color: "$gray11" }}>
+          <Field label="Knotenname" css={{ "--color": "$colors$gray11" }}>
             <Input
-              css={{ backgroundColor: "$gray1" }}
+              css={{ backgroundColor: "$gray1", color: "$gray12" }}
               name="nodeName"
               maxLength={70}
             />

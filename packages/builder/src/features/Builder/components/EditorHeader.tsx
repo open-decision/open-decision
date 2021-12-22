@@ -21,6 +21,7 @@ export const EditorHeader = ({ css }: HeaderProps) => {
         <Link passHref href="/vorschau">
           <SystemLink
             className={buttonStyles({ variant: "tertiary", size: "small" })}
+            underline={false}
           >
             Vorschau
           </SystemLink>

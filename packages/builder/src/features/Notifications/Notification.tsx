@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import {
   styled,
-  IconButton,
   Box,
   Text,
   Heading,
   Icon,
+  Button,
 } from "@open-legal-tech/design-system";
 import { notification, useNotificationStore } from "./NotificationState";
 import * as Progress from "@radix-ui/react-progress";
@@ -112,13 +112,15 @@ export const Notification = ({ notification, id }: NotificationProps) => {
           <Heading size="small" css={{ flex: 1 }}>
             {notification.title}
           </Heading>
-          <IconButton
+          <Button
             alignByContent="right"
             variant="ghost"
             onClick={() => removeNotification(id)}
-            label="Benachrichtigung schließen"
-            Icon={<X />}
-          />
+          >
+            <Icon label="Benachrichtigung schließen">
+              <X />
+            </Icon>
+          </Button>
         </Header>
         <Text css={{ marginTop: "$2" }}>{notification.content}</Text>
       </Box>

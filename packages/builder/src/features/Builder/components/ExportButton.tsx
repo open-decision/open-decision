@@ -39,6 +39,7 @@ export function ExportButton({ css }: Props) {
           : false
       }
       href={fileDownloadUrl}
+      underline={false}
     >
       Export
     </Link>

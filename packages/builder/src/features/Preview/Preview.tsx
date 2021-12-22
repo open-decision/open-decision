@@ -90,8 +90,14 @@ function PreviewRichTextEditor() {
         />
       ) : null}
       <RichTextEditor.Editable
-        css={{ gridRow: "2", paddingInlineEnd: "$8" }}
+        css={{
+          gridRow: "2",
+          padding: "$3 $5",
+          paddingInlineEnd: "$8",
+          "&:hover": { backgroundColor: "$gray3" },
+        }}
         renderElement={renderElement}
+        placeholder="Dieser Knoten hat keinen Inhalt"
       />
     </Box>
   );
