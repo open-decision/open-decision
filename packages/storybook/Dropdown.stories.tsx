@@ -3,10 +3,10 @@ import * as React from "react";
 import { Meta, Story } from "@storybook/react";
 import { Menu, Settings } from "react-feather";
 import {
-  IconButton,
   Icon,
   DropdownMenu,
   DropdownMenuRootProps,
+  Button,
 } from "@open-legal-tech/design-system";
 
 export default {
@@ -21,7 +21,11 @@ const Template: Story<DropdownMenuRootProps> = (props) => {
   return (
     <DropdownMenu.Root {...props}>
       <DropdownMenu.Trigger asChild>
-        <IconButton variant="tertiary" Icon={<Menu />} label="Open Menu" />
+        <Button variant="tertiary">
+          <Icon label="Open Menu">
+            <Menu />
+          </Icon>
+        </Button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content sideOffset={5} css={{ width: "max-content" }} loop>
         <DropdownMenu.Item>

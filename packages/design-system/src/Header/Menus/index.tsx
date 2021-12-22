@@ -1,22 +1,19 @@
-import * as React from "react";
 import * as Collapsible from "@radix-ui/react-collapsible";
-import { IconButton } from "../../Button/IconButton";
-import { keyframes, styled } from "../../stitches";
+import * as React from "react";
 import { Box } from "../../Box";
+import { Button, ButtonProps } from "../../Button/Button";
+import { keyframes, styled } from "../../stitches";
+import { Icon as IconComp } from "../../Icon/Icon";
 
-type MenuTriggerProps = React.ComponentProps<typeof IconButton>;
+type MenuTriggerProps = ButtonProps & { Icon?: React.ReactNode };
 
 const MenuTrigger = ({ Icon, ...props }: MenuTriggerProps) => {
   return (
     <Collapsible.Trigger asChild>
-      <IconButton
-        variant="ghost"
-        css={{ colorScheme: "gray" }}
-        Icon={Icon}
-        {...props}
-      >
+      <Button variant="ghost" css={{ colorScheme: "gray" }} {...props}>
+        <IconComp label="Öffne das Menü">{Icon}</IconComp>
         {props.children}
-      </IconButton>
+      </Button>
     </Collapsible.Trigger>
   );
 };

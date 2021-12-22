@@ -1,10 +1,10 @@
 import * as React from "react";
 import { Meta, Story } from "@storybook/react";
 import {
+  Button,
   Field,
   Form,
   Icon,
-  IconButton,
   Input as SystemInput,
   InputProps,
 } from "@open-legal-tech/design-system";
@@ -41,13 +41,11 @@ WithIcon.args = {
 export const WithButtons = Input.bind({});
 WithButtons.args = {
   Buttons: [
-    <IconButton
-      key="button"
-      size="small"
-      variant="tertiary"
-      label="Remove Content"
-      Icon={<ArrowRight />}
-    />,
+    <Button key="button" size="small" variant="tertiary">
+      <Icon label="Remove Content">
+        <ArrowRight />
+      </Icon>
+    </Button>,
   ],
 };
 export const WithButtonsAndIcons = Input.bind({});
@@ -58,12 +56,10 @@ WithButtonsAndIcons.args = {
     </Icon>
   ),
   Buttons: [
-    <IconButton
-      key="button"
-      size="small"
-      variant="tertiary"
-      label="Remove Content"
-      Icon={<ArrowRight />}
-    />,
+    <Button key="button" size="small" variant="tertiary">
+      <Icon label="Remove Content">
+        <ArrowRight />
+      </Icon>
+    </Button>,
   ],
 };

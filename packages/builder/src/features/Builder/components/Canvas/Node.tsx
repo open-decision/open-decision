@@ -3,9 +3,9 @@ import {
   styled,
   Text,
   DropdownMenu,
-  IconButton,
   Icon,
   Tooltip,
+  Button,
 } from "@open-legal-tech/design-system";
 import React, { memo } from "react";
 import { MoreHorizontal, Star, Trash } from "react-feather";
@@ -91,13 +91,15 @@ export const Node = memo(({ id, data }: NodeProps<NodeData>) => {
       >
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
-            <IconButton
+            <Button
               size="small"
               variant="ghost"
               css={{ position: "absolute", top: 0, right: 0 }}
-              Icon={<MoreHorizontal />}
-              label={`Öffne Menü Node: ${data.name}`}
-            />
+            >
+              <Icon label={`Öffne Menü Node: ${data.name}`}>
+                <MoreHorizontal />
+              </Icon>
+            </Button>
           </DropdownMenu.Trigger>
           <DropdownMenu.Content>
             {isStartNode ? (

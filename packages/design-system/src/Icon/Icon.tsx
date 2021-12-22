@@ -4,32 +4,15 @@ import { alignByContent } from "../stitches/utils";
 import * as AccessibleIcon from "@radix-ui/react-accessible-icon";
 import { iconSizes } from "./shared";
 
-const StyledIcon = styled("span", alignByContent, {
+const StyledIcon = styled("span", alignByContent, iconSizes, {
   $$iconSize: "0px",
   transform: "translate($$XTranslation)",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  width: "$$iconSize",
-  height: "$$iconSize",
 
   "&[data-active='true'] > svg": {
     stroke: "$primary10",
-  },
-
-  variants: {
-    size: {
-      ...iconSizes,
-      "extra-small": {
-        $$paddingInline: "$space$1",
-        $$iconSize: "16px",
-
-        "& > svg": {
-          width: "$$iconSize",
-          height: "$$iconSize",
-        },
-      },
-    },
   },
 
   defaultVariants: {

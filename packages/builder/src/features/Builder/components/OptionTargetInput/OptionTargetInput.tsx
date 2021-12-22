@@ -1,11 +1,10 @@
 import {
   Box,
   Button,
+  ButtonProps,
   Combobox,
   Form,
   Icon,
-  IconButton,
-  IconButtonProps,
   Input,
   Label,
   styled,
@@ -59,8 +58,8 @@ export function OptionTargetInputs({ node }: SingleSelectProps) {
         <Button
           variant="tertiary"
           round
-          square
           onClick={() => send({ type: "addRelation", nodeId: node.id })}
+          square
         >
           <Icon label="Neue Antwortmöglichkeit hinzufügen">
             <Plus />
@@ -232,39 +231,40 @@ export function OptionTargetInput({
             </Combobox.Input>
           </Combobox.Root>
         </Box>
-        <IconButton
+        <Button
           css={{ colorScheme: "error" }}
           variant="ghost"
           size="small"
-          label="Entferne den Input"
-          Icon={<Trash />}
           type="button"
           onClick={() => onDelete(input.id)}
-        />
-        <IconButton
+        >
+          <Icon label="Entferne den Input">
+            <Trash />
+          </Icon>
+        </Button>
+        <Button
           variant="ghost"
           size="small"
-          label="Entferne den Input"
           type="button"
-          Icon={<DragHandle />}
           onPointerDown={(event) => controls.start(event)}
-        />
+        >
+          <Icon label="Verschiebe den Input">
+            <DragHandle />
+          </Icon>
+        </Button>
       </Form>
     </Reorder.Item>
   );
 }
 
-type NodeLinkProps = { target?: string } & Omit<
-  IconButtonProps,
-  "label" | "Icon"
->;
+type NodeLinkProps = { target?: string } & Omit<ButtonProps, "label" | "Icon">;
 
 function NodeLink({ target, ...props }: NodeLinkProps) {
   const node = useNode(target ?? "");
   const [, send] = useTree();
 
   return (
-    <IconButton
+    <Button
       css={{
         boxShadow: "none",
         borderRadius: "0",
@@ -286,9 +286,13 @@ function NodeLink({ target, ...props }: NodeLinkProps) {
       }}
       type="button"
       disabled={!target}
-      label={node ? `Gehe zu Node: ${node.name}` : "Keine Node verbunden"}
-      Icon={<Crosshair />}
       {...props}
-    />
+    >
+      <Icon
+        label={node ? `Gehe zu Node: ${node.name}` : "Keine Node verbunden"}
+      >
+        <Crosshair />
+      </Icon>
+    </Button>
   );
 }

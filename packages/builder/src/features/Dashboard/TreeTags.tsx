@@ -1,4 +1,4 @@
-import { IconButton, Badge } from "@open-legal-tech/design-system";
+import { Badge, Button, Icon } from "@open-legal-tech/design-system";
 import React from "react";
 import { Plus } from "react-feather";
 import { ValidTreeNode } from "./types";
@@ -13,14 +13,12 @@ export const TreeTags: React.FC<TreeTagsProps> = ({ tree }) => {
           {tag.name}
         </Badge>
       ))}
-      <IconButton
-        alignByContent="left"
-        variant="ghost"
-        round
-        size="small"
-        label="Tag hinzufügen"
-        Icon={<Plus className="w-6 h-6" />}
-      />
+      <Button alignByContent="left" variant="ghost" round size="small">
+        <Icon label="Tag hinzufügen">
+          {" "}
+          <Plus />
+        </Icon>
+      </Button>
     </div>
   );
 };

@@ -1,10 +1,11 @@
 import * as React from "react";
 import { Meta, Story } from "@storybook/react";
 import {
-  IconButton,
   InlineInput,
   InlineInputProps,
   Form,
+  Icon,
+  Button,
 } from "@open-legal-tech/design-system";
 import { Edit2 } from "react-feather";
 
@@ -24,13 +25,15 @@ const Input: Story<InlineInputProps> = (props) => (
     <InlineInput
       {...props}
       IndicatorButton={
-        <IconButton
+        <Button
           variant="tertiary"
           size="small"
-          label="Editieren"
           css={{ colorScheme: "primary" }}
-          Icon={<Edit2 />}
-        />
+        >
+          <Icon label="Editieren">
+            <Edit2 />
+          </Icon>
+        </Button>
       }
       name="test"
     />

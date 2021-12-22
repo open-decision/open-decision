@@ -4,9 +4,10 @@ import { Meta, Story } from "@storybook/react";
 import {
   ToggleButton,
   ToggleButtonProps,
-  IconButton,
   ToggleGroup,
   Box,
+  Icon,
+  Button,
 } from "@open-legal-tech/design-system";
 import { Users } from "react-feather";
 
@@ -30,5 +31,11 @@ const SingleToggleButtonTemplate: Story<ToggleButtonProps> = (props) => (
 
 export const Default = SingleToggleButtonTemplate.bind({});
 Default.args = {
-  children: <IconButton label="" variant="secondary" Icon={<Users />} />,
+  children: (
+    <Button variant="secondary">
+      <Icon>
+        <Users />
+      </Icon>
+    </Button>
+  ),
 };

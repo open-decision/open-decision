@@ -1,6 +1,5 @@
 import { alignByContent } from "../stitches/utils";
 import { styled, css } from "../stitches";
-import { iconSizes } from "../Icon/shared";
 
 export const buttonStyles = css(alignByContent, {
   $$borderWidth: "1px",
@@ -33,17 +32,39 @@ export const buttonStyles = css(alignByContent, {
 
   variants: {
     size: {
+      "extra-small": {
+        $$paddingInline: "$space$1",
+        $$paddingBlock: "$space$2",
+        "--iconSize": "16px",
+
+        "&  svg": {
+          width: "var(--iconSize)",
+          height: "var(--iconSize)",
+        },
+      },
       small: {
         $$paddingInline: "$space$4",
         $$paddingBlock: "$space$2",
         textStyle: "small-text",
         fontWeight: 600,
         letterSpacing: "0.025em",
+        "--iconSize": "18px",
+
+        "&  svg": {
+          width: "var(--iconSize)",
+          height: "var(--iconSize)",
+        },
       },
       medium: {
         textStyle: "medium-text",
         fontWeight: 600,
         letterSpacing: "0.025em",
+        "--iconSize": "22px",
+
+        "&  svg": {
+          width: "var(--iconSize)",
+          height: "var(--iconSize)",
+        },
       },
       large: {
         $$paddingInline: "$space$8",
@@ -51,6 +72,12 @@ export const buttonStyles = css(alignByContent, {
         textStyle: "large-text",
         fontWeight: 600,
         letterSpacing: "0.025em",
+        "--iconSize": "24px",
+
+        "&  svg": {
+          width: "var(--iconSize)",
+          height: "var(--iconSize)",
+        },
       },
     },
     variant: {
@@ -73,7 +100,6 @@ export const buttonStyles = css(alignByContent, {
         },
 
         "&:disabled": {
-          opacity: 0.2,
           backgroundColor: "$colorScheme9",
         },
       },
@@ -125,18 +151,18 @@ export const buttonStyles = css(alignByContent, {
 
       ghost: {
         colorScheme: "gray",
-        color: "$gray12 !important",
+        color: "$gray11",
         backgroundColor: "unset",
         boxShadow: "unset",
         focusStyle: "inner",
 
         "&:hover, &:focus-visible, &[data-active='true']": {
-          color: "$colorScheme11 !important",
+          color: "$colorScheme12",
         },
 
         "&[data-state=on]": {
-          color: "$primary11 !important",
-          backgroundColor: "$colorScheme2 !important",
+          color: "$primary11",
+          backgroundColor: "$colorScheme2",
         },
 
         "&:disabled": {
@@ -154,34 +180,39 @@ export const buttonStyles = css(alignByContent, {
       },
     },
 
-    square: {
-      true: {
-        padding: "$$paddingInline",
-      },
-    },
-
     round: {
       true: {
         borderRadius: "$full",
+      },
+    },
+
+    square: {
+      true: {
+        padding: "$$paddingInline",
       },
     },
   },
 
   compoundVariants: [
     {
+      size: "extra-small",
       square: true,
+      css: { $$paddingInline: "$space$1" },
+    },
+    {
       size: "small",
-      css: iconSizes.small,
+      square: true,
+      css: { $$paddingInline: "$space$2" },
     },
     {
-      square: true,
       size: "medium",
-      css: iconSizes.medium,
+      square: true,
+      css: { $$paddingInline: "$space$3" },
     },
     {
-      square: true,
       size: "large",
-      css: iconSizes.large,
+      square: true,
+      css: { $$paddingInline: "$space$4" },
     },
   ],
 
@@ -192,5 +223,9 @@ export const buttonStyles = css(alignByContent, {
   },
 });
 
-export type ButtonProps = React.ComponentProps<typeof Button>;
-export const Button = styled("button", buttonStyles);
+const StyledButton = styled("button", buttonStyles);
+
+export type ButtonProps = React.ComponentProps<typeof StyledButton>;
+export const Button = ({ children, ...props }: ButtonProps) => (
+  <StyledButton {...props}>{children}</StyledButton>
+);

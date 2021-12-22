@@ -1,12 +1,12 @@
 import {
-  iconButtonStyles,
+  buttonStyles,
   Label,
   styled,
   StyleObject,
 } from "@open-legal-tech/design-system";
 import React, { ForwardedRef } from "react";
 
-const StyledLabel = styled(Label, iconButtonStyles, {
+const StyledLabel = styled(Label, buttonStyles, {
   focusStyle: "outer-within",
 });
 
@@ -32,18 +32,11 @@ export type FileInputProps = {
  * A custom Form element wrapping the native file input type.
  */
 const FileInputImpl = (
-  { className, children, css, onChange, ...props }: FileInputProps,
+  { children, css, onChange, ...props }: FileInputProps,
   ref: ForwardedRef<HTMLLabelElement>
 ) => {
   return (
-    <StyledLabel
-      square
-      variant="secondary"
-      css={css}
-      className={className}
-      ref={ref}
-      {...props}
-    >
+    <StyledLabel variant="secondary" css={css} ref={ref} square {...props}>
       {children}
       <HiddenInput type="file" onChange={onChange} />
     </StyledLabel>

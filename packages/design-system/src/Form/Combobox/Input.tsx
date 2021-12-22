@@ -1,11 +1,12 @@
 import * as React from "react";
 import { Box } from "../../Box";
 import { Text } from "../../Text";
-import { IconButton } from "../../Button/IconButton";
 import { X } from "../../icons";
 import { StyleObject } from "../../stitches";
 import { InputProps } from "../Inputs";
 import { useCombobox } from "./useCombobox";
+import { Button } from "../..";
+import { Icon } from "../../Icon/Icon";
 
 export type ComboboxInputProps = {
   children: React.ReactElement<InputProps>;
@@ -35,9 +36,7 @@ export function Input({ children, css, menuCss }: ComboboxInputProps) {
     React.cloneElement(children, {
       ...getInputProps(),
       Buttons: (
-        <IconButton
-          label="Entferne die momentan ausgewählte Option"
-          Icon={<X />}
+        <Button
           size="small"
           variant="ghost"
           type="button"
@@ -47,7 +46,11 @@ export function Input({ children, css, menuCss }: ComboboxInputProps) {
             opacity: inputValue ? 1 : "0 !important",
           }}
           onClick={() => reset()}
-        />
+        >
+          <Icon label="Entferne die momentan ausgewählte Option">
+            <X />
+          </Icon>
+        </Button>
       ),
     });
 

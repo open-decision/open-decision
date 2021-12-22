@@ -11,7 +11,7 @@ import {
   Button,
   Heading,
   HeadingGroup,
-  IconButton,
+  Icon,
   Text,
 } from "@open-legal-tech/design-system";
 import Link from "next/link";
@@ -43,13 +43,15 @@ const TreeCard: React.FC<TreeCard> = ({ tree }) => {
           </HeadingGroup.SubHeading>
         </HeadingGroup.Container>
         <div className="self-end space-x-4 flex">
-          <IconButton
+          <Button
             variant="secondary"
-            label="Baum löschen"
             onClick={() => deleteTree(tree.id)}
             css={{ colorScheme: "error" }}
-            Icon={<Trash style={{ width: "20px", height: "20px" }} />}
-          />
+          >
+            <Icon label="Baum löschen">
+              <Trash />
+            </Icon>
+          </Button>
           <Link href={`/builder/${tree.id}`}>
             <Button variant="secondary">Öffnen</Button>
           </Link>

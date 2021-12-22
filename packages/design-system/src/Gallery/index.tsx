@@ -1,9 +1,10 @@
 import * as React from "react";
 import { Box } from "../Box";
-import { IconButton } from "../Button/IconButton";
+import { Button } from "../Button/Button";
 import { merge } from "remeda";
 import { styled } from "../stitches";
 import { ChevronLeft, ChevronRight } from "react-feather";
+import { Icon } from "../Icon/Icon";
 
 const StyledOuterBox = styled(Box, {
   $$arrowWidth: "50px",
@@ -25,7 +26,7 @@ const Set = styled(Box, {
   paddingBlock: "$4",
 });
 
-const ArrowButton = styled(IconButton, {
+const ArrowButton = styled(Button, {
   cursor: "pointer",
   display: "flex",
   flexDirection: "column",
@@ -57,8 +58,6 @@ function Container({ children, css, contentAlign = true, ...props }: Props) {
       {...props}
     >
       <ArrowButton
-        Icon={<ChevronLeft width={30} height={30} />}
-        label="scroll back"
         variant="ghost"
         css={{ order: 1, "@smallTablet": { order: "revert" } }}
         onClick={() =>
@@ -67,7 +66,11 @@ function Container({ children, css, contentAlign = true, ...props }: Props) {
             behavior: "smooth",
           })
         }
-      />
+      >
+        <Icon label="scroll back">
+          <ChevronLeft width={30} height={30} />
+        </Icon>
+      </ArrowButton>
       <Box
         css={{
           display: "flex",
@@ -85,8 +88,6 @@ function Container({ children, css, contentAlign = true, ...props }: Props) {
         {children}
       </Box>
       <ArrowButton
-        Icon={<ChevronRight width={30} height={30} />}
-        label="scroll forwards"
         variant="ghost"
         css={{ order: 2, "@smallTablet": { order: "revert" } }}
         onClick={() =>
@@ -95,7 +96,11 @@ function Container({ children, css, contentAlign = true, ...props }: Props) {
             behavior: "smooth",
           })
         }
-      />
+      >
+        <Icon label="scroll forwards">
+          <ChevronRight width={30} height={30} />
+        </Icon>
+      </ArrowButton>
     </StyledOuterBox>
   );
 }

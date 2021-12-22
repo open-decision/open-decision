@@ -1,10 +1,9 @@
 import * as React from "react";
-import { textStyles } from "..";
 import { styled, css } from "../stitches";
 
 export type LinkProps = React.ComponentProps<typeof Link>;
 
-export const baseLinkStyles = css(textStyles, {
+export const baseLinkStyles = css({
   display: "flex",
   alignItems: "center",
   color: "$primary9",
@@ -19,25 +18,35 @@ export const Link = styled("a", baseLinkStyles, {
     color: "$gray12",
   },
 
-  "&::before": {
-    content: '""',
-    position: "absolute",
-    display: "block",
-    width: "100%",
-    height: "2px",
-    bottom: "0",
-    left: "0",
-    backgroundColor: "currentcolor",
-    transform: "scaleX(0)",
-    transformOrigin: "top left",
-    transition: "transform 0.3s ease",
+  variants: {
+    underline: {
+      true: {
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          display: "block",
+          width: "100%",
+          height: "2px",
+          bottom: "0",
+          left: "0",
+          backgroundColor: "currentcolor",
+          transform: "scaleX(0)",
+          transformOrigin: "top left",
+          transition: "transform 0.3s ease",
+        },
+
+        "&:hover::before": {
+          transform: "scaleX(1)",
+        },
+
+        "&:active::before": {
+          transform: "scaleX(1)",
+        },
+      },
+    },
   },
 
-  "&:hover::before": {
-    transform: "scaleX(1)",
-  },
-
-  "&:active::before": {
-    transform: "scaleX(1)",
+  defaultVariants: {
+    underline: true,
   },
 });

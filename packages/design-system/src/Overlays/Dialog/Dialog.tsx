@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { IconButton, IconButtonProps } from "../../index";
+import { Button, Icon, ButtonProps } from "../../index";
 import { X } from "../../icons";
 import { styled, keyframes } from "../../stitches";
 
@@ -56,15 +56,14 @@ function DialogContent({ children, ...props }: DialogContentProps) {
   return <StyledContent {...props}>{children}</StyledContent>;
 }
 
-function CloseButton(props: Partial<IconButtonProps>) {
+function CloseButton(props: Partial<ButtonProps>) {
   return (
     <DialogPrimitive.Close asChild>
-      <IconButton
-        variant="ghost"
-        Icon={<X />}
-        label="Schließe den Dialog"
-        {...props}
-      />
+      <Button variant="ghost" square alignByContent="right" {...props}>
+        <Icon label="Schließe den Dialog">
+          <X />
+        </Icon>
+      </Button>
     </DialogPrimitive.Close>
   );
 }
@@ -86,4 +85,4 @@ export type DialogContentProps = React.ComponentProps<typeof StyledContent>;
 export type DialogTitleProps = DialogPrimitive.DialogTitleProps;
 export type DialogDescriptionProps = DialogPrimitive.DialogDescriptionProps;
 export type DialogCloseProps = DialogPrimitive.DialogCloseProps;
-export type DialogCloseButtonProps = Partial<IconButtonProps>;
+export type DialogCloseButtonProps = Partial<ButtonProps>;

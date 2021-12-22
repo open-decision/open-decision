@@ -8,7 +8,6 @@ import {
   Input,
   Form,
   ValidationMessage,
-  iconButtonStyles,
   Tooltip,
 } from "@open-legal-tech/design-system";
 import { BaseHeader } from "components/Header";
@@ -109,10 +108,6 @@ const Editor = () => {
               <Tooltip.Root>
                 <Tooltip.Trigger asChild>
                   <FileInput
-                    className={iconButtonStyles({
-                      variant: "secondary",
-                      size: "large",
-                    })}
                     onChange={(event) => {
                       if (!event.currentTarget.files?.[0]) return;
 
@@ -125,8 +120,6 @@ const Editor = () => {
 
                         const validatedResult =
                           BuilderTree.Type.safeParse(parsedResult);
-
-                        console.log(validatedResult);
 
                         if (!validatedResult.success) {
                           return addNotification({

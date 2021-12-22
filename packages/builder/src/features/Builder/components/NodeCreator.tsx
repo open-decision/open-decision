@@ -2,11 +2,13 @@ import React from "react";
 import {
   Combobox,
   Form,
-  IconButton,
+  Button,
   StyleObject,
   Input,
   useCombobox,
   Box,
+  InputWithButton,
+  Icon,
 } from "@open-legal-tech/design-system";
 import { Plus } from "react-feather";
 import { useTree } from "../state/useTree";
@@ -75,24 +77,36 @@ const NodeCreatorInput = ({ createHandler, autoFocus }) => {
   const { isCreating, inputValue, setInputValue } = useCombobox();
 
   return (
-    <Box css={{ display: "flex", gap: "$2" }}>
+    <Box>
       <Combobox.Input css={{ backgroundColor: "$gray1", zIndex: "5" }}>
-        <Input autoFocus={autoFocus} name="search" placeholder="Knotenname" />
+        <InputWithButton
+          Input={
+            <Input
+              autoFocus={autoFocus}
+              name="search"
+              placeholder="Knotenname"
+            />
+          }
+          Button={
+            <Button
+              css={{ boxShadow: "$1" }}
+              onDragStart={(event) => onDragStart(event)}
+              disabled={!isCreating}
+              onClick={() => {
+                const newNode = createHandler(inputValue);
+                send({ type: "selectNode", nodeId: newNode.id });
+                setInputValue("");
+              }}
+              draggable
+              square
+            >
+              <Icon label="Füge einen neuen Knoten hinzu">
+                <Plus />
+              </Icon>
+            </Button>
+          }
+        />
       </Combobox.Input>
-
-      <IconButton
-        css={{ boxShadow: "$1" }}
-        label="Füge einen neuen Knoten hinzu"
-        onDragStart={(event) => onDragStart(event)}
-        disabled={!isCreating}
-        onClick={() => {
-          const newNode = createHandler(inputValue);
-          send({ type: "selectNode", nodeId: newNode.id });
-          setInputValue("");
-        }}
-        draggable
-        Icon={<Plus style={{ width: "30px", height: "30px" }} />}
-      />
     </Box>
   );
 };
