@@ -20,7 +20,7 @@ export const logger = winston.createLogger({
   ),
   transports: [
     new winston.transports.Console({
-      stderrLevels: ["error"],
+      stderrLevels: ["error", "debug", "info"],
     }),
     new winston.transports.File({ filename: "test.log" }),
   ],
