@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "./src/index.js",
+  "engines": {
+    "node": "16.x"
+  },
   "scripts": {
     "start": "npm run build pm2 start ecosystem.config.json --no-daemon",
     "build": "tsc -p . && prisma generate",
@@ -21,8 +24,7 @@
     "prettier:fix": "prettier --write **/*.ts",
     "docker:prod": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up",
     "docker:dev": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up",
-    "docker:test": "docker-compose -f docker-compose.yml -f docker-compose.test.yml up",
-    "prepare": "husky install"
+    "docker:test": "docker-compose -f docker-compose.yml -f docker-compose.test.yml up"
   },
   "keywords": [],
   "author": "",
