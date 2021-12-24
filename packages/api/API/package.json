@@ -15,7 +15,7 @@
     "docker:down": "docker-compose down",
     "test": "dotenv -e .env.test npm run docker:up && npm run migrate:postgres &&  jest -i --colors --verbose --detectOpenHandles --coverage && npm run docker:down",
     "test:watch": "dotenv -e .env.test npm run docker:up && npm run migrate:postgres &&  jest -i --watchAll && npm run docker:down",
-    "tsc": "tsc -p .",
+    "tsc": "npx tsc -p .",
     "migrate:postgres": "dotenv -e .env.test -- npx prisma migrate dev --name postgres-init",
     "coverage": "jest -i --coverage",
     "coverage:coveralls": "jest -i --coverage --coverageReporters=text-lcov | coveralls",
