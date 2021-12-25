@@ -7,7 +7,7 @@
     "node": "16.x"
   },
   "scripts": {
-    "start": "node ./dist/src/index.js",
+    "start": "pm2 start ecosystem.config.json --no-daemon",
     "postinstall": "npm run tsc && prisma generate",
     "build": "npm run tsc && prisma generate",
     "build:live": "nodemon --watch 'src/**/*.ts' --exec \"ts-node\" src/index.ts",
