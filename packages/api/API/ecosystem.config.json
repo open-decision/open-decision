@@ -1,8 +1,8 @@
 {
   "apps": [
     {
-      "name": "app",
-      "script": "dist/index.js",
+      "name": "Open Decision Backend",
+      "script": "./dist/index.js",
       "instances": 1,
       "autorestart": true,
       "watch": false,
