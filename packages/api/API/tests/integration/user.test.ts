@@ -345,13 +345,11 @@ describe("User routes", () => {
         .expect(httpStatus.OK);
 
       expect(res.body).toEqual({
-        id: userOne.id,
         uuid: userOne.uuid,
         email: userOne.email,
         name: userOne.name,
         role: userOne.role,
         emailIsVerified: userOne.emailIsVerified,
-        password: "Password was redacted.",
       });
     });
 
@@ -485,11 +483,9 @@ describe("User routes", () => {
         .expect(httpStatus.OK);
 
       expect(res.body).toEqual({
-        id: userOne.id,
         email: updateBody.email,
         role: "USER",
         emailIsVerified: false,
-        password: "Password was redacted.",
         name: updateBody.name,
         uuid: userOne.uuid,
       });
