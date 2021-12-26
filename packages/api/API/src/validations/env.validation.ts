@@ -43,5 +43,6 @@ export const EnvVars = z
       .optional()
       .default("30")
       .transform((str) => parseInt(str, 10)),
+    SENTRY_DSN: z.string().optional(),
   })
   .merge(MailserverConfig.partial());

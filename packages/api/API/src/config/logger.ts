@@ -1,5 +1,6 @@
 import winston from "winston";
 import config from "./config";
+import Sentry from "winston-transport-sentry-node";
 
 const enumerateErrorFormat = winston.format((info) => {
   if (info instanceof Error) {
@@ -25,3 +26,14 @@ export const logger = winston.createLogger({
     new winston.transports.File({ filename: "test.log" }),
   ],
 });
+
+if (config.SENTRY_DSN) {
+  logger.add(
+    new Sentry({
+      sentry: {
+        dsn: config.SENTRY_DSN,
+        serverName: "OD-Backend",
+      },
+    })
+  );
+}
