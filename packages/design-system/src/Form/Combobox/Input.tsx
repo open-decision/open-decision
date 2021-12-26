@@ -35,6 +35,7 @@ export function Input({ children, css, menuCss }: ComboboxInputProps) {
     React.isValidElement(children) &&
     React.cloneElement(children, {
       ...getInputProps(),
+      control: true,
       Buttons: (
         <Button
           size="small"

@@ -34,31 +34,49 @@ const StyledInput = styled("input", {
   },
 });
 
-export type InputProps = {
+interface BaseInputProps {
   name: string;
   Buttons?: JSX.Element | JSX.Element[];
   Icon?: React.ReactNode;
   css?: StyleObject;
   size?: React.ComponentProps<typeof StyledBox>["size"];
   alignByContent?: React.ComponentProps<typeof StyledBox>["alignByContent"];
-} & RegisterOptions;
+  disabled?: boolean;
+  control: boolean;
+}
+
+type ControlledInputProps = {
+  control: true;
+} & React.InputHTMLAttributes<HTMLInputElement>;
+
+type UncontrolledInputProps = { control: false } & RegisterOptions;
+
+export type InputProps = BaseInputProps &
+  (UncontrolledInputProps | ControlledInputProps);
 
 const InputComponent = (
   {
-    name,
-    Buttons,
     disabled,
-    css,
+    Buttons,
+    control,
     size,
-    alignByContent,
+    css,
+    name,
     Icon,
+    alignByContent,
     ...props
   }: InputProps,
   forwardedRef: React.Ref<HTMLInputElement>
 ) => {
   const { register } = useFormContext();
-  const { ref, ...inputProps } = register(name, { disabled, ...props });
-  const innerRef = useComposedRefs(forwardedRef);
+  const { ref, ...inputProps } = control
+    ? {
+        ref: forwardedRef,
+        ...(props as React.InputHTMLAttributes<HTMLInputElement>),
+      }
+    : register(name, { disabled, ...(props as RegisterOptions) });
+
+  const innerRef = useComposedRefs(ref);
 
   const [hasFocus, setHasFocus] = React.useState(false);
 
@@ -90,7 +108,7 @@ const InputComponent = (
         {...inputProps}
         onFocus={() => setHasFocus(true)}
         ref={(e) => {
-          ref(e);
+          // ref(e);
           // @ts-expect-error - by default forwardedRef.current is readonly. Let's ignore it
           innerRef.current = e;
         }}

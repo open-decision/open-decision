@@ -20,6 +20,7 @@ type Context = {
   reset: () => void;
   isCreating: boolean;
   setInputValue: (inputValue: string) => void;
+  name: string;
   propGetters: {
     getMenuProps: (
       options?: UseComboboxGetMenuPropsOptions,

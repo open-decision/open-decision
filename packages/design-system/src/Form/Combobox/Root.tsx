@@ -1,18 +1,20 @@
 import { matchSorter } from "match-sorter";
 import * as React from "react";
 import { Box } from "../../Box";
-import { useInput } from "../useForm";
 import { Item, ComboboxContext } from "./useCombobox";
 import { useCombobox as useComboboxPrimitive } from "downshift";
 import { StyleObject } from "../../stitches";
 import { pipe } from "remeda";
 import { useClickAway } from "react-use";
+import { useController } from "react-hook-form";
 
 const fallbackSelectedItem = {
   id: "",
   label: "",
 };
 
+const cleanLabel = (label: string) => label.replace("Erstelle ", "");
+const itemToString = (item: Item | null) => cleanLabel(item?.label ?? "");
 export type ComboboxRootProps = {
   css?: StyleObject;
   items: Item[];
@@ -21,6 +23,7 @@ export type ComboboxRootProps = {
   onCreate?: (itemLabel: string) => Item;
   onInputValueChange?: (inputValue: string) => void;
   onIsCreatingChange?: (isCreating: boolean) => void;
+  onSelectedItemChange?: (item: Item | null | undefined) => void;
   /**
    * Allows the Input to be reset when the focus moves away from it.
    * Note: The initialValue is not shown as the selectedItem when this is true,
@@ -29,6 +32,7 @@ export type ComboboxRootProps = {
   resetOnBlur?: boolean;
   children: React.ReactNode;
   name: string;
+  defaultValue?: string;
 };
 
 export function Root({
@@ -36,25 +40,26 @@ export function Root({
   items,
   subsetOfItems,
   onCreate,
-  onInputValueChange,
   onIsCreatingChange,
+  onSelectedItemChange,
   resetOnBlur = false,
   children,
   name,
+  defaultValue = "",
 }: ComboboxRootProps) {
+  const {
+    field: { onChange, value: selectedItem },
+  } = useController({
+    name,
+    defaultValue,
+  });
+
   const itemSubset = subsetOfItems ?? items;
   const [inputItems, setInputItems] = React.useState(itemSubset);
-  const { value, setValue } = useInput(name, "string");
-  const [selectedItem, setSelectedItem] = React.useState(
-    inputItems.find((item) => item.id === value) ?? fallbackSelectedItem
-  );
-
-  const cleanLabel = (label: string) => label.replace("Erstelle ", "");
 
   // ------------------------------------------------------------------
   // The following state is used to determine when the user is able to create a new item.
   // This should only ever be possible if an onCreate handler has been declared.
-
   const [isCreating, setIsCreating] = React.useState(false);
 
   const updateIsCreating = (isCreating: boolean) => {
@@ -82,17 +87,17 @@ export function Root({
     setInputValue,
   } = useComboboxPrimitive({
     items: inputItems,
-    selectedItem,
-    itemToString: (item) => cleanLabel(item?.label ?? ""),
-    onSelectedItemChange: (changes) => {
-      if (isCreating && (changes.inputValue?.length ?? 0) > 0 && onCreate) {
-        const newItem = onCreate(cleanLabel(changes.selectedItem?.label ?? ""));
-        setSelectedItem(newItem);
-        return setValue(newItem.id);
+    initialSelectedItem: selectedItem,
+    itemToString,
+    onSelectedItemChange: ({ selectedItem }) => {
+      let item = selectedItem;
+
+      if (isCreating && (inputValue?.length ?? 0) > 0 && onCreate) {
+        item = onCreate(cleanLabel(selectedItem?.label ?? ""));
       }
 
-      setSelectedItem(changes.selectedItem ?? fallbackSelectedItem);
-      return setValue(changes.selectedItem?.id ?? fallbackSelectedItem.id);
+      onSelectedItemChange?.(item);
+      onChange(item ?? fallbackSelectedItem.id);
     },
     onInputValueChange: ({ inputValue }) => {
       const filteredItems = matchSorter(itemSubset, inputValue ?? "", {
@@ -119,7 +124,6 @@ export function Root({
 
       updateIsCreating(isCreating);
       setInputItems(filteredItems);
-      onInputValueChange?.(inputValue ?? "");
     },
   });
 
@@ -151,6 +155,7 @@ export function Root({
         reset,
         setInputValue,
         isCreating,
+        name,
         propGetters: {
           getMenuProps,
           getInputProps,

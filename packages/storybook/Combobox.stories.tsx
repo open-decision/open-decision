@@ -15,7 +15,6 @@ export default {
 
 const Template: Story<ComboboxInputProps> = ({ children }) => {
   const [selectedItem, setSelectedItem] = React.useState("123");
-  const [inputValue, setInputValue] = React.useState("");
   const [items, setItems] = React.useState([
     { id: "123", label: "test" },
     { id: "1234", label: "another one" },
@@ -33,14 +32,10 @@ const Template: Story<ComboboxInputProps> = ({ children }) => {
   };
 
   return (
-    <Form
-      initialValues={{ combobox: selectedItem ?? "" }}
-      onChange={({ values }) => setSelectedItem(values.combobox)}
-    >
+    <Form onSubmit={(data) => setSelectedItem(data.combobox.id)}>
       <Combobox.Root
         name="combobox"
         onCreate={handleItemCreate}
-        onInputValueChange={(inputValue) => setInputValue(inputValue)}
         resetOnBlur
         items={items}
       >
