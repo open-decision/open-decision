@@ -45,14 +45,14 @@ authRouter.post(
 
 export default authRouter;
 /**
- * @swagger
+ * @openapi
  * tags:
  *   name: Auth
  *   description: Authentication
  */
 
 /**
- * @swagger
+ * @openapi
  * /auth/register:
  *   post:
  *     summary: Register as user
@@ -67,8 +67,6 @@ export default authRouter;
  *               - email
  *               - password
  *             properties:
- *               name:
- *                 type: string
  *               email:
  *                 type: string
  *                 format: email
@@ -78,13 +76,18 @@ export default authRouter;
  *                 format: password
  *                 minLength: 8
  *                 maxLength: 300
- *                 description: At least one number and one letter
+ *                 description: Must be sufficiently complex (score at zxcvbn-ts >= 3)
  *             example:
  *               email: fake@example.com
  *               password: Th@t!shardToGuess
  *     responses:
  *       "201":
  *         description: Created
+ *         headers:
+ *           Set-Cookie:
+ *             schema:
+ *               type: string
+ *               example: refreshCookie=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZWJhYzUzNDk1NGI1NDEzOTgwNmMxMTIiLCJpYXQiOjE1ODkyOTg0ODQsImV4cCI6MTU4OTMwMDI4NH0.m1U63blB0MLej_WfB7yC2FTMnCziif9X8yzwDEfJXAg; Path=/; Secure; HttpOnly; SameSite=None; Domain=example.com
  *         content:
  *           application/json:
  *             schema:
@@ -92,14 +95,14 @@ export default authRouter;
  *               properties:
  *                 user:
  *                   $ref: '#/components/schemas/User'
- *                 tokens:
- *                   $ref: '#/components/schemas/AuthTokens'
+ *                 access:
+ *                   $ref: '#/components/schemas/Token'
  *       "400":
  *         $ref: '#/components/responses/DuplicateEmail'
  */
 
 /**
- * @swagger
+ * @openapi
  * /auth/login:
  *   post:
  *     summary: Login
@@ -126,6 +129,11 @@ export default authRouter;
  *     responses:
  *       "200":
  *         description: OK
+ *         headers:
+ *           Set-Cookie:
+ *             schema:
+ *               type: string
+ *               example: refreshCookie=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZWJhYzUzNDk1NGI1NDEzOTgwNmMxMTIiLCJpYXQiOjE1ODkyOTg0ODQsImV4cCI6MTU4OTMwMDI4NH0.m1U63blB0MLej_WfB7yC2FTMnCziif9X8yzwDEfJXAg; Path=/; Secure; HttpOnly; SameSite=None; Domain=example.com
  *         content:
  *           application/json:
  *             schema:
@@ -133,8 +141,8 @@ export default authRouter;
  *               properties:
  *                 user:
  *                   $ref: '#/components/schemas/User'
- *                 tokens:
- *                   $ref: '#/components/schemas/AuthTokens'
+ *                 access:
+ *                   $ref: '#/components/schemas/Token'
  *       "401":
  *         description: Invalid email or password
  *         content:
@@ -147,24 +155,18 @@ export default authRouter;
  */
 
 /**
- * @swagger
+ * @openapi
  * /auth/logout:
  *   post:
  *     summary: Logout
  *     tags: [Auth]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - refreshToken
- *             properties:
- *               refreshToken:
- *                 type: string
- *             example:
- *               refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZWJhYzUzNDk1NGI1NDEzOTgwNmMxMTIiLCJpYXQiOjE1ODkyOTg0ODQsImV4cCI6MTU4OTMwMDI4NH0.m1U63blB0MLej_WfB7yC2FTMnCziif9X8yzwDEfJXAg
+ *     parameters:
+ *       - in: cookie
+ *         name: refreshCookie
+ *         schema:
+ *           type: string
+ *           example: refreshCookie=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZWJhYzUzNDk1NGI1NDEzOTgwNmMxMTIiLCJpYXQiOjE1ODkyOTg0ODQsImV4cCI6MTU4OTMwMDI4NH0.m1U63blB0MLej_WfB7yC2FTMnCziif9X8yzwDEfJXAg; Path=/; Secure; HttpOnly; SameSite=None; Domain=example.com
+ *         required: true
  *     responses:
  *       "204":
  *         description: No content
@@ -173,37 +175,31 @@ export default authRouter;
  */
 
 /**
- * @swagger
+ * @openapi
  * /auth/refresh-tokens:
  *   post:
- *     summary: Refresh auth tokens
+ *     summary: Refresh auth token if refresh token is still valid or auth & refresh token if login is still valid
  *     tags: [Auth]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - refreshToken
- *             properties:
- *               refreshToken:
- *                 type: string
- *             example:
- *               refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZWJhYzUzNDk1NGI1NDEzOTgwNmMxMTIiLCJpYXQiOjE1ODkyOTg0ODQsImV4cCI6MTU4OTMwMDI4NH0.m1U63blB0MLej_WfB7yC2FTMnCziif9X8yzwDEfJXAg
+ *     parameters:
+ *       - in: cookie
+ *         name: refreshCookie
+ *         schema:
+ *           type: string
+ *           example: refreshCookie=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZWJhYzUzNDk1NGI1NDEzOTgwNmMxMTIiLCJpYXQiOjE1ODkyOTg0ODQsImV4cCI6MTU4OTMwMDI4NH0.m1U63blB0MLej_WfB7yC2FTMnCziif9X8yzwDEfJXAg; Path=/; Secure; HttpOnly; SameSite=None; Domain=example.com
+ *         required: true
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/AuthTokens'
+ *               $ref: '#/components/schemas/AccessToken'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  */
 
 /**
- * @swagger
+ * @openapi
  * /auth/forgot-password:
  *   post:
  *     summary: Forgot password
@@ -231,7 +227,7 @@ export default authRouter;
  */
 
 /**
- * @swagger
+ * @openapi
  * /auth/reset-password:
  *   post:
  *     summary: Reset password
@@ -256,7 +252,8 @@ export default authRouter;
  *                 type: string
  *                 format: password
  *                 minLength: 8
- *                 description: At least one number and one letter
+ *                 maxLength: 300
+ *                 description: Must be sufficiently complex (score at zxcvbn-ts >= 3)
  *             example:
  *               password: Th@t!shardToGuess
  *     responses:
@@ -274,7 +271,7 @@ export default authRouter;
  */
 
 /**
- * @swagger
+ * @openapi
  * /auth/send-verification-email:
  *   post:
  *     summary: Send verification email
@@ -290,7 +287,7 @@ export default authRouter;
  */
 
 /**
- * @swagger
+ * @openapi
  * /auth/verify-email:
  *   post:
  *     summary: verify email

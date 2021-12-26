@@ -38,14 +38,14 @@ userRouter
 
 export default userRouter;
 /**
- * @swagger
+ * @openapi
  * tags:
  *   name: Users
  *   description: User management and retrieval
  */
 
 /**
- * @swagger
+ * @openapi
  * /users:
  *   post:
  *     summary: Create a user
@@ -60,7 +60,6 @@ export default userRouter;
  *           schema:
  *             type: object
  *             required:
- *               - name
  *               - email
  *               - password
  *               - role
@@ -75,10 +74,11 @@ export default userRouter;
  *                 type: string
  *                 format: password
  *                 minLength: 8
- *                 description: At least one number and one letter
+ *                 maxLength: 300
+ *                 description: Must be sufficiently complex (score at zxcvbn-ts >= 3)
  *               role:
  *                  type: string
- *                  enum: [user, admin]
+ *                  enum: [USER, ADMIN]
  *             example:
  *               name: fake name
  *               email: fake@example.com
@@ -97,89 +97,24 @@ export default userRouter;
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
  *         $ref: '#/components/responses/Forbidden'
- *
- *   get:
- *     summary: Get all users
- *     description: Only admins can retrieve all users.
- *     tags: [Users]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: query
- *         name: name
- *         schema:
- *           type: string
- *         description: User name
- *       - in: query
- *         name: role
- *         schema:
- *           type: string
- *         description: User role
- *       - in: query
- *         name: sortBy
- *         schema:
- *           type: string
- *         description: sort by query in the form of field:desc/asc (ex. name:asc)
- *       - in: query
- *         name: limit
- *         schema:
- *           type: integer
- *           minimum: 1
- *         default: 10
- *         description: Maximum number of users
- *       - in: query
- *         name: page
- *         schema:
- *           type: integer
- *           minimum: 1
- *           default: 1
- *         description: Page number
- *     responses:
- *       "200":
- *         description: OK
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 results:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/User'
- *                 page:
- *                   type: integer
- *                   example: 1
- *                 limit:
- *                   type: integer
- *                   example: 10
- *                 totalPages:
- *                   type: integer
- *                   example: 1
- *                 totalResults:
- *                   type: integer
- *                   example: 1
- *       "401":
- *         $ref: '#/components/responses/Unauthorized'
- *       "403":
- *         $ref: '#/components/responses/Forbidden'
  */
 
 /**
- * @swagger
- * /users/{id}:
+ * @openapi
+ * /users/{uuid}:
  *   get:
  *     summary: Get a user
- *     description: Logged in users can fetch only their own user information. Only admins can fetch other users.
+ *     description: Logged in users can fetch only their own user information.
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: uuid
  *         required: true
  *         schema:
  *           type: string
- *         description: User id
+ *         description: User uuid
  *     responses:
  *       "200":
  *         description: OK
@@ -196,17 +131,17 @@ export default userRouter;
  *
  *   patch:
  *     summary: Update a user
- *     description: Logged in users can only update their own information. Only admins can update other users.
+ *     description: Logged in users can only update their own information.
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: uuid
  *         required: true
  *         schema:
  *           type: string
- *         description: User id
+ *         description: User uuid
  *     requestBody:
  *       required: true
  *       content:
@@ -224,7 +159,8 @@ export default userRouter;
  *                 type: string
  *                 format: password
  *                 minLength: 8
- *                 description: At least one number and one letter
+ *                 maxLength: 300
+ *                 description: Must be sufficiently complex (score at zxcvbn-ts >= 3)
  *             example:
  *               name: fake name
  *               email: fake@example.com
@@ -253,11 +189,11 @@ export default userRouter;
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: uuid
  *         required: true
  *         schema:
  *           type: string
- *         description: User id
+ *         description: User uuid
  *     responses:
  *       "200":
  *         description: No content
