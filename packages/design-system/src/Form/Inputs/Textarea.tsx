@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useFormContext } from "react-hook-form";
 import { styled } from "../../stitches";
 import { baseInputStyles } from "../shared/styles";
 import { useInput } from "../useForm";
@@ -31,14 +32,8 @@ type TextAreaProps = React.ComponentProps<typeof StyledTextarea> & {
 };
 
 export function Textarea({ name, ...props }: TextAreaProps) {
-  const { value, setValue } = useInput(name, "string");
+  const { register } = useFormContext();
+  const { ref, ...inputProps } = register(name, props);
 
-  return (
-    <StyledTextarea
-      name="test"
-      value={value}
-      onChange={(event) => setValue(event.target.value ?? "")}
-      {...props}
-    />
-  );
+  return <StyledTextarea ref={ref} {...inputProps} />;
 }

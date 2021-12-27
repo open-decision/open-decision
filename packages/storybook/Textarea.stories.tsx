@@ -9,12 +9,6 @@ export default {
 
 export const Input: Story = (props) => (
   <Form
-    initialValues={{
-      test: "",
-      another: "",
-      test2: "existing value",
-      test3: "",
-    }}
     onSubmit={({ values }) => alert(values)}
     css={{ display: "grid", gap: "$2", width: "max-content" }}
   >
