@@ -3,8 +3,7 @@ import * as React from "react";
 import { styled, StyleObject } from "../../stitches";
 import { baseInputStyles, baseTextInputStyle } from "../shared/styles";
 import { Box } from "../../Box";
-import { useComposedRefs } from "../../internal/utils";
-import { RegisterOptions, useFormContext } from "react-hook-form";
+import { UseInputProps, useInput } from "./useInput";
 
 const StyledBox = styled(Box, baseInputStyles, baseTextInputStyle, {
   borderRadius: "$md",
@@ -42,52 +41,33 @@ interface BaseInputProps {
   size?: React.ComponentProps<typeof StyledBox>["size"];
   alignByContent?: React.ComponentProps<typeof StyledBox>["alignByContent"];
   disabled?: boolean;
-  control: boolean;
+  autoFocus?: boolean;
+  placeholder?: string;
 }
 
-type ControlledInputProps = {
-  control: true;
-} & React.InputHTMLAttributes<HTMLInputElement>;
-
-type UncontrolledInputProps = { control: false } & RegisterOptions;
-
-export type InputProps = BaseInputProps &
-  (UncontrolledInputProps | ControlledInputProps);
+export type InputProps = BaseInputProps & UseInputProps;
 
 const InputComponent = (
   {
     disabled,
     Buttons,
-    control,
     size,
     css,
     name,
     Icon,
     alignByContent,
+    autoFocus = false,
+    placeholder,
     ...props
   }: InputProps,
   forwardedRef: React.Ref<HTMLInputElement>
 ) => {
-  const { register } = useFormContext();
-  const { ref, ...inputProps } = control
-    ? {
-        ref: forwardedRef,
-        ...(props as React.InputHTMLAttributes<HTMLInputElement>),
-      }
-    : register(name, { disabled, ...(props as RegisterOptions) });
-
-  const innerRef = useComposedRefs(ref);
-
-  const [hasFocus, setHasFocus] = React.useState(false);
-
-  React.useEffect(() => {
-    if (
-      document.hasFocus() &&
-      innerRef.current?.contains(document.activeElement)
-    ) {
-      setHasFocus(true);
-    }
-  }, [innerRef]);
+  const {
+    ref,
+    hasFocus,
+    inputProps: { onBlur, ...inputProps },
+    setHasFocus,
+  } = useInput(name, props, forwardedRef);
 
   const EnhancedIcon = React.isValidElement(Icon)
     ? React.cloneElement(Icon, {
@@ -106,12 +86,14 @@ const InputComponent = (
       {EnhancedIcon}
       <StyledInput
         {...inputProps}
+        placeholder={placeholder}
+        autoFocus={autoFocus}
         onFocus={() => setHasFocus(true)}
-        ref={(e) => {
-          // ref(e);
-          // @ts-expect-error - by default forwardedRef.current is readonly. Let's ignore it
-          innerRef.current = e;
+        onBlur={(event) => {
+          onBlur?.(event);
+          setHasFocus(false);
         }}
+        ref={ref}
       />
       {Buttons}
     </StyledBox>

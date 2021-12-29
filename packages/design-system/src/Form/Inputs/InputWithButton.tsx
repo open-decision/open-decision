@@ -1,5 +1,5 @@
 import * as React from "react";
-import { styled } from "../../stitches";
+import { styled, StyleObject } from "../../stitches";
 import { Box } from "../../Box";
 import { Input as SystemInput } from "./Input";
 import { Button as SystemButton } from "../../Button/Button";
@@ -9,21 +9,22 @@ const StyledBox = styled(Box, {
   flexWrap: "wrap",
 });
 
-export type InputWithButtonProps = React.ComponentProps<typeof Box> & {
+export type InputWithButtonProps = {
   Input: React.ReactElement<React.ComponentProps<typeof SystemInput>>;
   Button: React.ReactElement<React.ComponentProps<typeof SystemButton>>;
   radius?: string;
+  css?: StyleObject;
 };
 
-export const InputWithButton = ({
-  Input,
-  Button,
-  radius = "$radii$md",
-  ...props
-}: InputWithButtonProps) => {
+const InputWithButtonComp = (
+  { Input, Button, radius = "$radii$md", css, ...props }: InputWithButtonProps,
+  ref: React.Ref<HTMLInputElement>
+) => {
   return (
-    <StyledBox {...props}>
+    <StyledBox css={css}>
       {React.cloneElement(Input, {
+        ref,
+        ...props,
         css: {
           ...Input.props?.css,
           flex: "1 1 100%",
@@ -67,3 +68,8 @@ export const InputWithButton = ({
     </StyledBox>
   );
 };
+
+export const InputWithButton = React.forwardRef<
+  HTMLInputElement,
+  InputWithButtonProps
+>(InputWithButtonComp);

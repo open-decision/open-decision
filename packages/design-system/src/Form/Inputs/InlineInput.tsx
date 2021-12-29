@@ -3,31 +3,10 @@ import { styled } from "../../stitches";
 import { Box } from "../../Box";
 import { InputProps } from "./Input";
 import { baseInputStyles, baseTextInputStyle } from "../shared/styles";
-import { useComposedRefs } from "../../internal/utils";
-import { useKey, useMeasure } from "react-use";
+import { useMeasure } from "react-use";
 import { useFormContext, useWatch } from "react-hook-form";
-
-type Actions =
-  | { type: "startEditing"; originalValue: string }
-  | { type: "endEditing" };
-
-type State = { isEditing: boolean; originalValue?: string };
-
-function reducer(state: State, action: Actions): State {
-  switch (action.type) {
-    case "startEditing":
-      return {
-        isEditing: true,
-        originalValue: action.originalValue,
-      };
-    case "endEditing": {
-      return { ...state, isEditing: false };
-    }
-
-    default:
-      return state;
-  }
-}
+import { useInput } from "./useInput";
+import { useEditing } from "./useEditing";
 
 const StyledBox = styled(Box, baseInputStyles, {
   border: 0,
@@ -72,50 +51,31 @@ const InlineInputImpl = (
   {
     name,
     alignByContent,
-    disabled,
+    disabled = false,
     Buttons,
     IndicatorButton,
     css,
+    size,
     ...props
   }: InlineInputProps,
   forwardedRef: React.Ref<HTMLInputElement>
 ) => {
-  const { register, setValue, formState } = useFormContext();
+  const { setValue } = useFormContext();
   const inputValue = useWatch({ name });
 
-  const { ref, ...inputProps } = register(name, { disabled, ...props });
-  const innerRef = useComposedRefs(forwardedRef);
+  const { ref, inputProps, hasFocus } = useInput(name, props, forwardedRef);
+
   const [wrapperRef, { width }] = useMeasure<HTMLSpanElement>();
-
-  const [state, dispatch] = React.useReducer(reducer, {
-    isEditing: false,
-  });
-  const isEditing = disabled !== undefined ? !disabled : state.isEditing;
-
-  useKey("Enter", () => dispatch({ type: "endEditing" }));
-  useKey(
-    "Escape",
-    () => {
-      state.originalValue != null && setValue(name, state.originalValue);
-      dispatch({ type: "endEditing" });
-    },
-    undefined,
-    [state]
+  const { isEditing, startEditing } = useEditing(
+    ref,
+    disabled,
+    (originalValue) => setValue(name, originalValue)
   );
-
-  React.useEffect(() => {
-    if (isEditing) {
-      innerRef.current?.select();
-    } else {
-      innerRef.current?.setSelectionRange(null, null);
-    }
-  }, [innerRef, isEditing]);
 
   const EnhancedIndicatorButton = IndicatorButton
     ? React.cloneElement(IndicatorButton, {
         "data-active": isEditing,
-        onClick: () =>
-          dispatch({ type: "startEditing", originalValue: formState[name] }),
+        onClick: startEditing,
         type: "button",
         disabled,
       })
@@ -125,16 +85,15 @@ const InlineInputImpl = (
     <StyledBox
       css={{ color: disabled ? "$gray8" : "$gray12" }}
       data-disabled={disabled}
+      data-focus={hasFocus}
     >
       <StyledInput
         {...inputProps}
-        ref={(e) => {
-          ref(e);
-          // @ts-expect-error - by default forwardedRef.current is readonly. Let's ignore it
-          innerRef.current = e;
-        }}
+        size={size}
+        ref={ref}
         alignByContent={alignByContent}
         css={{
+          minWidth: "50px",
           width: `${width}px`,
           ...css,
         }}

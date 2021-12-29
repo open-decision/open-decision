@@ -42,6 +42,7 @@ export function Input({ children, css, menuCss }: ComboboxInputProps) {
           variant="ghost"
           type="button"
           disabled={!inputValue}
+          square
           css={{
             focusStyle: "inner",
             opacity: inputValue ? 1 : "0 !important",

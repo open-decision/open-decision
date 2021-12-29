@@ -7,25 +7,44 @@ import {
   FormProvider,
   SubmitHandler,
   SubmitErrorHandler,
-  FieldValues,
+  UseFormProps,
+  UnpackNestedValue,
+  DeepPartial,
 } from "react-hook-form";
 
 const StyledForm = styled("form", {});
 
-export type FormProps = {
+export type FormProps<TFieldValues> = {
   css?: StyleObject;
   children: React.ReactNode;
-  onSubmit: SubmitHandler<FieldValues>;
-  onSubmitError?: SubmitErrorHandler<FieldValues>;
-};
+  onSubmit: SubmitHandler<TFieldValues>;
+  onSubmitError?: SubmitErrorHandler<TFieldValues>;
+  onChange?: (data: UnpackNestedValue<DeepPartial<TFieldValues>>) => void;
+} & UseFormProps<TFieldValues>;
 
-export function Form({ children, onSubmit, css }: FormProps) {
-  const methods = useForm();
+export function Form<TFieldValues>({
+  children,
+  onSubmit,
+  onSubmitError,
+  onChange,
+  css,
+  ...props
+}: FormProps<TFieldValues>) {
+  const methods = useForm<TFieldValues>(props);
+
+  React.useEffect(() => {
+    if (onChange) {
+      const subscription = methods.watch((data) => onChange(data));
+      return () => subscription.unsubscribe();
+    }
+
+    return undefined;
+  }, [methods, onChange]);
 
   return (
     <FormProvider {...methods}>
       <StyledForm
-        onSubmit={methods.handleSubmit(onSubmit)}
+        onSubmit={methods.handleSubmit(onSubmit, onSubmitError)}
         noValidate
         css={css}
       >
