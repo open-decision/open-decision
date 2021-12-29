@@ -85,6 +85,7 @@ export function Root({
     reset,
     inputValue,
     setInputValue,
+    setHighlightedIndex,
   } = useComboboxPrimitive({
     items: inputItems,
     initialSelectedItem: selectedItem,
@@ -124,6 +125,7 @@ export function Root({
 
       updateIsCreating(isCreating);
       setInputItems(filteredItems);
+      setHighlightedIndex(0);
     },
   });
 
