@@ -26,19 +26,26 @@ export function NodeEditingSidebar({
     <>
       <Box as="header">
         <Form
-          onChange={({ values }) => {
+          onChange={({ name }) =>
             send({
               type: "updateNode",
               id: node.id,
-              node: { name: values.nodeName },
-            });
-          }}
-          initialValues={{ nodeName: node?.name ?? "" }}
+              node: { name },
+            })
+          }
+          onSubmit={({ name }) =>
+            send({
+              type: "updateNode",
+              id: node.id,
+              node: { name },
+            })
+          }
+          defaultValues={{ name: node?.name ?? "" }}
         >
           <Field label="Knotenname" css={{ "--color": "$colors$gray11" }}>
             <Input
               css={{ backgroundColor: "$gray1", color: "$gray12" }}
-              name="nodeName"
+              name="name"
               maxLength={70}
             />
           </Field>

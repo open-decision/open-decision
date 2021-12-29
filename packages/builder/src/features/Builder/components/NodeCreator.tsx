@@ -41,13 +41,16 @@ export const NodeCreator = ({ css }: Props) => {
     return { id: newNode.id, label: newNode.name };
   }
 
+  function changeHandler(newSelectedItemId: string) {
+    send({ type: "selectNode", nodeId: newSelectedItemId });
+  }
+
   return (
     <Form
       css={css}
-      onChange={({ values }) => {
-        return send({ type: "selectNode", nodeId: values.search });
-      }}
-      initialValues={{ search: selectedNodeId ?? "" }}
+      onSubmit={(data) => changeHandler(data.selectedNodeId ?? "")}
+      onChange={(data) => changeHandler(data.selectedNodeId ?? "")}
+      defaultValues={{ selectedNodeId }}
     >
       <Combobox.Root
         css={{ display: "flex", alignItems: "center", gap: "$2" }}

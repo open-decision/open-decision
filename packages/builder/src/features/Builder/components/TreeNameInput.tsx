@@ -22,28 +22,22 @@ export function TreeNameInput({ css }: Props) {
   return (
     <Container css={css}>
       <Label
-        htmlFor="projectName"
+        htmlFor="treeName"
         size="medium"
         css={{ color: "inherit", fontWeight: 600 }}
       >
         Projekt {">"}
       </Label>
       <Form
-        onChange={({ values }) =>
+        onSubmit={({ treeName }) =>
           send({
             type: "updateTree",
-            tree: {
-              treeName: values.projectName,
-            },
+            tree: { treeName },
           })
         }
-        initialValues={{ projectName: treeName ?? "" }}
+        defaultValues={{ treeName }}
       >
-        <InlineInput
-          css={{ color: "inherit" }}
-          name="projectName"
-          id="projectName"
-        />
+        <InlineInput css={{ color: "inherit" }} name="treeName" id="treeName" />
       </Form>
     </Container>
   );

@@ -169,12 +169,12 @@ const Editor = () => {
                     <Dialog.CloseButton />
                   </Box>
                   <Form
-                    initialValues={{ treeName: "" }}
+                    defaultValues={{ treeName: "" }}
                     css={{ display: "flex", flexDirection: "column" }}
-                    onSubmit={({ values }) => {
+                    onSubmit={({ treeName }) => {
                       return send({
                         type: "createTree",
-                        name: values.treeName,
+                        name: treeName,
                       });
                     }}
                   >

@@ -154,10 +154,18 @@ export function OptionTargetInput({
       dragConstraints={groupRef}
     >
       <Form
-        onChange={({ values }) => onChange(values)}
-        initialValues={{
+        onSubmit={(data) =>
+          onChange({ answer: data.answer, target: data.target?.id })
+        }
+        onChange={(data) =>
+          onChange({ answer: data.answer, target: data.target?.id })
+        }
+        defaultValues={{
           answer: input.answer ?? "",
-          target: input.target ?? "",
+          target: {
+            id: input.target ?? "",
+            label: input.target ? tree.context.nodes[input.target].name : "",
+          },
         }}
         css={{
           display: "flex",
@@ -231,27 +239,35 @@ export function OptionTargetInput({
             </Combobox.Input>
           </Combobox.Root>
         </Box>
-        <Button
-          css={{ colorScheme: "error" }}
-          variant="ghost"
-          size="small"
-          type="button"
-          onClick={() => onDelete(input.id)}
+        <Box
+          css={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-around",
+          }}
         >
-          <Icon label="Entferne den Input">
-            <Trash />
-          </Icon>
-        </Button>
-        <Button
-          variant="ghost"
-          size="small"
-          type="button"
-          onPointerDown={(event) => controls.start(event)}
-        >
-          <Icon label="Verschiebe den Input">
-            <DragHandle />
-          </Icon>
-        </Button>
+          <Button
+            variant="ghost"
+            size="small"
+            type="button"
+            onPointerDown={(event) => controls.start(event)}
+          >
+            <Icon label="Verschiebe den Input">
+              <DragHandle />
+            </Icon>
+          </Button>
+          <Button
+            css={{ colorScheme: "error" }}
+            variant="ghost"
+            size="small"
+            type="button"
+            onClick={() => onDelete(input.id)}
+          >
+            <Icon label="Entferne den Input">
+              <Trash />
+            </Icon>
+          </Button>
+        </Box>
       </Form>
     </Reorder.Item>
   );
