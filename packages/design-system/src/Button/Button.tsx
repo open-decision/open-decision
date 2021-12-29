@@ -223,9 +223,5 @@ export const buttonStyles = css(alignByContent, {
   },
 });
 
-const StyledButton = styled("button", buttonStyles);
-
-export type ButtonProps = React.ComponentProps<typeof StyledButton>;
-export const Button = ({ children, ...props }: ButtonProps) => (
-  <StyledButton {...props}>{children}</StyledButton>
-);
+export const Button = styled("button", buttonStyles);
+export type ButtonProps = React.ComponentProps<typeof Button>;
