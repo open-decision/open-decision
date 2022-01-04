@@ -9,6 +9,7 @@ export const baseLinkStyles = css({
   color: "$primary9",
   textDecoration: "none",
   position: "relative",
+  textStyle: "medium-text",
 
   focusStyle: "outer",
 });

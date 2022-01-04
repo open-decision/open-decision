@@ -6,7 +6,7 @@ import { iconSizes } from "./shared";
 
 const StyledIcon = styled("span", alignByContent, iconSizes, {
   transform: "translate($$XTranslation)",
-  display: "flex",
+  display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
 
