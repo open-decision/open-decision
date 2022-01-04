@@ -82,7 +82,6 @@ export const buttonStyles = css(alignByContent, {
     },
     variant: {
       primary: {
-        boxShadow: "$3",
         backgroundColor: "$colorScheme9",
         color: "$colorScheme-text !important",
 
@@ -96,7 +95,6 @@ export const buttonStyles = css(alignByContent, {
 
         "&[data-state=on]": {
           backgroundColor: "$colorScheme11",
-          boxShadow: "none",
         },
 
         "&:disabled": {
@@ -107,7 +105,6 @@ export const buttonStyles = css(alignByContent, {
       secondary: {
         backgroundColor: "$colorScheme3",
         color: "$colorScheme11 !important",
-        boxShadow: "$1",
 
         "&:hover, &:focus-visible": {
           backgroundColor: "$colorScheme5",
@@ -119,7 +116,6 @@ export const buttonStyles = css(alignByContent, {
 
         "&[data-state=on]": {
           backgroundColor: "$colorScheme5",
-          boxShadow: "none",
         },
 
         "&:disabled": {
@@ -153,7 +149,6 @@ export const buttonStyles = css(alignByContent, {
         colorScheme: "gray",
         color: "$gray11",
         backgroundColor: "unset",
-        boxShadow: "unset",
         focusStyle: "inner",
 
         "&:hover, &:focus-visible, &[data-active='true']": {
@@ -175,7 +170,6 @@ export const buttonStyles = css(alignByContent, {
       true: {
         "&:active": {
           $$YTranslation: "1px",
-          boxShadow: "none",
         },
       },
     },
