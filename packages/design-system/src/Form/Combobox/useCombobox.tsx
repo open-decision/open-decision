@@ -14,7 +14,7 @@ export type Item = { readonly id: string; readonly label: string };
 type Context = {
   inputValue: string;
   highlightedIndex: number;
-  selectedItem: Item | null;
+  selectedItemId?: string;
   isOpen: boolean;
   inputItems: Item[];
   reset: () => void;

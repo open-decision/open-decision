@@ -4,9 +4,7 @@ import { Box } from "../../Box";
 import { Item, ComboboxContext } from "./useCombobox";
 import { useCombobox as useComboboxPrimitive } from "downshift";
 import { StyleObject } from "../../stitches";
-import { pipe } from "remeda";
-import { useClickAway } from "react-use";
-import { useController } from "react-hook-form";
+import { useController, UseControllerProps } from "react-hook-form";
 
 const fallbackSelectedItem = {
   id: "",
@@ -24,16 +22,10 @@ export type ComboboxRootProps = {
   onInputValueChange?: (inputValue: string) => void;
   onIsCreatingChange?: (isCreating: boolean) => void;
   onSelectedItemChange?: (item: Item | null | undefined) => void;
-  /**
-   * Allows the Input to be reset when the focus moves away from it.
-   * Note: The initialValue is not shown as the selectedItem when this is true,
-   * because the Input is not reflecting the currently selectedItem.
-   */
-  resetOnBlur?: boolean;
   children: React.ReactNode;
   name: string;
   defaultValue?: string;
-};
+} & UseControllerProps["rules"];
 
 export function Root({
   css,
@@ -42,17 +34,19 @@ export function Root({
   onCreate,
   onIsCreatingChange,
   onSelectedItemChange,
-  resetOnBlur = false,
   children,
   name,
-  defaultValue = "",
+  defaultValue,
 }: ComboboxRootProps) {
   const {
-    field: { onChange, value: selectedItem },
+    field: { onChange, value: selectedItemId },
+    formState: { errors },
   } = useController({
     name,
     defaultValue,
   });
+
+  const isValid = Object.keys(errors).length === 0;
 
   const itemSubset = subsetOfItems ?? items;
   const [inputItems, setInputItems] = React.useState(itemSubset);
@@ -85,20 +79,19 @@ export function Root({
     reset,
     inputValue,
     setInputValue,
-    setHighlightedIndex,
   } = useComboboxPrimitive({
     items: inputItems,
-    initialSelectedItem: selectedItem,
+    initialSelectedItem: items.find((item) => item.id === selectedItemId),
     itemToString,
     onSelectedItemChange: ({ selectedItem }) => {
       let item = selectedItem;
 
-      if (isCreating && (inputValue?.length ?? 0) > 0 && onCreate) {
+      if (isCreating && (inputValue?.length ?? 0) > 0 && onCreate && isValid) {
         item = onCreate(cleanLabel(selectedItem?.label ?? ""));
       }
 
       onSelectedItemChange?.(item);
-      onChange(item ?? fallbackSelectedItem.id);
+      onChange(item?.id ?? fallbackSelectedItem.id);
     },
     onInputValueChange: ({ inputValue }) => {
       const filteredItems = matchSorter(itemSubset, inputValue ?? "", {
@@ -106,15 +99,12 @@ export function Root({
       });
 
       const nonEmptyInputValue = (inputValue?.length ?? 0) > 0;
-      const emptyFilteredItems = filteredItems.length === 0;
       const nonEqualInputValueAndFilteredItem = !items.some((item) => {
         return item.label === inputValue?.trim();
       });
 
       const isCreating = validIsCreating(
-        nonEmptyInputValue &&
-          emptyFilteredItems &&
-          nonEqualInputValueAndFilteredItem
+        nonEmptyInputValue && nonEqualInputValueAndFilteredItem && isValid
       );
 
       if (isCreating)
@@ -125,26 +115,8 @@ export function Root({
 
       updateIsCreating(isCreating);
       setInputItems(filteredItems);
-      setHighlightedIndex(0);
     },
   });
-
-  const ref = React.useRef<HTMLDivElement | null>(null);
-  useClickAway(
-    ref,
-    (event) => {
-      const isOption =
-        event.target instanceof HTMLElement &&
-        pipe(
-          event.target.attributes,
-          (NodeMap) => NodeMap.getNamedItem("role"),
-          (role) => role?.nodeValue === "option"
-        );
-
-      return !isOption && resetOnBlur && setInputValue("");
-    },
-    ["click", "mousedown", "touchstart"]
-  );
 
   return (
     <ComboboxContext.Provider
@@ -152,7 +124,7 @@ export function Root({
         inputItems,
         inputValue,
         highlightedIndex,
-        selectedItem,
+        selectedItemId,
         isOpen,
         reset,
         setInputValue,
@@ -169,9 +141,7 @@ export function Root({
       }}
       key={items.length}
     >
-      <Box css={css} ref={ref}>
-        {children}
-      </Box>
+      <Box css={css}>{children}</Box>
     </ComboboxContext.Provider>
   );
 }

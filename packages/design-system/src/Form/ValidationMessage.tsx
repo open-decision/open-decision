@@ -3,8 +3,6 @@ import * as React from "react";
 import { styled, StyleObject } from "../stitches";
 import { textStyles } from "../Text";
 
-import { useInput } from "./useForm";
-
 const StyledErrorList = styled("ul", {
   listStyle: "none",
   padding: "0",

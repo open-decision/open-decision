@@ -7,14 +7,26 @@ import { InputProps } from "../Inputs";
 import { useCombobox } from "./useCombobox";
 import { Button } from "../..";
 import { Icon } from "../../Icon/Icon";
+import { ValidationMessage } from "..";
+import { useController, UseControllerProps } from "react-hook-form";
+import { useMergeRefs } from "../../internal/utils";
 
 export type ComboboxInputProps = {
   children: React.ReactElement<InputProps>;
   css?: StyleObject;
   menuCss?: StyleObject;
-};
+  name: string;
+} & UseControllerProps["rules"];
 
-export function Input({ children, css, menuCss }: ComboboxInputProps) {
+export function Input({
+  children,
+  css,
+  menuCss,
+  name,
+  ...rules
+}: ComboboxInputProps) {
+  React.Children.only(children);
+
   const {
     inputValue,
     isOpen,
@@ -29,12 +41,21 @@ export function Input({ children, css, menuCss }: ComboboxInputProps) {
     },
   } = useCombobox();
 
-  React.Children.only(children);
+  const {
+    field: { onChange, onBlur: controllerOnBlur, ref: controllerRef },
+  } = useController({ name, rules });
+
+  const { ref: inputRef, ...inputProps } = getInputProps({
+    onChange,
+    onBlur: controllerOnBlur,
+  });
+  const composedRef = useMergeRefs(inputRef, controllerRef);
 
   const EnhancedInput =
     React.isValidElement(children) &&
     React.cloneElement(children, {
-      ...getInputProps(),
+      ...inputProps,
+      ref: composedRef,
       control: true,
       Buttons: (
         <Button
@@ -65,6 +86,7 @@ export function Input({ children, css, menuCss }: ComboboxInputProps) {
       {...getComboboxProps()}
     >
       {EnhancedInput}
+      <ValidationMessage name={name} css={{ marginTop: "$1" }} />
       <Box
         data-state={openState}
         {...getMenuProps()}
@@ -96,6 +118,7 @@ export function Input({ children, css, menuCss }: ComboboxInputProps) {
                     highlightedIndex === index ? "$primary9" : null,
                   color: highlightedIndex === index ? "$primary1" : null,
                   padding: "$1 $2",
+                  borderBottom: "1px solid $colors$gray4",
                 }}
                 key={`${item?.id}${index}`}
                 {...getItemProps({ item, index })}

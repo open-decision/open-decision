@@ -63,10 +63,14 @@ const InlineInputImpl = (
   const { setValue } = useFormContext();
   const inputValue = useWatch({ name });
 
-  const { ref, inputProps, hasFocus } = useInput(name, props, forwardedRef);
+  const {
+    ref,
+    inputProps: { onBlur, ...inputProps },
+    hasFocus,
+  } = useInput(name, props, forwardedRef);
 
   const [wrapperRef, { width }] = useMeasure<HTMLSpanElement>();
-  const { isEditing, startEditing } = useEditing(
+  const { isEditing, startEditing, endEditing } = useEditing(
     ref,
     disabled,
     (originalValue) => setValue(name, originalValue)
@@ -89,6 +93,10 @@ const InlineInputImpl = (
     >
       <StyledInput
         {...inputProps}
+        onBlur={(event) => {
+          onBlur?.(event);
+          endEditing();
+        }}
         size={size}
         ref={ref}
         alignByContent={alignByContent}
@@ -97,6 +105,7 @@ const InlineInputImpl = (
           width: `${width}px`,
           ...css,
         }}
+        onClick={startEditing}
       />
       <SizingSpan
         ref={wrapperRef}

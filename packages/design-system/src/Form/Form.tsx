@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import * as React from "react";
 import { styled, StyleObject } from "../stitches";
+import { isEmptyObject } from "../internal/utils";
 
 import {
   useForm,
@@ -9,7 +10,6 @@ import {
   SubmitErrorHandler,
   UseFormProps,
   UnpackNestedValue,
-  DeepPartial,
 } from "react-hook-form";
 
 const StyledForm = styled("form", {});
@@ -19,7 +19,8 @@ export type FormProps<TFieldValues> = {
   children: React.ReactNode;
   onSubmit: SubmitHandler<TFieldValues>;
   onSubmitError?: SubmitErrorHandler<TFieldValues>;
-  onChange?: (data: UnpackNestedValue<DeepPartial<TFieldValues>>) => void;
+  onChange?: SubmitHandler<TFieldValues>;
+  onChangeError?: SubmitErrorHandler<TFieldValues>;
 } & UseFormProps<TFieldValues>;
 
 export function Form<TFieldValues>({
@@ -27,19 +28,23 @@ export function Form<TFieldValues>({
   onSubmit,
   onSubmitError,
   onChange,
+  onChangeError,
   css,
   ...props
 }: FormProps<TFieldValues>) {
   const methods = useForm<TFieldValues>(props);
+  const { watch, handleSubmit, formState } = methods;
+  const { errors } = formState;
 
   React.useEffect(() => {
-    if (onChange) {
-      const subscription = methods.watch((data) => onChange(data));
-      return () => subscription.unsubscribe();
-    }
+    if (!onChange) return undefined;
+    const subscription = watch((data) => {
+      if (!isEmptyObject(errors)) return onChangeError?.(errors);
+      return onChange(data as UnpackNestedValue<TFieldValues>);
+    });
 
-    return undefined;
-  }, [methods, onChange]);
+    return () => subscription.unsubscribe();
+  }, [watch, handleSubmit, onChange, onChangeError, errors]);
 
   return (
     <FormProvider {...methods}>
