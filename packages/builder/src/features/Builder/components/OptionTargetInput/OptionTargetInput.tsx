@@ -131,11 +131,13 @@ export function OptionTargetInput({
     values,
     map((node) => ({ id: node.id, label: node.name }))
   );
-  const nodeOptions = pipe(
-    BuilderTree.getConnectableNodes(node)(tree.context),
-    values,
-    map((node) => ({ id: node.id, label: node.name }))
-  );
+  const nodeOptions = node
+    ? pipe(
+        BuilderTree.getConnectableNodes(node)(tree.context),
+        values,
+        map((node) => ({ id: node.id, label: node.name }))
+      )
+    : [];
 
   const controls = useDragControls();
 
@@ -144,7 +146,7 @@ export function OptionTargetInput({
   useClickAway(ref, () => send({ type: "selectRelation", id: "" }));
   useUnmount(() => send({ type: "selectRelation", id: "" }));
 
-  return (
+  return node ? (
     // FIXME Open issue -> https://github.com/framer/motion/issues/1313
     // The Reorder.Item creates a stacking context which makes it impossible to have the Combobox overlap other Reorder.Items
     <Reorder.Item
@@ -270,6 +272,8 @@ export function OptionTargetInput({
         </Box>
       </Form>
     </Reorder.Item>
+  ) : (
+    <Box>Kein Knoten ausgewählt</Box>
   );
 }
 
