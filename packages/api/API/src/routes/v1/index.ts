@@ -35,4 +35,9 @@ if (config.NODE_ENV === "development") {
   });
 }
 
+// make the docs public even in production, if explicitly required
+if (config.PUBLIC_API_DOCUMENTATION !== "false") {
+  router.use("/docs", docsRouter);
+}
+
 export default router;
