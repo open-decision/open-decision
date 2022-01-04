@@ -12,6 +12,7 @@ import * as React from "react";
 import { useNodes } from "../state/useNode";
 import { useTree } from "../state/useTree";
 import { BuilderNode, BuilderTree } from "@open-decision/type-classes";
+import { nodeNameMaxLength } from "../utilities/constants";
 
 type NodeEditingSidebarProps = { node: BuilderNode.TNode };
 
@@ -46,7 +47,7 @@ export function NodeEditingSidebar({
             <Input
               css={{ backgroundColor: "$gray1", color: "$gray12" }}
               name="name"
-              maxLength={70}
+              maxLength={nodeNameMaxLength}
             />
           </Field>
         </Form>

@@ -20,7 +20,7 @@ import { Plus, Trash, Crosshair } from "react-feather";
 import { useNode } from "features/Builder/state/useNode";
 import { DragHandle } from "./DragHandle";
 import { useTree } from "features/Builder/state/useTree";
-import { useClickAway, useUnmount } from "react-use";
+import { useUnmount } from "react-use";
 import { Reorder, useDragControls } from "framer-motion";
 import { map, values } from "remeda";
 
@@ -164,10 +164,7 @@ export function OptionTargetInput({
         }
         defaultValues={{
           answer: input.answer ?? "",
-          target: {
-            id: input.target ?? "",
-            label: input.target ? tree.context.nodes[input.target].name : "",
-          },
+          target: input.target ?? "",
         }}
         css={{
           display: "flex",
@@ -234,6 +231,7 @@ export function OptionTargetInput({
                 "&[data-state='open']": { border: "1px solid $gray8" },
               }}
               onBlur={deselectRelation}
+              name="target"
             >
               <Input
                 name="target"

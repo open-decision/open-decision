@@ -14,12 +14,12 @@ import { Plus } from "react-feather";
 import { useTree } from "../state/useTree";
 import { useEditor } from "../state/useEditor";
 import { BuilderNode } from "@open-decision/type-classes";
+import { nodeNameMaxLength } from "../utilities/constants";
 
 type Props = { css?: StyleObject };
 
 export const NodeCreator = ({ css }: Props) => {
   const [nodes, send] = useTree((state) => state.nodes);
-  const [selectedNodeId] = useTree((state) => state.selectedNodeId);
   const { getCenter } = useEditor();
 
   const items = React.useMemo(
@@ -50,14 +50,16 @@ export const NodeCreator = ({ css }: Props) => {
       css={css}
       onSubmit={(data) => changeHandler(data.selectedNodeId ?? "")}
       onChange={(data) => changeHandler(data.selectedNodeId ?? "")}
-      defaultValues={{ selectedNodeId }}
+      defaultValues={{
+        selectedNodeId: "",
+        search: "",
+      }}
     >
       <Combobox.Root
         css={{ display: "flex", alignItems: "center", gap: "$2" }}
-        name="search"
+        name="selectedNodeId"
         items={items}
         onCreate={createHandler}
-        resetOnBlur
         key={items.length}
       >
         <NodeCreatorInput
@@ -80,14 +82,19 @@ const NodeCreatorInput = ({ createHandler, autoFocus }) => {
   const { isCreating, inputValue, setInputValue } = useCombobox();
 
   return (
-    <Box>
-      <Combobox.Input css={{ backgroundColor: "$gray1", zIndex: "5" }}>
+    <Box css={{ width: "300px" }}>
+      <Combobox.Input
+        css={{ backgroundColor: "$gray1", zIndex: "5" }}
+        name="search"
+        maxLength={nodeNameMaxLength}
+      >
         <InputWithButton
           Input={
             <Input
               autoFocus={autoFocus}
               name="search"
               placeholder="Knotenname"
+              maxLength={nodeNameMaxLength}
             />
           }
           Button={
