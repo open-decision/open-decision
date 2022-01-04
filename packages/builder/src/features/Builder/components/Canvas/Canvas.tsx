@@ -64,7 +64,7 @@ export function Canvas({ children, css }: Props) {
       y: event.clientY,
     });
 
-    if (coordinates) {
+    if (coordinates && name) {
       send({
         type: "addNode",
         value: BuilderNode.create({
