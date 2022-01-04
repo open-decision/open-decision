@@ -15,7 +15,6 @@ import { Preview } from "features/Preview/Preview";
 import { useTree } from "features/Builder/state/useTree";
 import { InterpreterProvider } from "@open-decision/interpreter";
 import { MobilePreview } from "features/Preview/MobilePreview";
-import { ThemingButton } from "features/Preview/components/ThemingButton";
 
 export default function Vorschau() {
   const [state] = useTree();

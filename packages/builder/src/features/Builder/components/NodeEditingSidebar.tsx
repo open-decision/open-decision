@@ -20,12 +20,15 @@ export function NodeEditingSidebar({
   node,
 }: NodeEditingSidebarProps): JSX.Element {
   const [tree, send] = useTree();
-  const parentNodesIds = BuilderTree.getParents(node.id)(tree.context);
+  const parentNodesIds = React.useMemo(
+    () => BuilderTree.getParents(node.id)(tree.context),
+    [tree, node.id]
+  );
   const parentNodes = useNodes(parentNodesIds);
 
   return (
     <>
-      <Box as="header">
+      <Box as="header" key={tree.context.selectedNodeId}>
         <Form
           onChange={({ name }) =>
             send({
@@ -123,6 +126,7 @@ export function NodeEditingSidebar({
                   onClick={() =>
                     send({ type: "selectNode", nodeId: parentNode.id })
                   }
+                  css={{ textAlign: "left" }}
                 >
                   {parentNode.name}
                 </Button>
