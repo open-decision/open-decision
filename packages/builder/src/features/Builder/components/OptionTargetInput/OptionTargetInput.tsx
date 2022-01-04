@@ -143,8 +143,8 @@ export function OptionTargetInput({
 
   const ref = React.useRef<HTMLDivElement | null>(null);
 
-  useClickAway(ref, () => send({ type: "selectRelation", id: "" }));
-  useUnmount(() => send({ type: "selectRelation", id: "" }));
+  const deselectRelation = () => send({ type: "selectRelation", id: "" });
+  useUnmount(deselectRelation);
 
   return node ? (
     // FIXME Open issue -> https://github.com/framer/motion/issues/1313
@@ -157,10 +157,10 @@ export function OptionTargetInput({
     >
       <Form
         onSubmit={(data) =>
-          onChange({ answer: data.answer, target: data.target?.id })
+          onChange({ answer: data.answer, target: data.target })
         }
         onChange={(data) =>
-          onChange({ answer: data.answer, target: data.target?.id })
+          onChange({ answer: data.answer, target: data.target })
         }
         defaultValues={{
           answer: input.answer ?? "",
@@ -198,6 +198,7 @@ export function OptionTargetInput({
             }}
             name="answer"
             placeholder="Antwort"
+            onBlur={deselectRelation}
           />
           <NodeLink target={input.target} />
           <Combobox.Root
@@ -232,6 +233,7 @@ export function OptionTargetInput({
                 backgroundColor: "$gray1",
                 "&[data-state='open']": { border: "1px solid $gray8" },
               }}
+              onBlur={deselectRelation}
             >
               <Input
                 name="target"
