@@ -2,7 +2,6 @@ import * as React from "react";
 import { useFormContext } from "react-hook-form";
 import { styled } from "../../stitches";
 import { baseInputStyles } from "../shared/styles";
-import { useInput } from "../useForm";
 
 const StyledTextarea = styled("textarea", baseInputStyles, {
   backgroundColor: "transparent",
