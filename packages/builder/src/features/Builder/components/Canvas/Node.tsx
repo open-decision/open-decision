@@ -32,6 +32,11 @@ export const Node = memo(({ id, data }: NodeProps<NodeData>) => {
   const [startNode] = useTree((state) => state.startNode);
   const { isConnecting, connectingNodeId } = useEditor();
 
+  const validConnectionTarget = React.useMemo(
+    () => !isConnecting || (isConnecting && data.isConnectable),
+    [isConnecting, data.isConnectable]
+  );
+
   const selected = selectedNodeId === id;
   const isStartNode = startNode === id;
 
@@ -44,10 +49,10 @@ export const Node = memo(({ id, data }: NodeProps<NodeData>) => {
         boxShadow: selected ? "0px 0px 0px 1px $colors$primary9, $2" : "$2",
         border: selected ? "1px solid $primary9" : "1px solid $gray9",
         width: nodeWidth,
-        height: nodeHeight,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        minHeight: nodeHeight,
+        padding: "$2",
+        opacity: validConnectionTarget ? 1 : 0.2,
+        transition: "opacity 200ms ease-in-out",
 
         "&:hover": {
           borderColor: "$primary9",
@@ -56,12 +61,8 @@ export const Node = memo(({ id, data }: NodeProps<NodeData>) => {
     >
       {isStartNode ? (
         <Icon
-          size="small"
-          css={{
-            position: "absolute",
-            top: 10,
-            left: 10,
-          }}
+          size="medium"
+          css={{ float: "left", padding: "$2", margin: "-$2 0 -$2 -$2" }}
         >
           <Star style={{ fill: "orange", stroke: "orange" }} />
         </Icon>
@@ -78,24 +79,13 @@ export const Node = memo(({ id, data }: NodeProps<NodeData>) => {
               }
             : {},
         }}
+        id={id}
         isConnectable={isConnecting}
       />
-      <Box
-        data-nodeid={id}
-        css={{
-          padding: "$4",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+      <Box data-nodeid={id} css={{ float: "right", margin: "-$2 -$2 0 0" }}>
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
-            <Button
-              size="small"
-              variant="ghost"
-              css={{ position: "absolute", top: 0, right: 0 }}
-            >
+            <Button size="small" variant="ghost" square>
               <Icon label={`Öffne Menü Node: ${data.name}`}>
                 <MoreHorizontal />
               </Icon>
@@ -158,19 +148,19 @@ export const Node = memo(({ id, data }: NodeProps<NodeData>) => {
             )}
           </DropdownMenu.Content>
         </DropdownMenu.Root>
-        <Text
-          css={{
-            textAlign: "center",
-            wordBreak: "break-word",
-            hyphens: "auto",
-          }}
-          data-nodeid={id}
-          size="small"
-          as="span"
-        >
-          {data.name}
-        </Text>
       </Box>
+      <Text
+        css={{
+          textAlign: "center",
+          wordBreak: "break-word",
+          hyphens: "auto",
+        }}
+        data-nodeid={id}
+        size="small"
+        as="span"
+      >
+        {data.name}
+      </Text>
       <Port
         type="source"
         position={Position.Bottom}

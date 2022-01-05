@@ -76,16 +76,24 @@ export const getPaths =
   };
 
 export const getConnectableNodes =
-  (node: PublicNode.TNode | BuilderNode.TNode) =>
-  (tree: PublicTree.TTree | BuilderTree.TTree) => {
+  <
+    TNode extends PublicNode.TNode | BuilderNode.TNode,
+    TTree extends PublicTree.TTree | BuilderTree.TTree
+  >(
+    node: TNode
+  ) =>
+  (tree: TTree): TNode[] | TNode[] => {
     const nodesOnPath = getPaths(node)(tree).flatMap((path) => path);
+    const nodesChildren = getChildren(node)(tree);
 
     return pipe(
       tree.nodes,
-      values,
+      Object.values,
       filter(
         (iteratedNode) =>
-          iteratedNode.id !== node.id && !nodesOnPath.includes(iteratedNode.id)
+          iteratedNode.id !== node.id &&
+          !nodesOnPath.includes(iteratedNode.id) &&
+          !nodesChildren.includes(iteratedNode.id)
       )
     );
   };

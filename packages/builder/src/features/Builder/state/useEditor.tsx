@@ -85,9 +85,7 @@ export function EditorProvider({ children }: TreeProviderProps) {
   }, [position, selectedNodeId, setCenter]);
 
   const connectingNodeId = useStoreState((state) => state.connectionNodeId);
-  const isConnecting = useStoreState(
-    (state) => state.connectionHandleType != null
-  );
+  const isConnecting = useStoreState((state) => state.connectionNodeId != null);
 
   return (
     <EditorContext.Provider

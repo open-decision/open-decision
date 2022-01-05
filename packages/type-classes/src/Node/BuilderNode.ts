@@ -13,6 +13,7 @@ export type TCoordinates = z.infer<typeof Coordinates>;
 export const Type = BaseNode.extend({
   position: Coordinates,
   relations: z.record(BuilderRelation.Type),
+  isConnectable: z.boolean(),
 });
 
 export const Record = z.record(Type);
@@ -27,6 +28,7 @@ export function create(node: Partial<Omit<TNode, "id">>): TNode {
     name: "Neuer Knoten",
     content: [],
     position: { x: 0, y: 0 },
+    isConnectable: false,
     ...node,
   };
 }

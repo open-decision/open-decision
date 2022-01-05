@@ -3,7 +3,7 @@ import "react-flow-renderer";
 
 export type NodeData = Pick<
   BuilderNode.TNode,
-  "name" | "content" | "relations"
+  "name" | "content" | "relations" | "isConnectable"
 >;
 
 declare module "react-flow-renderer" {

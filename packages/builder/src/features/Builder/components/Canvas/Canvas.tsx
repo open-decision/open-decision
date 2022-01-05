@@ -1,5 +1,5 @@
 import * as React from "react";
-import { BuilderNode } from "@open-decision/type-classes";
+import { BuilderNode, BuilderTree } from "@open-decision/type-classes";
 import { useEditor } from "features/Builder/state/useEditor";
 import ReactFlow, { FlowElement } from "react-flow-renderer";
 import { useTree } from "../../state/useTree";
@@ -39,16 +39,26 @@ export function Canvas({ children, css }: Props) {
     projectCoordinates,
   } = useEditor();
 
+  const sourceNodeId = React.useRef<string | undefined>(undefined);
+
+  const connectionOriginNode = sourceNodeId.current
+    ? state.context.nodes[sourceNodeId.current]
+    : undefined;
+  const connectableNodes = connectionOriginNode
+    ? BuilderTree.getConnectableNodes(connectionOriginNode)(state.context)
+    : [];
+
   const elements = [
-    ...transformToReactFlowNodes(state.context?.nodes ?? {}),
+    ...transformToReactFlowNodes(
+      state.context?.nodes ?? {},
+      connectionOriginNode ? [connectionOriginNode, ...connectableNodes] : []
+    ),
     ...transformToReactFlowEdges(
       state.context?.nodes ?? {},
       state.context.selectedNodeId,
       state.context.selectedRelationId
     ),
   ];
-
-  const sourceNodeId = React.useRef<string | undefined>(undefined);
 
   const onDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -83,7 +93,6 @@ export function Canvas({ children, css }: Props) {
         onPaneClick={() => closeNodeEditingSidebar()}
         nodeTypes={customNodes}
         elements={elements}
-        // deleteKeyCode={46}
         paneMoveable={!isTransitioning}
         zoomOnPinch={!isTransitioning}
         zoomOnScroll={!isTransitioning}
@@ -94,7 +103,9 @@ export function Canvas({ children, css }: Props) {
           send([
             {
               type: "deleteNode",
-              ids: elementsToRemove.map((element) => element.id),
+              ids: elementsToRemove
+                .map((element) => element.id)
+                .filter((element) => element !== state.context.startNode),
             },
           ]);
         }}
