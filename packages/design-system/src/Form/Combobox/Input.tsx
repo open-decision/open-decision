@@ -119,6 +119,8 @@ export function Input({
                   color: highlightedIndex === index ? "$primary1" : null,
                   padding: "$1 $2",
                   borderBottom: "1px solid $colors$gray4",
+                  wordBreak: "break-word",
+                  hyphens: "auto",
                 }}
                 key={`${item?.id}${index}`}
                 {...getItemProps({ item, index })}

@@ -4,6 +4,7 @@ import { styled, StyleObject } from "../../stitches";
 import { baseInputStyles, baseTextInputStyle } from "../shared/styles";
 import { Box } from "../../Box";
 import { UseInputProps, useInput } from "./useInput";
+import { useFormContext } from "react-hook-form";
 
 const StyledBox = styled(Box, baseInputStyles, baseTextInputStyle, {
   borderRadius: "$md",
@@ -85,7 +86,6 @@ const InputComponent = (
     >
       {EnhancedIcon}
       <StyledInput
-        {...inputProps}
         placeholder={placeholder}
         autoFocus={autoFocus}
         onFocus={() => setHasFocus(true)}
@@ -94,6 +94,7 @@ const InputComponent = (
           setHasFocus(false);
         }}
         ref={ref}
+        {...inputProps}
       />
       {Buttons}
     </StyledBox>

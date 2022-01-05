@@ -10,10 +10,7 @@ type UncontrolledInputProps = {
   control?: false;
 } & RegisterOptions;
 
-export type UseInputProps = { control?: boolean } & (
-  | UncontrolledInputProps
-  | ControlledInputProps
-);
+export type UseInputProps = UncontrolledInputProps | ControlledInputProps;
 
 export function useInput(
   name: string,
@@ -21,12 +18,12 @@ export function useInput(
     control = false,
     ...options
   }: UncontrolledInputProps | ControlledInputProps,
-  ref: React.Ref<HTMLInputElement>
+  forwardedRef: React.Ref<HTMLInputElement>
 ) {
   const { register } = useFormContext();
-  const inputProps = control
+  const { ref, ...inputProps } = control
     ? {
-        ref,
+        ref: forwardedRef,
         ...(options as React.InputHTMLAttributes<HTMLInputElement>),
       }
     : register(name, {
@@ -34,7 +31,7 @@ export function useInput(
         ...(options as RegisterOptions),
       });
 
-  const innerRef = useComposedRefs(inputProps.ref);
+  const innerRef = useComposedRefs(ref);
 
   const [hasFocus, setHasFocus] = React.useState(false);
 

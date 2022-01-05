@@ -4,7 +4,7 @@ import { Box } from "../../Box";
 import { Item, ComboboxContext } from "./useCombobox";
 import { useCombobox as useComboboxPrimitive } from "downshift";
 import { StyleObject } from "../../stitches";
-import { useController, UseControllerProps } from "react-hook-form";
+import { useController } from "react-hook-form";
 
 const fallbackSelectedItem = {
   id: "",
@@ -25,7 +25,7 @@ export type ComboboxRootProps = {
   children: React.ReactNode;
   name: string;
   defaultValue?: string;
-} & UseControllerProps["rules"];
+};
 
 export function Root({
   css,
@@ -40,13 +40,11 @@ export function Root({
 }: ComboboxRootProps) {
   const {
     field: { onChange, value: selectedItemId },
-    formState: { errors },
+    formState: { isValid, isValidating },
   } = useController({
     name,
     defaultValue,
   });
-
-  const isValid = Object.keys(errors).length === 0;
 
   const itemSubset = subsetOfItems ?? items;
   const [inputItems, setInputItems] = React.useState(itemSubset);
@@ -104,7 +102,10 @@ export function Root({
       });
 
       const isCreating = validIsCreating(
-        nonEmptyInputValue && nonEqualInputValueAndFilteredItem && isValid
+        nonEmptyInputValue &&
+          nonEqualInputValueAndFilteredItem &&
+          isValid &&
+          !isValidating
       );
 
       if (isCreating)
@@ -128,7 +129,7 @@ export function Root({
         isOpen,
         reset,
         setInputValue,
-        isCreating,
+        isCreating: isValid && !isValidating && isCreating,
         name,
         propGetters: {
           getMenuProps,
