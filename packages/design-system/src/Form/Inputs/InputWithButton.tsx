@@ -16,14 +16,16 @@ export type InputWithButtonProps = {
   css?: StyleObject;
 };
 
-const InputWithButtonComp = (
-  { Input, Button, radius = "$radii$md", css, ...props }: InputWithButtonProps,
-  ref: React.Ref<HTMLInputElement>
-) => {
+export const InputWithButton = ({
+  Input,
+  Button,
+  radius = "$radii$md",
+  css,
+  ...props
+}: InputWithButtonProps) => {
   return (
     <StyledBox css={css}>
       {React.cloneElement(Input, {
-        ref,
         ...props,
         css: {
           ...Input.props?.css,
@@ -68,8 +70,3 @@ const InputWithButtonComp = (
     </StyledBox>
   );
 };
-
-export const InputWithButton = React.forwardRef<
-  HTMLInputElement,
-  InputWithButtonProps
->(InputWithButtonComp);
