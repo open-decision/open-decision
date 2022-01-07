@@ -1,6 +1,6 @@
 {
   "name": "@open-legal-tech/design-system",
-  "version": "0.22.2",
+  "version": "0.22.3",
   "main": "./src/index.ts",
   "module": "./src/index.ts",
   "types": "./src/index.ts",
