@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useFormContext } from "react-hook-form";
 import { styled } from "../../stitches";
 import { baseInputStyles } from "../shared/styles";
 
@@ -26,13 +25,17 @@ const StyledTextarea = styled("textarea", baseInputStyles, {
   },
 });
 
-type TextAreaProps = React.ComponentProps<typeof StyledTextarea> & {
+export type TextAreaProps = React.ComponentProps<typeof StyledTextarea> & {
   name: string;
 };
 
-export function Textarea({ name, ...props }: TextAreaProps) {
-  const { register } = useFormContext();
-  const { ref, ...inputProps } = register(name, props);
-
-  return <StyledTextarea ref={ref} {...inputProps} />;
+function TextareaImpl(
+  { css, ...props }: TextAreaProps,
+  forwardedRef: React.Ref<HTMLTextAreaElement>
+) {
+  return <StyledTextarea ref={forwardedRef} css={css} {...props} />;
 }
+
+export const Textarea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
+  TextareaImpl
+);

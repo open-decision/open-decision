@@ -8,8 +8,12 @@ import { useCombobox } from "./useCombobox";
 import { Button } from "../..";
 import { Icon } from "../../Icon/Icon";
 import { ValidationMessage } from "..";
-import { useController, UseControllerProps } from "react-hook-form";
-import { useMergeRefs } from "../../internal/utils";
+import {
+  useController,
+  UseControllerProps,
+  useFormContext,
+} from "react-hook-form";
+import { mergeRefs } from "../../internal/utils/composeRef";
 
 export type ComboboxInputProps = {
   children: React.ReactElement<InputProps>;
@@ -41,6 +45,8 @@ export function Input({
     },
   } = useCombobox();
 
+  const { clearErrors } = useFormContext();
+
   const {
     field: { onChange, onBlur: controllerOnBlur, ref: controllerRef },
   } = useController({ name, rules });
@@ -49,14 +55,12 @@ export function Input({
     onChange,
     onBlur: controllerOnBlur,
   });
-  const composedRef = useMergeRefs(inputRef, controllerRef);
 
   const EnhancedInput =
     React.isValidElement(children) &&
     React.cloneElement(children, {
       ...inputProps,
-      ref: composedRef,
-      control: true,
+      ref: mergeRefs([inputRef, controllerRef]),
       Buttons: (
         <Button
           size="small"
@@ -68,7 +72,10 @@ export function Input({
             focusStyle: "inner",
             opacity: inputValue ? 1 : "0 !important",
           }}
-          onClick={() => reset()}
+          onClick={() => {
+            clearErrors(name);
+            return reset();
+          }}
         >
           <Icon label="Entferne die momentan ausgewählte Option">
             <X />

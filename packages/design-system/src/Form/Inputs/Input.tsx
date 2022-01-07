@@ -3,8 +3,7 @@ import * as React from "react";
 import { styled, StyleObject } from "../../stitches";
 import { baseInputStyles, baseTextInputStyle } from "../shared/styles";
 import { Box } from "../../Box";
-import { UseInputProps, useInput } from "./useInput";
-import { useFormContext } from "react-hook-form";
+import { useInputFocus } from "./useInputFocus";
 
 const StyledBox = styled(Box, baseInputStyles, baseTextInputStyle, {
   borderRadius: "$md",
@@ -34,7 +33,7 @@ const StyledInput = styled("input", {
   },
 });
 
-interface BaseInputProps {
+export type InputProps = {
   name: string;
   Buttons?: JSX.Element | JSX.Element[];
   Icon?: React.ReactNode;
@@ -44,63 +43,58 @@ interface BaseInputProps {
   disabled?: boolean;
   autoFocus?: boolean;
   placeholder?: string;
-}
-
-export type InputProps = BaseInputProps & UseInputProps;
-
-const InputComponent = (
-  {
-    disabled,
-    Buttons,
-    size,
-    css,
-    name,
-    Icon,
-    alignByContent,
-    autoFocus = false,
-    placeholder,
-    ...props
-  }: InputProps,
-  forwardedRef: React.Ref<HTMLInputElement>
-) => {
-  const {
-    ref,
-    hasFocus,
-    inputProps: { onBlur, ...inputProps },
-    setHasFocus,
-  } = useInput(name, props, forwardedRef);
-
-  const EnhancedIcon = React.isValidElement(Icon)
-    ? React.cloneElement(Icon, {
-        "data-active": hasFocus,
-      })
-    : Icon;
-
-  return (
-    <StyledBox
-      css={{ color: disabled ? "$gray8" : undefined, ...css }}
-      data-disabled={disabled}
-      data-focus={hasFocus}
-      size={size}
-      alignByContent={alignByContent}
-    >
-      {EnhancedIcon}
-      <StyledInput
-        placeholder={placeholder}
-        autoFocus={autoFocus}
-        onFocus={() => setHasFocus(true)}
-        onBlur={(event) => {
-          onBlur?.(event);
-          setHasFocus(false);
-        }}
-        ref={ref}
-        {...inputProps}
-      />
-      {Buttons}
-    </StyledBox>
-  );
-};
+} & React.ComponentProps<typeof StyledInput>;
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  InputComponent
+  function Input(
+    {
+      disabled,
+      Buttons,
+      size,
+      css,
+      Icon,
+      alignByContent,
+      onBlur,
+      onFocus,
+      ...props
+    },
+    ref
+  ) {
+    const [inputFocusRef, hasFocus, setHasFocus] = useInputFocus();
+
+    const EnhancedIcon = React.isValidElement(Icon)
+      ? React.cloneElement(Icon, {
+          "data-active": hasFocus,
+        })
+      : Icon;
+
+    return (
+      <StyledBox
+        css={{ color: disabled ? "$gray8" : undefined, ...css }}
+        data-disabled={disabled}
+        data-focus={hasFocus}
+        size={size}
+        alignByContent={alignByContent}
+      >
+        {EnhancedIcon}
+        <StyledInput
+          onFocus={(event) => {
+            onFocus?.(event);
+            setHasFocus(true);
+          }}
+          onBlur={(event) => {
+            onBlur?.(event);
+            setHasFocus(false);
+          }}
+          ref={(e) => {
+            typeof ref === "function" ? ref?.(e) : null;
+            inputFocusRef.current = e;
+          }}
+          disabled={disabled}
+          {...props}
+        />
+        {Buttons}
+      </StyledBox>
+    );
+  }
 );

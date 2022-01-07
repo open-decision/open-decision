@@ -1,7 +1,6 @@
 import React from "react";
 import {
   Combobox,
-  Form,
   Button,
   StyleObject,
   Input,
@@ -9,6 +8,8 @@ import {
   Box,
   InputWithButton,
   Icon,
+  useForm,
+  useFormContext,
 } from "@open-legal-tech/design-system";
 import { Plus } from "react-feather";
 import { useTree } from "../state/useTree";
@@ -21,6 +22,13 @@ type Props = { css?: StyleObject };
 export const NodeCreator = ({ css }: Props) => {
   const [nodes, send] = useTree((state) => state.nodes);
   const { getCenter } = useEditor();
+  const [Form] = useForm({
+    defaultValues: {
+      selectedNodeId: "",
+      search: "",
+    },
+    mode: "onChange",
+  });
 
   const items = React.useMemo(
     () =>
@@ -49,11 +57,6 @@ export const NodeCreator = ({ css }: Props) => {
     <Form
       css={css}
       onSubmit={(data) => changeHandler(data.selectedNodeId ?? "")}
-      onChange={(data) => changeHandler(data.selectedNodeId ?? "")}
-      defaultValues={{
-        selectedNodeId: "",
-        search: "",
-      }}
     >
       <Combobox.Root
         css={{ display: "flex", alignItems: "center", gap: "$2" }}
@@ -89,14 +92,8 @@ const NodeCreatorInput = ({ createHandler, autoFocus }) => {
         maxLength={nodeNameMaxLength}
       >
         <InputWithButton
-          Input={
-            <Input
-              autoFocus={autoFocus}
-              name="search"
-              placeholder="Knotenname"
-              maxLength={nodeNameMaxLength}
-            />
-          }
+          // @ts-expect-error - #FIXME Combobox.Input needs to be turned into a ControlledInput
+          Input={<Input autoFocus={autoFocus} placeholder="Knotenname" />}
           Button={
             <Button
               css={{ boxShadow: "$1" }}

@@ -6,9 +6,9 @@ import {
   Dialog,
   Label,
   Input,
-  Form,
   ValidationMessage,
   Tooltip,
+  useForm,
 } from "@open-legal-tech/design-system";
 import { BaseHeader } from "components/Header";
 import { MainContent } from "components/Layout";
@@ -45,6 +45,7 @@ export default function Tree(): JSX.Element {
 
 const Editor = () => {
   const [state, send] = useTree();
+  const [Form, { register }] = useForm({ defaultValues: { treeName: "" } });
 
   const addNotification = useNotificationStore(
     (state) => state.addNotification
@@ -169,7 +170,6 @@ const Editor = () => {
                     <Dialog.CloseButton />
                   </Box>
                   <Form
-                    defaultValues={{ treeName: "" }}
                     css={{ display: "flex", flexDirection: "column" }}
                     onSubmit={({ treeName }) => {
                       return send({
@@ -185,6 +185,12 @@ const Editor = () => {
                     </Dialog.Description>
                     <Input
                       autoFocus
+                      {...register("treeName", {
+                        required: {
+                          value: true,
+                          message: "Es muss ein Name vergeben werden.",
+                        },
+                      })}
                       name="treeName"
                       id="treeName"
                       css={{ marginBlock: "$2" }}

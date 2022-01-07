@@ -7,7 +7,7 @@ import {
 } from "react-hook-form";
 
 type ControlledInputProps = Omit<UseControllerProps, "rules"> & {
-  children: (field: ControllerRenderProps & { control: true }) => JSX.Element;
+  children: (field: ControllerRenderProps) => JSX.Element;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
 } & UseControllerProps["rules"];
 
@@ -30,5 +30,5 @@ export function ControlledInput({
     !invalid ? onChange(event) : null;
   };
 
-  return children({ onChange: mergedOnChange, control: true, ...field });
+  return children({ onChange: mergedOnChange, ...field });
 }

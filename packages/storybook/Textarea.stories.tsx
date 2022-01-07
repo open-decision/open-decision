@@ -1,21 +1,31 @@
 import * as React from "react";
 import { Meta, Story } from "@storybook/react";
-import { Field, Form, Textarea } from "@open-legal-tech/design-system";
+import {
+  Field,
+  useForm,
+  Textarea,
+  Button,
+} from "@open-legal-tech/design-system";
 
 export default {
   component: Textarea,
   title: "Components/Inputs/Textarea",
 } as Meta;
 
-export const Input: Story = (props) => (
-  <Form
-    onSubmit={({ values }) => alert(values)}
-    css={{ display: "grid", gap: "$2", width: "max-content" }}
-  >
-    <Textarea {...props} name="test" />
-    <Textarea {...props} name="another" disabled />
-    <Field label="Testinput">
-      <Textarea {...props} name="test2" size="large" rows={10} />
-    </Field>
-  </Form>
-);
+export const Input: Story = (props) => {
+  const [Form, { register }] = useForm();
+
+  return (
+    <Form
+      onSubmit={(data) => console.log(data)}
+      css={{ display: "grid", gap: "$2", width: "max-content" }}
+    >
+      <Textarea {...props} {...register("test")} />
+      <Textarea {...props} {...register("another", { disabled: true })} />
+      <Field label="Testinput">
+        <Textarea {...props} {...register("test2")} size="large" rows={10} />
+      </Field>
+      <Button type="submit">Submit</Button>
+    </Form>
+  );
+};

@@ -3,7 +3,7 @@ import { Meta, Story } from "@storybook/react";
 import {
   Button,
   Field,
-  Form,
+  useForm,
   Icon,
   Input as SystemInput,
   InputProps,
@@ -15,22 +15,27 @@ export default {
   title: "Components/Inputs/Input",
 } as Meta;
 
-const Input: Story<InputProps> = (props) => (
-  <Form
-    onSubmit={(data) => console.log(data)}
-    css={{ display: "grid", gap: "$2", width: "max-content" }}
-  >
-    <SystemInput {...props} name="1" />
-    <Field label="Testinput">
-      <SystemInput
-        {...props}
-        name="2"
-        required={{ value: true, message: "This Input is required" }}
-      />
-    </Field>
-    <Button>Submit</Button>
-  </Form>
-);
+const Input: Story<InputProps> = (props) => {
+  const [Form, { register }] = useForm();
+
+  return (
+    <Form
+      onSubmit={(data) => console.log(data)}
+      css={{ display: "grid", gap: "$2", width: "max-content" }}
+    >
+      <SystemInput {...props} {...register("1")} />
+      <Field label="Testinput">
+        <SystemInput
+          {...props}
+          {...register("2", {
+            required: { value: true, message: "This Input is required" },
+          })}
+        />
+      </Field>
+      <Button>Submit</Button>
+    </Form>
+  );
+};
 
 export const Default = Input.bind({});
 export const WithIcon = Input.bind({});

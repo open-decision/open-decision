@@ -3,11 +3,12 @@ import {
   Button,
   ButtonProps,
   Combobox,
-  Form,
+  ControlledInput,
   Icon,
   Input,
   Label,
   styled,
+  useForm,
 } from "@open-legal-tech/design-system";
 import * as React from "react";
 import {
@@ -146,6 +147,13 @@ export function OptionTargetInput({
   const deselectRelation = () => send({ type: "selectRelation", id: "" });
   useUnmount(deselectRelation);
 
+  const [Form] = useForm({
+    defaultValues: {
+      answer: input.answer ?? "",
+      target: input.target ?? "",
+    },
+  });
+
   return node ? (
     // FIXME Open issue -> https://github.com/framer/motion/issues/1313
     // The Reorder.Item creates a stacking context which makes it impossible to have the Combobox overlap other Reorder.Items
@@ -159,13 +167,6 @@ export function OptionTargetInput({
         onSubmit={(data) =>
           onChange({ answer: data.answer, target: data.target })
         }
-        onChange={(data) =>
-          onChange({ answer: data.answer, target: data.target })
-        }
-        defaultValues={{
-          answer: input.answer ?? "",
-          target: input.target ?? "",
-        }}
         css={{
           display: "flex",
           position: "relative",
@@ -183,20 +184,30 @@ export function OptionTargetInput({
             backgroundColor: "$gray1",
           }}
         >
-          <Input
-            css={{
-              borderRadius: "0",
-              borderTopLeftRadius: "inherit",
-              borderTopRightRadius: "inherit",
-              gridColumn: "1 / -1",
-              borderBottom: "inherit",
-              margin: "-1px",
-              marginBottom: 0,
-            }}
+          <ControlledInput
             name="answer"
-            placeholder="Antwort"
-            onBlur={deselectRelation}
-          />
+            onChange={(event) => onChange({ answer: event.target.value })}
+          >
+            {({ onBlur, ...field }) => (
+              <Input
+                css={{
+                  borderRadius: "0",
+                  borderTopLeftRadius: "inherit",
+                  borderTopRightRadius: "inherit",
+                  gridColumn: "1 / -1",
+                  borderBottom: "inherit",
+                  margin: "-1px",
+                  marginBottom: 0,
+                }}
+                placeholder="Antwort"
+                onBlur={() => {
+                  deselectRelation();
+                  onBlur?.();
+                }}
+                {...field}
+              />
+            )}
+          </ControlledInput>
           <NodeLink target={input.target} />
           <Combobox.Root
             name="target"

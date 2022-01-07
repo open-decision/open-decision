@@ -26,8 +26,7 @@ export function assignRef<T = any>(ref: ReactRef<T> | undefined, value: T) {
   if (ref == null) return;
 
   if (typeof ref === "function") {
-    ref(value);
-    return;
+    return ref(value);
   }
 
   try {
@@ -36,6 +35,20 @@ export function assignRef<T = any>(ref: ReactRef<T> | undefined, value: T) {
   } catch (error) {
     throw new Error(`Cannot assign value '${value}' to ref '${ref}'`);
   }
+}
+
+export function mergeRefs<T = any>(
+  refs: Array<React.MutableRefObject<T> | React.LegacyRef<T>>
+): React.RefCallback<T> {
+  return (value) => {
+    refs.forEach((ref) => {
+      if (typeof ref === "function") {
+        ref(value);
+      } else if (ref != null) {
+        (ref as React.MutableRefObject<T | null>).current = value;
+      }
+    });
+  };
 }
 
 /**

@@ -5,7 +5,7 @@ import { InputProps } from "./Input";
 import { baseInputStyles, baseTextInputStyle } from "../shared/styles";
 import { useMeasure } from "react-use";
 import { useFormContext, useWatch } from "react-hook-form";
-import { useInput } from "./useInput";
+import { useInputFocus } from "./useInputFocus";
 import { useEditing } from "./useEditing";
 
 const StyledBox = styled(Box, baseInputStyles, {
@@ -45,7 +45,7 @@ const SizingSpan = styled("span", {
   whiteSpace: "pre-wrap",
 });
 
-export type InlineInputProps = InputProps & { IndicatorButton?: JSX.Element };
+export type InlineInputProps = InputProps;
 
 const InlineInputImpl = (
   {
@@ -53,21 +53,19 @@ const InlineInputImpl = (
     alignByContent,
     disabled = false,
     Buttons,
-    IndicatorButton,
     css,
     size,
+    onClick,
+    onBlur,
+    onFocus,
     ...props
   }: InlineInputProps,
-  forwardedRef: React.Ref<HTMLInputElement>
+  ref: React.Ref<HTMLInputElement>
 ) => {
   const { setValue } = useFormContext();
   const inputValue = useWatch({ name });
 
-  const {
-    ref,
-    inputProps: { onBlur, ...inputProps },
-    hasFocus,
-  } = useInput(name, props, forwardedRef);
+  const [inputFocusRef, hasFocus, setHasFocus] = useInputFocus();
 
   const [wrapperRef, { width }] = useMeasure<HTMLSpanElement>();
   const { isEditing, startEditing, endEditing } = useEditing(
@@ -76,15 +74,6 @@ const InlineInputImpl = (
     (originalValue) => setValue(name, originalValue)
   );
 
-  const EnhancedIndicatorButton = IndicatorButton
-    ? React.cloneElement(IndicatorButton, {
-        "data-active": isEditing,
-        onClick: startEditing,
-        type: "button",
-        disabled,
-      })
-    : IndicatorButton;
-
   return (
     <StyledBox
       css={{ color: disabled ? "$gray8" : "$gray12" }}
@@ -92,20 +81,32 @@ const InlineInputImpl = (
       data-focus={hasFocus}
     >
       <StyledInput
-        {...inputProps}
         onBlur={(event) => {
           onBlur?.(event);
           endEditing();
         }}
+        onFocus={(event) => {
+          onFocus?.(event);
+          setHasFocus(true);
+        }}
         size={size}
-        ref={ref}
+        ref={(e) => {
+          typeof ref === "function" ? ref?.(e) : null;
+          inputFocusRef.current = e;
+        }}
         alignByContent={alignByContent}
         css={{
           minWidth: "50px",
           width: `${width}px`,
           ...css,
         }}
-        onClick={startEditing}
+        onClick={(event) => {
+          startEditing(inputValue);
+          onClick?.(event);
+        }}
+        disabled={disabled}
+        name={name}
+        {...props}
       />
       <SizingSpan
         ref={wrapperRef}
@@ -117,7 +118,6 @@ const InlineInputImpl = (
       >
         {inputValue}
       </SizingSpan>
-      {EnhancedIndicatorButton}
       {Buttons}
     </StyledBox>
   );

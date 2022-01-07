@@ -2,9 +2,10 @@ import {
   Box,
   Button,
   Field,
-  Form,
+  useForm,
   Input,
   Label,
+  ControlledInput,
 } from "@open-legal-tech/design-system";
 import { RichTextEditor } from "components/RichTextEditor";
 import { OptionTargetInputs } from "features/Builder/components/OptionTargetInput/OptionTargetInput";
@@ -25,18 +26,12 @@ export function NodeEditingSidebar({
     [tree, node.id]
   );
   const parentNodes = useNodes(parentNodesIds);
+  const [Form] = useForm({ defaultValues: { name: node?.name ?? "" } });
 
   return (
     <>
       <Box as="header" key={tree.context.selectedNodeId}>
         <Form
-          onChange={({ name }) =>
-            send({
-              type: "updateNode",
-              id: node.id,
-              node: { name },
-            })
-          }
           onSubmit={({ name }) =>
             send({
               type: "updateNode",
@@ -44,14 +39,26 @@ export function NodeEditingSidebar({
               node: { name },
             })
           }
-          defaultValues={{ name: node?.name ?? "" }}
         >
           <Field label="Knotenname" css={{ "--color": "$colors$gray11" }}>
-            <Input
-              css={{ backgroundColor: "$gray1", color: "$gray12" }}
+            <ControlledInput
               name="name"
               maxLength={nodeNameMaxLength}
-            />
+              onChange={(event) =>
+                send({
+                  type: "updateNode",
+                  id: node.id,
+                  node: { name: event.target.value },
+                })
+              }
+            >
+              {(field) => (
+                <Input
+                  css={{ backgroundColor: "$gray1", color: "$gray12" }}
+                  {...field}
+                />
+              )}
+            </ControlledInput>
           </Field>
         </Form>
       </Box>

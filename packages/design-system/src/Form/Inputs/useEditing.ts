@@ -28,7 +28,7 @@ function reducer(state: State, action: Actions): State {
 }
 
 export function useEditing(
-  ref: React.RefObject<HTMLInputElement>,
+  ref: React.Ref<HTMLInputElement>,
   disabled: boolean,
   onEscape: (originalValue: any) => void
 ) {
@@ -52,9 +52,11 @@ export function useEditing(
 
   React.useEffect(() => {
     if (state.isEditing) {
-      ref.current?.select();
+      typeof ref === "object" ? ref?.current?.select() : null;
     } else {
-      ref.current?.setSelectionRange(null, null);
+      typeof ref === "object"
+        ? ref?.current?.setSelectionRange(null, null)
+        : null;
     }
   }, [ref, state.isEditing]);
 

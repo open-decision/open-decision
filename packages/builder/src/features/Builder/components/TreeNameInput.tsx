@@ -1,12 +1,13 @@
 import {
   Box,
-  Form,
   InlineInput,
   Label,
   styled,
   StyleObject,
   Link as SystemLink,
   Icon,
+  useForm,
+  ControlledInput,
 } from "@open-legal-tech/design-system";
 import { useTree } from "features/Builder/state/useTree";
 import Link from "next/link";
@@ -22,6 +23,7 @@ type Props = { css?: StyleObject };
 
 export function TreeNameInput({ css }: Props) {
   const [treeName, send] = useTree((state) => state.treeName);
+  const [Form] = useForm({ defaultValues: { treeName } });
 
   return (
     <Container css={css}>
@@ -60,9 +62,20 @@ export function TreeNameInput({ css }: Props) {
             tree: { treeName },
           })
         }
-        defaultValues={{ treeName }}
       >
-        <InlineInput css={{ color: "inherit" }} name="treeName" id="treeName" />
+        <ControlledInput
+          name="treeName"
+          onChange={(event) =>
+            send({
+              type: "updateTree",
+              tree: { treeName: event.target.value },
+            })
+          }
+        >
+          {(field) => (
+            <InlineInput {...field} css={{ color: "inherit" }} id="treeName" />
+          )}
+        </ControlledInput>
       </Form>
     </Container>
   );
