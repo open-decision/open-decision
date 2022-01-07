@@ -56,6 +56,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       alignByContent,
       onBlur,
       onFocus,
+      className,
       ...props
     },
     ref
@@ -71,6 +72,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <StyledBox
         css={{ color: disabled ? "$gray8" : undefined, ...css }}
+        className={className}
         data-disabled={disabled}
         data-focus={hasFocus}
         size={size}

@@ -54,6 +54,7 @@ const InlineInputImpl = (
     disabled = false,
     Buttons,
     css,
+    className,
     size,
     onClick,
     onBlur,
@@ -76,9 +77,10 @@ const InlineInputImpl = (
 
   return (
     <StyledBox
-      css={{ color: disabled ? "$gray8" : "$gray12" }}
+      css={{ color: disabled ? "$gray8" : "$gray12", ...css }}
       data-disabled={disabled}
       data-focus={hasFocus}
+      className={className}
     >
       <StyledInput
         onBlur={(event) => {
