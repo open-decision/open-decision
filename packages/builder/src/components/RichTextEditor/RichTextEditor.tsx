@@ -55,7 +55,7 @@ function Root({ value, setValue, children }: RichTextEditorProps): JSX.Element {
 }
 
 const StyledEditable = styled(SlateEditable, {
-  minHeight: "200px !important",
+  minHeight: "200px",
   gap: "10px",
   display: "flex",
   flexDirection: "column",

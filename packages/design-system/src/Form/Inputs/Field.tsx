@@ -34,7 +34,7 @@ export function Field({ label, children, css, name }: FieldProps) {
 
   return (
     <FieldBox css={css}>
-      <Label size="small">
+      <Label size="small" css={{ flexDirection: "column" }}>
         <Box css={{ marginBottom: "$2", display: "block" }} as="span">
           {label}
         </Box>

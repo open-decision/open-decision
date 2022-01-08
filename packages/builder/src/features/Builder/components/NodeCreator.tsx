@@ -64,6 +64,7 @@ export const NodeCreator = ({ css }: Props) => {
         items={items}
         onCreate={createHandler}
         key={items.length}
+        onSelectedItemChange={(newItem) => changeHandler(newItem?.id ?? "")}
       >
         <NodeCreatorInput
           autoFocus={Object.keys(nodes).length === 0}
@@ -91,28 +92,35 @@ const NodeCreatorInput = ({ createHandler, autoFocus }) => {
         name="search"
         maxLength={nodeNameMaxLength}
       >
-        <InputWithButton
-          // @ts-expect-error - #FIXME Combobox.Input needs to be turned into a ControlledInput
-          Input={<Input autoFocus={autoFocus} placeholder="Knotenname" />}
-          Button={
-            <Button
-              css={{ boxShadow: "$1" }}
-              onDragStart={(event) => onDragStart(event)}
-              disabled={!isCreating}
-              onClick={() => {
-                const newNode = createHandler(inputValue);
-                send({ type: "selectNode", nodeId: newNode.id });
-                setInputValue("");
-              }}
-              draggable
-              square
-            >
-              <Icon label="Füge einen neuen Knoten hinzu">
-                <Plus />
-              </Icon>
-            </Button>
-          }
-        />
+        {(field) => (
+          <InputWithButton
+            Input={
+              <Input
+                {...field}
+                autoFocus={autoFocus}
+                placeholder="Knotenname"
+              />
+            }
+            Button={
+              <Button
+                css={{ boxShadow: "$1" }}
+                onDragStart={(event) => onDragStart(event)}
+                disabled={!isCreating}
+                onClick={() => {
+                  const newNode = createHandler(inputValue);
+                  send({ type: "selectNode", nodeId: newNode.id });
+                  setInputValue("");
+                }}
+                draggable
+                square
+              >
+                <Icon label="Füge einen neuen Knoten hinzu">
+                  <Plus />
+                </Icon>
+              </Button>
+            }
+          />
+        )}
       </Combobox.Input>
     </Box>
   );

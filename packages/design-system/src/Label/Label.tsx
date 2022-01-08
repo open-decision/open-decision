@@ -4,7 +4,6 @@ export type LabelProps = React.ComponentProps<typeof Label>;
 export const Label = styled("label", {
   color: "var(--color, $colorScheme-text)",
   display: "flex",
-  flexDirection: "column",
 
   variants: {
     size: {

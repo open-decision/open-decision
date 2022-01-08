@@ -233,6 +233,9 @@ export function OptionTargetInput({
 
               return { id: newNode.id, label: newNode.name };
             }}
+            onSelectedItemChange={(newItem) =>
+              onChange({ target: newItem?.id ?? "" })
+            }
             items={allOptions}
             subsetOfItems={nodeOptions}
           >
@@ -244,11 +247,13 @@ export function OptionTargetInput({
               onBlur={deselectRelation}
               name="target"
             >
-              <Input
-                name="target"
-                placeholder="Zielknoten auswählen"
-                css={{ border: 0, borderRadius: 0 }}
-              />
+              {(field) => (
+                <Input
+                  placeholder="Zielknoten auswählen"
+                  css={{ border: 0, borderRadius: 0 }}
+                  {...field}
+                />
+              )}
             </Combobox.Input>
           </Combobox.Root>
         </Box>

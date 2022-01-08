@@ -47,7 +47,7 @@
     "@fontsource/poppins": "^4.5.0",
     "@open-decision/interpreter": "workspace:^0.0.1",
     "@open-decision/type-classes": "workspace:^0.0.1",
-    "@open-legal-tech/design-system": "workspace:^0.20.12",
+    "@open-legal-tech/design-system": "workspace:^0.22.3",
     "@radix-ui/colors": "^0.1.8",
     "@radix-ui/react-avatar": "^0.1.1",
     "@radix-ui/react-collapsible": "^0.1.1",

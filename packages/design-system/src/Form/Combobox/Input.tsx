@@ -3,7 +3,6 @@ import { Box } from "../../Box";
 import { Text } from "../../Text";
 import { X } from "../../icons";
 import { StyleObject } from "../../stitches";
-import { InputProps } from "../Inputs";
 import { useCombobox } from "./useCombobox";
 import { Button } from "../..";
 import { Icon } from "../../Icon/Icon";
@@ -16,7 +15,7 @@ import {
 import { mergeRefs } from "../../internal/utils/composeRef";
 
 export type ComboboxInputProps = {
-  children: React.ReactElement<InputProps>;
+  children: (field) => JSX.Element;
   css?: StyleObject;
   menuCss?: StyleObject;
   name: string;
@@ -29,8 +28,6 @@ export function Input({
   name,
   ...rules
 }: ComboboxInputProps) {
-  React.Children.only(children);
-
   const {
     inputValue,
     isOpen,
@@ -56,33 +53,31 @@ export function Input({
     onBlur: controllerOnBlur,
   });
 
-  const EnhancedInput =
-    React.isValidElement(children) &&
-    React.cloneElement(children, {
-      ...inputProps,
-      ref: mergeRefs([inputRef, controllerRef]),
-      Buttons: (
-        <Button
-          size="small"
-          variant="ghost"
-          type="button"
-          disabled={!inputValue}
-          square
-          css={{
-            focusStyle: "inner",
-            opacity: inputValue ? 1 : "0 !important",
-          }}
-          onClick={() => {
-            clearErrors(name);
-            return reset();
-          }}
-        >
-          <Icon label="Entferne die momentan ausgewählte Option">
-            <X />
-          </Icon>
-        </Button>
-      ),
-    });
+  const field = {
+    ...inputProps,
+    ref: mergeRefs([inputRef, controllerRef]),
+    Buttons: (
+      <Button
+        size="small"
+        variant="ghost"
+        type="button"
+        disabled={!inputValue}
+        square
+        css={{
+          focusStyle: "inner",
+          opacity: inputValue ? 1 : "0 !important",
+        }}
+        onClick={() => {
+          clearErrors(name);
+          return reset();
+        }}
+      >
+        <Icon label="Entferne die momentan ausgewählte Option">
+          <X />
+        </Icon>
+      </Button>
+    ),
+  };
 
   const openState = isOpen ? "open" : "closed";
 
@@ -92,7 +87,7 @@ export function Input({
       data-state={openState}
       {...getComboboxProps()}
     >
-      {EnhancedInput}
+      {children(field)}
       <ValidationMessage name={name} css={{ marginTop: "$1" }} />
       <Box
         data-state={openState}
@@ -125,9 +120,11 @@ export function Input({
                     highlightedIndex === index ? "$primary9" : null,
                   color: highlightedIndex === index ? "$primary1" : null,
                   padding: "$1 $2",
-                  borderBottom: "1px solid $colors$gray4",
                   wordBreak: "break-word",
                   hyphens: "auto",
+                  "&:not(:last-child)": {
+                    borderBottom: "1px solid $colors$gray4",
+                  },
                 }}
                 key={`${item?.id}${index}`}
                 {...getItemProps({ item, index })}
