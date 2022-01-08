@@ -5,5 +5,6 @@ export * from "./RadioButtons";
 export * from "./Checkboxes";
 export * from "./Combobox";
 export * from "./ValidationMessage";
-export { useFormContext } from "react-hook-form";
+export { useFormContext, useWatch } from "react-hook-form";
 export * from "./utils/validation";
+export { useInputGroup } from "./shared/Context";

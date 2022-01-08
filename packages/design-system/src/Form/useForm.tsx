@@ -54,5 +54,17 @@ export function useForm<TFieldValues extends FieldValues>(
     [methods]
   );
 
-  return [Form, methods];
+  return [
+    Form,
+    {
+      ...methods,
+      handleSubmit:
+        <TSubmitFieldValues extends FieldValues = TFieldValues>(
+          onSubmit: SubmitHandler<TSubmitFieldValues>,
+          onSubmitError?: SubmitErrorHandler<TFieldValues>
+        ) =>
+        (event?: React.BaseSyntheticEvent) =>
+          methods.handleSubmit(onSubmit, onSubmitError)(event),
+    },
+  ];
 }

@@ -1,17 +1,12 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import * as RadioGroup from "@radix-ui/react-radio-group";
 import * as React from "react";
-import { Text } from "../../Text";
+import { Label } from "../../Label/Label";
 import { styled, StyleObject } from "../../stitches";
 
 import { InputGroupProvider, useInputGroup } from "../shared/Context";
 import { baseInputBoxStyles, baseInputStyles } from "../shared/styles";
-import {
-  Controller,
-  RegisterOptions,
-  useFormContext,
-  useWatch,
-} from "react-hook-form";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
 
 const StyledRadio = styled(
   RadioGroup.Item,
@@ -38,11 +33,23 @@ const Indicator = styled(RadioGroup.Indicator, {
   },
 });
 
-type ButtonProps = { disabled?: boolean; value: string; id?: string };
+type ButtonProps = {
+  disabled?: boolean;
+  value: string;
+  id?: string;
+  css?: StyleObject;
+  className?: string;
+};
 
-function Button({ disabled, value, id }: ButtonProps) {
+function Button({ disabled, value, id, css, className }: ButtonProps) {
   return (
-    <StyledRadio id={id} value={value} disabled={disabled}>
+    <StyledRadio
+      id={id}
+      value={value}
+      disabled={disabled}
+      css={css}
+      className={className}
+    >
       <Indicator />
     </StyledRadio>
   );
@@ -56,7 +63,7 @@ const StyledRadioBox = styled("div", {
 
 type FieldProps = ButtonProps & { label: string };
 
-function Field({ label, disabled, value, ...props }: FieldProps) {
+function Field({ label, disabled, value, css, ...props }: FieldProps) {
   const { name, getActive, createId } = useInputGroup("radio");
   const inputValue = useWatch({ name });
   const isActive = getActive?.(inputValue);
@@ -64,17 +71,20 @@ function Field({ label, disabled, value, ...props }: FieldProps) {
 
   return (
     <StyledRadioBox
-      style={{ marginLeft: "5px" }}
+      css={{ marginLeft: "5px", ...css }}
       data-state={isActive ? "checked" : "unchecked"}
     >
       <Button id={id} disabled={disabled} value={value} {...props} />
-      <Text
+      <Label
         htmlFor={id}
         as="label"
-        css={disabled ? { color: "$gray9", opacity: 0.4 } : {}}
+        css={{
+          flex: 1,
+          ...(disabled ? { color: "$gray9", opacity: 0.4 } : {}),
+        }}
       >
         {label}
-      </Text>
+      </Label>
     </StyledRadioBox>
   );
 }
@@ -88,11 +98,15 @@ export type RadioGroupProps = {
   name: string;
   css?: StyleObject;
   children: React.ReactNode;
-  required?: boolean;
-  validationMessages?: { required?: string };
-} & RegisterOptions;
+  onChange?: (...event: any[]) => void;
+};
 
-function Group({ children, name, css }: RadioGroupProps) {
+function Group({
+  children,
+  name,
+  css,
+  onChange: consumerOnChange,
+}: RadioGroupProps) {
   const inputValue = useWatch({ name });
   const { control } = useFormContext();
 
@@ -114,7 +128,10 @@ function Group({ children, name, css }: RadioGroupProps) {
             <StyledRadioGroup
               value={value}
               onBlur={onBlur}
-              onValueChange={onChange}
+              onValueChange={(value) => {
+                onChange(value);
+                consumerOnChange?.(value);
+              }}
               ref={ref}
               css={css}
               name={name}

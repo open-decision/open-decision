@@ -5,7 +5,7 @@ type InputGroupContext =
   | {
       type: "radio" | "checkbox";
       name: string;
-      getActive?: (elemName: string) => boolean;
+      getActive?: (elemValue: string) => boolean;
       createId: (value: string) => string;
     }
   | undefined;

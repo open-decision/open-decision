@@ -1,4 +1,8 @@
-import { BuilderRelation, BuilderTree } from "@open-decision/type-classes";
+import {
+  BuilderNode,
+  BuilderRelation,
+  BuilderTree,
+} from "@open-decision/type-classes";
 
 export class Interpreter {
   history: { nodes: string[]; answers: Record<string, string> };
@@ -105,6 +109,37 @@ export class Interpreter {
     this.currentNode = savedState.currentNode;
     this.history = savedState.history;
     return this.getCurrentNode();
+  }
+
+  getNode(nodeId: string): BuilderNode.TNode | undefined {
+    return this.tree.nodes[nodeId];
+  }
+
+  getRelationByAnswer(nodeId: string, answer: string) {
+    const relation = Object.values(this.getNode(nodeId)?.relations ?? {}).find(
+      (relation) => relation.answer === answer
+    );
+
+    if (!relation) return undefined;
+
+    return relation;
+  }
+
+  getRelationById(nodeId: string, relationId: string) {
+    const relation = this.getNode(nodeId)?.relations[relationId];
+
+    if (!relation) return undefined;
+
+    return relation;
+  }
+
+  getAnswer(nodeId: string) {
+    const maybeAnswer = this.history.answers[nodeId];
+    const relation = this.getRelationByAnswer(nodeId, maybeAnswer);
+
+    if (!relation) return undefined;
+
+    return relation;
   }
 
   _addToHistory(answer: string) {
