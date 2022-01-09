@@ -59,6 +59,7 @@ export default function Vorschau() {
                     maxWidth: "max-content",
                     marginBottom: "-1px",
                   }}
+                  underline={false}
                 >
                   <Icon label="Zurück">
                     <ChevronLeft />

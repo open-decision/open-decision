@@ -37,6 +37,7 @@ export function TreeNameInput({ css }: Props) {
             maxWidth: "max-content",
             marginBottom: "-1px",
           }}
+          underline={false}
         >
           <Label
             htmlFor="treeName"
