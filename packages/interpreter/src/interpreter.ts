@@ -56,8 +56,13 @@ export class Interpreter {
   evaluateUserInput(relation: BuilderRelation.TRelation) {
     this.state = "interpreting";
 
-    this._addToHistory(relation.answer ?? "");
-    this.currentNode = relation.target ?? "";
+    if (!relation.target) {
+      this.state = "error";
+      return new Error(`The relation provided does not have a target.`);
+    }
+
+    this._addToHistory(relation.id);
+    this.currentNode = relation.target;
 
     return this.getCurrentNode();
   }
@@ -115,16 +120,6 @@ export class Interpreter {
     return this.tree.nodes[nodeId];
   }
 
-  getRelationByAnswer(nodeId: string, answer: string) {
-    const relation = Object.values(this.getNode(nodeId)?.relations ?? {}).find(
-      (relation) => relation.answer === answer
-    );
-
-    if (!relation) return undefined;
-
-    return relation;
-  }
-
   getRelationById(nodeId: string, relationId: string) {
     const relation = this.getNode(nodeId)?.relations[relationId];
 
@@ -135,16 +130,16 @@ export class Interpreter {
 
   getAnswer(nodeId: string) {
     const maybeAnswer = this.history.answers[nodeId];
-    const relation = this.getRelationByAnswer(nodeId, maybeAnswer);
+    const relation = this.getRelationById(nodeId, maybeAnswer);
 
     if (!relation) return undefined;
 
     return relation;
   }
 
-  _addToHistory(answer: string) {
+  _addToHistory(answerId: string) {
     this.history["nodes"].push(this.currentNode);
-    this.history["answers"][this.currentNode] = answer;
+    this.history["answers"][this.currentNode] = answerId;
     this.hasHistory = this.history.nodes.length > 0;
   }
 }
