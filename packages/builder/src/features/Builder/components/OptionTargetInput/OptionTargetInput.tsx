@@ -57,8 +57,7 @@ export function OptionTargetInputs({ node }: SingleSelectProps) {
           Pfade
         </Label>
         <Button
-          variant="tertiary"
-          round
+          variant="ghost"
           onClick={() => send({ type: "addRelation", nodeId: node.id })}
           square
         >
