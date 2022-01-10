@@ -84,7 +84,7 @@ export function Root({
     onSelectedItemChange: ({ selectedItem }) => {
       let item = selectedItem;
 
-      if (isCreating && (inputValue?.length ?? 0) > 0 && onCreate && isValid) {
+      if (isCreating && item?.id === "create" && onCreate && isValid) {
         item = onCreate(cleanLabel(selectedItem?.label ?? ""));
       }
 
