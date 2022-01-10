@@ -94,7 +94,7 @@ export const Node = memo(({ id, data }: NodeProps<NodeData>) => {
           <DropdownMenu.Content>
             {isStartNode ? (
               <Tooltip.Root>
-                <Tooltip.Trigger>
+                <Tooltip.Trigger asChild>
                   <DropdownMenu.Item
                     css={{ colorScheme: "error" }}
                     onSelect={() => send({ type: "deleteNode", ids: [id] })}

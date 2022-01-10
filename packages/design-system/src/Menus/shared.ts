@@ -25,8 +25,6 @@ export const menuItemStyles = css({
   userSelect: "none",
   display: "grid",
   gridTemplateColumns: "max-content 1fr",
-  alignItems: "center",
-  // borderRadius: "$md",
   paddingInline: "$4",
   paddingBlock: "$2",
   gap: "$3",
