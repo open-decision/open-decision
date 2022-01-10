@@ -1,5 +1,6 @@
-import { Box, Heading, Link, Text } from "@open-legal-tech/design-system";
+import { Box, Heading, Text } from "@open-legal-tech/design-system";
 import { listItemStyles, listStyles } from "components/RichTextEditor/Elements";
+import { Link } from "components/RichTextEditor/elements/Link";
 import { RenderElementProps } from "slate-react";
 
 export const renderElement = (props: RenderElementProps): JSX.Element => {
