@@ -1,8 +1,14 @@
 [build.environment]
   NPM_FLAGS = "--version"
 [build]
+  base = "packages/builder/"
   command = "npx pnpm install --store=node_modules/.pnpm-store && npx pnpm build"
+  publish = ".next/"
 [[plugins]]
   package = "../../plugins/pnpm-preinstaller"
+
 [[plugins]]
-  package = "@netlify/plugin-nextjs"
+  package = "@sentry/netlify-build-plugin"
+  [plugins.inputs]
+    sentryOrg = "open-legal-tech-ev"
+    sentryProject = "builder"

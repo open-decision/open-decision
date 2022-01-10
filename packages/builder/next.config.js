@@ -12,6 +12,5 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 });
 
 module.exports = withPlugins([withSentryConfig, withTM, withBundleAnalyzer], {
-  target: "serverless",
   reactStrictMode: true,
 });
