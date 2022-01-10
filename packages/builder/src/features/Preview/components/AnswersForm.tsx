@@ -29,7 +29,7 @@ export function AnswersForm({
     relationId: relation?.id ?? "",
   };
 
-  const [Form] = useForm({
+  const [Form, { handleSubmit }] = useForm({
     defaultValues,
   });
 
@@ -48,6 +48,7 @@ export function AnswersForm({
           gap: "$2",
           display: "grid",
         }}
+        onChange={handleSubmit(onSubmit)}
       >
         {Object.values(node.relations).map((relation) => (
           <AnswersRadioButtons relation={relation} key={relation.id} />
@@ -101,6 +102,8 @@ type status = "disabled" | "active" | "default";
 type PreviewRadioButtonsProps = { relation: BuilderRelation.TRelation };
 
 function AnswersRadioButtons({ relation }: PreviewRadioButtonsProps) {
+  const [isTooltipOpen, setIsTooltipOpen] = React.useState(false);
+
   const { getActive } = useInputGroup("radio");
   const hasAnswer = relation?.answer != null;
 
@@ -111,7 +114,12 @@ function AnswersRadioButtons({ relation }: PreviewRadioButtonsProps) {
 
   return (
     <>
-      <Tooltip.Root>
+      <Tooltip.Root
+        open={isTooltipOpen}
+        onOpenChange={(open) =>
+          setIsTooltipOpen(status !== "disabled" ? false : open)
+        }
+      >
         <RadioButtons.Button
           id={relation.id}
           value={relation.id}
