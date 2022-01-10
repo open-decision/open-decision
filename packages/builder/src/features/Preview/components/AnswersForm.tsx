@@ -73,6 +73,7 @@ const StyledTooltipTrigger = styled(Tooltip.Trigger, {
       active: {
         backgroundColor: "$primary9",
         color: "$white",
+        fontWeight: "500 !important",
       },
       disabled: {
         opacity: 0.5,
@@ -118,7 +119,7 @@ function AnswersRadioButtons({ relation }: PreviewRadioButtonsProps) {
           disabled={status === "disabled"}
         />
         <StyledTooltipTrigger asChild status={status} data-answer={hasAnswer}>
-          <Label htmlFor={relation.id}>
+          <Label htmlFor={relation.id} css={{ textStyle: "medium-text" }}>
             {hasAnswer ? relation.answer : "Kein Antworttext"}
           </Label>
         </StyledTooltipTrigger>
