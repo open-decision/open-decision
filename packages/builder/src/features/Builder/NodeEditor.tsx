@@ -48,7 +48,9 @@ export const NodeEditor = ({ css }: NodeEditorProps) => {
         }}
         open={sidebarOpen}
       >
-        {sidebarOpen ? <NodeEditingSidebar node={selectedNode} /> : null}
+        {sidebarOpen ? (
+          <NodeEditingSidebar node={selectedNode} key={selectedNode.id} />
+        ) : null}
       </Sidebar>
     </>
   );
