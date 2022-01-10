@@ -1,4 +1,5 @@
 const withPlugins = require("next-compose-plugins");
+const { withSentryConfig } = require("@sentry/nextjs");
 
 const withTM = require("next-transpile-modules")([
   "@open-legal-tech/design-system",
@@ -10,7 +11,7 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
 
-module.exports = withPlugins([withTM, withBundleAnalyzer], {
+module.exports = withPlugins([withSentryConfig, withTM, withBundleAnalyzer], {
   target: "serverless",
   reactStrictMode: true,
 });

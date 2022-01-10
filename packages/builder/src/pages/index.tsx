@@ -23,23 +23,26 @@ import { Upload } from "react-feather";
 import { BuilderTree } from "@open-decision/type-classes";
 import { EditorHeader } from "features/Builder/components/EditorHeader";
 import { useNotificationStore } from "features/Notifications/NotificationState";
+import { ErrorBoundary } from "@sentry/nextjs";
 
 export default function Tree(): JSX.Element {
   return (
-    <MainContent
-      css={{
-        overflow: "hidden",
-        display: "grid",
-        gridTemplateColumns: `1fr ${sidebarWidth}px`,
-        gridTemplateRows: "max-content 1fr",
-      }}
-    >
-      <ReactFlowProvider>
-        <EditorProvider>
-          <Editor />
-        </EditorProvider>
-      </ReactFlowProvider>
-    </MainContent>
+    <ErrorBoundary fallback={<Text>An Error has occured</Text>}>
+      <MainContent
+        css={{
+          overflow: "hidden",
+          display: "grid",
+          gridTemplateColumns: `1fr ${sidebarWidth}px`,
+          gridTemplateRows: "max-content 1fr",
+        }}
+      >
+        <ReactFlowProvider>
+          <EditorProvider>
+            <Editor />
+          </EditorProvider>
+        </ReactFlowProvider>
+      </MainContent>
+    </ErrorBoundary>
   );
 }
 
