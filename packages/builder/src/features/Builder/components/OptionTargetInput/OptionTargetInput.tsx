@@ -86,7 +86,7 @@ export function OptionTargetInputs({ node }: SingleSelectProps) {
         {relations.map((relation) => (
           <OptionTargetInput
             groupRef={ref}
-            key={relation.id}
+            key={`${relation.id}_${relation.answer}_${relation.target}`}
             input={relation}
             onChange={(newData) =>
               send({
