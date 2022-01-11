@@ -79,7 +79,6 @@ export class Interpreter {
     const previousNode = this.history.nodes.pop();
 
     if (previousNode) {
-      delete this.history.answers[this.currentNode];
       this.currentNode = previousNode;
       this.hasHistory = this.history.nodes.length > 0;
     } else {
