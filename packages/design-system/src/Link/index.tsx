@@ -4,12 +4,13 @@ import { styled, css } from "../stitches";
 export type LinkProps = React.ComponentProps<typeof Link>;
 
 export const baseLinkStyles = css({
-  display: "flex",
+  display: "inline-flex",
   alignItems: "center",
   color: "$primary9",
   textDecoration: "none",
   position: "relative",
   textStyle: "medium-text",
+  maxWidth: "max-content",
 
   focusStyle: "outer",
 });
