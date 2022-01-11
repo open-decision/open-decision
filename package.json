@@ -1,6 +1,6 @@
 {
   "name": "open-decision",
-  "repository": "https://github.com/open-decision/Builder",
+  "repository": "https://github.com/open-legal-tech/open-decision",
   "devDependencies": {
     "@types/node": "^16.11.19",
     "@typescript-eslint/eslint-plugin": "^5.9.0",
