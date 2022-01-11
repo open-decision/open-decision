@@ -60,6 +60,16 @@ export function OptionTargetInputs({ node }: SingleSelectProps) {
           variant="ghost"
           onClick={() => send({ type: "addRelation", nodeId: node.id })}
           square
+          css={{
+            "&:hover": {
+              backgroundColor: "$gray4",
+            },
+
+            "&:active, &[data-active='true'], &[data-state=on]": {
+              color: "$gray12 !important",
+              backgroundColor: "$gray6 !important",
+            },
+          }}
         >
           <Icon label="Neue Antwortmöglichkeit hinzufügen">
             <Plus />
