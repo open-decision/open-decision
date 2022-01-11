@@ -100,9 +100,7 @@ const Editor = () => {
       </>
     );
 
-  if (state.matches("empty")) {
-    throw new Error(`Test`);
-
+  if (state.matches("empty"))
     return (
       <>
         <BaseHeader css={{ gridColumn: "1 / -1", gridRow: "1" }} />
@@ -261,7 +259,6 @@ const Editor = () => {
         </Box>
       </>
     );
-  }
 
   return (
     <>
