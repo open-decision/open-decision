@@ -112,16 +112,26 @@ const Editor = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            height: "100%",
           }}
         >
           <Box
             css={{
               display: "flex",
               flexDirection: "column",
+              justifyContent: "center",
+              height: "100%",
+              width: "clamp(200px, 80vw, 800px)",
             }}
           >
-            <Box css={{ transform: "scaleX(-1)" }}>
-              <Image src="/EmptyIllustration.png" width={700} height={500} />
+            <Box
+              css={{ transform: "scaleX(-1)", height: "60%", width: "100%" }}
+            >
+              <Image
+                src="/EmptyIllustration.png"
+                layout="fill"
+                objectFit="contain"
+              />
             </Box>
             <Box
               as="header"
