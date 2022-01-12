@@ -12,4 +12,3 @@
   [plugins.inputs]
     sentryOrg = "open-legal-tech-ev"
     sentryProject = "builder"
-    deployPreviews = false
