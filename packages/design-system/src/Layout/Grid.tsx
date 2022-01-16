@@ -1,7 +1,7 @@
 import { OnlyString } from "@stitches/react/types/css";
 import * as React from "react";
 import { styled } from "../stitches";
-import { gap } from "./shared";
+import { gap } from "../shared/variants";
 
 const StyledGrid = styled("div", gap, {
   display: "grid",
