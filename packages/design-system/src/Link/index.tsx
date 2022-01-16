@@ -15,7 +15,7 @@ export const baseLinkStyles = css({
   focusStyle: "outer",
 });
 
-export const Link = styled("a", baseLinkStyles, {
+export const underlineLinkStyles = css({
   "&:hover": {
     color: "$gray12",
   },
@@ -52,3 +52,5 @@ export const Link = styled("a", baseLinkStyles, {
     underline: true,
   },
 });
+
+export const Link = styled("a", baseLinkStyles, underlineLinkStyles);

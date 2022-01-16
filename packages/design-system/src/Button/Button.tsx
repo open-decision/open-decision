@@ -6,6 +6,8 @@ export const buttonStyles = css(alignByContent, {
   $$paddingInline: "$space$6",
   $$paddingBlock: "$space$3",
   $$YTranslation: "0px",
+  $$gap: "$space$1",
+  gap: "$$gap",
 
   //Mini reset
   appearance: "none",
@@ -25,7 +27,6 @@ export const buttonStyles = css(alignByContent, {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  gap: "$2",
   border: "$$borderWidth solid transparent",
   padding: "$$paddingBlock $$paddingInline",
   focusStyle: "outer",
@@ -73,6 +74,7 @@ export const buttonStyles = css(alignByContent, {
         fontWeight: 600,
         letterSpacing: "0.025em",
         "--iconSize": "24px",
+        $$gap: "$space$2",
 
         "&  svg": {
           width: "var(--iconSize)",

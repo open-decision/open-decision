@@ -1,7 +1,6 @@
-import { styled } from "../stitches";
+import { styled, css } from "../stitches";
 
-export type LabelProps = React.ComponentProps<typeof Label>;
-export const Label = styled("label", {
+export const labelStyles = css({
   color: "var(--color, $colorScheme-text)",
   display: "flex",
 
@@ -22,3 +21,6 @@ export const Label = styled("label", {
     size: "medium",
   },
 });
+
+export type LabelProps = React.ComponentProps<typeof Label>;
+export const Label = styled("label", labelStyles);

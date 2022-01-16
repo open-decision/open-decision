@@ -1,7 +1,7 @@
 import * as React from "react";
-import { styled } from "../stitches";
+import { styled, css } from "../stitches";
 
-export const StyledBadge = styled("span", {
+export const badeStyles = css({
   colorScheme: "primary",
   borderRadius: "$full",
   border: "1px solid transparent",
@@ -47,13 +47,6 @@ export const StyledBadge = styled("span", {
   },
 });
 
-export type BadgeProps = React.ComponentProps<typeof StyledBadge>;
+export const Badge = styled("span", badeStyles);
 
-export const BadgeComponent = (
-  props: BadgeProps,
-  ref: React.Ref<HTMLSpanElement>
-) => <StyledBadge ref={ref} {...props} />;
-
-export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
-  BadgeComponent
-);
+export type BadgeProps = React.ComponentProps<typeof Badge>;
