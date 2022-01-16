@@ -1,5 +1,6 @@
 export * from "./Badge";
 export * from "./Box";
+export * from "./Layout";
 export * from "./Button/Button";
 export * from "./Cards";
 export * from "./ContactButtons";

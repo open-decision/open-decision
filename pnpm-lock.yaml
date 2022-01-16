@@ -237,6 +237,7 @@ importers:
       stitches-normalize-css: ^1.2.0
       tsup: ^5.6.0
       typescript: ^4.4.4
+      use-resize-observer: ^8.0.0
       utility-types: ^3.10.0
       vite: ^2.6.13
     dependencies:
@@ -262,6 +263,7 @@ importers:
       react-hook-form: 7.22.5_react@17.0.2
       react-use: 17.3.2_react-dom@17.0.2+react@17.0.2
       stitches-normalize-css: 1.2.0
+      use-resize-observer: 8.0.0_react-dom@17.0.2+react@17.0.2
     devDependencies:
       '@fontsource/poppins': 4.5.0
       '@svgr/cli': 5.5.0
@@ -2653,6 +2655,10 @@ packages:
       '@types/yargs': 15.0.14
       chalk: 4.1.2
     dev: true
+
+  /@juggle/resize-observer/3.3.1:
+    resolution: {integrity: sha512-zMM9Ds+SawiUkakS7y94Ymqx+S0ORzpG3frZirN3l+UlXUmSUR7hF4wxCVqW+ei94JzV5kt0uXBcoOEAuiydrw==}
+    dev: false
 
   /@mdx-js/loader/1.6.22_react@17.0.2:
     resolution: {integrity: sha512-9CjGwy595NaxAYp0hF9B/A0lH6C8Rms97e2JS9d3jVUtILn6pT5i5IV965ra3lIWc7Rs1GG1tBdVF7dCowYe6Q==}
@@ -17243,6 +17249,17 @@ packages:
       react: 17.0.2
       use-isomorphic-layout-effect: 1.1.1_b08e3c15324cbe90a6ff8fcd416c932c
     dev: true
+
+  /use-resize-observer/8.0.0_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-n0iKSeiQpJCyaFh5JA0qsVLBIovsF4EIIR1G6XiBwKJN66ZrD4Oj62bjcuTAATPKiSp6an/2UZZxCf/67fk3sQ==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      '@juggle/resize-observer': 3.3.1
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+    dev: false
 
   /use-sidecar/1.0.5_react@17.0.2:
     resolution: {integrity: sha512-k9jnrjYNwN6xYLj1iaGhonDghfvmeTmYjAiGvOr7clwKfPjMXJf4/HOr7oT5tJwYafgp2tG2l3eZEOfoELiMcA==}

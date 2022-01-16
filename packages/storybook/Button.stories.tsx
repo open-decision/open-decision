@@ -30,6 +30,12 @@ const ButtonGrid: Story<Omit<ButtonProps, "css">> = (props) => (
           <Plus />
         </Icon>
       </Button>
+      <Button size="extra-small" {...props}>
+        <Icon size="extra-small">
+          <Plus />
+        </Icon>{" "}
+        Button
+      </Button>
     </Box>
     <Heading size="extra-small">Small</Heading>
     <Box css={{ display: "flex", gap: "$4" }}>
@@ -43,6 +49,12 @@ const ButtonGrid: Story<Omit<ButtonProps, "css">> = (props) => (
         <Icon size="small">
           <Plus />
         </Icon>
+      </Button>
+      <Button size="small" {...props}>
+        <Icon size="small">
+          <Plus />
+        </Icon>{" "}
+        Button
       </Button>
     </Box>
     <Heading size="extra-small">Medium</Heading>
@@ -58,6 +70,12 @@ const ButtonGrid: Story<Omit<ButtonProps, "css">> = (props) => (
           <Plus />
         </Icon>
       </Button>
+      <Button {...props}>
+        <Icon>
+          <Plus />
+        </Icon>{" "}
+        Button
+      </Button>
     </Box>
     <Heading size="extra-small">Large</Heading>
     <Box css={{ display: "flex", gap: "$4" }}>
@@ -71,6 +89,12 @@ const ButtonGrid: Story<Omit<ButtonProps, "css">> = (props) => (
         <Icon size="large">
           <Plus />
         </Icon>
+      </Button>
+      <Button size="large" {...props}>
+        <Icon size="large">
+          <Plus />
+        </Icon>{" "}
+        Button
       </Button>
     </Box>
   </Box>

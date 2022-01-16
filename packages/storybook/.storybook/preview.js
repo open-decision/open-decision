@@ -15,6 +15,7 @@ export const parameters = {
   docs: {
     container: DocsContainer,
   },
+  layout: "fullscreen",
   darkMode: {
     darkClass: "dark",
     lightClass: "light",

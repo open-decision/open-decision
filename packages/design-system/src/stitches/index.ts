@@ -1,4 +1,8 @@
-import { createStitches, CSS } from "@stitches/react";
+import {
+  createStitches,
+  CSS,
+  ScaleValue as StitchesScaleValue,
+} from "@stitches/react";
 import { tokens, media } from "../internal/tokens";
 import {
   slateDark,
@@ -15,6 +19,7 @@ import {
   blueDarkA,
 } from "@radix-ui/colors";
 import { ColorKeys, aliasColor, TextStyles } from "../internal/utils";
+import { Prefixed } from "@stitches/react/types/util";
 
 const { colors, ...otherTokens } = tokens;
 
@@ -134,10 +139,39 @@ export const designSystem = createStitches({
     },
   },
 });
+export * from "@stitches/react";
 
 export type StyleObject = CSS<typeof designSystem>;
 
-// export * from "@stitches/react";
+export type ScaleValue<T> = StitchesScaleValue<T, typeof designSystem>;
+type Theme = typeof theme;
+
+type TokenByScaleName<ScaleName extends keyof Theme> = Prefixed<
+  "$",
+  keyof Theme[ScaleName]
+>;
+
+type ScaleVariant<ScaleName extends keyof Theme> = Record<
+  keyof Theme[ScaleName],
+  StyleObject
+>;
+
+type GetCss<ScaleName extends keyof Theme> = (
+  token: TokenByScaleName<ScaleName>
+) => StyleObject;
+
+export function createScaleVariant<ScaleName extends keyof Theme>(
+  scaleName: ScaleName,
+  getCss: GetCss<ScaleName>
+): ScaleVariant<ScaleName> {
+  return Object.keys(designSystem.theme[scaleName]).reduce(
+    (acc, key) => ({
+      ...acc,
+      [key]: getCss(`$${key}` as TokenByScaleName<ScaleName>),
+    }),
+    {} as any
+  );
+}
 
 export const {
   styled,
