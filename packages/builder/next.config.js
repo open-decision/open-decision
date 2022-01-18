@@ -13,4 +13,12 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 
 module.exports = withPlugins([withSentryConfig, withTM, withBundleAnalyzer], {
   reactStrictMode: true,
+  async rewrites() {
+    return [
+      {
+        source: "/auth/:path",
+        destination: "https://od-node-backend.herokuapp.com/v1/auth/:path",
+      },
+    ];
+  },
 });
