@@ -44,7 +44,7 @@ const login = catchAsync(async (req: Request, res: Response) => {
     httpOnly: true,
     sameSite: "none",
   });
-  res.send({ access });
+  res.send({ user: pickSafeUserProperties(user), access });
 });
 
 const logout = catchAsync(async (req: Request, res: Response) => {
