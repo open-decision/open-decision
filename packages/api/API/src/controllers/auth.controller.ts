@@ -71,7 +71,10 @@ const refreshTokens = catchAsync(async (req: Request, res: Response) => {
     });
   }
 
-  res.send({ access: refreshedTokens?.access });
+  res.send({
+    user: pickSafeUserProperties(refreshedTokens.user),
+    access: refreshedTokens?.access,
+  });
 });
 
 const forgotPassword = catchAsync(async (req: Request, res: Response) => {

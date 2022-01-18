@@ -153,6 +153,7 @@ const refreshTokens = async (refreshToken: string) => {
   if (!tokenIsExpired) {
     // Issue new access token
     return {
+      user: user,
       access: generateAccessToken(tokenFromDatabase.ownerUuid),
     };
   } else {
@@ -167,6 +168,7 @@ const refreshTokens = async (refreshToken: string) => {
       loginExpires
     );
     return {
+      user: user,
       access: newAuthToken,
       refresh: newRefreshToken,
     };
