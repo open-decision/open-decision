@@ -1,7 +1,6 @@
 export * from "./FileInput";
 export * from "./Header";
 export * from "./Layout";
-export * from "./LoginCard";
 export * from "./Logo";
 export * from "./RichTextEditor";
 export * from "./Sidebar";

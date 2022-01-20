@@ -1,17 +1,18 @@
-import { z } from "zod";
+import { LoginResponse, validateLoginResponse } from "./shared";
+import { safeFetch } from "./safeFetch";
 
-const loginResponse = z.object({
-  access: z.object({ token: z.string() }),
-});
-
-export const login = () =>
-  fetch("/auth/login", {
-    method: "POST",
-    body: JSON.stringify({
-      email: "phil.garb@outlook.de",
-      password: "Th@t!shardToGuess",
-    }),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then(async (res) => loginResponse.parse(await res.json()));
+export const login = (
+  email: string,
+  password: string,
+  onSuccess: (data: LoginResponse) => void,
+  onError: (error: string) => void
+) =>
+  safeFetch(
+    "/auth/login",
+    { method: "POST", body: { email, password } },
+    {
+      throwingValidation: validateLoginResponse,
+      onSuccess,
+      onError,
+    }
+  );

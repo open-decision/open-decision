@@ -5,7 +5,9 @@ import {
   styled,
   Box,
   darkTheme,
+  Button,
 } from "@open-legal-tech/design-system";
+import { useAuth } from "features/Auth/useAuth";
 
 const Container = styled("div", {
   backgroundColor: "$gray2",
@@ -23,6 +25,8 @@ const Content = styled("header", {
 type BaseHeaderProps = { children?: React.ReactNode; css?: StyleObject };
 
 export const BaseHeader = ({ children, css }: BaseHeaderProps) => {
+  const [, send] = useAuth();
+
   return (
     <Container css={css} className={darkTheme}>
       <Content>
@@ -37,6 +41,13 @@ export const BaseHeader = ({ children, css }: BaseHeaderProps) => {
         >
           {children}
         </Box>
+        <Button
+          variant="ghost"
+          size="small"
+          onClick={() => send({ type: "LOG_OUT" })}
+        >
+          Logout
+        </Button>
       </Content>
     </Container>
   );

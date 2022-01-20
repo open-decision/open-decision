@@ -1,9 +1,10 @@
-import { ErrorMessage } from "@hookform/error-message";
+import { ErrorMessage as FormErrorMessage } from "@hookform/error-message";
 import * as React from "react";
+import { useFormContext } from "react-hook-form";
 import { styled, StyleObject } from "../stitches";
 import { textStyles } from "../Text";
 
-const StyledErrorList = styled("ul", {
+export const ErrorList = styled("ul", {
   listStyle: "none",
   padding: "0",
   display: "flex",
@@ -12,14 +13,14 @@ const StyledErrorList = styled("ul", {
   margin: "0",
 });
 
-const StyledMessage = styled("li", textStyles, {
+export const ErrorMessage = styled("li", textStyles, {
   color: "$error11",
   border: "1px solid $colors$error5",
   backgroundColor: "$error1",
   padding: "$1 $2",
   borderRadius: "$md",
   fontSize: "$sm",
-  width: "max-content",
+  listStyle: "none",
 });
 
 export type ValidationMessageProps = {
@@ -29,15 +30,20 @@ export type ValidationMessageProps = {
 };
 
 export function ValidationMessage({ name, css }: ValidationMessageProps) {
+  const {
+    formState: { errors },
+  } = useFormContext();
+
   return (
-    <ErrorMessage
+    <FormErrorMessage
       name={name}
+      errors={errors}
       render={({ message }) => (
-        <StyledErrorList css={css}>
-          <StyledMessage size="extra-small" key={message}>
+        <ErrorList css={css}>
+          <ErrorMessage size="extra-small" key={message}>
             {message}
-          </StyledMessage>
-        </StyledErrorList>
+          </ErrorMessage>
+        </ErrorList>
       )}
     />
   );
