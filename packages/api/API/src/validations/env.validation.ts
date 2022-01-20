@@ -4,13 +4,7 @@ import { MailserverConfig } from "./mailserver.validation";
 export const EnvVars = z
   .object({
     NODE_ENV: z.enum(["production", "development", "test"]),
-    HOST: z
-      .string()
-      .url({
-        message:
-          "Invalid hostname. Make sure to not include the protocoll (like https://) and to follow RFC 1123",
-      })
-      .optional(),
+    HOST: z.string().optional(),
     PORT: z
       .string()
       .default("3000")
