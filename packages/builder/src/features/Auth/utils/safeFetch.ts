@@ -8,6 +8,7 @@ type Config<TData> = {
   onSuccess: (data: TData) => void;
   onError: (error: string) => void;
   throwingValidation?: ValidationFn<TData>;
+  expectReturn?: boolean;
 };
 
 export const safeFetch = <TData>(
@@ -18,7 +19,7 @@ export const safeFetch = <TData>(
   }: Omit<RequestInit, "body"> & {
     body?: Record<string, any>;
   },
-  { onSuccess, onError, throwingValidation }: Config<TData>
+  { onSuccess, onError, throwingValidation, expectReturn = true }: Config<TData>
 ) =>
   pipe(
     TaskEither.tryCatch(
@@ -34,11 +35,13 @@ export const safeFetch = <TData>(
     ),
     TaskEither.chain((response) =>
       TaskEither.tryCatch(async (): Promise<any> => {
-        const body = await response.json();
+        if (expectReturn) {
+          if (response.ok) return await response.json();
+        } else {
+          if (response.ok) return response.ok;
+        }
 
-        if (response.ok) return body;
-
-        throw new Error(body.message);
+        throw new Error(response.statusText);
       }, Either.toError)
     ),
     TaskEither.chainEitherK((response) =>

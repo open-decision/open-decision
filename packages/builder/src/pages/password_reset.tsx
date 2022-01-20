@@ -4,7 +4,6 @@ import {
   Field,
   Heading,
   Input,
-  Link,
   Stack,
   Text,
   useForm,
@@ -17,7 +16,6 @@ export default function Login(): JSX.Element {
   const [Form, { register }] = useForm({
     defaultValues: {
       email: "",
-      password: "",
     },
   });
 
@@ -49,16 +47,13 @@ export default function Login(): JSX.Element {
             borderRadius: "$md",
           }}
         >
-          <Heading size="large" css={{ marginBottom: "$3" }}>
-            Anmelden
-          </Heading>
+          <Heading css={{ marginBottom: "$3" }}>Passwort zurücksetzen</Heading>
           <Text css={{ color: "$gray11", marginBottom: "$8" }}>
-            Loggen Sie sich ein um mit Open Decision fortzufahren.
+            Bitte geben Sie die E-Mail Adresse an, mit der Sie sich bei Open
+            Decision registriert haben.
           </Text>
           <Form
-            onSubmit={({ email, password }) =>
-              send({ type: "LOG_IN", email, password })
-            }
+            onSubmit={({ email }) => send({ type: "RESET_PASSWORD", email })}
             css={{ display: "flex", flexDirection: "column" }}
           >
             <Field label="Mailadresse">
@@ -72,42 +67,15 @@ export default function Login(): JSX.Element {
                 placeholder="beispiel@web.de"
               />
             </Field>
-            <Field label="Passwort" css={{ marginTop: "$4" }}>
-              <Input
-                type="password"
-                {...register("password", {
-                  required: {
-                    value: true,
-                    message: "Ein Passwort muss angegeben werden.",
-                  },
-                })}
-                placeholder="*******"
-              />
-            </Field>
-            <Link
-              css={{
-                marginLeft: "auto",
-                marginTop: "$4",
-                color: "$black",
-              }}
-              underline={false}
-              href="/password_reset"
-            >
-              Passwort vergessen?
-            </Link>
             {state.context.error ? (
               <ErrorMessage css={{ marginTop: "$4" }}>
                 {state.context.error}
               </ErrorMessage>
             ) : null}
             <Button type="submit" css={{ marginTop: "$6" }}>
-              Jetzt Anmelden
+              Passwort zurücksetzen
             </Button>
           </Form>
-          <Text css={{ marginTop: "$6" }}>
-            Sie haben noch kein Konto?{" "}
-            <Link href="/register">Dann registrieren Sie sich hier</Link>
-          </Text>
         </Stack>
       </Stack>
     </MainContent>

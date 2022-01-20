@@ -5,6 +5,7 @@ import { login } from "./utils/login";
 import { logout } from "./utils/logout";
 import { refresh } from "./utils/refresh";
 import { register } from "./utils/register";
+import { resetPassword } from "./utils/resetPassword";
 import { LoginResponse } from "./utils/shared";
 
 type LocationContext = { location?: string };
@@ -50,7 +51,10 @@ export type Events =
   | { type: "FAILED_REGISTER"; error: any }
   | { type: "SUCCESSFULL_REDIRECT" }
   | { type: "SUCCESSFULL_LOGOUT" }
-  | { type: "FAILED_LOGOUT" };
+  | { type: "FAILED_LOGOUT" }
+  | { type: "RESET_PASSWORD"; email: string }
+  | { type: "SUCCESSFULL_RESET" }
+  | { type: "FAILED_RESET"; error: any };
 
 export type AuthService = Interpreter<Context, any, Events, State>;
 
@@ -136,9 +140,26 @@ export const createAuthenticationMachine = (router: NextRouter) =>
             REGISTER: {
               target: ".register",
             },
+            RESET_PASSWORD: {
+              target: ".resetPassword",
+            },
           },
           states: {
             idle: {},
+            resetPassword: {
+              invoke: {
+                src: "resetPassword",
+              },
+              on: {
+                SUCCESSFULL_RESET: {
+                  target: "#authentication.loggedOut",
+                },
+                FAILED_RESET: {
+                  target: "#authentication.loggedOut",
+                  actions: "assignErrorToContext",
+                },
+              },
+            },
             loggingIn: {
               invoke: {
                 src: "login",
@@ -236,6 +257,15 @@ export const createAuthenticationMachine = (router: NextRouter) =>
             () => send({ type: "FAILED_LOGOUT" })
           );
         },
+        resetPassword: (_context, event) => async (send: Sender<Events>) => {
+          if (event.type !== "RESET_PASSWORD") return;
+
+          await resetPassword(
+            event.email,
+            () => send("SUCCESSFULL_RESET"),
+            (error) => send({ type: "FAILED_RESET", error })
+          );
+        },
         redirectToLogin:
           (_context, _event) => async (_send: Sender<Events>) => {
             protectedRoutes.includes(router.pathname)
@@ -274,7 +304,8 @@ export const createAuthenticationMachine = (router: NextRouter) =>
           error: (_context, event) => {
             if (
               event.type !== "FAILED_LOGIN" &&
-              event.type !== "FAILED_REGISTER"
+              event.type !== "FAILED_REGISTER" &&
+              event.type !== "FAILED_RESET"
             )
               return;
 
