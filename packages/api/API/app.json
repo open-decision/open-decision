@@ -1,0 +1,20 @@
+{
+  "name": "Open Decision - Backend",
+  "description": "Backend for Open Decision - an Open Source No-Code Expertsystem ",
+  "repository": "https://github.com/open-legal-tech/node-backend",
+  "website": "https://open-decision.org/",
+  "env": {
+    "NODE_ENV": {
+      "description": "Used to identify the environment, should be set to 'production' if deployed. Valid values: 'production', 'development', 'test'.",
+      "value": "production"
+    },
+    "ACCESS_TOKEN_SECRET": {
+      "description": "CHANGEME: change ASAP to a long random string, otherwise the application is insecure.",
+      "value": "*rng3+b@qjs5t&t-u)cs2!^bnrelwha&&bddsdfs2nmtu72ijj9h^7=z5"
+    },
+    "REFRESH_TOKEN_SECRET": {
+      "description": "CHANGEME: change ASAP to a long random string, otherwise the application is insecure.",
+      "value": "7+e3-4t5mrz@+m1aa-kxk3i#yeffdfl3ss(%rz&aancr2=jcm1wn@)ln2hcb"
+    }
+  }
+}

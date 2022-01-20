@@ -10,7 +10,7 @@ import httpStatus from "http-status";
  * Create a new user
  * @param {string} email
  * @param {password} string
- * @returns {User}
+ * @returns {Promise<User>}
  */
 async function create(email: string, password: string) {
   if (await emailIsTaken(email)) {
@@ -63,7 +63,7 @@ async function hashPassword(plainPassword: string) {
  * Check if password matches the user's password
  * @param {string} password
  * @param {User} user
- * @returns {Promise<bool>}
+ * @returns {Promise<boolean>}
  */
 async function isPasswordMatch(password: string, user: PrismaUser) {
   return argon2.verify(user.password, password);
@@ -71,7 +71,7 @@ async function isPasswordMatch(password: string, user: PrismaUser) {
 
 /**
  * Find user by UUID or id
- * @param {UUID | number} uuidOrId
+ * @param {(string|number)} uuidOrId
  * @returns {Promise<User>}
  */
 async function findByUuidOrId(uuidOrId: string | number) {
@@ -116,7 +116,7 @@ async function save(userBody: UserBody, user: PrismaUser) {
 
 /**
  * Remove an user using its UUID or id
- * @param {UUID | number} userIdOrUUID
+ * @param {(string|number)} userIdOrUUID
  * @returns {Promise<User>}
  */
 async function remove(userIdOrUUID: string | number) {
