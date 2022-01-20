@@ -45,12 +45,6 @@ if (config.NODE_ENV === "production") {
 // v1 api routes
 app.use("/v1", router);
 
-// app.use("/auth", authRouter);
-
-// app.use("/restricted", isAuthorized, async (req: Request, res: Response) => {
-//   res.send("Awesome");
-// });
-
 // app.use(
 //   "/graphql",
 //   isAuthorized,

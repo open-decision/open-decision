@@ -98,6 +98,7 @@
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
+    "express-route-reload": "^1.0.1",
     "jest": "^27.0.6",
     "jest-mock-extended": "^2.0.2-beta2",
     "node-mocks-http": "^1.11.0",

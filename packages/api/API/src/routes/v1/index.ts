@@ -19,7 +19,7 @@ const defaultRoutes = [
 const devRoutes = [
   // routes available only in development mode
   {
-    path: "/docs",
+    path: "/docs/",
     route: docsRouter,
   },
 ];
@@ -37,7 +37,7 @@ if (config.NODE_ENV === "development") {
 
 // make the docs public even in production, if explicitly required
 if (config.PUBLIC_API_DOCUMENTATION !== "false") {
-  router.use("/docs", docsRouter);
+  router.use("/docs/", docsRouter);
 }
 
 export default router;
