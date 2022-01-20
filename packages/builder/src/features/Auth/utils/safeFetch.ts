@@ -2,7 +2,7 @@ import * as TaskEither from "fp-ts/TaskEither";
 import * as Either from "fp-ts/Either";
 import { pipe } from "fp-ts/function";
 import * as Task from "fp-ts/Task";
-import { RequestInit } from "next/dist/server/web/spec-extension/request";
+
 type ValidationFn<TData> = (responseBody: unknown) => TData;
 type Config<TData> = {
   onSuccess: (data: TData) => void;
@@ -15,7 +15,9 @@ export const safeFetch = <TData>(
   {
     body,
     ...options
-  }: Omit<RequestInit, "body"> & { body?: Record<string, any> },
+  }: Omit<RequestInit, "body"> & {
+    body?: Record<string, any>;
+  },
   { onSuccess, onError, throwingValidation }: Config<TData>
 ) =>
   pipe(
