@@ -3,7 +3,7 @@ module.exports = {
     try {
       if (process.env.CI) {
         await run.command(
-          "npx pnpm install -r --shamefully-hoist --store=node_modules/.pnpm-store"
+          "npx pnpm install -r --shamefully-hoist --store=node_modules/.pnpm-store --no-frozen-lockfile"
         );
       } else {
         status.show({ summary: "CI is false, skipping pnpm install." });
@@ -13,5 +13,5 @@ module.exports = {
     } catch (e) {
       build.failBuild(`An error occured while installing pnpm: ${e.message}`);
     }
-  }
+  },
 };
