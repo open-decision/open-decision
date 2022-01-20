@@ -1,11 +1,6 @@
 import config from "../../src/config/config";
 import prisma from "../../src/init-prisma-client";
 export const setupTestDB = () => {
-  // // beforeAll(async () => {
-  // //   // create product categories
-
-  // })
-
   beforeEach(async () => {
     const deleteUser = prisma.user.deleteMany();
     const deleteToken = prisma.token.deleteMany();

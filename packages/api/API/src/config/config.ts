@@ -3,8 +3,9 @@ import path from "path";
 import { EnvVars } from "../validations/env.validation";
 
 //TODO: properly load env file
-dotenv.config({ path: path.join(__dirname, `../../.env.development`) });
-
+if (process.env.NODE_ENV !== "production") {
+  dotenv.config({ path: path.join(__dirname, `../../.env.development`) });
+}
 const validationResult = EnvVars.safeParse(process.env);
 
 if (!validationResult.success) {

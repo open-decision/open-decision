@@ -48,10 +48,8 @@ describe("Auth routes", () => {
         .expect(hasRefreshCookie);
 
       expect(res.body.user).toEqual({
-        id: expect.anything(),
         uuid: expect.anything(),
         name: null,
-        password: "Password was redacted.",
         email: newUser.email,
         role: "USER",
         emailIsVerified: false,
@@ -62,7 +60,7 @@ describe("Auth routes", () => {
         expires: expect.anything(),
       });
 
-      const dbUser = await UserHandler.findByUuidOrId(res.body.user.id);
+      const dbUser = await UserHandler.findByUuidOrId(res.body.user.uuid);
       expect(dbUser).toBeDefined();
       expect(dbUser!.password).not.toBe(newUser.password);
       expect(dbUser).toMatchObject({

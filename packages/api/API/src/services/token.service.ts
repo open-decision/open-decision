@@ -12,8 +12,8 @@ import { TokenInterface } from "../types/AuthInterfaces";
 import { login } from "../validations/auth.validation";
 /**
  * Generate token
- * @param {UUID | string} userId
- * @param {dayjs.Dayjs} expires
+ * @param {(UUID|string)} userId
+ * @param {dayjs.Dayjs} expiry
  * @param {TokenType} type
  * @param {string} [secret]
  * @returns {string}
@@ -38,10 +38,11 @@ const generateToken = (
 /**
  * Save a token
  * @param {string} token
- * @param {UUID | string} userUuid
+ * @param {(UUID|string)} userUuid
  * @param {dayjs.Dayjs} expires
  * @param {TokenType} type
- * @param {boolean} [blacklisted]
+ * @param {boolean} [blacklisted=false]
+ * @param {(dayjs.Dayjs|null)} [loginExpiry=null]
  * @returns {Promise<Token>}
  */
 const saveToken = async (
@@ -92,6 +93,12 @@ const verifyToken = async (token: string, type: TokenType) => {
   }
 };
 
+/**
+ * Get expired refresh token and return token entry if the login is not expired yet
+ * @param {string} token
+ * @param {secret} string
+ * @returns {Promise<Token>}
+ */
 const getExpiredRefreshToken = async (token: string, secret: string) => {
   const expiredRefreshToken = jwt.verify(token, secret, {
     algorithms: ["HS256"],
@@ -114,6 +121,11 @@ const getExpiredRefreshToken = async (token: string, secret: string) => {
   }
 };
 
+/**
+ * Issue new access token or new access & refresh tokens if refresh token is expired but still valid
+ * @param {string} refreshToken
+ * @returns {Promise<Object>}
+ */
 const refreshTokens = async (refreshToken: string) => {
   let tokenFromDatabase: PrismaToken;
   let tokenIsExpired = false;
@@ -141,6 +153,7 @@ const refreshTokens = async (refreshToken: string) => {
   if (!tokenIsExpired) {
     // Issue new access token
     return {
+      user: user,
       access: generateAccessToken(tokenFromDatabase.ownerUuid),
     };
   } else {
@@ -155,6 +168,7 @@ const refreshTokens = async (refreshToken: string) => {
       loginExpires
     );
     return {
+      user: user,
       access: newAuthToken,
       refresh: newRefreshToken,
     };
@@ -163,7 +177,7 @@ const refreshTokens = async (refreshToken: string) => {
 /**
  * Generate access token
  * @param {userUuid} string
- * @returns {Promise<Object>}
+ * @returns {Object}
  */
 const generateAccessToken = (userUuid: string) => {
   const accessTokenExpires = dayjs().add(
@@ -185,6 +199,8 @@ const generateAccessToken = (userUuid: string) => {
 /**
  * Generate refresh token
  * @param {userUuid} string
+ * @param {boolean} [isLogin=true]
+ * @param {(dayjs.Dayjs|null)} [loginExpiry=null]
  * @returns {Promise<Object>}
  */
 const generateRefreshToken = async (
@@ -226,6 +242,12 @@ const generateRefreshToken = async (
   };
 };
 
+/**
+ * Generate both auth token
+ * @param {User} user
+ * @param {boolean} [isLogin=true]
+ * @returns {Promise<string>}
+ */
 const generateAuthTokens = async (user: User, isLogin = true) => {
   return {
     access: generateAccessToken(user.uuid),

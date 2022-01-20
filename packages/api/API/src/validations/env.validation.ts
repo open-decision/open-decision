@@ -43,5 +43,8 @@ export const EnvVars = z
       .optional()
       .default("30")
       .transform((str) => parseInt(str, 10)),
+    SENTRY_DSN: z.string().optional(),
+    INSTANCE_NAME: z.string().optional().default("OD Backend"),
+    PUBLIC_API_DOCUMENTATION: z.string().optional().default("false"),
   })
   .merge(MailserverConfig.partial());

@@ -3,6 +3,7 @@ import * as R from "remeda";
 import httpStatus from "http-status";
 import ApiError from "../utils/ApiError";
 import catchAsync from "../utils/catchAsync";
+import pickSafeUserProperties from "../utils/pickSafeUserProperties";
 import { userService } from "../services";
 import { User } from "prisma/prisma-client";
 namespace Express {
@@ -33,7 +34,7 @@ const getUser = catchAsync(async (req: Request, res: Response) => {
       message: "User not found",
     });
   }
-  res.send({ ...user, password: "Password was redacted." });
+  res.send(pickSafeUserProperties(user));
 });
 
 const updateUser = catchAsync(async (req: Request, res: Response) => {
@@ -44,7 +45,7 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
     res.locals.userUuid,
     updateData
   );
-  res.send({ ...user, password: "Password was redacted." });
+  res.send(pickSafeUserProperties(user));
 });
 
 const deleteUser = catchAsync(async (req: Request, res: Response) => {

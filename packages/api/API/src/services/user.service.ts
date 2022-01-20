@@ -4,7 +4,8 @@ import ApiError from "../utils/ApiError";
 import httpStatus from "http-status";
 /**
  * Create a user
- * @param {Object} userBody
+ * @param {string} email
+ * @param {string} password
  * @returns {Promise<User>}
  */
 const createUser = async (email: string, password: string) => {
@@ -12,22 +13,8 @@ const createUser = async (email: string, password: string) => {
 };
 
 /**
- * Query for users
- * @param {Object} filter - Mongo filter
- * @param {Object} options - Query options
- * @param {string} [options.sortBy] - Sort option in the format: sortField:(desc|asc)
- * @param {number} [options.limit] - Maximum number of results per page (default = 10)
- * @param {number} [options.page] - Current page (default = 1)
- * @returns {Promise<QueryResult>}
- */
-// const queryUsers = async (filter, options) => {
-//   const users = await User.paginate(filter, options);
-//   return users;
-// };
-
-/**
  * Get user by uuid or id
- * @param {UUID|number} uuidOrId
+ * @param {(string|number)} uuidOrId
  * @returns {Promise<User>}
  */
 const getUserByUuidOrId = async (uuidOrId: string | number) => {
@@ -45,7 +32,7 @@ const getUserByEmail = async (email: string) => {
 
 /**
  * Update user by uuid or id
- * @param {UUID | number} userIdOrUUID
+ * @param {(string|number)} userIdOrUUID
  * @param {UserBody} updateBody
  * @returns {Promise<User>}
  */
@@ -82,7 +69,7 @@ const updateUserByUuidOrId = async (
 
 /**
  * Delete user by uuid or id
- * @param {UUID | number} userIdOrUUID
+ * @param {(string|number)} userIdOrUUID
  * @returns {Promise<User>}
  */
 const deleteUserByUuidOrId = async (userIdOrUUID: string | number) => {

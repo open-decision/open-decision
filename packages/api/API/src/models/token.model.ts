@@ -6,10 +6,11 @@ import { FindTokenInterface } from "../types/types";
 /**
  * Store a token in DB
  * @param {string} token
- * @param {UUID | string} userUuid
+ * @param {(UUID|string)} userUuid
  * @param {dayjs.Dayjs} expiry
  * @param {TokenType} type
- * @param {bool} blacklisted
+ * @param {boolean} blacklisted
+ * @param {dayjs.Dayjs} loginExpiry
  * @returns {Promise<Token>}}
  */
 
@@ -35,9 +36,7 @@ async function storeInDb(
 
 /**
  * Find a token stored in the DB
- * @param {string} token
- * @param {TokenType} type
- * @param {bool} blacklisted
+ * @param {FindTokenInterface} constraints
  * @returns {Promise<Token>}}
  */
 
@@ -62,9 +61,9 @@ async function deleteFromDbById(id: number) {
 
 /**
  * Delete all token of one user of a specific type
- * @param {UUID} userUuid
- *  @param {TokenType} type
- * @returns {BatchPayload}}
+ * @param {string} userUuid
+ * @param {TokenType} type
+ * @returns {Promise<Prisma.BatchPayload>}
  */
 async function deleteAllTokenOfUser(userUuid: string, type: TokenType) {
   return prisma.token.deleteMany({

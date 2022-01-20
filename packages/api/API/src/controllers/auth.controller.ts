@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import config from "../config/config";
 import catchAsync from "../utils/catchAsync";
+import pickSafeUserProperties from "../utils/pickSafeUserProperties";
 import {
   userService,
   tokenService,
@@ -30,7 +31,7 @@ const register = catchAsync(async (req: Request, res: Response) => {
   });
   res
     .status(httpStatus.CREATED)
-    .send({ user: { ...user, password: "Password was redacted." }, access });
+    .send({ user: pickSafeUserProperties(user), access });
 });
 
 const login = catchAsync(async (req: Request, res: Response) => {
@@ -43,7 +44,7 @@ const login = catchAsync(async (req: Request, res: Response) => {
     httpOnly: true,
     sameSite: "none",
   });
-  res.send({ access });
+  res.send({ user: pickSafeUserProperties(user), access });
 });
 
 const logout = catchAsync(async (req: Request, res: Response) => {
@@ -70,7 +71,10 @@ const refreshTokens = catchAsync(async (req: Request, res: Response) => {
     });
   }
 
-  res.send({ access: refreshedTokens?.access });
+  res.send({
+    user: pickSafeUserProperties(refreshedTokens.user),
+    access: refreshedTokens?.access,
+  });
 });
 
 const forgotPassword = catchAsync(async (req: Request, res: Response) => {
