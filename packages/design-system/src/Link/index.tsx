@@ -16,10 +16,6 @@ export const baseLinkStyles = css({
 });
 
 export const underlineLinkStyles = css({
-  "&:hover": {
-    color: "$gray12",
-  },
-
   variants: {
     underline: {
       true: {

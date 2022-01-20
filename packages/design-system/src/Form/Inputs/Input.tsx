@@ -1,11 +1,11 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import * as React from "react";
-import { styled, StyleObject } from "../../stitches";
+import { styled } from "../../stitches";
 import { baseInputStyles, baseTextInputStyle } from "../shared/styles";
 import { Box } from "../../Box";
 import { useInputFocus } from "./useInputFocus";
 
-const StyledBox = styled(Box, baseInputStyles, baseTextInputStyle, {
+const StyledBox = styled(Box, baseTextInputStyle, baseInputStyles, {
   borderRadius: "$md",
   display: "flex",
   alignItems: "center",
@@ -37,13 +37,11 @@ export type InputProps = {
   name: string;
   Buttons?: JSX.Element | JSX.Element[];
   Icon?: React.ReactNode;
-  css?: StyleObject;
-  size?: React.ComponentProps<typeof StyledBox>["size"];
-  alignByContent?: React.ComponentProps<typeof StyledBox>["alignByContent"];
   disabled?: boolean;
   autoFocus?: boolean;
   placeholder?: string;
-} & React.ComponentProps<typeof StyledInput>;
+} & React.ComponentProps<typeof StyledBox> &
+  React.ComponentProps<typeof StyledInput>;
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   function Input(

@@ -9,14 +9,6 @@ export const baseInputStyles = css({
 
   transition: "all 0.2s",
 
-  "&:hover": {
-    borderColor: "$primary9",
-
-    ".icon > svg": {
-      stroke: "$primary9",
-    },
-  },
-
   "&[data-state='checked']": {
     backgroundColor: "$primary9",
     borderColor: "$primary9",
