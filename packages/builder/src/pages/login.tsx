@@ -91,7 +91,7 @@ export default function Login(): JSX.Element {
                 color: "$black",
               }}
               underline={false}
-              href="/password_reset"
+              href="/forgot_password"
             >
               Passwort vergessen?
             </Link>

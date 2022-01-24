@@ -3,6 +3,10 @@ import * as Either from "fp-ts/Either";
 import { pipe } from "fp-ts/function";
 import * as Task from "fp-ts/Task";
 
+const errorMessages = {
+  500: "Es gab einen Error auf dem Server. Bitte versuchen Sie es erneut.",
+};
+
 type ValidationFn<TData> = (responseBody: unknown) => TData;
 type Config<TData> = {
   onSuccess: (data: TData) => void;
@@ -39,6 +43,10 @@ export const safeFetch = <TData>(
           if (response.ok) return await response.json();
         } else {
           if (response.ok) return response.ok;
+        }
+
+        if (response.status >= 400) {
+          throw new Error(errorMessages["500"]);
         }
 
         throw new Error(response.statusText);
