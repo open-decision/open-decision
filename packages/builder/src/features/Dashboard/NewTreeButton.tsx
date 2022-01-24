@@ -1,103 +1,83 @@
 import React from "react";
-import * as Dialog from "@radix-ui/react-dialog";
-import { styled, Button } from "@open-legal-tech/design-system";
-import { useTreeStore } from "./hooks/useTrees";
-import { PlusCircle } from "react-feather";
+import {
+  Button,
+  Box,
+  Dialog,
+  Heading,
+  Label,
+  Input,
+  useForm,
+  ValidationMessage,
+  ButtonProps,
+} from "@open-legal-tech/design-system";
 
-const Overlay = styled(Dialog.Overlay, {
-  backgroundColor: "rgba(0, 0, 0, .15)",
-  position: "fixed",
-  top: 0,
-  right: 0,
-  bottom: 0,
-  left: 0,
-});
-
-const Content = styled(Dialog.Content, {
-  position: "fixed",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  minWidth: 200,
-  maxWidth: "fit-content",
-  maxHeight: "85vh",
-  padding: "$6 $8",
-  marginTop: "-5vh",
-  backgroundColor: "white",
-  borderRadius: 6,
-  borderLeft: "4px solid",
-  borderLeftColor: "$emerald500",
-
-  "&:focus": {
-    outline: "none",
-  },
-});
-
-const Form = styled("form", {
-  marginTop: "$6",
-  display: "flex",
-  flexDirection: "column",
-});
-
-const DialogButton = styled(Button, {
-  display: "flex",
-  alignItems: "center",
-});
-export const NewTreeButton: React.FC = () => {
-  const [name, setName] = React.useState("");
-  const [open, setOpen] = React.useState(false);
-  const createTree = useTreeStore(
-    React.useCallback((state) => state.createTree, [])
-  );
+export const NewTreeButton = (props: ButtonProps) => {
+  const [Form, { register }] = useForm({ defaultValues: { treeName: "" } });
 
   return (
-    <Dialog.Root open={open} onOpenChange={setOpen}>
+    <Dialog.Root>
       <Dialog.Trigger asChild>
-        <DialogButton variant="secondary" className="my-8" size="large">
-          <PlusCircle className="w-6 h-6 mr-2 inline" />
-          Neue Anwendung erstellen
-        </DialogButton>
+        <Button {...props}>Neues Projekt erstellen</Button>
       </Dialog.Trigger>
-      <Overlay />
-      <Content>
-        {/* <Box
+      <Dialog.Content
+        css={{ minWidth: "350px", paddingTop: "$2", zIndex: "$10" }}
+      >
+        <Box
           css={{
             display: "flex",
             justifyContent: "space-between",
+            marginBottom: "$6",
             alignItems: "center",
           }}
         >
-          <Heading css={{ marginRight: "$8" }}>Neuen Baum hinzufügen</Heading>
-          <DialogButton
-            variant="tertiary"
-            label="Baumerstellung schließen"
-            as={IconButton}
-          >
-            <Cross1Icon />
-          </DialogButton>
-        </Box> */}
+          <Dialog.Title asChild>
+            <Heading size="extra-small">Neues Projekt erstellen</Heading>
+          </Dialog.Title>
+          <Dialog.CloseButton />
+        </Box>
         <Form
-          onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
-            event.preventDefault();
-            createTree({ name }, () => setOpen(false));
+          css={{ display: "flex", flexDirection: "column" }}
+          onSubmit={({ treeName }) => {
+            return send({
+              type: "createTree",
+              name: treeName,
+            });
           }}
         >
-          {/* <Field
-            label="Name"
-            layout="inline"
-            name="name"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-          /> */}
+          <Dialog.Description asChild>
+            <Label size="small" htmlFor="treeName">
+              Projektname
+            </Label>
+          </Dialog.Description>
+          <Input
+            autoFocus
+            {...register("treeName", {
+              required: {
+                value: true,
+                message: "Es muss ein Name vergeben werden.",
+              },
+            })}
+            name="treeName"
+            id="treeName"
+            css={{ marginBlock: "$2" }}
+            required
+          />
+          <ValidationMessage name="treeName" />
+
           <Button
+            size="small"
             variant="secondary"
-            css={{ marginTop: "$6", alignSelf: "flex-end" }}
+            css={{
+              colorScheme: "success",
+              alignSelf: "end",
+              marginTop: "$6",
+            }}
             type="submit"
           >
             Erstellen
           </Button>
         </Form>
-      </Content>
+      </Dialog.Content>
     </Dialog.Root>
   );
 };

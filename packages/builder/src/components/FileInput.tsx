@@ -26,7 +26,7 @@ export type FileInputProps = {
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
   children: React.ReactNode;
   className?: string;
-};
+} & React.ComponentProps<typeof StyledLabel>;
 
 /**
  * A custom Form element wrapping the native file input type.
