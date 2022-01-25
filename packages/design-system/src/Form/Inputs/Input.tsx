@@ -15,6 +15,7 @@ const StyledBox = styled(Box, baseTextInputStyle, baseInputStyles, {
   $$paddingInline: "$space$2",
   $$paddingBlock: "$space$3",
   paddingInline: "$$paddingInline",
+  gap: "$3",
 });
 
 const StyledInput = styled("input", {

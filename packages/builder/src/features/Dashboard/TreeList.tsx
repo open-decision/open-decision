@@ -1,7 +1,7 @@
 import React from "react";
 import { parseISO, format } from "date-fns";
 import de from "date-fns/locale/de";
-import { fuzzySearch, Search, sortByKey } from "./Filter";
+import { fuzzySearch, sortByKey } from "./filter";
 import { motion } from "framer-motion";
 import { InlinedValidTreeNode, TreeState } from "./types";
 import { identity, pipe } from "remeda";
@@ -9,15 +9,21 @@ import { TreeTags } from "./TreeTags";
 import {
   Box,
   Button,
+  Field,
   Heading,
   HeadingGroup,
   Icon,
+  iconStyles,
+  Input,
+  Reel,
+  Stack,
   Text,
+  useForm,
 } from "@open-legal-tech/design-system";
 import Link from "next/link";
 import { mapObjToArr } from "./utils";
 import { useTreeStore } from "./hooks/useTrees";
-import { ChevronDown, Trash } from "react-feather";
+import { ChevronDown, Search, Trash } from "react-feather";
 
 type TreeCard = { tree: InlinedValidTreeNode };
 
@@ -28,12 +34,11 @@ const TreeCard: React.FC<TreeCard> = ({ tree }) => {
 
   return (
     <Box
-      css={{ padding: "$4" }}
-      className="bg-gray1 rounded-md shadow-md space-y-2 hover:shadow-lg focus-within:shadow-lg transition-all duration-100 border-l-4 border-primary9"
+      css={{ padding: "$4", backgroundColor: "$gray1", borderRadius: "$md" }}
     >
       <TreeTags tree={tree} />
 
-      <div className="flex items-baseline">
+      <Stack css={{ alignItems: "baseline" }}>
         <HeadingGroup.Container className="flex-grow">
           <Heading as="h3" size="small">
             {tree.name}
@@ -42,7 +47,7 @@ const TreeCard: React.FC<TreeCard> = ({ tree }) => {
             Erstellt am: {format(parseISO(tree.createdAt), "P", { locale: de })}
           </HeadingGroup.SubHeading>
         </HeadingGroup.Container>
-        <div className="self-end space-x-4 flex">
+        <Reel css={{ alignSelf: "flex-end", gap: "$4" }}>
           <Button
             variant="secondary"
             onClick={() => deleteTree(tree.id)}
@@ -55,8 +60,8 @@ const TreeCard: React.FC<TreeCard> = ({ tree }) => {
           <Link href={`/builder/${tree.id}`}>
             <Button variant="secondary">Öffnen</Button>
           </Link>
-        </div>
-      </div>
+        </Reel>
+      </Stack>
     </Box>
   );
 };
@@ -88,6 +93,7 @@ const SortButton: React.FunctionComponent<SortButton> = ({
   return (
     <Button
       variant="ghost"
+      size="small"
       onClick={() =>
         setSort({
           key: name,
@@ -101,8 +107,9 @@ const SortButton: React.FunctionComponent<SortButton> = ({
         animate={
           sort.key === name ? (sort.descending ? "up" : "down") : "neutral"
         }
+        className={iconStyles()}
       >
-        <ChevronDown className="w-6" />
+        <ChevronDown />
       </motion.span>
     </Button>
   );
@@ -127,25 +134,48 @@ export const TreeList: React.FC<TreeList> = ({ data }) => {
     descending: true,
   });
 
+  const [Form] = useForm({
+    defaultValues: {
+      search: "",
+    },
+  });
+
+  const handleFilterChange = React.useCallback(
+    function handleFilterChange() {
+      const arrayData = mapObjToArr(data);
+
+      const modifiedData = pipe(
+        arrayData,
+        filter ? filterData(filter) : identity,
+        sort.key ? sortData(sort) : identity
+      );
+
+      setFilteredData(modifiedData);
+    },
+    [data, filter, sort]
+  );
+
   React.useEffect(() => {
-    const arrayData = mapObjToArr(data);
-
-    const modifiedData = pipe(
-      arrayData,
-      filter ? filterData(filter) : identity,
-      sort.key ? sortData(sort) : identity
-    );
-
-    setFilteredData(modifiedData);
-  }, [data, filter, sort]);
+    handleFilterChange();
+  }, [handleFilterChange]);
 
   return (
-    <div className="space-y-8 my-12">
-      <Heading className="text-xl font-bold">Ihre Anwendungen</Heading>
-      <Search setValue={setFilter} value={filter} />
-      <div>
-        <Text className="flex items-center">
-          Sortieren nach:{" "}
+    <Stack css={{ gap: "$3" }}>
+      <Form onSubmit={handleFilterChange} css={{ display: "flex", gap: "$2" }}>
+        <Field label="Suche" isLabelVisible={false} css={{ flex: "1" }}>
+          <Input
+            name="search"
+            value={filter || ""}
+            onChange={(event) => setFilter(event.target.value)}
+            Icon={
+              <Icon>
+                <Search />
+              </Icon>
+            }
+            placeholder="Suche"
+          />
+        </Field>
+        <Text css={{ display: "flex", alignItems: "center" }}>
           <SortButton sort={sort} setSort={setSort} name="name" label="Name" />
           <SortButton
             sort={sort}
@@ -154,14 +184,14 @@ export const TreeList: React.FC<TreeList> = ({ data }) => {
             label="Datum"
           />
         </Text>
-        <div className="space-y-6 mt-2">
-          {filteredData.map((tree) => (
-            <motion.div key={tree.id} layout>
-              <TreeCard tree={tree} />
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </div>
+      </Form>
+      <Stack css={{ gap: "$4", marginTop: "$1" }}>
+        {filteredData.map((tree) => (
+          <motion.div key={tree.id} layout>
+            <TreeCard tree={tree} />
+          </motion.div>
+        ))}
+      </Stack>
+    </Stack>
   );
 };

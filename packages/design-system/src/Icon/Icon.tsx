@@ -1,10 +1,10 @@
 import * as React from "react";
-import { styled } from "../stitches";
+import { styled, css } from "../stitches";
 import { alignByContent } from "../stitches/utils";
 import * as AccessibleIcon from "@radix-ui/react-accessible-icon";
 import { iconSizes } from "./shared";
 
-const StyledIcon = styled("span", alignByContent, iconSizes, {
+export const iconStyles = css(alignByContent, iconSizes, {
   transform: "translate($$XTranslation)",
   display: "inline-flex",
   alignItems: "center",
@@ -18,6 +18,8 @@ const StyledIcon = styled("span", alignByContent, iconSizes, {
     size: "medium",
   },
 });
+
+const StyledIcon = styled("span", iconStyles);
 
 export type IconProps = {
   children: React.ReactNode;

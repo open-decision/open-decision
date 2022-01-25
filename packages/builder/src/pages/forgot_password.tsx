@@ -12,7 +12,7 @@ import { MainContent } from "components";
 import { useAuth } from "features/Auth/useAuth";
 import * as React from "react";
 
-export default function Login(): JSX.Element {
+export default function ForgotPassword(): JSX.Element {
   const [Form, { register }] = useForm({
     defaultValues: {
       email: "",
@@ -53,7 +53,9 @@ export default function Login(): JSX.Element {
             Decision registriert haben.
           </Text>
           <Form
-            onSubmit={({ email }) => send({ type: "RESET_PASSWORD", email })}
+            onSubmit={({ email }) =>
+              send({ type: "REQUEST_PASSWORD_RESET", email })
+            }
             css={{ display: "flex", flexDirection: "column" }}
           >
             <Field label="Mailadresse">

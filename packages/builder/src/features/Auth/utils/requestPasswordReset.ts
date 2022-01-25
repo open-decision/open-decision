@@ -1,13 +1,13 @@
 import { safeFetch } from "./safeFetch";
 
-export const resetPassword = (
-  password: string,
+export const requestPasswordReset = (
+  email: string,
   onSuccess: () => void,
   onError: (error: string) => void
 ) =>
   safeFetch(
-    "/auth/reset-password",
-    { method: "POST", body: { password } },
+    "/auth/forgot-password",
+    { method: "POST", body: { email } },
     {
       onSuccess,
       onError,

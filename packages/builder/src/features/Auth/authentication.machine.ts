@@ -1,10 +1,11 @@
 import { NextRouter } from "next/router";
 import { protectedRoutes } from "src/config/protectedRoutes";
-import { assign, createMachine, Interpreter, Sender } from "xstate";
+import { assign, createMachine, Interpreter } from "xstate";
 import { login } from "./utils/login";
 import { logout } from "./utils/logout";
 import { refresh } from "./utils/refresh";
 import { register } from "./utils/register";
+import { requestPasswordReset } from "./utils/requestPasswordReset";
 import { resetPassword } from "./utils/resetPassword";
 import { LoginResponse } from "./utils/shared";
 
@@ -44,17 +45,20 @@ export type Events =
   | { type: "LOG_OUT" }
   | { type: "LOG_IN"; email: string; password: string }
   | { type: "SUCCESSFULL_LOGIN"; user: LoginResponse }
-  | { type: "FAILED_LOGIN"; error: any }
+  | { type: "FAILED_LOGIN"; error: string }
   | { type: "SAFE_USER"; user: LoginResponse }
   | { type: "REGISTER"; email: string; password: string }
   | { type: "SUCCESSFULL_REGISTER"; user: LoginResponse }
-  | { type: "FAILED_REGISTER"; error: any }
+  | { type: "FAILED_REGISTER"; error: string }
   | { type: "SUCCESSFULL_REDIRECT" }
   | { type: "SUCCESSFULL_LOGOUT" }
   | { type: "FAILED_LOGOUT" }
-  | { type: "RESET_PASSWORD"; email: string }
-  | { type: "SUCCESSFULL_RESET" }
-  | { type: "FAILED_RESET"; error: any };
+  | { type: "REQUEST_PASSWORD_RESET"; email: string }
+  | { type: "RESET_PASSWORD"; password: string }
+  | { type: "SUCCESSFULL_PASSWORD_RESET" }
+  | { type: "FAILED_PASSWORD_RESET"; error: string }
+  | { type: "SUCCESSFULL_PASSWORD_RESET_REQUEST" }
+  | { type: "FAILED_PASSWORD_RESET_REQUEST"; error: string };
 
 export type AuthService = Interpreter<Context, any, Events, State>;
 
@@ -81,10 +85,16 @@ export const createAuthenticationMachine = (router: NextRouter) =>
               target: "loggedIn",
               actions: "assignUserToContext",
             },
-            REPORT_IS_LOGGED_OUT: {
-              target: "loggedOut",
-              actions: "assignLocationToContext",
-            },
+            REPORT_IS_LOGGED_OUT: [
+              {
+                target: "loggedOut",
+                actions: "assignLocationToContext",
+                cond: () => protectedRoutes.includes(router.pathname),
+              },
+              {
+                target: "loggedOut.idle",
+              },
+            ],
           },
         },
         loggedIn: {
@@ -140,21 +150,38 @@ export const createAuthenticationMachine = (router: NextRouter) =>
             REGISTER: {
               target: ".register",
             },
+            REQUEST_PASSWORD_RESET: {
+              target: ".requestPasswordReset",
+            },
             RESET_PASSWORD: {
               target: ".resetPassword",
             },
           },
           states: {
             idle: {},
+            requestPasswordReset: {
+              invoke: {
+                src: "requestPasswordReset",
+              },
+              on: {
+                SUCCESSFULL_PASSWORD_RESET_REQUEST: {
+                  target: "#authentication.loggedOut.idle",
+                },
+                FAILED_PASSWORD_RESET_REQUEST: {
+                  target: "#authentication.loggedOut",
+                  actions: "assignErrorToContext",
+                },
+              },
+            },
             resetPassword: {
               invoke: {
                 src: "resetPassword",
               },
               on: {
-                SUCCESSFULL_RESET: {
+                SUCCESSFULL_PASSWORD_RESET: {
                   target: "#authentication.loggedOut",
                 },
-                FAILED_RESET: {
+                FAILED_PASSWORD_RESET: {
                   target: "#authentication.loggedOut",
                   actions: "assignErrorToContext",
                 },
@@ -179,7 +206,7 @@ export const createAuthenticationMachine = (router: NextRouter) =>
               },
             },
             redirectToLogin: {
-              invoke: { src: "redirectToLogin" },
+              invoke: { src: "redirectToLogin", onDone: { target: "idle" } },
             },
             register: {
               invoke: {
@@ -205,20 +232,17 @@ export const createAuthenticationMachine = (router: NextRouter) =>
     },
     {
       services: {
-        checkIfLoggedIn: () => async (send: Sender<Events>) => {
+        checkIfLoggedIn: () => async (send) => {
           await refresh(
             (user) =>
               send({
                 type: "REPORT_IS_LOGGED_IN",
                 user,
               }),
-            (error) => {
-              console.log(error);
-              return send({ type: "REPORT_IS_LOGGED_OUT" });
-            }
+            () => send({ type: "REPORT_IS_LOGGED_OUT" })
           );
         },
-        login: (_context, event) => async (send: Sender<Events>) => {
+        login: (_context, event) => async (send) => {
           if (event.type !== "LOG_IN") return;
           const { email, password } = event;
 
@@ -233,7 +257,7 @@ export const createAuthenticationMachine = (router: NextRouter) =>
             (error) => send({ type: "FAILED_LOGIN", error })
           );
         },
-        register: (_context, event) => async (send: Sender<Events>) => {
+        register: (_context, event) => async (send) => {
           if (event.type !== "REGISTER") return;
 
           const { email, password } = event;
@@ -249,7 +273,7 @@ export const createAuthenticationMachine = (router: NextRouter) =>
             (error) => send({ type: "FAILED_REGISTER", error })
           );
         },
-        logout: (_context, event) => async (send: Sender<Events>) => {
+        logout: (_context, event) => async (send) => {
           if (event.type !== "LOG_OUT") return;
 
           await logout(
@@ -257,21 +281,27 @@ export const createAuthenticationMachine = (router: NextRouter) =>
             () => send({ type: "FAILED_LOGOUT" })
           );
         },
-        resetPassword: (_context, event) => async (send: Sender<Events>) => {
+        requestPasswordReset: (_context, event) => async (send) => {
+          if (event.type !== "REQUEST_PASSWORD_RESET") return;
+
+          await requestPasswordReset(
+            event.email,
+            () => send("SUCCESSFULL_PASSWORD_RESET_REQUEST"),
+            (error) => send({ type: "FAILED_PASSWORD_RESET_REQUEST", error })
+          );
+        },
+        resetPassword: (_context, event) => async (send) => {
           if (event.type !== "RESET_PASSWORD") return;
 
           await resetPassword(
-            event.email,
-            () => send("SUCCESSFULL_RESET"),
-            (error) => send({ type: "FAILED_RESET", error })
+            event.password,
+            () => send("SUCCESSFULL_PASSWORD_RESET"),
+            (error) => send({ type: "FAILED_PASSWORD_RESET", error })
           );
         },
-        redirectToLogin:
-          (_context, _event) => async (_send: Sender<Events>) => {
-            protectedRoutes.includes(router.pathname)
-              ? router.push("/login")
-              : null;
-          },
+        redirectToLogin: (_context, _event) => async (_send) => {
+          router.push("/login");
+        },
         redirectToLocation: (context) => async () => {
           router.push(context?.location ?? "/");
         },
@@ -305,7 +335,8 @@ export const createAuthenticationMachine = (router: NextRouter) =>
             if (
               event.type !== "FAILED_LOGIN" &&
               event.type !== "FAILED_REGISTER" &&
-              event.type !== "FAILED_RESET"
+              event.type !== "FAILED_PASSWORD_RESET" &&
+              event.type !== "FAILED_PASSWORD_RESET_REQUEST"
             )
               return;
 
