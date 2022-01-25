@@ -45,8 +45,12 @@ export const safeFetch = <TData>(
           if (response.ok) return response.ok;
         }
 
-        if (response.status >= 400) {
+        if (response.status >= 500) {
           throw new Error(errorMessages["500"]);
+        }
+
+        if (response.status >= 400) {
+          throw new Error(response.statusText);
         }
 
         throw new Error(response.statusText);
