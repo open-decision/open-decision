@@ -97,7 +97,11 @@ export function NodeEditingSidebar({
           >
             <RichTextEditor.Toolbar css={{ borderBottom: "inherit" }} />
             <RichTextEditor.Editable
-              css={{ padding: "$2", backgroundColor: "$gray1" }}
+              css={{
+                padding: "$2",
+                backgroundColor: "$gray1",
+                borderRadius: "0",
+              }}
             />
           </Box>
         </RichTextEditor.Root>

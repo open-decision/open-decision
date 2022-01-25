@@ -97,7 +97,7 @@ export function Root({
         keys: ["label"],
       });
 
-      const nonEmptyInputValue = (inputValue?.length ?? 0) > 0;
+      const nonEmptyInputValue = (inputValue?.trim().length ?? 0) > 0;
       const nonEqualInputValueAndFilteredItem = !items.some((item) => {
         return item.label === inputValue?.trim();
       });
