@@ -4,7 +4,7 @@ import { Box } from "../../Box";
 import { Item, ComboboxContext } from "./useCombobox";
 import { useCombobox as useComboboxPrimitive } from "downshift";
 import { StyleObject } from "../../stitches";
-import { useController } from "react-hook-form";
+import { useController, useFormContext } from "react-hook-form";
 
 const fallbackSelectedItem = {
   id: "",
@@ -38,6 +38,7 @@ export function Root({
   name,
   defaultValue,
 }: ComboboxRootProps) {
+  const { trigger } = useFormContext();
   const {
     field: { onChange, value: selectedItemId },
     formState: { isValid, isValidating },
@@ -91,7 +92,7 @@ export function Root({
       onSelectedItemChange?.(item);
       onChange(item?.id ?? fallbackSelectedItem.id);
     },
-    onInputValueChange: ({ inputValue }) => {
+    onInputValueChange: async ({ inputValue }) => {
       const filteredItems = matchSorter(itemSubset, inputValue ?? "", {
         keys: ["label"],
       });
@@ -101,11 +102,10 @@ export function Root({
         return item.label === inputValue?.trim();
       });
 
+      const isValid = await trigger();
+
       const isCreating = validIsCreating(
-        nonEmptyInputValue &&
-          nonEqualInputValueAndFilteredItem &&
-          isValid &&
-          !isValidating
+        nonEmptyInputValue && nonEqualInputValueAndFilteredItem && isValid
       );
 
       if (isCreating)
