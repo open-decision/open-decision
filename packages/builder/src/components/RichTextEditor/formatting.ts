@@ -1,8 +1,8 @@
 import { RichTextContent } from "@open-decision/type-classes";
-import { Editor, Element, Path, Text, Transforms } from "slate";
+import { Editor, Element, Text, Transforms } from "slate";
 import { ReactEditor } from "slate-react";
 import { isLink } from "./contentTypes/link";
-import { createListUtility, isList } from "./contentTypes/lists";
+import { isList } from "./contentTypes/lists";
 
 export function isBlockType(
   elemType: RichTextContent.TElements
@@ -13,9 +13,16 @@ export function isBlockType(
 export const isElement =
   (editor: Editor) => (elemType: RichTextContent.TElements) => {
     const [match] = Editor.nodes(editor, {
-      match: (n) => {
-        return Element.isElement(n) && n.type === elemType;
-      },
+      match: (n) => Element.isElement(n) && n.type === elemType,
+    });
+
+    return Boolean(match);
+  };
+
+export const isInside =
+  (editor: Editor) => (elemType: RichTextContent.TElements[]) => {
+    const match = Editor.above(editor, {
+      match: (n) => Element.isElement(n) && elemType.includes(n.type),
     });
 
     return Boolean(match);
@@ -75,8 +82,9 @@ export const toggleList =
   (editor: Editor) => (elemType: RichTextContent.TListTags) => {
     if (!editor.selection) return;
     const isActive = isElement(editor)(elemType);
+    const isInsideList = isInside(editor)(["ordered_list", "unordered_list"]);
 
-    if (isActive) {
+    if (isActive || isInsideList) {
       Transforms.unwrapNodes(editor, {
         match: (n) =>
           !Editor.isEditor(n) && Element.isElement(n) && isList(n.type),
