@@ -2,6 +2,7 @@ import { BuilderTree } from "@open-decision/type-classes";
 import { Box, Heading, Stack, styled } from "@open-legal-tech/design-system";
 import { Separator } from "@radix-ui/react-separator";
 import { BaseHeader, FileInput, MainContent } from "components";
+import { useTree } from "features/Builder/state/useTree";
 import { NewTreeButton } from "features/Dashboard/NewTreeButton";
 import { TreeList } from "features/Dashboard/TreeList";
 import { useNotificationStore } from "features/Notifications/NotificationState";
@@ -26,6 +27,7 @@ export default function Dashboard() {
   const addNotification = useNotificationStore(
     (state) => state.addNotification
   );
+  const [, send] = useTree();
   const trees = undefined;
 
   return (

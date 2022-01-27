@@ -37,12 +37,13 @@ export const NewTreeButton = (props: ButtonProps) => {
         </Box>
         <Form
           css={{ display: "flex", flexDirection: "column" }}
-          onSubmit={({ treeName }) => {
-            return send({
-              type: "createTree",
-              name: treeName,
-            });
-          }}
+          // onSubmit={({ treeName }) => {
+          //   return send({
+          //     type: "createTree",
+          //     name: treeName,
+          //   });
+          // }}
+          onSubmit={() => undefined}
         >
           <Dialog.Description asChild>
             <Label size="small" htmlFor="treeName">
