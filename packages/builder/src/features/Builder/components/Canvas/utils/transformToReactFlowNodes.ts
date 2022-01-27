@@ -12,10 +12,12 @@ export function transformToReactFlowNodes(
         name: node.name,
         relations: node.relations,
         content: node.content,
-        isConnectable:
-          connectableNodes?.some(
-            (connectableNode) => connectableNode.id === node.id
-          ) ?? false,
+        runtime: {
+          isConnectable:
+            connectableNodes?.some(
+              (connectableNode) => connectableNode.id === node.id
+            ) ?? false,
+        },
       },
       id: node.id,
       position: node.position,
