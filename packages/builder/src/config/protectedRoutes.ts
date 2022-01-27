@@ -1,1 +1,1 @@
-export const protectedRoutes = ["/", "/vorschau"];
+export const protectedRoutes = ["/", "/vorschau", "/builder"];

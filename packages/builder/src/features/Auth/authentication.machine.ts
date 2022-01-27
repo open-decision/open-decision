@@ -81,18 +81,16 @@ export const createAuthenticationMachine = (router: NextRouter) =>
             },
           },
           on: {
-            REPORT_IS_LOGGED_IN: {
-              target: "loggedIn",
-              actions: "assignUserToContext",
-            },
+            REPORT_IS_LOGGED_IN: [
+              {
+                target: "loggedIn",
+                actions: ["assignUserToContext", "assignLocationToContext"],
+              },
+            ],
             REPORT_IS_LOGGED_OUT: [
               {
                 target: "loggedOut",
                 actions: "assignLocationToContext",
-                cond: () => protectedRoutes.includes(router.pathname),
-              },
-              {
-                target: "loggedOut.idle",
               },
             ],
           },
