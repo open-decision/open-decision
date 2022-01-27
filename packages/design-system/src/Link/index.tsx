@@ -10,7 +10,6 @@ export const baseLinkStyles = css({
   textDecoration: "none",
   position: "relative",
   textStyle: "medium-text",
-  maxWidth: "max-content",
 
   focusStyle: "outer",
 });

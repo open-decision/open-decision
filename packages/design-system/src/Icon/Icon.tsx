@@ -11,7 +11,7 @@ export const iconStyles = css(alignByContent, iconSizes, {
   justifyContent: "center",
 
   "&[data-active='true'] > svg": {
-    stroke: "$primary10",
+    stroke: "$colorScheme10",
   },
 
   defaultVariants: {

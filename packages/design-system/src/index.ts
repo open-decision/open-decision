@@ -24,3 +24,4 @@ export { alignByContent } from "./stitches/utils";
 export { aliasColor } from "./internal/utils";
 export { tokens, media, mediaNumberOnly } from "./internal/tokens";
 export type { SystemColors } from "./internal/utils";
+export { visuallyHidden } from "./shared/utils";
