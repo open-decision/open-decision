@@ -4,6 +4,7 @@ import {
   ControllerRenderProps,
   useController,
   UseControllerProps,
+  useFormContext,
 } from "react-hook-form";
 
 type ControlledInputProps = Omit<UseControllerProps, "rules"> & {
@@ -18,16 +19,18 @@ export function ControlledInput({
   onChange,
   ...rules
 }: ControlledInputProps) {
+  const { trigger } = useFormContext();
   const {
     field: { onChange: fieldOnChange, ...field },
-    fieldState: { invalid },
   } = useController({ name, defaultValue, rules });
 
-  const mergedOnChange = <T extends HTMLInputElement>(
+  const mergedOnChange = async <T extends HTMLInputElement>(
     event: ChangeEvent<T>
   ) => {
     fieldOnChange(event);
-    !invalid ? onChange(event) : null;
+    const isValid = await trigger();
+
+    isValid ? onChange(event) : null;
   };
 
   return children({ onChange: mergedOnChange, ...field });
