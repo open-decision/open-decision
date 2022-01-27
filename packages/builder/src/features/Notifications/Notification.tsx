@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import {
   styled,
-  Box,
   Text,
   Heading,
   Icon,
   Button,
+  Stack,
 } from "@open-legal-tech/design-system";
 import { notification, useNotificationStore } from "./NotificationState";
 import * as Progress from "@radix-ui/react-progress";
@@ -26,39 +26,40 @@ type NotificationProps = {
 };
 
 const Container = styled(motion.div, {
-  $color: "$colors$colorScheme11",
-  boxShadow: "$5",
+  $$accentColor: "$colors$colorScheme11",
+  boxShadow: "$6",
   borderRadius: "$md",
-  backgroundColor: "$colorScheme3",
-  color: "var(--color)",
+  backgroundColor: "$white",
 
   defaultVariants: {
     variant: "neutral",
   },
 });
 
-const Header = styled("header", {
-  display: "flex",
-  alignItems: "center",
-  gap: "$3",
-});
-
 const ProgressBar = styled(Progress.Root, {
   height: 3,
+  margin: "0px 4px 4px 4px",
 });
 
 const ProgressIndicator = styled(Progress.Indicator, {
   height: "100%",
-  backgroundColor: "currentColor",
-  borderTopLeftRadius: "$md",
+  backgroundColor: "$$accentColor",
+  borderRadius: "$md",
 });
 
 export const Notification = ({ notification, id }: NotificationProps) => {
   const animation = useAnimation();
 
+  const duration =
+    notification.duration === "persistent" ? 5 : notification.duration;
+
   useEffect(() => {
+    if (notification.duration === "persistent") {
+      return animation.stop();
+    }
+
     animation.start("empty");
-  }, []);
+  }, [notification.duration]);
 
   const IconSVG = icons[notification.variant];
   const removeNotification = useNotificationStore(
@@ -92,38 +93,56 @@ export const Notification = ({ notification, id }: NotificationProps) => {
       exit="exit"
       css={{ colorScheme: notification.variant }}
       role="alert"
+      layout
       {...gestures()}
     >
+      <Stack
+        css={{
+          padding: "$5",
+          flexDirection: "row",
+          gap: "$5",
+          alignItems: "center",
+        }}
+      >
+        <Icon
+          css={{
+            marginBottom: "-2px",
+            backgroundColor: "$colorScheme3",
+            borderRadius: "$full",
+            padding: "$3",
+            color: "$$accentColor",
+          }}
+        >
+          <IconSVG />
+        </Icon>
+        <Stack css={{ gap: "$1", flex: 1 }}>
+          <Heading size="extra-small">{notification.title}</Heading>
+          <Text>{notification.content}</Text>
+        </Stack>
+        <Button
+          square
+          variant="ghost"
+          css={{
+            "&:hover": { backgroundColor: "$colorScheme3", color: "$black" },
+            "&:active": { backgroundColor: "$colorScheme5", color: "$black" },
+          }}
+          onClick={() => removeNotification(id)}
+        >
+          <Icon label="Benachrichtigung schließen">
+            <X />
+          </Icon>
+        </Button>
+      </Stack>
       <ProgressBar>
         <ProgressIndicator
           as={motion.div}
           variants={progress}
-          transition={{ duration: notification.duration }}
+          transition={{ duration }}
           initial="full"
           animate={animation}
           onAnimationComplete={() => removeNotification(id)}
         />
       </ProgressBar>
-      <Box css={{ padding: "$5" }}>
-        <Header>
-          <Icon css={{ marginBottom: "-2px" }}>
-            <IconSVG />
-          </Icon>
-          <Heading size="small" css={{ flex: 1 }}>
-            {notification.title}
-          </Heading>
-          <Button
-            alignByContent="right"
-            variant="ghost"
-            onClick={() => removeNotification(id)}
-          >
-            <Icon label="Benachrichtigung schließen">
-              <X />
-            </Icon>
-          </Button>
-        </Header>
-        <Text css={{ marginTop: "$2" }}>{notification.content}</Text>
-      </Box>
     </Container>
   );
 };

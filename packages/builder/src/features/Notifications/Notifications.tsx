@@ -12,11 +12,11 @@ export const Notifications = () => {
       css={{
         position: "absolute",
         zIndex: "9999",
-        right: "25px",
-        bottom: "25px",
+        left: "$8",
+        bottom: "$8",
         display: "grid",
         gap: "$4",
-        width: "350px",
+        width: "500px",
       }}
     >
       <AnimatePresence>

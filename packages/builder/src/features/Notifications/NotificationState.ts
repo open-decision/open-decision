@@ -8,7 +8,7 @@ export type notification = {
   variant: notificationVariants;
   title: string;
   content: string;
-  duration?: number;
+  duration?: number | "persistent";
 };
 
 export type NotificationState = {
