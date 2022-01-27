@@ -11,7 +11,7 @@ import {
   useForm,
   Link,
 } from "@open-legal-tech/design-system";
-import { BaseHeader } from "components/Header";
+import { BaseHeader } from "components/Header/Header";
 import { MainContent } from "components/Layout";
 import { NodeEditor } from "features/Builder/NodeEditor";
 import { EditorProvider } from "features/Builder/state/useEditor";
