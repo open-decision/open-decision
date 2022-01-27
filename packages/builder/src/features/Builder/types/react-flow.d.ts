@@ -3,8 +3,12 @@ import "react-flow-renderer";
 
 export type NodeData = Pick<
   BuilderNode.TNode,
-  "name" | "content" | "relations" | "isConnectable"
->;
+  "name" | "content" | "relations"
+> & {
+  runtime: {
+    isConnectable: boolean;
+  };
+};
 
 declare module "react-flow-renderer" {
   interface Connection {

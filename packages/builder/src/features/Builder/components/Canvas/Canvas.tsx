@@ -7,8 +7,14 @@ import { transformToReactFlowEdges } from "./utils/transformToReactFlowEdges";
 import { transformToReactFlowNodes } from "./utils/transformToReactFlowNodes";
 import { css, styled, StyleObject } from "@open-legal-tech/design-system";
 import { transitionDuration } from "features/Builder/utilities/constants";
-import { Node } from "./Node";
+import { Node } from "./Nodes/Node";
 import { NodeData } from "features/Builder/types/react-flow";
+
+const validConnectEvent = (
+  target: MouseEvent["target"]
+): target is HTMLDivElement | HTMLSpanElement =>
+  (target instanceof HTMLDivElement || target instanceof HTMLSpanElement) &&
+  target.dataset.nodeid != null;
 
 const Container = styled("div", {
   display: "grid",
@@ -115,12 +121,13 @@ export function Canvas({ children, css }: Props) {
           }
         }}
         onConnectEnd={(event) => {
+          if (!validConnectEvent(event.target)) return;
           if (
-            (event.target instanceof HTMLDivElement ||
-              event.target instanceof HTMLSpanElement) &&
-            event.target.dataset.nodeid &&
             sourceNodeId.current &&
-            sourceNodeId.current !== event.target.dataset.nodeid
+            connectableNodes.some(
+              //@ts-expect-error - Typescript thinks the event can be any MouseEvent although we checked that it is valid above.
+              (node) => node.id === event.target.dataset.nodeid
+            )
           ) {
             send({
               type: "addRelation",
