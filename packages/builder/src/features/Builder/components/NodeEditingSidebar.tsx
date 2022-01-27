@@ -1,11 +1,13 @@
 import {
   Box,
   Button,
-  Field,
   useForm,
   Input,
   Label,
   ControlledInput,
+  Stack,
+  Icon,
+  ValidationMessage,
 } from "@open-legal-tech/design-system";
 import { RichTextEditor } from "components/RichTextEditor";
 import { OptionTargetInputs } from "features/Builder/components/OptionTargetInput/OptionTargetInput";
@@ -14,6 +16,9 @@ import { useNodes } from "../state/useNode";
 import { useTree } from "../state/useTree";
 import { BuilderNode, BuilderTree } from "@open-decision/type-classes";
 import { nodeNameMaxLength } from "../utilities/constants";
+import { NodeMenu } from "./Canvas/Nodes/NodeMenu";
+import { NodeLabel } from "./Canvas/Nodes/NodeLabel";
+import { Star } from "react-feather";
 
 type NodeEditingSidebarProps = { node: BuilderNode.TNode };
 
@@ -25,8 +30,14 @@ export function NodeEditingSidebar({
     () => BuilderTree.getParents(node.id)(tree.context),
     [tree, node.id]
   );
+
   const parentNodes = useNodes(parentNodesIds);
-  const [Form] = useForm({ defaultValues: { name: node?.name ?? "" } });
+  const [Form] = useForm({
+    defaultValues: { name: node?.name ?? "" },
+    mode: "onChange",
+  });
+
+  const isStartNode = node.id === tree.context.startNode;
 
   return (
     <>
@@ -39,27 +50,65 @@ export function NodeEditingSidebar({
               node: { name },
             })
           }
+          css={{ gap: "$2", display: "flex", flexDirection: "column" }}
         >
-          <Field label="Knotenname" css={{ "--color": "$colors$gray11" }}>
-            <ControlledInput
-              name="name"
-              maxLength={nodeNameMaxLength}
-              onChange={(event) =>
-                send({
-                  type: "updateNode",
-                  id: node.id,
-                  node: { name: event.target.value },
-                })
-              }
-            >
-              {(field) => (
-                <Input
-                  css={{ backgroundColor: "$gray1", color: "$gray12" }}
-                  {...field}
-                />
-              )}
-            </ControlledInput>
-          </Field>
+          <Stack
+            css={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Label size="small" css={{ color: "$gray11" }}>
+              Knoten
+            </Label>
+            <Stack css={{ flexDirection: "row", gap: "$2" }}>
+              {isStartNode ? (
+                <NodeLabel
+                  css={{
+                    position: "relative",
+                    top: "unset",
+                    left: "unset",
+                    colorScheme: "success",
+                  }}
+                >
+                  <Icon size="extra-small">
+                    <Star />
+                  </Icon>
+                  Start
+                </NodeLabel>
+              ) : null}
+              <NodeMenu
+                name={node.name}
+                nodeId={node.id}
+                isStartNode={isStartNode}
+              />
+            </Stack>
+          </Stack>
+          <ControlledInput
+            name="name"
+            maxLength={nodeNameMaxLength}
+            validate={(val) =>
+              BuilderTree.isUnique(tree.context, { name: val })
+                ? true
+                : "Eine Node mit diesem Namen existiert bereits."
+            }
+            onChange={(event) =>
+              send({
+                type: "updateNode",
+                id: node.id,
+                node: { name: event.target.value },
+              })
+            }
+          >
+            {(field) => (
+              <Input
+                css={{ backgroundColor: "$gray1", color: "$gray12" }}
+                {...field}
+              />
+            )}
+          </ControlledInput>
+          <ValidationMessage name="name" />
         </Form>
       </Box>
       <Box as="section">

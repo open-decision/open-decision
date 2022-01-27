@@ -98,13 +98,24 @@ export const getConnectableNodes =
     );
   };
 
-export const getTreeHash = (
-  tree: Omit<PublicTree.TTree, "checksum" | "startNode">
-) => {
-  //TODO: include startNode once its added to the type by uncommenting
-  // const dataToHash = (({ id, startNode, nodes}) => ({ id, startNode, nodes }))(tree)
-  const dataToHash = (({ id, nodes }) => ({ id, nodes }))(tree);
+export const getTreeHash = (tree: Omit<PublicTree.TTree, "checksum">) => {
+  const dataToHash = (({ id, startNode, nodes }) => ({ id, startNode, nodes }))(
+    tree
+  );
   // Use "json-stable-stringify" to get a deterministic JSON string
   // then hash using murmur3 as hash-algo, as it's lightweight and small, seed is 0
   return murmur.murmur3(stringify(dataToHash), 0);
+};
+
+type IsUniqueNode =
+  | { name?: string; id: string }
+  | { name: string; id?: string };
+
+export const isUnique = (tree: BuilderTree.TTree, node: IsUniqueNode) => {
+  const { nodes } = tree;
+
+  return !Object.values(nodes).some(
+    (existingNode) =>
+      node?.id === existingNode.id || node?.name?.trim() === existingNode.name
+  );
 };
