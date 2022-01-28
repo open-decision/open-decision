@@ -36,8 +36,5 @@
   "version": "0.0.1",
   "workspaces": [
     "packages/*"
-  ],
-  "dependencies": {
-    "@netlify/plugin-nextjs": "^3.9.2"
-  }
+  ]
 }
