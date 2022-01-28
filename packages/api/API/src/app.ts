@@ -1,4 +1,3 @@
-import "reflect-metadata";
 import express from "express";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
@@ -23,7 +22,12 @@ if (config.NODE_ENV !== "test") {
 app.use(cookieParser());
 
 // set security HTTP headers
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy:
+      process.env.NODE_ENV === "production" ? undefined : false,
+  })
+);
 
 // parse json request body
 app.use(express.json());
@@ -44,22 +48,6 @@ if (config.NODE_ENV === "production") {
 
 // v1 api routes
 app.use("/v1", router);
-
-// app.use(
-//   "/graphql",
-//   isAuthorized,
-//   graphqlHTTP(async (req: any, res: any, graphQLParams: any) => ({
-//     schema: schema,
-//     graphiql: true,
-//     context: (req: any, res: any) => {
-//       return {
-//         ...req,
-//         prisma,
-//         userUuid: res.context.userUuid,
-//       };
-//     },
-//   }))
-// );
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {

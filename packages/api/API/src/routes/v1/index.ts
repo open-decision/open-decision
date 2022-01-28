@@ -1,6 +1,7 @@
 import express, { Router } from "express";
 import authRouter from "./auth.route";
 import userRouter from "./user.route";
+import graphqlRouter from "./graphql.route";
 import docsRouter from "./docs.route";
 import config from "../../config/config";
 const router = express.Router();
@@ -14,6 +15,7 @@ const defaultRoutes = [
     path: "/users",
     route: userRouter,
   },
+  { path: "/graphql", route: graphqlRouter },
 ];
 
 const devRoutes = [

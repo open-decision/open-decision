@@ -3,26 +3,192 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type AffectedRowsOutput {
+  count: Int!
+}
+
+"""
+The javascript `Date` as string. Type represents date and time as the ISO Date string.
+"""
+scalar DateTime
+
+input DateTimeFilter {
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  not: NestedDateTimeFilter
+  notIn: [DateTime!]
+}
+
 type DecisionTree {
-  id: ID!
+  createdAt: DateTime!
+  id: Int!
+  language: String!
+  name: String!
+  tags: JSON
+  treeData: JSON
+  updatedAt: DateTime!
+}
+
+input DecisionTreeCreateInput {
+  createdAt: DateTime
   language: String
   name: String!
-  tags: String
-  treeData: String
+  tags: JSON
+  treeData: JSON
+  updatedAt: DateTime
+}
+
+input DecisionTreeOrderByWithRelationInput {
+  createdAt: SortOrder
+  id: SortOrder
+  language: SortOrder
+  name: SortOrder
+  tags: SortOrder
+  treeData: SortOrder
+  updatedAt: SortOrder
+}
+
+enum DecisionTreeScalarFieldEnum {
+  createdAt
+  id
+  language
+  name
+  ownerUuid
+  tags
+  treeData
+  updatedAt
+}
+
+input DecisionTreeUpdateInput {
+  language: StringFieldUpdateOperationsInput
+  name: StringFieldUpdateOperationsInput
+  tags: JSON
+  treeData: JSON
+}
+
+input DecisionTreeUpdateManyMutationInput {
+  language: StringFieldUpdateOperationsInput
+  name: StringFieldUpdateOperationsInput
+  tags: JSON
+  treeData: JSON
+}
+
+input DecisionTreeWhereInput {
+  AND: [DecisionTreeWhereInput!]
+  NOT: [DecisionTreeWhereInput!]
+  OR: [DecisionTreeWhereInput!]
+  createdAt: DateTimeFilter
+  id: IntFilter
+  language: StringFilter
+  name: StringFilter
+  tags: JsonNullableFilter
+  treeData: JsonNullableFilter
+  updatedAt: DateTimeFilter
+}
+
+input DecisionTreeWhereUniqueInput {
+  id: Int
+}
+
+input IntFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntFilter
+  notIn: [Int!]
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+input JsonNullableFilter {
+  equals: JSON
+  not: JSON
 }
 
 type Mutation {
-  addTree(newTreeData: NewTreeInput!): DecisionTree!
+  createDecisionTree(data: DecisionTreeCreateInput!): DecisionTree!
+  deleteDecisionTree(where: DecisionTreeWhereUniqueInput!): DecisionTree
+  deleteManyDecisionTree(where: DecisionTreeWhereInput): AffectedRowsOutput!
+  updateDecisionTree(data: DecisionTreeUpdateInput!, where: DecisionTreeWhereUniqueInput!): DecisionTree
+  updateManyDecisionTree(data: DecisionTreeUpdateManyMutationInput!, where: DecisionTreeWhereInput): AffectedRowsOutput!
 }
 
-input NewTreeInput {
-  language: String!
-  name: String!
-  tags: String
-  treeData: String
+input NestedDateTimeFilter {
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  not: NestedDateTimeFilter
+  notIn: [DateTime!]
+}
+
+input NestedIntFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntFilter
+  notIn: [Int!]
+}
+
+input NestedStringFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  not: NestedStringFilter
+  notIn: [String!]
+  startsWith: String
 }
 
 type Query {
-  DecisionTree(id: String!): DecisionTree!
-  allTrees: [DecisionTree!]!
+  decisionTree(where: DecisionTreeWhereUniqueInput!): DecisionTree
+  decisionTrees(cursor: DecisionTreeWhereUniqueInput, distinct: [DecisionTreeScalarFieldEnum!], orderBy: [DecisionTreeOrderByWithRelationInput!], skip: Int, take: Int, where: DecisionTreeWhereInput): [DecisionTree!]!
+}
+
+enum QueryMode {
+  default
+  insensitive
+}
+
+enum SortOrder {
+  asc
+  desc
+}
+
+input StringFieldUpdateOperationsInput {
+  set: String
+}
+
+input StringFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  mode: QueryMode
+  not: NestedStringFilter
+  notIn: [String!]
+  startsWith: String
 }
