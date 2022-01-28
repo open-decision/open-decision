@@ -1,13 +1,29 @@
 import { BuilderTree } from "@open-decision/type-classes";
 import { Box, Heading, Stack, styled } from "@open-legal-tech/design-system";
 import { Separator } from "@radix-ui/react-separator";
+import { ErrorBoundary } from "@sentry/nextjs";
 import { BaseHeader, FileInput, MainContent } from "components";
-import { useTree } from "features/Builder/state/useTree";
+import { TreeProvider, useTree } from "features/Builder/state/useTree";
 import { NewTreeButton } from "features/Dashboard/NewTreeButton";
 import { TreeList } from "features/Dashboard/TreeList";
+import { queryClient } from "features/Data/queryClient";
+import { ErrorFallback } from "features/Error/ErrorFallback";
 import { useNotificationStore } from "features/Notifications/NotificationState";
 import Image from "next/image";
 import * as React from "react";
+import { QueryClientProvider } from "react-query";
+
+export default function DashboardPage() {
+  return (
+    <ErrorBoundary fallback={ErrorFallback}>
+      <QueryClientProvider client={queryClient}>
+        <TreeProvider>
+          <Dashboard />
+        </TreeProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
+  );
+}
 
 const DashboardGrid = styled(MainContent, {
   display: "grid",
@@ -23,7 +39,7 @@ const StyledSeparator = styled(Separator, {
   marginBlock: "$6",
 });
 
-export default function Dashboard() {
+function Dashboard() {
   const addNotification = useNotificationStore(
     (state) => state.addNotification
   );

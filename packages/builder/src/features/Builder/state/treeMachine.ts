@@ -45,7 +45,7 @@ export type sendToTreePayload = Parameters<
 
 export type Context = BuilderTree.TTree;
 
-export type TreeService = Interpreter<Context, any, Events, TreeState>;
+export type TreeService = Interpreter<Context, any, Events, TreeState, any>;
 export type SendFn = TreeService["send"];
 export type InterpretedTreeState = TreeService["state"];
 

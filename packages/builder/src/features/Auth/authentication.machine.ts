@@ -60,7 +60,7 @@ export type Events =
   | { type: "SUCCESSFULL_PASSWORD_RESET_REQUEST" }
   | { type: "FAILED_PASSWORD_RESET_REQUEST"; error: string };
 
-export type AuthService = Interpreter<Context, any, Events, State>;
+export type AuthService = Interpreter<Context, any, Events, State, any>;
 
 export const createAuthenticationMachine = (router: NextRouter) =>
   createMachine<Context, Events, State>(

@@ -1,9 +1,9 @@
 import { Badge, Button, Icon } from "@open-legal-tech/design-system";
 import React from "react";
 import { Plus } from "react-feather";
-import { ValidTreeNode } from "./types";
 
-type TreeTagsProps = { tree: ValidTreeNode };
+// FIXME Remove the any types when it is clear what shape the metadata return from the API has
+type TreeTagsProps = { tree: any };
 
 export const TreeTags: React.FC<TreeTagsProps> = ({ tree }) => {
   return (

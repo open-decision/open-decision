@@ -10,7 +10,6 @@ import {
 import { notification, useNotificationStore } from "./NotificationState";
 import * as Progress from "@radix-ui/react-progress";
 import { motion, useAnimation } from "framer-motion";
-import { useGesture } from "react-use-gesture";
 import { Info, XCircle, CheckCircle, HelpCircle, X } from "react-feather";
 
 const icons = {
@@ -66,14 +65,6 @@ export const Notification = ({ notification, id }: NotificationProps) => {
     (state) => state.removeNotification
   );
 
-  const gestures = useGesture({
-    onPointerEnter: () => animation.stop(),
-    onPointerLeave: () => animation.start("empty"),
-    onClick: () => animation.set("full"),
-    onFocus: () => animation.stop(),
-    onBlur: () => animation.start("empty"),
-  });
-
   const progress = {
     full: { width: "100%" },
     empty: { width: "0%" },
@@ -94,7 +85,11 @@ export const Notification = ({ notification, id }: NotificationProps) => {
       css={{ colorScheme: notification.variant }}
       role="alert"
       layout
-      {...gestures()}
+      onPointerEnter={() => animation.stop()}
+      onPointerLeave={() => animation.start("empty")}
+      onClick={() => animation.set("full")}
+      onFocus={() => animation.stop()}
+      onBlur={() => animation.start("empty")}
     >
       <Stack
         css={{

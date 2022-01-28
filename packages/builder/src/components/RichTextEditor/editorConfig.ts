@@ -1,14 +1,5 @@
 import { isLink, isLinkElement, Url, wrapLink } from "./contentTypes/link";
-import {
-  Editor,
-  Element,
-  Location,
-  Node,
-  Path,
-  Range,
-  Text,
-  Transforms,
-} from "slate";
+import { Editor, Element, Node, Path, Transforms } from "slate";
 
 export const withInlines = (editor: Editor): Editor => {
   const { insertData, insertText, isInline, normalizeNode } = editor;

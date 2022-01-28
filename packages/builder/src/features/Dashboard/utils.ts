@@ -1,12 +1,16 @@
 import { format } from "date-fns";
 import de from "date-fns/locale/de";
 import { pipe, prop, map, flatten, uniq } from "remeda";
-import { ValidTreeNode } from "./types";
 export const readableDate = (date: Date): string =>
   format(date, "P", { locale: de });
-export const getTags = (data: ValidTreeNode): string[] =>
+
+// FIXME Remove the any types when it is clear what shape the metadata return from the API has
+
+export const getTags = (data: any): string[] =>
+  //@ts-expect-error - can be removed when the any is fixed
   pipe(data, prop("tags"), map(prop("name")));
-export const filterTags = (data: ValidTreeNode[]): string[] =>
+
+export const filterTags = (data: any[]): string[] =>
   pipe(data, map(getTags), flatten(), uniq());
 
 export type InlinedKey<T> = { id: string } & T;

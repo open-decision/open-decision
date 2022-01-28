@@ -1,7 +1,6 @@
 import React from "react";
 import { css, StyleObject } from "@open-legal-tech/design-system";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEditor } from "features/Builder/state/useEditor";
 
 const styledMotionDiv = css({
   display: "flex",

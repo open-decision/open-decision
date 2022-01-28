@@ -1,70 +1,19 @@
 import React from "react";
-import { parseISO, format } from "date-fns";
-import de from "date-fns/locale/de";
 import { fuzzySearch, sortByKey } from "./filter";
 import { motion } from "framer-motion";
-import { InlinedValidTreeNode, TreeState } from "./types";
 import { identity, pipe } from "remeda";
-import { TreeTags } from "./TreeTags";
 import {
-  Box,
   Button,
   Field,
-  Heading,
-  HeadingGroup,
   Icon,
   iconStyles,
   Input,
-  Reel,
   Stack,
   Text,
   useForm,
 } from "@open-legal-tech/design-system";
-import Link from "next/link";
 import { mapObjToArr } from "./utils";
-import { useTreeStore } from "./hooks/useTrees";
-import { ChevronDown, Search, Trash } from "react-feather";
-
-type TreeCard = { tree: InlinedValidTreeNode };
-
-const TreeCard: React.FC<TreeCard> = ({ tree }) => {
-  const deleteTree = useTreeStore(
-    React.useCallback((state) => state.deleteTree, [])
-  );
-
-  return (
-    <Box
-      css={{ padding: "$4", backgroundColor: "$gray1", borderRadius: "$md" }}
-    >
-      <TreeTags tree={tree} />
-
-      <Stack css={{ alignItems: "baseline" }}>
-        <HeadingGroup.Container className="flex-grow">
-          <Heading as="h3" size="small">
-            {tree.name}
-          </Heading>
-          <HeadingGroup.SubHeading>
-            Erstellt am: {format(parseISO(tree.createdAt), "P", { locale: de })}
-          </HeadingGroup.SubHeading>
-        </HeadingGroup.Container>
-        <Reel css={{ alignSelf: "flex-end", gap: "$4" }}>
-          <Button
-            variant="secondary"
-            onClick={() => deleteTree(tree.id)}
-            css={{ colorScheme: "error" }}
-          >
-            <Icon label="Baum löschen">
-              <Trash />
-            </Icon>
-          </Button>
-          <Link href={`/builder/${tree.id}`}>
-            <Button variant="secondary">Öffnen</Button>
-          </Link>
-        </Reel>
-      </Stack>
-    </Box>
-  );
-};
+import { ChevronDown, Search } from "react-feather";
 
 type SortButton = {
   sort: { key: string; descending: boolean };
@@ -114,16 +63,16 @@ const SortButton: React.FunctionComponent<SortButton> = ({
     </Button>
   );
 };
-
-type TreeList = { data: TreeState };
+// FIXME Remove the any types when it is clear what shape the metadata return from the API has
+type TreeList = { data: any };
 type sortState = { key: string; descending: boolean };
 
-const sortData = (sort: sortState) => (data: InlinedValidTreeNode[]) =>
+const sortData = (sort: sortState) => (data: any[]) =>
   sort.descending
     ? sortByKey(data, sort.key)
     : sortByKey(data, sort.key).reverse();
 
-const filterData = (filter: string) => (data: InlinedValidTreeNode[]) =>
+const filterData = (filter: string) => (data: any[]) =>
   fuzzySearch(data, filter);
 
 export const TreeList: React.FC<TreeList> = ({ data }) => {
@@ -188,7 +137,8 @@ export const TreeList: React.FC<TreeList> = ({ data }) => {
       <Stack css={{ gap: "$4", marginTop: "$1" }}>
         {filteredData.map((tree) => (
           <motion.div key={tree.id} layout>
-            <TreeCard tree={tree} />
+            {/* FIXME Implement new TreeCard */}
+            {/* <TreeCard tree={tree} /> */}
           </motion.div>
         ))}
       </Stack>
