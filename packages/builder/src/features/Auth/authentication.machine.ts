@@ -298,7 +298,9 @@ export const createAuthenticationMachine = (router: NextRouter) =>
           );
         },
         redirectToLogin: (_context, _event) => async (_send) => {
-          router.push("/login");
+          protectedRoutes.includes(router.pathname)
+            ? router.push("/login")
+            : null;
         },
         redirectToLocation: (context) => async () => {
           router.push(context?.location ?? "/");
