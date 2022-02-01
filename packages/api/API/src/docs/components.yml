@@ -16,7 +16,7 @@ components:
         emailIsVerified:
           type: boolean
       example:
-        id: 2d36a831-5abb-4327-a5e5-235c43d5d54e
+        uuid: 2d36a831-5abb-4327-a5e5-235c43d5d54e
         email: fake@example.com
         name: fake name
         role: USER
