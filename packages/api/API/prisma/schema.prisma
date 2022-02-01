@@ -54,6 +54,7 @@ model Token {
 enum Role {
   USER
   STAFF
+  DEVELOPER
   ADMIN
 }
 

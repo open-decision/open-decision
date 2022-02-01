@@ -9,7 +9,6 @@ export const createUser = z.object({
       .max(300)
       .refine(async (val) => isPasswordStrongEnough(val)),
     name: z.string(),
-    role: z.enum(["USER", "STAFF", "ADMIN"]),
   }),
 });
 

@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { MailserverConfig } from "./mailserver.validation";
-//TODO configure .env and env.example
 export const EnvVars = z
   .object({
     NODE_ENV: z.enum(["production", "development", "test"]),
@@ -40,5 +39,10 @@ export const EnvVars = z
     SENTRY_DSN: z.string().optional(),
     INSTANCE_NAME: z.string().optional().default("OD Backend"),
     PUBLIC_API_DOCUMENTATION: z.string().optional().default("false"),
+    DEV_ACCOUNT_WHITELIST: z
+      .string()
+      .optional()
+      .default("[]")
+      .transform((str) => JSON.parse(str)),
   })
   .merge(MailserverConfig.partial());

@@ -176,12 +176,14 @@ const refreshTokens = async (refreshToken: string) => {
 };
 /**
  * Generate access token
- * @param {userUuid} string
+ * @param {string} userUuid
+ * @param {boolean} [isDevAccount=false]
  * @returns {Object}
  */
-const generateAccessToken = (userUuid: string) => {
+const generateAccessToken = (userUuid: string, isDevAccount = false) => {
   const accessTokenExpires = dayjs().add(
-    config.JWT_ACCESS_EXPIRATION_MINUTES,
+    // Dev accounts get an access token that is valid for 7 days
+    !isDevAccount ? config.JWT_ACCESS_EXPIRATION_MINUTES : 60 * 24 * 7,
     "minutes"
   );
   const accessToken = generateToken(
@@ -198,7 +200,7 @@ const generateAccessToken = (userUuid: string) => {
 
 /**
  * Generate refresh token
- * @param {userUuid} string
+ * @param {string} userUuid
  * @param {boolean} [isLogin=true]
  * @param {(dayjs.Dayjs|null)} [loginExpiry=null]
  * @returns {Promise<Object>}
@@ -250,7 +252,10 @@ const generateRefreshToken = async (
  */
 const generateAuthTokens = async (user: User, isLogin = true) => {
   return {
-    access: generateAccessToken(user.uuid),
+    access: generateAccessToken(
+      user.uuid,
+      user.role === "DEVELOPER" ? true : false
+    ),
     refresh: await generateRefreshToken(user.uuid, isLogin),
   };
 };
