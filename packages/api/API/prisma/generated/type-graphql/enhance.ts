@@ -43,7 +43,7 @@ function applyTypeClassEnhanceConfig<
 const modelsInfo = {
   DecisionTree: ["id", "createdAt", "updatedAt", "name", "tags", "treeData", "language"],
   User: ["id", "uuid", "name", "role", "email", "password", "emailIsVerified"],
-  Token: ["id", "token", "type", "ownerUuid", "expires", "loginExpiry", "blacklisted"]
+  Token: ["id", "token", "type", "ownerUuid", "expires", "blacklisted"]
 };
 
 type ModelNames = keyof typeof models;

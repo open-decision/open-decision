@@ -11,6 +11,7 @@ import ApiError from "./utils/ApiError";
 import { authLimiter } from "./middlewares/rateLimiter";
 import httpStatus from "http-status";
 import router from "./routes/v1";
+
 export const app = express();
 
 if (config.NODE_ENV !== "test") {

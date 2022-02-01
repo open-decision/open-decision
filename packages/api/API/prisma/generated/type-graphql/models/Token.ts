@@ -36,11 +36,6 @@ export class Token {
   })
   expires!: Date;
 
-  @TypeGraphQL.Field(_type => Date, {
-    nullable: true
-  })
-  loginExpiry?: Date | null;
-
   @TypeGraphQL.Field(_type => Boolean, {
     nullable: false
   })

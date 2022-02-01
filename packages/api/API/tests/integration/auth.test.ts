@@ -132,8 +132,15 @@ describe("Auth routes", () => {
         .expect(httpStatus.OK)
         .expect(hasRefreshCookie);
 
-      expect(res.body).toEqual({
+      expect(res.body).toMatchObject({
         access: { token: expect.anything(), expires: expect.anything() },
+        user: {
+          email: userOne.email,
+          emailIsVerified: false,
+          name: userOne.name,
+          role: "USER",
+          uuid: expect.anything(),
+        },
       });
     });
 
@@ -261,8 +268,15 @@ describe("Auth routes", () => {
         .expect(httpStatus.OK)
         .expect(hasRefreshCookie);
 
-      expect(res.body).toEqual({
+      expect(res.body).toMatchObject({
         access: { token: expect.anything(), expires: expect.anything() },
+        user: {
+          email: userOne.email,
+          emailIsVerified: false,
+          name: userOne.name,
+          role: "USER",
+          uuid: expect.anything(),
+        },
       });
 
       expect(res.body).not.toHaveProperty("refresh");

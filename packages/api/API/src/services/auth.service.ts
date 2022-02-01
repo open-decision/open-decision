@@ -54,7 +54,7 @@ const logout = async (refreshToken: string) => {
  */
 const refreshAuth = async (refreshToken: string) => {
   try {
-    return tokenService.refreshTokens(refreshToken);
+    return await tokenService.refreshTokens(refreshToken);
   } catch (error) {
     throw new ApiError({
       statusCode: httpStatus.UNAUTHORIZED,

@@ -6,7 +6,6 @@ export enum TokenScalarFieldEnum {
   type = "type",
   ownerUuid = "ownerUuid",
   expires = "expires",
-  loginExpiry = "loginExpiry",
   blacklisted = "blacklisted"
 }
 TypeGraphQL.registerEnumType(TokenScalarFieldEnum, {

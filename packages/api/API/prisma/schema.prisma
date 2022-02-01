@@ -23,7 +23,7 @@ model DecisionTree {
   treeData  Json?     @db.JsonB
   language  String   @default("de_DE")
   /// @TypeGraphQL.omit(output: true, input: true)
-  owner     User     @relation(fields: [ownerUuid], references: [uuid])
+  owner     User     @relation(fields: [ownerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   /// @TypeGraphQL.omit(output: true, input: true)
   ownerUuid String   @db.Uuid
 }
