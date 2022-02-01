@@ -45,8 +45,6 @@ const logout = async (refreshToken: string) => {
   }
 
   await tokenHandler.deleteFromDbById(refreshTokenFromDb.id);
-
-  //TODO: reimplement accessTokenBlocklist
 };
 
 /**
@@ -56,7 +54,7 @@ const logout = async (refreshToken: string) => {
  */
 const refreshAuth = async (refreshToken: string) => {
   try {
-    return await tokenService.refreshTokens(refreshToken);
+    return tokenService.refreshTokens(refreshToken);
   } catch (error) {
     throw new ApiError({
       statusCode: httpStatus.UNAUTHORIZED,

@@ -47,7 +47,6 @@ model Token {
   owner                 User          @relation(fields: [ownerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade) 
   ownerUuid             String        @db.Uuid
   expires               DateTime
-  loginExpiry           DateTime?
   blacklisted           Boolean       @default(false)
 }
 
