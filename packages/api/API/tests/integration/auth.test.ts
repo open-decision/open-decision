@@ -18,17 +18,12 @@ import {
   adminAccessToken,
 } from "../fixtures/token.fixture";
 import { jest } from "@jest/globals";
-import { User } from "prisma/prisma-client";
 import UserHandler from "../../src/models/user.model";
 import { tokenHandler } from "../../src/models/token.model";
-setupTestDB();
 import { TokenType } from "prisma/prisma-client";
-import { logger } from "../../src/config/logger";
-import {
-  extractRefreshToken,
-  hasNoRefreshCookie,
-  hasRefreshCookie,
-} from "../utils/refreshCookieHelpers";
+import { hasRefreshCookie } from "../utils/refreshCookieHelpers";
+
+setupTestDB();
 
 describe("Auth routes", () => {
   describe("POST /v1/auth/register", () => {

@@ -3,7 +3,7 @@ import httpStatus from "http-status";
 import { app } from "../../src/app";
 import config from "../../src/config/config";
 
-describe("Auth routes", () => {
+describe("Docs routes", () => {
   describe("GET /v1/docs", () => {
     test("should return 200 when running in development", async () => {
       config.NODE_ENV = "development";
