@@ -10,13 +10,19 @@ import {
   menuSeparatorStyles,
 } from "../shared";
 
-const ItemIndicator = () => {
+type IndicatorProps = { children?: React.ReactNode };
+
+const ItemIndicator = ({ children }: IndicatorProps) => {
   return (
-    <Icon label="Checked" css={{ padding: 0 }}>
-      <DropdownMenuPrimitives.ItemIndicator asChild>
-        <Check />
-      </DropdownMenuPrimitives.ItemIndicator>
-    </Icon>
+    <DropdownMenuPrimitives.ItemIndicator asChild>
+      {children ? (
+        children
+      ) : (
+        <Icon label="Checked" css={{ padding: 0 }}>
+          <Check />
+        </Icon>
+      )}
+    </DropdownMenuPrimitives.ItemIndicator>
   );
 };
 
@@ -25,10 +31,12 @@ const StyledCheckboxItem = styled(
   menuItemStyles
 );
 
-const CheckboxItem = ({ children, ...props }: DropdownCheckboxItemProps) => {
+type CheckboxItemProps = DropdownCheckboxItemProps & { Icon?: React.ReactNode };
+
+const CheckboxItem = ({ children, Icon, ...props }: CheckboxItemProps) => {
   return (
     <StyledCheckboxItem {...props}>
-      <ItemIndicator />
+      <ItemIndicator>{Icon}</ItemIndicator>
       {children}
     </StyledCheckboxItem>
   );

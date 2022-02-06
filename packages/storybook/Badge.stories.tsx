@@ -24,5 +24,5 @@ export const Primary = BadgeGrid.bind({});
 
 export const Secondary = BadgeGrid.bind({});
 Secondary.args = {
-  level: "secondary",
+  variant: "secondary",
 };

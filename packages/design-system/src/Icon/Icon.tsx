@@ -25,12 +25,18 @@ export type IconProps = {
   children: React.ReactNode;
   label?: string;
 } & React.ComponentProps<typeof StyledIcon>;
-export const Icon = ({ children, label, ...props }: IconProps) => {
+
+const IconImpl = (
+  { children, label, ...props }: IconProps,
+  ref: React.Ref<HTMLSpanElement>
+) => {
   return (
     <AccessibleIcon.Root label={label ?? ""}>
-      <StyledIcon className="icon" {...props}>
+      <StyledIcon className="icon" ref={ref} {...props}>
         {children}
       </StyledIcon>
     </AccessibleIcon.Root>
   );
 };
+
+export const Icon = React.forwardRef<HTMLSpanElement, IconProps>(IconImpl);

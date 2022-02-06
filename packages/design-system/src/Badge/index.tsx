@@ -9,7 +9,7 @@ export const badeStyles = css({
   maxWidth: "max-content",
 
   variants: {
-    level: {
+    variant: {
       primary: { backgroundColor: "$colorScheme9", color: "$colorScheme1" },
       secondary: { color: "$colorScheme11", borderColor: "currentcolor" },
     },
@@ -42,7 +42,7 @@ export const badeStyles = css({
   },
 
   defaultVariants: {
-    level: "primary",
+    variant: "primary",
     size: "medium",
   },
 });
