@@ -42,12 +42,8 @@ export default function VorschauPage({ id }) {
 function Vorschau() {
   const [state] = useTree();
 
-  if (state.matches("empty")) {
+  if (state.matches("connecting")) {
     return <Box>Empty</Box>;
-  }
-
-  if (state.matches("pending")) {
-    return <Box>Loading...</Box>;
   }
 
   return (
