@@ -19,12 +19,19 @@ import { ErrorBoundary } from "@sentry/nextjs";
 import { ErrorFallback } from "features/Error/ErrorFallback";
 import { QueryClientProvider } from "react-query";
 import { queryClient } from "features/Data/queryClient";
+import { GetServerSideProps } from "next";
 
-export default function VorschauPage() {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  return {
+    props: { id: context.params?.id },
+  };
+};
+
+export default function VorschauPage({ id }) {
   return (
     <ErrorBoundary fallback={ErrorFallback}>
       <QueryClientProvider client={queryClient}>
-        <TreeProvider>
+        <TreeProvider id={id}>
           <Vorschau />
         </TreeProvider>
       </QueryClientProvider>

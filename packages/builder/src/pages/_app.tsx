@@ -6,7 +6,7 @@ import { Box, globalStyles, Text } from "@open-legal-tech/design-system";
 import { AuthProvider, useAuth } from "features/Auth/useAuth";
 import { useRouter } from "next/router";
 import { protectedRoutes } from "../config/protectedRoutes";
-import "@fontsource/poppins";
+// import "@fontsource/poppins";
 
 export default function App({ Component, pageProps }: AppProps): JSX.Element {
   globalStyles();
@@ -38,7 +38,8 @@ function ProtectedRoute({ children }) {
   const [state] = useAuth();
   const { pathname } = useRouter();
 
-  return !state.matches("loggedIn") && protectedRoutes.includes(pathname) ? (
+  return !state.matches("loggedIn") &&
+    protectedRoutes.some((routeRegEx) => routeRegEx.test(pathname)) ? (
     <Box />
   ) : (
     children
