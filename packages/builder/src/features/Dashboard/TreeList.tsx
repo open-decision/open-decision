@@ -4,67 +4,18 @@ import { motion } from "framer-motion";
 import { identity, pipe } from "remeda";
 import {
   Button,
+  DropdownMenu,
   Field,
   Icon,
-  iconStyles,
   Input,
   Stack,
-  Text,
   useForm,
 } from "@open-legal-tech/design-system";
-import { mapObjToArr } from "./utils";
-import { ChevronDown, Search } from "react-feather";
+import { Search, Sliders, TrendingDown, TrendingUp } from "react-feather";
+import { TreesQuery } from "features/Data/generated/graphql";
+import { TreeCard } from "./TreeCard";
 
-type SortButton = {
-  sort: { key: string; descending: boolean };
-  setSort: React.Dispatch<
-    React.SetStateAction<{
-      key: string;
-      descending: boolean;
-    }>
-  >;
-  name: string;
-  label: string;
-};
-
-const SortButton: React.FunctionComponent<SortButton> = ({
-  sort,
-  setSort,
-  name,
-  label,
-}) => {
-  const variants = {
-    up: { rotate: 180 },
-    down: { rotate: 0 },
-    neutral: { rotate: 90 },
-  };
-
-  return (
-    <Button
-      variant="ghost"
-      size="small"
-      onClick={() =>
-        setSort({
-          key: name,
-          descending: sort.key === name ? !sort.descending : sort.descending,
-        })
-      }
-    >
-      {label}
-      <motion.span
-        variants={variants}
-        animate={
-          sort.key === name ? (sort.descending ? "up" : "down") : "neutral"
-        }
-        className={iconStyles()}
-      >
-        <ChevronDown />
-      </motion.span>
-    </Button>
-  );
-};
-// FIXME Remove the any types when it is clear what shape the metadata return from the API has
-type TreeList = { data: any };
+type TreeListProps = { data: TreesQuery["decisionTrees"] };
 type sortState = { key: string; descending: boolean };
 
 const sortData = (sort: sortState) => (data: any[]) =>
@@ -75,12 +26,14 @@ const sortData = (sort: sortState) => (data: any[]) =>
 const filterData = (filter: string) => (data: any[]) =>
   fuzzySearch(data, filter);
 
-export const TreeList: React.FC<TreeList> = ({ data }) => {
+export const TreeList = ({ data }: TreeListProps) => {
   const [filter, setFilter] = React.useState("");
-  const [filteredData, setFilteredData] = React.useState(mapObjToArr(data));
+  const [filteredData, setFilteredData] = React.useState<
+    TreesQuery["decisionTrees"]
+  >([]);
   const [sort, setSort] = React.useState<sortState>({
-    key: "",
-    descending: true,
+    key: "updatedAt",
+    descending: false,
   });
 
   const [Form] = useForm({
@@ -91,10 +44,8 @@ export const TreeList: React.FC<TreeList> = ({ data }) => {
 
   const handleFilterChange = React.useCallback(
     function handleFilterChange() {
-      const arrayData = mapObjToArr(data);
-
       const modifiedData = pipe(
-        arrayData,
+        data,
         filter ? filterData(filter) : identity,
         sort.key ? sortData(sort) : identity
       );
@@ -108,10 +59,33 @@ export const TreeList: React.FC<TreeList> = ({ data }) => {
     handleFilterChange();
   }, [handleFilterChange]);
 
+  const handleSort = (key: string) =>
+    setSort({
+      key,
+      descending: sort.key === key ? !sort.descending : sort.descending,
+    });
+
+  const CheckboxIcon = sort.descending ? (
+    <Icon size="small">
+      <TrendingDown />
+    </Icon>
+  ) : (
+    <Icon size="small">
+      <TrendingUp />
+    </Icon>
+  );
+
   return (
-    <Stack css={{ gap: "$3" }}>
-      <Form onSubmit={handleFilterChange} css={{ display: "flex", gap: "$2" }}>
-        <Field label="Suche" isLabelVisible={false} css={{ flex: "1" }}>
+    <>
+      <Form
+        onSubmit={handleFilterChange}
+        css={{ display: "flex", gap: "$2", justifyContent: "space-between" }}
+      >
+        <Field
+          label="Suche"
+          isLabelVisible={false}
+          css={{ flexBasis: "400px", backgroundColor: "white" }}
+        >
           <Input
             name="search"
             value={filter || ""}
@@ -124,24 +98,61 @@ export const TreeList: React.FC<TreeList> = ({ data }) => {
             placeholder="Suche"
           />
         </Field>
-        <Text css={{ display: "flex", alignItems: "center" }}>
-          <SortButton sort={sort} setSort={setSort} name="name" label="Name" />
-          <SortButton
-            sort={sort}
-            setSort={setSort}
-            name="createdAt"
-            label="Datum"
-          />
-        </Text>
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger asChild>
+            <Button variant="ghost" css={{ gap: "$3" }}>
+              <span>current filter</span>
+              <Icon>
+                <Sliders />
+              </Icon>
+            </Button>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content align="start">
+            <DropdownMenu.CheckboxItem
+              Icon={CheckboxIcon}
+              checked={sort.key === "updatedAt"}
+              onSelect={() => handleSort("updatedAt")}
+            >
+              Zuletzt bearbeitet
+            </DropdownMenu.CheckboxItem>
+            <DropdownMenu.CheckboxItem
+              Icon={CheckboxIcon}
+              checked={sort.key === "createdAt"}
+              onSelect={() => handleSort("createdAt")}
+            >
+              Erstellungsdatum
+            </DropdownMenu.CheckboxItem>
+            <DropdownMenu.CheckboxItem disabled>
+              Nur fertige Projekte
+            </DropdownMenu.CheckboxItem>
+            <DropdownMenu.CheckboxItem disabled>
+              Nur unfertige Projekte
+            </DropdownMenu.CheckboxItem>
+            <DropdownMenu.CheckboxItem disabled>
+              Nur veröffentlichte Projekte
+            </DropdownMenu.CheckboxItem>
+            <DropdownMenu.CheckboxItem disabled>
+              Nur unveröffentlichte Projekte
+            </DropdownMenu.CheckboxItem>
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
       </Form>
-      <Stack css={{ gap: "$4", marginTop: "$1" }}>
+      <Stack
+        css={{
+          gap: "$4",
+          marginTop: "$1",
+          overflow: "auto",
+          paddingBlock: "$4",
+          paddingRight: "$4",
+          marginRight: "-$4",
+        }}
+      >
         {filteredData.map((tree) => (
           <motion.div key={tree.id} layout>
-            {/* FIXME Implement new TreeCard */}
-            {/* <TreeCard tree={tree} /> */}
+            <TreeCard tree={tree} />
           </motion.div>
         ))}
       </Stack>
-    </Stack>
+    </>
   );
 };

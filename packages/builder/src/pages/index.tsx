@@ -3,9 +3,14 @@ import { Box, Heading, Stack, styled } from "@open-legal-tech/design-system";
 import { Separator } from "@radix-ui/react-separator";
 import { ErrorBoundary } from "@sentry/nextjs";
 import { BaseHeader, FileInput, MainContent } from "components";
-import { TreeProvider, useTree } from "features/Builder/state/useTree";
+import { LoadingSpinner } from "components/LoadingSpinner";
+import { TreeProvider } from "features/Builder/state/useTree";
 import { NewTreeButton } from "features/Dashboard/NewTreeButton";
 import { TreeList } from "features/Dashboard/TreeList";
+import {
+  useCreateTreeMutation,
+  useTreesQuery,
+} from "features/Data/generated/graphql";
 import { queryClient } from "features/Data/queryClient";
 import { ErrorFallback } from "features/Error/ErrorFallback";
 import { useNotificationStore } from "features/Notifications/NotificationState";
@@ -15,13 +20,21 @@ import { QueryClientProvider } from "react-query";
 
 export default function DashboardPage() {
   return (
-    <ErrorBoundary fallback={ErrorFallback}>
-      <QueryClientProvider client={queryClient}>
-        <TreeProvider>
-          <Dashboard />
-        </TreeProvider>
-      </QueryClientProvider>
-    </ErrorBoundary>
+    <MainContent
+      css={{
+        overflow: "hidden",
+        display: "grid",
+        gridTemplateRows: "max-content 1fr",
+      }}
+    >
+      <ErrorBoundary fallback={ErrorFallback}>
+        <QueryClientProvider client={queryClient}>
+          <TreeProvider>
+            <Dashboard />
+          </TreeProvider>
+        </QueryClientProvider>
+      </ErrorBoundary>
+    </MainContent>
   );
 }
 
@@ -30,6 +43,7 @@ const DashboardGrid = styled(MainContent, {
   height: "100%",
   gridTemplateRows: "max-content max-content max-content 1fr",
   gridTemplateColumns: `1fr min(1000px, 100%) 1fr`,
+  backgroundColor: "$gray2",
 });
 
 const StyledSeparator = styled(Separator, {
@@ -43,8 +57,11 @@ function Dashboard() {
   const addNotification = useNotificationStore(
     (state) => state.addNotification
   );
-  const [, send] = useTree();
-  const trees = undefined;
+
+  const { data: trees, isLoading } = useTreesQuery();
+  const { mutate: saveTree } = useCreateTreeMutation({
+    onSuccess: () => queryClient.invalidateQueries("Trees"),
+  });
 
   return (
     <DashboardGrid>
@@ -84,9 +101,11 @@ function Dashboard() {
                   });
                 }
 
-                return send({
-                  type: "loadTree",
-                  tree: validatedResult.data,
+                return saveTree({
+                  data: {
+                    name: validatedResult.data.name,
+                    treeData: validatedResult.data.treeData,
+                  },
                 });
               };
 
@@ -103,17 +122,22 @@ function Dashboard() {
       <Stack
         css={{
           gridColumn: 2,
-          justifyContent: trees ? undefined : "center",
+          overflow: "hidden",
         }}
       >
-        {trees ? (
-          <TreeList data={trees} />
+        {isLoading ? (
+          <Stack center css={{ height: "100%" }}>
+            <LoadingSpinner />
+          </Stack>
+        ) : trees && trees?.decisionTrees.length > 0 ? (
+          <TreeList data={trees.decisionTrees} />
         ) : (
           <Box
             css={{
               transform: "scaleX(-1)",
-              height: "70%",
+              height: "100%",
               width: "100%",
+              position: "relative",
             }}
           >
             <Image

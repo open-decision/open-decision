@@ -10,12 +10,24 @@ import {
   ValidationMessage,
   ButtonProps,
 } from "@open-legal-tech/design-system";
+import { useCreateTreeMutation } from "features/Data/generated/graphql";
+import { queryClient } from "features/Data/queryClient";
+import { LoadingSpinner } from "components/LoadingSpinner";
 
 export const NewTreeButton = (props: ButtonProps) => {
   const [Form, { register }] = useForm({ defaultValues: { treeName: "" } });
 
+  const [open, setOpen] = React.useState(false);
+
+  const { mutate: createTree, isLoading } = useCreateTreeMutation({
+    onSuccess: () => {
+      queryClient.invalidateQueries("Trees");
+      setOpen(false);
+    },
+  });
+
   return (
-    <Dialog.Root>
+    <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
         <Button {...props}>Neues Projekt erstellen</Button>
       </Dialog.Trigger>
@@ -37,13 +49,7 @@ export const NewTreeButton = (props: ButtonProps) => {
         </Box>
         <Form
           css={{ display: "flex", flexDirection: "column" }}
-          // onSubmit={({ treeName }) => {
-          //   return send({
-          //     type: "createTree",
-          //     name: treeName,
-          //   });
-          // }}
-          onSubmit={() => undefined}
+          onSubmit={({ treeName }) => createTree({ data: { name: treeName } })}
         >
           <Dialog.Description asChild>
             <Label size="small" htmlFor="treeName">
@@ -64,7 +70,6 @@ export const NewTreeButton = (props: ButtonProps) => {
             required
           />
           <ValidationMessage name="treeName" />
-
           <Button
             size="small"
             variant="secondary"
@@ -75,7 +80,7 @@ export const NewTreeButton = (props: ButtonProps) => {
             }}
             type="submit"
           >
-            Erstellen
+            {isLoading ? <LoadingSpinner colorScheme="success" /> : "Erstellen"}
           </Button>
         </Form>
       </Dialog.Content>

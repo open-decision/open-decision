@@ -14,8 +14,3 @@ export const filterTags = (data: any[]): string[] =>
   pipe(data, map(getTags), flatten(), uniq());
 
 export type InlinedKey<T> = { id: string } & T;
-export type ArrFromObj<T> = InlinedKey<T>[];
-
-export const mapObjToArr = <T>(obj: Record<string, T>): ArrFromObj<T> => {
-  return Object.entries(obj).map(([key, value]) => ({ id: key, ...value }));
-};
