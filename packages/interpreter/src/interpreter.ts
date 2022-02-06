@@ -29,7 +29,7 @@ export class Interpreter {
       throw new Error(`The provided tree is not in the correct format`);
 
     this.tree = decodedJSON.data;
-    this.currentNode = this.tree.startNode;
+    this.currentNode = this.tree.startNode ?? "";
   }
 
   updateTree(json: any) {
@@ -39,7 +39,7 @@ export class Interpreter {
       throw new Error(`The provided tree is not in the correct format`);
 
     this.tree = decodedJSON.data;
-    this.currentNode = this.tree.startNode;
+    this.currentNode = this.tree.startNode ?? "";
   }
 
   /**
@@ -47,7 +47,7 @@ export class Interpreter {
    * @returns JSON String of the `currentNodes` `renderData`
    */
   getCurrentNode() {
-    return this.tree.nodes[this.currentNode];
+    return this.tree.treeData[this.currentNode];
   }
 
   /**
@@ -69,7 +69,7 @@ export class Interpreter {
 
   //Helper functions
   get treeName() {
-    return this.tree.treeName;
+    return this.tree.name;
   }
 
   /**
@@ -93,7 +93,7 @@ export class Interpreter {
    * Restart the Interpretation.
    */
   reset() {
-    this.currentNode = this.tree.startNode;
+    this.currentNode = this.tree.startNode ?? "";
     this.history = { nodes: [], answers: {} };
     return this.getCurrentNode();
   }
@@ -116,7 +116,7 @@ export class Interpreter {
   }
 
   getNode(nodeId: string): BuilderNode.TNode | undefined {
-    return this.tree.nodes[nodeId];
+    return this.tree.treeData[nodeId];
   }
 
   getRelationById(nodeId: string, relationId: string) {
