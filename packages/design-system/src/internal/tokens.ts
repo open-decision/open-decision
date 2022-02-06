@@ -128,7 +128,7 @@ export const colors: SystemColors = {
   ...aliasColor("infoA", blueA),
   black: "$colors$gray12",
   white: "$colors$gray1",
-  shadowColor: "rgba(17, 24, 28, 0.3)",
+  shadowColor: "rgba(17, 24, 28, 0.1)",
   background: "$colors$gray1",
 };
 
