@@ -17,7 +17,10 @@ type HeaderProps = {
 };
 
 export const EditorHeader = ({ css }: HeaderProps) => {
-  const [hasNode] = useTree((state) => Object.values(state.nodes).length > 0);
+  const [hasNode] = useTree(
+    (state) => Object.values(state.treeData).length > 0
+  );
+
   const { addNotification } = useNotificationStore();
 
   return (

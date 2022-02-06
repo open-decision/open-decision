@@ -34,9 +34,7 @@ export function ExportButton({ css }: Props) {
     <Link
       className={buttonStyles({ size: "small", variant: "secondary", css })}
       download={
-        file
-          ? `${state.context.treeName}_${readableDate(new Date())}.json`
-          : false
+        file ? `${state.context.name}_${readableDate(new Date())}.json` : false
       }
       href={fileDownloadUrl}
       underline={false}

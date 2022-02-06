@@ -18,26 +18,26 @@ const Container = styled(Box, {
 type Props = { css?: StyleObject };
 
 export function TreeNameInput({ css }: Props) {
-  const [treeName, send] = useTree((state) => state.treeName);
-  const [Form] = useForm({ defaultValues: { treeName } });
+  const [name, send] = useTree((state) => state.name);
+  const [Form] = useForm({ defaultValues: { name } });
 
   return (
     <Container css={css}>
       <ProjectMenu css={{ marginRight: "10px" }} />
       <Form
-        onSubmit={({ treeName }) =>
+        onSubmit={({ name }) =>
           send({
             type: "updateTree",
-            tree: { treeName },
+            tree: { name },
           })
         }
       >
         <ControlledInput
-          name="treeName"
+          name="name"
           onChange={(event) =>
             send({
               type: "updateTree",
-              tree: { treeName: event.target.value },
+              tree: { name: event.target.value },
             })
           }
         >

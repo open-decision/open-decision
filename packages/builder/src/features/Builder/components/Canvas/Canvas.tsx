@@ -1,5 +1,5 @@
 import * as React from "react";
-import { BuilderNode, BuilderTree } from "@open-decision/type-classes";
+import { BuilderNode } from "@open-decision/type-classes";
 import { useEditor } from "features/Builder/state/useEditor";
 import ReactFlow, { FlowElement } from "react-flow-renderer";
 import { useTree } from "../../state/useTree";
@@ -37,6 +37,7 @@ type Props = { children?: React.ReactNode; css?: StyleObject };
 
 export function Canvas({ children, css }: Props) {
   const [state, send] = useTree();
+
   const {
     reactFlowWrapperRef,
     setReactFlowInstance,
@@ -45,22 +46,18 @@ export function Canvas({ children, css }: Props) {
     projectCoordinates,
   } = useEditor();
 
-  const sourceNodeId = React.useRef<string | undefined>(undefined);
-
-  const connectionOriginNode = sourceNodeId.current
-    ? state.context.nodes[sourceNodeId.current]
-    : undefined;
-  const connectableNodes = connectionOriginNode
-    ? BuilderTree.getConnectableNodes(connectionOriginNode)(state.context)
-    : [];
-
   const elements = [
     ...transformToReactFlowNodes(
-      state.context?.nodes ?? {},
-      connectionOriginNode ? [connectionOriginNode, ...connectableNodes] : []
+      state.context?.treeData ?? {},
+      state.context.connectionSourceNode && state.context.validConnections
+        ? [
+            state.context.connectionSourceNode,
+            ...state.context.validConnections,
+          ]
+        : []
     ),
     ...transformToReactFlowEdges(
-      state.context?.nodes ?? {},
+      state.context?.treeData ?? {},
       state.context.selectedNodeId,
       state.context.selectedRelationId
     ),
@@ -116,25 +113,18 @@ export function Canvas({ children, css }: Props) {
           ]);
         }}
         onConnectStart={(event) => {
-          if (event.target instanceof HTMLDivElement) {
-            sourceNodeId.current = event.target.dataset.nodeid;
+          if (validConnectEvent(event.target) && event.target.dataset.nodeid) {
+            send({
+              type: "startConnecting",
+              sourceNodeId: event.target.dataset.nodeid,
+            });
           }
         }}
         onConnectEnd={(event) => {
-          if (!validConnectEvent(event.target)) return;
-          if (
-            sourceNodeId.current &&
-            connectableNodes.some(
-              //@ts-expect-error - Typescript thinks the event can be any MouseEvent although we checked that it is valid above.
-              (node) => node.id === event.target.dataset.nodeid
-            )
-          ) {
-            send({
-              type: "addRelation",
-              nodeId: sourceNodeId.current,
-              relation: { target: event.target.dataset.nodeid },
-            });
-          }
+          if (!validConnectEvent(event.target) || !event.target.dataset.nodeid)
+            return send("abortConnect");
+
+          send({ type: "connect", target: event.target.dataset.nodeid });
         }}
         onDragOver={onDragOver}
         onDrop={onDrop}
@@ -160,9 +150,7 @@ export function Canvas({ children, css }: Props) {
           gridRow: "1",
           isolation: "isolate",
         }}
-      >
-        {/* <Controls style={{ display: "flex", left: "50%" }} /> */}
-      </ReactFlow>
+      />
       {children}
     </Container>
   );

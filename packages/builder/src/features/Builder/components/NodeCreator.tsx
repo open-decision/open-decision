@@ -19,7 +19,7 @@ import { nodeNameMaxLength } from "../utilities/constants";
 type Props = { css?: StyleObject };
 
 export const NodeCreator = ({ css }: Props) => {
-  const [nodes, send] = useTree((state) => state.nodes);
+  const [treeData, send] = useTree((state) => state.treeData);
   const { getCenter } = useEditor();
   const [Form] = useForm({
     defaultValues: {
@@ -31,11 +31,11 @@ export const NodeCreator = ({ css }: Props) => {
 
   const items = React.useMemo(
     () =>
-      Object.values(nodes).map((node) => ({
+      Object.values(treeData).map((node) => ({
         id: node.id,
         label: node.name,
       })),
-    [nodes]
+    [treeData]
   );
 
   function createHandler(label: string) {
@@ -66,7 +66,7 @@ export const NodeCreator = ({ css }: Props) => {
         onSelectedItemChange={(newItem) => changeHandler(newItem?.id ?? "")}
       >
         <NodeCreatorInput
-          autoFocus={Object.keys(nodes).length === 0}
+          autoFocus={Object.keys(treeData).length === 0}
           createHandler={createHandler}
         />
       </Combobox.Root>
@@ -75,7 +75,7 @@ export const NodeCreator = ({ css }: Props) => {
 };
 
 const NodeCreatorInput = ({ createHandler, autoFocus }) => {
-  const [, send] = useTree((state) => state.nodes);
+  const [, send] = useTree((state) => state.treeData);
 
   const onDragStart = (event: React.DragEvent<HTMLButtonElement>) => {
     event.dataTransfer.setData("nodeLabel", inputValue);

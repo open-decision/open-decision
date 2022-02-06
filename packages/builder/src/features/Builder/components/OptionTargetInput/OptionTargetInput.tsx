@@ -137,7 +137,7 @@ export function OptionTargetInput({
   const [tree, send] = useTree();
   const node = useNode(nodeId);
   const allOptions = pipe(
-    tree.context.nodes,
+    tree.context.treeData,
     values,
     map((node) => ({ id: node.id, label: node.name }))
   );

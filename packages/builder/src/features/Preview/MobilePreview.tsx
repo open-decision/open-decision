@@ -8,7 +8,9 @@ import { AnswersForm } from "./components/AnswersForm";
 
 export function MobilePreview() {
   const [snapshot, interpreter] = useInterpreter();
-  const [node, send] = useTree((state) => state.nodes[interpreter.currentNode]);
+  const [node, send] = useTree(
+    (state) => state.treeData[interpreter.currentNode]
+  );
   const relation = React.useMemo(
     () => snapshot.getAnswer(node.id),
     [node.id, snapshot]

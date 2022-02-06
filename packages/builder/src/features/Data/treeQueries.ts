@@ -11,3 +11,15 @@ gql`
     }
   }
 `;
+
+gql`
+  query getFullTree($id: Int!) {
+    decisionTree(where: { id: $id }) {
+      id
+      createdAt
+      name
+      treeData
+      updatedAt
+    }
+  }
+`;

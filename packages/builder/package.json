@@ -76,6 +76,7 @@
     "remeda": "^0.0.32",
     "slate": "^0.72.3",
     "slate-react": "^0.72.7",
+    "spinners-react": "^1.0.6",
     "uuid": "^8.3.2",
     "xstate": "^4.29.0",
     "zod": "^3.11.6",
