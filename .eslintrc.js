@@ -49,6 +49,7 @@ module.exports = {
         ignoreNonDOM: true,
       },
     ],
+    "@typescript-eslint/ban-types": "off",
   },
   settings: {
     react: {

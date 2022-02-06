@@ -15,7 +15,6 @@ packages/*/dist
 packages/*/lib
 .rollup*
 generated
-*.typegen.ts
 
 # misc
 .DS_Store
