@@ -54,7 +54,7 @@ export type Events =
   | { type: "SUCCESSFULL_LOGOUT" }
   | { type: "FAILED_LOGOUT" }
   | { type: "REQUEST_PASSWORD_RESET"; email: string }
-  | { type: "RESET_PASSWORD"; password: string }
+  | { type: "RESET_PASSWORD"; password: string; token: string }
   | { type: "SUCCESSFULL_PASSWORD_RESET" }
   | { type: "FAILED_PASSWORD_RESET"; error: string }
   | { type: "SUCCESSFULL_PASSWORD_RESET_REQUEST" }
@@ -117,7 +117,7 @@ export const createAuthenticationMachine = (router: NextRouter) =>
               },
               on: {
                 REPORT_IS_LOGGED_IN: {
-                  target: "#authentication.loggedIn",
+                  target: "#authentication.loggedIn.idle",
                   actions: "assignUserToContext",
                 },
                 REPORT_IS_LOGGED_OUT: "#authentication.loggedOut",
@@ -293,12 +293,15 @@ export const createAuthenticationMachine = (router: NextRouter) =>
 
           await resetPassword(
             event.password,
+            event.token,
             () => send("SUCCESSFULL_PASSWORD_RESET"),
             (error) => send({ type: "FAILED_PASSWORD_RESET", error })
           );
         },
         redirectToLogin: (_context, _event) => async (_send) => {
-          protectedRoutes.includes(router.pathname)
+          protectedRoutes.some((routeRegEx) =>
+            routeRegEx.test(window.location.pathname)
+          )
             ? router.push("/login")
             : null;
         },
@@ -325,9 +328,11 @@ export const createAuthenticationMachine = (router: NextRouter) =>
         }),
         assignLocationToContext: assign({
           location: (_context, _event) => {
-            const isProtected = protectedRoutes.includes(router.pathname);
+            const isProtected = protectedRoutes.some((routeRegEx) =>
+              routeRegEx.test(window.location.pathname)
+            );
 
-            return isProtected ? router.pathname : "/";
+            return isProtected ? window.location.pathname : "/";
           },
         }),
         assignErrorToContext: assign({

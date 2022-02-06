@@ -64,7 +64,11 @@ export default function ResetPassword(): JSX.Element {
               </Text>
               <Form
                 onSubmit={({ newPassword }) =>
-                  send({ type: "RESET_PASSWORD", password: newPassword })
+                  send({
+                    type: "RESET_PASSWORD",
+                    password: newPassword,
+                    token: token instanceof Object ? token[0] : token,
+                  })
                 }
                 css={{ display: "flex", flexDirection: "column" }}
               >

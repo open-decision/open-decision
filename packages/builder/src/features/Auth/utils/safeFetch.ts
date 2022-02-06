@@ -3,9 +3,28 @@ import * as Either from "fp-ts/Either";
 import { pipe } from "fp-ts/function";
 import * as Task from "fp-ts/Task";
 
-const errorMessages = {
-  500: "Es gab einen Error auf dem Server. Bitte versuchen Sie es erneut.",
-};
+export const safeGetResponseData =
+  (expectReturn = true) =>
+  (response: Response) =>
+    TaskEither.tryCatch(async (): Promise<any> => {
+      if (expectReturn) {
+        if (response.ok) return await response.json();
+      } else {
+        if (response.ok) return response.ok;
+      }
+
+      if (response.status >= 500) {
+        throw new Error(
+          "Es gab einen Error auf dem Server. Bitte versuchen Sie es erneut."
+        );
+      }
+
+      if (response.status >= 400) {
+        throw new Error(response.statusText);
+      }
+
+      throw new Error(response.statusText);
+    }, Either.toError);
 
 type ValidationFn<TData> = (responseBody: unknown) => TData;
 type Config<TData> = {
@@ -37,25 +56,7 @@ export const safeFetch = <TData>(
         }),
       Either.toError
     ),
-    TaskEither.chain((response) =>
-      TaskEither.tryCatch(async (): Promise<any> => {
-        if (expectReturn) {
-          if (response.ok) return await response.json();
-        } else {
-          if (response.ok) return response.ok;
-        }
-
-        if (response.status >= 500) {
-          throw new Error(errorMessages["500"]);
-        }
-
-        if (response.status >= 400) {
-          throw new Error(response.statusText);
-        }
-
-        throw new Error(response.statusText);
-      }, Either.toError)
-    ),
+    TaskEither.chain(safeGetResponseData(expectReturn)),
     TaskEither.chainEitherK((response) =>
       throwingValidation
         ? Either.tryCatch(() => throwingValidation(response), Either.toError)
