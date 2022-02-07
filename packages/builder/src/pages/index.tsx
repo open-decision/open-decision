@@ -4,7 +4,6 @@ import { Separator } from "@radix-ui/react-separator";
 import { ErrorBoundary } from "@sentry/nextjs";
 import { BaseHeader, FileInput, MainContent } from "components";
 import { LoadingSpinner } from "components/LoadingSpinner";
-import { TreeProvider } from "features/Builder/state/useTree";
 import { NewTreeButton } from "features/Dashboard/NewTreeButton";
 import { TreeList } from "features/Dashboard/TreeList";
 import {
@@ -20,21 +19,11 @@ import { QueryClientProvider } from "react-query";
 
 export default function DashboardPage() {
   return (
-    <MainContent
-      css={{
-        overflow: "hidden",
-        display: "grid",
-        gridTemplateRows: "max-content 1fr",
-      }}
-    >
-      <ErrorBoundary fallback={ErrorFallback}>
-        <QueryClientProvider client={queryClient}>
-          <TreeProvider>
-            <Dashboard />
-          </TreeProvider>
-        </QueryClientProvider>
-      </ErrorBoundary>
-    </MainContent>
+    <ErrorBoundary fallback={ErrorFallback}>
+      <QueryClientProvider client={queryClient}>
+        <Dashboard />
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 
