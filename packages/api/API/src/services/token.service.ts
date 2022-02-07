@@ -42,7 +42,6 @@ const generateToken = (
  * @param {dayjs.Dayjs} expires
  * @param {TokenType} type
  * @param {boolean} [blacklisted=false]
- * @param {(dayjs.Dayjs|null)} [loginExpiry=null]
  * @returns {Promise<Token>}
  */
 const saveToken = async (
@@ -50,16 +49,14 @@ const saveToken = async (
   userUuid: UUID | string,
   expiry: dayjs.Dayjs,
   type: TokenType,
-  blacklisted = false,
-  loginExpiry: dayjs.Dayjs | null = null
+  blacklisted = false
 ) => {
   const storedToken = tokenHandler.storeInDb(
     token,
     userUuid,
     expiry,
     type,
-    blacklisted,
-    loginExpiry
+    blacklisted
   );
   return storedToken;
 };
@@ -94,94 +91,41 @@ const verifyToken = async (token: string, type: TokenType) => {
 };
 
 /**
- * Get expired refresh token and return token entry if the login is not expired yet
- * @param {string} token
- * @param {secret} string
- * @returns {Promise<Token>}
- */
-const getExpiredRefreshToken = async (token: string, secret: string) => {
-  const expiredRefreshToken = jwt.verify(token, secret, {
-    algorithms: ["HS256"],
-    ignoreExpiration: true,
-  }) as TokenInterface;
-
-  const expiredRefreshTokenFromDatabase = await tokenHandler.findOne({
-    token,
-    ownerUuid: expiredRefreshToken.userUuid,
-    blacklisted: false,
-    type: TokenType.REFRESH,
-  });
-  if (!expiredRefreshTokenFromDatabase) {
-    throw new Error("Token not found");
-  }
-  if (dayjs(expiredRefreshTokenFromDatabase?.loginExpiry).isAfter(dayjs())) {
-    return expiredRefreshTokenFromDatabase;
-  } else {
-    throw new Error("Invalid Token, please login again.");
-  }
-};
-
-/**
- * Issue new access token or new access & refresh tokens if refresh token is expired but still valid
+ * Issue new access & refresh tokens
  * @param {string} refreshToken
  * @returns {Promise<Object>}
  */
 const refreshTokens = async (refreshToken: string) => {
-  let tokenFromDatabase: PrismaToken;
-  let tokenIsExpired = false;
-  try {
-    tokenFromDatabase = await verifyToken(refreshToken, TokenType.REFRESH);
-  } catch (error) {
-    // The refresh token can be expired but we still issue a new token
+  const refreshTokenFromDb = await verifyToken(refreshToken, TokenType.REFRESH);
 
-    if (error instanceof TokenExpiredError && TokenType.REFRESH) {
-      tokenFromDatabase = await getExpiredRefreshToken(
-        refreshToken,
-        config.REFRESH_TOKEN_SECRET
-      );
-      tokenIsExpired = true;
-    } else {
-      throw error;
-    }
-  }
   const user = await userService.getUserByUuidOrId(
-    tokenFromDatabase!.ownerUuid
+    refreshTokenFromDb!.ownerUuid
   );
   if (!user) {
     throw new Error();
   }
-  if (!tokenIsExpired) {
-    // Issue new access token
-    return {
-      user: user,
-      access: generateAccessToken(tokenFromDatabase.ownerUuid),
-    };
-  } else {
-    //Delete old refresh token
-    await tokenHandler.deleteFromDbById(tokenFromDatabase!.id);
-    // Issue new access and refresh token, but keep the old login expiry
-    const newAuthToken = generateAccessToken(tokenFromDatabase.ownerUuid);
-    const loginExpires = dayjs(tokenFromDatabase.loginExpiry);
-    const newRefreshToken = await generateRefreshToken(
-      tokenFromDatabase.ownerUuid,
-      false,
-      loginExpires
-    );
-    return {
-      user: user,
-      access: newAuthToken,
-      refresh: newRefreshToken,
-    };
-  }
+
+  //Delete old refresh token
+  await tokenHandler.deleteFromDbById(refreshTokenFromDb!.id);
+  // Issue new access and refresh token
+  const newTokens = await generateAuthTokens(user);
+
+  return {
+    user: user,
+    ...newTokens,
+  };
 };
+
 /**
  * Generate access token
- * @param {userUuid} string
+ * @param {string} userUuid
+ * @param {boolean} [isDevAccount=false]
  * @returns {Object}
  */
-const generateAccessToken = (userUuid: string) => {
+const generateAccessToken = (userUuid: string, isDevAccount = false) => {
   const accessTokenExpires = dayjs().add(
-    config.JWT_ACCESS_EXPIRATION_MINUTES,
+    // Dev accounts get an access token that is valid for 7 days
+    !isDevAccount ? config.JWT_ACCESS_EXPIRATION_MINUTES : 60 * 24 * 7,
     "minutes"
   );
   const accessToken = generateToken(
@@ -198,28 +142,14 @@ const generateAccessToken = (userUuid: string) => {
 
 /**
  * Generate refresh token
- * @param {userUuid} string
- * @param {boolean} [isLogin=true]
- * @param {(dayjs.Dayjs|null)} [loginExpiry=null]
+ * @param {string} userUuid
  * @returns {Promise<Object>}
  */
-const generateRefreshToken = async (
-  userUuid: string,
-  isLogin = true,
-  loginExpiry: dayjs.Dayjs | null = null
-) => {
+const generateRefreshToken = async (userUuid: string) => {
   const refreshTokenExpires = dayjs().add(
     config.JWT_REFRESH_EXPIRATION_DAYS,
     "days"
   );
-
-  let loginExpiryDate;
-
-  if (loginExpiry) {
-    loginExpiryDate = loginExpiry;
-  } else if (isLogin) {
-    loginExpiryDate = dayjs().add(config.LOGIN_EXPIRATION_DAYS, "days");
-  }
 
   const refreshToken = generateToken(
     userUuid,
@@ -231,9 +161,7 @@ const generateRefreshToken = async (
     refreshToken,
     userUuid,
     refreshTokenExpires,
-    TokenType.REFRESH,
-    false,
-    loginExpiryDate
+    TokenType.REFRESH
   );
 
   return {
@@ -248,10 +176,13 @@ const generateRefreshToken = async (
  * @param {boolean} [isLogin=true]
  * @returns {Promise<string>}
  */
-const generateAuthTokens = async (user: User, isLogin = true) => {
+const generateAuthTokens = async (user: User) => {
   return {
-    access: generateAccessToken(user.uuid),
-    refresh: await generateRefreshToken(user.uuid, isLogin),
+    access: generateAccessToken(
+      user.uuid,
+      user.role === "DEVELOPER" ? true : false
+    ),
+    refresh: await generateRefreshToken(user.uuid),
   };
 };
 

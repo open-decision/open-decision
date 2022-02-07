@@ -5,6 +5,7 @@ import prisma from "../init-prisma-client";
 import * as argon2 from "argon2";
 import getConstraint from "../utils/getConstraint";
 import httpStatus from "http-status";
+import config from "../config/config";
 
 /**
  * Create a new user
@@ -23,6 +24,15 @@ async function create(email: string, password: string) {
       // "A link to activate your account has been emailed to the address provided.",
     });
   } else {
+    if (config.DEV_ACCOUNT_WHITELIST.includes(email)) {
+      return prisma.user.create({
+        data: {
+          email,
+          password: await hashPassword(password),
+          role: "DEVELOPER",
+        },
+      });
+    }
     return prisma.user.create({
       data: { email, password: await hashPassword(password) },
     });

@@ -21,6 +21,7 @@ const register = catchAsync(async (req: Request, res: Response) => {
     res.locals.email,
     res.locals.password
   );
+
   const { refresh, access } = await tokenService.generateAuthTokens(user);
 
   res.cookie("refreshCookie", refresh.token, {
@@ -29,6 +30,10 @@ const register = catchAsync(async (req: Request, res: Response) => {
     httpOnly: true,
     sameSite: "none",
   });
+
+  const verifyEmailToken = await tokenService.generateVerifyEmailToken(user);
+  emailService.sendVerificationEmail(user.email, verifyEmailToken);
+
   res
     .status(httpStatus.CREATED)
     .send({ user: pickSafeUserProperties(user), access });
@@ -37,7 +42,7 @@ const register = catchAsync(async (req: Request, res: Response) => {
 const login = catchAsync(async (req: Request, res: Response) => {
   const { email, password } = res.locals;
   const user = await authService.loginUserWithEmailAndPassword(email, password);
-  const { refresh, access } = await tokenService.generateAuthTokens(user, true);
+  const { refresh, access } = await tokenService.generateAuthTokens(user);
   res.cookie("refreshCookie", refresh.token, {
     maxAge: config.JWT_REFRESH_EXPIRATION_DAYS * 86400 * 1000,
     secure: config.NODE_ENV === "production" ? true : false,
@@ -62,14 +67,12 @@ const refreshTokens = catchAsync(async (req: Request, res: Response) => {
     res.locals.refreshCookie
   );
 
-  if (refreshedTokens?.refresh) {
-    res.cookie("refreshCookie", (await refreshedTokens?.refresh).token, {
-      maxAge: config.JWT_REFRESH_EXPIRATION_DAYS * 86400 * 1000,
-      secure: config.NODE_ENV === "production" ? true : false,
-      httpOnly: true,
-      sameSite: "none",
-    });
-  }
+  res.cookie("refreshCookie", refreshedTokens.refresh.token, {
+    maxAge: config.JWT_REFRESH_EXPIRATION_DAYS * 86400 * 1000,
+    secure: config.NODE_ENV === "production" ? true : false,
+    httpOnly: true,
+    sameSite: "none",
+  });
 
   res.send({
     user: pickSafeUserProperties(refreshedTokens.user),

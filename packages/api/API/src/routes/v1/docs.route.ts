@@ -17,5 +17,9 @@ docsRouter.get(
     explorer: true,
   })
 );
+docsRouter.get("/export", (req, res) => {
+  res.set("Content-Disposition", "attachment; filename=swagger.json");
+  res.json(specs);
+});
 
 export default docsRouter;

@@ -1,6 +1,5 @@
 import { User } from "@prisma/client";
 import prisma from "../../src/init-prisma-client";
-import UserHandler from "../../src/models/user.model";
 import faker from "faker";
 const password = "Th@t!shardToGuess";
 const hashedPassword =

@@ -178,7 +178,7 @@ export default authRouter;
  * @openapi
  * /auth/refresh-tokens:
  *   post:
- *     summary: Refresh auth token if refresh token is still valid or auth & refresh token if login is still valid
+ *     summary: Refresh auth & refresh token if refresh token is still valid
  *     tags: [Auth]
  *     parameters:
  *       - in: cookie
@@ -232,13 +232,6 @@ export default authRouter;
  *   post:
  *     summary: Reset password
  *     tags: [Auth]
- *     parameters:
- *       - in: query
- *         name: token
- *         required: true
- *         schema:
- *           type: string
- *         description: The reset password token
  *     requestBody:
  *       required: true
  *       content:
@@ -247,6 +240,7 @@ export default authRouter;
  *             type: object
  *             required:
  *               - password
+ *               - token
  *             properties:
  *               password:
  *                 type: string
@@ -254,8 +248,12 @@ export default authRouter;
  *                 minLength: 8
  *                 maxLength: 300
  *                 description: Must be sufficiently complex (score at zxcvbn-ts >= 3)
+ *               token:
+ *                 type: string
+ *                 description: The reset password token
  *             example:
  *               password: Th@t!shardToGuess
+ *               token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZWJhYzUzNDk1NGI1NDEzOTgwNmMxMTIiLCJpYXQiOjE1O...
  *     responses:
  *       "204":
  *         description: No content

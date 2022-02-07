@@ -18,17 +18,12 @@ import {
   adminAccessToken,
 } from "../fixtures/token.fixture";
 import { jest } from "@jest/globals";
-import { User } from "prisma/prisma-client";
 import UserHandler from "../../src/models/user.model";
 import { tokenHandler } from "../../src/models/token.model";
-setupTestDB();
 import { TokenType } from "prisma/prisma-client";
-import { logger } from "../../src/config/logger";
-import {
-  extractRefreshToken,
-  hasNoRefreshCookie,
-  hasRefreshCookie,
-} from "../utils/refreshCookieHelpers";
+import { hasRefreshCookie } from "../utils/refreshCookieHelpers";
+
+setupTestDB();
 
 describe("Auth routes", () => {
   describe("POST /v1/auth/register", () => {
@@ -132,8 +127,15 @@ describe("Auth routes", () => {
         .expect(httpStatus.OK)
         .expect(hasRefreshCookie);
 
-      expect(res.body).toEqual({
+      expect(res.body).toMatchObject({
         access: { token: expect.anything(), expires: expect.anything() },
+        user: {
+          email: userOne.email,
+          emailIsVerified: false,
+          name: userOne.name,
+          role: "USER",
+          uuid: expect.anything(),
+        },
       });
     });
 
@@ -236,8 +238,7 @@ describe("Auth routes", () => {
         userOne.uuid,
         refreshTokenExpires,
         TokenType.REFRESH,
-        true,
-        dayjs().add(config.LOGIN_EXPIRATION_DAYS, "days")
+        true
       );
 
       await request(app)
@@ -249,7 +250,7 @@ describe("Auth routes", () => {
   });
 
   describe("POST /v1/auth/refresh-tokens", () => {
-    test("should return 200 and new auth tokens if refresh token is valid", async () => {
+    test("should return 200 a new access & refresh token if refresh token is valid", async () => {
       await insertUsers([userOne]);
       const refreshToken = await tokenService.generateRefreshToken(
         userOne.uuid
@@ -260,57 +261,22 @@ describe("Auth routes", () => {
         .set("Cookie", [`refreshCookie=${refreshToken.token}`])
         .send()
         .expect(httpStatus.OK)
-        .expect(hasNoRefreshCookie);
-
-      expect(res.body).toEqual({
-        access: { token: expect.anything(), expires: expect.anything() },
-      });
-
-      expect(res.body).not.toHaveProperty("refresh");
-    });
-
-    test("should return 200, new auth token & refresh cookie if refresh token is expired but login is still valid", async () => {
-      await insertUsers([userOne]);
-
-      const refreshTokenExpires = dayjs().subtract(1, "minutes");
-      const refreshToken = tokenService.generateToken(
-        userOne.uuid,
-        refreshTokenExpires,
-        TokenType.REFRESH,
-        config.REFRESH_TOKEN_SECRET
-      );
-      await tokenService.saveToken(
-        refreshToken,
-        userOne.uuid,
-        refreshTokenExpires,
-        TokenType.REFRESH,
-        false,
-        dayjs().add(config.LOGIN_EXPIRATION_DAYS, "days")
-      );
-
-      const res = await request(app)
-        .post("/v1/auth/refresh-tokens")
-        .set("Cookie", [`refreshCookie=${refreshToken}`])
-        .send()
-        .expect(httpStatus.OK)
         .expect(hasRefreshCookie);
 
-      expect(res.body).toEqual({
+      expect(res.body).toMatchObject({
         access: { token: expect.anything(), expires: expect.anything() },
+        user: {
+          email: userOne.email,
+          emailIsVerified: false,
+          name: userOne.name,
+          role: "USER",
+          uuid: expect.anything(),
+        },
       });
 
       expect(res.body).not.toHaveProperty("refresh");
-
-      const dbRefreshTokenDoc = await tokenHandler.findOne({
-        token: extractRefreshToken(res.header["set-cookie"][0])!,
-        type: TokenType.REFRESH,
-      });
-      expect(dbRefreshTokenDoc).toMatchObject({
-        type: TokenType.REFRESH,
-        ownerUuid: userOne.uuid,
-        blacklisted: false,
-      });
     });
+
     test("should return 400 error if refresh token is missing from cookie", async () => {
       await request(app)
         .post("/v1/auth/refresh-tokens")
@@ -335,8 +301,7 @@ describe("Auth routes", () => {
         userOne.uuid,
         refreshTokenExpires,
         TokenType.REFRESH,
-        false,
-        dayjs().add(config.LOGIN_EXPIRATION_DAYS, "days")
+        false
       );
 
       await request(app)
@@ -382,8 +347,7 @@ describe("Auth routes", () => {
         userOne.uuid,
         refreshTokenExpires,
         TokenType.REFRESH,
-        true,
-        dayjs().add(config.LOGIN_EXPIRATION_DAYS, "days")
+        true
       );
       await request(app)
         .post("/v1/auth/refresh-tokens")
@@ -401,14 +365,12 @@ describe("Auth routes", () => {
         TokenType.REFRESH,
         config.REFRESH_TOKEN_SECRET
       );
-      const loginExpires = dayjs().subtract(31, "days");
       await tokenService.saveToken(
         refreshToken,
         userOne.uuid,
         refreshTokenExpires,
         TokenType.REFRESH,
-        false,
-        loginExpires
+        false
       );
       await request(app)
         .post("/v1/auth/refresh-tokens")

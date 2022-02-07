@@ -8,6 +8,12 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator typegraphql {
+  provider = "typegraphql-prisma"
+  output   = "../prisma/generated/type-graphql"
+    emitOnly = "models"
+}
+
 model DecisionTree {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
@@ -16,7 +22,9 @@ model DecisionTree {
   tags      Json?     
   treeData  Json?     @db.JsonB
   language  String   @default("de_DE")
-  owner     User     @relation(fields: [ownerUuid], references: [uuid])
+  /// @TypeGraphQL.omit(output: true, input: true)
+  owner     User     @relation(fields: [ownerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
   ownerUuid String   @db.Uuid
 }
 
@@ -39,13 +47,13 @@ model Token {
   owner                 User          @relation(fields: [ownerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade) 
   ownerUuid             String        @db.Uuid
   expires               DateTime
-  loginExpiry           DateTime?
   blacklisted           Boolean       @default(false)
 }
 
 enum Role {
   USER
   STAFF
+  DEVELOPER
   ADMIN
 }
 

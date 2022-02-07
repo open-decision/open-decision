@@ -10,7 +10,6 @@ import { FindTokenInterface } from "../types/types";
  * @param {dayjs.Dayjs} expiry
  * @param {TokenType} type
  * @param {boolean} blacklisted
- * @param {dayjs.Dayjs} loginExpiry
  * @returns {Promise<Token>}}
  */
 
@@ -19,8 +18,7 @@ async function storeInDb(
   userUuid: UUID | string,
   expiry: dayjs.Dayjs,
   type: TokenType,
-  blacklisted = false,
-  loginExpiry: dayjs.Dayjs | null = null
+  blacklisted = false
 ) {
   return prisma.token.create({
     data: {
@@ -28,7 +26,6 @@ async function storeInDb(
       expires: expiry.toISOString(),
       ownerUuid: userUuid instanceof UUID ? userUuid.toString() : userUuid,
       type,
-      loginExpiry: loginExpiry ? loginExpiry.toISOString() : null,
       blacklisted,
     },
   });

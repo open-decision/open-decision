@@ -45,8 +45,6 @@ const logout = async (refreshToken: string) => {
   }
 
   await tokenHandler.deleteFromDbById(refreshTokenFromDb.id);
-
-  //TODO: reimplement accessTokenBlocklist
 };
 
 /**

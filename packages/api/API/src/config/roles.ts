@@ -6,8 +6,8 @@ const allRoles = {
   ADMIN: adminRights,
 } as const;
 
-export type Roles = keyof typeof allRoles;
+type Roles = keyof typeof allRoles;
 export type Permissions = typeof allRoles[keyof typeof allRoles][number];
 
-export const roles = Object.keys(allRoles) as Roles[];
+const roles = Object.keys(allRoles) as Roles[];
 export const roleRights = new Map(Object.entries(allRoles));
