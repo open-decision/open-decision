@@ -103,7 +103,7 @@ export const createTreeMachine = (syncFn: (data: BuilderTree.TTree) => void) =>
           { syncMachineRef: _, ...context },
           _event
         ) => {
-          updateTreeInStorage("tree", context);
+          updateTreeInStorage(context.id.toString(), context);
         },
         addNode: immerAssign((context, { value }) => {
           context.treeData[value.id] = value;

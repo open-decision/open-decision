@@ -13,8 +13,9 @@ import { LoadingSpinner } from "components/LoadingSpinner";
 import localforage from "localforage";
 import { useQuery } from "react-query";
 
-async function getTreeFromStorage() {
-  const possibleTree = await localforage.getItem("tree");
+async function getTreeFromStorage(id: string) {
+  const possibleTree = await localforage.getItem(id);
+  if (!possibleTree) return undefined;
   const parsedTree = BuilderTree.Type.safeParse(possibleTree);
 
   if (parsedTree.success) return parsedTree.data;
@@ -48,12 +49,12 @@ function Tree({ children, tree }: TreeProps) {
 type TreeProviderProps = Omit<
   React.ComponentProps<typeof Provider>,
   "value"
-> & { id?: string };
+> & { id: string };
 
 export function TreeProvider({ children, id }: TreeProviderProps) {
   const { data: localTree, isLoading: isLoadingLocalTree } = useQuery(
     "LocalTree",
-    async () => await getTreeFromStorage()
+    async () => await getTreeFromStorage(id)
   );
 
   const { data: tree, isLoading } = useGetFullTreeQuery(
