@@ -17,5 +17,10 @@
       "value": "7+e3-4t5mrz@+m1aa-kxk3i#yeffdfl3ss(%rz&aancr2=jcm1wn@)ln2hcb"
     }
   },
-  "addons": ["heroku-postgresql:hobby-dev"]
+  "addons": [
+    {
+      "plan": "heroku-postgresql:hobby-dev",
+      "as": "DATABASE_URL"
+    }
+  ]
 }

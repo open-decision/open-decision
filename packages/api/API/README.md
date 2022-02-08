@@ -40,7 +40,7 @@ If you want to join our team, contact us at [contact@open-decision.org](mailto:c
 
 With one click, you can deploy your own instance of the Open Decision backend for free on Heroku.
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/open-legal-tech/node-backend)
 
 Make sure to replace the ACCESS_TOKEN_SECRET and REFRESH_TOKEN_SECRET as soon as possible to secure your instance. [Click here](https://djecrety.ir/) to generate two unique secret keys and [replace them in the Heroku Dashboard.](https://devcenter.heroku.com/articles/config-vars#using-the-heroku-dashboard)
 
