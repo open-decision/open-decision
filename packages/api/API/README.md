@@ -11,6 +11,8 @@ The backend is mainly designed to be used in conjunction with the Open Decision 
 - [Important Links](#important-links)
 - [Participate](#participate)
 - [Deploy in the Cloud](#deploy-in-the-cloud)
+  - [Using the Heroku Deploy button](#using-the-heroku-deploy-button)
+  - [Deploying manually on Heroku](#deploying-manually-on-heroku)
 - [Local Set-Up](#local-set-up)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
@@ -38,6 +40,10 @@ If you want to join our team, contact us at [contact@open-decision.org](mailto:c
 
 ## Deploy in the Cloud
 
+We are currently using Heroku for deploying the backend, please create an account or sign-in on [Heroku](https://heroku.com)
+
+### Using the Heroku Deploy button
+
 With one click, you can deploy your own instance of the Open Decision backend for free on Heroku.
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/open-legal-tech/node-backend)
@@ -45,6 +51,26 @@ With one click, you can deploy your own instance of the Open Decision backend fo
 Make sure to replace the ACCESS_TOKEN_SECRET and REFRESH_TOKEN_SECRET as soon as possible to secure your instance. [Click here](https://djecrety.ir/) to generate two unique secret keys and [replace them in the Heroku Dashboard.](https://devcenter.heroku.com/articles/config-vars#using-the-heroku-dashboard)
 
 Take a look at the [.evn.example file](https://github.com/open-legal-tech/node-backend/blob/master/.env.example)to see the optional variables you should set when running the backend properly. Refer to the [Heroku documentation](https://devcenter.heroku.com/articles/config-vars#using-the-heroku-dashboard)for more information about config variables.
+
+To try some queries, set the config variable `PUBLIC_API_DOCUMENTATION = true`. The server will quickly restart, now you can access the API definition at https://yourAppName.herokuapp.com/v1/docs/. Go to https://yourAppName.herokuapp.com/v1/docs/export to download the definition and import it to your favorite API client, e.g. [Insomnia](https://insomnia.rest/download). All queries will be pre-filled.
+
+### Deploying manually on Heroku
+
+First, fork the backend using your Github account.
+
+Now, to deploy manually on Heroku, create a new app with a free dyno. Set the following config variables in the ["Settings" tab -> Config Vars page](https://devcenter.heroku.com/articles/config-vars#using-the-heroku-dashboard). [Click here](https://djecrety.ir/) to generate two unique secret keys.
+
+```
+NODE_ENV = production
+ACCESS_TOKEN_SECRET = SomeRandomKey
+REFRESH_TOKEN_SECRET = AnotherRandomKey
+```
+
+Next, go to the "Resources" tab and add the Heroku Postgres add-on, choose the Free "Hobby Dev" plan. Wait until the database is attached.
+
+Now, select the "Deploy" tab, connect your Github account, search for your fork and click deploy. After a few minutes, your app should be up and running.
+
+To try some queries, set the config variable `PUBLIC_API_DOCUMENTATION = true`. The server will quickly restart, now you can access the API definition at https://yourAppName.herokuapp.com/v1/docs/. Go to https://yourAppName.herokuapp.com/v1/docs/export to download the definition and import it to your favorite API client, e.g. [Insomnia](https://insomnia.rest/download). All queries will be pre-filled.
 
 ## Local Set-up
 
@@ -110,6 +136,8 @@ info: Connected to database
 Access the server at [http://localhost:3000](http://localhost:3000).
 
 To see the API documentation, go to [http://localhost:3000/v1/docs](http://localhost:3000/v1/docs).
+
+To try some queries, download the API definition at [http://localhost:3000/v1/docs/export](http://localhost:3000/v1/docs/export) and import it to your favorite API client, e.g. [Insomnia](https://insomnia.rest/download). All queries will be pre-filled.
 
 ### Additional settings
 
