@@ -19,8 +19,7 @@
   },
   "addons": [
     {
-      "plan": "heroku-postgresql:hobby-dev",
-      "as": "DATABASE_URL"
+      "plan": "heroku-postgresql:hobby-dev"
     }
   ]
 }
