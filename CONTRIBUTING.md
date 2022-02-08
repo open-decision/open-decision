@@ -6,7 +6,7 @@ We ask you kindly to read and follow those guidelines and also our [Code of Cond
 to ensure a smooth and friendly cooperation. However, this is not intended to be a final set of rules.
 Use your best judgment and feel free to propose changes to this document in a pull request.
 
-If you have any questions, see our [Slack-Channel](https://join.slack.com/t/opendecision/shared_invite/enQtNjM2NDUxNTQyNzU4LWYwMzJlZjlhOWJkMmIxMTBmMjYwMDE0Y2Y2OGUyZDBiY2FmOWU4OTVmMDFhMjNhNTIxYWZkZTNkNDRmNjQ4MmM)
+If you have any questions, see our [Slack-Channel](https://open-decision.org/slack)
 
 ## Language
 Everything code-related, including the documentation is in english.
@@ -15,7 +15,7 @@ Open Decision is based in Germany and for now targeted at and tested by a mostly
 This is why the User Interface is in german at the moment.
 There is however no reason to restrict the software to one country and one language, so feel free to start developing an english version.
 
-Communication on [Slack](https://slack.open-decision.org)
+Communication on [Slack](https://open-decision.org/slack)
 and other Channels is in german, although english is equally fine.
 
 ## Coding Conventions and Styleguides
