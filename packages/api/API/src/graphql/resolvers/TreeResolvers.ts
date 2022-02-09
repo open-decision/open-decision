@@ -146,7 +146,7 @@ export class DecisionTreeCrudResolver {
   async updatePartialDecisionTree(
     @TypeGraphQL.Ctx() ctx: GqlContext,
     @TypeGraphQL.Info() info: GraphQLResolveInfo,
-    @TypeGraphQL.Args() args: updatePartialDecisionTreeArgs
+    @TypeGraphQL.Args() args: UpdatePartialDecisionTreeArgs
   ): Promise<DecisionTree | null> {
     const { _count } = transformFields(graphqlFields(info as any));
     const treeToUpdate = await getPrismaFromContext(ctx).decisionTree.findFirst(
