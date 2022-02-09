@@ -42,6 +42,7 @@
     "@zxcvbn-ts/language-de": "^1.0.0",
     "@zxcvbn-ts/language-en": "^1.0.0",
     "argon2": "^0.28.4",
+    "class-validator": "^0.13.2",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
@@ -118,5 +119,8 @@
     "tsconfig-paths": "^3.12.0",
     "typegraphql-prisma": "^0.18.4",
     "typescript": "^4.4.4"
+  },
+  "volta": {
+    "node": "14.19.0"
   }
 }
