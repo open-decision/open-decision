@@ -5,3 +5,4 @@ export { FindManyDecisionTreeArgs } from "./FindManyDecisionTreeArgs";
 export { FindUniqueDecisionTreeArgs } from "./FindUniqueDecisionTreeArgs";
 export { UpdateDecisionTreeArgs } from "./UpdateDecisionTreeArgs";
 export { UpdateManyDecisionTreeArgs } from "./UpdateManyDecisionTreeArgs";
+export { UpdatePartialDecisionTreeArgs } from "./UpdatePartialDecisionTreeArgs";

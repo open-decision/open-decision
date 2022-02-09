@@ -48,9 +48,9 @@ With one click, you can deploy your own instance of the Open Decision backend fo
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/open-legal-tech/node-backend)
 
-Make sure to replace the ACCESS_TOKEN_SECRET and REFRESH_TOKEN_SECRET as soon as possible to secure your instance. [Click here](https://djecrety.ir/) to generate two unique secret keys and [replace them in the Heroku Dashboard.](https://devcenter.heroku.com/articles/config-vars#using-the-heroku-dashboard)
+Make sure to replace the ACCESS_TOKEN_SECRET and REFRESH_TOKEN_SECRET as soon as possible to secure your instance. Use a secret key generator [like this one](https://djecrety.ir/) to generate two unique secret keys and [replace them in the Heroku Dashboard.](https://devcenter.heroku.com/articles/config-vars#using-the-heroku-dashboard)
 
-Take a look at the [.evn.example file](https://github.com/open-legal-tech/node-backend/blob/master/.env.example)to see the optional variables you should set when running the backend properly. Refer to the [Heroku documentation](https://devcenter.heroku.com/articles/config-vars#using-the-heroku-dashboard)for more information about config variables.
+Take a look at the [.evn.example file](https://github.com/open-legal-tech/node-backend/blob/master/.env.example) to see the optional variables you should set when running the backend properly. Refer to the [Heroku documentation](https://devcenter.heroku.com/articles/config-vars#using-the-heroku-dashboard) for more information about config variables.
 
 To try some queries, set the config variable `PUBLIC_API_DOCUMENTATION = true`. The server will quickly restart, now you can access the API definition at https://yourAppName.herokuapp.com/v1/docs/. Go to https://yourAppName.herokuapp.com/v1/docs/export to download the definition and import it to your favorite API client, e.g. [Insomnia](https://insomnia.rest/download). All queries will be pre-filled.
 
@@ -58,7 +58,7 @@ To try some queries, set the config variable `PUBLIC_API_DOCUMENTATION = true`. 
 
 First, fork the backend using your Github account.
 
-Now, to deploy manually on Heroku, create a new app with a free dyno. Set the following config variables in the ["Settings" tab -> Config Vars page](https://devcenter.heroku.com/articles/config-vars#using-the-heroku-dashboard). [Click here](https://djecrety.ir/) to generate two unique secret keys.
+Now, to deploy manually on Heroku, create a new app with a free dyno. Set the following config variables in the "Settings" tab -> Config Vars page. Use a secret key generator [like this one](https://djecrety.ir/) to generate two unique secret keys.
 
 ```
 NODE_ENV = production
@@ -78,7 +78,7 @@ The instructions down below will get you a copy of the project up and running on
 
 ### Prerequisites
 
-You need to install Node.js and the package manager npm globally. When you install Node from the [official website](https://nodejs.org/en/download/), npm will be installed as well. We are currently using Node 16 LTS.
+You need to install Node.js and the package manager npm globally. If you install Node from the [official website](https://nodejs.org/en/download/), npm will be installed as well. We are currently using Node 16 LTS.
 
 Furthermore, make sure to have [git installed](https://git-scm.com/downloads) and available in your terminal.
 
@@ -110,11 +110,11 @@ Next, we need to set the environment variables. By default, the backend expects 
 
 Feel free to rename the `.env.development.example` file to `.env.development`.
 
-Next, set the `DATABASE_URL` variable to the connection string for your local Postgres database. When using Postgres.app, simply replace the two occurrences of "username" in the string with your macOS system user name, as this is the [default database](https://postgresapp.com/) provided.
+Next, set the `DATABASE_URL` variable to the connection string for your local Postgres database. If using Postgres.app, simply replace the two occurrences of "username" in the string with your macOS system user name, as this is the [default database](https://postgresapp.com/) provided.
 
 If you're using another local Postgres database, please refer to the documentation on how to create a database and get the connection string.
 
-Finally, when using the local database for the first time, run the following command to migrate the schema.
+Finally, if you're using the local database for the first time, run the following command to migrate the schema.
 
 ```
 npm run migrate:dev
@@ -143,7 +143,7 @@ To try some queries, download the API definition at [http://localhost:3000/v1/do
 
 There are several additional settings you can set in the .env-files. Please [refer to the commented .env.example file](https://github.com/open-legal-tech/node-backend/blob/master/.env.example) to see all possible options. For a deeper insight, you can take a look at the [zod validation schema](https://github.com/open-legal-tech/node-backend/blob/master/src/validations/env.validation.ts).
 
-To test the mailing functionality, we recommend using [Ethereal](https://ethereal.email/). When running in production, you should use a transactional SMTP provider, as Ethereal is not actually sending mails.
+To test the mailing functionality, we recommend using [Ethereal](https://ethereal.email/). If running in production, you should use a transactional SMTP provider, as Ethereal is not actually sending mails.
 
 ### Running the tests
 
