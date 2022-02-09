@@ -14,14 +14,13 @@ import {
   UpdatePartialDecisionTreeArgs,
 } from "./args";
 import { AffectedRowsOutput } from "./outputs";
-
 import {
   transformFields,
   getPrismaFromContext,
   transformCountFieldIntoSelectRelationsCount,
-} from "@type-graphql-prisma/helpers";
+} from "../helpers";
 import ApiError from "../../utils/ApiError";
-
+import { BuilderTree } from "@open-decision/type-classes";
 @TypeGraphQL.Resolver((_of) => DecisionTree)
 export class DecisionTreeCrudResolver {
   @TypeGraphQL.Query((_returns) => DecisionTree, {
@@ -68,9 +67,13 @@ export class DecisionTreeCrudResolver {
     @TypeGraphQL.Info() info: GraphQLResolveInfo,
     @TypeGraphQL.Args() args: CreateDecisionTreeArgs
   ): Promise<DecisionTree> {
+    const { startNode: _startNode, ...newTree } = BuilderTree.create(
+      args.data.name
+    );
     return getPrismaFromContext(ctx).decisionTree.create({
       data: {
-        ...args.data,
+        name: newTree.name,
+        treeData: newTree.treeData,
         owner: { connect: { uuid: ctx.user.uuid } },
       },
     });
@@ -163,11 +166,13 @@ export class DecisionTreeCrudResolver {
       throw new ApiError({ message: "Not found." });
     }
 
-    // Apply patches to tree here
+    const updatedTree = BuilderTree.applyPatches(args.data.treePatches as any)(
+      treeToUpdate as any
+    );
 
     return getPrismaFromContext(ctx).decisionTree.update({
       data: {
-        ...args.data,
+        treeData: updatedTree.treeData,
       },
       where: {
         id: treeToUpdate.id,
