@@ -1,14 +1,14 @@
 import * as TypeGraphQL from "type-graphql";
 import * as GraphQLScalars from "graphql-scalars";
-import { DecisionTreeUpdateInput } from "../inputs/DecisionTreeUpdateInput";
+import { DecisionTreePartialUpdateInput } from "../inputs/DecisionTreePartialUpdateInput";
 import { DecisionTreeWhereUniqueInput } from "../inputs/DecisionTreeWhereUniqueInput";
 
 @TypeGraphQL.ArgsType()
 export class UpdatePartialDecisionTreeArgs {
-  @TypeGraphQL.Field((_type) => DecisionTreeUpdateInput, {
+  @TypeGraphQL.Field((_type) => DecisionTreePartialUpdateInput, {
     nullable: false,
   })
-  data!: DecisionTreeUpdateInput;
+  data!: DecisionTreePartialUpdateInput;
 
   @TypeGraphQL.Field((_type) => DecisionTreeWhereUniqueInput, {
     nullable: false,
