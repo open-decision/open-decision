@@ -11,6 +11,7 @@ import {
   DeleteDecisionTreeArgs,
   UpdateDecisionTreeArgs,
   UpdateManyDecisionTreeArgs,
+  UpdatePartialDecisionTreeArgs,
 } from "./args";
 import { AffectedRowsOutput } from "./outputs";
 
@@ -127,6 +128,42 @@ export class DecisionTreeCrudResolver {
     if (!treeToUpdate) {
       throw new ApiError({ message: "Not found." });
     }
+
+    return getPrismaFromContext(ctx).decisionTree.update({
+      data: {
+        ...args.data,
+      },
+      where: {
+        id: treeToUpdate.id,
+      },
+      ...(_count && transformCountFieldIntoSelectRelationsCount(_count)),
+    });
+  }
+
+  @TypeGraphQL.Mutation((_returns) => DecisionTree, {
+    nullable: true,
+  })
+  async updatePartialDecisionTree(
+    @TypeGraphQL.Ctx() ctx: GqlContext,
+    @TypeGraphQL.Info() info: GraphQLResolveInfo,
+    @TypeGraphQL.Args() args: UpdatePartialDecisionTreeArgs
+  ): Promise<DecisionTree | null> {
+    const { _count } = transformFields(graphqlFields(info as any));
+    const treeToUpdate = await getPrismaFromContext(ctx).decisionTree.findFirst(
+      {
+        where: {
+          ...args.where,
+          ownerUuid: ctx.user.uuid,
+          ...(_count && transformCountFieldIntoSelectRelationsCount(_count)),
+        },
+      }
+    );
+
+    if (!treeToUpdate) {
+      throw new ApiError({ message: "Not found." });
+    }
+
+    // Apply patches to tree here
 
     return getPrismaFromContext(ctx).decisionTree.update({
       data: {
