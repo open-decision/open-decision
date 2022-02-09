@@ -2,7 +2,7 @@ import * as TypeGraphQL from "type-graphql";
 import * as GraphQLScalars from "graphql-scalars";
 import { Prisma } from "@prisma/client";
 import { DecimalJSScalar } from "../../scalars";
-import { NestedDateTimeFilter } from "../inputs/NestedDateTimeFilter";
+import { NestedDateTimeFilter } from "./NestedDateTimeFilter";
 
 @TypeGraphQL.InputType("DateTimeFilter", {
   isAbstract: true

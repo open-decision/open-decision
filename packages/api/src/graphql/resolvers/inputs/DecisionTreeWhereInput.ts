@@ -1,8 +1,8 @@
 import * as TypeGraphQL from "type-graphql";
-import { DateTimeFilter } from "../inputs/DateTimeFilter";
-import { IntFilter } from "../inputs/IntFilter";
-import { JsonNullableFilter } from "../inputs/JsonNullableFilter";
-import { StringFilter } from "../inputs/StringFilter";
+import { DateTimeFilter } from "./DateTimeFilter";
+import { IntFilter } from "./IntFilter";
+import { JsonNullableFilter } from "./JsonNullableFilter";
+import { StringFilter } from "./StringFilter";
 
 @TypeGraphQL.InputType("DecisionTreeWhereInput", {
   isAbstract: true,

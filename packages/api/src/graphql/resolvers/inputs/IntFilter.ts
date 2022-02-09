@@ -2,7 +2,7 @@ import * as TypeGraphQL from "type-graphql";
 import * as GraphQLScalars from "graphql-scalars";
 import { Prisma } from "@prisma/client";
 import { DecimalJSScalar } from "../../scalars";
-import { NestedIntFilter } from "../inputs/NestedIntFilter";
+import { NestedIntFilter } from "./NestedIntFilter";
 
 @TypeGraphQL.InputType("IntFilter", {
   isAbstract: true
