@@ -1,4 +1,3 @@
-import { ValidationError } from "class-validator";
 import { UUID } from "../types/uuid-class";
 
 function getConstraint(idOrUUID: string | number | UUID) {

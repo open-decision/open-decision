@@ -1,1 +1,1 @@
-export * from "../../prisma/generated/type-graphql/enums";
+export * from "@type-graphql-prisma/enums";

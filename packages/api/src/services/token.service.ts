@@ -6,7 +6,7 @@ import { tokenHandler } from "../models/token.model";
 import ApiError from "../utils/ApiError";
 import { UUID } from "../types/uuid-class";
 import prisma from "../init-prisma-client";
-import { TokenType, User, Token as PrismaToken } from ".prisma/client";
+import { TokenType, User, Token as PrismaToken } from "@prisma/client";
 import httpStatus from "http-status";
 import { TokenInterface } from "../types/AuthInterfaces";
 import { login } from "../validations/auth.validation";

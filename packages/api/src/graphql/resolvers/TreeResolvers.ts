@@ -1,7 +1,7 @@
 import * as TypeGraphQL from "type-graphql";
 import graphqlFields from "graphql-fields";
 import { GraphQLResolveInfo } from "graphql";
-import { DecisionTree } from "../../../prisma/generated/type-graphql/models/DecisionTree";
+import { DecisionTree } from "@type-graphql-prisma/models/DecisionTree";
 import { GqlContext } from "../types";
 import {
   CreateDecisionTreeArgs,
@@ -19,7 +19,7 @@ import {
   transformFields,
   getPrismaFromContext,
   transformCountFieldIntoSelectRelationsCount,
-} from "../../../prisma/generated/type-graphql/helpers";
+} from "@type-graphql-prisma/helpers";
 import ApiError from "../../utils/ApiError";
 
 @TypeGraphQL.Resolver((_of) => DecisionTree)

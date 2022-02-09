@@ -1,18 +1,18 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "target": "es2018",
     "module": "commonjs",
     "lib": ["es2018", "esnext.asynciterable", "dom.iterable"],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "rootDir": ".",
     "outDir": "dist",
-    "sourceMap": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "typeRoots": ["./src/types", "./node_modules/@types"]
+    "typeRoots": ["./src/types", "./node_modules/@types"],
+    "rootDir": ".",
+    "baseUrl": ".",
+    "paths": {
+      "@prisma-client": ["prisma/generated/prisma-client/index"],
+      "@type-graphql-prisma/*": ["prisma/generated/type-graphql/*"]
+    }
   },
-  "exclude": ["./src/graphql/"]
+  "exclude": ["dist"]
 }

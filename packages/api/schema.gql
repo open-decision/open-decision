@@ -121,6 +121,7 @@ type Mutation {
   deleteManyDecisionTree(where: DecisionTreeWhereInput): AffectedRowsOutput!
   updateDecisionTree(data: DecisionTreeUpdateInput!, where: DecisionTreeWhereUniqueInput!): DecisionTree
   updateManyDecisionTree(data: DecisionTreeUpdateManyMutationInput!, where: DecisionTreeWhereInput): AffectedRowsOutput!
+  updatePartialDecisionTree(data: DecisionTreeUpdateInput!, where: DecisionTreeWhereUniqueInput!): DecisionTree
 }
 
 input NestedDateTimeFilter {

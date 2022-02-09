@@ -1,11 +1,12 @@
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  
+
 }
 
 generator client {
   provider = "prisma-client-js"
+  output   = "./generated/prisma-client"
 }
 
 generator typegraphql {
@@ -19,7 +20,7 @@ model DecisionTree {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String
-  tags      Json?     
+  tags      Json?
   treeData  Json?     @db.JsonB
   language  String   @default("de_DE")
   /// @TypeGraphQL.omit(output: true, input: true)
@@ -44,7 +45,7 @@ model Token {
   id                    Int           @id @unique @default(autoincrement())
   token                 String
   type                  TokenType
-  owner                 User          @relation(fields: [ownerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade) 
+  owner                 User          @relation(fields: [ownerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   ownerUuid             String        @db.Uuid
   expires               DateTime
   blacklisted           Boolean       @default(false)

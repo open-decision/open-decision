@@ -1,4 +1,4 @@
-import { User } from "prisma/prisma-client";
+import { User } from "@prisma-client";
 import * as R from "remeda";
 
 const pickSafeUserProperties = (user: User) => {

@@ -1,1 +1,1 @@
-export * from "../../prisma/generated/type-graphql/scalars";
+export * from "@type-graphql-prisma/scalars";

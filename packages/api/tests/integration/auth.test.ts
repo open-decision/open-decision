@@ -17,10 +17,9 @@ import {
   userOneAccessToken,
   adminAccessToken,
 } from "../fixtures/token.fixture";
-import { jest } from "@jest/globals";
 import UserHandler from "../../src/models/user.model";
 import { tokenHandler } from "../../src/models/token.model";
-import { TokenType } from "prisma/prisma-client";
+import { TokenType } from "@prisma-client";
 import { hasRefreshCookie } from "../utils/refreshCookieHelpers";
 
 setupTestDB();
