@@ -71,7 +71,7 @@ const refreshTokens = catchAsync(async (req: Request, res: Response) => {
     maxAge: config.JWT_REFRESH_EXPIRATION_DAYS * 86400 * 1000,
     secure: config.NODE_ENV === "production" ? true : false,
     httpOnly: true,
-    sameSite: "none",
+    sameSite: config.NODE_ENV === "production" ? "none" : "lax",
   });
 
   res.send({
