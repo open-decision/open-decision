@@ -1,10 +1,10 @@
 import * as React from "react";
-import { useActor, useInterpret, useSelector } from "@xstate/react";
+import { useInterpret, useSelector } from "@xstate/react";
 import { TreeInterpreter, createTreeMachine } from "./treeMachine";
 import { BuilderTree } from "@open-decision/type-classes";
 import {
   useGetFullTreeQuery,
-  useUpdateTreeMutation,
+  usePatchTreeMutation,
 } from "features/Data/generated/graphql";
 import { createInterpreterContext } from "utils/createStateMachineContext";
 import { BaseHeader } from "components";
@@ -28,20 +28,22 @@ export const [Provider, useTreeService] =
   createInterpreterContext<TreeInterpreter>("TreeContext");
 
 function Tree({ children, tree }: TreeProps) {
-  const { mutate: updateTree } = useUpdateTreeMutation();
+  const { mutateAsync: patchTree } = usePatchTreeMutation({
+    retry: 3,
+  });
 
   const treeMachine = React.useCallback(
     () =>
-      createTreeMachine(async function syncFn(context) {
-        updateTree({
+      createTreeMachine(tree, async function syncFn(patches) {
+        return patchTree({
           id: tree.id,
-          data: { name: { set: context.name }, treeData: context.treeData },
+          data: { treePatches: patches },
         });
       }),
-    [tree.id, updateTree]
+    [patchTree, tree]
   );
 
-  const service = useInterpret(treeMachine, { context: tree });
+  const service = useInterpret(treeMachine);
 
   return <Provider value={service}>{children}</Provider>;
 }
@@ -85,7 +87,7 @@ export function TreeProvider({ children, id }: TreeProviderProps) {
         }}
         center
       >
-        <LoadingSpinner />
+        <LoadingSpinner width="50px" />
       </Stack>
     </>
   );
@@ -107,10 +109,4 @@ export function useTree<T>(
   React.useDebugValue("Tree");
 
   return [data, service.send];
-}
-
-export function useSyncMachine() {
-  const [syncMachineRef] = useTree((state) => state.syncMachineRef);
-
-  return useActor(syncMachineRef);
 }

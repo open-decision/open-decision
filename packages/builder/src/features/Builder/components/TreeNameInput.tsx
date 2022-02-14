@@ -6,7 +6,7 @@ import {
   ControlledInput,
   Input,
 } from "@open-legal-tech/design-system";
-import { useTree } from "features/Builder/state/useTree";
+import { useTree } from "features/Builder/state/treeMachine/useTree";
 import * as React from "react";
 import { ProjectMenu } from "./ProjectMenu";
 
@@ -18,7 +18,7 @@ const Container = styled(Box, {
 type Props = { css?: StyleObject };
 
 export function TreeNameInput({ css }: Props) {
-  const [name, send] = useTree((state) => state.name);
+  const [name, send] = useTree((state) => state.tree.name);
   const [Form] = useForm({ defaultValues: { name } });
 
   return (

@@ -52,6 +52,8 @@ function Dashboard() {
     onSuccess: () => queryClient.invalidateQueries("Trees"),
   });
 
+  const hasTrees = trees && trees?.decisionTrees.length > 0;
+
   return (
     <DashboardGrid>
       <BaseHeader css={{ gridRow: 1, gridColumn: "1 / -1" }} />
@@ -112,19 +114,20 @@ function Dashboard() {
         css={{
           gridColumn: 2,
           overflow: "hidden",
+          justifyContent: !hasTrees ? "center" : undefined,
         }}
       >
         {isLoading ? (
           <Stack center css={{ height: "100%" }}>
-            <LoadingSpinner />
+            <LoadingSpinner width="50px" />
           </Stack>
-        ) : trees && trees?.decisionTrees.length > 0 ? (
+        ) : hasTrees ? (
           <TreeList data={trees.decisionTrees} />
         ) : (
           <Box
             css={{
               transform: "scaleX(-1)",
-              height: "100%",
+              height: "70%",
               width: "100%",
               position: "relative",
             }}
@@ -133,6 +136,7 @@ function Dashboard() {
               src="/EmptyIllustration.png"
               layout="fill"
               objectFit="contain"
+              priority
             />
           </Box>
         )}

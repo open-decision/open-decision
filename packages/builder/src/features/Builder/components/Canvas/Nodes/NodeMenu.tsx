@@ -6,7 +6,7 @@ import {
   Text,
   StyleObject,
 } from "@open-legal-tech/design-system";
-import { useTree } from "features/Builder/state/useTree";
+import { useTree } from "features/Builder/state/treeMachine/useTree";
 import { MoreHorizontal, Trash, Star } from "react-feather";
 
 type Props = {

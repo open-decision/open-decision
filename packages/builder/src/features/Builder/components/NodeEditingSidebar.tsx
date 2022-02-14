@@ -12,8 +12,8 @@ import {
 import { RichTextEditor } from "components/RichTextEditor";
 import { OptionTargetInputs } from "features/Builder/components/OptionTargetInput/OptionTargetInput";
 import * as React from "react";
-import { useNodes } from "../state/useNode";
-import { useTree } from "../state/useTree";
+import { useNodes } from "../state/treeMachine/useNode";
+import { useTree } from "../state/treeMachine/useTree";
 import { BuilderNode, BuilderTree } from "@open-decision/type-classes";
 import { nodeNameMaxLength } from "../utilities/constants";
 import { NodeMenu } from "./Canvas/Nodes/NodeMenu";
@@ -25,9 +25,9 @@ type NodeEditingSidebarProps = { node: BuilderNode.TNode };
 export function NodeEditingSidebar({
   node,
 }: NodeEditingSidebarProps): JSX.Element {
-  const [tree, send] = useTree();
+  const [tree, send] = useTree((state) => state.tree);
   const parentNodesIds = React.useMemo(
-    () => BuilderTree.getParents(node.id)(tree.context),
+    () => BuilderTree.getParents(node.id)(tree),
     [tree, node.id]
   );
 
@@ -37,17 +37,16 @@ export function NodeEditingSidebar({
     mode: "onChange",
   });
 
-  const isStartNode = node.id === tree.context.startNode;
+  const isStartNode = node.id === tree.startNode;
 
   return (
     <>
-      <Box as="header" key={tree.context.selectedNodeId}>
+      <Box as="header" key={tree.selectedNodeId}>
         <Form
           onSubmit={({ name }) =>
             send({
               type: "updateNode",
-              id: node.id,
-              node: { name },
+              node: { ...node, name },
             })
           }
           css={{ gap: "$2", display: "flex", flexDirection: "column" }}
@@ -89,15 +88,14 @@ export function NodeEditingSidebar({
             name="name"
             maxLength={nodeNameMaxLength}
             validate={(val) =>
-              BuilderTree.isUnique(tree.context, { name: val })
+              BuilderTree.isUnique(tree, { name: val })
                 ? true
                 : "Eine Node mit diesem Namen existiert bereits."
             }
             onChange={(event) =>
               send({
                 type: "updateNode",
-                id: node.id,
-                node: { name: event.target.value },
+                node: { ...node, name: event.target.value },
               })
             }
           >
@@ -129,8 +127,7 @@ export function NodeEditingSidebar({
           setValue={(newValue) =>
             send({
               type: "updateNode",
-              id: node.id,
-              node: { content: newValue },
+              node: { ...node, content: newValue },
             })
           }
         >

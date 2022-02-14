@@ -4,8 +4,9 @@ import React from "react";
 import { NodeCreator } from "./components/NodeCreator";
 import { NodeEditingSidebar } from "./components/NodeEditingSidebar";
 import { Canvas } from "./components/Canvas/Canvas";
-import { useSelectedNode } from "./state/useNode";
+import { useSelectedNode } from "./state/treeMachine/useNode";
 import { SyncIndicator } from "./components/Canvas/SyncIndicator";
+import { UndoRedo } from "./components/Canvas/UndoRedo";
 
 type NodeEditorProps = {
   css?: StyleObject;
@@ -27,6 +28,7 @@ export const NodeEditor = ({ css }: NodeEditorProps) => {
           }}
         />
         <SyncIndicator />
+        <UndoRedo />
       </Canvas>
       <Sidebar
         css={{

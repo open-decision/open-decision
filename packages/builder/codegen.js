@@ -4,7 +4,7 @@ loadEnvConfig(process.cwd());
 module.exports = {
   overwrite: true,
   schema: {
-    "https://api.open-decision.org/v1/graphql": {
+    "http://localhost:4000/v1/graphql": {
       headers: {
         Authorization: `Bearer ${process.env.OD_API_KEY}`,
       },

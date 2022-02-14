@@ -3,6 +3,7 @@
 export interface Typegen0 {
   "@@xstate/typegen": true;
   eventsCausingActions: {
+    clearPatches: "patchesReceived";
     addNode: "addNode";
     syncTreeWithLocalStorage:
       | "addNode"
@@ -14,6 +15,8 @@ export interface Typegen0 {
       | "updateTree"
       | "selectNode"
       | "selectRelation"
+      | "undo"
+      | "redo"
       | "connect";
     sendSyncEvent:
       | "addNode"
@@ -23,6 +26,8 @@ export interface Typegen0 {
       | "updateRelation"
       | "deleteRelation"
       | "updateTree"
+      | "undo"
+      | "redo"
       | "connect";
     updateNode: "updateNode";
     deleteNode: "deleteNode";
@@ -33,7 +38,10 @@ export interface Typegen0 {
     selectNode: "selectNode";
     selectRelation: "selectRelation";
     startConnecting: "startConnecting";
+    undo: "undo";
+    redo: "redo";
     connect: "connect";
+    cleanUpConnect: "connect" | "abortConnect";
     spawnSyncMachine: "xstate.init";
   };
   internalEvents: {

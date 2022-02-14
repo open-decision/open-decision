@@ -1,7 +1,7 @@
 import { MainContent } from "components/Layout";
 import { NodeEditor } from "features/Builder/NodeEditor";
 import { EditorProvider } from "features/Builder/state/useEditor";
-import { TreeProvider } from "features/Builder/state/useTree";
+import { TreeProvider } from "features/Builder/state/treeMachine/useTree";
 import { sidebarWidth } from "features/Builder/utilities/constants";
 import { ReactFlowProvider } from "react-flow-renderer";
 import { EditorHeader } from "features/Builder/components/EditorHeader";

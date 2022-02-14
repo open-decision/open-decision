@@ -6,7 +6,7 @@ import {
 } from "react-flow-renderer";
 import { calculateCenterOfNode } from "../utilities/calculateCenterOfNode";
 import { sidebarWidth, transitionDuration } from "../utilities/constants";
-import { useTree } from "./useTree";
+import { useTree } from "./treeMachine/useTree";
 import { BuilderNode } from "@open-decision/type-classes";
 import { TCoordinates } from "@open-decision/type-classes/src/Node/BuilderNode";
 
@@ -33,8 +33,8 @@ type TreeProviderProps = Omit<
   "value"
 >;
 export function EditorProvider({ children }: TreeProviderProps) {
-  const [selectedNodeId, send] = useTree((state) => state.selectedNodeId);
-  const [nodes] = useTree((state) => state.treeData);
+  const [selectedNodeId, send] = useTree((state) => state.tree.selectedNodeId);
+  const [nodes] = useTree((state) => state.tree.treeData);
   const reactFlowWrapperRef = React.useRef<HTMLDivElement | null>(null);
   const reactFlowBounds = reactFlowWrapperRef.current?.getBoundingClientRect();
 

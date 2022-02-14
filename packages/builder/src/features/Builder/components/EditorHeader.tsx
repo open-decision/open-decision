@@ -9,7 +9,7 @@ import { BaseHeader } from "components";
 import { TreeNameInput } from "./TreeNameInput";
 import Link from "next/link";
 import { ExportButton } from "./ExportButton";
-import { useTree } from "../state/useTree";
+import { useTree } from "../state/treeMachine/useTree";
 import { useNotificationStore } from "features/Notifications/NotificationState";
 
 type HeaderProps = {
@@ -18,7 +18,7 @@ type HeaderProps = {
 
 export const EditorHeader = ({ css }: HeaderProps) => {
   const [hasNode] = useTree(
-    (state) => Object.values(state.treeData).length > 0
+    (state) => Object.values(state.tree.treeData).length > 0
   );
 
   const { addNotification } = useNotificationStore();

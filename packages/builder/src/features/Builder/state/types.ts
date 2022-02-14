@@ -5,32 +5,36 @@ import {
   BuilderRelation,
 } from "@open-decision/type-classes";
 import { ActorRefFrom } from "xstate";
-import { createSyncMachine } from "./syncMachine";
+import { createSyncMachine } from "./syncMachine/syncMachine";
 
-export type Context = BuilderTree.TTree & {
-  connectionSourceNode?: BuilderNode.TNode;
-  validConnections?: BuilderNode.TNode[];
-  syncMachineRef: ActorRefFrom<ReturnType<typeof createSyncMachine>>;
+export type Context = {
+  tree: BuilderTree.TTree;
+  connectionSourceNode?: BuilderNode.TNode | null;
+  validConnections?: BuilderNode.TNode[] | null;
+  syncMachineRef: ActorRefFrom<ReturnType<typeof createSyncMachine>> | null;
+  patches: BuilderTree.TPatch[];
+  undoRedoStack: [BuilderTree.TPatch[], BuilderTree.TPatch[]][];
+  undoRedoPosition: number;
 };
 
 export type Events =
-  | { type: "addNode"; value: BuilderNode.TNode }
+  | { type: "addNode"; node: BuilderNode.TNode }
   | {
       type: "updateNode";
-      id: string;
-      node: Partial<BuilderNode.TNode>;
+      node: Partial<BuilderNode.TNode> & { id: BuilderNode.TNode["id"] };
     }
   | { type: "deleteNode"; ids: string[] }
   | {
       type: "addRelation";
       nodeId: string;
-      relation?: Omit<BuilderRelation.TRelation, "id">;
+      relation: Omit<BuilderRelation.TRelation, "id">;
     }
   | {
       type: "updateRelation";
       nodeId: string;
-      relationId: string;
-      relation?: Partial<BuilderRelation.TRelation>;
+      relation: Partial<BuilderRelation.TRelation> & {
+        id: BuilderRelation.TRelation["id"];
+      };
     }
   | {
       type: "deleteRelation";
@@ -45,4 +49,7 @@ export type Events =
   | { type: "selectRelation"; id: string }
   | { type: "startConnecting"; sourceNodeId: string }
   | { type: "connect"; target: string }
-  | { type: "abortConnect" };
+  | { type: "abortConnect" }
+  | { type: "undo" }
+  | { type: "redo" }
+  | { type: "patchesReceived" };

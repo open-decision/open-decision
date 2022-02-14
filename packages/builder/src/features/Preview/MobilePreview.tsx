@@ -1,7 +1,7 @@
 import { Box } from "@open-legal-tech/design-system";
 import * as React from "react";
 import { RichTextEditor } from "components";
-import { useTree } from "features/Builder/state/useTree";
+import { useTree } from "features/Builder/state/treeMachine/useTree";
 import { useInterpreter } from "@open-decision/interpreter";
 import { renderElement } from "./shared";
 import { AnswersForm } from "./components/AnswersForm";
@@ -9,7 +9,7 @@ import { AnswersForm } from "./components/AnswersForm";
 export function MobilePreview() {
   const [snapshot, interpreter] = useInterpreter();
   const [node, send] = useTree(
-    (state) => state.treeData[interpreter.currentNode]
+    (state) => state.tree.treeData[interpreter.currentNode]
   );
   const relation = React.useMemo(
     () => snapshot.getAnswer(node.id),

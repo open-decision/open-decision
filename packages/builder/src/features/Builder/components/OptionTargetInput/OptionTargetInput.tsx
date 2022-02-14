@@ -18,9 +18,9 @@ import {
 } from "@open-decision/type-classes";
 import { pipe } from "fp-ts/lib/function";
 import { Plus, Trash, Crosshair } from "react-feather";
-import { useNode } from "features/Builder/state/useNode";
+import { useNode } from "features/Builder/state/treeMachine/useNode";
 import { DragHandle } from "./DragHandle";
-import { useTree } from "features/Builder/state/useTree";
+import { useTree } from "features/Builder/state/treeMachine/useTree";
 import { useUnmount } from "react-use";
 import { Reorder, useDragControls } from "framer-motion";
 import { map, values } from "remeda";
@@ -58,7 +58,9 @@ export function OptionTargetInputs({ node }: SingleSelectProps) {
         </Label>
         <Button
           variant="ghost"
-          onClick={() => send({ type: "addRelation", nodeId: node.id })}
+          onClick={() =>
+            send({ type: "addRelation", nodeId: node.id, relation: {} })
+          }
           square
           css={{
             "&:hover": {
@@ -83,8 +85,8 @@ export function OptionTargetInputs({ node }: SingleSelectProps) {
         onReorder={(newOrder: BuilderRelation.TRelation[]) =>
           send({
             type: "updateNode",
-            id: node.id,
             node: {
+              ...node,
               relations: Object.fromEntries(
                 newOrder.map((relation) => [relation.id, relation])
               ),
@@ -101,8 +103,7 @@ export function OptionTargetInputs({ node }: SingleSelectProps) {
               send({
                 type: "updateRelation",
                 nodeId: node.id,
-                relationId: relation.id,
-                relation: newData,
+                relation: { ...relation, ...newData },
               })
             }
             onDelete={() =>
@@ -134,16 +135,16 @@ export function OptionTargetInput({
   onDelete,
   groupRef,
 }: SingleSelectInputProps): JSX.Element {
-  const [tree, send] = useTree();
+  const [tree, send] = useTree((state) => state.tree);
   const node = useNode(nodeId);
   const allOptions = pipe(
-    tree.context.treeData,
+    tree.treeData,
     values,
     map((node) => ({ id: node.id, label: node.name }))
   );
   const nodeOptions = node
     ? pipe(
-        BuilderTree.getConnectableNodes(node)(tree.context),
+        BuilderTree.getConnectableNodes(node)(tree),
         values,
         map((node) => ({ id: node.id, label: node.name }))
       )
@@ -228,13 +229,13 @@ export function OptionTargetInput({
               send([
                 {
                   type: "addNode",
-                  value: newNode,
+                  node: newNode,
                 },
                 {
                   type: "updateRelation",
                   nodeId: node.id,
-                  relationId: input.id,
                   relation: {
+                    id: input.id,
                     target: newNode.id,
                   },
                 },

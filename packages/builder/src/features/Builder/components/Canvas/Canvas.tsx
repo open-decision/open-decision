@@ -2,7 +2,7 @@ import * as React from "react";
 import { BuilderNode } from "@open-decision/type-classes";
 import { useEditor } from "features/Builder/state/useEditor";
 import ReactFlow, { FlowElement } from "react-flow-renderer";
-import { useTree } from "../../state/useTree";
+import { useTree } from "../../state/treeMachine/useTree";
 import { transformToReactFlowEdges } from "./utils/transformToReactFlowEdges";
 import { transformToReactFlowNodes } from "./utils/transformToReactFlowNodes";
 import { css, styled, StyleObject } from "@open-legal-tech/design-system";
@@ -48,7 +48,7 @@ export function Canvas({ children, css }: Props) {
 
   const elements = [
     ...transformToReactFlowNodes(
-      state.context?.treeData ?? {},
+      state.context?.tree.treeData ?? {},
       state.context.connectionSourceNode && state.context.validConnections
         ? [
             state.context.connectionSourceNode,
@@ -57,9 +57,9 @@ export function Canvas({ children, css }: Props) {
         : []
     ),
     ...transformToReactFlowEdges(
-      state.context?.treeData ?? {},
-      state.context.selectedNodeId,
-      state.context.selectedRelationId
+      state.context?.tree.treeData ?? {},
+      state.context.tree.selectedNodeId,
+      state.context.tree.selectedRelationId
     ),
   ];
 
@@ -80,7 +80,7 @@ export function Canvas({ children, css }: Props) {
     if (coordinates && name) {
       send({
         type: "addNode",
-        value: BuilderNode.create({
+        node: BuilderNode.create({
           position: coordinates,
           name,
         }),
@@ -108,7 +108,7 @@ export function Canvas({ children, css }: Props) {
               type: "deleteNode",
               ids: elementsToRemove
                 .map((element) => element.id)
-                .filter((element) => element !== state.context.startNode),
+                .filter((element) => element !== state.context.tree.startNode),
             },
           ]);
         }}
@@ -143,7 +143,7 @@ export function Canvas({ children, css }: Props) {
             });
         }}
         onNodeDragStop={(_event, node) => {
-          return send({ type: "updateNode", id: node.id, node });
+          return send({ type: "updateNode", node });
         }}
         style={{
           gridColumn: "1 / -1",

@@ -5,7 +5,7 @@ import {
   Link,
   StyleObject,
 } from "@open-legal-tech/design-system";
-import { useTree } from "../state/useTree";
+import { useTree } from "../state/treeMachine/useTree";
 import { readableDate } from "features/Dashboard/utils";
 
 type Props = { css?: StyleObject };

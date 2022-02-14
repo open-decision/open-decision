@@ -11,7 +11,7 @@ import {
   useForm,
 } from "@open-legal-tech/design-system";
 import { Plus } from "react-feather";
-import { useTree } from "../state/useTree";
+import { useTree } from "../state/treeMachine/useTree";
 import { useEditor } from "../state/useEditor";
 import { BuilderNode } from "@open-decision/type-classes";
 import { nodeNameMaxLength } from "../utilities/constants";
@@ -19,7 +19,7 @@ import { nodeNameMaxLength } from "../utilities/constants";
 type Props = { css?: StyleObject };
 
 export const NodeCreator = ({ css }: Props) => {
-  const [treeData, send] = useTree((state) => state.treeData);
+  const [treeData, send] = useTree((state) => state.tree.treeData);
   const { getCenter } = useEditor();
   const [Form] = useForm({
     defaultValues: {
@@ -43,7 +43,7 @@ export const NodeCreator = ({ css }: Props) => {
       position: getCenter(),
       name: label,
     });
-    send({ type: "addNode", value: newNode });
+    send({ type: "addNode", node: newNode });
 
     return { id: newNode.id, label: newNode.name };
   }
@@ -75,7 +75,7 @@ export const NodeCreator = ({ css }: Props) => {
 };
 
 const NodeCreatorInput = ({ createHandler, autoFocus }) => {
-  const [, send] = useTree((state) => state.treeData);
+  const [, send] = useTree((state) => state.tree.treeData);
 
   const onDragStart = (event: React.DragEvent<HTMLButtonElement>) => {
     event.dataTransfer.setData("nodeLabel", inputValue);

@@ -2,7 +2,7 @@ import { Box, styled, Text, Icon, Stack } from "@open-legal-tech/design-system";
 import React, { memo } from "react";
 import { Star } from "react-feather";
 import { NodeProps, Position } from "react-flow-renderer";
-import { useTree } from "../../../state/useTree";
+import { useTree } from "../../../state/treeMachine/useTree";
 import { nodeHeight, nodeWidth } from "../../../utilities/constants";
 import { NodeData } from "../../../types/react-flow";
 import { useEditor } from "features/Builder/state/useEditor";
@@ -32,8 +32,8 @@ const NodeContainer = styled(Stack, {
 
 export const Node = memo(
   ({ id, data: { runtime, ...data } }: NodeProps<NodeData>) => {
-    const [selectedNodeId] = useTree((state) => state.selectedNodeId);
-    const [startNode] = useTree((state) => state.startNode);
+    const [selectedNodeId] = useTree((state) => state.tree.selectedNodeId);
+    const [startNode] = useTree((state) => state.tree.startNode);
     const { isConnecting, connectingNodeId } = useEditor();
 
     const validConnectionTarget = React.useMemo(

@@ -12,7 +12,10 @@ import * as React from "react";
 import Link from "next/link";
 import { ChevronLeft } from "react-feather";
 import { Preview } from "features/Preview/Preview";
-import { TreeProvider, useTree } from "features/Builder/state/useTree";
+import {
+  TreeProvider,
+  useTree,
+} from "features/Builder/state/treeMachine/useTree";
 import { InterpreterProvider } from "@open-decision/interpreter";
 import { MobilePreview } from "features/Preview/MobilePreview";
 import { ErrorBoundary } from "@sentry/nextjs";
