@@ -1,27 +1,27 @@
 import * as React from "react";
-import * as TooltipPrimtive from "@radix-ui/react-tooltip";
+import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import { styled } from "../../stitches";
 import { overlayCss } from "../shared";
 
-const StyledContent = styled(TooltipPrimtive.Content, overlayCss);
+const StyledContent = styled(TooltipPrimitive.Content, overlayCss);
 
-const StyledArrow = styled(TooltipPrimtive.Arrow, {
+const StyledArrow = styled(TooltipPrimitive.Arrow, {
   fill: "var(--bgColor)",
 });
 
-const StyledTrigger = styled(TooltipPrimtive.Trigger, {
+const StyledTrigger = styled(TooltipPrimitive.Trigger, {
   backgroundColor: "transparent",
   border: "none",
 });
 
 export const Tooltip = {
-  Root: TooltipPrimtive.Root,
+  Root: TooltipPrimitive.Root,
   Trigger: StyledTrigger,
   Content: StyledContent,
   Arrow: StyledArrow,
 };
 
-export type TooltipRootProps = TooltipPrimtive.TooltipProps;
-export type TooltipTriggerProps = TooltipPrimtive.TooltipTriggerProps;
+export type TooltipRootProps = TooltipPrimitive.TooltipProps;
+export type TooltipTriggerProps = TooltipPrimitive.TooltipTriggerProps;
 export type TooltipContentProps = React.ComponentProps<typeof StyledContent>;
-export type TooltipArrowProps = TooltipPrimtive.TooltipArrowProps;
+export type TooltipArrowProps = TooltipPrimitive.TooltipArrowProps;
