@@ -1,5 +1,4 @@
 import { assign as immerAssign } from "@xstate/immer";
-import localForage from "localforage";
 import { assign, createMachine, InterpreterFrom, send, spawn } from "xstate";
 import { Context, Events } from "../types";
 import { BuilderTree } from "@open-decision/type-classes";
@@ -7,10 +6,6 @@ import { createSyncMachine } from "../syncMachine/syncMachine";
 import { applyPatches } from "immer";
 import { addPatches } from "../utils";
 import { PatchTreeMutation } from "features/Data/generated/graphql";
-
-async function updateTreeInStorage(id: string, tree: BuilderTree.TTree) {
-  localForage.setItem(id, tree);
-}
 
 export type TreeInterpreter = InterpreterFrom<
   ReturnType<typeof createTreeMachine>
@@ -46,77 +41,48 @@ export const createTreeMachine = (
         idle: {
           on: {
             addNode: {
-              actions: ["addNode", "syncTreeWithLocalStorage", "sendSyncEvent"],
+              actions: ["addNode", "sendSyncEvent"],
             },
             updateNode: {
-              actions: [
-                "updateNode",
-                "syncTreeWithLocalStorage",
-                "sendSyncEvent",
-              ],
+              actions: ["updateNode", "sendSyncEvent"],
             },
             deleteNode: {
-              actions: [
-                "deleteNode",
-                "syncTreeWithLocalStorage",
-                "sendSyncEvent",
-              ],
+              actions: ["deleteNode", "sendSyncEvent"],
             },
             addRelation: {
-              actions: [
-                "addRelation",
-                "syncTreeWithLocalStorage",
-                "sendSyncEvent",
-              ],
+              actions: ["addRelation", "sendSyncEvent"],
             },
             updateRelation: {
-              actions: [
-                "updateRelation",
-                "syncTreeWithLocalStorage",
-                "sendSyncEvent",
-              ],
+              actions: ["updateRelation", "sendSyncEvent"],
             },
             deleteRelation: {
-              actions: [
-                "deleteRelation",
-                "syncTreeWithLocalStorage",
-                "sendSyncEvent",
-              ],
+              actions: ["deleteRelation", "sendSyncEvent"],
             },
             updateTree: {
-              actions: [
-                "updateTree",
-                "syncTreeWithLocalStorage",
-                "sendSyncEvent",
-              ],
+              actions: ["updateTree", "sendSyncEvent"],
             },
             selectNode: {
-              actions: ["selectNode", "syncTreeWithLocalStorage"],
+              actions: ["selectNode"],
             },
             selectRelation: {
-              actions: ["selectRelation", "syncTreeWithLocalStorage"],
+              actions: ["selectRelation"],
             },
             startConnecting: {
               target: "connecting",
               actions: "startConnecting",
             },
             undo: {
-              actions: ["undo", "syncTreeWithLocalStorage", "sendSyncEvent"],
+              actions: ["undo", "sendSyncEvent"],
             },
             redo: {
-              actions: ["redo", "syncTreeWithLocalStorage", "sendSyncEvent"],
+              actions: ["redo", "sendSyncEvent"],
             },
           },
         },
         connecting: {
           on: {
             connect: {
-              actions: [
-                "connect",
-                "syncTreeWithLocalStorage",
-                "sendSyncEvent",
-                "cleanUpConnect",
-              ],
+              actions: ["connect", "sendSyncEvent", "cleanUpConnect"],
               target: "idle",
             },
             abortConnect: { target: "idle", actions: ["cleanUpConnect"] },
@@ -126,9 +92,6 @@ export const createTreeMachine = (
     },
     {
       actions: {
-        syncTreeWithLocalStorage: ({ tree }, _event) => {
-          updateTreeInStorage(tree.id.toString(), tree);
-        },
         addNode: immerAssign((context, event) => {
           const [newTree, patches, inversePatches] = BuilderTree.addNode(
             event.node

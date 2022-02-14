@@ -10,18 +10,6 @@ import { createInterpreterContext } from "utils/createStateMachineContext";
 import { BaseHeader } from "components";
 import { Stack } from "@open-legal-tech/design-system";
 import { LoadingSpinner } from "components/LoadingSpinner";
-import localforage from "localforage";
-import { useQuery } from "react-query";
-
-async function getTreeFromStorage(id: string) {
-  const possibleTree = await localforage.getItem(id);
-  if (!possibleTree) return undefined;
-  const parsedTree = BuilderTree.Type.safeParse(possibleTree);
-
-  if (parsedTree.success) return parsedTree.data;
-
-  return parsedTree.error;
-}
 
 type TreeProps = { children: React.ReactNode; tree: BuilderTree.TTree };
 export const [Provider, useTreeService] =
@@ -54,11 +42,6 @@ type TreeProviderProps = Omit<
 > & { id: string };
 
 export function TreeProvider({ children, id }: TreeProviderProps) {
-  const { data: localTree, isLoading: isLoadingLocalTree } = useQuery(
-    "LocalTree",
-    async () => await getTreeFromStorage(id)
-  );
-
   const { data: tree, isLoading } = useGetFullTreeQuery(
     { id: Number(id) },
     {

@@ -5,19 +5,6 @@ export interface Typegen0 {
   eventsCausingActions: {
     clearPatches: "patchesReceived";
     addNode: "addNode";
-    syncTreeWithLocalStorage:
-      | "addNode"
-      | "updateNode"
-      | "deleteNode"
-      | "addRelation"
-      | "updateRelation"
-      | "deleteRelation"
-      | "updateTree"
-      | "selectNode"
-      | "selectRelation"
-      | "undo"
-      | "redo"
-      | "connect";
     sendSyncEvent:
       | "addNode"
       | "updateNode"
