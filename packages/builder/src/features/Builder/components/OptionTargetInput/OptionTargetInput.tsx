@@ -84,28 +84,19 @@ export function OptionTargetInputs({ node }: SingleSelectProps) {
         values={relations}
         onReorder={(newOrder: BuilderRelation.TRelation[]) =>
           send({
-            type: "updateNode",
-            node: {
-              ...node,
-              relations: Object.fromEntries(
-                newOrder.map((relation) => [relation.id, relation])
-              ),
-            },
+            type: "updateNodeRelations",
+            nodeId: node.id,
+            relations: Object.fromEntries(
+              newOrder.map((relation) => [relation.id, relation])
+            ),
           })
         }
       >
         {relations.map((relation) => (
           <OptionTargetInput
             groupRef={ref}
-            key={`${relation.id}_${relation.target}`}
-            input={relation}
-            onChange={(newData) =>
-              send({
-                type: "updateRelation",
-                nodeId: node.id,
-                relation: { ...relation, ...newData },
-              })
-            }
+            key={relation.id}
+            relation={relation}
             onDelete={() =>
               send({
                 type: "deleteRelation",
@@ -121,17 +112,15 @@ export function OptionTargetInputs({ node }: SingleSelectProps) {
   );
 }
 type SingleSelectInputProps = {
-  input: BuilderRelation.TRelation;
+  relation: BuilderRelation.TRelation;
   nodeId: string;
-  onChange: (relation: Omit<BuilderRelation.TRelation, "id">) => void;
   onDelete: (id: string) => void;
   groupRef: React.MutableRefObject<HTMLDivElement | null>;
 };
 
 export function OptionTargetInput({
-  input,
+  relation,
   nodeId,
-  onChange,
   onDelete,
   groupRef,
 }: SingleSelectInputProps): JSX.Element {
@@ -159,8 +148,8 @@ export function OptionTargetInput({
 
   const [Form] = useForm({
     defaultValues: {
-      answer: input.answer ?? "",
-      target: input.target ?? "",
+      answer: relation.answer ?? "",
+      target: relation.target ?? "",
     },
   });
 
@@ -168,14 +157,18 @@ export function OptionTargetInput({
     // FIXME Open issue -> https://github.com/framer/motion/issues/1313
     // The Reorder.Item creates a stacking context which makes it impossible to have the Combobox overlap other Reorder.Items
     <Reorder.Item
-      value={input}
+      value={relation}
       dragListener={false}
       dragControls={controls}
       dragConstraints={groupRef}
     >
       <Form
         onSubmit={(data) =>
-          onChange({ answer: data.answer, target: data.target })
+          send({
+            type: "updateRelation",
+            nodeId: node.id,
+            relation: { ...relation, ...data },
+          })
         }
         css={{
           display: "flex",
@@ -183,7 +176,7 @@ export function OptionTargetInput({
         }}
       >
         <Box
-          onClick={() => send({ type: "selectRelation", id: input.id })}
+          onClick={() => send({ type: "selectRelation", id: relation.id })}
           ref={ref}
           css={{
             flex: 1,
@@ -196,7 +189,14 @@ export function OptionTargetInput({
         >
           <ControlledInput
             name="answer"
-            onChange={(event) => onChange({ answer: event.target.value })}
+            onChange={(event) =>
+              send({
+                type: "updateRelationAnswer",
+                nodeId: node.id,
+                relationId: relation.id,
+                answer: event.target.value,
+              })
+            }
           >
             {({ onBlur, ...field }) => (
               <Input
@@ -218,7 +218,7 @@ export function OptionTargetInput({
               />
             )}
           </ControlledInput>
-          <NodeLink target={input.target} />
+          <NodeLink target={relation.target} />
           <Combobox.Root
             name="target"
             onCreate={(name) => {
@@ -232,19 +232,22 @@ export function OptionTargetInput({
                   node: newNode,
                 },
                 {
-                  type: "updateRelation",
+                  type: "updateRelationTarget",
                   nodeId: node.id,
-                  relation: {
-                    id: input.id,
-                    target: newNode.id,
-                  },
+                  relationId: relation.id,
+                  target: newNode.id,
                 },
               ]);
 
               return { id: newNode.id, label: newNode.name };
             }}
             onSelectedItemChange={(newItem) =>
-              onChange({ target: newItem?.id ?? "" })
+              send({
+                type: "updateRelationTarget",
+                nodeId: node.id,
+                relationId: relation.id,
+                target: newItem?.id ?? "",
+              })
             }
             items={allOptions}
             subsetOfItems={nodeOptions}
@@ -289,7 +292,7 @@ export function OptionTargetInput({
             variant="ghost"
             size="small"
             type="button"
-            onClick={() => onDelete(input.id)}
+            onClick={() => onDelete(relation.id)}
           >
             <Icon label="Entferne den Input">
               <Trash />

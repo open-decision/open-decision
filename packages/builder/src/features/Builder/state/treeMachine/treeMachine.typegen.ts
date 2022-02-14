@@ -8,18 +8,31 @@ export interface Typegen0 {
     sendSyncEvent:
       | "addNode"
       | "updateNode"
+      | "updateNodeName"
+      | "updateNodePosition"
+      | "updateNodeContent"
+      | "updateNodeRelations"
       | "deleteNode"
       | "addRelation"
       | "updateRelation"
+      | "updateRelationAnswer"
+      | "updateRelationTarget"
       | "deleteRelation"
       | "updateTree"
       | "undo"
       | "redo"
       | "connect";
     updateNode: "updateNode";
+    updateNodeName: "updateNodeName";
+    mergePatch: "updateNodeName" | "updateRelationAnswer";
+    updateNodePosition: "updateNodePosition";
+    updateNodeContent: "updateNodeContent";
+    updateNodeRelations: "updateNodeRelations";
     deleteNode: "deleteNode";
     addRelation: "addRelation";
     updateRelation: "updateRelation";
+    updateRelationAnswer: "updateRelationAnswer";
+    updateRelationTarget: "updateRelationTarget";
     deleteRelation: "deleteRelation";
     updateTree: "updateTree";
     selectNode: "selectNode";

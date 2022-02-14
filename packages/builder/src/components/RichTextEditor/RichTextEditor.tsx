@@ -28,7 +28,7 @@ const initialValues: Descendant[] = [
 
 type RichTextEditorProps = {
   value: Descendant[];
-  setValue: (newValue: Descendant[]) => void;
+  setValue?: (newValue: Descendant[]) => void;
   children: React.ReactNode;
 };
 

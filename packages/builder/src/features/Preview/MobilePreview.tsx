@@ -46,17 +46,7 @@ export function MobilePreview() {
             overflow: "hidden",
           }}
         >
-          <RichTextEditor.Root
-            key={snapshot.currentNode}
-            value={node.content}
-            setValue={(newValue) =>
-              send({
-                type: "updateNode",
-                id: snapshot.currentNode,
-                node: { content: newValue },
-              })
-            }
-          >
+          <RichTextEditor.Root key={snapshot.currentNode} value={node.content}>
             <RichTextEditor.Editable
               css={{ marginBottom: "$6", paddingRight: "$2", minHeight: 0 }}
               renderElement={renderElement}

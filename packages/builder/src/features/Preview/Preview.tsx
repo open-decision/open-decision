@@ -8,7 +8,7 @@ import { AnswersForm } from "./components/AnswersForm";
 
 export function Preview() {
   const [snapshot, interpreter] = useInterpreter();
-  const [node, send] = useTree(
+  const [node] = useTree(
     (state) => state.tree.treeData[interpreter.currentNode]
   );
   const relation = React.useMemo(
@@ -26,17 +26,7 @@ export function Preview() {
       }}
     >
       <Box css={{ gridColumn: "2" }}>
-        <RichTextEditor.Root
-          key={snapshot.currentNode}
-          value={node.content}
-          setValue={(newValue) =>
-            send({
-              type: "updateNode",
-              id: snapshot.currentNode,
-              node: { content: newValue },
-            })
-          }
-        >
+        <RichTextEditor.Root key={snapshot.currentNode} value={node.content}>
           <PreviewRichTextEditor />
         </RichTextEditor.Root>
         <AnswersForm

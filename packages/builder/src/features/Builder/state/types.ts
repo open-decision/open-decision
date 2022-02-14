@@ -19,10 +19,19 @@ export type Context = {
 
 export type Events =
   | { type: "addNode"; node: BuilderNode.TNode }
-  | {
+  | ({
       type: "updateNode";
-      node: Partial<BuilderNode.TNode> & { id: BuilderNode.TNode["id"] };
-    }
+    } & BuilderTree.UpdateNodePayload)
+  | ({
+      type: "updateNodeName";
+    } & BuilderTree.UpdateNodeNamePayload)
+  | ({
+      type: "updateNodePosition";
+    } & BuilderTree.UpdateNodePositionPayload)
+  | ({
+      type: "updateNodeContent";
+    } & BuilderTree.UpdateNodeContentPayload)
+  | ({ type: "updateNodeRelations" } & BuilderTree.UpdateNodeRelationsPayload)
   | { type: "deleteNode"; ids: string[] }
   | {
       type: "addRelation";
@@ -36,6 +45,12 @@ export type Events =
         id: BuilderRelation.TRelation["id"];
       };
     }
+  | ({
+      type: "updateRelationAnswer";
+    } & BuilderTree.UpdateRelationAnswerPayload)
+  | ({
+      type: "updateRelationTarget";
+    } & BuilderTree.UpdateRelationTargetPayload)
   | {
       type: "deleteRelation";
       nodeId: string;

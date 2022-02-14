@@ -45,8 +45,9 @@ export function NodeEditingSidebar({
         <Form
           onSubmit={({ name }) =>
             send({
-              type: "updateNode",
-              node: { ...node, name },
+              type: "updateNodeName",
+              nodeId: node.id,
+              name,
             })
           }
           css={{ gap: "$2", display: "flex", flexDirection: "column" }}
@@ -94,8 +95,9 @@ export function NodeEditingSidebar({
             }
             onChange={(event) =>
               send({
-                type: "updateNode",
-                node: { ...node, name: event.target.value },
+                type: "updateNodeName",
+                nodeId: node.id,
+                name: event.target.value,
               })
             }
           >
@@ -126,8 +128,9 @@ export function NodeEditingSidebar({
           value={node.content}
           setValue={(newValue) =>
             send({
-              type: "updateNode",
-              node: { ...node, content: newValue },
+              type: "updateNodeContent",
+              nodeId: node.id,
+              content: newValue,
             })
           }
         >

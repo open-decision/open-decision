@@ -142,9 +142,13 @@ export function Canvas({ children, css }: Props) {
               nodeId: element.id,
             });
         }}
-        onNodeDragStop={(_event, node) => {
-          return send({ type: "updateNode", node });
-        }}
+        onNodeDragStop={(_event, node) =>
+          send({
+            type: "updateNodePosition",
+            nodeId: node.id,
+            position: node.position,
+          })
+        }
         style={{
           gridColumn: "1 / -1",
           gridRow: "1",
