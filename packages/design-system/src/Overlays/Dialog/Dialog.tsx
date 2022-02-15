@@ -3,6 +3,8 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Button, Icon, ButtonProps } from "../../index";
 import { X } from "../../icons";
 import { styled, keyframes } from "../../stitches";
+import { Heading } from "../../Heading";
+import { Box } from "../../Box";
 
 function DialogRoot({ children, ...props }: DialogRootProps) {
   return (
@@ -23,7 +25,9 @@ const StyledContent = styled(DialogPrimitive.Content, {
   borderRadius: "$md",
   backgroundColor: "$gray1",
   padding: "$5",
-  minWidth: "200px",
+  minWidth: "350px",
+  zIndex: "$10",
+  maxWidth: "500px",
 
   position: "fixed",
   top: "50%",
@@ -68,6 +72,25 @@ function CloseButton(props: Partial<ButtonProps>) {
   );
 }
 
+function Header({ children }: HeaderProps) {
+  return (
+    <Box
+      as="header"
+      css={{
+        display: "flex",
+        justifyContent: "space-between",
+        marginBottom: "$6",
+        alignItems: "center",
+      }}
+    >
+      <Dialog.Title asChild>
+        <Heading size="extra-small">{children}</Heading>
+      </Dialog.Title>
+      <Dialog.CloseButton />
+    </Box>
+  );
+}
+
 export const Dialog = {
   Root: DialogRoot,
   Trigger: DialogPrimitive.Trigger,
@@ -76,13 +99,14 @@ export const Dialog = {
   Description: DialogPrimitive.Description,
   Close: DialogPrimitive.Close,
   CloseButton,
+  Header,
 };
 
 export type DialogRootProps = DialogPrimitive.DialogProps;
-
 export type DialogTriggerProps = DialogPrimitive.DialogTriggerProps;
 export type DialogContentProps = React.ComponentProps<typeof StyledContent>;
 export type DialogTitleProps = DialogPrimitive.DialogTitleProps;
 export type DialogDescriptionProps = DialogPrimitive.DialogDescriptionProps;
 export type DialogCloseProps = DialogPrimitive.DialogCloseProps;
 export type DialogCloseButtonProps = Partial<ButtonProps>;
+export type HeaderProps = { children: React.ReactNode };

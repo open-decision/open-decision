@@ -37,6 +37,7 @@ export const buttonStyles = css(alignByContent, {
         $$paddingInline: "$space$1",
         $$paddingBlock: "$space$2",
         "--iconSize": "16px",
+        textStyle: "extra-small-text",
 
         "&  svg": {
           width: "var(--iconSize)",
@@ -85,7 +86,8 @@ export const buttonStyles = css(alignByContent, {
     variant: {
       primary: {
         backgroundColor: "$colorScheme9",
-        color: "$colorScheme-text !important",
+        $color: "$colorScheme-text",
+        color: "var(--color, $white)",
 
         "&:hover, &:focus-visible": {
           backgroundColor: "$colorScheme10",

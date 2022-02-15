@@ -47,10 +47,7 @@ export function Field({
     <FieldBox css={css}>
       <Label
         size="small"
-        css={{
-          marginBottom: "$2",
-          display: "block",
-        }}
+        css={{ display: "block" }}
         className={isLabelVisible ? "" : visuallyHidden()}
         htmlFor={inputName}
       >
