@@ -30,23 +30,18 @@ export const isInside =
 
 export const isBooleanMarkActive =
   (editor: Editor) => (mark: keyof RichTextContent.TBooleanMarks) => {
-    const [match] = Editor.nodes(editor, {
-      match: (n) => Text.isText(n) && n[mark] === true,
-      universal: true,
-    });
-
-    return Boolean(match);
+    return Boolean(Editor.marks(editor)?.[mark]);
   };
 
 export const toggleBooleanMark =
   (editor: Editor) =>
   (mark: keyof RichTextContent.TBooleanMarks): void => {
     const isActive = isBooleanMarkActive(editor)(mark);
-    Transforms.setNodes(
-      editor,
-      { [mark]: isActive ? undefined : true },
-      { match: (n) => Text.isText(n), split: true }
-    );
+
+    isActive
+      ? Editor.removeMark(editor, mark)
+      : Editor.addMark(editor, mark, true);
+
     ReactEditor.focus(editor);
   };
 
