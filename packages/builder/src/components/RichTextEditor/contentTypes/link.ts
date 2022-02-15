@@ -24,13 +24,17 @@ export const isLinkActive = (editor) => {
   return !!link;
 };
 
-const unwrapLink = (editor: Editor) => {
+export const unwrapLink = (editor: Editor) => {
   Transforms.unwrapNodes(editor, {
     match: (n) => !Editor.isEditor(n) && Element.isElement(n) && isLink(n.type),
   });
 };
 
-export const wrapLink = (editor: Editor, possibleUrl: string): void => {
+export const wrapLink = (
+  editor: Editor,
+  possibleUrl: string,
+  text?: string
+): void => {
   const url = Url.safeParse(possibleUrl);
 
   if (!url.success) return;
@@ -45,7 +49,7 @@ export const wrapLink = (editor: Editor, possibleUrl: string): void => {
   const link: RichTextContent.TLinkElement = {
     type: "link",
     url: url.data,
-    children: isCollapsed ? [{ text: url.data }] : [],
+    children: isCollapsed ? [{ text: text || url.data }] : [],
   };
 
   if (isCollapsed) {

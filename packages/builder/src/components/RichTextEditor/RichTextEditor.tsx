@@ -8,7 +8,7 @@ import {
   useSlate,
   withReact,
 } from "slate-react";
-import { createEditor, Descendant, Editor } from "slate";
+import { createEditor, Descendant, Editor, Node } from "slate";
 import { renderElement as defaultRenderElement } from "./Elements";
 import { renderLeaf as defaultRenderLeaf } from "./Leaf";
 import { Toolbar } from "./Toolbar";
