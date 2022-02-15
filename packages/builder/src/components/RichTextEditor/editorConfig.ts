@@ -26,7 +26,6 @@ export const withInlines = (editor: Editor): Editor => {
     }
   };
 
-  // Empty link elements are removed when normalizing the data output of the Editor.
   editor.normalizeNode = (entry) => {
     const [node, path] = entry;
     if (!Element.isElement(node)) return;
@@ -43,7 +42,7 @@ export const withInlines = (editor: Editor): Editor => {
             focus: editor.selection.focus,
           });
           Transforms.insertText(editor, textContent.trimEnd());
-          Transforms.insertNodes(
+          return Transforms.insertNodes(
             editor,
             { text: " " },
             {
@@ -55,17 +54,7 @@ export const withInlines = (editor: Editor): Editor => {
 
         if (!Editor.isEmpty(editor, child)) return;
 
-        // remove link nodes whose text value is an empty string.
-        // empty text links happen when you break from a link to the next line or delete a link line.
-        if (children.length === 1) {
-          Transforms.removeNodes(editor, { at: path });
-          Transforms.insertNodes(editor, {
-            type: "paragraph",
-            children: [{ text: "" }],
-          });
-        } else {
-          Transforms.removeNodes(editor, { at: childPath });
-        }
+        return Transforms.removeNodes(editor, { at: childPath });
       }
     }
 

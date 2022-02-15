@@ -47,7 +47,7 @@ function Root({ value, setValue, children }: RichTextEditorProps): JSX.Element {
     <Slate
       editor={editor}
       value={value}
-      onChange={(newValue) => setValue(newValue)}
+      onChange={(newValue) => setValue?.(newValue)}
     >
       {children}
     </Slate>
