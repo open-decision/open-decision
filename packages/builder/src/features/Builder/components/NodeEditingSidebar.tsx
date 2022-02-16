@@ -59,9 +59,7 @@ export function NodeEditingSidebar({
               alignItems: "center",
             }}
           >
-            <Label size="small" css={{ color: "$gray11" }}>
-              Knoten
-            </Label>
+            <Label size="small">Knoten</Label>
             <Stack css={{ flexDirection: "row", gap: "$2" }}>
               {isStartNode ? (
                 <NodeLabel
@@ -119,7 +117,6 @@ export function NodeEditingSidebar({
             margin: 0,
             marginBottom: "$2",
             display: "block",
-            color: "$gray11",
           }}
         >
           Inhalt
@@ -164,7 +161,6 @@ export function NodeEditingSidebar({
               margin: 0,
               marginBottom: "$2",
               display: "block",
-              color: "$gray11",
             }}
           >
             Elternknoten
@@ -180,13 +176,17 @@ export function NodeEditingSidebar({
             {Object.values(parentNodes).map((parentNode) => {
               return (
                 <Button
-                  size="small"
+                  size="extra-small"
                   variant="tertiary"
                   key={parentNode.id}
                   onClick={() =>
                     send({ type: "selectNode", nodeId: parentNode.id })
                   }
-                  css={{ textAlign: "left" }}
+                  css={{
+                    textAlign: "left",
+                    wordBreak: "break-word",
+                    focusStyle: "inner",
+                  }}
                 >
                   {parentNode.name}
                 </Button>

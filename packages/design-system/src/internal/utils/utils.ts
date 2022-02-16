@@ -12,7 +12,8 @@ export type ColorKeys =
   | "errorA"
   | "successA"
   | "warningA"
-  | "infoA";
+  | "infoA"
+  | "colorScheme";
 
 export type ColorLevels =
   | "1"

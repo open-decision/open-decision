@@ -39,7 +39,7 @@ export function SyncIndicator() {
           position: "absolute",
           left: 80,
           bottom: 10,
-          colorScheme: "error",
+          colorScheme: "danger",
         }}
       >
         <Tooltip.Root>
@@ -49,7 +49,7 @@ export function SyncIndicator() {
             </Icon>
           </Tooltip.Trigger>
           <SyncTooltipContent sideOffset={15} alignOffset={-10}>
-            <Icon css={{ colorScheme: "error" }} data-active>
+            <Icon css={{ colorScheme: "danger" }} data-active>
               <XOctagon />
             </Icon>
             <Text size="small" css={{ gridColumn: 2 }}>

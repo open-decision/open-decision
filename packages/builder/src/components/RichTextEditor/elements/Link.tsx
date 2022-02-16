@@ -76,7 +76,7 @@ export function Link(props: RenderElementProps) {
             <Input
               size="small"
               {...register("url")}
-              css={{ color: "$colorScheme-text" }}
+              css={{ color: "$black" }}
             />
             <Button square size="extra-small" type="submit" variant="secondary">
               <Icon>

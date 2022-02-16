@@ -44,7 +44,7 @@ export const Heading = styled(
   "h2",
   {
     fontFamily: "$heading",
-    color: "var(--color, $black)",
+    colorFallback: "$black",
     margin: "unset",
   },
   responsiveFontSize

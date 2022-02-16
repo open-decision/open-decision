@@ -46,7 +46,7 @@ export function OptionTargetInputs({ node }: SingleSelectProps) {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: "$4",
+          marginBottom: "$1",
         }}
       >
         <Label
@@ -57,21 +57,11 @@ export function OptionTargetInputs({ node }: SingleSelectProps) {
           Pfade
         </Label>
         <Button
-          variant="ghost"
+          variant="neutral"
+          square
           onClick={() =>
             send({ type: "addRelation", nodeId: node.id, relation: {} })
           }
-          square
-          css={{
-            "&:hover": {
-              backgroundColor: "$gray4",
-            },
-
-            "&:active, &[data-active='true'], &[data-state=on]": {
-              color: "$gray12 !important",
-              backgroundColor: "$gray6 !important",
-            },
-          }}
         >
           <Icon label="Neue Antwortmöglichkeit hinzufügen">
             <Plus />
@@ -154,8 +144,6 @@ export function OptionTargetInput({
   });
 
   return node ? (
-    // FIXME Open issue -> https://github.com/framer/motion/issues/1313
-    // The Reorder.Item creates a stacking context which makes it impossible to have the Combobox overlap other Reorder.Items
     <Reorder.Item
       value={relation}
       dragListener={false}
@@ -173,6 +161,7 @@ export function OptionTargetInput({
         css={{
           display: "flex",
           position: "relative",
+          gap: "$1",
         }}
       >
         <Box
@@ -281,6 +270,7 @@ export function OptionTargetInput({
             variant="ghost"
             size="small"
             type="button"
+            square
             onPointerDown={(event) => controls.start(event)}
           >
             <Icon label="Verschiebe den Input">
@@ -288,10 +278,10 @@ export function OptionTargetInput({
             </Icon>
           </Button>
           <Button
-            css={{ colorScheme: "error" }}
             variant="ghost"
             size="small"
             type="button"
+            square
             onClick={() => onDelete(relation.id)}
           >
             <Icon label="Entferne den Input">

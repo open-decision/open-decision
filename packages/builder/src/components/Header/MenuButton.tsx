@@ -10,6 +10,8 @@ function MenuButtonImpl({ label, css, ...props }: Props, ref) {
       size="small"
       css={{
         minWidth: "max-content",
+        color: "$gray11",
+
         "&[data-state='open'] svg": {
           transform: "rotate(180deg)",
         },

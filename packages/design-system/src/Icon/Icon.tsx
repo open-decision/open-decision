@@ -1,6 +1,6 @@
 import * as React from "react";
 import { styled, css } from "../stitches";
-import { alignByContent } from "../stitches/utils";
+import { alignByContent } from "../shared/variants";
 import * as AccessibleIcon from "@radix-ui/react-accessible-icon";
 import { iconSizes } from "./shared";
 

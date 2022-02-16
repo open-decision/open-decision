@@ -43,7 +43,7 @@ export const Dialog: Story<DialogRootProps> = (props) => (
           <Button
             size="small"
             variant="secondary"
-            css={{ colorScheme: "error" }}
+            css={{ colorScheme: "danger" }}
           >
             Löschen
           </Button>

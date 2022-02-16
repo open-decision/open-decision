@@ -34,6 +34,7 @@ export const NodeEditor = ({ css }: NodeEditorProps) => {
         css={{
           gridRow: "2",
           gridColumn: "2",
+          $color: "$colors$gray11",
         }}
         open={sidebarOpen}
       >

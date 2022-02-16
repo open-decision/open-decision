@@ -3,7 +3,7 @@ import { styled, css } from "../stitches";
 export type TextProps = React.ComponentProps<typeof Text>;
 
 export const textStyles = css({
-  color: "var(--color, $black)",
+  colorFallback: "$black",
   margin: "unset",
 
   variants: {

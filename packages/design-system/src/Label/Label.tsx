@@ -1,8 +1,8 @@
 import { styled, css } from "../stitches";
 
 export const labelStyles = css({
-  color: "var(--color, $colorScheme-text)",
   display: "flex",
+  colorFallback: "$black",
 
   variants: {
     size: {

@@ -44,7 +44,7 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
           <Tooltip.Root>
             <Tooltip.Trigger asChild>
               <DropdownMenu.Item
-                css={{ colorScheme: "error" }}
+                css={{ colorScheme: "danger" }}
                 onSelect={() => send({ type: "deleteNode", ids: [nodeId] })}
                 disabled
               >
@@ -80,7 +80,7 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
               Zur Startnode machen
             </DropdownMenu.Item>
             <DropdownMenu.Item
-              css={{ colorScheme: "error" }}
+              css={{ colorScheme: "danger" }}
               onSelect={() => send({ type: "deleteNode", ids: [nodeId] })}
             >
               <Icon

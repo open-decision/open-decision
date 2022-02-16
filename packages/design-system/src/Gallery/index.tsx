@@ -58,7 +58,7 @@ function Container({ children, css, contentAlign = true, ...props }: Props) {
       {...props}
     >
       <ArrowButton
-        variant="ghost"
+        variant="neutral"
         css={{ order: 1, "@smallTablet": { order: "revert" } }}
         onClick={() =>
           ref.current?.scrollBy({
@@ -88,7 +88,7 @@ function Container({ children, css, contentAlign = true, ...props }: Props) {
         {children}
       </Box>
       <ArrowButton
-        variant="ghost"
+        variant="neutral"
         css={{ order: 2, "@smallTablet": { order: "revert" } }}
         onClick={() =>
           ref.current?.scrollBy({

@@ -20,7 +20,7 @@ export const ToggleButton = ({
       defaultPressed={defaultPressed}
       onPressedChange={onPressedChange}
     >
-      <Button variant="ghost" size="small" {...props}>
+      <Button variant="neutral" size="small" {...props}>
         {children}
       </Button>
     </Toggle.Root>

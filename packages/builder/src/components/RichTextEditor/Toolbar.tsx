@@ -35,17 +35,6 @@ const StyledToolbar = styled(Box, {
   gap: "$1",
 });
 
-const ToolbarButton = styled(ToggleButton, {
-  "&:hover": {
-    backgroundColor: "$gray4",
-  },
-
-  "&:active, &[data-active='true'], &[data-state=on]": {
-    color: "$gray12 !important",
-    backgroundColor: "$gray6 !important",
-  },
-});
-
 export function Toolbar({
   css,
   ...props
@@ -65,7 +54,7 @@ export function Toolbar({
     <StyledToolbar css={css} {...props}>
       <Button
         size="small"
-        variant="ghost"
+        variant="neutral"
         square
         onClick={() =>
           isHeading
@@ -87,7 +76,7 @@ export function Toolbar({
         decorative
         css={{ alignSelf: "stretch" }}
       />
-      <ToolbarButton
+      <ToggleButton
         square
         pressed={isMarkActive("bold")}
         onClick={() => toggleEditorMark("bold")}
@@ -95,8 +84,8 @@ export function Toolbar({
         <Icon size="small" label="Markiere den ausgewählten Text fett">
           <Bold />
         </Icon>
-      </ToolbarButton>
-      <ToolbarButton
+      </ToggleButton>
+      <ToggleButton
         square
         pressed={isMarkActive("italic")}
         onClick={() => toggleEditorMark("italic")}
@@ -104,8 +93,8 @@ export function Toolbar({
         <Icon size="small" label="Markiere den ausgewählten Text kursiv">
           <Italic />
         </Icon>
-      </ToolbarButton>
-      <ToolbarButton
+      </ToggleButton>
+      <ToggleButton
         square
         pressed={isMarkActive("underline")}
         onClick={() => toggleEditorMark("underline")}
@@ -113,8 +102,8 @@ export function Toolbar({
         <Icon size="small" label="Unterstreiche den ausgewählten Text">
           <Underline />
         </Icon>
-      </ToolbarButton>
-      <ToolbarButton
+      </ToggleButton>
+      <ToggleButton
         square
         pressed={isList}
         onClick={() => toggleListElement("unordered_list")}
@@ -122,9 +111,9 @@ export function Toolbar({
         <Icon size="small" label="Erstelle eine unnumerierte Liste">
           <List />
         </Icon>
-      </ToolbarButton>
+      </ToggleButton>
 
-      <ToolbarButton
+      <ToggleButton
         square
         pressed={isNumberedList}
         onClick={() => toggleListElement("ordered_list")}
@@ -132,13 +121,13 @@ export function Toolbar({
         <Icon size="small" label="Erstelle eine numerierte Liste">
           <QuestionMarkIcon />
         </Icon>
-      </ToolbarButton>
+      </ToggleButton>
       <StyledSeparator
         orientation="vertical"
         decorative
         css={{ alignSelf: "stretch" }}
       />
-      <ToolbarButton
+      <ToggleButton
         square
         pressed={isLink}
         onMouseDown={(event) => {
@@ -149,7 +138,7 @@ export function Toolbar({
         <Icon size="small" label="Erstelle eine numerierte Liste">
           <Link />
         </Icon>
-      </ToolbarButton>
+      </ToggleButton>
     </StyledToolbar>
   );
 }

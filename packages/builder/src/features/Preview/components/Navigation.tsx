@@ -32,7 +32,7 @@ export function Navigation({ interpreter, snapshot }: PreviewNavigationProps) {
   return (
     <Box css={{ display: "flex", justifyContent: "center" }}>
       <StyledButton
-        variant="ghost"
+        variant="neutral"
         onClick={() => interpreter.goBack()}
         disabled={!snapshot.hasHistory}
         css={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
@@ -44,7 +44,7 @@ export function Navigation({ interpreter, snapshot }: PreviewNavigationProps) {
       </StyledButton>
       <StyledSeparator orientation="vertical" />
       <StyledButton
-        variant="ghost"
+        variant="neutral"
         css={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
         type="submit"
         disabled={!answer}

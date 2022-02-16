@@ -82,7 +82,7 @@ function Editable({
       renderElement={renderElement}
       renderLeaf={renderLeaf}
       onKeyDown={onKeyDownHandler(editor)}
-      css={css}
+      css={{ focusStyle: "inner", ...css }}
       {...props}
     />
   );

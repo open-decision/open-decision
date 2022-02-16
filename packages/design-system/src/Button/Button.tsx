@@ -1,4 +1,4 @@
-import { alignByContent } from "../stitches/utils";
+import { alignByContent } from "../shared/variants";
 import { styled, css } from "../stitches";
 
 export const buttonStyles = css(alignByContent, {
@@ -86,18 +86,13 @@ export const buttonStyles = css(alignByContent, {
     variant: {
       primary: {
         backgroundColor: "$colorScheme9",
-        $color: "$colorScheme-text",
-        color: "var(--color, $white)",
+        color: "$white",
 
         "&:hover, &:focus-visible": {
           backgroundColor: "$colorScheme10",
         },
 
-        "&:active, &[data-active='true']": {
-          backgroundColor: "$colorScheme11",
-        },
-
-        "&[data-state=on]": {
+        "&:active, &[data-active='true'], &[data-state=on]": {
           backgroundColor: "$colorScheme11",
         },
 
@@ -108,18 +103,14 @@ export const buttonStyles = css(alignByContent, {
 
       secondary: {
         backgroundColor: "$colorScheme3",
-        color: "$colorScheme11 !important",
+        color: "$colorScheme11",
 
         "&:hover, &:focus-visible": {
           backgroundColor: "$colorScheme5",
         },
 
-        "&:active, &[data-active='true']": {
+        "&:active, &[data-active='true'], &[data-state=on]": {
           backgroundColor: "$colorScheme7",
-        },
-
-        "&[data-state=on]": {
-          backgroundColor: "$colorScheme5",
         },
 
         "&:disabled": {
@@ -129,18 +120,14 @@ export const buttonStyles = css(alignByContent, {
 
       tertiary: {
         backgroundColor: "transparent",
-        color: "$colorScheme11 !important",
+        color: "$colorScheme11",
         borderColor: "currentcolor",
 
         "&:hover, &:focus-visible": {
           backgroundColor: "$colorScheme3",
         },
 
-        "&:active, &[data-active='true']": {
-          backgroundColor: "$colorScheme5",
-        },
-
-        "&[data-state=on]": {
+        "&:active, &[data-active='true'], &[data-state=on]": {
           backgroundColor: "$colorScheme5",
         },
 
@@ -151,17 +138,24 @@ export const buttonStyles = css(alignByContent, {
 
       ghost: {
         colorScheme: "gray",
-        color: "$gray11",
+        backgroundColor: "unset",
+        focusStyle: "inner",
+        colorFallback: "$black",
+      },
+
+      neutral: {
+        colorScheme: "gray",
+        color: "$colorScheme10",
         backgroundColor: "unset",
         focusStyle: "inner",
 
-        "&:hover, &:focus-visible, &[data-active='true']": {
-          color: "$colorScheme12",
+        "&:hover": {
+          backgroundColor: "$colorScheme3",
         },
 
-        "&[data-state=on]": {
-          color: "$primary11",
-          backgroundColor: "$colorScheme2",
+        "&:active, &[data-active='true'], &[data-state=on]": {
+          color: "$colorScheme12",
+          backgroundColor: "$colorScheme5",
         },
 
         "&:disabled": {

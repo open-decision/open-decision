@@ -114,15 +114,7 @@ export const Notification = ({ notification, id }: NotificationProps) => {
           <Heading size="extra-small">{notification.title}</Heading>
           <Text>{notification.content}</Text>
         </Stack>
-        <Button
-          square
-          variant="ghost"
-          css={{
-            "&:hover": { backgroundColor: "$colorScheme3", color: "$black" },
-            "&:active": { backgroundColor: "$colorScheme5", color: "$black" },
-          }}
-          onClick={() => removeNotification(id)}
-        >
+        <Button square variant="neutral" onClick={() => removeNotification(id)}>
           <Icon label="Benachrichtigung schließen">
             <X />
           </Icon>

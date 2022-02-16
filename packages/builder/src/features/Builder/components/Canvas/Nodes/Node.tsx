@@ -103,7 +103,7 @@ export const Node = memo(
           data-nodeid={id}
           size="small"
           as="span"
-          css={{ textAlign: "center" }}
+          css={{ textAlign: "center", wordBreak: "break-word" }}
         >
           {data.name}
         </Text>

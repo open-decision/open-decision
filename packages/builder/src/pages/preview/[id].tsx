@@ -100,13 +100,12 @@ function Vorschau() {
                 >
                   <Tabs.Trigger value="desktop_preview" asChild>
                     <Button
-                      variant="ghost"
+                      variant="neutral"
                       css={{
                         padding: "var(--padding)",
                         borderRadius: "0",
 
                         "&[data-state='active']": {
-                          color: "$gray12",
                           marginBottom: "-1px",
                           borderBottom: "3px solid $primary9",
                         },
@@ -117,13 +116,12 @@ function Vorschau() {
                   </Tabs.Trigger>
                   <Tabs.Trigger value="mobile_preview" asChild>
                     <Button
-                      variant="ghost"
+                      variant="neutral"
                       css={{
                         padding: "var(--padding)",
                         borderRadius: "0",
 
                         "&[data-state='active']": {
-                          color: "$gray12",
                           marginBottom: "-1px",
                           borderBottom: "3px solid $primary9",
                         },

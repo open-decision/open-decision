@@ -10,6 +10,7 @@ export const baseLinkStyles = css({
   textDecoration: "none",
   position: "relative",
   textStyle: "medium-text",
+  colorFallback: "$black",
 
   focusStyle: "outer",
 });
