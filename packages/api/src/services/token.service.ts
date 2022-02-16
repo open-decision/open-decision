@@ -1,15 +1,13 @@
-import jwt, { TokenExpiredError } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import dayjs from "dayjs";
 import config from "../config/config";
 import { userService } from "./index";
 import { tokenHandler } from "../models/token.model";
 import ApiError from "../utils/ApiError";
 import { UUID } from "../types/uuid-class";
-import prisma from "../init-prisma-client";
-import { TokenType, User, Token as PrismaToken } from "@prisma/client";
+import { TokenType, User } from "@prisma-client";
 import httpStatus from "http-status";
 import { TokenInterface } from "../types/AuthInterfaces";
-import { login } from "../validations/auth.validation";
 /**
  * Generate token
  * @param {(UUID|string)} userId

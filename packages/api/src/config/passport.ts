@@ -1,6 +1,6 @@
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import config from "./config";
-import { TokenType } from "@prisma/client";
+import { TokenType } from "@prisma-client";
 import UserHandler from "../models/user.model";
 import { JwtPayload } from "jsonwebtoken";
 
