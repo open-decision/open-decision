@@ -67,13 +67,11 @@ export class DecisionTreeCrudResolver {
     @TypeGraphQL.Info() info: GraphQLResolveInfo,
     @TypeGraphQL.Args() args: CreateDecisionTreeArgs
   ): Promise<DecisionTree> {
-    const { startNode: _startNode, ...newTree } = BuilderTree.create(
-      args.data.name
-    );
+    const newTree = BuilderTree.create(args.data.name);
+
     return getPrismaFromContext(ctx).decisionTree.create({
       data: {
-        name: newTree.name,
-        treeData: newTree.treeData,
+        ...newTree,
         owner: { connect: { uuid: ctx.user.uuid } },
       },
     });

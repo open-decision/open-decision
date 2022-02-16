@@ -14,5 +14,6 @@
       "@type-graphql-prisma/*": ["prisma/generated/type-graphql/*"]
     }
   },
+  "references": [{ "path": "../type-classes" }, { "path": "../interpreter" }],
   "exclude": ["dist"]
 }

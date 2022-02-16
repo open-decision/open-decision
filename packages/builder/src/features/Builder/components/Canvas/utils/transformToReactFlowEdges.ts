@@ -3,7 +3,8 @@ import * as Array from "fp-ts/Array";
 import * as Option from "fp-ts/Option";
 import { fromEquals } from "fp-ts/Eq";
 import { pipe } from "fp-ts/function";
-import { Connection, BuilderNode } from "@open-decision/type-classes";
+import * as Connection from "./Connection";
+import { BuilderNode } from "@open-decision/type-classes";
 
 export const eqEdge = (a: Connection.TConnection, b: Connection.TConnection) =>
   a.source === b.source && a.target === b.target;

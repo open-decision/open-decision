@@ -2,14 +2,6 @@ import { pipe, filter, isNot, values } from "remeda";
 import { isEmpty } from "ramda";
 import * as BuilderNode from "../Node/BuilderNode";
 import * as PublicNode from "../Node/PublicNode";
-import { z } from "zod";
-import { Descendants } from "./RichTextContent";
-
-export const BaseNode = z.object({
-  id: z.string().uuid(),
-  name: z.string(),
-  content: Descendants,
-});
 
 export const hasRelation = (
   node: BuilderNode.TNode | PublicNode.TNode,

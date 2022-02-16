@@ -7,60 +7,58 @@ import { values } from "ramda";
 import { createAdjacencyList, depthFirstSearch } from "./utils";
 import stringify from "json-stable-stringify";
 import * as murmur from "murmurhash-js";
-import * as Node from "../Node/PublicNode";
-import { z } from "zod";
-
-// ------------------------------------------------------------------
-// Types
-export const BaseTree = z.object({
-  id: z.number(),
-  name: z.string().min(1),
-  treeData: Node.Record,
-  startNode: z.string().optional(),
-});
 
 // ------------------------------------------------------------------
 // Methods
-
+/**
+ * Get the immediate parents of the node with the provided id.
+ */
 export const getParents =
-  (id: string) =>
+  (nodeId: string) =>
   (tree: PublicTree.TTree | BuilderTree.TTree): string[] =>
     pipe(
-      tree.treeData,
+      // We operate on the nodes of the tree.
+      tree.treeData.nodes,
       values,
+      // We flatMap to remove an unnecessary level of array nesting.
       flatMap((node) =>
         pipe(
+          // We check all node relations.
           node.relations,
           values,
+          // We reduce here, because we only want to include the valid parents and no undefined in the resulting array.
           reduce((acc: string[], relation) => {
-            if (relation.target != null && relation.target === id)
-              return [...acc, node.id];
+            // Check whether the target is the initially provided nodeId. If true merge the existing accumulated array with the
+            // node id of the lopped over node id.
+            if (relation.target === nodeId) return [...acc, node.id];
 
             return acc;
           }, [])
         )
       ),
+      // Remove all repeating parentNodeIds.
       uniq()
     );
 
+/**
+ * Get the immediate Children of the node with the provided id.
+ */
 export const getChildren =
-  (node: BuilderNode.TNode | PublicNode.TNode) =>
-  (tree: BuilderTree.TTree | PublicTree.TTree) =>
-    pipe(tree.treeData[node.id], (node) =>
-      pipe(
-        node.relations,
-        values,
-        filter((relation) => !!relation.target),
-        map((relation) => relation.target)
-      )
+  (nodeId: string) => (tree: BuilderTree.TTree | PublicTree.TTree) =>
+    pipe(
+      // Get the node from the tree
+      tree.treeData.nodes[nodeId].relations,
+      values,
+      // Filter out relations without targets
+      filter((relation) => Boolean(relation.target)),
+      // Return an array of the target ids
+      map((relation) => relation.target)
     );
 
 export const circularConnection =
-  (tree: PublicTree.TTree | BuilderTree.TTree) =>
-  ({ source, target }: { source: string; target: string }): boolean => {
-    const nodesOnPaths = getPaths(tree.treeData[source])(tree).flatMap(
-      (path) => path
-    );
+  ({ source, target }: { source: string; target: string }) =>
+  (tree: PublicTree.TTree | BuilderTree.TTree): boolean => {
+    const nodesOnPaths = getPaths(source)(tree).flatMap((path) => path);
 
     if (nodesOnPaths.includes(target)) return true;
 
@@ -68,11 +66,10 @@ export const circularConnection =
   };
 
 export const getPaths =
-  ({ id }: PublicNode.TNode | BuilderNode.TNode) =>
-  (tree: PublicTree.TTree | BuilderTree.TTree) => {
-    const adjacencyList = createAdjacencyList(tree.treeData);
+  (nodeId: string) => (tree: PublicTree.TTree | BuilderTree.TTree) => {
+    const adjacencyList = createAdjacencyList(tree.treeData.nodes);
 
-    return depthFirstSearch(id, adjacencyList);
+    return depthFirstSearch(nodeId, adjacencyList);
   };
 
 export const getConnectableNodes =
@@ -82,12 +79,12 @@ export const getConnectableNodes =
   >(
     node: TNode
   ) =>
-  (tree: TTree): TNode[] | TNode[] => {
-    const nodesOnPath = getPaths(node)(tree).flatMap((path) => path);
-    const nodesChildren = getChildren(node)(tree);
+  (tree: TTree): TNode[] => {
+    const nodesOnPath = getPaths(node.id)(tree).flatMap((path) => path);
+    const nodesChildren = getChildren(node.id)(tree);
 
     return pipe(
-      tree.treeData,
+      tree.treeData.nodes,
       Object.values,
       filter(
         (iteratedNode) =>
@@ -99,24 +96,21 @@ export const getConnectableNodes =
   };
 
 export const getTreeHash = (tree: Omit<PublicTree.TTree, "checksum">) => {
-  const dataToHash = (({ id, startNode, treeData }) => ({
-    id,
-    startNode,
-    treeData,
-  }))(tree);
   // Use "json-stable-stringify" to get a deterministic JSON string
   // then hash using murmur3 as hash-algo, as it's lightweight and small, seed is 0
-  return murmur.murmur3(stringify(dataToHash), 0);
+  return murmur.murmur3(stringify({ id: tree.id, treeData: tree.treeData }), 0);
 };
 
 type IsUniqueNode =
   | { name?: string; id: string }
   | { name: string; id?: string };
 
-export const isUnique = (tree: BuilderTree.TTree, node: IsUniqueNode) => {
-  const { treeData } = tree;
+export const isUnique = (node: IsUniqueNode) => (tree: BuilderTree.TTree) => {
+  const {
+    treeData: { nodes },
+  } = tree;
 
-  return !Object.values(treeData).some(
+  return !Object.values(nodes).some(
     (existingNode) =>
       node?.id === existingNode.id || node?.name?.trim() === existingNode.name
   );

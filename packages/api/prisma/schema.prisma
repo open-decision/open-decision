@@ -22,7 +22,6 @@ model DecisionTree {
   name      String
   tags      Json?
   treeData  Json?     @db.JsonB
-  language  String   @default("de_DE")
   /// @TypeGraphQL.omit(output: true, input: true)
   owner     User     @relation(fields: [ownerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   /// @TypeGraphQL.omit(output: true, input: true)

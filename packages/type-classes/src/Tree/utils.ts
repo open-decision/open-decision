@@ -1,27 +1,32 @@
+/**
+ * Get a Record of all object keys with their targets in an array.
+ * {@link https://en.wikipedia.org/wiki/Adjacency_list}
+ */
 export function createAdjacencyList<
   T extends Record<
     string,
     { id: string; relations: Record<string, { target?: string }> }
   >
 >(obj: T) {
-  const list = {};
+  const adjacencyList = {};
 
-  Object.entries(obj).forEach(([key, node]) => {
-    const relations = node.relations;
-    if (!list[key]) list[key] = [];
+  Object.values(obj).forEach((sourceNode) => {
+    // If there is no key for this sourceNode yet; add it with a value of an empty array.
+    if (!adjacencyList[sourceNode.id]) adjacencyList[sourceNode.id] = [];
 
-    Object.values(relations).forEach((relation) => {
-      if (relation.target) {
-        if (!list[relation.target]) {
-          list[relation.target] = [];
-        }
+    Object.values(sourceNode.relations).forEach(({ target: targetNodeId }) => {
+      if (!targetNodeId) return;
 
-        list[relation.target].push(key);
-      }
+      // If there is no key for this targetNodeId yet; add it with a value of an empty array.
+
+      if (!adjacencyList[targetNodeId]) adjacencyList[targetNodeId] = [];
+
+      // Push the sourceNodeId to the targets array.
+      adjacencyList[targetNodeId].push(sourceNode.id);
     });
   });
 
-  return list;
+  return adjacencyList;
 }
 
 export function depthFirstSearch(
@@ -36,9 +41,9 @@ export function depthFirstSearch(
     visited[id] = true;
     path.push(id);
 
-    adjacencyList[id]?.forEach((target) => {
-      if (!visited[target]) {
-        return depthFirstSearch(target);
+    adjacencyList[id]?.forEach((neighbors) => {
+      if (!visited[neighbors]) {
+        return depthFirstSearch(neighbors);
       }
     });
 

@@ -1,8 +1,8 @@
+import * as PublicRelation from "./PublicRelation";
 import { v4 as uuidV4 } from "uuid";
 import { z } from "zod";
-import { BaseRelation } from "./shared";
 
-export const Type = BaseRelation.extend({
+export const Type = PublicRelation.Type.extend({
   answer: z.string().optional(),
   target: z.string().optional(),
 });
