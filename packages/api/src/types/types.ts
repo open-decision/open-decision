@@ -1,4 +1,4 @@
-import { User, TokenType } from "@prisma/client";
+import { User, TokenType } from "@prisma-client";
 
 // export enum TokenTypes {
 //   ACCESS = "access",

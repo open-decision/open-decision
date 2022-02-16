@@ -1,6 +1,6 @@
 import * as TypeGraphQL from "type-graphql";
 import * as GraphQLScalars from "graphql-scalars";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@prisma-client";
 import { StringFieldUpdateOperationsInput } from "./StringFieldUpdateOperationsInput";
 
 @TypeGraphQL.InputType("DecisionTreePartialUpdateInput", {

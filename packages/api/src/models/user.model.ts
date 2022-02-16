@@ -1,5 +1,5 @@
 import ApiError from "../utils/ApiError";
-import { User as PrismaUser, Prisma } from "@prisma/client";
+import { User as PrismaUser, Prisma } from "@prisma-client";
 import { UserBody } from "../types/types";
 import prisma from "../init-prisma-client";
 import * as argon2 from "argon2";

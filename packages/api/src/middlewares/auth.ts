@@ -2,7 +2,7 @@ import { Request } from "express";
 import { NextFunction, Response } from "express-serve-static-core";
 import passport from "passport";
 import { Permissions, roleRights } from "../config/roles";
-import { User } from "@prisma/client";
+import { User } from "@prisma-client";
 import ApiError from "../utils/ApiError";
 import httpStatus from "http-status";
 import { jwtStrategy } from "../config/passport";

@@ -1,4 +1,4 @@
-import { DecisionTree } from "@prisma/client";
+import { DecisionTree } from "@prisma-client";
 import { query } from "express";
 
 export const createTree = (name: string) => ({

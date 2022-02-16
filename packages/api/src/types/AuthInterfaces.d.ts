@@ -1,4 +1,4 @@
-import { PrismaClient, User, TokenType } from "@prisma/client";
+import { PrismaClient, User, TokenType } from "@prisma-client";
 
 export interface TokenInterface {
   userUuid: string;

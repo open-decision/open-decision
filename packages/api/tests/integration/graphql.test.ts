@@ -4,7 +4,7 @@ import faker from "faker";
 import { app } from "../../src/app";
 import { userOne, insertUsers, userTwo } from "../fixtures/user.fixture";
 import { userOneAccessToken } from "../fixtures/token.fixture";
-import { DecisionTree } from "@prisma/client";
+import { DecisionTree } from "@prisma-client";
 import prisma from "../../src/init-prisma-client";
 import {
   createTree,
