@@ -232,7 +232,8 @@ export const createTreeMachine = (
           context.tree.treeData.selectedRelationId = id;
         }),
         startConnecting: immerAssign((context, { sourceNodeId }) => {
-          const connectionOriginNode = context.tree.treeData[sourceNodeId];
+          const connectionOriginNode =
+            context.tree.treeData.nodes[sourceNodeId];
 
           context.connectionSourceNode = connectionOriginNode;
 

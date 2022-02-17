@@ -48,7 +48,7 @@ export function Canvas({ children, css }: Props) {
 
   const elements = [
     ...transformToReactFlowNodes(
-      state.context?.tree.treeData ?? {},
+      state.context?.tree.treeData.nodes ?? {},
       state.context.connectionSourceNode && state.context.validConnections
         ? [
             state.context.connectionSourceNode,
@@ -57,9 +57,9 @@ export function Canvas({ children, css }: Props) {
         : []
     ),
     ...transformToReactFlowEdges(
-      state.context?.tree.treeData ?? {},
-      state.context.tree.selectedNodeId,
-      state.context.tree.selectedRelationId
+      state.context?.tree.treeData.nodes ?? {},
+      state.context.tree.treeData.selectedNodeId,
+      state.context.tree.treeData.selectedRelationId
     ),
   ];
 
@@ -108,7 +108,9 @@ export function Canvas({ children, css }: Props) {
               type: "deleteNode",
               ids: elementsToRemove
                 .map((element) => element.id)
-                .filter((element) => element !== state.context.tree.startNode),
+                .filter(
+                  (element) => element !== state.context.tree.treeData.startNode
+                ),
             },
           ]);
         }}

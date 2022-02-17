@@ -117,7 +117,7 @@ export function OptionTargetInput({
   const [tree, send] = useTree((state) => state.tree);
   const node = useNode(nodeId);
   const allOptions = pipe(
-    tree.treeData,
+    tree.treeData.nodes,
     values,
     map((node) => ({ id: node.id, label: node.name }))
   );
@@ -162,6 +162,7 @@ export function OptionTargetInput({
           display: "flex",
           position: "relative",
           gap: "$1",
+          $color: "$black",
         }}
       >
         <Box
@@ -252,7 +253,7 @@ export function OptionTargetInput({
               {(field) => (
                 <Input
                   placeholder="Zielknoten auswählen"
-                  css={{ border: 0, borderRadius: 0 }}
+                  css={{ border: 0, borderRadius: 0, color: "$black" }}
                   {...field}
                 />
               )}

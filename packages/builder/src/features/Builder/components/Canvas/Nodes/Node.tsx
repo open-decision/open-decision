@@ -32,8 +32,10 @@ const NodeContainer = styled(Stack, {
 
 export const Node = memo(
   ({ id, data: { runtime, ...data } }: NodeProps<NodeData>) => {
-    const [selectedNodeId] = useTree((state) => state.tree.selectedNodeId);
-    const [startNode] = useTree((state) => state.tree.startNode);
+    const [selectedNodeId] = useTree(
+      (state) => state.tree.treeData.selectedNodeId
+    );
+    const [startNode] = useTree((state) => state.tree.treeData.startNode);
     const { isConnecting, connectingNodeId } = useEditor();
 
     const validConnectionTarget = React.useMemo(

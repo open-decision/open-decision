@@ -33,8 +33,10 @@ type TreeProviderProps = Omit<
   "value"
 >;
 export function EditorProvider({ children }: TreeProviderProps) {
-  const [selectedNodeId, send] = useTree((state) => state.tree.selectedNodeId);
-  const [nodes] = useTree((state) => state.tree.treeData);
+  const [selectedNodeId, send] = useTree(
+    (state) => state.tree.treeData.selectedNodeId
+  );
+  const [nodes] = useTree((state) => state.tree.treeData.nodes);
   const reactFlowWrapperRef = React.useRef<HTMLDivElement | null>(null);
   const reactFlowBounds = reactFlowWrapperRef.current?.getBoundingClientRect();
 

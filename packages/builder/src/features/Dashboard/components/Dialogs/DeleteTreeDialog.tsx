@@ -81,7 +81,7 @@ export function DeleteTreeDialog({
           <ValidationMessage name="treeName" />
           <DashboardDialog.SubmitButton
             isLoading={isLoading}
-            colorScheme="error"
+            colorScheme="danger"
           >
             Löschen
           </DashboardDialog.SubmitButton>

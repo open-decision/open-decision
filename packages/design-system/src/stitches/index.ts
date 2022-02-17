@@ -35,8 +35,8 @@ import { Prefixed } from "@stitches/react/types/util";
 export const designSystem = createStitches({
   theme: {
     colors: {
-      ...aliasColor("gray", slate),
-      ...aliasColor("grayA", slateA),
+      ...aliasColor("gray", slate, true),
+      ...aliasColor("grayA", slateA, true),
       ...aliasColor("primary", indigo),
       ...aliasColor("primaryA", indigoA),
       ...aliasColor("accent", amber, true),
@@ -49,22 +49,11 @@ export const designSystem = createStitches({
       ...aliasColor("warningA", amberA, true),
       ...aliasColor("info", blue),
       ...aliasColor("infoA", blueA),
+      ...aliasColor("colorScheme", slate, true),
       black: "$colors$gray12",
       white: "$colors$gray1",
       shadowColor: "rgba(17, 24, 28, 0.1)",
       background: "$colors$gray1",
-      colorScheme1: `$colors$gray1`,
-      colorScheme2: `$colors$gray2`,
-      colorScheme3: `$colors$gray3`,
-      colorScheme4: `$colors$gray4`,
-      colorScheme5: `$colors$gray5`,
-      colorScheme6: `$colors$gray6`,
-      colorScheme7: `$colors$gray7`,
-      colorScheme8: `$colors$gray8`,
-      colorScheme9: `$colors$gray9`,
-      colorScheme10: `$colors$gray10`,
-      colorScheme11: `$colors$gray11`,
-      colorScheme12: `$colors$gray12`,
     },
     space: {
       1: "4px",
@@ -202,7 +191,6 @@ export const designSystem = createStitches({
         letterSpacing: "inherit",
         fontWeight: "inherit",
         fontFamily: "inherit",
-        colorFallback: "inherit",
       };
 
       switch (value) {
@@ -340,8 +328,8 @@ export const darkTheme = createTheme("dark", {
     ...aliasColor("primaryA", indigoDarkA),
     ...aliasColor("accent", amberDark, true),
     ...aliasColor("accentA", amberDarkA, true),
-    ...aliasColor("error", redDark),
-    ...aliasColor("errorA", redDarkA),
+    ...aliasColor("danger", redDark),
+    ...aliasColor("dangerA", redDarkA),
     ...aliasColor("success", greenDark),
     ...aliasColor("successA", greenDarkA),
     ...aliasColor("warning", amberDark, true),
