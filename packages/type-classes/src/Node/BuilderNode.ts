@@ -44,8 +44,8 @@ export function createNewAssociatedNode(
   };
 
   return create({
-    position,
     ...newNode,
+    position,
   });
 }
 

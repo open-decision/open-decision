@@ -14,7 +14,7 @@ enablePatches();
 
 export const Type = PublicTree.Type.extend({
   treeData: PublicTree.TreeData.extend({
-    startNode: z.string().uuid().optional(),
+    startNode: z.string().optional(),
     nodes: BuilderNode.Record,
     selectedNodeId: z.string().optional(),
     selectedRelationId: z.string().optional(),
@@ -36,7 +36,7 @@ export type TPatches = z.infer<typeof Patches>;
 
 export function create(name: string): Omit<TTree, "id"> {
   const newTree: Omit<TTree, "id"> = {
-    treeData: { startNode: "", nodes: {} },
+    treeData: { nodes: {} },
     tags: [],
     name,
   };
@@ -67,7 +67,7 @@ export const addNode =
   (tree: TTree): TreeUpdateReturn =>
     produceWithPatches(tree, (draft) => {
       // Assign the node to the treeData object by its id.
-      draft.treeData[node.id] = node;
+      draft.treeData.nodes[node.id] = node;
 
       // If no startNode exists assign the new nodes id to the startNode.
       // This in effect makes it so, that the first Node automatically becomes the startNode.
@@ -83,10 +83,10 @@ export const updateNode: NodeUpdateFn<UpdateNodePayload> =
   (tree: TTree): TreeUpdateReturn =>
     produceWithPatches(tree, (draft) => {
       // Get the old state of the Node.
-      const oldNode = draft.treeData[nodeId];
+      const oldNode = draft.treeData.nodes[nodeId];
 
       // Merge the old with the new state and assign that to the treeData with the id of the Node.
-      draft.treeData[nodeId] = {
+      draft.treeData.nodes[nodeId] = {
         ...oldNode,
         ...node,
       };
@@ -101,7 +101,7 @@ export const updateNodeName: NodeUpdateFn<UpdateNodeNamePayload> =
   ({ nodeId, name }) =>
   (tree: TTree): TreeUpdateReturn =>
     produceWithPatches(tree, (draft) => {
-      draft.treeData[nodeId].name = name;
+      draft.treeData.nodes[nodeId].name = name;
     });
 
 export type UpdateNodePositionPayload = {
@@ -113,7 +113,7 @@ export const updateNodePosition: NodeUpdateFn<UpdateNodePositionPayload> =
   ({ nodeId, position }) =>
   (tree: TTree): TreeUpdateReturn =>
     produceWithPatches(tree, (draft) => {
-      draft.treeData[nodeId].position = position;
+      draft.treeData.nodes[nodeId].position = position;
     });
 
 export type UpdateNodeContentPayload = {
@@ -124,7 +124,7 @@ export const updateNodeContent: NodeUpdateFn<UpdateNodeContentPayload> =
   ({ nodeId, content }) =>
   (tree: TTree): TreeUpdateReturn =>
     produceWithPatches(tree, (draft) => {
-      draft.treeData[nodeId].content = content;
+      draft.treeData.nodes[nodeId].content = content;
     });
 
 export type UpdateNodeRelationsPayload = {
@@ -135,7 +135,7 @@ export const updateNodeRelations: NodeUpdateFn<UpdateNodeRelationsPayload> =
   ({ nodeId, relations }) =>
   (tree: TTree): TreeUpdateReturn =>
     produceWithPatches(tree, (draft) => {
-      draft.treeData[nodeId].relations = relations;
+      draft.treeData.nodes[nodeId].relations = relations;
     });
 
 export const deleteNodes =
@@ -144,15 +144,15 @@ export const deleteNodes =
     produceWithPatches(tree, (draft) => {
       // We loop over all the provided ids to allow for multiple Nodes to be deleted at once.
       ids.forEach((id) => {
-        delete draft.treeData[id];
+        delete draft.treeData.nodes[id];
 
         // If the deletedNode is currently selected remove that selection.
         if (id === draft.treeData.selectedNodeId)
           draft.treeData.selectedNodeId = "";
 
         // Remove the Node from all the targets of other Nodes.
-        for (const nodeId in draft.treeData) {
-          const node = draft.treeData[nodeId];
+        for (const nodeId in draft.treeData.nodes) {
+          const node = draft.treeData.nodes[nodeId];
 
           for (const nodeRelation in node.relations) {
             const relation = node.relations[nodeRelation];
@@ -183,7 +183,7 @@ export const addRelation =
     const [newTree, patches, inversePatches] = produceWithPatches(
       tree,
       (draft) => {
-        draft.treeData[nodeId].relations[newRelation.id] = newRelation;
+        draft.treeData.nodes[nodeId].relations[newRelation.id] = newRelation;
       }
     );
 
@@ -199,9 +199,9 @@ export const updateRelation =
     const [newTree, patches, inversePatches] = produceWithPatches(
       tree,
       (draft) => {
-        const oldValue = draft.treeData[nodeId].relations[relation.id];
+        const oldValue = draft.treeData.nodes[nodeId].relations[relation.id];
 
-        draft.treeData[nodeId].relations[relation.id] = {
+        draft.treeData.nodes[nodeId].relations[relation.id] = {
           ...oldValue,
           ...relation,
         };
@@ -225,7 +225,7 @@ export const updateRelationAnswer: RelationUpdateFn<UpdateRelationAnswerPayload>
     ({ nodeId, relationId, answer }) =>
     (tree) =>
       produceWithPatches(tree, (draft) => {
-        draft.treeData[nodeId].relations[relationId].answer = answer;
+        draft.treeData.nodes[nodeId].relations[relationId].answer = answer;
       });
 
 export type UpdateRelationTargetPayload = {
@@ -241,7 +241,7 @@ export const updateRelationTarget: RelationUpdateFn<UpdateRelationTargetPayload>
       const [newTree, patches, inversePatches] = produceWithPatches(
         tree,
         (draft) => {
-          draft.treeData[nodeId].relations[relationId].target = target;
+          draft.treeData.nodes[nodeId].relations[relationId].target = target;
         }
       );
 
@@ -256,7 +256,7 @@ export const deleteRelations =
   (tree: TTree): TreeUpdateReturn =>
     produceWithPatches(tree, (draft) => {
       relationIds.forEach((relationId) => {
-        delete draft.treeData[nodeId].relations[relationId];
+        delete draft.treeData.nodes[nodeId].relations[relationId];
       });
     });
 
