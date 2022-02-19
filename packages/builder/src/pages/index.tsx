@@ -88,7 +88,7 @@ function Dashboard() {
                     title: "Ungültiger Inhalt",
                     content:
                       "Die importierte Datei ist kein valider Entscheidungsbaum.",
-                    variant: "error",
+                    variant: "danger",
                   });
                 }
 

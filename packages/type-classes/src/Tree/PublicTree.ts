@@ -1,11 +1,27 @@
+import * as PublicNode from "../Node/PublicNode";
 import { z } from "zod";
-import { BaseTree } from "./shared";
 
 // ------------------------------------------------------------------
 // Tree State
 
-export const Type = BaseTree.extend({
-  checksum: z.number(),
+export const TreeData = z.object({
+  startNode: z.string().uuid(),
+  nodes: PublicNode.Record,
+});
+
+export const Tags = z.object({
+  name: z.string(),
+  color: z.string().regex(/^#[0-9a-f]{3,6}$/i),
+  type: z.enum(["system", "user"]),
+});
+
+export const Type = z.object({
+  id: z.number(),
+  name: z.string().min(1),
+  treeData: TreeData,
+  tags: z.array(Tags),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().optional(),
 });
 
 // ------------------------------------------------------------------

@@ -28,6 +28,7 @@ const StyledInput = styled("input", {
   outline: "none",
   backgroundColor: "transparent",
   textStyle: "inherit",
+  color: "$colorScheme-text",
 
   "&:focus-visible": {
     outline: "none",

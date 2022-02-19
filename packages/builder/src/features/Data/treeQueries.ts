@@ -20,6 +20,7 @@ gql`
       name
       treeData
       updatedAt
+      tags
     }
   }
 `;

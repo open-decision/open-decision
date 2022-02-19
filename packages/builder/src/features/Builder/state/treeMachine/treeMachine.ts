@@ -226,13 +226,14 @@ export const createTreeMachine = (
           BuilderTree.updateTree(event.tree)(context.tree)
         ),
         selectNode: immerAssign((context, { nodeId }) => {
-          context.tree.selectedNodeId = nodeId;
+          context.tree.treeData.selectedNodeId = nodeId;
         }),
         selectRelation: immerAssign((context, { id }) => {
-          context.tree.selectedRelationId = id;
+          context.tree.treeData.selectedRelationId = id;
         }),
         startConnecting: immerAssign((context, { sourceNodeId }) => {
-          const connectionOriginNode = context.tree.treeData[sourceNodeId];
+          const connectionOriginNode =
+            context.tree.treeData.nodes[sourceNodeId];
 
           context.connectionSourceNode = connectionOriginNode;
 

@@ -5,8 +5,8 @@ import * as PublicNode from "../Node/PublicNode";
 
 export function TransformToPublicTree(tree: BuilderTree.TTree) {
   const transformedTree = BuilderTree.Type.transform(
-    ({ id, name, treeData, startNode }) => {
-      const transformedNodes = TransformToPublicNodes.safeParse(treeData);
+    ({ id, name, treeData: { nodes, startNode } }) => {
+      const transformedNodes = TransformToPublicNodes.safeParse(nodes);
 
       if (!transformedNodes.success) return transformedNodes;
       const parsedNodes = PublicNode.Record.safeParse(transformedNodes.data);
@@ -16,11 +16,9 @@ export function TransformToPublicTree(tree: BuilderTree.TTree) {
       const tree: PublicTree.TTree = {
         id,
         name,
-        treeData: parsedNodes.data,
-        checksum: 0,
-        startNode,
+        treeData: { nodes: parsedNodes.data, startNode: startNode ?? "" },
+        tags: [],
       };
-      tree.checksum = PublicTree.getTreeHash(tree);
 
       return PublicTree.Type.safeParse(tree);
     }

@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { BaseRelation } from "./shared";
 
-export const Type = BaseRelation.extend({
+export const Type = z.object({
+  id: z.string().uuid(),
   answer: z.string().min(1),
   target: z.string().min(1),
 });

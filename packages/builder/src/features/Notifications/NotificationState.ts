@@ -2,7 +2,7 @@ import create from "zustand";
 import produce from "immer";
 import { v4 as uuidV4 } from "uuid";
 
-export type notificationVariants = "success" | "error" | "info" | "warning";
+export type notificationVariants = "success" | "danger" | "info" | "warning";
 
 export type notification = {
   variant: notificationVariants;

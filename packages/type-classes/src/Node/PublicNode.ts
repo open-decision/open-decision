@@ -1,8 +1,10 @@
-import { z } from "zod";
 import * as PublicRelation from "../Relation/PublicRelation";
-import { BaseNode } from "./shared";
+import { z } from "zod";
+import { RichTextContent } from "./RichTextContent";
 
-export const Type = BaseNode.extend({
+export const Type = z.object({
+  id: z.string().uuid(),
+  content: RichTextContent,
   relations: z.record(PublicRelation.Type),
 });
 

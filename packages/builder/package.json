@@ -15,7 +15,7 @@
     "lint:fix": "yarn lint --fix",
     "verify": "run-p prettier lint",
     "verify:fix": "yarn prettier:fix && yarn lint:fix",
-    "typecheck": "tsc -b -w"
+    "typecheck": "tsc -w"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "2.5.0",

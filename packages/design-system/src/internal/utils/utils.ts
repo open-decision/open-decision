@@ -2,14 +2,14 @@ export type ColorKeys =
   | "gray"
   | "primary"
   | "accent"
-  | "error"
+  | "danger"
   | "success"
   | "warning"
   | "info"
   | "grayA"
   | "primaryA"
   | "accentA"
-  | "errorA"
+  | "dangerA"
   | "successA"
   | "warningA"
   | "infoA"
@@ -60,7 +60,8 @@ export const aliasColor = <TAlias extends string>(
     [`${alias}10`]: colors[9],
     [`${alias}11`]: colors[10],
     [`${alias}12`]: colors[11],
-    [`${alias}-text`]: bright ? "$colors$black" : "$colors$white",
+    [`${alias}-text`]: "$colors$12",
+    [`${alias}-bg-opaque-text`]: bright ? "$colors$black" : "$colors$white",
   } as Record<ColorSpectrum<TAlias>, string>;
 };
 

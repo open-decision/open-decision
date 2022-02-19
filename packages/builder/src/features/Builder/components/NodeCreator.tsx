@@ -19,7 +19,7 @@ import { nodeNameMaxLength } from "../utilities/constants";
 type Props = { css?: StyleObject };
 
 export const NodeCreator = ({ css }: Props) => {
-  const [treeData, send] = useTree((state) => state.tree.treeData);
+  const [nodes, send] = useTree((state) => state.tree.treeData.nodes);
   const { getCenter } = useEditor();
   const [Form] = useForm({
     defaultValues: {
@@ -31,11 +31,11 @@ export const NodeCreator = ({ css }: Props) => {
 
   const items = React.useMemo(
     () =>
-      Object.values(treeData).map((node) => ({
+      Object.values(nodes).map((node) => ({
         id: node.id,
         label: node.name,
       })),
-    [treeData]
+    [nodes]
   );
 
   function createHandler(label: string) {
@@ -66,7 +66,7 @@ export const NodeCreator = ({ css }: Props) => {
         onSelectedItemChange={(newItem) => changeHandler(newItem?.id ?? "")}
       >
         <NodeCreatorInput
-          autoFocus={Object.keys(treeData).length === 0}
+          autoFocus={Object.keys(nodes).length === 0}
           createHandler={createHandler}
         />
       </Combobox.Root>

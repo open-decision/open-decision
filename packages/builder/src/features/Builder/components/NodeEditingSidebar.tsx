@@ -37,11 +37,11 @@ export function NodeEditingSidebar({
     mode: "onChange",
   });
 
-  const isStartNode = node.id === tree.startNode;
+  const isStartNode = node.id === tree.treeData.startNode;
 
   return (
     <>
-      <Box as="header" key={tree.selectedNodeId}>
+      <Box as="header" key={tree.treeData.selectedNodeId}>
         <Form
           onSubmit={({ name }) =>
             send({
@@ -87,7 +87,7 @@ export function NodeEditingSidebar({
             name="name"
             maxLength={nodeNameMaxLength}
             validate={(val) =>
-              BuilderTree.isUnique(tree, { name: val })
+              BuilderTree.isUnique({ name: val })(tree)
                 ? true
                 : "Eine Node mit diesem Namen existiert bereits."
             }
@@ -139,6 +139,7 @@ export function NodeEditingSidebar({
               border: "1px solid $gray8",
               maxHeight: "600px",
               gridTemplateRows: "50px 1fr",
+              $color: "$black",
             }}
           >
             <RichTextEditor.Toolbar css={{ borderBottom: "inherit" }} />

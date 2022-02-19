@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { v4 as uuidV4 } from "uuid";
 import * as BuilderRelation from "../Relation/BuilderRelation";
-import { BaseNode } from "./shared";
+import * as PublicNode from "./PublicNode";
 
 export const Coordinates = z.object({
   x: z.number(),
@@ -10,7 +10,8 @@ export const Coordinates = z.object({
 
 export type TCoordinates = z.infer<typeof Coordinates>;
 
-export const Type = BaseNode.extend({
+export const Type = PublicNode.Type.extend({
+  name: z.string(),
   position: Coordinates,
   relations: z.record(BuilderRelation.Type),
 });
@@ -43,8 +44,8 @@ export function createNewAssociatedNode(
   };
 
   return create({
-    position,
     ...newNode,
+    position,
   });
 }
 
