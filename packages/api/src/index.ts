@@ -3,6 +3,7 @@ import prisma from "./init-prisma-client";
 import { app } from "./app";
 import config from "./config/config";
 import { logger } from "./config/logger";
+import { websocketUpgradeHandler } from "./websocket-server";
 
 async function asyncPreparation() {
   try {
@@ -19,6 +20,9 @@ asyncPreparation();
 export const server = app.listen({ port: config.PORT }, () => {
   logger.info(`Listening to port ${config.PORT}`);
 });
+
+// Handles websocket connections for "/v1/builder-sync" endpoint
+server.on("upgrade", websocketUpgradeHandler);
 
 const exitHandler = () => {
   if (server) {
