@@ -5,20 +5,20 @@ import {
   Link,
   StyleObject,
 } from "@open-legal-tech/design-system";
-import { useTree } from "../state/treeMachine/useTree";
 import { readableDate } from "features/Dashboard/utils";
+import { useTree } from "../state/treeStore/hooks";
 
 type Props = { css?: StyleObject };
 
 export function ExportButton({ css }: Props) {
-  const [state] = useTree();
+  const tree = useTree();
 
   const file = React.useMemo(
     () =>
-      new Blob([JSON.stringify(state.context)], {
+      new Blob([JSON.stringify(tree)], {
         type: "application/json",
       }),
-    [state]
+    [tree]
   );
 
   if (file instanceof Error)
@@ -33,9 +33,7 @@ export function ExportButton({ css }: Props) {
   return (
     <Link
       className={buttonStyles({ size: "small", variant: "secondary", css })}
-      download={
-        file ? `${state.context.name}_${readableDate(new Date())}.json` : false
-      }
+      download={file ? `${tree.name}_${readableDate(new Date())}.json` : false}
       href={fileDownloadUrl}
       underline={false}
     >

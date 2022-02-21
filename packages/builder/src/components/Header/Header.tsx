@@ -5,8 +5,10 @@ import {
   styled,
   Box,
   darkTheme,
+  Button,
 } from "@open-legal-tech/design-system";
 import { UserMenu } from "./UserMenu";
+import { addNode } from "features/Builder/state/treeStore/treeStore";
 
 const Container = styled("div", {
   backgroundColor: "$gray2",

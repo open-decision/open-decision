@@ -21,7 +21,7 @@ export const Record = z.record(Type);
 // ------------------------------------------------------------------
 // Methods
 
-export function create(node: Partial<Omit<TNode, "id">>): TNode {
+export function create(node?: Partial<Omit<TNode, "id">>): TNode {
   return {
     id: uuidV4(),
     relations: {},

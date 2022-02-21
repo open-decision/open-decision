@@ -11,15 +11,16 @@ import {
   useForm,
 } from "@open-legal-tech/design-system";
 import { Plus } from "react-feather";
-import { useTree } from "../state/treeMachine/useTree";
 import { useEditor } from "../state/useEditor";
-import { BuilderNode } from "@open-decision/type-classes";
 import { nodeNameMaxLength } from "../utilities/constants";
+import { addNode, selectNode } from "../state/treeStore/treeStore";
+import { useNodes } from "../state/treeStore/hooks";
 
 type Props = { css?: StyleObject };
 
 export const NodeCreator = ({ css }: Props) => {
-  const [nodes, send] = useTree((state) => state.tree.treeData.nodes);
+  const nodes = useNodes();
+
   const { getCenter } = useEditor();
   const [Form] = useForm({
     defaultValues: {
@@ -39,17 +40,13 @@ export const NodeCreator = ({ css }: Props) => {
   );
 
   function createHandler(label: string) {
-    const newNode = BuilderNode.create({
-      position: getCenter(),
-      name: label,
-    });
-    send({ type: "addNode", node: newNode });
+    const newNode = addNode({ position: getCenter(), name: label });
 
     return { id: newNode.id, label: newNode.name };
   }
 
   function changeHandler(newSelectedItemId: string) {
-    send({ type: "selectNode", nodeId: newSelectedItemId });
+    selectNode(newSelectedItemId);
   }
 
   return (
@@ -75,8 +72,6 @@ export const NodeCreator = ({ css }: Props) => {
 };
 
 const NodeCreatorInput = ({ createHandler, autoFocus }) => {
-  const [, send] = useTree((state) => state.tree.treeData);
-
   const onDragStart = (event: React.DragEvent<HTMLButtonElement>) => {
     event.dataTransfer.setData("nodeLabel", inputValue);
     event.dataTransfer.effectAllowed = "move";
@@ -107,7 +102,7 @@ const NodeCreatorInput = ({ createHandler, autoFocus }) => {
                 disabled={!isCreating}
                 onClick={() => {
                   const newNode = createHandler(inputValue);
-                  send({ type: "selectNode", nodeId: newNode.id });
+                  selectNode(newNode.id);
                   setInputValue("");
                 }}
                 draggable

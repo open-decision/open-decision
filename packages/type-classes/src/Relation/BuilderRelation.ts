@@ -17,3 +17,5 @@ export const create = (relation?: Omit<TRelation, "id">): TRelation => {
 };
 
 export type TRelation = z.infer<typeof Type>;
+
+export type TRecord = Record<string, TRelation>;

@@ -1,10 +1,8 @@
 import { Button, Icon, Stack } from "@open-legal-tech/design-system";
-import { useTree } from "features/Builder/state/treeMachine/useTree";
+import { undoManager } from "features/Builder/state/treeStore/treeStore";
 import { ArrowLeft, ArrowRight } from "react-feather";
 
 export function UndoRedo() {
-  const [, send] = useTree();
-
   return (
     <Stack
       css={{
@@ -18,7 +16,8 @@ export function UndoRedo() {
       <Button
         variant="secondary"
         size="extra-small"
-        onClick={() => send({ type: "undo" })}
+        onClick={() => undoManager.undo()}
+        disabled={!undoManager.canUndo()}
       >
         <Icon>
           <ArrowLeft />
@@ -27,7 +26,8 @@ export function UndoRedo() {
       <Button
         variant="secondary"
         size="extra-small"
-        onClick={() => send({ type: "redo" })}
+        onClick={() => undoManager.redo()}
+        disabled={!undoManager.canRedo()}
       >
         <Icon>
           <ArrowRight />

@@ -6,9 +6,10 @@ import {
 } from "react-flow-renderer";
 import { calculateCenterOfNode } from "../utilities/calculateCenterOfNode";
 import { sidebarWidth, transitionDuration } from "../utilities/constants";
-import { useTree } from "./treeMachine/useTree";
 import { BuilderNode } from "@open-decision/type-classes";
 import { TCoordinates } from "@open-decision/type-classes/src/Node/BuilderNode";
+import { useSelectedNode } from "./treeStore/hooks";
+import { selectNode } from "./treeStore/treeStore";
 
 type projectCoordinatesFn = (
   coordinates: TCoordinates
@@ -33,10 +34,8 @@ type TreeProviderProps = Omit<
   "value"
 >;
 export function EditorProvider({ children }: TreeProviderProps) {
-  const [selectedNodeId, send] = useTree(
-    (state) => state.tree.treeData.selectedNodeId
-  );
-  const [nodes] = useTree((state) => state.tree.treeData.nodes);
+  const selectedNode = useSelectedNode();
+
   const reactFlowWrapperRef = React.useRef<HTMLDivElement | null>(null);
   const reactFlowBounds = reactFlowWrapperRef.current?.getBoundingClientRect();
 
@@ -63,17 +62,15 @@ export function EditorProvider({ children }: TreeProviderProps) {
   };
 
   const [isTransitioning, setIsTransitioning] = React.useState(false);
-  const position = selectedNodeId
-    ? nodes?.[selectedNodeId]?.position
-    : undefined;
+  const position = selectedNode ? selectedNode.position : undefined;
 
   const { setCenter } = useZoomPanHelper();
   React.useEffect(() => {
-    if (selectedNodeId && position) {
+    if (selectedNode && position) {
       setIsTransitioning(true);
       const positionOfNodeFromCenter = calculateCenterOfNode(
         position,
-        selectedNodeId ? { x: sidebarWidth / 2, y: 0 } : undefined
+        selectedNode.id ? { x: sidebarWidth / 2, y: 0 } : undefined
       );
       setCenter?.(positionOfNodeFromCenter.x, positionOfNodeFromCenter.y, 1);
     }
@@ -84,7 +81,7 @@ export function EditorProvider({ children }: TreeProviderProps) {
     }, transitionDuration);
 
     return () => clearTimeout(timer);
-  }, [position, selectedNodeId, setCenter]);
+  }, [position, selectedNode, setCenter]);
 
   const connectingNodeId = useStoreState((state) => state.connectionNodeId);
   const isConnecting = useStoreState((state) => state.connectionNodeId != null);
@@ -97,7 +94,7 @@ export function EditorProvider({ children }: TreeProviderProps) {
         reactFlowWrapperRef,
         reactFlowInstance,
         setReactFlowInstance,
-        closeNodeEditingSidebar: () => send({ type: "selectNode", nodeId: "" }),
+        closeNodeEditingSidebar: () => selectNode(""),
         isTransitioning,
         isConnecting,
         connectingNodeId: connectingNodeId ? connectingNodeId : undefined,

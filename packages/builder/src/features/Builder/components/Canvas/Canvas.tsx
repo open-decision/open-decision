@@ -2,13 +2,28 @@ import * as React from "react";
 import { BuilderNode } from "@open-decision/type-classes";
 import { useEditor } from "features/Builder/state/useEditor";
 import ReactFlow, { FlowElement } from "react-flow-renderer";
-import { useTree } from "../../state/treeMachine/useTree";
 import { transformToReactFlowEdges } from "./utils/transformToReactFlowEdges";
 import { transformToReactFlowNodes } from "./utils/transformToReactFlowNodes";
 import { css, styled, StyleObject } from "@open-legal-tech/design-system";
 import { transitionDuration } from "features/Builder/utilities/constants";
 import { Node } from "./Nodes/Node";
 import { NodeData } from "features/Builder/types/react-flow";
+import {
+  abortConnecting,
+  addNode,
+  deleteNodes,
+  selectNode,
+  startConnecting,
+  connect,
+  updateNodePosition,
+} from "features/Builder/state/treeStore/treeStore";
+import {
+  useConnect,
+  useNodes,
+  useSelectedNode,
+  useSelectedRelationId,
+  useStartNode,
+} from "features/Builder/state/treeStore/hooks";
 
 const validConnectEvent = (
   target: MouseEvent["target"]
@@ -36,7 +51,11 @@ const customNodes = { customNode: Node };
 type Props = { children?: React.ReactNode; css?: StyleObject };
 
 export function Canvas({ children, css }: Props) {
-  const [state, send] = useTree();
+  const nodes = useNodes();
+  const selectedNode = useSelectedNode();
+  const selectedRelationId = useSelectedRelationId();
+  const startNode = useStartNode();
+  const { connectionSourceNode, validConnections } = useConnect();
 
   const {
     reactFlowWrapperRef,
@@ -48,19 +67,12 @@ export function Canvas({ children, css }: Props) {
 
   const elements = [
     ...transformToReactFlowNodes(
-      state.context?.tree.treeData.nodes ?? {},
-      state.context.connectionSourceNode && state.context.validConnections
-        ? [
-            state.context.connectionSourceNode,
-            ...state.context.validConnections,
-          ]
+      nodes,
+      connectionSourceNode && validConnections
+        ? [connectionSourceNode, ...validConnections]
         : []
     ),
-    ...transformToReactFlowEdges(
-      state.context?.tree.treeData.nodes ?? {},
-      state.context.tree.treeData.selectedNodeId,
-      state.context.tree.treeData.selectedRelationId
-    ),
+    ...transformToReactFlowEdges(nodes, selectedNode?.id, selectedRelationId),
   ];
 
   const onDragOver = (event: React.DragEvent<HTMLDivElement>) => {
@@ -78,13 +90,7 @@ export function Canvas({ children, css }: Props) {
     });
 
     if (coordinates && name) {
-      send({
-        type: "addNode",
-        node: BuilderNode.create({
-          position: coordinates,
-          name,
-        }),
-      });
+      addNode({ position: coordinates, name });
     }
   };
 
@@ -103,30 +109,22 @@ export function Canvas({ children, css }: Props) {
         selectNodesOnDrag={false}
         panOnScroll={true}
         onElementsRemove={(elementsToRemove) => {
-          send([
-            {
-              type: "deleteNode",
-              ids: elementsToRemove
-                .map((element) => element.id)
-                .filter(
-                  (element) => element !== state.context.tree.treeData.startNode
-                ),
-            },
-          ]);
+          deleteNodes(
+            elementsToRemove
+              .map((element) => element.id)
+              .filter((element) => element !== startNode)
+          );
         }}
         onConnectStart={(event) => {
           if (validConnectEvent(event.target) && event.target.dataset.nodeid) {
-            send({
-              type: "startConnecting",
-              sourceNodeId: event.target.dataset.nodeid,
-            });
+            startConnecting(event.target.dataset.nodeid);
           }
         }}
         onConnectEnd={(event) => {
           if (!validConnectEvent(event.target) || !event.target.dataset.nodeid)
-            return send("abortConnect");
+            return abortConnecting();
 
-          send({ type: "connect", target: event.target.dataset.nodeid });
+          connect(event.target.dataset.nodeid);
         }}
         onDragOver={onDragOver}
         onDrop={onDrop}
@@ -139,17 +137,10 @@ export function Canvas({ children, css }: Props) {
             event.target instanceof HTMLElement &&
             event.target.dataset?.nodeid === element.id
           )
-            send({
-              type: "selectNode",
-              nodeId: element.id,
-            });
+            selectNode(element.id);
         }}
         onNodeDragStop={(_event, node) =>
-          send({
-            type: "updateNodePosition",
-            nodeId: node.id,
-            position: node.position,
-          })
+          updateNodePosition(node.id, node.position)
         }
         style={{
           gridColumn: "1 / -1",

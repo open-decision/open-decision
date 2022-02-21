@@ -6,7 +6,10 @@ import {
   Text,
   StyleObject,
 } from "@open-legal-tech/design-system";
-import { useTree } from "features/Builder/state/treeMachine/useTree";
+import {
+  deleteNodes,
+  updateStartNode,
+} from "features/Builder/state/treeStore/treeStore";
 import { MoreHorizontal, Trash, Star } from "react-feather";
 
 type Props = {
@@ -17,8 +20,6 @@ type Props = {
 };
 
 export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
-  const [, send] = useTree();
-
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
@@ -45,7 +46,7 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
             <Tooltip.Trigger asChild>
               <DropdownMenu.Item
                 css={{ colorScheme: "danger" }}
-                onSelect={() => send({ type: "deleteNode", ids: [nodeId] })}
+                onSelect={() => deleteNodes([nodeId])}
                 disabled
               >
                 <Icon
@@ -66,9 +67,7 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
           <>
             <DropdownMenu.Item
               css={{ colorScheme: "primary" }}
-              onSelect={() =>
-                send({ type: "updateTree", tree: { startNode: nodeId } })
-              }
+              onSelect={() => updateStartNode(nodeId)}
             >
               <Icon
                 label="Zur Startnode machen"
@@ -81,7 +80,7 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
             </DropdownMenu.Item>
             <DropdownMenu.Item
               css={{ colorScheme: "danger" }}
-              onSelect={() => send({ type: "deleteNode", ids: [nodeId] })}
+              onSelect={() => deleteNodes([nodeId])}
             >
               <Icon
                 label="Löschen Icon"

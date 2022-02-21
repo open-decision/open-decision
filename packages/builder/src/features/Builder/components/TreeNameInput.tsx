@@ -6,9 +6,13 @@ import {
   ControlledInput,
   Input,
 } from "@open-legal-tech/design-system";
-import { useTree } from "features/Builder/state/treeMachine/useTree";
+import {
+  updateTreeName,
+  treeStore,
+} from "features/Builder/state/treeStore/treeStore";
 import * as React from "react";
 import { ProjectMenu } from "./ProjectMenu";
+import { useSnapshot } from "valtio";
 
 const Container = styled(Box, {
   display: "flex",
@@ -18,28 +22,16 @@ const Container = styled(Box, {
 type Props = { css?: StyleObject };
 
 export function TreeNameInput({ css }: Props) {
-  const [name, send] = useTree((state) => state.tree.name);
+  const { name } = useSnapshot(treeStore);
   const [Form] = useForm({ defaultValues: { name } });
 
   return (
     <Container css={css}>
       <ProjectMenu css={{ marginRight: "10px" }} />
-      <Form
-        onSubmit={({ name }) =>
-          send({
-            type: "updateTree",
-            tree: { name },
-          })
-        }
-      >
+      <Form onSubmit={({ name }) => updateTreeName(name)}>
         <ControlledInput
           name="name"
-          onChange={(event) =>
-            send({
-              type: "updateTree",
-              tree: { name: event.target.value },
-            })
-          }
+          onChange={(event) => updateTreeName(event.target.value)}
         >
           {(field) => (
             <Input

@@ -2,13 +2,16 @@ import { Box, styled, Text, Icon, Stack } from "@open-legal-tech/design-system";
 import React, { memo } from "react";
 import { Star } from "react-feather";
 import { NodeProps, Position } from "react-flow-renderer";
-import { useTree } from "../../../state/treeMachine/useTree";
 import { nodeHeight, nodeWidth } from "../../../utilities/constants";
 import { NodeData } from "../../../types/react-flow";
 import { useEditor } from "features/Builder/state/useEditor";
 import { NodeMenu } from "./NodeMenu";
 import { SourcePort, TargetPort } from "./Port";
 import { NodeLabel } from "./NodeLabel";
+import {
+  useSelectedNode,
+  useStartNode,
+} from "features/Builder/state/treeStore/hooks";
 
 const NodeContainer = styled(Stack, {
   backgroundColor: "$primary1",
@@ -32,18 +35,16 @@ const NodeContainer = styled(Stack, {
 
 export const Node = memo(
   ({ id, data: { runtime, ...data } }: NodeProps<NodeData>) => {
-    const [selectedNodeId] = useTree(
-      (state) => state.tree.treeData.selectedNodeId
-    );
-    const [startNode] = useTree((state) => state.tree.treeData.startNode);
     const { isConnecting, connectingNodeId } = useEditor();
+    const selectedNode = useSelectedNode();
+    const startNode = useStartNode();
 
     const validConnectionTarget = React.useMemo(
       () => !isConnecting || (isConnecting && runtime.isConnectable),
       [isConnecting, runtime.isConnectable]
     );
 
-    const isSelected = selectedNodeId === id;
+    const isSelected = selectedNode?.id === id;
     const isStartNode = startNode === id;
     const isConnectingNode = connectingNodeId === id;
     const connectable = validConnectionTarget && !isConnectingNode;

@@ -12,10 +12,6 @@ import * as React from "react";
 import Link from "next/link";
 import { ChevronLeft } from "react-feather";
 import { Preview } from "features/Preview/Preview";
-import {
-  TreeProvider,
-  useTree,
-} from "features/Builder/state/treeMachine/useTree";
 import { InterpreterProvider } from "@open-decision/interpreter";
 import { MobilePreview } from "features/Preview/MobilePreview";
 import { ErrorBoundary } from "@sentry/nextjs";
@@ -23,6 +19,7 @@ import { ErrorFallback } from "features/Error/ErrorFallback";
 import { QueryClientProvider } from "react-query";
 import { queryClient } from "features/Data/queryClient";
 import { GetServerSideProps } from "next";
+import { useStatus, useTree } from "features/Builder/state/treeStore/hooks";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
@@ -34,23 +31,22 @@ export default function VorschauPage({ id }) {
   return (
     <ErrorBoundary fallback={ErrorFallback}>
       <QueryClientProvider client={queryClient}>
-        <TreeProvider id={id}>
-          <Vorschau />
-        </TreeProvider>
+        <Vorschau />
       </QueryClientProvider>
     </ErrorBoundary>
   );
 }
 
 function Vorschau() {
-  const [state] = useTree();
+  const status = useStatus();
+  const tree = useTree();
 
-  if (state.matches("connecting")) {
+  if (status === "uninitialized") {
     return <Box>Empty</Box>;
   }
 
   return (
-    <InterpreterProvider tree={state.context}>
+    <InterpreterProvider tree={tree}>
       <MainContent
         css={{
           display: "grid",

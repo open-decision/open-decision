@@ -14,9 +14,9 @@ export const ErrorList = styled("ul", {
 });
 
 export const ErrorMessage = styled("li", textStyles, {
-  color: "$error11",
-  border: "1px solid $colors$error5",
-  backgroundColor: "$error1",
+  color: "$danger11",
+  border: "1px solid $colors$danger5",
+  backgroundColor: "$danger1",
   padding: "$1 $2",
   borderRadius: "$md",
   fontSize: "$sm",

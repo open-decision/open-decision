@@ -8,6 +8,10 @@ import { createAdjacencyList, depthFirstSearch } from "./utils";
 import stringify from "json-stable-stringify";
 import * as murmur from "murmurhash-js";
 
+type Nodes =
+  | PublicTree.TTree["treeData"]["nodes"]
+  | BuilderTree.TTree["treeData"]["nodes"];
+
 // ------------------------------------------------------------------
 // Methods
 /**
@@ -43,48 +47,41 @@ export const getParents =
 /**
  * Get the immediate Children of the node with the provided id.
  */
-export const getChildren =
-  (nodeId: string) => (tree: BuilderTree.TTree | PublicTree.TTree) =>
-    pipe(
-      // Get the node from the tree
-      tree.treeData.nodes[nodeId].relations,
-      values,
-      // Filter out relations without targets
-      filter((relation) => Boolean(relation.target)),
-      // Return an array of the target ids
-      map((relation) => relation.target)
-    );
+export const getChildren = (nodeId: string) => (nodes: Nodes) =>
+  pipe(
+    // Get the node from the tree
+    nodes[nodeId].relations,
+    values,
+    // Filter out relations without targets
+    filter((relation) => Boolean(relation.target)),
+    // Return an array of the target ids
+    map((relation) => relation.target)
+  );
 
 export const circularConnection =
   ({ source, target }: { source: string; target: string }) =>
-  (tree: PublicTree.TTree | BuilderTree.TTree): boolean => {
-    const nodesOnPaths = getPaths(source)(tree).flatMap((path) => path);
+  (nodes: Nodes): boolean => {
+    const nodesOnPaths = getPaths(source)(nodes).flatMap((path) => path);
 
     if (nodesOnPaths.includes(target)) return true;
 
     return false;
   };
 
-export const getPaths =
-  (nodeId: string) => (tree: PublicTree.TTree | BuilderTree.TTree) => {
-    const adjacencyList = createAdjacencyList(tree.treeData.nodes);
+export const getPaths = (nodeId: string) => (nodes: Nodes) => {
+  const adjacencyList = createAdjacencyList(nodes);
 
-    return depthFirstSearch(nodeId, adjacencyList);
-  };
+  return depthFirstSearch(nodeId, adjacencyList);
+};
 
 export const getConnectableNodes =
-  <
-    TNode extends PublicNode.TNode | BuilderNode.TNode,
-    TTree extends PublicTree.TTree | BuilderTree.TTree
-  >(
-    node: TNode
-  ) =>
-  (tree: TTree): TNode[] => {
-    const nodesOnPath = getPaths(node.id)(tree).flatMap((path) => path);
-    const nodesChildren = getChildren(node.id)(tree);
+  <TNode extends PublicNode.TNode | BuilderNode.TNode>(node: TNode) =>
+  (nodes: Nodes): TNode[] => {
+    const nodesOnPath = getPaths(node.id)(nodes).flatMap((path) => path);
+    const nodesChildren = getChildren(node.id)(nodes);
 
     return pipe(
-      tree.treeData.nodes,
+      nodes,
       Object.values,
       filter(
         (iteratedNode) =>
@@ -105,13 +102,12 @@ type IsUniqueNode =
   | { name?: string; id: string }
   | { name: string; id?: string };
 
-export const isUnique = (node: IsUniqueNode) => (tree: BuilderTree.TTree) => {
-  const {
-    treeData: { nodes },
-  } = tree;
+export const isUnique =
+  (node: IsUniqueNode) => (treeData: BuilderTree.TTree["treeData"]) => {
+    const { nodes } = treeData;
 
-  return !Object.values(nodes).some(
-    (existingNode) =>
-      node?.id === existingNode.id || node?.name?.trim() === existingNode.name
-  );
-};
+    return !Object.values(nodes).some(
+      (existingNode) =>
+        node?.id === existingNode.id || node?.name?.trim() === existingNode.name
+    );
+  };

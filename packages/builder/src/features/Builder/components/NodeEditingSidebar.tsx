@@ -12,44 +12,47 @@ import {
 import { RichTextEditor } from "components/RichTextEditor";
 import { OptionTargetInputs } from "features/Builder/components/OptionTargetInput/OptionTargetInput";
 import * as React from "react";
-import { useNodes } from "../state/treeMachine/useNode";
-import { useTree } from "../state/treeMachine/useTree";
 import { BuilderNode, BuilderTree } from "@open-decision/type-classes";
 import { nodeNameMaxLength } from "../utilities/constants";
 import { NodeMenu } from "./Canvas/Nodes/NodeMenu";
 import { NodeLabel } from "./Canvas/Nodes/NodeLabel";
 import { Star } from "react-feather";
+import {
+  selectNode,
+  updateNodeContent,
+  updateNodeName,
+} from "../state/treeStore/treeStore";
+import {
+  useNodes,
+  useParents,
+  useSelectedNode,
+  useStartNode,
+  useTree,
+} from "../state/treeStore/hooks";
 
 type NodeEditingSidebarProps = { node: BuilderNode.TNode };
 
 export function NodeEditingSidebar({
   node,
 }: NodeEditingSidebarProps): JSX.Element {
-  const [tree, send] = useTree((state) => state.tree);
-  const parentNodesIds = React.useMemo(
-    () => BuilderTree.getParents(node.id)(tree),
-    [tree, node.id]
-  );
+  const tree = useTree();
+  const parentNodeIds = useParents(node.id);
+  const startNode = useStartNode();
+  const selectedNode = useSelectedNode();
 
-  const parentNodes = useNodes(parentNodesIds);
+  const parentNodes = useNodes(parentNodeIds);
   const [Form] = useForm({
     defaultValues: { name: node?.name ?? "" },
     mode: "onChange",
   });
 
-  const isStartNode = node.id === tree.treeData.startNode;
+  const isStartNode = node.id === startNode;
 
   return (
     <>
-      <Box as="header" key={tree.treeData.selectedNodeId}>
+      <Box as="header" key={selectedNode?.id ?? ""}>
         <Form
-          onSubmit={({ name }) =>
-            send({
-              type: "updateNodeName",
-              nodeId: node.id,
-              name,
-            })
-          }
+          onSubmit={({ name }) => updateNodeName(node.id, name)}
           css={{ gap: "$2", display: "flex", flexDirection: "column" }}
         >
           <Stack
@@ -87,17 +90,11 @@ export function NodeEditingSidebar({
             name="name"
             maxLength={nodeNameMaxLength}
             validate={(val) =>
-              BuilderTree.isUnique({ name: val })(tree)
+              BuilderTree.isUnique({ name: val })(tree.treeData)
                 ? true
                 : "Eine Node mit diesem Namen existiert bereits."
             }
-            onChange={(event) =>
-              send({
-                type: "updateNodeName",
-                nodeId: node.id,
-                name: event.target.value,
-              })
-            }
+            onChange={(event) => updateNodeName(node.id, event.target.value)}
           >
             {(field) => (
               <Input
@@ -123,13 +120,7 @@ export function NodeEditingSidebar({
         </Label>
         <RichTextEditor.Root
           value={node.content}
-          setValue={(newValue) =>
-            send({
-              type: "updateNodeContent",
-              nodeId: node.id,
-              content: newValue,
-            })
-          }
+          setValue={(newValue) => updateNodeContent(node.id, newValue)}
         >
           <Box
             css={{
@@ -180,9 +171,7 @@ export function NodeEditingSidebar({
                   size="extra-small"
                   variant="tertiary"
                   key={parentNode.id}
-                  onClick={() =>
-                    send({ type: "selectNode", nodeId: parentNode.id })
-                  }
+                  onClick={() => selectNode(parentNode.id)}
                   css={{
                     textAlign: "left",
                     wordBreak: "break-word",

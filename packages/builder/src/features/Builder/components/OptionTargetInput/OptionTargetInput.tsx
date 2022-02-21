@@ -18,12 +18,23 @@ import {
 } from "@open-decision/type-classes";
 import { pipe } from "fp-ts/lib/function";
 import { Plus, Trash, Crosshair } from "react-feather";
-import { useNode } from "features/Builder/state/treeMachine/useNode";
 import { DragHandle } from "./DragHandle";
-import { useTree } from "features/Builder/state/treeMachine/useTree";
 import { useUnmount } from "react-use";
 import { Reorder, useDragControls } from "framer-motion";
 import { map, values } from "remeda";
+import {
+  addAssociatedNode,
+  addRelation,
+  deleteRelations,
+  deselectRelation,
+  selectNode,
+  selectRelation,
+  updateNodeRelations,
+  updateRelation,
+  updateRelationAnswer,
+  updateRelationTarget,
+} from "features/Builder/state/treeStore/treeStore";
+import { useNode, useNodes } from "features/Builder/state/treeStore/hooks";
 
 const StyledReorderGroup = styled(Reorder.Group, {
   listStyle: "none",
@@ -34,8 +45,6 @@ const StyledReorderGroup = styled(Reorder.Group, {
 type SingleSelectProps = { node: BuilderNode.TNode };
 
 export function OptionTargetInputs({ node }: SingleSelectProps) {
-  const [, send] = useTree();
-
   const relations = Object.values(node.relations);
   const ref = React.useRef<HTMLDivElement | null>(null);
 
@@ -59,9 +68,7 @@ export function OptionTargetInputs({ node }: SingleSelectProps) {
         <Button
           variant="neutral"
           square
-          onClick={() =>
-            send({ type: "addRelation", nodeId: node.id, relation: {} })
-          }
+          onClick={() => addRelation(node.id, {})}
         >
           <Icon label="Neue Antwortmöglichkeit hinzufügen">
             <Plus />
@@ -73,13 +80,12 @@ export function OptionTargetInputs({ node }: SingleSelectProps) {
         axis="y"
         values={relations}
         onReorder={(newOrder: BuilderRelation.TRelation[]) =>
-          send({
-            type: "updateNodeRelations",
-            nodeId: node.id,
-            relations: Object.fromEntries(
+          updateNodeRelations(
+            node.id,
+            Object.fromEntries(
               newOrder.map((relation) => [relation.id, relation])
-            ),
-          })
+            )
+          )
         }
       >
         {relations.map((relation) => (
@@ -87,13 +93,7 @@ export function OptionTargetInputs({ node }: SingleSelectProps) {
             groupRef={ref}
             key={relation.id}
             relation={relation}
-            onDelete={() =>
-              send({
-                type: "deleteRelation",
-                nodeId: node.id,
-                relationIds: [relation.id],
-              })
-            }
+            onDelete={() => deleteRelations(node.id, [relation.id])}
             nodeId={node.id}
           />
         ))}
@@ -114,16 +114,17 @@ export function OptionTargetInput({
   onDelete,
   groupRef,
 }: SingleSelectInputProps): JSX.Element {
-  const [tree, send] = useTree((state) => state.tree);
+  const nodes = useNodes();
+
   const node = useNode(nodeId);
   const allOptions = pipe(
-    tree.treeData.nodes,
+    nodes,
     values,
     map((node) => ({ id: node.id, label: node.name }))
   );
   const nodeOptions = node
     ? pipe(
-        BuilderTree.getConnectableNodes(node)(tree),
+        BuilderTree.getConnectableNodes(node)(nodes),
         values,
         map((node) => ({ id: node.id, label: node.name }))
       )
@@ -133,7 +134,6 @@ export function OptionTargetInput({
 
   const ref = React.useRef<HTMLDivElement | null>(null);
 
-  const deselectRelation = () => send({ type: "selectRelation", id: "" });
   useUnmount(deselectRelation);
 
   const [Form] = useForm({
@@ -151,13 +151,7 @@ export function OptionTargetInput({
       dragConstraints={groupRef}
     >
       <Form
-        onSubmit={(data) =>
-          send({
-            type: "updateRelation",
-            nodeId: node.id,
-            relation: { ...relation, ...data },
-          })
-        }
+        onSubmit={(data) => updateRelation(node.id, relation.id, data)}
         css={{
           display: "flex",
           position: "relative",
@@ -166,7 +160,7 @@ export function OptionTargetInput({
         }}
       >
         <Box
-          onClick={() => send({ type: "selectRelation", id: relation.id })}
+          onClick={() => selectRelation(relation.id)}
           ref={ref}
           css={{
             flex: 1,
@@ -180,12 +174,7 @@ export function OptionTargetInput({
           <ControlledInput
             name="answer"
             onChange={(event) =>
-              send({
-                type: "updateRelationAnswer",
-                nodeId: node.id,
-                relationId: relation.id,
-                answer: event.target.value,
-              })
+              updateRelationAnswer(node.id, relation.id, event.target.value)
             }
           >
             {({ onBlur, ...field }) => (
@@ -212,32 +201,12 @@ export function OptionTargetInput({
           <Combobox.Root
             name="target"
             onCreate={(name) => {
-              const newNode = BuilderNode.createNewAssociatedNode(node, {
-                name,
-              });
-
-              send([
-                {
-                  type: "addNode",
-                  node: newNode,
-                },
-                {
-                  type: "updateRelationTarget",
-                  nodeId: node.id,
-                  relationId: relation.id,
-                  target: newNode.id,
-                },
-              ]);
+              const newNode = addAssociatedNode(node.id, relation.id, { name });
 
               return { id: newNode.id, label: newNode.name };
             }}
             onSelectedItemChange={(newItem) =>
-              send({
-                type: "updateRelationTarget",
-                nodeId: node.id,
-                relationId: relation.id,
-                target: newItem?.id ?? "",
-              })
+              updateRelationTarget(node.id, relation.id, newItem?.id ?? "")
             }
             items={allOptions}
             subsetOfItems={nodeOptions}
@@ -301,7 +270,6 @@ type NodeLinkProps = { target?: string } & Omit<ButtonProps, "label" | "Icon">;
 
 function NodeLink({ target, ...props }: NodeLinkProps) {
   const node = useNode(target ?? "");
-  const [, send] = useTree();
 
   return (
     <Button
@@ -320,9 +288,7 @@ function NodeLink({ target, ...props }: NodeLinkProps) {
       size="small"
       variant="secondary"
       onClick={() => {
-        if (target) {
-          send({ type: "selectNode", nodeId: target });
-        }
+        if (target) selectNode(target);
       }}
       square
       type="button"

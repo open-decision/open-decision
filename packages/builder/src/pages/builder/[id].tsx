@@ -1,7 +1,6 @@
 import { MainContent } from "components/Layout";
 import { NodeEditor } from "features/Builder/NodeEditor";
 import { EditorProvider } from "features/Builder/state/useEditor";
-import { TreeProvider } from "features/Builder/state/treeMachine/useTree";
 import { sidebarWidth } from "features/Builder/utilities/constants";
 import { ReactFlowProvider } from "react-flow-renderer";
 import { EditorHeader } from "features/Builder/components/EditorHeader";
@@ -29,14 +28,12 @@ export default function BuilderPage({ id }): JSX.Element {
             gridTemplateRows: "max-content 1fr",
           }}
         >
-          <TreeProvider id={id}>
-            <ReactFlowProvider>
-              <EditorProvider>
-                <EditorHeader css={{ gridColumn: "1 / -1", gridRow: "1" }} />
-                <NodeEditor css={{ gridColumn: "1 / -1", gridRow: "2" }} />
-              </EditorProvider>
-            </ReactFlowProvider>
-          </TreeProvider>
+          <ReactFlowProvider>
+            <EditorProvider>
+              <EditorHeader css={{ gridColumn: "1 / -1", gridRow: "1" }} />
+              <NodeEditor css={{ gridColumn: "1 / -1", gridRow: "2" }} />
+            </EditorProvider>
+          </ReactFlowProvider>
         </MainContent>
       </QueryClientProvider>
     </ErrorBoundary>
