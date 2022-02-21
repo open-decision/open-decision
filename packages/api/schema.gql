@@ -26,7 +26,6 @@ input DateTimeFilter {
 type DecisionTree {
   createdAt: DateTime!
   id: Int!
-  language: String!
   name: String!
   tags: JSON
   treeData: JSON
@@ -62,7 +61,6 @@ input DecisionTreePartialUpdateInput {
 enum DecisionTreeScalarFieldEnum {
   createdAt
   id
-  language
   name
   ownerUuid
   tags

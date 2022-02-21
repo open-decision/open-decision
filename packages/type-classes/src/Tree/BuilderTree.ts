@@ -171,7 +171,7 @@ const isCircularRelation =
     circularConnection({
       source: nodeId,
       target,
-    })(tree);
+    })(tree.treeData.nodes);
 
 export const addRelation =
   (nodeId: string, relation: Omit<BuilderRelation.TRelation, "id">) =>
