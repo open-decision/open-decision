@@ -3,9 +3,9 @@ import { WebsocketProvider } from "y-websocket";
 
 const isBrowser = typeof window !== "undefined";
 
-export const connectWebsocket = (doc: Y.Doc) => {
+export const connectWebsocket = (doc: Y.Doc, id: string) => {
   const wsProvider = isBrowser
-    ? new WebsocketProvider("ws://localhost:1234", "tree", doc)
+    ? new WebsocketProvider("ws://localhost:1234", id, doc)
     : null;
 
   wsProvider?.on("status", (event) => {

@@ -5,16 +5,13 @@ import {
   BuilderRelation,
   BuilderTree,
 } from "@open-decision/type-classes";
-import { connectWebsocket } from "features/Data/yjs-websocket-connector";
 import { proxy } from "valtio";
 
-const yDoc = new Y.Doc();
+export const yDoc = new Y.Doc();
 
-const yTreeMap = yDoc.getMap("tree");
+export const yTreeMap = yDoc.getMap("tree");
 
 export const undoManager = new Y.UndoManager(yTreeMap);
-
-connectWebsocket(yDoc);
 
 export type TStore = {
   value: BuilderTree.TTree & {
@@ -29,6 +26,9 @@ export type TStore = {
 export const treeStore = proxy<TStore>({
   value: {
     status: "uninitialized",
+    id: 0,
+    name: "",
+    treeData: { nodes: {}, startNode: "" },
   },
 } as TStore);
 

@@ -29,6 +29,8 @@ import {
   useStartNode,
   useTree,
 } from "../state/treeStore/hooks";
+import { Tiptap } from "components/TipTap";
+import { Toolbar } from "components/RichTextEditor/Toolbar";
 
 type NodeEditingSidebarProps = { node: BuilderNode.TNode };
 
@@ -118,7 +120,8 @@ export function NodeEditingSidebar({
         >
           Inhalt
         </Label>
-        <RichTextEditor.Root
+        <Tiptap />
+        {/* <RichTextEditor.Root
           value={node.content}
           setValue={(newValue) => updateNodeContent(node.id, newValue)}
         >
@@ -142,7 +145,7 @@ export function NodeEditingSidebar({
               }}
             />
           </Box>
-        </RichTextEditor.Root>
+        </RichTextEditor.Root> */}
       </Box>
       {Object.values(parentNodes).length > 0 ? (
         <Box as="section">
