@@ -27,7 +27,8 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
 // });
 
 const getUser = catchAsync(async (req: Request, res: Response) => {
-  const user = await userService.getUserByUuidOrId(req.params.userUuid);
+  // @ts-ignore
+  const user = await userService.getUserByUuidOrId(req.user!.userUuid);
   if (!user) {
     throw new ApiError({
       statusCode: httpStatus.NOT_FOUND,
@@ -49,7 +50,8 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deleteUser = catchAsync(async (req: Request, res: Response) => {
-  await userService.deleteUserByUuidOrId(req.params.userUuid);
+  // @ts-ignore
+  await userService.deleteUserByUuidOrId(req.user!.userUuid);
   res.status(httpStatus.NO_CONTENT).send();
 });
 

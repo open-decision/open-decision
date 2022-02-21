@@ -5,7 +5,7 @@ import { Permissions, roleRights } from "../config/roles";
 import { User } from "@prisma-client";
 import ApiError from "../utils/ApiError";
 import httpStatus from "http-status";
-import { jwtStrategy } from "../config/passport";
+import { jwtStrategy, jwtWebsocketStrategy } from "../config/passport";
 namespace Express {
   export interface Request {
     user?: User;
@@ -61,3 +61,15 @@ export const auth =
       .then(() => next())
       .catch((err) => next(err));
   };
+
+export const wsAuth = async (req: Request, next: Function) => {
+  return new Promise((resolve, reject) => {
+    passport.authenticate(
+      jwtWebsocketStrategy,
+      { session: false },
+      verifyCallback(req, resolve, reject, [])
+    )(req, next);
+  })
+    .then(() => next(false, req.user))
+    .catch((err) => next(err));
+};
