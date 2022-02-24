@@ -6,8 +6,8 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "outDir": "dist",
-    "typeRoots": ["./src/types", "./node_modules/@types"],
-    "rootDir": ".",
+    // "typeRoots": ["./src/types", "./node_modules/@types"],
+    // "rootDir": ".",
     "baseUrl": ".",
     "paths": {
       "@prisma-client": ["prisma/generated/prisma-client/index"],
@@ -15,5 +15,6 @@
     }
   },
   "references": [{ "path": "../type-classes" }, { "path": "../interpreter" }],
+  "include": ["src", "prisma"],
   "exclude": ["dist"]
 }

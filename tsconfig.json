@@ -19,7 +19,6 @@
     "downlevelIteration": true,
     "composite": true,
     "baseUrl": "."
-    // "preserveSymlinks": true
   },
   "exclude": ["node_modules", "plugins"],
   "references": [

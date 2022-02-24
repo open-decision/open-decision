@@ -7,6 +7,10 @@ import {
 import { proxy } from "valtio";
 import { bindProxyAndYMap } from "valtio-yjs";
 
+declare module "valtio" {
+  function useSnapshot<T extends object>(p: T): T;
+}
+
 type TreeMeta = {
   name: string;
   id: number;

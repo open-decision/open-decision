@@ -1,9 +1,11 @@
 [build.environment]
   NPM_FLAGS = "--version"
+
 [build]
   base = "packages/builder/"
   command = "npx pnpm install --store=node_modules/.pnpm-store && npx pnpm build"
   publish = ".next/"
+
 [[plugins]]
   package = "../../plugins/pnpm-preinstaller"
 

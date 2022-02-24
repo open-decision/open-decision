@@ -1,4 +1,5 @@
-import { BuilderTree } from "@open-decision/type-classes";
+import { BuilderNode, BuilderTree } from "@open-decision/type-classes";
+import { pickBy } from "ramda";
 import { useSnapshot } from "valtio";
 import { treeStore } from "../treeStore";
 
@@ -37,15 +38,14 @@ export function useConnect() {
   return { connectionSourceNodeId, validConnections };
 }
 
-export function useNodes(ids?: string[]) {
+export function useNodes(ids?: string[]): BuilderNode.TNodesRecord {
   const {
     treeData: { nodes },
   } = useSnapshot(treeStore);
 
-  if (ids && nodes)
-    return Object.fromEntries(ids.map((id) => [id, nodes[id]])) ?? {};
+  if (ids && nodes) return pickBy((node) => ids.includes(node.id))(nodes);
 
-  return nodes ?? {};
+  return nodes;
 }
 
 export function useNode(id: string) {

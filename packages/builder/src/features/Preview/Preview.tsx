@@ -37,15 +37,3 @@ export function Preview() {
     </Box>
   );
 }
-
-function PreviewRichTextEditor() {
-  return (
-    <Box
-      css={{
-        marginBlock: "$8",
-        overflow: "hidden",
-        maxHeight: "800px",
-      }}
-    ></Box>
-  );
-}

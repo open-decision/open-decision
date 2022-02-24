@@ -19,11 +19,11 @@ module.exports = withPlugins(
       return [
         {
           source: "/auth/:path",
-          destination: "http://localhost:4000/v1/auth/:path",
+          destination: "http://api.open-decision.org/v1/auth/:path",
         },
         {
           source: "/graphql",
-          destination: "http://localhost:4000/v1/graphql",
+          destination: "http://api.open-decision.org/v1/graphql",
         },
       ];
     },
