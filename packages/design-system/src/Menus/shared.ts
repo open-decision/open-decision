@@ -6,12 +6,13 @@ const scaleIn = keyframes({
 });
 
 export const menuContainerStyles = css({
-  backgroundColor: "$gray2",
+  layer: "1",
   paddingBlock: "$2",
-  border: "1px solid $colors$gray8",
   boxShadow: "$4",
   borderRadius: "$md",
   overflow: "hidden",
+  zIndex: "$10",
+  overflowY: "auto",
 
   transformOrigin: "var(--radix-dropdown-menu-content-transform-origin)",
   animation: `${scaleIn} 0.1s ease-out`,
@@ -20,7 +21,7 @@ export const menuContainerStyles = css({
 export const menuItemStyles = css({
   all: "unset",
   colorScheme: "primary",
-  textStyle: "small-text",
+  textStyle: "medium-text",
   focusStyle: "inner",
   userSelect: "none",
   display: "grid",
@@ -29,10 +30,15 @@ export const menuItemStyles = css({
   paddingBlock: "$2",
   gap: "$3",
   minWidth: "200px",
+  alignItems: "center",
+  wordBreak: "break-word",
+  hyphens: "auto",
+  borderBlock: "1px solid transparent",
 
-  "&:focus": {
-    backgroundColor: "$primary9",
-    color: "$primary1",
+  "&:focus, &[data-focus='true']": {
+    backgroundColor: "$primary3",
+    focusColor: "$primary3",
+    borderColor: "$colors$primary6",
   },
 
   "&[data-disabled]": {

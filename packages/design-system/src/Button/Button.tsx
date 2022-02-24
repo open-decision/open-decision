@@ -3,8 +3,6 @@ import { styled, css } from "../stitches";
 
 export const buttonStyles = css(alignByContent, {
   $$borderWidth: "1px",
-  $$paddingInline: "$space$6",
-  $$paddingBlock: "$space$3",
   $$YTranslation: "0px",
   $$gap: "$space$1",
   gap: "$$gap",
@@ -33,54 +31,24 @@ export const buttonStyles = css(alignByContent, {
 
   variants: {
     size: {
-      "extra-small": {
-        $$paddingInline: "$space$1",
-        $$paddingBlock: "$space$2",
-        "--iconSize": "16px",
-        textStyle: "extra-small-text",
-
-        "&  svg": {
-          width: "var(--iconSize)",
-          height: "var(--iconSize)",
-        },
-      },
       small: {
-        $$paddingInline: "$space$4",
-        $$paddingBlock: "$space$2",
+        $$paddingInline: "$space$2",
+        $$paddingBlock: "$space$1",
         textStyle: "small-text",
         fontWeight: 600,
-        letterSpacing: "0.025em",
-        "--iconSize": "18px",
-
-        "&  svg": {
-          width: "var(--iconSize)",
-          height: "var(--iconSize)",
-        },
       },
       medium: {
+        $$paddingInline: "$space$4",
+        $$paddingBlock: "calc($space$3 - 2px)",
         textStyle: "medium-text",
         fontWeight: 600,
-        letterSpacing: "0.025em",
-        "--iconSize": "22px",
-
-        "&  svg": {
-          width: "var(--iconSize)",
-          height: "var(--iconSize)",
-        },
       },
       large: {
-        $$paddingInline: "$space$8",
-        $$paddingBlock: "$space$4",
+        $$paddingInline: "$space$5",
+        $$paddingBlock: "$space$3",
         textStyle: "large-text",
         fontWeight: 600,
-        letterSpacing: "0.025em",
-        "--iconSize": "24px",
         $$gap: "$space$2",
-
-        "&  svg": {
-          width: "var(--iconSize)",
-          height: "var(--iconSize)",
-        },
       },
     },
     variant: {
@@ -137,7 +105,6 @@ export const buttonStyles = css(alignByContent, {
       },
 
       ghost: {
-        colorScheme: "gray",
         backgroundColor: "unset",
         focusStyle: "inner",
         colorFallback: "$black",
@@ -145,12 +112,13 @@ export const buttonStyles = css(alignByContent, {
 
       neutral: {
         colorScheme: "gray",
-        color: "$colorScheme10",
+        color: "$colorScheme11",
         backgroundColor: "unset",
         focusStyle: "inner",
 
         "&:hover": {
           backgroundColor: "$colorScheme3",
+          color: "$colorScheme12",
         },
 
         "&:active, &[data-active='true'], &[data-state=on]": {
@@ -180,33 +148,11 @@ export const buttonStyles = css(alignByContent, {
 
     square: {
       true: {
-        padding: "$$paddingInline",
+        $$paddingInline: "$$paddingBlock",
+        aspectRatio: "1 / 1",
       },
     },
   },
-
-  compoundVariants: [
-    {
-      size: "extra-small",
-      square: true,
-      css: { $$paddingInline: "$space$1" },
-    },
-    {
-      size: "small",
-      square: true,
-      css: { $$paddingInline: "$space$2" },
-    },
-    {
-      size: "medium",
-      square: true,
-      css: { $$paddingInline: "$space$3" },
-    },
-    {
-      size: "large",
-      square: true,
-      css: { $$paddingInline: "$space$4" },
-    },
-  ],
 
   defaultVariants: {
     variant: "primary",

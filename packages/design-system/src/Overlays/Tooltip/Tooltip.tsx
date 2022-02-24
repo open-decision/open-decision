@@ -1,12 +1,26 @@
 import * as React from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
-import { styled } from "../../stitches";
+import { darkTheme, styled } from "../../stitches";
 import { overlayCss } from "../shared";
+import { Label } from "../../Label/Label";
+import { Text } from "../../Text";
+import { Stack } from "../../Layout";
 
-const StyledContent = styled(TooltipPrimitive.Content, overlayCss);
+const StyledContent = styled(
+  TooltipPrimitive.Content,
+  Stack,
+  { textAlign: "center", maxWidth: "200px", gap: "$1" },
+  overlayCss
+);
+
+const Content = (props: TooltipContentProps) => (
+  <StyledContent sideOffset={10} className={darkTheme} mode="dark" {...props}>
+    {props.children}
+  </StyledContent>
+);
 
 const StyledArrow = styled(TooltipPrimitive.Arrow, {
-  fill: "var(--bgColor)",
+  fill: "$$bgColor",
 });
 
 const StyledTrigger = styled(TooltipPrimitive.Trigger, {
@@ -14,11 +28,15 @@ const StyledTrigger = styled(TooltipPrimitive.Trigger, {
   border: "none",
 });
 
+const Body = styled(Text, { color: "$gray11" });
+
 export const Tooltip = {
   Root: TooltipPrimitive.Root,
   Trigger: StyledTrigger,
-  Content: StyledContent,
+  Content: Content,
   Arrow: StyledArrow,
+  Title: Label,
+  Body,
 };
 
 export type TooltipRootProps = TooltipPrimitive.TooltipProps;

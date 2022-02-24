@@ -25,7 +25,7 @@ export const underlineLinkStyles = css({
           display: "block",
           width: "100%",
           height: "2px",
-          bottom: "0",
+          bottom: "-2px",
           left: "0",
           backgroundColor: "currentcolor",
           transform: "scaleX(0)",

@@ -9,18 +9,14 @@ const StyledBox = styled(Box, baseTextInputStyle, baseInputStyles, {
   borderRadius: "$md",
   display: "flex",
   alignItems: "center",
-  focusStyle: "inner",
+  focusStyle: "inner-within",
   overflow: "hidden",
-  padding: "1px",
-  $$paddingInline: "$space$2",
-  $$paddingBlock: "$space$3",
-  paddingInline: "$$paddingInline",
-  gap: "$3",
+  colorScheme: "primary",
 });
 
 const StyledInput = styled("input", {
-  borderRadius: "$md",
   paddingBlock: "$$paddingBlock",
+  paddingInline: "$$paddingInline",
   border: "none",
   width: "100%",
   minWidth: 0,
@@ -28,28 +24,24 @@ const StyledInput = styled("input", {
   outline: "none",
   backgroundColor: "transparent",
   textStyle: "inherit",
-  color: "$colorScheme-text",
-
-  "&:focus-visible": {
-    outline: "none",
-  },
+  colorFallback: "$colorScheme-text",
 });
 
 export type InputProps = {
   name: string;
   Buttons?: JSX.Element | JSX.Element[];
+
   Icon?: React.ReactNode;
   disabled?: boolean;
   autoFocus?: boolean;
   placeholder?: string;
 } & React.ComponentProps<typeof StyledBox> &
-  React.ComponentProps<typeof StyledInput>;
+  Omit<React.ComponentProps<typeof StyledInput>, "size">;
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   function Input(
     {
       disabled,
-      Buttons,
       size,
       css,
       Icon,
@@ -66,12 +58,18 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const EnhancedIcon = React.isValidElement(Icon)
       ? React.cloneElement(Icon, {
           "data-active": hasFocus,
+          css: {
+            position: "absolute",
+            zIndex: "$10",
+            marginLeft: "$$paddingInline",
+            ...Icon.props.css,
+          },
         })
       : Icon;
 
     return (
       <StyledBox
-        css={{ color: disabled ? "$gray8" : undefined, ...css }}
+        css={{ $color: disabled ? "$gray8" : css?.color, ...css }}
         className={className}
         data-disabled={disabled}
         data-focus={hasFocus}
@@ -93,9 +91,32 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             inputFocusRef.current = e;
           }}
           disabled={disabled}
+          css={{
+            paddingLeft: EnhancedIcon
+              ? "calc($$paddingInline * 2 + 1em)"
+              : undefined,
+          }}
           {...props}
         />
-        {Buttons}
+        {/* <Button
+          size="small"
+          variant="ghost"
+          type="button"
+          disabled={!inputValue}
+          square
+          css={{
+            focusStyle: "inner",
+            opacity: inputValue ? 1 : "0 !important",
+          }}
+          onClick={() => {
+            clearErrors(name);
+            return reset();
+          }}
+        >
+          <Icon label="Entferne die momentan ausgewählte Option">
+            <X />
+          </Icon>
+        </Button> */}
       </StyledBox>
     );
   }

@@ -29,8 +29,15 @@ import {
   blue,
   blueA,
 } from "@radix-ui/colors";
-import { ColorKeys, aliasColor, TextStyles } from "../internal/utils";
+import {
+  ColorKeys,
+  aliasColor,
+  TextStyles,
+  SystemColors,
+} from "../internal/utils";
 import { Prefixed } from "@stitches/react/types/util";
+
+type focusStyleTypes = "inner-within" | "outer-within" | "outer" | "inner";
 
 export const designSystem = createStitches({
   theme: {
@@ -51,9 +58,13 @@ export const designSystem = createStitches({
       ...aliasColor("infoA", blueA),
       ...aliasColor("colorScheme", slate, true),
       black: "$colors$gray12",
-      white: "$colors$gray1",
+      white: "#ffffff",
       shadowColor: "rgba(17, 24, 28, 0.1)",
-      background: "$colors$gray1",
+      layer1: "$white",
+      layer2: "$gray1",
+      layer3: "$gray2",
+      layer4: "$gray3",
+      layer5: "$gray6",
     },
     space: {
       1: "4px",
@@ -70,37 +81,37 @@ export const designSystem = createStitches({
       12: "128px",
     },
     fontSizes: {
-      "extra-large-heading": "4.5rem",
-      "large-heading": "3rem",
-      "medium-heading": "2rem",
-      "small-heading": "1.5rem",
-      "extra-small-heading": "1.25rem",
-      "large-text": "1.125rem",
-      "medium-text": "1rem",
-      "small-text": "0.875rem",
-      "extra-small-text": "0.75rem",
+      "extra-large-heading": "3rem",
+      "large-heading": "2rem",
+      "medium-heading": "1.5rem",
+      "small-heading": "1.125rem",
+      "extra-small-heading": "1rem",
+      "large-text": "1rem",
+      "medium-text": "0.875rem",
+      "small-text": "0.75rem",
+      "extra-small-text": "0.625rem",
     },
     letterSpacings: {
-      "extra-large-heading": "-0.012em",
-      "large-heading": "- 0.012em",
+      "extra-large-heading": "0",
+      "large-heading": "0",
       "medium-heading": "0",
       "small-heading": "0",
       "extra-small-heading": "0",
       "large-text": "0",
       "medium-text": "0",
       "small-text": "0",
-      "extra-small-text": "0.04em",
+      "extra-small-text": "0.02em",
     },
     lineHeights: {
-      "extra-large-heading": "1.25em",
+      "extra-large-heading": "1.15em",
       "large-heading": "1.25em",
-      "medium-heading": "1.25em",
-      "small-heading": "1.25em",
+      "medium-heading": "1.3em",
+      "small-heading": "1.3em",
       "extra-small-heading": "1.25em",
       "large-text": "1.5em",
-      "medium-text": "1.5em",
-      "small-text": "1.5em",
-      "extra-small-text": "1.5em",
+      "medium-text": "1.4em",
+      "small-text": "1.3em",
+      "extra-small-text": "1.6em",
     },
     shadows: {
       1: "0px 1px 2px $colors$shadowColor",
@@ -174,8 +185,8 @@ export const designSystem = createStitches({
       "--colors-colorScheme11": `$colors$${value}11`,
       "--colors-colorScheme12": `$colors$${value}12`,
     }),
-    colorFallback: (value: StitchesScaleValue<"colors"> | "inherit") => ({
-      color: `var(--color, ${value})`,
+    colorFallback: (value: `$${keyof SystemColors}`) => ({
+      color: `var(--color, $colors${value})`,
     }),
     textStyle: (value: TextStyles | "inherit") => {
       const sharedTextStyles = {
@@ -211,9 +222,7 @@ export const designSystem = createStitches({
           return { fontFamily: "$text", ...sharedTextStyles };
       }
     },
-    focusStyle: (
-      value: "inner-within" | "outer-within" | "outer" | "inner"
-    ) => {
+    focusStyle: (value: focusStyleTypes) => {
       switch (value) {
         case "outer":
         case "outer-within": {
@@ -222,9 +231,7 @@ export const designSystem = createStitches({
 
           return {
             [`&:focus-visible, ${focusWithin}, &[data-focus='true']`]: {
-              boxShadow:
-                "0 0 0 1px $colors$background, 0 0 0 3px var(--focusColor, $colors$primary10)",
-              borderColor: "$background",
+              boxShadow: `0 0 0 1px var(--layer), 0 0 0 3px var(--focusColor, $colors$primary10)`,
               outline: "none",
             },
           };
@@ -236,16 +243,28 @@ export const designSystem = createStitches({
 
           return {
             [`&:focus-visible, ${focusWithin}, &[data-focus='true']`]: {
-              boxShadow: "inset 0 0 0 1px var(--focusColor, $colors$primary10)",
-              borderColor: "var(--focusColor, $colors$primary10)",
+              boxShadow: `inset 0 0 0 1px var(--focusColor, $colors$primary10)`,
+              borderColor: `var(--focusColor, $colors$primary10)`,
               outline: "none",
             },
           };
         }
       }
     },
+    focusColor: (value: `$${keyof SystemColors}`) => ({
+      $focusColor: `$colors${value}`,
+    }),
+    groupColor: (value: `$${keyof SystemColors}`) => ({
+      "--color": `$colors${value}`,
+      color: value,
+    }),
+    layer: (value: "1" | "2" | "3" | "4" | "5") => ({
+      backgroundColor: `$layer${value}`,
+      "--layer": `$colors$layer${value}`,
+    }),
   },
 });
+
 export * from "@stitches/react";
 
 export type StyleObject = CSS<typeof designSystem>;
@@ -300,6 +319,7 @@ export const globalStyles = globalCss({
   },
   "html, body": {
     height: "100%",
+    color: "$black",
   },
   body: {
     lineHeight: "1.5",
@@ -339,6 +359,10 @@ export const darkTheme = createTheme("dark", {
     ...aliasColor("colorScheme", slateDark),
     black: "$colors$gray1",
     white: "$colors$gray12",
-    background: "$colors$gray3",
+    layer1: "$black",
+    layer2: "$gray1",
+    layer3: "$gray2",
+    layer4: "$gray3",
+    layer5: "$gray6",
   },
 });

@@ -24,7 +24,7 @@ export const InputWithButton = ({
   ...props
 }: InputWithButtonProps) => {
   return (
-    <StyledBox css={css}>
+    <StyledBox css={{ ...css, borderRadius: radius }}>
       {React.cloneElement(Input, {
         ...props,
         css: {

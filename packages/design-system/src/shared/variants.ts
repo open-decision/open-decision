@@ -39,16 +39,16 @@ export const padding = css({
 export const alignByContent = css({
   $$XTranslation: 0,
   $$borderWidth: 0,
-  $$paddingInline: 0,
+  $$$paddingInline: 0,
   transform: "translateX($$XTranslation)",
 
   variants: {
     alignByContent: {
       left: {
-        $$XTranslation: "calc(($$borderWidth + $$paddingInline) * -1)",
+        $$XTranslation: "calc(($$borderWidth + $$$paddingInline) * -1)",
       },
       right: {
-        $$XTranslation: "calc($$borderWidth + $$paddingInline)",
+        $$XTranslation: "calc($$borderWidth + $$$paddingInline)",
       },
       center: {
         $$XTranslation: "0px",

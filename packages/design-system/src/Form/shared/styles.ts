@@ -22,9 +22,21 @@ export const baseInputStyles = css({
 export const baseTextInputStyle = css(alignByContent, {
   variants: {
     size: {
-      small: { $$paddingBlock: "$space$1", textStyle: "extra-small-text" },
-      medium: { $$paddingBlock: "$space$2" },
-      large: { $$paddingInline: "$space$3" },
+      small: {
+        $$paddingBlock: "$space$2",
+        $$paddingInline: "$space$2",
+        textStyle: "small-text",
+      },
+      medium: {
+        $$paddingBlock: "calc($space$3 - 2px)",
+        $$paddingInline: "$space$3",
+        textStyle: "medium-text",
+      },
+      large: {
+        $$paddingInline: "$space$3",
+        $$paddingBlock: "$space$4",
+        textStyle: "large-text",
+      },
     },
   },
 

@@ -38,4 +38,19 @@ export const overlayCss = css({
       '&[data-side="left"]': { animationName: slideRightAndFade },
     },
   },
+
+  variants: {
+    mode: {
+      light: {
+        groupColor: "$black",
+      },
+      dark: {
+        groupColor: "$white",
+      },
+    },
+  },
+
+  defaultVariants: {
+    mode: "light",
+  },
 });

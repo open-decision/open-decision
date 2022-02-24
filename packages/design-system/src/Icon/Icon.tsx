@@ -1,21 +1,21 @@
 import * as React from "react";
 import { styled, css } from "../stitches";
-import { alignByContent } from "../shared/variants";
 import * as AccessibleIcon from "@radix-ui/react-accessible-icon";
-import { iconSizes } from "./shared";
 
-export const iconStyles = css(alignByContent, iconSizes, {
-  transform: "translate($$XTranslation)",
+export const iconStyles = css({
   display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
+  width: "1em",
+  height: "1em",
 
-  "&[data-active='true'] > svg": {
-    stroke: "$colorScheme10",
+  "& svg": {
+    width: "1em",
+    height: "1em",
   },
 
-  defaultVariants: {
-    size: "medium",
+  "&[data-active='true'] > svg": {
+    stroke: "$colorScheme11",
   },
 });
 
