@@ -9,10 +9,9 @@ const styledMotionDiv = css({
   position: "relative",
   backgroundColor: "$gray2",
   gap: "$6",
-  boxShadow: "$1",
   paddingInlineEnd: "$5",
-  paddingInlineStart: "calc($space$5 - 1px)",
-  paddingBlock: "$6",
+  paddingInlineStart: "$5",
+  paddingBlock: "$5",
 });
 
 type SidebarProps = {

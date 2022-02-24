@@ -5,9 +5,7 @@ import {
   Text,
   Tooltip,
 } from "@open-legal-tech/design-system";
-import { useSync } from "features/Builder/state/syncMachine/useSync";
 import { Check, XOctagon } from "react-feather";
-import { LoadingSpinner } from "components/LoadingSpinner";
 
 const SyncTooltipContent = styled(Tooltip.Content, {
   padding: "$3",

@@ -5,13 +5,11 @@ import {
   styled,
   Box,
   darkTheme,
-  Button,
 } from "@open-legal-tech/design-system";
 import { UserMenu } from "./UserMenu";
-import { addNode } from "features/Builder/state/treeStore/treeStore";
 
 const Container = styled("div", {
-  backgroundColor: "$gray2",
+  layer: "1",
   paddingInline: "$4",
 });
 
@@ -19,7 +17,7 @@ const Content = styled("header", {
   display: "flex",
   alignItems: "center",
   gap: "$6",
-  $color: "$colors$gray1",
+  groupColor: "$gray11",
   paddingBlock: "$3",
 });
 
@@ -34,7 +32,6 @@ export const BaseHeader = ({ children, css }: BaseHeaderProps) => {
           css={{
             display: "flex",
             alignItems: "center",
-            color: "$gray11",
             width: "100%",
           }}
         >

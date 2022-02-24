@@ -6,6 +6,7 @@ import {
   Dialog,
   DialogTriggerProps,
   Text,
+  styled,
 } from "@open-legal-tech/design-system";
 import {
   TreesQuery,
@@ -13,17 +14,15 @@ import {
 } from "features/Data/generated/graphql";
 import { queryClient } from "features/Data/queryClient";
 import * as React from "react";
-import {
-  DashboardDialog,
-  DashboardDialogProps,
-} from "./DashboardDialogPrimitive";
+
+const Bold = styled("span", { color: "$gray12" });
 
 type Props = DialogTriggerProps & {
   tree: TreesQuery["decisionTrees"][0];
-  open: boolean;
-  setOpen: (open: boolean) => void;
+  open?: boolean;
+  setOpen?: (open: boolean) => void;
   focusOnClose?: () => void;
-} & DashboardDialogProps;
+};
 
 export function DeleteTreeDialog({
   tree,
@@ -32,39 +31,38 @@ export function DeleteTreeDialog({
   focusOnClose,
   children,
 }: Props) {
-  const [Form, { register }] = useForm({ defaultValues: { treeName: "" } });
+  const [Form, { register }] = useForm({
+    defaultValues: { treeName: "" },
+  });
 
   const { mutate: deleteTree, isLoading } = useDeleteTreeMutation({
     onSuccess: () => {
       queryClient.invalidateQueries("Trees");
-      setOpen(false);
+      setOpen?.(false);
     },
   });
 
   return (
-    <DashboardDialog.Root open={open} onOpenChange={setOpen}>
-      {children ? (
-        <DashboardDialog.Trigger>{children}</DashboardDialog.Trigger>
-      ) : null}
-      <DashboardDialog.Content onCloseAutoFocus={focusOnClose}>
-        <DashboardDialog.Header>Projekt löschen</DashboardDialog.Header>
-        <DashboardDialog.Description asChild>
-          <Text css={{ marginBottom: "$6" }}>
-            Bitte geben Sie den Namen des Projekts: <strong>{tree.name}</strong>{" "}
-            zur Bestätigung der Löschung ein.
+    <Dialog.Root open={open} onOpenChange={setOpen}>
+      {children ? <Dialog.Trigger asChild>{children}</Dialog.Trigger> : null}
+      <Dialog.Content onCloseAutoFocus={focusOnClose}>
+        <Dialog.Header css={{ marginBottom: "$2" }}>
+          Projekt löschen
+        </Dialog.Header>
+        <Dialog.Description asChild>
+          <Text css={{ marginBottom: "$4" }}>
+            Bitte geben Sie den Namen des Projekts: <Bold>{tree.name}</Bold> zur
+            Bestätigung der Löschung ein.
           </Text>
-        </DashboardDialog.Description>
+        </Dialog.Description>
         <Form
           css={{ display: "flex", flexDirection: "column" }}
           onSubmit={() => deleteTree({ id: tree.id })}
         >
-          <DashboardDialog.Description asChild>
-            <Label size="small" htmlFor="treeName">
-              Projektname
-            </Label>
-          </DashboardDialog.Description>
+          <Label size="small" htmlFor="treeName">
+            Projektname
+          </Label>
           <Input
-            autoFocus
             {...register("treeName", {
               required: {
                 value: true,
@@ -73,20 +71,18 @@ export function DeleteTreeDialog({
               validate: (val) =>
                 val === tree.name ? true : "Die Namen stimmen nicht überein.",
             })}
+            placeholder={tree.name}
             name="treeName"
             id="treeName"
-            css={{ marginBlock: "$2" }}
+            css={{ marginBlock: "$2", layer: "2" }}
             required
           />
           <ValidationMessage name="treeName" />
-          <DashboardDialog.SubmitButton
-            isLoading={isLoading}
-            colorScheme="danger"
-          >
+          <Dialog.ButtonRow isLoading={isLoading} colorScheme="danger">
             Löschen
-          </DashboardDialog.SubmitButton>
+          </Dialog.ButtonRow>
         </Form>
-      </DashboardDialog.Content>
-    </DashboardDialog.Root>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 }

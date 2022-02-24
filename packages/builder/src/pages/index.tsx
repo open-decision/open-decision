@@ -1,10 +1,15 @@
 import { BuilderTree } from "@open-decision/type-classes";
-import { Box, Heading, Stack, styled } from "@open-legal-tech/design-system";
-import { Separator } from "@radix-ui/react-separator";
+import {
+  Box,
+  Button,
+  Heading,
+  LoadingSpinner,
+  Stack,
+  styled,
+} from "@open-legal-tech/design-system";
 import { ErrorBoundary } from "@sentry/nextjs";
 import { BaseHeader, FileInput, MainContent } from "components";
-import { LoadingSpinner } from "components/LoadingSpinner";
-import { NewTreeButton } from "features/Dashboard/NewTreeButton";
+import { CreateTreeDialog } from "features/Dashboard/components/Dialogs/CreateTreeDialog";
 import { TreeList } from "features/Dashboard/TreeList";
 import {
   useCreateTreeMutation,
@@ -29,17 +34,11 @@ export default function DashboardPage() {
 
 const DashboardGrid = styled(MainContent, {
   display: "grid",
-  height: "100%",
-  gridTemplateRows: "max-content max-content max-content 1fr",
-  gridTemplateColumns: `1fr min(1000px, 100%) 1fr`,
-  backgroundColor: "$gray2",
-});
-
-const StyledSeparator = styled(Separator, {
-  gridColumn: 2,
-  height: "1px",
-  backgroundColor: "$gray7",
-  marginBlock: "$6",
+  height: "100vh",
+  overflow: "hidden",
+  gridTemplateRows: "max-content max-content 1fr",
+  gridTemplateColumns: `1fr min(1000px, 90%) 1fr`,
+  layer: "4",
 });
 
 function Dashboard() {
@@ -56,20 +55,18 @@ function Dashboard() {
 
   return (
     <DashboardGrid>
-      <BaseHeader css={{ gridRow: 1, gridColumn: "1 / -1" }} />
+      <BaseHeader css={{ gridColumn: "1 / -1" }} />
       <Stack
         css={{
-          flexDirection: "row",
           gridColumn: 2,
-          marginTop: "$10",
-          alignItems: "baseline",
+          flexDirection: "row",
+          marginBlock: "$10 $8",
           justifyContent: "space-between",
         }}
       >
         <Heading size="large">Meine Projekte</Heading>
-        <Stack css={{ flexDirection: "row", gap: "$4" }}>
+        <Stack css={{ flexDirection: "row", gap: "$3", alignItems: "center" }}>
           <FileInput
-            size="small"
             onChange={(event) => {
               if (!event.currentTarget.files?.[0]) return;
 
@@ -106,15 +103,18 @@ function Dashboard() {
           >
             Projekt importieren
           </FileInput>
-          <NewTreeButton size="small">Neues Projekt erstellen</NewTreeButton>
+          <CreateTreeDialog>
+            <Button>Neues Projekt erstellen</Button>
+          </CreateTreeDialog>
         </Stack>
       </Stack>
-      <StyledSeparator />
       <Stack
         css={{
-          gridColumn: 2,
-          overflow: "hidden",
           justifyContent: !hasTrees ? "center" : undefined,
+          overflow: "auto",
+          marginInline: "-$4",
+          gridColumn: 2,
+          height: "100%",
         }}
       >
         {isLoading ? (

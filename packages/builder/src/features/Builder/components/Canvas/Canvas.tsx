@@ -36,7 +36,7 @@ const Container = styled("div", {
   height: "100%",
   width: "100vw",
   position: "relative",
-  backgroundColor: "$gray1",
+
 });
 
 const canvasStyles = css({

@@ -11,15 +11,25 @@ import {
   Stack,
   useForm,
 } from "@open-legal-tech/design-system";
-import { Search, Sliders, TrendingDown, TrendingUp } from "react-feather";
+import { ChevronUp, Search } from "react-feather";
 import { TreesQuery } from "features/Data/generated/graphql";
 import { TreeCard } from "./TreeCard";
 
+const sortReadableNames = {
+  updatedAt: "Zuletzt bearbeitet",
+  createdAt: "Erstellungsdatum",
+};
+
+const sortDirectionReadableNames = {
+  descending: "Absteigend",
+  ascending: "Aufsteigend",
+};
+
 type TreeListProps = { data: TreesQuery["decisionTrees"] };
-type sortState = { key: string; descending: boolean };
+type sortState = { key: string; direction: "ascending" | "descending" };
 
 const sortData = (sort: sortState) => (data: any[]) =>
-  sort.descending
+  sort.direction === "descending"
     ? sortByKey(data, sort.key)
     : sortByKey(data, sort.key).reverse();
 
@@ -33,7 +43,7 @@ export const TreeList = ({ data }: TreeListProps) => {
   >([]);
   const [sort, setSort] = React.useState<sortState>({
     key: "updatedAt",
-    descending: false,
+    direction: "ascending",
   });
 
   const [Form] = useForm({
@@ -59,32 +69,21 @@ export const TreeList = ({ data }: TreeListProps) => {
     handleFilterChange();
   }, [handleFilterChange]);
 
-  const handleSort = (key: string) =>
-    setSort({
-      key,
-      descending: sort.key === key ? !sort.descending : sort.descending,
-    });
-
-  const CheckboxIcon = sort.descending ? (
-    <Icon size="small">
-      <TrendingDown />
-    </Icon>
-  ) : (
-    <Icon size="small">
-      <TrendingUp />
-    </Icon>
-  );
-
   return (
     <>
       <Form
         onSubmit={handleFilterChange}
-        css={{ display: "flex", gap: "$2", justifyContent: "space-between" }}
+        css={{
+          display: "flex",
+          gap: "$2",
+          justifyContent: "space-between",
+          paddingInline: "$4",
+        }}
       >
         <Field
           label="Suche"
           isLabelVisible={false}
-          css={{ flexBasis: "400px", backgroundColor: "white" }}
+          css={{ flexBasis: "400px", layer: "2" }}
         >
           <Input
             name="search"
@@ -99,56 +98,79 @@ export const TreeList = ({ data }: TreeListProps) => {
           />
         </Field>
         <DropdownMenu.Root>
-          <DropdownMenu.Trigger asChild>
-            <Button variant="ghost" css={{ gap: "$3" }}>
-              <span>current filter</span>
+          <Stack
+            css={{ flexDirection: "row", alignItems: "center", gap: "$2" }}
+          >
+            <DropdownMenu.Trigger asChild>
+              <Button
+                variant="neutral"
+                css={{
+                  gap: "$3",
+                }}
+              >
+                <span>{sortReadableNames[sort.key]}</span>
+              </Button>
+            </DropdownMenu.Trigger>
+            <Button
+              onClick={() =>
+                setSort({
+                  ...sort,
+                  direction:
+                    sort.direction === "descending"
+                      ? "ascending"
+                      : "descending",
+                })
+              }
+              data-direction={sort.direction}
+              variant="tertiary"
+              size="small"
+              css={{
+                svg: {
+                  transition: "transform 0.2s ease-in",
+                  transform: "rotate(0deg)",
+                },
+
+                "&[data-direction='descending']": {
+                  svg: {
+                    transform: "rotate(180deg)",
+                  },
+                },
+              }}
+            >
+              {sortDirectionReadableNames[sort.direction]}
               <Icon>
-                <Sliders />
+                <ChevronUp />
               </Icon>
             </Button>
-          </DropdownMenu.Trigger>
+          </Stack>
           <DropdownMenu.Content align="start">
             <DropdownMenu.CheckboxItem
-              Icon={CheckboxIcon}
               checked={sort.key === "updatedAt"}
-              onSelect={() => handleSort("updatedAt")}
+              onSelect={() => setSort({ ...sort, key: "updatedAt" })}
             >
-              Zuletzt bearbeitet
+              {sortReadableNames.updatedAt}
             </DropdownMenu.CheckboxItem>
             <DropdownMenu.CheckboxItem
-              Icon={CheckboxIcon}
               checked={sort.key === "createdAt"}
-              onSelect={() => handleSort("createdAt")}
+              onSelect={() => setSort({ ...sort, key: "createdAt" })}
             >
-              Erstellungsdatum
-            </DropdownMenu.CheckboxItem>
-            <DropdownMenu.CheckboxItem disabled>
-              Nur fertige Projekte
-            </DropdownMenu.CheckboxItem>
-            <DropdownMenu.CheckboxItem disabled>
-              Nur unfertige Projekte
-            </DropdownMenu.CheckboxItem>
-            <DropdownMenu.CheckboxItem disabled>
-              Nur veröffentlichte Projekte
-            </DropdownMenu.CheckboxItem>
-            <DropdownMenu.CheckboxItem disabled>
-              Nur unveröffentlichte Projekte
+              {sortReadableNames.createdAt}
             </DropdownMenu.CheckboxItem>
           </DropdownMenu.Content>
         </DropdownMenu.Root>
       </Form>
       <Stack
         css={{
-          gap: "$4",
+          gap: "$3",
           marginTop: "$1",
-          overflow: "auto",
           paddingBlock: "$4",
-          paddingRight: "$4",
-          marginRight: "-$4",
+          paddingInline: "$4",
+          overflow: "auto",
+          height: "100%",
         }}
       >
         {filteredData.map((tree) => (
-          <motion.div key={tree.id} layout>
+          <motion.div key={tree.id} layout transition={{ duration: 0.5 }}>
             <TreeCard tree={tree} />
           </motion.div>
         ))}

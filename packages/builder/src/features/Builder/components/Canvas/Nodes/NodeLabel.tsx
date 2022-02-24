@@ -4,7 +4,7 @@ export const NodeLabel = styled("span", Stack, {
   borderRadius: "$md",
   backgroundColor: "$success2",
   flexDirection: "row",
-  textStyle: "extra-small-text",
+  textStyle: "small-text",
   alignItems: "center",
   gap: "$1",
   padding: "$1",

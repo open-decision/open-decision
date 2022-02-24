@@ -82,12 +82,13 @@ const NodeCreatorInput = ({ createHandler, autoFocus }) => {
   return (
     <Box css={{ width: "300px" }}>
       <Combobox.Input
-        css={{ backgroundColor: "$gray1", zIndex: "5" }}
+        css={{ zIndex: "5" }}
         name="search"
         maxLength={nodeNameMaxLength}
       >
         {(field) => (
           <InputWithButton
+            css={{ layer: "2" }}
             Input={
               <Input
                 {...field}
@@ -105,8 +106,8 @@ const NodeCreatorInput = ({ createHandler, autoFocus }) => {
                   selectNode(newNode.id);
                   setInputValue("");
                 }}
-                draggable
                 square
+                draggable
               >
                 <Icon label="Füge einen neuen Knoten hinzu">
                   <Plus />

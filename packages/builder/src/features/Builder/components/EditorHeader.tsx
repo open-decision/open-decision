@@ -26,7 +26,7 @@ export const EditorHeader = ({ css }: HeaderProps) => {
         {hasNodes() ? (
           <Link passHref href="/vorschau">
             <SystemLink
-              className={buttonStyles({ variant: "tertiary", size: "small" })}
+              className={buttonStyles({ variant: "tertiary" })}
               underline={false}
             >
               Vorschau
@@ -35,7 +35,6 @@ export const EditorHeader = ({ css }: HeaderProps) => {
         ) : (
           <Button
             variant="tertiary"
-            size="small"
             onClick={() =>
               addNotification({
                 variant: "info",

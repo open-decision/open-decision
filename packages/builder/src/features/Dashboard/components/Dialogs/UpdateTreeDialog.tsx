@@ -3,22 +3,19 @@ import {
   Label,
   Input,
   ValidationMessage,
+  Dialog,
   DialogTriggerProps,
 } from "@open-legal-tech/design-system";
 import { useUpdateTreeMutation } from "features/Data/generated/graphql";
 import { queryClient } from "features/Data/queryClient";
 import * as React from "react";
-import {
-  DashboardDialog,
-  DashboardDialogProps,
-} from "./DashboardDialogPrimitive";
 
 type Props = DialogTriggerProps & {
   treeId: number;
-  open: boolean;
-  setOpen: (open: boolean) => void;
+  open?: boolean;
+  setOpen?: (open: boolean) => void;
   focusOnClose?: () => void;
-} & DashboardDialogProps;
+};
 
 export function UpdateTreeDialog({
   treeId,
@@ -32,31 +29,28 @@ export function UpdateTreeDialog({
   const { mutate: updateTree, isLoading } = useUpdateTreeMutation({
     onSuccess: () => {
       queryClient.invalidateQueries("Trees");
-      setOpen(false);
+      setOpen?.(false);
     },
   });
 
   return (
-    <DashboardDialog.Root open={open} onOpenChange={setOpen}>
-      {children ? (
-        <DashboardDialog.Trigger>{children}</DashboardDialog.Trigger>
-      ) : null}
-      <DashboardDialog.Content
-        css={{ minWidth: "350px", paddingTop: "$2", zIndex: "$10" }}
-        onCloseAutoFocus={focusOnClose}
-      >
-        <DashboardDialog.Header>Projektname ändern</DashboardDialog.Header>
+    <Dialog.Root open={open} onOpenChange={setOpen}>
+      {children ? <Dialog.Trigger asChild>{children}</Dialog.Trigger> : null}
+      <Dialog.Content onCloseAutoFocus={focusOnClose}>
+        <Dialog.Header css={{ marginBottom: "$4" }}>
+          Projektname ändern
+        </Dialog.Header>
         <Form
           css={{ display: "flex", flexDirection: "column" }}
           onSubmit={({ treeName }) =>
             updateTree({ data: { name: { set: treeName } }, id: treeId })
           }
         >
-          <DashboardDialog.Description asChild>
-            <Label size="small" htmlFor="treeName">
+          <Dialog.Description asChild>
+            <Label size="small" htmlFor="treeName" css={{ color: "$gray12" }}>
               Projektname
             </Label>
-          </DashboardDialog.Description>
+          </Dialog.Description>
           <Input
             autoFocus
             {...register("treeName", {
@@ -65,20 +59,18 @@ export function UpdateTreeDialog({
                 message: "Es muss ein Name vergeben werden.",
               },
             })}
+            placeholder="Mein Projektname"
             name="treeName"
             id="treeName"
-            css={{ marginBlock: "$2" }}
+            css={{ marginBlock: "$2", layer: "2" }}
             required
           />
           <ValidationMessage name="treeName" />
-          <DashboardDialog.SubmitButton
-            isLoading={isLoading}
-            colorScheme="success"
-          >
+          <Dialog.ButtonRow isLoading={isLoading} colorScheme="success">
             Erstellen
-          </DashboardDialog.SubmitButton>
+          </Dialog.ButtonRow>
         </Form>
-      </DashboardDialog.Content>
-    </DashboardDialog.Root>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 }

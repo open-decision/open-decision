@@ -42,6 +42,7 @@ const StyledReorderGroup = styled(Reorder.Group, {
   display: "grid",
   gap: "$4",
 });
+
 type SingleSelectProps = { node: BuilderNode.TNode };
 
 export function OptionTargetInputs({ node }: SingleSelectProps) {
@@ -53,32 +54,31 @@ export function OptionTargetInputs({ node }: SingleSelectProps) {
       <Box
         css={{
           display: "flex",
-          justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: "$1",
+          justifyContent: "space-between",
+          gap: "$2",
+          marginBottom: "$3",
         }}
       >
-        <Label
-          size="small"
-          as="h2"
-          css={{ margin: 0, display: "block", color: "$gray11" }}
-        >
+        <Label as="h2" css={{ margin: 0, display: "block" }}>
           Pfade
         </Label>
         <Button
-          variant="neutral"
-          square
+          size="small"
+          variant="secondary"
           onClick={() => addRelation(node.id, {})}
         >
           <Icon label="Neue Antwortmöglichkeit hinzufügen">
             <Plus />
           </Icon>
+          Hinzufügen
         </Button>
       </Box>
       <StyledReorderGroup
         ref={ref}
         axis="y"
         values={relations}
+        initial={false}
         onReorder={(newOrder: BuilderRelation.TRelation[]) =>
           updateNodeRelations(
             node.id,
@@ -156,7 +156,7 @@ export function OptionTargetInput({
           display: "flex",
           position: "relative",
           gap: "$1",
-          $color: "$black",
+          groupColor: "$colorScheme-text",
         }}
       >
         <Box
@@ -166,9 +166,9 @@ export function OptionTargetInput({
             flex: 1,
             display: "grid",
             gridTemplateColumns: "max-content 1fr",
-            border: "1px solid $gray8",
             borderRadius: "$md",
-            backgroundColor: "$gray1",
+            gap: "1px",
+            layer: "2",
           }}
         >
           <ControlledInput
@@ -184,9 +184,6 @@ export function OptionTargetInput({
                   borderTopLeftRadius: "inherit",
                   borderTopRightRadius: "inherit",
                   gridColumn: "1 / -1",
-                  borderBottom: "inherit",
-                  margin: "-1px",
-                  marginBottom: 0,
                 }}
                 placeholder="Antwort"
                 onBlur={() => {
@@ -202,6 +199,7 @@ export function OptionTargetInput({
             name="target"
             onCreate={(name) => {
               const newNode = addAssociatedNode(node.id, relation.id, { name });
+              if (!newNode) return { id: "", label: "" };
 
               return { id: newNode.id, label: newNode.name };
             }}
@@ -211,18 +209,14 @@ export function OptionTargetInput({
             items={allOptions}
             subsetOfItems={nodeOptions}
           >
-            <Combobox.Input
-              menuCss={{
-                backgroundColor: "$gray1",
-                "&[data-state='open']": { border: "1px solid $gray8" },
-              }}
-              onBlur={deselectRelation}
-              name="target"
-            >
+            <Combobox.Input onBlur={deselectRelation} name="target">
               {(field) => (
                 <Input
                   placeholder="Zielknoten auswählen"
-                  css={{ border: 0, borderRadius: 0, color: "$black" }}
+                  css={{
+                    borderRadius: 0,
+                    borderBottomRightRadius: "$md",
+                  }}
                   {...field}
                 />
               )}
@@ -237,8 +231,7 @@ export function OptionTargetInput({
           }}
         >
           <Button
-            variant="ghost"
-            size="small"
+            variant="neutral"
             type="button"
             square
             onPointerDown={(event) => controls.start(event)}
@@ -248,8 +241,7 @@ export function OptionTargetInput({
             </Icon>
           </Button>
           <Button
-            variant="ghost"
-            size="small"
+            variant="neutral"
             type="button"
             square
             onClick={() => onDelete(relation.id)}
@@ -277,12 +269,10 @@ function NodeLink({ target, ...props }: NodeLinkProps) {
         boxShadow: "none",
         borderRadius: "0",
         borderBottomLeftRadius: "inherit",
-        border: "none",
-        borderRight: "inherit",
         focusStyle: "inner",
-        width: "40px",
         maxWidth: "100%",
         colorScheme: target ? "primary" : "gray",
+        border: "1px solid",
       }}
       pressable={false}
       size="small"
@@ -290,7 +280,6 @@ function NodeLink({ target, ...props }: NodeLinkProps) {
       onClick={() => {
         if (target) selectNode(target);
       }}
-      square
       type="button"
       disabled={!target}
       {...props}

@@ -36,7 +36,7 @@ const FileInputImpl = (
   ref: ForwardedRef<HTMLLabelElement>
 ) => {
   return (
-    <StyledLabel variant="secondary" css={css} ref={ref} square {...props}>
+    <StyledLabel variant="tertiary" css={css} ref={ref} {...props}>
       {children}
       <HiddenInput type="file" onChange={onChange} />
     </StyledLabel>

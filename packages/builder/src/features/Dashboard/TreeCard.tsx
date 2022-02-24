@@ -13,15 +13,22 @@ import de from "date-fns/locale/de";
 import { TreesQuery } from "features/Data/generated/graphql";
 import { MoreHorizontal } from "react-feather";
 import { DeleteTreeDialog } from "./components/Dialogs/DeleteTreeDialog";
-import { TreeTags } from "./TreeTags";
-import { UpdateTreeDialog } from "./components/Dialogs/UpdateTreeDialog";
 import Link from "next/link";
+import { UpdateTreeDialog } from "./components/Dialogs/UpdateTreeDialog";
 
-const Card = styled(Stack, {
+const Card = styled("a", Stack, {
+  position: "relative",
   padding: "$5",
   border: "1px solid $gray7",
   borderRadius: "$md",
-  backgroundColor: "white",
+  layer: "1",
+  transition: "all 0.2s ease-in-out",
+  textDecoration: "none",
+
+  "&:hover, &:focus-within": {
+    transform: "scale(1.02)",
+    boxShadow: "$3",
+  },
 });
 
 type Props = { tree: TreesQuery["decisionTrees"][0] };
@@ -64,47 +71,47 @@ export function TreeCard({ tree }: Props) {
   return (
     <>
       <Dialog />
-      <Link href={`/builder/${tree.id}`}>
-        <Card css={{ cursor: "pointer" }}>
-          <Stack
-            css={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBlock: "-$3",
-            }}
-          >
-            <Heading size="small">{tree.name}</Heading>
-            <DropdownMenu.Root>
-              <DropdownMenu.Trigger asChild ref={dropdownTriggerRef}>
-                <Button variant="ghost" square>
-                  <Icon label="Projektmenü">
-                    <MoreHorizontal />
-                  </Icon>
-                </Button>
-              </DropdownMenu.Trigger>
-              <DropdownMenu.Content>
-                <DropdownMenu.Item
-                  onClick={(event) => event.stopPropagation()}
-                  onSelect={() => setOpenDialog("update")}
-                >
-                  Name ändern
-                </DropdownMenu.Item>
-                <DropdownMenu.Item
-                  onClick={(event) => event.stopPropagation()}
-                  onSelect={() => setOpenDialog("delete")}
-                >
-                  Löschen
-                </DropdownMenu.Item>
-              </DropdownMenu.Content>
-            </DropdownMenu.Root>
-          </Stack>
-          <Text css={{ color: "$gray11", marginTop: "$2" }}>
+      <Link href={`/builder/${tree.id}`} passHref>
+        <Card
+          css={{ cursor: "pointer" }}
+          title={`Öffne das Projekt ${tree.name}`}
+        >
+          <Heading size="small" css={{ marginBottom: "$1" }}>
+            {tree.name}
+          </Heading>
+          <DropdownMenu.Root>
+            <DropdownMenu.Trigger asChild ref={dropdownTriggerRef}>
+              <Button
+                variant="ghost"
+                square
+                css={{ position: "absolute", right: 20, top: 12 }}
+              >
+                <Icon label={`Projektmenü ${tree.name}`}>
+                  <MoreHorizontal />
+                </Icon>
+              </Button>
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Content>
+              <DropdownMenu.Item
+                onClick={(event) => event.stopPropagation()}
+                onSelect={() => setOpenDialog("update")}
+              >
+                Projektname ändern
+              </DropdownMenu.Item>
+              <DropdownMenu.Item
+                onClick={(event) => event.stopPropagation()}
+                onSelect={() => setOpenDialog("delete")}
+              >
+                Projekt löschen
+              </DropdownMenu.Item>
+            </DropdownMenu.Content>
+          </DropdownMenu.Root>
+          <Text css={{ color: "$gray11" }}>
             {formatRelative(parseISO(tree.updatedAt), new Date(), {
               locale: de,
             })}
           </Text>
-          <TreeTags tags={tree.tags} />
+          {/* <TreeTags tags={tree.tags} /> */}
         </Card>
       </Link>
     </>

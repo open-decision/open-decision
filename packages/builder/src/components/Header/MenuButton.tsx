@@ -7,10 +7,8 @@ function MenuButtonImpl({ label, css, ...props }: Props, ref) {
   return (
     <Button
       variant="ghost"
-      size="small"
       css={{
         minWidth: "max-content",
-        color: "$gray11",
 
         "&[data-state='open'] svg": {
           transform: "rotate(180deg)",

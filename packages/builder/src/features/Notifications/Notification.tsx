@@ -13,7 +13,7 @@ import { motion, useAnimation } from "framer-motion";
 import { Info, XCircle, CheckCircle, HelpCircle, X } from "react-feather";
 
 const icons = {
-  error: XCircle,
+  danger: XCircle,
   info: HelpCircle,
   success: CheckCircle,
   warning: Info,
@@ -104,6 +104,8 @@ export const Notification = ({ notification, id }: NotificationProps) => {
             marginBottom: "-2px",
             backgroundColor: "$colorScheme3",
             borderRadius: "$full",
+            width: "$5",
+            height: "$5",
             padding: "$3",
             color: "$$accentColor",
           }}

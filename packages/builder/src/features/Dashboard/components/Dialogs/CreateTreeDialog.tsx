@@ -4,42 +4,53 @@ import {
   Input,
   useForm,
   ValidationMessage,
+  Dialog,
+  DialogTriggerProps,
 } from "@open-legal-tech/design-system";
 import { useCreateTreeMutation } from "features/Data/generated/graphql";
 import { queryClient } from "features/Data/queryClient";
-import {
-  DashboardDialog,
-  DashboardDialogProps,
-} from "./DashboardDialogPrimitive";
 
-export const CreateTreeDialog = ({ children }: DashboardDialogProps) => {
+type Props = DialogTriggerProps & {
+  open?: boolean;
+  setOpen?: (open: boolean) => void;
+  focusOnClose?: () => void;
+};
+
+export const CreateTreeDialog = ({
+  children,
+  focusOnClose,
+  open,
+  setOpen,
+}: Props) => {
   const [Form, { register }] = useForm({ defaultValues: { treeName: "" } });
-
-  const [open, setOpen] = React.useState(false);
+  const [innerOpen, setInnerOpen] = React.useState(open);
 
   const { mutate: createTree, isLoading } = useCreateTreeMutation({
     onSuccess: () => {
       queryClient.invalidateQueries("Trees");
-      setOpen(false);
+      setOpen?.(false) ?? setInnerOpen(false);
     },
   });
 
   return (
-    <DashboardDialog.Root open={open} onOpenChange={setOpen}>
-      {children ? (
-        <DashboardDialog.Trigger>{children}</DashboardDialog.Trigger>
-      ) : null}
-      <DashboardDialog.Content>
-        <DashboardDialog.Header>Neues Projekt erstellen</DashboardDialog.Header>
+    <Dialog.Root
+      open={open ?? innerOpen}
+      onOpenChange={setOpen ?? setInnerOpen}
+    >
+      {children ? <Dialog.Trigger asChild>{children}</Dialog.Trigger> : null}
+      <Dialog.Content onCloseAutoFocus={focusOnClose}>
+        <Dialog.Header css={{ marginBottom: "$4" }}>
+          Neues Projekt erstellen
+        </Dialog.Header>
         <Form
           css={{ display: "flex", flexDirection: "column" }}
           onSubmit={({ treeName }) => createTree({ data: { name: treeName } })}
         >
-          <DashboardDialog.Description asChild>
-            <Label size="small" htmlFor="treeName">
+          <Dialog.Description asChild>
+            <Label size="small" htmlFor="treeName" css={{ color: "$gray12" }}>
               Projektname
             </Label>
-          </DashboardDialog.Description>
+          </Dialog.Description>
           <Input
             autoFocus
             {...register("treeName", {
@@ -50,18 +61,15 @@ export const CreateTreeDialog = ({ children }: DashboardDialogProps) => {
             })}
             name="treeName"
             id="treeName"
-            css={{ marginBlock: "$2" }}
+            css={{ marginBlock: "$2", layer: "2" }}
             required
           />
           <ValidationMessage name="treeName" />
-          <DashboardDialog.SubmitButton
-            isLoading={isLoading}
-            colorScheme="success"
-          >
+          <Dialog.ButtonRow isLoading={isLoading} colorScheme="success">
             Erstellen
-          </DashboardDialog.SubmitButton>
+          </Dialog.ButtonRow>
         </Form>
-      </DashboardDialog.Content>
-    </DashboardDialog.Root>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 };

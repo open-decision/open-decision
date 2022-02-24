@@ -14,7 +14,7 @@ import {
 } from "features/Builder/state/treeStore/hooks";
 
 const NodeContainer = styled(Stack, {
-  backgroundColor: "$primary1",
+  layer: "1",
   borderRadius: "$md",
   width: nodeWidth,
   minHeight: nodeHeight,
@@ -55,7 +55,7 @@ export const Node = memo(
         data-connecting={isConnecting}
         data-connectable={connectable}
         css={{
-          boxShadow: isSelected ? "$4" : "$2",
+          boxShadow: isSelected ? "$4" : "$3",
           border:
             isSelected && !isConnecting
               ? "2px solid $primary9"
@@ -67,7 +67,7 @@ export const Node = memo(
       >
         {isStartNode ? (
           <NodeLabel css={{ colorScheme: "success" }}>
-            <Icon size="extra-small">
+            <Icon>
               <Star />
             </Icon>
             Start
@@ -88,8 +88,8 @@ export const Node = memo(
             data-nodeid={id}
             css={{
               position: "absolute",
-              top: "$2",
-              right: "$2",
+              top: "$1",
+              right: "$1",
               transition: "opacity 100ms ease-in",
             }}
           >
@@ -104,7 +104,6 @@ export const Node = memo(
         <Text
           data-connecting={isConnecting}
           data-nodeid={id}
-          size="small"
           as="span"
           css={{ textAlign: "center", wordBreak: "break-word" }}
         >

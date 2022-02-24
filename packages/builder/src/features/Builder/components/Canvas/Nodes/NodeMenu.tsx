@@ -3,7 +3,6 @@ import {
   Icon,
   DropdownMenu,
   Tooltip,
-  Text,
   StyleObject,
 } from "@open-legal-tech/design-system";
 import {
@@ -24,12 +23,9 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <Button
-          size="extra-small"
-          variant="tertiary"
+          size="small"
+          variant="neutral"
           css={{
-            border: "1px solid $gray8",
-            colorScheme: "gray",
-            backgroundColor: "$gray1",
             focusStyle: "inner",
             ...css,
           }}
@@ -43,50 +39,33 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
       <DropdownMenu.Content>
         {isStartNode ? (
           <Tooltip.Root>
-            <Tooltip.Trigger asChild>
+            <Tooltip.Trigger style={{ all: "unset" }}>
               <DropdownMenu.Item
-                css={{ colorScheme: "danger" }}
                 onSelect={() => deleteNodes([nodeId])}
                 disabled
               >
-                <Icon
-                  label="Löschen Icon"
-                  size="extra-small"
-                  css={{ $$paddingInline: 0 }}
-                >
+                <Icon label="Löschen Icon" css={{ $$paddingInline: 0 }}>
                   <Trash />
                 </Icon>
                 Node löschen
               </DropdownMenu.Item>
             </Tooltip.Trigger>
             <Tooltip.Content>
-              <Text>Die Startnode kann nicht entfernt werden.</Text>
+              <Tooltip.Title>
+                Die Startnode kann nicht entfernt werden.
+              </Tooltip.Title>
             </Tooltip.Content>
           </Tooltip.Root>
         ) : (
           <>
-            <DropdownMenu.Item
-              css={{ colorScheme: "primary" }}
-              onSelect={() => updateStartNode(nodeId)}
-            >
-              <Icon
-                label="Zur Startnode machen"
-                size="extra-small"
-                css={{ $$paddingInline: 0 }}
-              >
+            <DropdownMenu.Item onSelect={() => updateStartNode(nodeId)}>
+              <Icon label="Zur Startnode machen" css={{ $$paddingInline: 0 }}>
                 <Star />
               </Icon>
               Zur Startnode machen
             </DropdownMenu.Item>
-            <DropdownMenu.Item
-              css={{ colorScheme: "danger" }}
-              onSelect={() => deleteNodes([nodeId])}
-            >
-              <Icon
-                label="Löschen Icon"
-                size="extra-small"
-                css={{ $$paddingInline: 0 }}
-              >
+            <DropdownMenu.Item onSelect={() => deleteNodes([nodeId])}>
+              <Icon label="Löschen Icon" css={{ $$paddingInline: 0 }}>
                 <Trash />
               </Icon>
               Node löschen

@@ -4,7 +4,6 @@ import React from "react";
 import { NodeCreator } from "./components/NodeCreator";
 import { NodeEditingSidebar } from "./components/NodeEditingSidebar";
 import { Canvas } from "./components/Canvas/Canvas";
-import { SyncIndicator } from "./components/Canvas/SyncIndicator";
 import { UndoRedo } from "./components/Canvas/UndoRedo";
 import { useSelectedNode } from "./state/treeStore/hooks";
 
@@ -23,18 +22,18 @@ export const NodeEditor = ({ css }: NodeEditorProps) => {
         <NodeCreator
           css={{
             position: "absolute",
-            top: "20px",
+            top: "$space$4",
             left: "$space$4",
           }}
         />
-        {/* <SyncIndicator /> */}
-        <UndoRedo />
+        {/* <UndoRedo /> */}
       </Canvas>
       <Sidebar
         css={{
           gridRow: "2",
           gridColumn: "2",
-          $color: "$colors$gray11",
+          groupColor: "$gray11",
+          layer: "1",
         }}
         open={sidebarOpen}
       >

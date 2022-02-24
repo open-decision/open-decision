@@ -6,13 +6,10 @@ import {
   ControlledInput,
   Input,
 } from "@open-legal-tech/design-system";
-import {
-  updateTreeName,
-  treeStore,
-} from "features/Builder/state/treeStore/treeStore";
+import { updateTreeName } from "features/Builder/state/treeStore/treeStore";
 import * as React from "react";
 import { ProjectMenu } from "./ProjectMenu";
-import { useSnapshot } from "valtio";
+import { useTree } from "../state/treeStore/hooks";
 
 const Container = styled(Box, {
   display: "flex",
@@ -22,8 +19,8 @@ const Container = styled(Box, {
 type Props = { css?: StyleObject };
 
 export function TreeNameInput({ css }: Props) {
-  const { name } = useSnapshot(treeStore);
-  const [Form] = useForm({ defaultValues: { name } });
+  const { name } = useTree();
+  const [Form] = useForm({ defaultValues: { name: name ?? "" } });
 
   return (
     <Container css={css}>

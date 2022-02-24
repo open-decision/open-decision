@@ -23,7 +23,7 @@ export function ExportButton({ css }: Props) {
 
   if (file instanceof Error)
     return (
-      <Button size="small" variant="secondary" disabled>
+      <Button variant="secondary" disabled>
         Export
       </Button>
     );
@@ -32,7 +32,7 @@ export function ExportButton({ css }: Props) {
 
   return (
     <Link
-      className={buttonStyles({ size: "small", variant: "secondary", css })}
+      className={buttonStyles({ variant: "secondary", css })}
       download={file ? `${tree.name}_${readableDate(new Date())}.json` : false}
       href={fileDownloadUrl}
       underline={false}
