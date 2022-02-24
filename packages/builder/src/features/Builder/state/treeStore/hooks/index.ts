@@ -4,20 +4,18 @@ import { treeStore } from "../treeStore";
 
 export function useSelectedNode() {
   const {
-    value: {
-      selectedNodeId,
-      treeData: { nodes },
-    },
+    metadata: { selectedNodeId },
+    treeData: { nodes },
   } = useSnapshot(treeStore);
 
-  if (!selectedNodeId) return undefined;
+  if (!selectedNodeId || !nodes) return undefined;
 
   return nodes[selectedNodeId];
 }
 
 export function useSelectedRelationId() {
   const {
-    value: { selectedRelationId },
+    metadata: { selectedRelationId },
   } = useSnapshot(treeStore);
 
   return selectedRelationId;
@@ -25,9 +23,7 @@ export function useSelectedRelationId() {
 
 export function useStartNode() {
   const {
-    value: {
-      treeData: { startNode },
-    },
+    treeData: { startNode },
   } = useSnapshot(treeStore);
 
   return startNode;
@@ -35,49 +31,46 @@ export function useStartNode() {
 
 export function useConnect() {
   const {
-    value: { connectionSourceNode, validConnections },
+    metadata: { connectionSourceNodeId, validConnections },
   } = useSnapshot(treeStore);
 
-  return { connectionSourceNode, validConnections };
+  return { connectionSourceNodeId, validConnections };
 }
 
 export function useNodes(ids?: string[]) {
   const {
-    value: {
-      treeData: { nodes },
-    },
+    treeData: { nodes },
   } = useSnapshot(treeStore);
 
-  if (ids) return Object.fromEntries(ids.map((id) => [id, nodes[id]])) ?? {};
+  if (ids && nodes)
+    return Object.fromEntries(ids.map((id) => [id, nodes[id]])) ?? {};
 
   return nodes ?? {};
 }
 
 export function useNode(id: string) {
   const {
-    value: {
-      treeData: {
-        nodes: { [id]: node },
-      },
-    },
+    treeData: { nodes },
   } = useSnapshot(treeStore);
 
-  if (!node) return undefined;
-  return node;
+  if (!nodes) return undefined;
+
+  return nodes[id];
 }
 
 export function useTree() {
   const {
-    value: { name, treeData, id },
+    metadata: { name, id },
+    treeData,
   } = useSnapshot(treeStore);
 
   return { name, treeData, id };
 }
 
 export function useParents(nodeId: string) {
-  return BuilderTree.getParents(nodeId)(treeStore.value);
+  return BuilderTree.getParents(nodeId)(treeStore.treeData.nodes ?? {});
 }
 
 export function useStatus() {
-  return treeStore.value.status;
+  return treeStore.metadata.status;
 }

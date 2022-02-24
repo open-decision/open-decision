@@ -21,43 +21,62 @@ import Dropcursor from "@tiptap/extension-dropcursor";
 import GapCursor from "@tiptap/extension-gapcursor";
 import Link from "@tiptap/extension-link";
 import Collaboration from "@tiptap/extension-collaboration";
-import { yDoc, yTreeMap } from "features/Builder/state/treeStore/treeStore";
-import { useNode } from "features/Builder/state/treeStore/hooks";
+import {
+  updateNodeContent,
+  yDoc,
+} from "features/Builder/state/treeStore/treeStore";
 
 const StyledEditorContent = styled(EditorContent, {
+  focusStyle: "inner-within",
+  border: "1px solid $gray8",
+  overflow: "auto",
+  borderBottomLeftRadius: "$md",
+  borderBottomRightRadius: "$md",
+  minHeight: "200px",
+  maxHeight: "500px",
+  layer: "2",
+
   ".ProseMirror": {
-    minHeight: "200px",
+    colorScheme: "primary",
     display: "flex",
     gap: "10px",
     flexDirection: "column",
-    overflow: "auto",
-    maxHeight: "100%",
     padding: "$2",
-    backgroundColor: "$gray1",
-    borderBottomLeftRadius: "$md",
-    borderBottomRightRadius: "$md",
-    focusStyle: "inner-within",
-    border: "1px solid $gray8",
+    outline: "none",
+    margin: "1px",
+    borderBottomLeftRadius: "$sm",
+    borderBottomRightRadius: "$sm",
+    height: "100%",
   },
 });
 
-export const Tiptap = () => {
+type Props = { id: string; content: Content };
+
+export const Tiptap = ({ id, content }: Props) => {
   const editor = useEditor({
     extensions: [
       Document,
       Heading.configure({
         HTMLAttributes: {
-          class: headingStyles({ size: "extra-small" }),
+          class: headingStyles({ size: "medium" }),
         },
       }),
       Paragraph.configure({
         HTMLAttributes: {
-          class: textStyles({ size: "small" }),
+          class: textStyles(),
         },
       }),
       Text,
-      OrderedList,
-      BulletList,
+      OrderedList.configure({
+        HTMLAttributes: {
+          class: textStyles(),
+        },
+      }),
+      BulletList.configure({
+        HTMLAttributes: {
+          class: textStyles(),
+        },
+      }),
       ListItem,
       Bold,
       Italic,
@@ -66,18 +85,21 @@ export const Tiptap = () => {
       Dropcursor,
       GapCursor,
       Link,
-      Collaboration.configure({ document: yDoc }),
+      Collaboration.configure({
+        document: yDoc,
+        field: id,
+      }),
     ],
+    content,
+    onUpdate: ({ editor }) => updateNodeContent(id, editor.getJSON()),
   });
 
   return (
     <Box
       css={{
         display: "grid",
-        overflow: "hidden",
-        maxHeight: "600px",
         gridTemplateRows: "50px 1fr",
-        $color: "$black",
+        groupColor: "$colorScheme-text",
       }}
     >
       <Toolbar
@@ -87,6 +109,7 @@ export const Tiptap = () => {
           borderBottom: "0",
           borderTopLeftRadius: "$md",
           borderTopRightRadius: "$md",
+          layer: "3",
         }}
       />
       <StyledEditorContent editor={editor} />

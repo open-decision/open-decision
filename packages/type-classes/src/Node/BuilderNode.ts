@@ -26,7 +26,7 @@ export function create(node?: Partial<Omit<TNode, "id">>): TNode {
     id: uuidV4(),
     relations: {},
     name: "Neuer Knoten",
-    content: [],
+    content: null,
     position: { x: 0, y: 0 },
     ...node,
   };

@@ -19,10 +19,10 @@ type Nodes =
  */
 export const getParents =
   (nodeId: string) =>
-  (tree: PublicTree.TTree | BuilderTree.TTree): string[] =>
+  (nodes: Nodes): string[] =>
     pipe(
       // We operate on the nodes of the tree.
-      tree.treeData.nodes,
+      nodes,
       values,
       // We flatMap to remove an unnecessary level of array nesting.
       flatMap((node) =>
@@ -102,12 +102,9 @@ type IsUniqueNode =
   | { name?: string; id: string }
   | { name: string; id?: string };
 
-export const isUnique =
-  (node: IsUniqueNode) => (treeData: BuilderTree.TTree["treeData"]) => {
-    const { nodes } = treeData;
-
-    return !Object.values(nodes).some(
-      (existingNode) =>
-        node?.id === existingNode.id || node?.name?.trim() === existingNode.name
-    );
-  };
+export const isUnique = (node: IsUniqueNode) => (nodes: Nodes) => {
+  return !Object.values(nodes).some(
+    (existingNode) =>
+      node?.id === existingNode.id || node?.name?.trim() === existingNode.name
+  );
+};

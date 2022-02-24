@@ -11,7 +11,10 @@ import { QueryClientProvider } from "react-query";
 import { queryClient } from "features/Data/queryClient";
 import { GetServerSideProps } from "next";
 import { yDoc } from "features/Builder/state/treeStore/treeStore";
-import { connectWebsocket } from "features/Data/yjs-websocket-connector";
+import {
+  connectLocalStorage,
+  connectWebsocket,
+} from "features/Data/yjs-connectors";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
@@ -20,7 +23,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 export default function BuilderPage({ id }): JSX.Element {
-  React.useEffect(() => connectWebsocket(yDoc, id), [id, yDoc]);
+  React.useEffect(() => {
+    connectLocalStorage(yDoc, id);
+    return connectWebsocket(yDoc, id);
+  }, [id]);
 
   return (
     <ErrorBoundary fallback={ErrorFallback}>

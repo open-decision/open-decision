@@ -1,6 +1,46 @@
 import * as PublicRelation from "../Relation/PublicRelation";
 import { z } from "zod";
-import { RichTextContent } from "./RichTextContent";
+
+export type JSONContent = {
+  type?: string;
+  attrs?: Record<string, any>;
+  content?: JSONContent[];
+  marks?: {
+    type: string;
+    attrs?: Record<string, any>;
+    [key: string]: any;
+  }[];
+  text?: string;
+  [key: string]: any;
+};
+
+export type HTMLContent = string;
+
+export type RichTextContent = HTMLContent | JSONContent | JSONContent[] | null;
+
+const JSONContent: z.ZodSchema<JSONContent> = z.lazy(() =>
+  z.object({
+    type: z.string().optional(),
+    attrs: z.record(z.any()).optional(),
+    content: z.array(JSONContent),
+    marks: z
+      .array(
+        z.object({
+          type: z.string(),
+          attrs: z.record(z.any()).optional(),
+        })
+      )
+      .optional(),
+    text: z.string().optional(),
+  })
+);
+
+export const RichTextContent = z.union([
+  JSONContent,
+  z.array(JSONContent),
+  z.string(),
+  z.null(),
+]);
 
 export const Type = z.object({
   id: z.string().uuid(),
