@@ -1,8 +1,6 @@
 import { Box } from "@open-legal-tech/design-system";
 import * as React from "react";
-import { RichTextEditor } from "components";
 import { useInterpreter } from "@open-decision/interpreter";
-import { renderElement } from "./shared";
 import { AnswersForm } from "./components/AnswersForm";
 import { useNode } from "features/Builder/state/treeStore/hooks";
 
@@ -47,14 +45,6 @@ export function MobilePreview() {
             overflow: "hidden",
           }}
         >
-          <RichTextEditor.Root key={snapshot.currentNode} value={node.content}>
-            <RichTextEditor.Editable
-              css={{ marginBottom: "$6", paddingRight: "$2", minHeight: 0 }}
-              renderElement={renderElement}
-              readOnly
-              placeholder="Dieser Knoten hat keinen Inhalt"
-            />
-          </RichTextEditor.Root>
           <AnswersForm
             interpreter={interpreter}
             snapshot={snapshot}

@@ -68,7 +68,7 @@ export function useTree() {
 }
 
 export function useParents(nodeId: string) {
-  return BuilderTree.getParents(nodeId)(treeStore.treeData.nodes ?? {});
+  return BuilderTree.getParents(nodeId)(treeStore.treeData.nodes);
 }
 
 export function useStatus() {

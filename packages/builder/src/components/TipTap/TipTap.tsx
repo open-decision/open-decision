@@ -5,7 +5,7 @@ import {
   textStyles,
 } from "@open-legal-tech/design-system";
 import { useEditor, EditorContent, Content } from "@tiptap/react";
-import { Toolbar } from "components/RichTextEditor/Toolbar";
+import { Toolbar } from "./Toolbar";
 import Underline from "@tiptap/extension-underline";
 import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";

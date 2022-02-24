@@ -10,11 +10,12 @@ const StyledArrow = styled(PopoverPrimitive.Arrow, {
 });
 
 export const Popover = {
-  ...PopoverPrimitive,
   Root: PopoverPrimitive.Root,
   Trigger: PopoverPrimitive.Trigger,
   Content: StyledContent,
   Arrow: StyledArrow,
+  Anchor: PopoverPrimitive.Anchor,
+  Close: PopoverPrimitive.Close,
 };
 
 export type PopoverRootProps = PopoverPrimitive.PopoverProps;

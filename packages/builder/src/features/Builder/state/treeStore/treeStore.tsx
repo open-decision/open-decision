@@ -182,7 +182,7 @@ export function startConnecting(sourceNodeId: string) {
 
   treeStore.metadata.validConnections = BuilderTree.getConnectableNodes(
     connectionOriginNode
-  )(treeStore.treeData.nodes ?? {});
+  )(treeStore.treeData.nodes);
 }
 
 export function abortConnecting() {

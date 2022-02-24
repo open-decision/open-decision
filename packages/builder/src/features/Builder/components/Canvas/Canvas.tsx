@@ -36,7 +36,6 @@ const Container = styled("div", {
   height: "100%",
   width: "100vw",
   position: "relative",
-
 });
 
 const canvasStyles = css({
@@ -55,7 +54,7 @@ export function Canvas({ children, css }: Props) {
   const selectedNode = useSelectedNode();
   const selectedRelationId = useSelectedRelationId();
   const startNode = useStartNode();
-  const { connectionSourceNode, validConnections } = useConnect();
+  const { connectionSourceNodeId, validConnections } = useConnect();
 
   const {
     reactFlowWrapperRef,
@@ -68,8 +67,8 @@ export function Canvas({ children, css }: Props) {
   const elements = [
     ...transformToReactFlowNodes(
       nodes,
-      connectionSourceNode && validConnections
-        ? [connectionSourceNode, ...validConnections]
+      connectionSourceNodeId && validConnections
+        ? [nodes[connectionSourceNodeId], ...validConnections]
         : []
     ),
     ...transformToReactFlowEdges(nodes, selectedNode?.id, selectedRelationId),

@@ -17,7 +17,9 @@
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "downlevelIteration": true,
-    "composite": true
+    "composite": true,
+    "baseUrl": "."
+    // "preserveSymlinks": true
   },
   "exclude": ["node_modules", "plugins"],
   "references": [

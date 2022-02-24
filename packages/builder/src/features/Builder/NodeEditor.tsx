@@ -4,7 +4,6 @@ import React from "react";
 import { NodeCreator } from "./components/NodeCreator";
 import { NodeEditingSidebar } from "./components/NodeEditingSidebar";
 import { Canvas } from "./components/Canvas/Canvas";
-import { UndoRedo } from "./components/Canvas/UndoRedo";
 import { useSelectedNode } from "./state/treeStore/hooks";
 
 type NodeEditorProps = {

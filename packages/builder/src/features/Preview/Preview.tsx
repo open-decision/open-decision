@@ -1,8 +1,6 @@
 import { Box } from "@open-legal-tech/design-system";
 import * as React from "react";
-import { RichTextEditor } from "components";
 import { useInterpreter } from "@open-decision/interpreter";
-import { renderElement } from "./shared";
 import { AnswersForm } from "./components/AnswersForm";
 import { useNode } from "features/Builder/state/treeStore/hooks";
 
@@ -28,9 +26,6 @@ export function Preview() {
       }}
     >
       <Box css={{ gridColumn: "2" }}>
-        <RichTextEditor.Root key={snapshot.currentNode} value={node.content}>
-          <PreviewRichTextEditor />
-        </RichTextEditor.Root>
         <AnswersForm
           relation={relation}
           node={node}
@@ -51,17 +46,6 @@ function PreviewRichTextEditor() {
         overflow: "hidden",
         maxHeight: "800px",
       }}
-    >
-      <RichTextEditor.Editable
-        css={{
-          gridRow: "2",
-          paddingInlineEnd: "$8",
-          minHeight: 0,
-        }}
-        readOnly
-        renderElement={renderElement}
-        placeholder="Dieser Knoten hat keinen Inhalt"
-      />
-    </Box>
+    ></Box>
   );
 }
