@@ -21,14 +21,6 @@ gql`
 `;
 
 gql`
-  mutation patchTree($data: DecisionTreePartialUpdateInput!, $id: Int!) {
-    updatePartialDecisionTree(data: $data, where: { id: $id }) {
-      id
-    }
-  }
-`;
-
-gql`
   mutation deleteTree($id: Int!) {
     deleteDecisionTree(where: { id: $id }) {
       id
