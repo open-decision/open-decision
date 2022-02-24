@@ -4,21 +4,23 @@
   "description": "",
   "main": "./src/index.js",
   "engines": {
-    "node": "14.x"
+    "node": "16.x"
   },
   "scripts": {
     "start": "pm2 start ecosystem.config.json --no-daemon",
-    "postinstall": "pnpm tsc && prisma generate",
-    "build": "pnpm tsc && prisma generate",
+    "postinstall": "pnpm prisma generate",
+    "build": "pnpm prisma generate && pnpm tsc && pnpm migrate:deploy",
     "build:live": "nodemon --watch 'src/**/*.ts' --exec \"ts-node -r tsconfig-paths/register\" src/index.ts",
-    "dev": "dotenv -e .env.development npm run build:live",
-    "migrate:dev": "dotenv -e .env.development npx prisma migrate dev",
+    "build:deploy": "pnpm build --filter @open-decision/type-classes && pnpm install && pnpm build && pnpm migrate:deploy",
+    "dev": "dotenv -e .env.development pnpm build:live",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down -t 2",
-    "test": "dotenv -e .env.test npm run docker:up && npm run migrate:test &&  jest -i --colors --verbose --coverage && npm run docker:down",
-    "test:watch": "dotenv -e .env.test npm run docker:up && npm run migrate:test &&  jest -i --watchAll && npm run docker:down",
+    "test": "dotenv -e .env.test pnpm docker:up && pnpm migrate:test &&  jest -i --colors --verbose --coverage && pnpm docker:down",
+    "test:watch": "dotenv -e .env.test npm run docker:up && pnpm migrate:test && jest -i --watchAll && pnpm docker:down",
     "tsc": "tsc -p .",
-    "migrate:test": "dotenv -e .env.test -- npx prisma migrate dev --name postgres-init",
+    "migrate:dev": "dotenv -e .env.development pnpm prisma migrate dev",
+    "migrate:test": "dotenv -e .env.test -- pnpm prisma migrate dev --name postgres-init",
+    "migrate:deploy": "pnpm prisma migrate deploy",
     "coverage": "jest -i --coverage",
     "coverage:coveralls": "jest -i --coverage --coverageReporters=text-lcov | coveralls",
     "lint": "eslint .",
@@ -28,7 +30,7 @@
     "docker:prod": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up",
     "docker:dev": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up",
     "docker:test": "docker-compose -f docker-compose.yml -f docker-compose.test.yml up",
-    "prismastudio:dev": "dotenv -e .env.development npx prisma studio"
+    "prismastudio:dev": "dotenv -e .env.development pnpm prisma studio"
   },
   "keywords": [],
   "author": "",
