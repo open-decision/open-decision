@@ -30,7 +30,7 @@
   "description": "The foundational types classes shared by all parts of the open decision application.",
   "sideEffects": false,
   "scripts": {
-    "build": "rm -rf lib & tsc --composite false --incremental false & vite build ",
+    "build": "rm -rf lib & tsc --composite false --incremental false & pnpm vite build ",
     "prepublish": "pnpm build",
     "prettier": "prettier --check src/",
     "prettier:fix": "prettier --write src/",
@@ -47,18 +47,17 @@
     "ramda": "^0.27.1",
     "remeda": "^0.0.30",
     "zod": "^3.11.6",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "utility-types": "^3.10.0",
+    "@types/ramda": "^0.27.46"
   },
   "devDependencies": {
     "@types/jest": "^27.0.3",
     "@types/json-stable-stringify": "^1.0.33",
     "@types/murmurhash-js": "^1.0.3",
-    "@types/ramda": "^0.27.46",
     "jest": "^27.0.6",
-    "remeda": "^0.0.30",
     "ts-jest": "^27.0.4",
     "typescript": "^4.4.4",
-    "utility-types": "^3.10.0",
     "vite": "^2.6.13"
   }
 }

@@ -1,5 +1,4 @@
-import { Request } from "express";
-import { NextFunction, Response } from "express-serve-static-core";
+import { Request, NextFunction, Response } from "express";
 import passport from "passport";
 import { Permissions, roleRights } from "../config/roles";
 import { User } from "@prisma-client";
