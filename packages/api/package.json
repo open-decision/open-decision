@@ -7,7 +7,7 @@
     "node": "16.x"
   },
   "scripts": {
-    "start": "ts-node -r tsconfig-paths/register -r dotenv/config src/index.ts",
+    "start": "TS_NODE_BASEURL=dist node -r tsconfig-paths/register -r dotenv/config dist/src/index.js",
     "build": "pnpm prisma generate && pnpm tsc && pnpm migrate:deploy",
     "build:live": "nodemon --watch 'src/**/*.ts' --exec \"ts-node -r tsconfig-paths/register\" src/index.ts",
     "build:deploy": "pnpm install --filter node-backend... && pnpm build --filter node-backend && pnpm migrate:deploy",
@@ -84,7 +84,8 @@
     "y-protocols": "^1.0.5",
     "y-websocket": "^1.3.18",
     "yjs": "^13.5.27",
-    "zod": "^3.11.6"
+    "zod": "^3.11.6",
+    "tsconfig-paths": "^3.12.0"
   },
   "devDependencies": {
     "@types/compression": "^1.7.2",
@@ -124,7 +125,6 @@
     "ts-node": "^10.4.0",
     "ts-node-dev": "^1.1.8",
     "ts-prune": "^0.10.3",
-    "tsconfig-paths": "^3.12.0",
     "typescript": "^4.4.4"
   },
   "volta": {

@@ -6,8 +6,6 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "outDir": "dist",
-    // "typeRoots": ["./src/types", "./node_modules/@types"],
-    // "rootDir": ".",
     "baseUrl": ".",
     "paths": {
       "@prisma-client": ["prisma/generated/prisma-client/index"],
