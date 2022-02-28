@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "TS_NODE_BASEURL=dist node -r tsconfig-paths/register -r dotenv/config dist/src/index.js",
-    "build": "pnpm prisma generate && pnpm tsc && pnpm migrate:deploy",
+    "build": "pnpm prisma generate && mkdir -p dist/prisma/generated && cp -r prisma/generated/prisma-client dist/prisma/generated/ && pnpm tsc && pnpm migrate:deploy",
     "build:live": "nodemon --watch 'src/**/*.ts' --exec \"ts-node -r tsconfig-paths/register\" src/index.ts",
     "build:deploy": "pnpm install --filter node-backend... && pnpm build --filter node-backend && pnpm migrate:deploy",
     "dev": "dotenv -e .env.development pnpm build:live",
