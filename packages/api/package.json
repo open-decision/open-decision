@@ -74,6 +74,7 @@
     "tslib": "^2.3.1",
     "type-graphql": "^1.1.1",
     "typescript": "^4.4.4",
+    "validator": "^13.7.0",
     "winston": "^3.3.3",
     "winston-transport-sentry-node": "^2.0.0",
     "ws": "^8.5.0",
