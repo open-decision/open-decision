@@ -8,7 +8,7 @@ export const connectWebsocket = (doc: Y.Doc, id: string, token: string) => {
   const wsProvider = isBrowser
     ? new WebsocketProvider(
         process.env.OD_WEBSOCKET_ENDPOINT ??
-          "ws://od-mono-api.onrender.com/v1/builder-sync",
+          "wss://od-mono-api.onrender.com/v1/builder-sync",
         id,
         doc,
         { params: { auth: token } }
