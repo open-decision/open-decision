@@ -31,8 +31,10 @@ const register = catchAsync(async (req: Request, res: Response) => {
     sameSite: config.NODE_ENV === "production" ? "none" : "lax",
   });
 
-  const verifyEmailToken = await tokenService.generateVerifyEmailToken(user);
-  emailService.sendVerificationEmail(user.email, verifyEmailToken);
+  if (user) {
+    const verifyEmailToken = await tokenService.generateVerifyEmailToken(user);
+    emailService.sendVerificationEmail(user.email, verifyEmailToken);
+  }
 
   res
     .status(httpStatus.CREATED)

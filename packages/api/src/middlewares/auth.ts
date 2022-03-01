@@ -72,13 +72,16 @@ export const auth =
   };
 
 export const wsAuth = async (req: http.IncomingMessage, next: Function) => {
-  return new Promise((resolve, reject) => {
-    passport.authenticate(
-      jwtWebsocketStrategy,
-      { session: false },
-      verifyCallback(req, resolve, reject, [])
-    )(req, next);
-  })
-    .then(() => next(false))
-    .catch((err) => next(err));
+  return (
+    new Promise((resolve, reject) => {
+      passport.authenticate(
+        jwtWebsocketStrategy,
+        { session: false },
+        verifyCallback(req, resolve, reject, [])
+      )(req, next);
+    })
+      //@ts-ignore
+      .then(() => next(false, req!.user))
+      .catch((err) => next(err))
+  );
 };
