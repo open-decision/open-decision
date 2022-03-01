@@ -4,14 +4,22 @@ import { IndexeddbPersistence } from "y-indexeddb";
 
 const isBrowser = typeof window !== "undefined";
 
-export const connectWebsocket = (doc: Y.Doc, id: string) => {
+export const connectWebsocket = (doc: Y.Doc, id: string, token: string) => {
   const wsProvider = isBrowser
-    ? new WebsocketProvider("ws://localhost:5000", id, doc)
+    ? new WebsocketProvider(
+        process.env.OD_WEBSOCKET_ENDPOINT ??
+          "ws://od-mono-api.onrender.com/v1/builder-sync",
+        id,
+        doc,
+        { params: { auth: token } }
+      )
     : null;
 
   wsProvider?.on("status", (event) => {
     console.log(event.status); // logs "connected" or "disconnected"
   });
+
+  return wsProvider;
 };
 
 export const connectLocalStorage = (doc: Y.Doc, id: string) => {
