@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, ButtonProps, Icon } from "@open-legal-tech/design-system";
+import { Button, ButtonProps, Icon } from "@open-decision/design-system";
 import { ChevronDown } from "react-feather";
 type Props = { label: string } & ButtonProps;
 

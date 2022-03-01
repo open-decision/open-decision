@@ -7,7 +7,7 @@ import {
   DialogTriggerProps,
   Text,
   styled,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 import {
   TreesQuery,
   useDeleteTreeMutation,

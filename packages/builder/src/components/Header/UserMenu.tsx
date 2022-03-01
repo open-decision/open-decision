@@ -1,4 +1,4 @@
-import { DropdownMenu } from "@open-legal-tech/design-system";
+import { DropdownMenu } from "@open-decision/design-system";
 import { useAuth } from "features/Auth/useAuth";
 import { MenuButton } from "./MenuButton";
 

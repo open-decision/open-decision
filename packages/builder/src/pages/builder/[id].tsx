@@ -15,6 +15,8 @@ import {
   connectLocalStorage,
   connectWebsocket,
 } from "features/Data/yjs-connectors";
+import { useAuth } from "features/Auth/useAuth";
+import { WebsocketProvider } from "y-websocket";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
@@ -23,10 +25,17 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 export default function BuilderPage({ id }): JSX.Element {
+  const [auth] = useAuth();
+
   React.useEffect(() => {
-    connectLocalStorage(yDoc, id);
-    return connectWebsocket(yDoc, id);
-  }, [id]);
+    let websocket: WebsocketProvider | null;
+    if (auth.context.user?.access.token) {
+      connectLocalStorage(yDoc, id);
+      websocket = connectWebsocket(yDoc, id, auth.context.user?.access.token);
+    }
+
+    return () => websocket?.destroy();
+  }, [auth.context.user?.access.token, id]);
 
   return (
     <ErrorBoundary fallback={ErrorFallback}>

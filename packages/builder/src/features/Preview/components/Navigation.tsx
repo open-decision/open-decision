@@ -4,7 +4,7 @@ import {
   Icon,
   Button,
   styled,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 import { ArrowLeft, ArrowRight } from "react-feather";
 import { Interpreter } from "@open-decision/interpreter";
 import { Separator } from "@radix-ui/react-separator";

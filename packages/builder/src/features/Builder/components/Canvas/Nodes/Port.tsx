@@ -1,4 +1,4 @@
-import { styled } from "@open-legal-tech/design-system";
+import { styled } from "@open-decision/design-system";
 import { Handle } from "react-flow-renderer";
 
 const portWidth = 18;

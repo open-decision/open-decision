@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Box, Badge, BadgeProps } from "@open-legal-tech/design-system";
+import { Box, Badge, BadgeProps } from "@open-decision/design-system";
 
 import { Meta, Story } from "@storybook/react";
 

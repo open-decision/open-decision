@@ -3,7 +3,7 @@ import {
   Label,
   styled,
   StyleObject,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 import React, { ForwardedRef } from "react";
 
 const StyledLabel = styled(Label, buttonStyles, {

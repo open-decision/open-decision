@@ -4,7 +4,7 @@ import {
   StyleObject,
   Link as SystemLink,
   Button,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 import { BaseHeader } from "components";
 import { TreeNameInput } from "./TreeNameInput";
 import Link from "next/link";

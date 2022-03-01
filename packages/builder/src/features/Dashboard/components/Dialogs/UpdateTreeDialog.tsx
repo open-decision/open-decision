@@ -5,7 +5,7 @@ import {
   ValidationMessage,
   Dialog,
   DialogTriggerProps,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 import { useUpdateTreeMutation } from "features/Data/generated/graphql";
 import { queryClient } from "features/Data/queryClient";
 import * as React from "react";

@@ -6,7 +6,7 @@ import {
   DialogRootProps,
   Heading,
   Text,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 
 import { Meta, Story } from "@storybook/react";
 

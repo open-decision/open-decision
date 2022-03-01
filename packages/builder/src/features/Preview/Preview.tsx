@@ -1,4 +1,4 @@
-import { Box } from "@open-legal-tech/design-system";
+import { Box } from "@open-decision/design-system";
 import * as React from "react";
 import { useInterpreter } from "@open-decision/interpreter";
 import { AnswersForm } from "./components/AnswersForm";

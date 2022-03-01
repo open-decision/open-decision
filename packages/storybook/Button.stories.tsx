@@ -7,7 +7,7 @@ import {
   ButtonProps,
   Heading,
   Icon,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 import { Plus } from "react-feather";
 
 export default {

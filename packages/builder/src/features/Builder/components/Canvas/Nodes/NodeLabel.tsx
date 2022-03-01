@@ -1,4 +1,4 @@
-import { Stack, styled } from "@open-legal-tech/design-system";
+import { Stack, styled } from "@open-decision/design-system";
 
 export const NodeLabel = styled("span", Stack, {
   borderRadius: "$md",

@@ -4,7 +4,7 @@ import { Meta, Story } from "@storybook/react";
 import {
   ContactButtons as SystemContactButtons,
   ContactButtonsContainerProps,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 
 export default {
   component: SystemContactButtons.Container,

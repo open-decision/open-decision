@@ -4,7 +4,7 @@ import { useEditor } from "features/Builder/state/useEditor";
 import ReactFlow, { FlowElement } from "react-flow-renderer";
 import { transformToReactFlowEdges } from "./utils/transformToReactFlowEdges";
 import { transformToReactFlowNodes } from "./utils/transformToReactFlowNodes";
-import { css, styled, StyleObject } from "@open-legal-tech/design-system";
+import { css, styled, StyleObject } from "@open-decision/design-system";
 import { transitionDuration } from "features/Builder/utilities/constants";
 import { Node } from "./Nodes/Node";
 import { NodeData } from "features/Builder/types/react-flow";

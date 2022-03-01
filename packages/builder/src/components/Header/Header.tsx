@@ -5,7 +5,7 @@ import {
   styled,
   Box,
   darkTheme,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 import { UserMenu } from "./UserMenu";
 
 const Container = styled("div", {

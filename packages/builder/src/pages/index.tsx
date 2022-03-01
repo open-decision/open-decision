@@ -6,7 +6,7 @@ import {
   LoadingSpinner,
   Stack,
   styled,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 import { ErrorBoundary } from "@sentry/nextjs";
 import { BaseHeader, FileInput, MainContent } from "components";
 import { CreateTreeDialog } from "features/Dashboard/components/Dialogs/CreateTreeDialog";

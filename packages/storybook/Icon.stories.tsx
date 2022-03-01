@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Icon as IconImpl, IconProps } from "@open-legal-tech/design-system";
+import { Icon as IconImpl, IconProps } from "@open-decision/design-system";
 
 import { Meta, Story } from "@storybook/react";
 import { Plus } from "react-feather";

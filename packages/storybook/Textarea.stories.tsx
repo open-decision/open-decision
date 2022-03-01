@@ -1,11 +1,6 @@
 import * as React from "react";
 import { Meta, Story } from "@storybook/react";
-import {
-  Field,
-  useForm,
-  Textarea,
-  Button,
-} from "@open-legal-tech/design-system";
+import { Field, useForm, Textarea, Button } from "@open-decision/design-system";
 
 export default {
   component: Textarea,

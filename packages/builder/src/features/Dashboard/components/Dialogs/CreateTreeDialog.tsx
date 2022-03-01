@@ -6,7 +6,7 @@ import {
   ValidationMessage,
   Dialog,
   DialogTriggerProps,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 import { useCreateTreeMutation } from "features/Data/generated/graphql";
 import { queryClient } from "features/Data/queryClient";
 

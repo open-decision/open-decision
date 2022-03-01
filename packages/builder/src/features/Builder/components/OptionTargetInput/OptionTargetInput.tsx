@@ -9,7 +9,7 @@ import {
   Label,
   styled,
   useForm,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 import * as React from "react";
 import {
   BuilderTree,

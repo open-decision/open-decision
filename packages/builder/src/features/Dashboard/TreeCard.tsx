@@ -7,7 +7,7 @@ import {
   Stack,
   styled,
   Text,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 import { formatRelative, parseISO } from "date-fns";
 import de from "date-fns/locale/de";
 import { TreesQuery } from "features/Data/generated/graphql";

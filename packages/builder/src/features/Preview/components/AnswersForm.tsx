@@ -8,7 +8,7 @@ import {
   Tooltip,
   Text,
   styled,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 import { Interpreter } from "@open-decision/interpreter";
 import { Navigation } from "./Navigation";
 

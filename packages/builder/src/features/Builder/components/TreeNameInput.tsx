@@ -5,7 +5,7 @@ import {
   useForm,
   ControlledInput,
   Input,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 import { updateTreeName } from "features/Builder/state/treeStore/treeStore";
 import * as React from "react";
 import { ProjectMenu } from "./ProjectMenu";

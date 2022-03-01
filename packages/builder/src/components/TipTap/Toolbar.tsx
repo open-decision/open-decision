@@ -4,7 +4,7 @@ import {
   styled,
   ToggleButton,
   Button,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 import { Type } from "react-feather";
 import * as React from "react";
 import * as Separator from "@radix-ui/react-separator";

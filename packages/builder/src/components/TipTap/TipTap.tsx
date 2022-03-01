@@ -3,7 +3,7 @@ import {
   headingStyles,
   styled,
   textStyles,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 import { useEditor, EditorContent, Content } from "@tiptap/react";
 import { Toolbar } from "./Toolbar";
 import Underline from "@tiptap/extension-underline";

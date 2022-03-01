@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Box } from "@open-legal-tech/design-system";
+import { Box } from "@open-decision/design-system";
 import { Notification } from "./Notification";
 import { useNotificationStore } from "./NotificationState";
 import { AnimatePresence } from "framer-motion";

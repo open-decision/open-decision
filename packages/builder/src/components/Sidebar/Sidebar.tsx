@@ -1,5 +1,5 @@
 import React from "react";
-import { css, StyleObject } from "@open-legal-tech/design-system";
+import { css, StyleObject } from "@open-decision/design-system";
 import { AnimatePresence, motion } from "framer-motion";
 
 const styledMotionDiv = css({

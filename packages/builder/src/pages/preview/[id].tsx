@@ -4,7 +4,7 @@ import {
   Icon,
   Link as SystemLink,
   Tabs,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 import { BaseHeader, MainContent } from "components";
 import { TreeNameInput } from "features/Builder/components/TreeNameInput";
 import { ExportButton } from "features/Builder/components/ExportButton";

@@ -4,7 +4,7 @@ import {
   Reel as ReelImpl,
   ReelProps,
   styled,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 
 import { Meta, Story } from "@storybook/react";
 

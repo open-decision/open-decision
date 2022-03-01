@@ -2,7 +2,7 @@ const withPlugins = require("next-compose-plugins");
 const { withSentryConfig } = require("@sentry/nextjs");
 
 const withTM = require("next-transpile-modules")([
-  "@open-legal-tech/design-system",
+  "@open-decision/design-system",
   "@open-decision/type-classes",
   "@open-decision/interpreter",
 ]);

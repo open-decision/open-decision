@@ -1,4 +1,4 @@
-import { StyleObject } from "@open-legal-tech/design-system";
+import { StyleObject } from "@open-decision/design-system";
 import { Sidebar } from "components/Sidebar";
 import React from "react";
 import { NodeCreator } from "./components/NodeCreator";

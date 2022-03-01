@@ -1,4 +1,4 @@
-import { Badge, Stack } from "@open-legal-tech/design-system";
+import { Badge, Stack } from "@open-decision/design-system";
 import React from "react";
 
 type Props = { tags: any };

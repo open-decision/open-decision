@@ -10,7 +10,7 @@ import {
   Input,
   Stack,
   useForm,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 import { ChevronUp, Search } from "react-feather";
 import { TreesQuery } from "features/Data/generated/graphql";
 import { TreeCard } from "./TreeCard";

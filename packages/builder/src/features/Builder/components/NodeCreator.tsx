@@ -9,7 +9,7 @@ import {
   InputWithButton,
   Icon,
   useForm,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 import { Plus } from "react-feather";
 import { useEditor } from "../state/useEditor";
 import { nodeNameMaxLength } from "../utilities/constants";

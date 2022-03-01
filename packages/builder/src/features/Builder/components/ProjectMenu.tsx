@@ -3,7 +3,7 @@ import {
   Icon,
   Link as SystemLink,
   StyleObject,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 import { MenuButton } from "components/Header/MenuButton";
 import Link from "next/link";
 import { ChevronLeft } from "react-feather";

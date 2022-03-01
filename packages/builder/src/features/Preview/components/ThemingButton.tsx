@@ -1,4 +1,4 @@
-import { Button, Icon, StyleObject } from "@open-legal-tech/design-system";
+import { Button, Icon, StyleObject } from "@open-decision/design-system";
 import * as React from "react";
 import { HelpCircle } from "react-feather";
 

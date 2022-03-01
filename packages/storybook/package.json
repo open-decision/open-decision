@@ -1,5 +1,5 @@
 {
-  "name": "@open-legal-tech/storybook",
+  "name": "@open-decision/storybook",
   "version": "0.0.1",
   "description": "The open legal tech design system storybook",
   "scripts": {
@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@fontsource/poppins": "^4.5.0",
-    "@open-legal-tech/design-system": "workspace:^",
+    "@open-decision/design-system": "workspace:^",
     "@rollup/plugin-commonjs": "^21.0.0",
     "@rollup/plugin-node-resolve": "^13.0.5",
     "@rollup/plugin-replace": "^3.0.0",

@@ -7,7 +7,7 @@ import {
   Stack,
   Text,
   useForm,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 import { MainContent } from "components";
 import { useAuth } from "features/Auth/useAuth";
 import * as React from "react";

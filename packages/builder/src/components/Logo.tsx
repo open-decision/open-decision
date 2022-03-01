@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Heading, styled } from "@open-legal-tech/design-system";
+import { Heading, styled } from "@open-decision/design-system";
 
 const Title = styled(Heading, {
   width: "50px",

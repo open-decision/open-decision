@@ -1,4 +1,4 @@
-import { Box, styled, Text, Icon, Stack } from "@open-legal-tech/design-system";
+import { Box, styled, Text, Icon, Stack } from "@open-decision/design-system";
 import React, { memo } from "react";
 import { Star } from "react-feather";
 import { NodeProps, Position } from "react-flow-renderer";

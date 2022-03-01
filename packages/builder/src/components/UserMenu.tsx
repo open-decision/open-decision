@@ -1,7 +1,7 @@
 import React from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Avatar from "@radix-ui/react-avatar";
-import { styled } from "@open-legal-tech/design-system";
+import { styled } from "@open-decision/design-system";
 import Link from "next/link";
 import { User } from "react-feather";
 

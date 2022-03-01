@@ -1,4 +1,4 @@
-import { Box, Heading, Link, Text } from "@open-legal-tech/design-system";
+import { Box, Heading, Link, Text } from "@open-decision/design-system";
 import { BaseHeader, MainContent } from "components";
 import { sidebarWidth } from "features/Builder/utilities/constants";
 

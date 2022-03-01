@@ -2,12 +2,7 @@ import * as React from "react";
 import { Layout } from "components/Layout";
 import type { AppProps } from "next/app";
 import "../design/index.css";
-import {
-  Box,
-  Button,
-  globalStyles,
-  Text,
-} from "@open-legal-tech/design-system";
+import { Box, Button, globalStyles, Text } from "@open-decision/design-system";
 import { AuthProvider, useAuth } from "features/Auth/useAuth";
 import { useRouter } from "next/router";
 import { protectedRoutes } from "../config/protectedRoutes";

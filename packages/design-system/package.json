@@ -1,5 +1,5 @@
 {
-  "name": "@open-legal-tech/design-system",
+  "name": "@open-decision/design-system",
   "version": "0.23.0",
   "main": "./src/index.ts",
   "module": "./src/index.ts",

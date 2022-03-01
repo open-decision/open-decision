@@ -6,7 +6,7 @@ import {
   Icon,
   Button,
   Stack,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 import { notification, useNotificationStore } from "./NotificationState";
 import * as Progress from "@radix-ui/react-progress";
 import { motion, useAnimation } from "framer-motion";

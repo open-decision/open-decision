@@ -4,7 +4,7 @@ import {
   DropdownMenu,
   Tooltip,
   StyleObject,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 import {
   deleteNodes,
   updateStartNode,

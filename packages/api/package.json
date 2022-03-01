@@ -1,5 +1,5 @@
 {
-  "name": "node-backend",
+  "name": "@open-decision/api",
   "version": "1.0.0",
   "description": "",
   "main": "./src/index.js",
@@ -10,7 +10,7 @@
     "start": "TS_NODE_BASEURL=dist node -r tsconfig-paths/register -r dotenv/config dist/src/index.js",
     "build": "pnpm prisma generate && mkdir -p dist/prisma/generated && cp -r prisma/generated/prisma-client dist/prisma/generated/ && pnpm tsc && pnpm migrate:deploy",
     "build:live": "nodemon --watch 'src/**/*.ts' --exec \"ts-node -r tsconfig-paths/register\" src/index.ts",
-    "build:deploy": "pnpm install --filter node-backend... && pnpm build --filter node-backend...",
+    "build:deploy": "pnpm install --filter @open-decision/api... && pnpm build --filter @open-decision/api...",
     "dev": "dotenv -e .env.development pnpm build:live",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down -t 2",

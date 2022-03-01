@@ -8,7 +8,7 @@ import {
   Icon,
   ValidationMessage,
   Link,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 import { OptionTargetInputs } from "features/Builder/components/OptionTargetInput/OptionTargetInput";
 import * as React from "react";
 import { BuilderNode, BuilderTree } from "@open-decision/type-classes";

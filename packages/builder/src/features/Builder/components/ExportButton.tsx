@@ -4,7 +4,7 @@ import {
   buttonStyles,
   Link,
   StyleObject,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 import { readableDate } from "features/Dashboard/utils";
 import { useTree } from "../state/treeStore/hooks";
 

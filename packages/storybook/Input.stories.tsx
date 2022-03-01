@@ -7,7 +7,7 @@ import {
   Icon,
   Input as SystemInput,
   InputProps,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 import { Search, ArrowRight } from "react-feather";
 
 export default {
