@@ -1,5 +1,4 @@
 import * as React from "react";
-import { BuilderNode } from "@open-decision/type-classes";
 import { useEditor } from "features/Builder/state/useEditor";
 import ReactFlow, { FlowElement } from "react-flow-renderer";
 import { transformToReactFlowEdges } from "./utils/transformToReactFlowEdges";
@@ -36,6 +35,7 @@ const Container = styled("div", {
   height: "100%",
   width: "100vw",
   position: "relative",
+  layer: "4",
 });
 
 const canvasStyles = css({
