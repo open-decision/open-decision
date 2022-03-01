@@ -45,7 +45,7 @@ export function useNodes(ids?: string[]): BuilderNode.TNodesRecord {
 
   if (ids && nodes) return pickBy((node) => ids.includes(node.id))(nodes);
 
-  return nodes;
+  return nodes ?? {};
 }
 
 export function useNode(id: string) {
