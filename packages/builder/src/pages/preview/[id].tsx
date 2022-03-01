@@ -19,11 +19,11 @@ import { ErrorFallback } from "features/Error/ErrorFallback";
 import { QueryClientProvider } from "react-query";
 import { queryClient } from "features/Data/queryClient";
 import { GetServerSideProps } from "next";
-import { useStatus, useTree } from "features/Builder/state/treeStore/hooks";
+import { useGetFullTreeQuery } from "features/Data/generated/graphql";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
-    props: { id: context.params?.id },
+    props: { id: Number(context.params?.id) },
   };
 };
 
@@ -31,22 +31,19 @@ export default function VorschauPage({ id }) {
   return (
     <ErrorBoundary fallback={ErrorFallback}>
       <QueryClientProvider client={queryClient}>
-        <Vorschau />
+        <Vorschau id={id} />
       </QueryClientProvider>
     </ErrorBoundary>
   );
 }
 
-function Vorschau() {
-  const status = useStatus();
-  const tree = useTree();
+type Props = { id: number };
 
-  if (status === "uninitialized") {
-    return <Box>Empty</Box>;
-  }
+function Vorschau({ id }: Props) {
+  const { data, isLoading } = useGetFullTreeQuery({ id });
 
-  return (
-    <InterpreterProvider tree={tree}>
+  return isLoading ? null : (
+    <InterpreterProvider tree={data?.decisionTree}>
       <MainContent
         css={{
           display: "grid",

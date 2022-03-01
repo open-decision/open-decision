@@ -11,6 +11,7 @@ import Link from "next/link";
 import { ExportButton } from "./ExportButton";
 import { useNotificationStore } from "features/Notifications/NotificationState";
 import { hasNodes } from "../state/treeStore/treeStore";
+import { useRouter } from "next/router";
 
 type HeaderProps = {
   css?: StyleObject;
@@ -18,13 +19,16 @@ type HeaderProps = {
 
 export const EditorHeader = ({ css }: HeaderProps) => {
   const { addNotification } = useNotificationStore();
+  const {
+    query: { id },
+  } = useRouter();
 
   return (
     <BaseHeader css={css}>
       <TreeNameInput />
       <Box css={{ display: "flex", gap: "$2", marginLeft: "auto" }}>
-        {hasNodes() ? (
-          <Link passHref href="/vorschau">
+        {hasNodes() && id ? (
+          <Link passHref href={`/preview/${id}`}>
             <SystemLink
               className={buttonStyles({ variant: "tertiary" })}
               underline={false}
