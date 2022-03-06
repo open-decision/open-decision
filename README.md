@@ -15,9 +15,9 @@ Join our community → [Slack Workspace](https://open-decision.org/slack)
 - [Introduction](#introduction)
 - [Architecture](#architecture)
 - [Participate](#participate)
-- [Contribute](#contribute)
-- [Join our Team](#join-our-team)
-- [Join the User Community](#join-the-user-community)
+    - [Contribute](#contribute)
+    - [Join our Developer Team](#join-our-developer-team)
+    - [Join the User Community](#join-the-user-community)
 - [Getting Started](#getting-started)
 - [Installation](#installation)
 - [License](#license)
@@ -38,7 +38,7 @@ tba
 
 As Open Decision is an ambitious and large scale project. Most of the work has been conducted in a team organized by [Open Legal Tech](https://open-legal-tech.org/), a non-profit based in Berlin. 
 
-You are welcome to [contribute](#contribute) via GitHub, [join our team](#Join-our-Team) or [join the user community on Slack](#join-the-user-community).
+You are welcome to [contribute](#contribute) via GitHub, [join our team](#Join-our-developer-team) or [join the user community on Slack](#join-the-user-community).
 
 ### Contribute
 
