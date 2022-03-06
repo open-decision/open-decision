@@ -1,15 +1,13 @@
-# Open Decision
+# Open Decision Backend
 
 Welcome to the Open Decision backend!
 
 The backend is built using Node.js and Express, we are using Typescript for the whole project. The backend is providing an REST API for authentication as well as a GraphQL API for storing and managing apps build with Open Decision.
 
-The backend is mainly designed to be used in conjunction with the Open Decision frontend, which can be found here: [github.com/open-legal-tech/open-decision](https://github.com/open-legal-tech/open-decision).
+The backend is mainly designed to be used in conjunction with the Open Decision frontend. The whole Open Decision Project can be found here: [github.com/open-legal-tech/open-decision](https://github.com/open-legal-tech/open-decision).
 
-## Table of content
+## Table of Contents
 
-- [Important Links](#important-links)
-- [Participate](#participate)
 - [Deploy in the Cloud](#deploy-in-the-cloud)
   - [Using the Heroku Deploy button](#using-the-heroku-deploy-button)
   - [Deploying manually on Heroku](#deploying-manually-on-heroku)
@@ -18,26 +16,6 @@ The backend is mainly designed to be used in conjunction with the Open Decision 
   - [Installation](#installation)
   - [Additional settings](#additional-settings)
   - [Running the tests](#running-the-tests)
-- [Contributing](#contributing)
-- [License](#license)
-- [Links](#links)
-
-## Important Links
-
-See the frontend on [github.com/open-legal-tech/open-decision](https://github.com/open-legal-tech/open-decision)
-
-Further information about the project on [open-decision.org](https://open-decision.org)
-
-Open Decision is a project by the [Open Legal Tech e.V.](https://open-legal-tech.org/), a non-profit based in Berlin, Germany.
-
-## Participate
-
-Join our growing community and socialize in [our Slack-Workspace](https://open-decision.org/slack).
-
-Feel free to pick an issue, open a bug report, feature request or fork the project. We are open to any input or suggestions on how to bring the project forward.
-
-If you want to join our team, contact us at [contact@open-decision.org](mailto:contact@open-decision.org).
-
 ## Deploy in the Cloud
 
 We are currently using Heroku for deploying the backend, please create an account or sign-in on [Heroku](https://heroku.com)
@@ -139,13 +117,13 @@ To see the API documentation, go to [http://localhost:3000/v1/docs](http://local
 
 To try some queries, download the API definition at [http://localhost:3000/v1/docs/export](http://localhost:3000/v1/docs/export) and import it to your favorite API client, e.g. [Insomnia](https://insomnia.rest/download). All queries will be pre-filled.
 
-### Additional settings
+### Additional Settings
 
 There are several additional settings you can set in the .env-files. Please [refer to the commented .env.example file](https://github.com/open-legal-tech/node-backend/blob/master/.env.example) to see all possible options. For a deeper insight, you can take a look at the [zod validation schema](https://github.com/open-legal-tech/node-backend/blob/master/src/validations/env.validation.ts).
 
 To test the mailing functionality, we recommend using [Ethereal](https://ethereal.email/). If running in production, you should use a transactional SMTP provider, as Ethereal is not actually sending mails.
 
-### Running the tests
+### Running the Tests
 
 To verify that the backend is running correctly it comes equipped with many end-to-end tests (and some unit tests) using [Jest](https://github.com/facebook/jest) and [supertest](https://github.com/visionmedia/supertest).
 
@@ -156,16 +134,3 @@ Next, you need to provide an `.env.test` file in the project root. The `.env.tes
 Now, make sure that Docker Desktop (or the docker daemon) is running and start the test scripts using `npm run test`.
 
 At the moment, some of the tests for the docs are failing due to some routing issues. All other tests should pass fine.
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://github.com/fbennets/open-decision/blob/master/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/fbennets/open-decision/blob/master/LICENSE) file for details.
-
-## Links
-
-- [Project Website](http://open-decision.org)
-- [Join our Slack-Workspace](https://open-decision.org/slack)
