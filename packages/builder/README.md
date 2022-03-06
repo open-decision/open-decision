@@ -2,7 +2,7 @@
 
 Welcome to the Open Decision Builder!
 
-You can find the whole Open Decision Project here: [github.com/open-legal-tech/open-legal-tech/open-decision](https://github.com/open-legal-tech/open-decision).
+You can find the whole Open Decision Project here: [github.com/open-legal-tech/open-decision](https://github.com/open-legal-tech/open-decision).
 
 ## Table of Contents
 
