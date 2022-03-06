@@ -2,14 +2,15 @@
 
 Welcome to the Open Decision Builder!
 
-You can find the whole Open Decision Project here: [github.com/open-legal-tech/open-decision](https://github.com/open-legal-tech/open-decision).
+You can find the whole Open Decision Project here: [github.com/open-legal-tech/open-legal-tech/open-decision](https://github.com/open-legal-tech/open-decision).
 
 ## Table of Contents
 
-- [0. Required Software](#0.-required-software)
-- [1. Clone the Repo](#1.-clone-the-repo)
-- [2. Install Dependencies](#0.-required-software)
-- [3. Open the Project](#3.-open-the-project)
+[0. Required Software](#0.-required-software)
+[1. Clone the Repo](#1.-clone-the-repo)
+[2. Install Dependencies](#0.-required-software)
+[3. Open the Project](#3.-open-the-project)
+
 ## 0. Required Software
 
 Please make sure that the following programs are installed locally on your machine.
@@ -21,7 +22,7 @@ Please make sure that the following programs are installed locally on your machi
 
 Execute the following command in the directory of your choosing. This will create a subfolder open-decision-frontend. This is the project.
 ```bash
-git clone https://github.com/open-decision/open-decision-frontend.git
+git clone https://github.com/open-legal-tech/open-decision.git
 ```
 
 ## 2. Install Dependencies
