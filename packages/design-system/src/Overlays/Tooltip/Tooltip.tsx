@@ -37,9 +37,11 @@ export const Tooltip = {
   Arrow: StyledArrow,
   Title: Label,
   Body,
+  Provider: TooltipPrimitive.Provider,
 };
 
 export type TooltipRootProps = TooltipPrimitive.TooltipProps;
 export type TooltipTriggerProps = TooltipPrimitive.TooltipTriggerProps;
 export type TooltipContentProps = React.ComponentProps<typeof StyledContent>;
 export type TooltipArrowProps = TooltipPrimitive.TooltipArrowProps;
+export type TooltipPrviderProps = TooltipPrimitive.TooltipProviderProps;
