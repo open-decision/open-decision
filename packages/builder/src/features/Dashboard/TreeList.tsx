@@ -83,7 +83,7 @@ export const TreeList = ({ data }: TreeListProps) => {
         <Field
           label="Suche"
           isLabelVisible={false}
-          css={{ flexBasis: "400px", layer: "2" }}
+          css={{ flexBasis: "400px", layer: "1" }}
         >
           <Input
             name="search"

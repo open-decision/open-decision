@@ -38,7 +38,7 @@ const DashboardGrid = styled(MainContent, {
   overflow: "hidden",
   gridTemplateRows: "max-content max-content 1fr",
   gridTemplateColumns: `1fr min(1000px, 90%) 1fr`,
-  layer: "4",
+  layer: "3",
 });
 
 function Dashboard() {
