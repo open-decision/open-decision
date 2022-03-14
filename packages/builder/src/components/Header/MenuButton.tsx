@@ -6,7 +6,7 @@ type Props = { label: string } & ButtonProps;
 function MenuButtonImpl({ label, css, ...props }: Props, ref) {
   return (
     <Button
-      variant="ghost"
+      variant="neutral"
       css={{
         minWidth: "max-content",
 
