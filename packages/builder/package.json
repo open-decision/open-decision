@@ -7,7 +7,7 @@
   "scripts": {
     "codegen": "graphql-codegen --config codegen.js",
     "lint": "eslint . --ext .ts,.tsx",
-    "dev": "pnpm build --filter @open-decision/frontend^... && pnpm codegen && next dev",
+    "dev": "pnpm dev --filter @open-decision/frontend^... && pnpm codegen & next dev",
     "build": "pnpm build --filter @open-decision/frontend^... && export NEXT_PUBLIC_APP_VERSION=$(git rev-parse HEAD) && pnpm codegen && next build",
     "start": "next start",
     "prettier": "prettier --check src/",
