@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Heading,
+  Icon,
   LoadingSpinner,
   Stack,
   styled,
@@ -21,6 +22,7 @@ import { useNotificationStore } from "features/Notifications/NotificationState";
 import Image from "next/image";
 import * as React from "react";
 import { QueryClientProvider } from "react-query";
+import { RocketIcon } from "@radix-ui/react-icons";
 
 export default function DashboardPage() {
   return (
@@ -104,7 +106,12 @@ function Dashboard() {
             Projekt importieren
           </FileInput>
           <CreateTreeDialog>
-            <Button>Neues Projekt erstellen</Button>
+            <Button>
+              <Icon css={{ marginTop: "2px" }}>
+                <RocketIcon />
+              </Icon>
+              Neues Projekt erstellen
+            </Button>
           </CreateTreeDialog>
         </Stack>
       </Stack>

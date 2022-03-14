@@ -4,7 +4,7 @@ import { styled, css } from "../stitches";
 export const buttonStyles = css(alignByContent, {
   $$borderWidth: "1px",
   $$YTranslation: "0px",
-  $$gap: "$space$1",
+  $$gap: "$space$2",
   gap: "$$gap",
 
   //Mini reset

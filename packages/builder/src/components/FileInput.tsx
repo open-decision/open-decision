@@ -1,10 +1,12 @@
 import {
   buttonStyles,
+  Icon,
   Label,
   styled,
   StyleObject,
 } from "@open-decision/design-system";
 import React, { ForwardedRef } from "react";
+import { Download } from "react-feather";
 
 const StyledLabel = styled(Label, buttonStyles, {
   focusStyle: "outer-within",
@@ -36,7 +38,10 @@ const FileInputImpl = (
   ref: ForwardedRef<HTMLLabelElement>
 ) => {
   return (
-    <StyledLabel variant="tertiary" css={css} ref={ref} {...props}>
+    <StyledLabel variant="secondary" css={css} ref={ref} {...props}>
+      <Icon css={{ marginTop: "2px" }}>
+        <Download />
+      </Icon>
       {children}
       <HiddenInput type="file" onChange={onChange} />
     </StyledLabel>
