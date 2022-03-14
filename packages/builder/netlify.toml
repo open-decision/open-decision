@@ -1,10 +1,6 @@
 [build.environment]
   NPM_FLAGS = "--version"
-
-[build]
-  base = "packages/builder/"
-  command = "npx pnpm build --filter @open-decision/frontend..."
-  publish = ".next/"
+  NODE_VERSION = "14"
 
 [[plugins]]
   package = "../../plugins/pnpm-preinstaller"
