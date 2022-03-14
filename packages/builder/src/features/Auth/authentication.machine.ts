@@ -100,7 +100,7 @@ export const createAuthenticationMachine = (router: NextRouter) =>
           states: {
             idle: {
               after: {
-                30000: {
+                870000: {
                   target: "refresh",
                 },
               },
