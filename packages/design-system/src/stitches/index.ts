@@ -35,7 +35,6 @@ import {
   TextStyles,
   SystemColors,
 } from "../internal/utils";
-import { Prefixed } from "@stitches/react/types/util";
 
 type focusStyleTypes = "inner-within" | "outer-within" | "outer" | "inner";
 
@@ -271,6 +270,11 @@ export type StyleObject = CSS<typeof designSystem>;
 
 export type ScaleValue<T> = StitchesScaleValue<T, typeof designSystem>;
 type Theme = typeof theme;
+
+type Prefixed<K extends string, T> = `${K}${Extract<
+  T,
+  boolean | number | string
+>}`;
 
 type TokenByScaleName<ScaleName extends keyof Theme> = Prefixed<
   "$",

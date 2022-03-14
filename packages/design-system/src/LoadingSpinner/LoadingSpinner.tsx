@@ -1,3 +1,4 @@
+import * as React from "react";
 import { SpinnerCircular } from "spinners-react";
 import { Icon } from "../Icon/Icon";
 import { ColorKeys } from "../internal/utils";
