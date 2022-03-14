@@ -1,18 +1,12 @@
 const withPlugins = require("next-compose-plugins");
 const { withSentryConfig } = require("@sentry/nextjs");
 
-const withTM = require("next-transpile-modules")([
-  "@open-decision/design-system",
-  "@open-decision/type-classes",
-  "@open-decision/interpreter",
-]);
-
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
 
 module.exports = withPlugins(
-  [withSentryConfig({}, { silent: true }), withTM, withBundleAnalyzer],
+  [withSentryConfig({}, { silent: true }), withBundleAnalyzer],
   {
     reactStrictMode: true,
     async rewrites() {
