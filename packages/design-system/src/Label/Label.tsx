@@ -3,6 +3,8 @@ import { styled, css } from "../stitches";
 export const labelStyles = css({
   display: "flex",
   colorFallback: "$black",
+  alignItems: "center",
+  gap: "$3",
 
   variants: {
     size: {

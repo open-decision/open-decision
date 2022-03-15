@@ -116,7 +116,7 @@ export const buttonStyles = css(alignByContent, {
         backgroundColor: "unset",
         focusStyle: "inner",
 
-        "&:hover": {
+        customIntentStyle: {
           backgroundColor: "$colorScheme3",
           color: "$colorScheme12",
         },

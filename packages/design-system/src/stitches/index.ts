@@ -1,6 +1,7 @@
 import {
   createStitches,
   CSS,
+  CSSProperties,
   ScaleValue as StitchesScaleValue,
 } from "@stitches/react";
 import {
@@ -36,7 +37,12 @@ import {
   SystemColors,
 } from "../internal/utils";
 
-type focusStyleTypes = "inner-within" | "outer-within" | "outer" | "inner";
+type focusStyleTypes =
+  | "inner-within"
+  | "outer-within"
+  | "outer"
+  | "inner"
+  | "none";
 
 export const designSystem = createStitches({
   theme: {
@@ -223,6 +229,9 @@ export const designSystem = createStitches({
     },
     focusStyle: (value: focusStyleTypes) => {
       switch (value) {
+        case "none": {
+          return { outline: "none" };
+        }
         case "outer":
         case "outer-within": {
           const focusWithin =
@@ -250,6 +259,15 @@ export const designSystem = createStitches({
         }
       }
     },
+    customFocusStyle: (value: CSSProperties) => ({
+      "&:focus-visible, &[data-focus='true']": value,
+    }),
+    customHoverStyle: (value: CSSProperties) => ({
+      "&:hover": value,
+    }),
+    customIntentStyle: (value: CSSProperties) => ({
+      "&:focus-visible, &[data-focus='true'], &:hover": value,
+    }),
     focusColor: (value: `$${keyof SystemColors}`) => ({
       $focusColor: `$colors${value}`,
     }),
