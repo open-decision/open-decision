@@ -7,7 +7,7 @@
   "scripts": {
     "codegen": "graphql-codegen --config codegen.js",
     "lint": "eslint . --ext .ts,.tsx",
-    "dev": "pnpm dev --filter @open-decision/frontend^... && pnpm codegen & next dev",
+    "dev": "pnpm dev --filter @open-decision/frontend^... & pnpm codegen && next dev",
     "build": "pnpm build --filter @open-decision/frontend^... && export NEXT_PUBLIC_APP_VERSION=$(git rev-parse HEAD) && pnpm codegen && next build",
     "start": "next start",
     "prettier": "prettier --check src/",
@@ -31,6 +31,7 @@
     "@types/uuid": "^8.3.4",
     "next": "12.1.0",
     "next-compose-plugins": "^2.2.1",
+    "next-transpile-modules": "^9.0.0",
     "prettier": "2.5.1",
     "typescript": "^4.6.2",
     "utility-types": "^3.10.0"
