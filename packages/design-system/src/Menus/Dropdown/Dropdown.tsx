@@ -36,8 +36,8 @@ type CheckboxItemProps = DropdownCheckboxItemProps & { Icon?: React.ReactNode };
 const CheckboxItem = ({ children, Icon, ...props }: CheckboxItemProps) => {
   return (
     <StyledCheckboxItem {...props}>
-      <ItemIndicator>{Icon}</ItemIndicator>
       {children}
+      <ItemIndicator>{Icon}</ItemIndicator>
     </StyledCheckboxItem>
   );
 };

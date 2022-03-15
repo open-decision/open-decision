@@ -7,7 +7,7 @@ const scaleIn = keyframes({
 
 export const menuContainerStyles = css({
   layer: "1",
-  paddingBlock: "$2",
+  paddingBlock: "$1",
   boxShadow: "$4",
   borderRadius: "$md",
   overflow: "hidden",
@@ -24,21 +24,22 @@ export const menuItemStyles = css({
   textStyle: "medium-text",
   focusStyle: "inner",
   userSelect: "none",
-  display: "grid",
-  gridTemplateColumns: "max-content 1fr",
+  display: "flex",
   paddingInline: "$4",
   paddingBlock: "$2",
-  gap: "$3",
   minWidth: "200px",
   alignItems: "center",
   wordBreak: "break-word",
   hyphens: "auto",
-  borderBlock: "1px solid transparent",
+  justifyContent: "space-between",
+
+  "&[data-state='checked']": {
+    backgroundColor: "$primary3",
+  },
 
   "&:focus, &[data-focus='true']": {
-    backgroundColor: "$primary3",
-    focusColor: "$primary3",
-    borderColor: "$colors$primary6",
+    backgroundColor: "$primary5",
+    focusColor: "$primary5",
   },
 
   "&[data-disabled]": {
