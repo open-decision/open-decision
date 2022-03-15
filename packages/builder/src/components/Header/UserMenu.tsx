@@ -12,7 +12,7 @@ export function UserMenu() {
         <MenuButton label="Mein Account" />
       </DropdownMenu.Trigger>
       <DropdownMenu.Content>
-        <Link href="settings">
+        <Link href="/settings">
           <DropdownMenu.Item>Einstellungen</DropdownMenu.Item>
         </Link>
         <DropdownMenu.Item onSelect={() => send({ type: "LOG_OUT" })}>
