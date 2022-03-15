@@ -28,7 +28,8 @@ const ItemIndicator = ({ children }: IndicatorProps) => {
 
 const StyledCheckboxItem = styled(
   DropdownMenuPrimitives.CheckboxItem,
-  menuItemStyles
+  menuItemStyles,
+  { justifyContent: "space-between" }
 );
 
 type CheckboxItemProps = DropdownCheckboxItemProps & { Icon?: React.ReactNode };

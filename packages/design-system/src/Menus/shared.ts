@@ -25,13 +25,14 @@ export const menuItemStyles = css({
   focusStyle: "inner",
   userSelect: "none",
   display: "flex",
+  gap: "$3",
   paddingInline: "$4",
   paddingBlock: "$2",
   minWidth: "200px",
   alignItems: "center",
   wordBreak: "break-word",
   hyphens: "auto",
-  justifyContent: "space-between",
+  cursor: "pointer",
 
   "&[data-state='checked']": {
     backgroundColor: "$primary3",
