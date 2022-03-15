@@ -1,11 +1,11 @@
 import {
-  Button,
   ErrorMessage,
   Field,
   Heading,
   Input,
   Link,
   Stack,
+  SubmitButton,
   Text,
   useForm,
 } from "@open-decision/design-system";
@@ -102,9 +102,13 @@ export default function Login(): JSX.Element {
                 {state.context.error}
               </ErrorMessage>
             ) : null}
-            <Button type="submit" css={{ marginTop: "$6" }}>
+            <SubmitButton
+              isLoading={state.matches("loggedOut.loggingIn")}
+              type="submit"
+              css={{ marginTop: "$6" }}
+            >
               Jetzt Anmelden
-            </Button>
+            </SubmitButton>
           </Form>
           <Text css={{ marginTop: "$6" }}>
             Sie haben noch kein Konto?{" "}

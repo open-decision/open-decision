@@ -6,8 +6,8 @@ import { styled, keyframes, StyleObject } from "../../stitches";
 import { Heading } from "../../Heading";
 import { Box } from "../../Box";
 import { ColorKeys } from "../../internal/utils";
-import { LoadingSpinner } from "../../LoadingSpinner/LoadingSpinner";
 import { Stack } from "../../Layout/Stack";
+import { SubmitButton, SubmitButtonProps } from "../../Button/SubmitButton";
 
 function DialogRoot({ children, ...props }: DialogRootProps) {
   return (
@@ -132,30 +132,8 @@ const ButtonRow = (props: SubmitButtonProps) => (
         Abbrechen
       </Dialog.ActionButton>
     </Dialog.Close>
-    <Dialog.SubmitButton {...props} />
+    <SubmitButton {...props} />
   </Stack>
-);
-
-type SubmitButtonProps = ButtonProps & {
-  isLoading: boolean;
-  colorScheme?: ColorKeys;
-};
-
-const SubmitButton = ({
-  isLoading,
-  children,
-  colorScheme,
-  css,
-  ...props
-}: SubmitButtonProps) => (
-  <ActionButton
-    type="submit"
-    colorScheme={colorScheme}
-    css={{ focusColor: colorScheme ? `$${colorScheme}11` : undefined, ...css }}
-    {...props}
-  >
-    {isLoading ? <LoadingSpinner colorScheme={colorScheme} /> : children}
-  </ActionButton>
 );
 
 export const Dialog = {
@@ -167,7 +145,6 @@ export const Dialog = {
   Close: DialogPrimitive.Close,
   CloseButton,
   Header,
-  SubmitButton,
   ActionButton,
   ButtonRow,
 };

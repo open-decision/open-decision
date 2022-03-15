@@ -58,7 +58,8 @@ export type Events =
   | { type: "SUCCESSFULL_PASSWORD_RESET" }
   | { type: "FAILED_PASSWORD_RESET"; error: string }
   | { type: "SUCCESSFULL_PASSWORD_RESET_REQUEST" }
-  | { type: "FAILED_PASSWORD_RESET_REQUEST"; error: string };
+  | { type: "FAILED_PASSWORD_RESET_REQUEST"; error: string }
+  | { type: "REDIRECT" };
 
 export type AuthService = Interpreter<Context, any, Events, State, any>;
 
@@ -97,6 +98,14 @@ export const createAuthenticationMachine = (router: NextRouter) =>
         },
         loggedIn: {
           initial: "redirectToLocation",
+          on: {
+            LOG_OUT: {
+              target: ".loggingOut",
+            },
+            REDIRECT: {
+              target: ".redirectToLocation",
+            },
+          },
           states: {
             idle: {
               after: {
@@ -132,11 +141,6 @@ export const createAuthenticationMachine = (router: NextRouter) =>
               },
             },
           },
-          on: {
-            LOG_OUT: {
-              target: ".loggingOut",
-            },
-          },
         },
         loggedOut: {
           entry: "clearUserDetailsFromContext",
@@ -163,13 +167,16 @@ export const createAuthenticationMachine = (router: NextRouter) =>
               },
               on: {
                 SUCCESSFULL_PASSWORD_RESET_REQUEST: {
-                  target: "#authentication.loggedOut.idle",
+                  target: "#authentication.loggedOut.passwordResetRequested",
                 },
                 FAILED_PASSWORD_RESET_REQUEST: {
                   target: "#authentication.loggedOut",
                   actions: "assignErrorToContext",
                 },
               },
+            },
+            passwordResetRequested: {
+              type: "final",
             },
             resetPassword: {
               invoke: {

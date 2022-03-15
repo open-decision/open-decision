@@ -8,7 +8,7 @@ type Props = { colorScheme?: ColorKeys; width?: React.CSSProperties["width"] };
 
 export function LoadingSpinner({ colorScheme = "primary" }: Props) {
   return (
-    <Icon label="Lädt">
+    <Icon label="Lädt" css={{ fontSize: "1.3em" }}>
       <SpinnerCircular
         color={theme.colors[`${colorScheme}11`].value}
         secondaryColor={theme.colors[`${colorScheme}4`].value}

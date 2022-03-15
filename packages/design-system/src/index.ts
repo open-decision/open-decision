@@ -1,7 +1,7 @@
 export * from "./Badge";
 export * from "./Box";
 export * from "./Layout";
-export * from "./Button/Button";
+export * from "./Button";
 export * from "./Cards";
 export * from "./Gallery";
 export * from "./Header";
@@ -11,7 +11,6 @@ export * from "./Form";
 export * from "./Link";
 export * from "./Menus";
 export * from "./Label/Label";
-export * from "./Button/ToggleButton";
 export * from "./Icon/Icon";
 export * from "./Overlays/Dialog/Dialog";
 export * from "./Overlays/Tooltip/Tooltip";

@@ -6,6 +6,7 @@ import {
   Input,
   Link,
   Stack,
+  SubmitButton,
   Text,
   useForm,
 } from "@open-decision/design-system";
@@ -108,9 +109,13 @@ export default function Login(): JSX.Element {
                 {state.context.error}
               </ErrorMessage>
             ) : null}
-            <Button css={{ marginTop: "$8" }} type="submit">
+            <SubmitButton
+              isLoading={state.matches("loggedOut.register")}
+              css={{ marginTop: "$8" }}
+              type="submit"
+            >
               Jetzt Registrieren
-            </Button>
+            </SubmitButton>
           </Form>
           <Text css={{ marginTop: "$6" }}>
             Sie haben bereits ein Konto?{" "}
