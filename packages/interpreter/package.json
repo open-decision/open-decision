@@ -19,7 +19,7 @@
   "sideEffects": false,
   "scripts": {
     "build": "pnpm build --filter @open-decision/interpreter^.. && rm -rf lib & tsc --composite false --incremental false & vite build",
-    "dev": "pnpm build --filter @open-decision/interpreter^.. && & tsc --composite false --incremental false & vite build --watch",
+    "dev": "tsc --composite false --incremental false & vite build --watch",
     "prepublish": "pnpm build",
     "prettier": "prettier --check src/",
     "prettier:fix": "prettier --write src/",
