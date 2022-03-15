@@ -167,7 +167,6 @@ export function OptionTargetInput({
             display: "grid",
             gridTemplateColumns: "max-content 1fr",
             borderRadius: "$md",
-            gap: "1px",
             layer: "2",
           }}
         >
@@ -184,6 +183,11 @@ export function OptionTargetInput({
                   borderTopLeftRadius: "inherit",
                   borderTopRightRadius: "inherit",
                   gridColumn: "1 / -1",
+                  marginBottom: "-1px",
+
+                  "&:focus-within, &:focus-visible": {
+                    zIndex: "$10",
+                  },
                 }}
                 placeholder="Antwort"
                 onBlur={() => {
