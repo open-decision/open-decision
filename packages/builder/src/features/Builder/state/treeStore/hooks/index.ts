@@ -14,6 +14,14 @@ export function useSelectedNode() {
   return nodes[selectedNodeId];
 }
 
+export function useIsPreviewable() {
+  const {
+    treeData: { nodes, startNode },
+  } = useSnapshot(treeStore);
+
+  return Object.values(nodes ?? {}).length > 0 && startNode;
+}
+
 export function useSelectedRelationId() {
   const {
     metadata: { selectedRelationId },

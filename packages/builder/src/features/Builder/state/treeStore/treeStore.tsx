@@ -53,6 +53,8 @@ export function addNode(node: Parameters<typeof BuilderNode.create>[0]) {
 
   treeStore.treeData.nodes[newNode.id] = newNode;
 
+  if (!treeStore.treeData.startNode) treeStore.treeData.startNode = newNode.id;
+
   return newNode;
 }
 
@@ -198,10 +200,6 @@ export function connect(target: string) {
   if (treeStore.metadata.connectionSourceNodeId == null) return;
 
   addRelation(treeStore.metadata.connectionSourceNodeId, { target });
-}
-
-export function hasNodes() {
-  return Object.values(treeStore.treeData.nodes ?? {}).length > 0;
 }
 
 export function addAssociatedNode(

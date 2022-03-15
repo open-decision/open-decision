@@ -10,8 +10,8 @@ import { TreeNameInput } from "./TreeNameInput";
 import Link from "next/link";
 import { ExportButton } from "./ExportButton";
 import { useNotificationStore } from "features/Notifications/NotificationState";
-import { hasNodes } from "../state/treeStore/treeStore";
 import { useRouter } from "next/router";
+import { useIsPreviewable } from "../state/treeStore/hooks";
 
 type HeaderProps = {
   css?: StyleObject;
@@ -23,11 +23,13 @@ export const EditorHeader = ({ css }: HeaderProps) => {
     query: { id },
   } = useRouter();
 
+  const isPreviewable = useIsPreviewable();
+
   return (
     <BaseHeader css={css}>
       <TreeNameInput />
       <Box css={{ display: "flex", gap: "$2", marginLeft: "auto" }}>
-        {hasNodes() && id ? (
+        {isPreviewable && id ? (
           <Link passHref href={`/preview/${id}`}>
             <SystemLink
               className={buttonStyles({ variant: "tertiary" })}
@@ -44,7 +46,7 @@ export const EditorHeader = ({ css }: HeaderProps) => {
                 variant: "info",
                 title: "Keine Knoten",
                 content:
-                  "Die Vorschau kann nur aufgerufen werden wenn es mindestens einen Knoten gibt.",
+                  "Die Vorschau kann nur aufgerufen werden wenn es mindestens einen Startknoten gibt",
               })
             }
           >
