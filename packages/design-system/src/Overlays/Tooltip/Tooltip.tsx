@@ -2,7 +2,6 @@ import * as React from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import { darkTheme, styled } from "../../stitches";
 import { overlayCss } from "../shared";
-import { Label } from "../../Label/Label";
 import { Text } from "../../Text";
 import { Stack } from "../../Layout";
 
@@ -35,7 +34,7 @@ export const Tooltip = {
   Trigger: StyledTrigger,
   Content: Content,
   Arrow: StyledArrow,
-  Title: Label,
+  Title: Text,
   Body,
   Provider: TooltipPrimitive.Provider,
 };
