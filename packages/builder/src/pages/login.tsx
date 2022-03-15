@@ -47,6 +47,7 @@ export default function Login(): JSX.Element {
             padding: "$9",
             boxShadow: "$7",
             borderRadius: "$md",
+            layer: "1",
           }}
         >
           <Heading size="large" css={{ marginBottom: "$3" }}>
@@ -63,6 +64,7 @@ export default function Login(): JSX.Element {
           >
             <Field label="Mailadresse">
               <Input
+                css={{ layer: "2" }}
                 {...register("email", {
                   required: {
                     value: true,
@@ -74,6 +76,7 @@ export default function Login(): JSX.Element {
             </Field>
             <Field label="Passwort" css={{ marginTop: "$4" }}>
               <Input
+                css={{ layer: "2" }}
                 type="password"
                 {...register("password", {
                   required: {

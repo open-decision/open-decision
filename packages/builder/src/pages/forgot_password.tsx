@@ -45,6 +45,7 @@ export default function ForgotPassword(): JSX.Element {
             padding: "$9",
             boxShadow: "$7",
             borderRadius: "$md",
+            layer: "1",
           }}
         >
           <Heading css={{ marginBottom: "$3" }}>Passwort zurücksetzen</Heading>
@@ -60,6 +61,7 @@ export default function ForgotPassword(): JSX.Element {
           >
             <Field label="Mailadresse">
               <Input
+                css={{ layer: "2" }}
                 {...register("email", {
                   required: {
                     value: true,
