@@ -91,7 +91,6 @@ export default function Login(): JSX.Element {
               css={{
                 marginLeft: "auto",
                 marginTop: "$4",
-                color: "$black",
               }}
               underline={false}
               href="/forgot_password"
