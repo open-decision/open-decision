@@ -11,7 +11,7 @@ import * as Separator from "@radix-ui/react-separator";
 import { Bold, Italic, Link, List, Underline } from "react-feather";
 import { HeadingIcon } from "@radix-ui/react-icons";
 import { Editor } from "@tiptap/react";
-import { NumberedList } from "components/TipTap/NumberedListIcon";
+import { NumberedList } from "./NumberedListIcon";
 
 const StyledSeparator = styled(Separator.Root, {
   backgroundColor: "$gray7",

@@ -8,7 +8,7 @@
     ".": {
       "import": "./lib/index.mjs",
       "require": "./lib/index.cjs",
-      "types": "./lib/index.js"
+      "types": "./lib/index.d.ts"
     }
   },
   "files": [

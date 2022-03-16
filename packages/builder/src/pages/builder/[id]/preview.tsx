@@ -20,6 +20,10 @@ import { QueryClientProvider } from "react-query";
 import { queryClient } from "features/Data/queryClient";
 import { GetServerSideProps } from "next";
 import { useGetFullTreeQuery } from "features/Data/generated/graphql";
+import {
+  TreeProvider,
+  useTree,
+} from "features/Builder/state/treeStore/TreeProvider";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
@@ -29,21 +33,35 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 export default function VorschauPage({ id }) {
   return (
-    <ErrorBoundary fallback={ErrorFallback}>
-      <QueryClientProvider client={queryClient}>
-        <Vorschau id={id} />
-      </QueryClientProvider>
-    </ErrorBoundary>
+    <React.Suspense fallback={<div>Loading...</div>}>
+      <ErrorBoundary fallback={ErrorFallback}>
+        <TreeProvider id={id}>
+          <QueryClientProvider client={queryClient}>
+            <Vorschau id={id} />
+          </QueryClientProvider>
+        </TreeProvider>
+      </ErrorBoundary>
+    </React.Suspense>
   );
 }
 
 type Props = { id: number };
 
 function Vorschau({ id }: Props) {
-  const { data, isLoading } = useGetFullTreeQuery({ id });
+  const { syncedStore } = useTree();
 
-  return isLoading ? null : (
-    <InterpreterProvider tree={data?.decisionTree}>
+  return (
+    <InterpreterProvider
+      tree={{
+        id,
+        name: syncedStore.name,
+        tags: [],
+        treeData: {
+          nodes: syncedStore.nodes,
+          startNode: syncedStore.startNode,
+        },
+      }}
+    >
       <MainContent
         css={{
           display: "grid",
@@ -65,7 +83,7 @@ function Vorschau({ id }: Props) {
                 borderBottom: "1px solid $gray7",
               }}
             >
-              <Link passHref href="/">
+              <Link passHref href={`/builder/${id}`}>
                 <SystemLink
                   css={{
                     color: "$gray11",

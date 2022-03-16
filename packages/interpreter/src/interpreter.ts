@@ -11,7 +11,7 @@ export class Interpreter {
   hasHistory: boolean;
   tree: BuilderTree.TTree;
 
-  constructor(json: any) {
+  constructor(json: BuilderTree.TTree) {
     /**
      * The log of visited nodes and given answers.
      */
@@ -25,8 +25,13 @@ export class Interpreter {
 
     const decodedJSON = BuilderTree.Type.safeParse(json);
 
-    if (!decodedJSON.success)
-      throw new Error(`The provided tree is not in the correct format`);
+    if (!decodedJSON.success) {
+      throw new Error(
+        `The provided tree is not in the correct format: ${decodedJSON.error}`
+      );
+    }
+
+    console.log(decodedJSON.data);
 
     this.tree = decodedJSON.data;
     this.currentNode = this.tree.treeData.startNode ?? "";

@@ -30,7 +30,7 @@ export const EditorHeader = ({ css }: HeaderProps) => {
       <TreeNameInput />
       <Box css={{ display: "flex", gap: "$2", marginLeft: "auto" }}>
         {isPreviewable && id ? (
-          <Link passHref href={`/preview/${id}`}>
+          <Link passHref href={`/builder/${id}/preview`}>
             <SystemLink
               className={buttonStyles({ variant: "tertiary" })}
               underline={false}

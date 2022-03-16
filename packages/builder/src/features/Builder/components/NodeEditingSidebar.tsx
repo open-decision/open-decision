@@ -23,7 +23,7 @@ import {
   useStartNode,
   useTreeData,
 } from "../state/treeStore/hooks";
-import { Tiptap } from "components/TipTap/TipTap";
+import { RichTextEditor } from "components/RichTextEditor/RichTextEditor";
 import { useTree } from "../state/treeStore/TreeProvider";
 
 export function NodeEditingSidebar() {
@@ -109,7 +109,7 @@ export function NodeEditingSidebar() {
         >
           Inhalt
         </Label>
-        <Tiptap id={node.id} content={node.content} />
+        <RichTextEditor id={node.id} content={node.content} />
       </Box>
       {Object.values(parentNodes).length > 0 ? (
         <Box as="section">

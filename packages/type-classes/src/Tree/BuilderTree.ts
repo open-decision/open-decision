@@ -13,6 +13,7 @@ import * as PublicTree from "./PublicTree";
 enablePatches();
 
 export const Type = PublicTree.Type.extend({
+  name: z.string().optional(),
   treeData: PublicTree.TreeData.extend({
     startNode: z.string().optional(),
     nodes: BuilderNode.Record,
@@ -114,17 +115,6 @@ export const updateNodePosition: NodeUpdateFn<UpdateNodePositionPayload> =
   (tree: TTree): TreeUpdateReturn =>
     produceWithPatches(tree, (draft) => {
       draft.treeData.nodes[nodeId].position = position;
-    });
-
-export type UpdateNodeContentPayload = {
-  nodeId: string;
-  content: BuilderNode.TNode["content"];
-};
-export const updateNodeContent: NodeUpdateFn<UpdateNodeContentPayload> =
-  ({ nodeId, content }) =>
-  (tree: TTree): TreeUpdateReturn =>
-    produceWithPatches(tree, (draft) => {
-      draft.treeData.nodes[nodeId].content = content;
     });
 
 export type UpdateNodeRelationsPayload = {

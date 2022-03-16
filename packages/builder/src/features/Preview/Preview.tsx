@@ -3,13 +3,13 @@ import * as React from "react";
 import { useInterpreter } from "@open-decision/interpreter";
 import { AnswersForm } from "./components/AnswersForm";
 import { useNode } from "features/Builder/state/treeStore/hooks";
+import { RichTextRenderer } from "components/RichTextEditor/RichTextRenderer";
 
 export function Preview() {
   const [snapshot, interpreter] = useInterpreter();
   const node = useNode(interpreter.currentNode);
 
-  if (!node)
-    throw new Error(`The Mobile Preview could not retrieve the currentNode.`);
+  if (!node) throw new Error(`The Preview could not retrieve the currentNode.`);
 
   const relation = React.useMemo(
     () => snapshot.getAnswer(node?.id),
@@ -26,6 +26,7 @@ export function Preview() {
       }}
     >
       <Box css={{ gridColumn: "2" }}>
+        <RichTextRenderer id={node.id} content={node.content} />
         <AnswersForm
           relation={relation}
           node={node}

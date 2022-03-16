@@ -479,12 +479,14 @@ importers:
 
   packages/interpreter:
     specifiers:
+      '@open-decision/type-classes': workspace:^
       typescript: ^4.6.2
       valtio: ^1.3.1
       vite: ^2.8.6
     dependencies:
       valtio: 1.3.1
     devDependencies:
+      '@open-decision/type-classes': link:../type-classes
       typescript: 4.6.2
       vite: 2.8.6
 

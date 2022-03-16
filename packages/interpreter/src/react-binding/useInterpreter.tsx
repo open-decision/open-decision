@@ -1,3 +1,4 @@
+import { BuilderTree } from "@open-decision/type-classes";
 import * as React from "react";
 import { proxy, useSnapshot } from "valtio";
 import { Interpreter } from "../interpreter";
@@ -9,7 +10,7 @@ export function InterpreterProvider({
   tree,
 }: {
   children: React.ReactNode;
-  tree: any;
+  tree: BuilderTree.TTree;
 }) {
   const interpreter = React.useRef(proxy(new Interpreter(tree)));
 

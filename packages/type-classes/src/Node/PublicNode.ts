@@ -44,7 +44,7 @@ export const RichTextContent = z.union([
 
 export const Type = z.object({
   id: z.string().uuid(),
-  content: RichTextContent,
+  content: z.any(),
   relations: z.record(PublicRelation.Type),
 });
 
