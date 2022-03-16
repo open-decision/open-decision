@@ -31,8 +31,6 @@ export class Interpreter {
       );
     }
 
-    console.log(decodedJSON.data);
-
     this.tree = decodedJSON.data;
     this.currentNode = this.tree.treeData.startNode ?? "";
   }

@@ -27,8 +27,6 @@ export function createTreeStore() {
 
   const yDoc = new Doc();
 
-  console.log(yDoc);
-
   const yMap = yDoc.getMap("tree");
 
   bindProxyAndYMap(syncedStore, yMap, { transactionOrigin: "valtio" });
