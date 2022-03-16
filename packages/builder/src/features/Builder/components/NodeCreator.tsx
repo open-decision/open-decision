@@ -13,13 +13,14 @@ import {
 import { Plus } from "react-feather";
 import { useEditor } from "../state/useEditor";
 import { nodeNameMaxLength } from "../utilities/constants";
-import { addNode, selectNode } from "../state/treeStore/treeStore";
 import { useNodes } from "../state/treeStore/hooks";
+import { useTree } from "../state/treeStore/TreeProvider";
 
 type Props = { css?: StyleObject };
 
 export const NodeCreator = ({ css }: Props) => {
   const nodes = useNodes();
+  const { addNode, selectNode } = useTree();
 
   const { getCenter } = useEditor();
   const [Form] = useForm({
@@ -78,6 +79,8 @@ const NodeCreatorInput = ({ createHandler, autoFocus }) => {
   };
 
   const { isCreating, inputValue, setInputValue } = useCombobox();
+
+  const { selectNode } = useTree();
 
   return (
     <Box css={{ width: "300px" }}>

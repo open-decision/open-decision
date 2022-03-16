@@ -21,10 +21,7 @@ import Dropcursor from "@tiptap/extension-dropcursor";
 import GapCursor from "@tiptap/extension-gapcursor";
 import Link from "@tiptap/extension-link";
 import Collaboration from "@tiptap/extension-collaboration";
-import {
-  updateNodeContent,
-  yDoc,
-} from "features/Builder/state/treeStore/treeStore";
+import { useTree } from "features/Builder/state/treeStore/TreeProvider";
 
 const StyledEditorContent = styled(EditorContent, {
   focusStyle: "inner-within",
@@ -53,6 +50,8 @@ const StyledEditorContent = styled(EditorContent, {
 type Props = { id: string; content: Content };
 
 export const Tiptap = ({ id, content }: Props) => {
+  const { yDoc, updateNodeContent } = useTree();
+
   const editor = useEditor({
     extensions: [
       Document,

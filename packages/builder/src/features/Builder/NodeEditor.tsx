@@ -13,8 +13,6 @@ type NodeEditorProps = {
 export const NodeEditor = ({ css }: NodeEditorProps) => {
   const selectedNode = useSelectedNode();
 
-  const sidebarOpen = selectedNode != null;
-
   return (
     <>
       <Canvas css={css}>
@@ -25,7 +23,6 @@ export const NodeEditor = ({ css }: NodeEditorProps) => {
             left: "$space$4",
           }}
         />
-        {/* <UndoRedo /> */}
       </Canvas>
       <Sidebar
         css={{
@@ -34,14 +31,9 @@ export const NodeEditor = ({ css }: NodeEditorProps) => {
           groupColor: "$gray11",
           layer: "1",
         }}
-        open={sidebarOpen}
+        open={selectedNode != null}
       >
-        {sidebarOpen ? (
-          <NodeEditingSidebar
-            node={Object.assign({}, selectedNode)}
-            key={selectedNode.id}
-          />
-        ) : null}
+        <NodeEditingSidebar />
       </Sidebar>
     </>
   );

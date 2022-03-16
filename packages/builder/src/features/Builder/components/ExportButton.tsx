@@ -6,12 +6,12 @@ import {
   StyleObject,
 } from "@open-decision/design-system";
 import { readableDate } from "features/Dashboard/utils";
-import { useTree } from "../state/treeStore/hooks";
+import { useTreeData } from "../state/treeStore/hooks";
 
 type Props = { css?: StyleObject };
 
 export function ExportButton({ css }: Props) {
-  const tree = useTree();
+  const tree = useTreeData();
 
   const file = React.useMemo(
     () =>

@@ -1,84 +1,79 @@
 import { BuilderNode, BuilderTree } from "@open-decision/type-classes";
 import { pickBy } from "ramda";
+import { useTree } from "../TreeProvider";
 import { useSnapshot } from "valtio";
-import { treeStore } from "../treeStore";
 
 export function useSelectedNode() {
-  const {
-    metadata: { selectedNodeId },
-    treeData: { nodes },
-  } = useSnapshot(treeStore);
+  const { nonSyncedStore } = useTree();
 
-  if (!selectedNodeId || !nodes) return undefined;
+  const { selectedNodeId } = useSnapshot(nonSyncedStore);
 
-  return nodes[selectedNodeId];
+  return useNode(selectedNodeId ?? "");
 }
 
 export function useIsPreviewable() {
-  const {
-    treeData: { nodes, startNode },
-  } = useSnapshot(treeStore);
+  const { syncedStore } = useTree();
+
+  const { nodes, startNode } = useSnapshot(syncedStore);
 
   return Object.values(nodes ?? {}).length > 0 && startNode;
 }
 
 export function useSelectedRelationId() {
-  const {
-    metadata: { selectedRelationId },
-  } = useSnapshot(treeStore);
+  const { nonSyncedStore } = useTree();
+
+  const { selectedRelationId } = useSnapshot(nonSyncedStore);
 
   return selectedRelationId;
 }
 
 export function useStartNode() {
-  const {
-    treeData: { startNode },
-  } = useSnapshot(treeStore);
+  const { syncedStore } = useTree();
+
+  const { startNode } = useSnapshot(syncedStore);
 
   return startNode;
 }
 
 export function useConnect() {
-  const {
-    metadata: { connectionSourceNodeId, validConnections },
-  } = useSnapshot(treeStore);
+  const { nonSyncedStore } = useTree();
+
+  const { connectionSourceNodeId, validConnections } =
+    useSnapshot(nonSyncedStore);
 
   return { connectionSourceNodeId, validConnections };
 }
 
 export function useNodes(ids?: string[]): BuilderNode.TNodesRecord {
-  const {
-    treeData: { nodes },
-  } = useSnapshot(treeStore);
+  const { syncedStore } = useTree();
+
+  const { nodes } = useSnapshot(syncedStore);
 
   if (ids && nodes) return pickBy((node) => ids.includes(node.id))(nodes);
 
-  return nodes ?? {};
+  return nodes;
 }
 
 export function useNode(id: string) {
-  const {
-    treeData: { nodes },
-  } = useSnapshot(treeStore);
+  const { syncedStore } = useTree();
+
+  const { nodes } = useSnapshot(syncedStore);
 
   if (!nodes) return undefined;
 
-  return nodes[id];
+  return nodes[id] ?? undefined;
 }
 
-export function useTree() {
-  const {
-    metadata: { name, id },
-    treeData,
-  } = useSnapshot(treeStore);
+export function useTreeData() {
+  const { syncedStore } = useTree();
 
-  return { name, treeData, id };
+  const { ...treeData } = useSnapshot(syncedStore);
+
+  return { treeData };
 }
 
 export function useParents(nodeId: string) {
-  return BuilderTree.getParents(nodeId)(treeStore.treeData.nodes);
-}
+  const { syncedStore } = useTree();
 
-export function useStatus() {
-  return treeStore.metadata.status;
+  return BuilderTree.getParents(nodeId)(syncedStore.nodes ?? {});
 }

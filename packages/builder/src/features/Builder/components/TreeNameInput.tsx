@@ -6,10 +6,10 @@ import {
   ControlledInput,
   Input,
 } from "@open-decision/design-system";
-import { updateTreeName } from "features/Builder/state/treeStore/treeStore";
 import * as React from "react";
 import { ProjectMenu } from "./ProjectMenu";
-import { useTree } from "../state/treeStore/hooks";
+import { useTreeData } from "../state/treeStore/hooks";
+import { useTree } from "../state/treeStore/TreeProvider";
 
 const Container = styled(Box, {
   display: "flex",
@@ -19,7 +19,8 @@ const Container = styled(Box, {
 type Props = { css?: StyleObject };
 
 export function TreeNameInput({ css }: Props) {
-  const { name } = useTree();
+  const { updateTreeName } = useTree();
+  const { name } = useTreeData();
   const [Form] = useForm({ defaultValues: { name: name ?? "" } });
 
   return (

@@ -10,13 +10,7 @@ import { ErrorFallback } from "features/Error/ErrorFallback";
 import { QueryClientProvider } from "react-query";
 import { queryClient } from "features/Data/queryClient";
 import { GetServerSideProps } from "next";
-import { yDoc } from "features/Builder/state/treeStore/treeStore";
-import {
-  connectLocalStorage,
-  connectWebsocket,
-} from "features/Data/yjs-connectors";
-import { useAuth } from "features/Auth/useAuth";
-import { WebsocketProvider } from "y-websocket";
+import { TreeProvider } from "features/Builder/state/treeStore/TreeProvider";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
@@ -25,37 +19,29 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 export default function BuilderPage({ id }): JSX.Element {
-  const [auth] = useAuth();
-
-  React.useEffect(() => {
-    let websocket: WebsocketProvider | null;
-    if (auth.context.user?.access.token) {
-      connectLocalStorage(yDoc, id);
-      websocket = connectWebsocket(yDoc, id, auth.context.user?.access.token);
-    }
-
-    return () => websocket?.destroy();
-  }, [auth.context.user?.access.token, id]);
-
   return (
-    <ErrorBoundary fallback={ErrorFallback}>
-      <QueryClientProvider client={queryClient}>
-        <MainContent
-          css={{
-            overflow: "hidden",
-            display: "grid",
-            gridTemplateColumns: `1fr ${sidebarWidth}px`,
-            gridTemplateRows: "max-content 1fr",
-          }}
-        >
-          <ReactFlowProvider>
-            <EditorProvider>
-              <EditorHeader css={{ gridColumn: "1 / -1", gridRow: "1" }} />
-              <NodeEditor css={{ gridColumn: "1 / -1", gridRow: "2" }} />
-            </EditorProvider>
-          </ReactFlowProvider>
-        </MainContent>
-      </QueryClientProvider>
-    </ErrorBoundary>
+    <React.Suspense fallback={<div>Loading...</div>}>
+      <ErrorBoundary fallback={ErrorFallback}>
+        <QueryClientProvider client={queryClient}>
+          <MainContent
+            css={{
+              overflow: "hidden",
+              display: "grid",
+              gridTemplateColumns: `1fr ${sidebarWidth}px`,
+              gridTemplateRows: "max-content 1fr",
+            }}
+          >
+            <TreeProvider id={id}>
+              <ReactFlowProvider>
+                <EditorProvider>
+                  <EditorHeader css={{ gridColumn: "1 / -1", gridRow: "1" }} />
+                  <NodeEditor css={{ gridColumn: "1 / -1", gridRow: "2" }} />
+                </EditorProvider>
+              </ReactFlowProvider>
+            </TreeProvider>
+          </MainContent>
+        </QueryClientProvider>
+      </ErrorBoundary>
+    </React.Suspense>
   );
 }

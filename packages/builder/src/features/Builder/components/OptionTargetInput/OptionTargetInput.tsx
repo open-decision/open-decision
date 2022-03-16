@@ -22,19 +22,8 @@ import { DragHandle } from "./DragHandle";
 import { useUnmount } from "react-use";
 import { Reorder, useDragControls } from "framer-motion";
 import { map, values } from "remeda";
-import {
-  addAssociatedNode,
-  addRelation,
-  deleteRelations,
-  deselectRelation,
-  selectNode,
-  selectRelation,
-  updateNodeRelations,
-  updateRelation,
-  updateRelationAnswer,
-  updateRelationTarget,
-} from "features/Builder/state/treeStore/treeStore";
 import { useNode, useNodes } from "features/Builder/state/treeStore/hooks";
+import { useTree } from "features/Builder/state/treeStore/TreeProvider";
 
 const StyledReorderGroup = styled(Reorder.Group, {
   listStyle: "none",
@@ -46,6 +35,7 @@ const StyledReorderGroup = styled(Reorder.Group, {
 type SingleSelectProps = { node: BuilderNode.TNode };
 
 export function OptionTargetInputs({ node }: SingleSelectProps) {
+  const { addRelation, deleteRelations, updateNodeRelations } = useTree();
   const relations = Object.values(node.relations);
   const ref = React.useRef<HTMLDivElement | null>(null);
 
@@ -114,6 +104,15 @@ export function OptionTargetInput({
   onDelete,
   groupRef,
 }: SingleSelectInputProps): JSX.Element {
+  const {
+    addAssociatedNode,
+    deselectRelation,
+    selectRelation,
+    updateRelation,
+    updateRelationAnswer,
+    updateRelationTarget,
+  } = useTree();
+
   const nodes = useNodes();
 
   const node = useNode(nodeId);
@@ -265,6 +264,7 @@ export function OptionTargetInput({
 type NodeLinkProps = { target?: string } & Omit<ButtonProps, "label" | "Icon">;
 
 function NodeLink({ target, ...props }: NodeLinkProps) {
+  const { selectNode } = useTree();
   const node = useNode(target ?? "");
 
   return (

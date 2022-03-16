@@ -7,16 +7,15 @@ import {
 import { calculateCenterOfNode } from "../utilities/calculateCenterOfNode";
 import { sidebarWidth, transitionDuration } from "../utilities/constants";
 import { BuilderNode } from "@open-decision/type-classes";
-import { TCoordinates } from "@open-decision/type-classes/src/Node/BuilderNode";
 import { useSelectedNode } from "./treeStore/hooks";
-import { selectNode } from "./treeStore/treeStore";
+import { useTree } from "./treeStore/TreeProvider";
 
 type projectCoordinatesFn = (
-  coordinates: TCoordinates
-) => TCoordinates | undefined;
+  coordinates: BuilderNode.TCoordinates
+) => BuilderNode.TCoordinates | undefined;
 
 type EditorState = {
-  getCenter: () => TCoordinates | undefined;
+  getCenter: () => BuilderNode.TCoordinates | undefined;
   projectCoordinates: projectCoordinatesFn;
   reactFlowWrapperRef: React.MutableRefObject<HTMLDivElement | null>;
   reactFlowInstance?: OnLoadParams<any>;
@@ -34,6 +33,7 @@ type TreeProviderProps = Omit<
   "value"
 >;
 export function EditorProvider({ children }: TreeProviderProps) {
+  const { selectNode } = useTree();
   const selectedNode = useSelectedNode();
 
   const reactFlowWrapperRef = React.useRef<HTMLDivElement | null>(null);

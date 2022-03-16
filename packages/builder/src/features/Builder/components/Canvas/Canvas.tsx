@@ -8,21 +8,13 @@ import { transitionDuration } from "features/Builder/utilities/constants";
 import { Node } from "./Nodes/Node";
 import { NodeData } from "features/Builder/types/react-flow";
 import {
-  abortConnecting,
-  addNode,
-  deleteNodes,
-  selectNode,
-  startConnecting,
-  connect,
-  updateNodePosition,
-} from "features/Builder/state/treeStore/treeStore";
-import {
   useConnect,
   useNodes,
   useSelectedNode,
   useSelectedRelationId,
   useStartNode,
 } from "features/Builder/state/treeStore/hooks";
+import { useTree } from "features/Builder/state/treeStore/TreeProvider";
 
 const validConnectEvent = (
   target: MouseEvent["target"]
@@ -50,6 +42,15 @@ const customNodes = { customNode: Node };
 type Props = { children?: React.ReactNode; css?: StyleObject };
 
 export function Canvas({ children, css }: Props) {
+  const {
+    abortConnecting,
+    addNode,
+    deleteNodes,
+    selectNode,
+    startConnecting,
+    connect,
+    updateNodePosition,
+  } = useTree();
   const nodes = useNodes();
   const selectedNode = useSelectedNode();
   const selectedRelationId = useSelectedRelationId();

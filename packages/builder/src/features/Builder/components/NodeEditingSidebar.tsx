@@ -11,30 +11,27 @@ import {
 } from "@open-decision/design-system";
 import { OptionTargetInputs } from "features/Builder/components/OptionTargetInput/OptionTargetInput";
 import * as React from "react";
-import { BuilderNode, BuilderTree } from "@open-decision/type-classes";
+import { BuilderTree } from "@open-decision/type-classes";
 import { nodeNameMaxLength } from "../utilities/constants";
 import { NodeMenu } from "./Canvas/Nodes/NodeMenu";
 import { NodeLabel } from "./Canvas/Nodes/NodeLabel";
 import { ChevronRight, Star } from "react-feather";
-import { selectNode, updateNodeName } from "../state/treeStore/treeStore";
 import {
   useNodes,
   useParents,
   useSelectedNode,
   useStartNode,
-  useTree,
+  useTreeData,
 } from "../state/treeStore/hooks";
 import { Tiptap } from "components/TipTap/TipTap";
+import { useTree } from "../state/treeStore/TreeProvider";
 
-type NodeEditingSidebarProps = { node: BuilderNode.TNode };
-
-export function NodeEditingSidebar({
-  node,
-}: NodeEditingSidebarProps): JSX.Element {
-  const tree = useTree();
-  const parentNodeIds = useParents(node.id);
+export function NodeEditingSidebar() {
+  const node = useSelectedNode();
+  const tree = useTreeData();
+  const parentNodeIds = useParents(node?.id ?? "");
   const startNode = useStartNode();
-  const selectedNode = useSelectedNode();
+  const { selectNode, updateNodeName } = useTree();
 
   const parentNodes = useNodes(parentNodeIds);
   const [Form] = useForm({
@@ -42,11 +39,11 @@ export function NodeEditingSidebar({
     mode: "onChange",
   });
 
-  const isStartNode = node.id === startNode;
+  const isStartNode = node?.id === startNode;
 
-  return (
+  return node ? (
     <>
-      <Box as="header" key={selectedNode?.id ?? ""}>
+      <Box as="header" key={node.id ?? ""}>
         <Form
           onSubmit={({ name }) => updateNodeName(node.id, name)}
           css={{ gap: "$2", display: "flex", flexDirection: "column" }}
@@ -162,5 +159,5 @@ export function NodeEditingSidebar({
         <OptionTargetInputs node={node} />
       </Box>
     </>
-  );
+  ) : null;
 }

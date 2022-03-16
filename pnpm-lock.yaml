@@ -294,6 +294,7 @@ importers:
       react-query: ^3.34.16
       react-use: ^17.3.2
       remeda: ^0.0.32
+      suspend-react: ^0.0.8
       typescript: ^4.6.2
       utility-types: ^3.10.0
       uuid: ^8.3.2
@@ -306,7 +307,6 @@ importers:
       yjs: ^13.5.28
       zod: ^3.13.4
       zustand: ^3.7.0
-      zustand-yjs: ^0.0.14
     dependencies:
       '@fontsource/poppins': 4.5.3
       '@open-decision/design-system': link:../design-system
@@ -366,6 +366,7 @@ importers:
       react-query: 3.34.16_react-dom@17.0.2+react@17.0.2
       react-use: 17.3.2_react-dom@17.0.2+react@17.0.2
       remeda: 0.0.32
+      suspend-react: 0.0.8_react@17.0.2
       uuid: 8.3.2
       valtio: 1.3.1_react@17.0.2
       valtio-yjs: 0.3.1_valtio@1.3.1+yjs@13.5.28
@@ -376,7 +377,6 @@ importers:
       yjs: 13.5.28
       zod: 3.13.4
       zustand: 3.7.1_react@17.0.2
-      zustand-yjs: 0.0.14_8df3216a1b1bee8d35682efca55b63ed
     devDependencies:
       '@graphql-codegen/cli': 2.6.2_45714620a984ae6de3180a0d408eb21a
       '@graphql-codegen/introspection': 2.1.1_graphql@16.3.0
@@ -479,12 +479,10 @@ importers:
 
   packages/interpreter:
     specifiers:
-      '@open-decision/type-classes': workspace:^0.0.1
       typescript: ^4.6.2
       valtio: ^1.3.1
       vite: ^2.8.6
     dependencies:
-      '@open-decision/type-classes': link:../type-classes
       valtio: 1.3.1
     devDependencies:
       typescript: 4.6.2
@@ -7967,6 +7965,7 @@ packages:
     resolution: {integrity: sha512-wEP+B8hzvy6ORDv1QBhcQia4j6ea4SFIBttHYpXKPFZRviBvknq0FRh3VrIxeXUmsPkwuXVZrVGG7KUVONmXCQ==}
     dependencies:
       '@types/react': 17.0.40
+    dev: true
 
   /@types/react-redux/7.1.23:
     resolution: {integrity: sha512-D02o3FPfqQlfu2WeEYwh3x2otYd2Dk1o8wAfsA0B1C2AJEFxE663Ozu7JzuWbznGgW248NaOF6wsqCGNq9d3qw==}
@@ -9680,7 +9679,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001307
+      caniuse-lite: 1.0.30001316
       electron-to-chromium: 1.4.65
       escalade: 3.1.1
       node-releases: 2.0.1
@@ -9889,10 +9888,6 @@ packages:
 
   /caniuse-lite/1.0.30001298:
     resolution: {integrity: sha512-AcKqikjMLlvghZL/vfTHorlQsLDhGRalYf1+GmWCf5SCMziSGjRYQW/JEksj14NaYHIR6KIhrFAy0HV5C25UzQ==}
-    dev: true
-
-  /caniuse-lite/1.0.30001307:
-    resolution: {integrity: sha512-+MXEMczJ4FuxJAUp0jvAl6Df0NI/OfW1RWEE61eSmzS7hw6lz4IKutbhbXendwq8BljfFuHtu26VWsg4afQ7Ng==}
     dev: true
 
   /caniuse-lite/1.0.30001316:
@@ -20049,6 +20044,14 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
+  /suspend-react/0.0.8_react@17.0.2:
+    resolution: {integrity: sha512-ZC3r8Hu1y0dIThzsGw0RLZplnX9yXwfItcvaIzJc2VQVi8TGyGDlu92syMB5ulybfvGLHAI5Ghzlk23UBPF8xg==}
+    peerDependencies:
+      react: '>=17.0'
+    dependencies:
+      react: 17.0.2
+    dev: false
+
   /svg-parser/2.0.4:
     resolution: {integrity: sha512-e4hG1hRwoOdRb37cIMSgzNsxyzKfayW6VOflrwvR+/bzrkyxY/31WkbgnQpgtrNp1SdpJvpUAGTa/ZoiPNDuRQ==}
     dev: true
@@ -22286,20 +22289,6 @@ packages:
 
   /zod/3.13.4:
     resolution: {integrity: sha512-LZRucWt4j/ru5azOkJxCfpR87IyFDn8h2UODdqvXzZLb3K7bb9chUrUIGTy3BPsr8XnbQYfQ5Md5Hu2OYIo1mg==}
-    dev: false
-
-  /zustand-yjs/0.0.14_8df3216a1b1bee8d35682efca55b63ed:
-    resolution: {integrity: sha512-KCi8i9j/T2Px3IHBRkcZVIKEdN75SJyMivUAyX42hlC7bi9A+HB06Vspq6aSZinpM2tR+yOKm4WflYhwMeGOPg==}
-    peerDependencies:
-      y-protocols: '>=1.0.5'
-      yjs: '>=13.0.0'
-      zustand: '>=3.5.13'
-    dependencies:
-      '@types/react': 17.0.40
-      '@types/react-dom': 17.0.13
-      y-protocols: 1.0.5
-      yjs: 13.5.28
-      zustand: 3.7.1_react@17.0.2
     dev: false
 
   /zustand/3.7.1_react@17.0.2:
