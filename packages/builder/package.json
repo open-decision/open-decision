@@ -103,7 +103,7 @@
     "xstate": "^4.30.6",
     "y-indexeddb": "^9.0.7",
     "y-protocols": "^1.0.5",
-    "y-websocket": "^1.3.18",
+    "y-websocket": "github:PhilGarb/y-websocket#master",
     "yjs": "^13.5.28",
     "zod": "^3.13.4",
     "zustand": "^3.7.0"

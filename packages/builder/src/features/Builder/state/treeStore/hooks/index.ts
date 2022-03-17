@@ -49,6 +49,14 @@ export function useNodes(ids?: string[]): BuilderNode.TNodesRecord {
 
   const { nodes } = useSnapshot(syncedStore);
 
+  // const nodesMap = yDoc.getMap("nodes");
+
+  // let nodes: BuilderNode.TNodesRecord = {};
+
+  // nodesMap.observeDeep(() => {
+  //   nodes = Object.fromEntries(nodesMap.entries());
+  // });
+
   if (ids && nodes) return pickBy((node) => ids.includes(node.id))(nodes);
 
   return nodes;
@@ -67,9 +75,9 @@ export function useNode(id: string) {
 export function useTreeData() {
   const { syncedStore } = useTree();
 
-  const { ...treeData } = useSnapshot(syncedStore);
+  const snapshot = useSnapshot(syncedStore);
 
-  return { treeData };
+  return { ...snapshot };
 }
 
 export function useParents(nodeId: string) {

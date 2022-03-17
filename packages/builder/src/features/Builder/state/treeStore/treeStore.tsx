@@ -5,13 +5,13 @@ import {
 } from "@open-decision/type-classes";
 import { proxy } from "valtio";
 import { bindProxyAndYMap } from "valtio-yjs";
-import { Doc } from "yjs";
+import * as Y from "yjs";
 
 declare module "valtio" {
   function useSnapshot<T extends object>(p: T): T;
 }
 
-export function createTreeStore() {
+export function createTreeStore(id: string, yMap: Y.Map<unknown>) {
   const nonSyncedStore = proxy({
     selectedRelationId: "",
     selectedNodeId: "",
@@ -21,15 +21,11 @@ export function createTreeStore() {
 
   const syncedStore = proxy({
     startNode: "",
-    nodes: {} as BuilderNode.TNodesRecord,
+    nodes: {},
     name: "",
   });
 
-  const yDoc = new Doc();
-
-  const yMap = yDoc.getMap("tree");
-
-  bindProxyAndYMap(syncedStore, yMap, { transactionOrigin: "valtio" });
+  bindProxyAndYMap(syncedStore, yMap, { transactionOrigin: `valtio ${id}` });
 
   function updateStartNode(startNode: string) {
     syncedStore.startNode = startNode;
@@ -50,9 +46,10 @@ export function createTreeStore() {
   function addNode(node: Parameters<typeof BuilderNode.create>[0]) {
     const newNode = BuilderNode.create(node);
 
-    syncedStore.nodes[newNode.id] = newNode;
+    // yMap.set(newNode.id, newNode);
 
-    if (syncedStore.startNode.length === 0) syncedStore.startNode = newNode.id;
+    syncedStore.nodes[newNode.id] = newNode;
+    if (!syncedStore.startNode) syncedStore.startNode = newNode.id;
 
     return newNode;
   }
@@ -243,6 +240,5 @@ export function createTreeStore() {
     addNode,
     updateRelationTarget,
     addRelation,
-    yDoc,
   };
 }
