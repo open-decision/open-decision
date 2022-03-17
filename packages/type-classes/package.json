@@ -4,6 +4,7 @@
   "main": "./lib/index.cjs",
   "module": "./lib/index.mjs",
   "types": "./lib/index.d.ts",
+  "type": "module",
   "exports": {
     ".": {
       "import": "./lib/index.mjs",
