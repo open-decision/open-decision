@@ -33,7 +33,7 @@ export const NodeEditor = ({ css }: NodeEditorProps) => {
         }}
         open={selectedNode != null}
       >
-        <NodeEditingSidebar />
+        <NodeEditingSidebar key={selectedNode?.id} />
       </Sidebar>
     </>
   );

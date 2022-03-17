@@ -109,7 +109,7 @@ export function NodeEditingSidebar() {
         >
           Inhalt
         </Label>
-        <RichTextEditor id={node.id} content={node.content} />
+        <RichTextEditor id={node.id} content={node.content} key={node.id} />
       </Box>
       {Object.values(parentNodes).length > 0 ? (
         <Box as="section">

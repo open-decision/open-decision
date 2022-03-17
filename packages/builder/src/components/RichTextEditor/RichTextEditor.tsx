@@ -1,7 +1,6 @@
 import { Box, styled } from "@open-decision/design-system";
 import { EditorContent, Content, useEditor } from "@tiptap/react";
 import { Toolbar } from "./Toolbar";
-import Collaboration from "@tiptap/extension-collaboration";
 import { useTree } from "features/Builder/state/treeStore/TreeProvider";
 import { extensions } from "./shared";
 

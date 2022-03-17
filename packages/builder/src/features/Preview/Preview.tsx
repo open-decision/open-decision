@@ -26,7 +26,7 @@ export function Preview() {
       }}
     >
       <Box css={{ gridColumn: "2" }}>
-        <RichTextRenderer id={node.id} content={node.content} />
+        <RichTextRenderer content={node.content} key={node.id} />
         <AnswersForm
           relation={relation}
           node={node}

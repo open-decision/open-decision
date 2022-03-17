@@ -2,7 +2,9 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import * as React from "react";
 import { extensions } from "./shared";
 
-export function RichTextRenderer(content: any) {
+type Props = { content: any };
+
+export function RichTextRenderer({ content }: Props) {
   const editor = useEditor({ extensions, content });
 
   return <EditorContent editor={editor} />;
