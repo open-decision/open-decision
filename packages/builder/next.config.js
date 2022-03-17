@@ -25,6 +25,10 @@ const nextConfig = {
         source: "/graphql",
         destination: `${process.env.OD_API_ENDPOINT}/v1/graphql`,
       },
+      {
+        source: "/users/:uuid",
+        destination: `${process.env.OD_API_ENDPOINT}/v1/users/:uuid`,
+      },
     ];
   },
 };

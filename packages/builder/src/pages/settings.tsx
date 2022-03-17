@@ -1,5 +1,4 @@
 import {
-  Box,
   Field,
   Heading,
   Icon,
@@ -12,10 +11,24 @@ import {
 } from "@open-decision/design-system";
 import { EyeClosedIcon, RocketIcon } from "@radix-ui/react-icons";
 import { BaseHeader, MainContent } from "components";
+import {
+  useUserUpdateMutation,
+  useDeleteUserMutation,
+} from "features/Auth/settings.queries";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import * as React from "react";
 import { Eye, User } from "react-feather";
+import { QueryClientProvider } from "react-query";
+import { queryClient } from "features/Data/queryClient";
+
+export default function SettingsPage() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <SettingsPageImpl />
+    </QueryClientProvider>
+  );
+}
 
 const StyledMainContent = styled(MainContent, {
   display: "grid",
@@ -43,8 +56,12 @@ const SideMenuLink = styled("a", Label, {
 
 SideMenuLink.defaultProps = { size: "medium" };
 
-export default function SettingsPage() {
+function SettingsPageImpl() {
   const router = useRouter();
+
+  const { mutate, isLoading } = useUserUpdateMutation();
+  const { mutate: deleteUserMutation, isLoading: isLoadingUserDelete } =
+    useDeleteUserMutation();
 
   const [PasswordForm, { register: registerPasswordForm }] = useForm({
     defaultValues: {
@@ -117,7 +134,9 @@ export default function SettingsPage() {
           <Heading as="h3" size="small">
             Passwort ändern
           </Heading>
-          <PasswordForm>
+          <PasswordForm
+            onSubmit={({ newPassword }) => mutate({ password: newPassword })}
+          >
             <Field label="Neues Passwort">
               <Input
                 {...registerPasswordForm("newPassword")}
@@ -127,6 +146,7 @@ export default function SettingsPage() {
               />
             </Field>
             <SubmitButton
+              isLoading={isLoading}
               variant="secondary"
               css={{ marginLeft: "auto", marginTop: "$3" }}
             >
@@ -145,7 +165,7 @@ export default function SettingsPage() {
           <Heading as="h3" size="small" css={{ marginTop: "$4" }}>
             Mailadresse ändern
           </Heading>
-          <EmailForm>
+          <EmailForm onSubmit={({ newEmail }) => mutate({ email: newEmail })}>
             <Field label="Neue E-Mail Adresse">
               <Input
                 {...registerEmailForm("newEmail")}
@@ -155,6 +175,7 @@ export default function SettingsPage() {
               />
             </Field>
             <SubmitButton
+              isLoading={isLoading}
               variant="secondary"
               css={{ marginLeft: "auto", marginTop: "$3" }}
             >
@@ -176,7 +197,12 @@ export default function SettingsPage() {
           <Heading as="h3" size="small">
             Account löschen
           </Heading>
-          <SubmitButton colorScheme="danger" variant="secondary">
+          <SubmitButton
+            onClick={() => deleteUserMutation()}
+            isLoading={isLoadingUserDelete}
+            colorScheme="danger"
+            variant="secondary"
+          >
             Account löschen
           </SubmitButton>
         </Stack>
