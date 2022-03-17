@@ -1,8 +1,5 @@
-import * as Record from "fp-ts/Record";
-import * as Array from "fp-ts/Array";
-import * as Option from "fp-ts/Option";
-import { fromEquals } from "fp-ts/Eq";
-import { pipe } from "fp-ts/function";
+import { record, array, option, eq } from "fp-ts";
+import { pipe } from "remeda";
 import * as Connection from "./Connection";
 import { BuilderNode } from "@open-decision/type-classes";
 
@@ -16,13 +13,13 @@ export const transformToReactFlowEdges = (
 ) => {
   return pipe(
     nodes,
-    Record.toArray,
-    Array.chain(([, node]) =>
+    record.toArray,
+    array.chain(([, node]) =>
       pipe(
         node.relations,
-        Record.toArray,
-        Array.filterMap(([, relation]) =>
-          Option.fromNullable(
+        record.toArray,
+        array.filterMap(([, relation]) =>
+          option.fromNullable(
             relation.target
               ? Connection.create({
                   source: node.id,
@@ -40,7 +37,7 @@ export const transformToReactFlowEdges = (
               : null
           )
         ),
-        Array.uniq(fromEquals(eqEdge))
+        array.uniq(eq.fromEquals(eqEdge))
       )
     )
   );

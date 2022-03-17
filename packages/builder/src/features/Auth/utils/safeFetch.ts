@@ -1,12 +1,10 @@
-import * as TaskEither from "fp-ts/TaskEither";
-import * as Either from "fp-ts/Either";
-import { pipe } from "fp-ts/function";
-import * as Task from "fp-ts/Task";
+import { taskEither, task, either } from "fp-ts";
+import { pipe } from "remeda";
 
 export const safeGetResponseData =
   (expectReturn = true) =>
   (response: Response) =>
-    TaskEither.tryCatch(async (): Promise<any> => {
+    taskEither.tryCatch(async (): Promise<any> => {
       if (expectReturn) {
         if (response.ok) return await response.json();
       } else {
@@ -24,7 +22,7 @@ export const safeGetResponseData =
       }
 
       throw new Error(response.statusText);
-    }, Either.toError);
+    }, either.toError);
 
 type ValidationFn<TData> = (responseBody: unknown) => TData;
 type Config<TData> = {
@@ -45,7 +43,7 @@ export const safeFetch = <TData>(
   { onSuccess, onError, throwingValidation, expectReturn = true }: Config<TData>
 ) =>
   pipe(
-    TaskEither.tryCatch(
+    taskEither.tryCatch(
       () =>
         fetch(url, {
           headers: {
@@ -54,16 +52,16 @@ export const safeFetch = <TData>(
           body: JSON.stringify(body ?? {}),
           ...options,
         }),
-      Either.toError
+      either.toError
     ),
-    TaskEither.chain(safeGetResponseData(expectReturn)),
-    TaskEither.chainEitherK((response) =>
+    taskEither.chain(safeGetResponseData(expectReturn)),
+    taskEither.chainEitherK((response) =>
       throwingValidation
-        ? Either.tryCatch(() => throwingValidation(response), Either.toError)
-        : Either.right(response)
+        ? either.tryCatch(() => throwingValidation(response), either.toError)
+        : either.right(response)
     ),
-    TaskEither.fold(
-      (error) => Task.of(onError(error.message)),
-      (data) => Task.of(onSuccess(data))
+    taskEither.fold(
+      (error) => task.of(onError(error.message)),
+      (data) => task.of(onSuccess(data))
     )
   )();

@@ -16,7 +16,7 @@ import {
   BuilderNode,
   BuilderRelation,
 } from "@open-decision/type-classes";
-import { pipe } from "fp-ts/lib/function";
+import { pipe } from "remeda";
 import { Plus, Trash, Crosshair } from "react-feather";
 import { DragHandle } from "./DragHandle";
 import { useUnmount } from "react-use";
