@@ -3,18 +3,18 @@
  * {@link https://en.wikipedia.org/wiki/Adjacency_list}
  */
 export function createAdjacencyList<
-  T extends Record<
-    string,
-    { id: string; relations: Record<string, { target?: string }> }
-  >
->(obj: T) {
+  T extends {
+    id: string;
+    data: { relations: string[] };
+  }[]
+>(array: T) {
   const adjacencyList = {};
 
-  Object.values(obj).forEach((sourceNode) => {
+  array.forEach((sourceNode) => {
     // If there is no key for this sourceNode yet; add it with a value of an empty array.
     if (!adjacencyList[sourceNode.id]) adjacencyList[sourceNode.id] = [];
 
-    Object.values(sourceNode.relations).forEach(({ target: targetNodeId }) => {
+    Object.values(sourceNode.data.relations).forEach((targetNodeId) => {
       if (!targetNodeId) return;
 
       // If there is no key for this targetNodeId yet; add it with a value of an empty array.

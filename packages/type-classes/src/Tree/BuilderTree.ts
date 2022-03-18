@@ -10,6 +10,7 @@ import { circularConnection } from "./BuilderTree";
 import { merge } from "remeda";
 import { DeepPartial } from "utility-types";
 import * as PublicTree from "./PublicTree";
+import * as BuilderEdge from "../Edge/BuilderEdge";
 enablePatches();
 
 export const Type = PublicTree.Type.extend({
@@ -17,6 +18,7 @@ export const Type = PublicTree.Type.extend({
   treeData: PublicTree.TreeData.extend({
     startNode: z.string().optional(),
     nodes: BuilderNode.Record,
+    edges: BuilderEdge.Array,
     selectedNodeId: z.string().optional(),
     selectedRelationId: z.string().optional(),
   }),
@@ -37,7 +39,7 @@ export type TPatches = z.infer<typeof Patches>;
 
 export function create(name: string): Omit<TTree, "id"> {
   const newTree: Omit<TTree, "id"> = {
-    treeData: { nodes: {} },
+    treeData: { nodes: [] },
     tags: [],
     name,
   };
@@ -144,8 +146,8 @@ export const deleteNodes =
         for (const nodeId in draft.treeData.nodes) {
           const node = draft.treeData.nodes[nodeId];
 
-          for (const nodeRelation in node.relations) {
-            const relation = node.relations[nodeRelation];
+          for (const nodeRelation in node.data.relations) {
+            const relation = node.data.relations[nodeRelation];
 
             if (relation.target === id) {
               delete relation.target;

@@ -1,14 +1,9 @@
 import * as React from "react";
-import {
-  OnLoadParams,
-  useStoreState,
-  useZoomPanHelper,
-} from "react-flow-renderer";
+import { useStore, useReactFlow } from "react-flow-renderer";
 import { calculateCenterOfNode } from "../utilities/calculateCenterOfNode";
-import { sidebarWidth, transitionDuration } from "../utilities/constants";
+import { sidebarWidth } from "../utilities/constants";
 import { BuilderNode } from "@open-decision/type-classes";
-import { useSelectedNode } from "./treeStore/hooks";
-import { useTree } from "./treeStore/TreeProvider";
+import shallow from "zustand/shallow";
 
 type projectCoordinatesFn = (
   coordinates: BuilderNode.TCoordinates
@@ -18,10 +13,11 @@ type EditorState = {
   getCenter: () => BuilderNode.TCoordinates | undefined;
   projectCoordinates: projectCoordinatesFn;
   reactFlowWrapperRef: React.MutableRefObject<HTMLDivElement | null>;
-  reactFlowInstance?: OnLoadParams<any>;
-  setReactFlowInstance: (newInstance: OnLoadParams<any>) => void;
   closeNodeEditingSidebar: () => void;
-  isTransitioning: boolean;
+  unselectNodesAndEdges: () => void;
+  addSelectedNodes: (nodeIds: string[]) => void;
+  addSelectedEdges: (edgeIds: string[]) => void;
+  zoomToNode: (node: BuilderNode.TNode) => void;
   isConnecting: boolean;
   connectingNodeId?: string;
 };
@@ -33,20 +29,34 @@ type TreeProviderProps = Omit<
   "value"
 >;
 export function EditorProvider({ children }: TreeProviderProps) {
-  const { selectNode } = useTree();
-  const selectedNode = useSelectedNode();
+  // const selectedNodes = useStore(
+  //   (state) =>
+  //     Array.from(state.nodeInternals)
+  //       .filter(([_, n]) => n.selected)
+  //       .map(([_, n]) => n),
+  //   shallow
+  // );
+
+  // const selectedEdges = useStore(
+  //   (state) => state.edges.filter((e) => e.selected),
+  //   shallow
+  // );
+
+  const unselectNodesAndEdges = useStore(
+    (state) => state.unselectNodesAndEdges
+  );
+
+  const addSelectedNodes = useStore((state) => state.addSelectedNodes);
+  const addSelectedEdges = useStore((state) => state.addSelectedEdges);
 
   const reactFlowWrapperRef = React.useRef<HTMLDivElement | null>(null);
   const reactFlowBounds = reactFlowWrapperRef.current?.getBoundingClientRect();
 
-  const [reactFlowInstance, setReactFlowInstance] = React.useState<
-    OnLoadParams<BuilderNode.TNode> | undefined
-  >();
-
+  const { project, setCenter } = useReactFlow();
   const getCenter = () => {
     if (!reactFlowBounds) return undefined;
 
-    return reactFlowInstance?.project({
+    return project({
       x: reactFlowBounds.width / 2,
       y: reactFlowBounds.height / 2,
     });
@@ -55,36 +65,26 @@ export function EditorProvider({ children }: TreeProviderProps) {
   const projectCoordinates: projectCoordinatesFn = (coordinates) => {
     if (!reactFlowBounds) return undefined;
 
-    return reactFlowInstance?.project({
+    return project({
       x: coordinates.x - reactFlowBounds.left,
       y: coordinates.y - reactFlowBounds.top,
     });
   };
 
-  const [isTransitioning, setIsTransitioning] = React.useState(false);
-  const position = selectedNode ? selectedNode.position : undefined;
+  function zoomToNode(node: BuilderNode.TNode) {
+    const positionOfNodeFromCenter = calculateCenterOfNode(
+      node.position,
+      node.id ? { x: sidebarWidth / 2, y: 0 } : undefined
+    );
 
-  const { setCenter } = useZoomPanHelper();
-  React.useEffect(() => {
-    if (selectedNode && position) {
-      setIsTransitioning(true);
-      const positionOfNodeFromCenter = calculateCenterOfNode(
-        position,
-        selectedNode.id ? { x: sidebarWidth / 2, y: 0 } : undefined
-      );
-      setCenter?.(positionOfNodeFromCenter.x, positionOfNodeFromCenter.y, 1);
-    }
+    setCenter?.(positionOfNodeFromCenter.x, positionOfNodeFromCenter.y, {
+      zoom: 1,
+      duration: 1000,
+    });
+  }
 
-    // After the animation ends smoothPan is set back to inactive.
-    const timer = setTimeout(() => {
-      setIsTransitioning(false);
-    }, transitionDuration);
-
-    return () => clearTimeout(timer);
-  }, [position, selectedNode, setCenter]);
-
-  const connectingNodeId = useStoreState((state) => state.connectionNodeId);
-  const isConnecting = useStoreState((state) => state.connectionNodeId != null);
+  const connectingNodeId = useStore((state) => state.connectionNodeId);
+  const isConnecting = useStore((state) => state.connectionNodeId != null);
 
   return (
     <EditorContext.Provider
@@ -92,10 +92,13 @@ export function EditorProvider({ children }: TreeProviderProps) {
         projectCoordinates,
         getCenter,
         reactFlowWrapperRef,
-        reactFlowInstance,
-        setReactFlowInstance,
-        closeNodeEditingSidebar: () => selectNode(""),
-        isTransitioning,
+        closeNodeEditingSidebar: () => {
+          unselectNodesAndEdges();
+        },
+        unselectNodesAndEdges,
+        addSelectedEdges,
+        addSelectedNodes,
+        zoomToNode,
         isConnecting,
         connectingNodeId: connectingNodeId ? connectingNodeId : undefined,
       }}

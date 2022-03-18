@@ -14,15 +14,14 @@ import { Plus } from "react-feather";
 import { useEditor } from "../state/useEditor";
 import { nodeNameMaxLength } from "../utilities/constants";
 import { useNodes } from "../state/treeStore/hooks";
-import { useTree } from "../state/treeStore/TreeProvider";
+import { addNode } from "../state/treeStore/treeStore";
 
 type Props = { css?: StyleObject };
 
 export const NodeCreator = ({ css }: Props) => {
   const nodes = useNodes();
-  const { addNode, selectNode } = useTree();
 
-  const { getCenter } = useEditor();
+  const { getCenter, zoomToNode, addSelectedNodes } = useEditor();
   const [Form] = useForm({
     defaultValues: {
       selectedNodeId: "",
@@ -35,19 +34,28 @@ export const NodeCreator = ({ css }: Props) => {
     () =>
       Object.values(nodes).map((node) => ({
         id: node.id,
-        label: node.name,
+        label: node.data.name,
       })),
     [nodes]
   );
 
   function createHandler(label: string) {
-    const newNode = addNode({ position: getCenter(), name: label });
+    const newNode = addNode({
+      position: getCenter(),
+      data: { name: label },
+    });
 
-    return { id: newNode.id, label: newNode.name };
+    zoomToNode(newNode);
+
+    return { id: newNode.id, label: newNode.data.name };
   }
 
   function changeHandler(newSelectedItemId: string) {
-    selectNode(newSelectedItemId);
+    addSelectedNodes([newSelectedItemId]);
+    const node = nodes.find((node) => node.id === newSelectedItemId);
+
+    if (!node) return;
+    zoomToNode(node);
   }
 
   return (
@@ -79,8 +87,7 @@ const NodeCreatorInput = ({ createHandler, autoFocus }) => {
   };
 
   const { isCreating, inputValue, setInputValue } = useCombobox();
-
-  const { selectNode } = useTree();
+  const { addSelectedNodes } = useEditor();
 
   return (
     <Box css={{ width: "300px" }}>
@@ -106,7 +113,7 @@ const NodeCreatorInput = ({ createHandler, autoFocus }) => {
                 disabled={!isCreating}
                 onClick={() => {
                   const newNode = createHandler(inputValue);
-                  selectNode(newNode.id);
+                  addSelectedNodes([newNode.id]);
                   setInputValue("");
                 }}
                 square

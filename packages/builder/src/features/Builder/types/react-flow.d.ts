@@ -1,14 +1,4 @@
-import { BuilderNode } from "@open-decision/type-classes";
 import "react-flow-renderer";
-
-export type NodeData = Pick<
-  BuilderNode.TNode,
-  "name" | "content" | "relations"
-> & {
-  runtime: {
-    isConnectable: boolean;
-  };
-};
 
 declare module "react-flow-renderer" {
   interface Connection {

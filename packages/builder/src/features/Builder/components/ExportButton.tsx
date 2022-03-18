@@ -11,33 +11,39 @@ import { useTreeData } from "../state/treeStore/hooks";
 type Props = { css?: StyleObject };
 
 export function ExportButton({ css }: Props) {
-  const tree = useTreeData();
+  // const tree = useTreeData();
 
-  const file = React.useMemo(
-    () =>
-      new Blob([JSON.stringify(tree)], {
-        type: "application/json",
-      }),
-    [tree]
-  );
+  // const file = React.useMemo(
+  //   () =>
+  //     new Blob([JSON.stringify(tree)], {
+  //       type: "application/json",
+  //     }),
+  //   [tree]
+  // );
 
-  if (file instanceof Error)
-    return (
-      <Button variant="secondary" disabled>
-        Export
-      </Button>
-    );
+  // if (file instanceof Error)
+  //   return (
+  //     <Button variant="secondary" disabled>
+  //       Export
+  //     </Button>
+  //   );
 
-  const fileDownloadUrl = URL.createObjectURL(file);
+  // const fileDownloadUrl = URL.createObjectURL(file);
 
   return (
-    <Link
-      className={buttonStyles({ variant: "secondary", css })}
-      download={file ? `${tree.name}_${readableDate(new Date())}.json` : false}
-      href={fileDownloadUrl}
-      underline={false}
-    >
+    <Button variant="secondary" disabled>
       Export
-    </Link>
+    </Button>
   );
+
+  // return (
+  //   <Link
+  //     className={buttonStyles({ variant: "secondary", css })}
+  //     download={file ? `${tree.name}_${readableDate(new Date())}.json` : false}
+  //     href={fileDownloadUrl}
+  //     underline={false}
+  //   >
+  //     Export
+  //   </Link>
+  // );
 }

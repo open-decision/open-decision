@@ -3,15 +3,17 @@ import React, { memo } from "react";
 import { Star } from "react-feather";
 import { NodeProps, Position } from "react-flow-renderer";
 import { nodeHeight, nodeWidth } from "../../../utilities/constants";
-import { NodeData } from "../../../types/react-flow";
 import { useEditor } from "features/Builder/state/useEditor";
 import { NodeMenu } from "./NodeMenu";
 import { SourcePort, TargetPort } from "./Port";
 import { NodeLabel } from "./NodeLabel";
 import {
-  useSelectedNode,
+  useIsSelected,
   useStartNode,
 } from "features/Builder/state/treeStore/hooks";
+import { nonSyncedStore } from "features/Builder/state/treeStore/treeStore";
+import { useSnapshot } from "valtio";
+import { BuilderNode } from "@open-decision/type-classes";
 
 const NodeContainer = styled(Stack, {
   layer: "1",
@@ -34,17 +36,16 @@ const NodeContainer = styled(Stack, {
 });
 
 export const Node = memo(
-  ({ id, data: { runtime, ...data } }: NodeProps<NodeData>) => {
+  ({ id, selected, data }: NodeProps<BuilderNode.TNodeData>) => {
     const { isConnecting, connectingNodeId } = useEditor();
-    const selectedNode = useSelectedNode();
+    const { validConnections } = useSnapshot(nonSyncedStore);
     const startNode = useStartNode();
 
     const validConnectionTarget = React.useMemo(
-      () => !isConnecting || (isConnecting && runtime.isConnectable),
-      [isConnecting, runtime.isConnectable]
+      () => !isConnecting || (isConnecting && validConnections?.includes(id)),
+      [isConnecting, validConnections, id]
     );
 
-    const isSelected = selectedNode?.id === id;
     const isStartNode = startNode === id;
     const isConnectingNode = connectingNodeId === id;
     const connectable = validConnectionTarget && !isConnectingNode;
@@ -55,12 +56,12 @@ export const Node = memo(
         data-connecting={isConnecting}
         data-connectable={connectable}
         css={{
-          boxShadow: isSelected ? "$4" : "$3",
+          boxShadow: selected ? "$4" : "$3",
           border:
-            isSelected && !isConnecting
+            selected && !isConnecting
               ? "2px solid $primary9"
               : "1px solid $gray8",
-          padding: isSelected ? "calc($5 - 1px)" : "$5",
+          padding: selected ? "calc($5 - 1px)" : "$5",
           opacity: validConnectionTarget ? 1 : 0.2,
         }}
         center
@@ -82,7 +83,7 @@ export const Node = memo(
           id={id}
           isConnectable={isConnecting}
         />
-        {isSelected && !isConnecting ? (
+        {selected && !isConnecting ? (
           <Box
             data-connecting={isConnecting}
             data-nodeid={id}

@@ -11,7 +11,7 @@ export * as BuilderRelation from "./Relation/BuilderRelation";
 
 // ------------------------------------------------------------------
 export * as RichTextContent from "./Node/RichTextContent";
-
+export * as BuilderEdge from "./Edge/BuilderEdge";
 // ------------------------------------------------------------------
 // Transforms
 export { TransformToPublicTree } from "./Tree/transforms";

@@ -1,20 +1,22 @@
 import * as React from "react";
 import { useEditor } from "features/Builder/state/useEditor";
-import ReactFlow, { FlowElement } from "react-flow-renderer";
-import { transformToReactFlowEdges } from "./utils/transformToReactFlowEdges";
-import { transformToReactFlowNodes } from "./utils/transformToReactFlowNodes";
-import { css, styled, StyleObject } from "@open-decision/design-system";
-import { transitionDuration } from "features/Builder/utilities/constants";
+import ReactFlow from "react-flow-renderer";
+import { styled, StyleObject } from "@open-decision/design-system";
 import { Node } from "./Nodes/Node";
-import { NodeData } from "features/Builder/types/react-flow";
 import {
-  useConnect,
+  useEdges,
   useNodes,
-  useSelectedNode,
-  useSelectedRelationId,
   useStartNode,
 } from "features/Builder/state/treeStore/hooks";
-import { useTree } from "features/Builder/state/treeStore/TreeProvider";
+import {
+  abortConnecting,
+  addEdge,
+  addNode,
+  deleteNodes,
+  nonSyncedStore,
+  startConnecting,
+  updateNodePosition,
+} from "features/Builder/state/treeStore/treeStore";
 
 const validConnectEvent = (
   target: MouseEvent["target"]
@@ -30,50 +32,28 @@ const Container = styled("div", {
   layer: "4",
 });
 
-const canvasStyles = css({
-  "&[data-transition='true'] .react-flow__nodes,&[data-transition='true'] .react-flow__edges *":
-    {
-      transition: `transform ${transitionDuration}ms ease-in-out`,
-    },
-});
-
 const customNodes = { customNode: Node };
 
 type Props = { children?: React.ReactNode; css?: StyleObject };
 
 export function Canvas({ children, css }: Props) {
-  const {
-    abortConnecting,
-    addNode,
-    deleteNodes,
-    selectNode,
-    startConnecting,
-    connect,
-    updateNodePosition,
-  } = useTree();
+  const { reactFlowWrapperRef } = useEditor();
+
+  return (
+    <Container ref={reactFlowWrapperRef} css={css}>
+      <Nodes />
+      {children}
+    </Container>
+  );
+}
+
+function Nodes() {
   const nodes = useNodes();
-  const selectedNode = useSelectedNode();
-  const selectedRelationId = useSelectedRelationId();
+  const edges = useEdges();
   const startNode = useStartNode();
-  const { connectionSourceNodeId, validConnections } = useConnect();
 
-  const {
-    reactFlowWrapperRef,
-    setReactFlowInstance,
-    closeNodeEditingSidebar,
-    isTransitioning,
-    projectCoordinates,
-  } = useEditor();
-
-  const elements = [
-    ...transformToReactFlowNodes(
-      nodes,
-      connectionSourceNodeId && validConnections
-        ? [nodes[connectionSourceNodeId], ...validConnections]
-        : []
-    ),
-    ...transformToReactFlowEdges(nodes, selectedNode?.id, selectedRelationId),
-  ];
+  const { closeNodeEditingSidebar, projectCoordinates, zoomToNode } =
+    useEditor();
 
   const onDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -90,65 +70,66 @@ export function Canvas({ children, css }: Props) {
     });
 
     if (coordinates && name) {
-      addNode({ position: coordinates, name });
+      addNode({ position: coordinates, data: { name } });
     }
   };
 
   return (
-    <Container ref={reactFlowWrapperRef} css={css}>
-      <ReactFlow
-        className={canvasStyles().className}
-        data-transition={isTransitioning}
-        onPaneClick={() => closeNodeEditingSidebar()}
-        nodeTypes={customNodes}
-        elements={elements}
-        paneMoveable={!isTransitioning}
-        zoomOnPinch={!isTransitioning}
-        zoomOnScroll={!isTransitioning}
-        zoomOnDoubleClick={false}
-        selectNodesOnDrag={false}
-        panOnScroll={true}
-        onElementsRemove={(elementsToRemove) => {
-          deleteNodes(
-            elementsToRemove
-              .map((element) => element.id)
-              .filter((element) => element !== startNode)
-          );
-        }}
-        onConnectStart={(event) => {
-          if (validConnectEvent(event.target) && event.target.dataset.nodeid) {
-            startConnecting(event.target.dataset.nodeid);
+    <ReactFlow
+      onPaneClick={() => closeNodeEditingSidebar()}
+      nodeTypes={customNodes}
+      nodes={nodes}
+      edges={edges}
+      zoomOnDoubleClick={false}
+      panOnScroll={true}
+      selectNodesOnDrag={false}
+      onNodesChange={(nodeChanges) => {
+        nodeChanges.forEach((nodeChange) => {
+          switch (nodeChange.type) {
+            case "remove":
+              nodeChange.id !== startNode ? deleteNodes([nodeChange.id]) : null;
+              break;
+            case "position":
+              nodeChange.dragging
+                ? updateNodePosition(
+                    nodeChange.id,
+                    nodeChange.position ?? { x: 0, y: 0 }
+                  )
+                : null;
+              break;
+            case "select": {
+              if (nodeChange.selected) {
+                const node = nodes.find((node) => node.id === nodeChange.id);
+                if (node) {
+                  zoomToNode(node);
+                }
+              }
+              break;
+            }
           }
-        }}
-        onConnectEnd={(event) => {
-          if (!validConnectEvent(event.target) || !event.target.dataset.nodeid)
-            return abortConnecting();
-
-          connect(event.target.dataset.nodeid);
-        }}
-        onDragOver={onDragOver}
-        onDrop={onDrop}
-        onLoad={(instance) => {
-          setReactFlowInstance(instance);
-          instance.fitView({ maxZoom: 1, minZoom: 1 });
-        }}
-        onElementClick={(event, element: FlowElement<NodeData>) => {
-          if (
-            event.target instanceof HTMLElement &&
-            event.target.dataset?.nodeid === element.id
-          )
-            selectNode(element.id);
-        }}
-        onNodeDragStop={(_event, node) =>
-          updateNodePosition(node.id, node.position)
+        });
+      }}
+      onConnectStart={(event) => {
+        if (validConnectEvent(event.target) && event.target.dataset.nodeid) {
+          startConnecting(event.target.dataset.nodeid);
         }
-        style={{
-          gridColumn: "1 / -1",
-          gridRow: "1",
-          isolation: "isolate",
-        }}
-      />
-      {children}
-    </Container>
+      }}
+      onConnectEnd={(event) => {
+        if (!validConnectEvent(event.target) || !event.target.dataset.nodeid)
+          return abortConnecting();
+
+        addEdge({
+          source: nonSyncedStore.connectionSourceNodeId,
+          target: event.target.dataset.nodeid,
+        });
+      }}
+      onDragOver={onDragOver}
+      onDrop={onDrop}
+      style={{
+        gridColumn: "1 / -1",
+        gridRow: "1",
+        isolation: "isolate",
+      }}
+    />
   );
 }

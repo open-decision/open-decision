@@ -11,31 +11,26 @@ import {
 } from "@open-decision/design-system";
 import { OptionTargetInputs } from "features/Builder/components/OptionTargetInput/OptionTargetInput";
 import * as React from "react";
-import { BuilderTree } from "@open-decision/type-classes";
+import { BuilderNode, BuilderTree } from "@open-decision/type-classes";
 import { nodeNameMaxLength } from "../utilities/constants";
 import { NodeMenu } from "./Canvas/Nodes/NodeMenu";
 import { NodeLabel } from "./Canvas/Nodes/NodeLabel";
 import { ChevronRight, Star } from "react-feather";
-import {
-  useNodes,
-  useParents,
-  useSelectedNode,
-  useStartNode,
-  useTreeData,
-} from "../state/treeStore/hooks";
+import { useNodes, useParents, useStartNode } from "../state/treeStore/hooks";
 import { RichTextEditor } from "components/RichTextEditor/RichTextEditor";
-import { useTree } from "../state/treeStore/TreeProvider";
+import { updateNodeName, syncedStore } from "../state/treeStore/treeStore";
+import { useEditor } from "../state/useEditor";
 
-export function NodeEditingSidebar() {
-  const node = useSelectedNode();
-  const tree = useTreeData();
-  const parentNodeIds = useParents(node?.id ?? "");
+type Props = { node: BuilderNode.TNode };
+
+export function NodeEditingSidebar({ node }: Props) {
+  const parentNodeIds = useParents(node);
   const startNode = useStartNode();
-  const { selectNode, updateNodeName } = useTree();
+  const { addSelectedNodes } = useEditor();
 
   const parentNodes = useNodes(parentNodeIds);
   const [Form] = useForm({
-    defaultValues: { name: node?.name ?? "" },
+    defaultValues: { name: node?.data.name ?? "" },
     mode: "onChange",
   });
 
@@ -75,7 +70,7 @@ export function NodeEditingSidebar() {
                 </NodeLabel>
               ) : null}
               <NodeMenu
-                name={node.name}
+                name={node.data.name}
                 nodeId={node.id}
                 isStartNode={isStartNode}
               />
@@ -85,7 +80,7 @@ export function NodeEditingSidebar() {
             name="name"
             maxLength={nodeNameMaxLength}
             validate={(val) =>
-              BuilderTree.isUnique({ name: val })(tree.treeData.nodes ?? {})
+              BuilderTree.isUnique({ name: val })(syncedStore.nodes)
                 ? true
                 : "Eine Node mit diesem Namen existiert bereits."
             }
@@ -109,7 +104,11 @@ export function NodeEditingSidebar() {
         >
           Inhalt
         </Label>
-        <RichTextEditor id={node.id} content={node.content} key={node.id} />
+        <RichTextEditor
+          id={node.id}
+          content={node.data.content}
+          key={node.id}
+        />
       </Box>
       {Object.values(parentNodes).length > 0 ? (
         <Box as="section">
@@ -135,7 +134,7 @@ export function NodeEditingSidebar() {
               return (
                 <Link
                   key={parentNode.id}
-                  onClick={() => selectNode(parentNode.id)}
+                  onClick={() => addSelectedNodes([parentNode.id])}
                   css={{
                     color: "$primary11",
                     fontWeight: 500,
@@ -148,7 +147,7 @@ export function NodeEditingSidebar() {
                   <Icon>
                     <ChevronRight />
                   </Icon>
-                  {parentNode.name}
+                  {parentNode.data.name}
                 </Link>
               );
             })}
@@ -156,7 +155,7 @@ export function NodeEditingSidebar() {
         </Box>
       ) : null}
       <Box as="section">
-        <OptionTargetInputs node={node} />
+        <OptionTargetInputs nodeId={node.id} relations={node.data.relations} />
       </Box>
     </>
   ) : null;

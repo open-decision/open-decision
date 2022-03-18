@@ -14,16 +14,28 @@ import * as React from "react";
 import {
   BuilderTree,
   BuilderNode,
-  BuilderRelation,
+  BuilderEdge,
 } from "@open-decision/type-classes";
 import { pipe } from "remeda";
 import { Plus, Trash, Crosshair } from "react-feather";
 import { DragHandle } from "./DragHandle";
-import { useUnmount } from "react-use";
 import { Reorder, useDragControls } from "framer-motion";
 import { map, values } from "remeda";
-import { useNode, useNodes } from "features/Builder/state/treeStore/hooks";
-import { useTree } from "features/Builder/state/treeStore/TreeProvider";
+import {
+  useEdges,
+  useNode,
+  useNodes,
+} from "features/Builder/state/treeStore/hooks";
+import {
+  addAssociatedNode,
+  addEdge,
+  deleteEdges,
+  updateEdge,
+  updateEdgeAnswer,
+  updateEdgeTarget,
+  updateNodeRelations,
+} from "features/Builder/state/treeStore/treeStore";
+import { useEditor } from "features/Builder/state/useEditor";
 
 const StyledReorderGroup = styled(Reorder.Group, {
   listStyle: "none",
@@ -32,12 +44,14 @@ const StyledReorderGroup = styled(Reorder.Group, {
   gap: "$4",
 });
 
-type SingleSelectProps = { node: BuilderNode.TNode };
+type SingleSelectProps = {
+  nodeId: string;
+  relations: BuilderNode.TNodeData["relations"];
+};
 
-export function OptionTargetInputs({ node }: SingleSelectProps) {
-  const { addRelation, deleteRelations, updateNodeRelations } = useTree();
-  const relations = Object.values(node.relations);
+export function OptionTargetInputs({ nodeId, relations }: SingleSelectProps) {
   const ref = React.useRef<HTMLDivElement | null>(null);
+  const edges = useEdges(relations);
 
   return (
     <>
@@ -56,7 +70,7 @@ export function OptionTargetInputs({ node }: SingleSelectProps) {
         <Button
           size="small"
           variant="secondary"
-          onClick={() => addRelation(node.id, {})}
+          onClick={() => addEdge({ source: nodeId, target: "" })}
         >
           <Icon label="Neue Antwortmöglichkeit hinzufügen">
             <Plus />
@@ -69,22 +83,17 @@ export function OptionTargetInputs({ node }: SingleSelectProps) {
         axis="y"
         values={relations}
         initial={false}
-        onReorder={(newOrder: BuilderRelation.TRelation[]) =>
-          updateNodeRelations(
-            node.id,
-            Object.fromEntries(
-              newOrder.map((relation) => [relation.id, relation])
-            )
-          )
+        onReorder={(newOrder: BuilderNode.TNodeData["relations"]) =>
+          updateNodeRelations(nodeId, newOrder)
         }
       >
-        {relations.map((relation) => (
+        {edges.map((edge) => (
           <OptionTargetInput
             groupRef={ref}
-            key={relation.id}
-            relation={relation}
-            onDelete={() => deleteRelations(node.id, [relation.id])}
-            nodeId={node.id}
+            key={edge.id}
+            edge={edge}
+            onDelete={() => deleteEdges([edge.id])}
+            nodeId={nodeId}
           />
         ))}
       </StyledReorderGroup>
@@ -92,40 +101,30 @@ export function OptionTargetInputs({ node }: SingleSelectProps) {
   );
 }
 type SingleSelectInputProps = {
-  relation: BuilderRelation.TRelation;
+  edge: BuilderEdge.TEdge;
   nodeId: string;
   onDelete: (id: string) => void;
   groupRef: React.MutableRefObject<HTMLDivElement | null>;
 };
 
 export function OptionTargetInput({
-  relation,
+  edge,
   nodeId,
   onDelete,
   groupRef,
 }: SingleSelectInputProps): JSX.Element {
-  const {
-    addAssociatedNode,
-    deselectRelation,
-    selectRelation,
-    updateRelation,
-    updateRelationAnswer,
-    updateRelationTarget,
-  } = useTree();
-
   const nodes = useNodes();
 
   const node = useNode(nodeId);
   const allOptions = pipe(
     nodes,
     values,
-    map((node) => ({ id: node.id, label: node.name }))
+    map((node) => ({ id: node.id, label: node.data.name }))
   );
   const nodeOptions = node
     ? pipe(
-        BuilderTree.getConnectableNodes(node)(nodes),
-        values,
-        map((node) => ({ id: node.id, label: node.name }))
+        BuilderTree.getConnectableNodes(node.id)(nodes),
+        map((nodeId) => ({ id: nodeId, label: "FIX LATER" }))
       )
     : [];
 
@@ -133,24 +132,28 @@ export function OptionTargetInput({
 
   const ref = React.useRef<HTMLDivElement | null>(null);
 
-  useUnmount(deselectRelation);
-
   const [Form] = useForm({
     defaultValues: {
-      answer: relation.answer ?? "",
-      target: relation.target ?? "",
+      answer: edge.data?.answer ?? "",
+      target: edge.target ?? "",
     },
   });
 
   return node ? (
     <Reorder.Item
-      value={relation}
+      value={edge.id}
       dragListener={false}
       dragControls={controls}
       dragConstraints={groupRef}
     >
       <Form
-        onSubmit={(data) => updateRelation(node.id, relation.id, data)}
+        onSubmit={(data) =>
+          updateEdge({
+            ...edge,
+            target: data.target,
+            data: { answer: data.answer },
+          })
+        }
         css={{
           display: "flex",
           position: "relative",
@@ -159,7 +162,6 @@ export function OptionTargetInput({
         }}
       >
         <Box
-          onClick={() => selectRelation(relation.id)}
           ref={ref}
           css={{
             flex: 1,
@@ -171,9 +173,7 @@ export function OptionTargetInput({
         >
           <ControlledInput
             name="answer"
-            onChange={(event) =>
-              updateRelationAnswer(node.id, relation.id, event.target.value)
-            }
+            onChange={(event) => updateEdgeAnswer(edge.id, event.target.value)}
           >
             {({ onBlur, ...field }) => (
               <Input
@@ -190,29 +190,32 @@ export function OptionTargetInput({
                 }}
                 placeholder="Antwort"
                 onBlur={() => {
-                  deselectRelation();
                   onBlur?.();
                 }}
                 {...field}
               />
             )}
           </ControlledInput>
-          <NodeLink target={relation.target} />
+          <NodeLink target={edge.target} />
           <Combobox.Root
             name="target"
             onCreate={(name) => {
-              const newNode = addAssociatedNode(node.id, relation.id, { name });
+              const newNode = addAssociatedNode(
+                node.id,
+                { data: { name } },
+                edge.id
+              );
               if (!newNode) return { id: "", label: "" };
 
-              return { id: newNode.id, label: newNode.name };
+              return { id: newNode.id, label: newNode.data.name };
             }}
             onSelectedItemChange={(newItem) =>
-              updateRelationTarget(node.id, relation.id, newItem?.id ?? "")
+              updateEdgeTarget(edge.id, newItem?.id ?? "")
             }
             items={allOptions}
             subsetOfItems={nodeOptions}
           >
-            <Combobox.Input onBlur={deselectRelation} name="target">
+            <Combobox.Input name="target">
               {(field) => (
                 <Input
                   placeholder="Zielknoten auswählen"
@@ -247,7 +250,7 @@ export function OptionTargetInput({
             variant="neutral"
             type="button"
             square
-            onClick={() => onDelete(relation.id)}
+            onClick={() => onDelete(edge.id)}
           >
             <Icon label="Entferne den Input">
               <Trash />
@@ -264,8 +267,9 @@ export function OptionTargetInput({
 type NodeLinkProps = { target?: string } & Omit<ButtonProps, "label" | "Icon">;
 
 function NodeLink({ target, ...props }: NodeLinkProps) {
-  const { selectNode } = useTree();
   const node = useNode(target ?? "");
+
+  const { addSelectedNodes } = useEditor();
 
   return (
     <Button
@@ -282,14 +286,18 @@ function NodeLink({ target, ...props }: NodeLinkProps) {
       size="small"
       variant="secondary"
       onClick={() => {
-        if (target) selectNode(target);
+        if (target) {
+          addSelectedNodes([target]);
+        }
       }}
       type="button"
       disabled={!target}
       {...props}
     >
       <Icon
-        label={node ? `Gehe zu Node: ${node.name}` : "Keine Node verbunden"}
+        label={
+          node ? `Gehe zu Node: ${node.data.name}` : "Keine Node verbunden"
+        }
       >
         <Crosshair />
       </Icon>

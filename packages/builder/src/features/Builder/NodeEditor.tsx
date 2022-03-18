@@ -4,14 +4,14 @@ import React from "react";
 import { NodeCreator } from "./components/NodeCreator";
 import { NodeEditingSidebar } from "./components/NodeEditingSidebar";
 import { Canvas } from "./components/Canvas/Canvas";
-import { useSelectedNode } from "./state/treeStore/hooks";
+import { useSelectedNodes } from "./state/treeStore/hooks";
 
 type NodeEditorProps = {
   css?: StyleObject;
 };
 
 export const NodeEditor = ({ css }: NodeEditorProps) => {
-  const selectedNode = useSelectedNode();
+  const [selectionStatus, selectedNode] = useSelectedNodes();
 
   return (
     <>
@@ -24,17 +24,19 @@ export const NodeEditor = ({ css }: NodeEditorProps) => {
           }}
         />
       </Canvas>
-      <Sidebar
-        css={{
-          gridRow: "2",
-          gridColumn: "2",
-          groupColor: "$gray11",
-          layer: "1",
-        }}
-        open={selectedNode != null}
-      >
-        <NodeEditingSidebar key={selectedNode?.id} />
-      </Sidebar>
+      {selectionStatus === "single" ? (
+        <Sidebar
+          css={{
+            gridRow: "2",
+            gridColumn: "2",
+            groupColor: "$gray11",
+            layer: "1",
+          }}
+          open={selectionStatus === "single"}
+        >
+          <NodeEditingSidebar node={selectedNode} key={selectedNode.id} />
+        </Sidebar>
+      ) : null}
     </>
   );
 };

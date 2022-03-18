@@ -8,7 +8,7 @@ export const hasRelation = (
   targetId: string
 ) =>
   pipe(
-    node.relations,
+    node.data.relations,
     values,
     filter((relation) => relation.target === targetId),
     isNot(isEmpty)

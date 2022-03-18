@@ -44,11 +44,15 @@ export const RichTextContent = z.union([
 
 export const Type = z.object({
   id: z.string().uuid(),
-  content: z.any(),
-  relations: z.record(PublicRelation.Type),
+  data: z.object({
+    name: z.string().optional(),
+    content: z.any(),
+    relations: z.record(PublicRelation.Type),
+  }),
+  type: z.literal("customNode"),
 });
 
-export const Record = z.record(Type);
+export const Record = z.array(Type);
 
 // ------------------------------------------------------------------
 // Methods

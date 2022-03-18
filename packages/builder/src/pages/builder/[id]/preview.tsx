@@ -19,11 +19,7 @@ import { ErrorFallback } from "features/Error/ErrorFallback";
 import { QueryClientProvider } from "react-query";
 import { queryClient } from "features/Data/queryClient";
 import { GetServerSideProps } from "next";
-import { useGetFullTreeQuery } from "features/Data/generated/graphql";
-import {
-  TreeProvider,
-  useTree,
-} from "features/Builder/state/treeStore/TreeProvider";
+import { treeStore } from "features/Builder/state/treeStore/useYjsConnection";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
@@ -35,11 +31,9 @@ export default function VorschauPage({ id }) {
   return (
     <React.Suspense fallback={<div>Loading...</div>}>
       <ErrorBoundary fallback={ErrorFallback}>
-        <TreeProvider id={id}>
-          <QueryClientProvider client={queryClient}>
-            <Vorschau id={id} />
-          </QueryClientProvider>
-        </TreeProvider>
+        <QueryClientProvider client={queryClient}>
+          <Vorschau id={id} />
+        </QueryClientProvider>
       </ErrorBoundary>
     </React.Suspense>
   );
@@ -48,8 +42,6 @@ export default function VorschauPage({ id }) {
 type Props = { id: number };
 
 function Vorschau({ id }: Props) {
-  const { syncedStore } = useTree();
-
   return (
     <InterpreterProvider
       tree={{

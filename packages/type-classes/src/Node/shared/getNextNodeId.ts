@@ -5,7 +5,7 @@ export const getNextNodeId = (
   node: BuilderNode.TNode | PublicNode.TNode,
   answer: string
 ) => {
-  const nextNode = Object.values(node.relations).find(
+  const nextNode = Object.values(node.data.relations).find(
     (relations) => relations.answer === answer
   );
 

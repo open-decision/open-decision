@@ -123,7 +123,7 @@ export class Interpreter {
   }
 
   getRelationById(nodeId: string, relationId: string) {
-    const relation = this.getNode(nodeId)?.relations[relationId];
+    const relation = this.getNode(nodeId)?.data.relations[relationId];
 
     if (!relation) return undefined;
 

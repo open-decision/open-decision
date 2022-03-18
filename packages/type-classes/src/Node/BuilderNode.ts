@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { v4 as uuidV4 } from "uuid";
-import * as BuilderRelation from "../Relation/BuilderRelation";
 import * as PublicNode from "./PublicNode";
+import { DeepPartial } from "utility-types";
 
 export const Coordinates = z.object({
   x: z.number(),
@@ -10,34 +10,53 @@ export const Coordinates = z.object({
 
 export type TCoordinates = z.infer<typeof Coordinates>;
 
-export const Type = PublicNode.Type.extend({
+export const NodeData = z.object({
   name: z.string(),
-  position: Coordinates,
-  relations: z.record(BuilderRelation.Type),
+  content: z.any().optional(),
+  relations: z.array(z.string()),
 });
 
-export const Record = z.record(Type);
+export const Type = PublicNode.Type.extend({
+  position: Coordinates,
+  data: NodeData,
+});
+
+export const Record = z.array(Type);
 
 // ------------------------------------------------------------------
 // Methods
 
-export function create(node?: Partial<Omit<TNode, "id">>): TNode {
+type nodeData = {
+  position?: TNode["position"];
+  data: {
+    relations?: TNodeData["relations"];
+    name?: string;
+  };
+} & DeepPartial<TNode>;
+
+export function create({
+  position = { x: 0, y: 0 },
+  data: { relations = [], name = "" },
+  ...node
+}: nodeData): TNode {
   return {
     id: uuidV4(),
-    relations: {},
-    name: "Neuer Knoten",
-
-    position: { x: 0, y: 0 },
+    data: {
+      relations,
+      name,
+    },
+    type: "customNode",
+    position,
     ...node,
   };
 }
 
 export function createNewAssociatedNode(
   node: TNode,
-  newNode: Partial<TNode>,
+  newNode: nodeData,
   nodeHeight = 80
 ): TNode {
-  const deplacement = Object.values(node.relations).length;
+  const deplacement = Object.values(node.data.relations).length;
   const position = {
     x: node.position.x + 5 * deplacement,
     y: node.position.y + nodeHeight + nodeHeight / 3 + 5 * deplacement,
@@ -53,3 +72,4 @@ export { getNextNodeId, hasRelation } from "./shared";
 
 export type TNode = z.infer<typeof Type>;
 export type TNodesRecord = z.infer<typeof Record>;
+export type TNodeData = z.infer<typeof NodeData>;
