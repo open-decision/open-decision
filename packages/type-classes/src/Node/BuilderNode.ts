@@ -19,6 +19,7 @@ export const NodeData = z.object({
 export const Type = PublicNode.Type.extend({
   position: Coordinates,
   data: NodeData,
+  selected: z.boolean(),
 });
 
 export const Record = z.array(Type);
@@ -47,6 +48,7 @@ export function create({
     },
     type: "customNode",
     position,
+    selected: false,
     ...node,
   };
 }

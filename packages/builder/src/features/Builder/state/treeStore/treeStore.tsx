@@ -95,6 +95,13 @@ export function updateNodeRelations(
   node.data.relations = relations;
 }
 
+export function updateSelectedNode(nodeId: string, selected: boolean) {
+  const node = getNode(nodeId);
+  if (!node) return;
+
+  node.selected = selected;
+}
+
 export function deleteNodes(ids: string[]) {
   syncedStore.nodes.filter((node) => ids.includes(node.id));
   syncedStore.edges.filter((edge) => ids.includes(edge.source || edge.target));

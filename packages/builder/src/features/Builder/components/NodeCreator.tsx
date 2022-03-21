@@ -43,6 +43,7 @@ export const NodeCreator = ({ css }: Props) => {
     const newNode = addNode({
       position: getCenter(),
       data: { name: label },
+      selected: true,
     });
 
     zoomToNode(newNode);

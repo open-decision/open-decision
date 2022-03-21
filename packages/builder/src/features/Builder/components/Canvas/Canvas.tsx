@@ -16,6 +16,7 @@ import {
   nonSyncedStore,
   startConnecting,
   updateNodePosition,
+  updateSelectedNode,
 } from "features/Builder/state/treeStore/treeStore";
 
 const validConnectEvent = (
@@ -52,8 +53,12 @@ function Nodes() {
   const edges = useEdges();
   const startNode = useStartNode();
 
-  const { closeNodeEditingSidebar, projectCoordinates, zoomToNode } =
-    useEditor();
+  const {
+    closeNodeEditingSidebar,
+    projectCoordinates,
+    zoomToNode,
+    unselectNodesAndEdges,
+  } = useEditor();
 
   const onDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -83,6 +88,7 @@ function Nodes() {
       zoomOnDoubleClick={false}
       panOnScroll={true}
       selectNodesOnDrag={false}
+      onNodeDragStart={() => unselectNodesAndEdges()}
       onNodesChange={(nodeChanges) => {
         nodeChanges.forEach((nodeChange) => {
           switch (nodeChange.type) {
@@ -98,8 +104,11 @@ function Nodes() {
                 : null;
               break;
             case "select": {
+              updateSelectedNode(nodeChange.id, nodeChange.selected);
+
               if (nodeChange.selected) {
                 const node = nodes.find((node) => node.id === nodeChange.id);
+
                 if (node) {
                   zoomToNode(node);
                 }
