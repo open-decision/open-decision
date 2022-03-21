@@ -58,10 +58,11 @@ export function createNewAssociatedNode(
   newNode: nodeData,
   nodeHeight = 80
 ): TNode {
-  const deplacement = Object.values(node.data.relations).length;
+  const deplacement = Object.values(node.data.relations).length - 1;
+
   const position = {
-    x: node.position.x + 5 * deplacement,
-    y: node.position.y + nodeHeight + nodeHeight / 3 + 5 * deplacement,
+    x: node.position.x + 220 * deplacement,
+    y: node.position.y + nodeHeight + 50,
   };
 
   return create({
