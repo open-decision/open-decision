@@ -59,6 +59,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       ? React.cloneElement(Icon, {
           "data-active": hasFocus,
           css: {
+            color: "$gray11",
             position: "absolute",
             zIndex: "$10",
             marginLeft: "$$paddingInline",
