@@ -320,7 +320,8 @@ export const createAuthenticationMachine = (router: NextRouter) =>
         assignUserToContext: assign((context, event) => {
           if (
             event.type !== "REPORT_IS_LOGGED_IN" &&
-            event.type !== "SUCCESSFULL_LOGIN"
+            event.type !== "SUCCESSFULL_LOGIN" &&
+            event.type !== "SUCCESSFULL_REGISTER"
           ) {
             return context;
           }
