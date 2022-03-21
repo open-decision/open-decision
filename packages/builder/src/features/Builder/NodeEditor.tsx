@@ -24,19 +24,19 @@ export const NodeEditor = ({ css }: NodeEditorProps) => {
           }}
         />
       </Canvas>
-      {selectionStatus === "single" ? (
-        <Sidebar
-          css={{
-            gridRow: "2",
-            gridColumn: "2",
-            groupColor: "$gray11",
-            layer: "1",
-          }}
-          open={selectionStatus === "single"}
-        >
+      <Sidebar
+        css={{
+          gridRow: "2",
+          gridColumn: "2",
+          groupColor: "$gray11",
+          layer: "1",
+        }}
+        open={selectionStatus === "single"}
+      >
+        {selectionStatus === "single" ? (
           <NodeEditingSidebar node={selectedNode} key={selectedNode.id} />
-        </Sidebar>
-      ) : null}
+        ) : null}
+      </Sidebar>
     </>
   );
 };
