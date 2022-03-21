@@ -20,7 +20,7 @@ import { pipe } from "remeda";
 import { Plus, Trash, Crosshair } from "react-feather";
 import { DragHandle } from "./DragHandle";
 import { Reorder, useDragControls } from "framer-motion";
-import { map, values } from "remeda";
+import { map } from "remeda";
 import {
   useEdges,
   useNode,
@@ -114,17 +114,20 @@ export function OptionTargetInput({
   groupRef,
 }: SingleSelectInputProps): JSX.Element {
   const nodes = useNodes();
-
   const node = useNode(nodeId);
+
   const allOptions = pipe(
     nodes,
-    values,
     map((node) => ({ id: node.id, label: node.data.name }))
   );
+
   const nodeOptions = node
     ? pipe(
         BuilderTree.getConnectableNodes(node.id)(nodes),
-        map((nodeId) => ({ id: nodeId, label: "FIX LATER" }))
+        map((nodeId) => ({
+          id: nodeId,
+          label: nodes.find((node) => node.id === nodeId)?.data.name ?? "",
+        }))
       )
     : [];
 
