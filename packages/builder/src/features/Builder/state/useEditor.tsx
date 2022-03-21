@@ -29,19 +29,6 @@ type TreeProviderProps = Omit<
   "value"
 >;
 export function EditorProvider({ children }: TreeProviderProps) {
-  // const selectedNodes = useStore(
-  //   (state) =>
-  //     Array.from(state.nodeInternals)
-  //       .filter(([_, n]) => n.selected)
-  //       .map(([_, n]) => n),
-  //   shallow
-  // );
-
-  // const selectedEdges = useStore(
-  //   (state) => state.edges.filter((e) => e.selected),
-  //   shallow
-  // );
-
   const unselectNodesAndEdges = useStore(
     (state) => state.unselectNodesAndEdges
   );
@@ -52,7 +39,7 @@ export function EditorProvider({ children }: TreeProviderProps) {
   const reactFlowWrapperRef = React.useRef<HTMLDivElement | null>(null);
   const reactFlowBounds = reactFlowWrapperRef.current?.getBoundingClientRect();
 
-  const { project, setCenter } = useReactFlow();
+  const { project, setCenter, getZoom } = useReactFlow();
   const getCenter = () => {
     if (!reactFlowBounds) return undefined;
 
@@ -78,7 +65,7 @@ export function EditorProvider({ children }: TreeProviderProps) {
     );
 
     setCenter?.(positionOfNodeFromCenter.x, positionOfNodeFromCenter.y, {
-      zoom: 1,
+      zoom: getZoom(),
       duration: 1000,
     });
   }
