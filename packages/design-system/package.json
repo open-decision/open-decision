@@ -1,6 +1,6 @@
 {
   "name": "@open-decision/design-system",
-  "version": "0.23.0",
+  "version": "0.24.1",
   "main": "./lib/index.cjs",
   "module": "./lib/index.mjs",
   "types": "./src/index.ts",
@@ -13,9 +13,13 @@
     }
   },
   "publishConfig": {
+    "main": "./lib/index.cjs",
+    "module": "./lib/index.mjs",
     "types": "./lib/index.d.ts",
     "exports": {
       ".": {
+        "import": "./lib/index.mjs",
+        "require": "./lib/index.cjs",
         "types": "./lib/index.d.ts"
       }
     }
