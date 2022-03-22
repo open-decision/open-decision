@@ -1,45 +1,32 @@
 import { BuilderNode, BuilderTree } from "@open-decision/type-classes";
-import { useStore } from "react-flow-renderer";
-import { mapToObj } from "remeda";
 import { useSnapshot } from "valtio";
 import { derive } from "valtio/utils";
 import { nonSyncedStore, syncedStore } from "../treeStore";
-import shallow from "zustand/shallow";
 
 export function useSelectedNodes():
   | ["none", []]
   | ["multi", BuilderNode.TNode[]]
-  | ["single", BuilderNode.TNode] {
-  const selectedNodes = useStore(
-    (state) =>
-      Array.from(state.nodeInternals)
-        .filter(([_, n]) => n.selected)
-        .map(([_, n]) => n),
-    shallow
-  );
-
+  | ["single", BuilderNode.TNode[]] {
+  const {
+    selection: { nodes: selectedNodeIds },
+  } = useSnapshot(nonSyncedStore);
   const { nodes } = useSnapshot(syncedStore);
 
-  if (selectedNodes) {
-    const nodesObj = mapToObj(nodes, (node) => [node.id, node]);
+  if (selectedNodeIds.length > 0) {
+    const selectedNodes = nodes.filter((node) =>
+      selectedNodeIds.includes(node.id)
+    );
 
-    if (selectedNodes.length > 1)
-      return ["multi", selectedNodes.map(({ id }) => nodesObj[id])];
-    if (selectedNodes.length > 0)
-      return ["single", nodesObj[selectedNodes[0].id]];
+    if (selectedNodes.length > 1) return ["multi", selectedNodes];
+    if (selectedNodes.length > 0) return ["single", selectedNodes];
   }
 
   return ["none", []];
 }
 
 export function useIsSelected(id: string) {
-  const selectedNodes = useStore(
-    (state) =>
-      Array.from(state.nodeInternals)
-        .filter(([_, n]) => n.selected)
-        .map(([_, n]) => n),
-    shallow
-  );
+  const { nodes } = useSnapshot(syncedStore);
+  const selectedNodes = nodes.filter((node) => node.selected);
 
   return selectedNodes.some((selectedNode) => selectedNode.id === id);
 }

@@ -7,17 +7,11 @@ import {
 } from "@open-decision/design-system";
 import { Type } from "react-feather";
 import * as React from "react";
-import * as Separator from "@radix-ui/react-separator";
 import { Bold, Italic, Link, List, Underline } from "react-feather";
 import { HeadingIcon } from "@radix-ui/react-icons";
 import { Editor } from "@tiptap/react";
 import { NumberedList } from "./NumberedListIcon";
-
-const StyledSeparator = styled(Separator.Root, {
-  backgroundColor: "$gray7",
-  "&[data-orientation=horizontal]": { height: 1 },
-  "&[data-orientation=vertical]": { width: 1 },
-});
+import { Separator } from "components/Separator";
 
 const StyledToolbar = styled(Box, {
   display: "flex",
@@ -57,7 +51,7 @@ export function Toolbar({ css, editor, ...props }: Props) {
           )}
         </Icon>
       </Button>
-      <StyledSeparator
+      <Separator
         orientation="vertical"
         decorative
         css={{ alignSelf: "stretch" }}
@@ -92,7 +86,7 @@ export function Toolbar({ css, editor, ...props }: Props) {
           <Underline />
         </Icon>
       </ToggleButton>
-      <StyledSeparator
+      <Separator
         orientation="vertical"
         decorative
         css={{ alignSelf: "stretch" }}
@@ -118,7 +112,7 @@ export function Toolbar({ css, editor, ...props }: Props) {
           <NumberedList />
         </Icon>
       </ToggleButton>
-      <StyledSeparator
+      <Separator
         orientation="vertical"
         decorative
         css={{ alignSelf: "stretch" }}

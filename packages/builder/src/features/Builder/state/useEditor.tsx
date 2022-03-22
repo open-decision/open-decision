@@ -1,9 +1,9 @@
 import * as React from "react";
-import { useStore, useReactFlow } from "react-flow-renderer";
+import { useReactFlow, useStore } from "react-flow-renderer";
 import { calculateCenterOfNode } from "../utilities/calculateCenterOfNode";
 import { sidebarWidth } from "../utilities/constants";
 import { BuilderNode } from "@open-decision/type-classes";
-import shallow from "zustand/shallow";
+import { removeSelectedNodes } from "./treeStore/treeStore";
 
 type projectCoordinatesFn = (
   coordinates: BuilderNode.TCoordinates
@@ -14,9 +14,6 @@ type EditorState = {
   projectCoordinates: projectCoordinatesFn;
   reactFlowWrapperRef: React.MutableRefObject<HTMLDivElement | null>;
   closeNodeEditingSidebar: () => void;
-  unselectNodesAndEdges: () => void;
-  addSelectedNodes: (nodeIds: string[]) => void;
-  addSelectedEdges: (edgeIds: string[]) => void;
   zoomToNode: (node: BuilderNode.TNode) => void;
   isConnecting: boolean;
   connectingNodeId?: string;
@@ -29,13 +26,6 @@ type TreeProviderProps = Omit<
   "value"
 >;
 export function EditorProvider({ children }: TreeProviderProps) {
-  const unselectNodesAndEdges = useStore(
-    (state) => state.unselectNodesAndEdges
-  );
-
-  const addSelectedNodes = useStore((state) => state.addSelectedNodes);
-  const addSelectedEdges = useStore((state) => state.addSelectedEdges);
-
   const reactFlowWrapperRef = React.useRef<HTMLDivElement | null>(null);
   const reactFlowBounds = reactFlowWrapperRef.current?.getBoundingClientRect();
 
@@ -80,11 +70,8 @@ export function EditorProvider({ children }: TreeProviderProps) {
         getCenter,
         reactFlowWrapperRef,
         closeNodeEditingSidebar: () => {
-          unselectNodesAndEdges();
+          removeSelectedNodes();
         },
-        unselectNodesAndEdges,
-        addSelectedEdges,
-        addSelectedNodes,
         zoomToNode,
         isConnecting,
         connectingNodeId: connectingNodeId ? connectingNodeId : undefined,

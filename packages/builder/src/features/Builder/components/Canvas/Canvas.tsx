@@ -11,13 +11,14 @@ import {
 import {
   abortConnecting,
   addEdge,
-  addNode,
+  addSelectedNodes,
   deleteNodes,
   nonSyncedStore,
+  removeSelectedNodes,
   startConnecting,
   updateNodePosition,
-  updateSelectedNode,
 } from "features/Builder/state/treeStore/treeStore";
+import { useSnapshot } from "valtio";
 
 const validConnectEvent = (
   target: MouseEvent["target"]
@@ -35,13 +36,17 @@ const Container = styled("div", {
 
 const customNodes = { customNode: Node };
 
-type Props = { children?: React.ReactNode; css?: StyleObject };
+type Props = {
+  children?: React.ReactNode;
+  css?: StyleObject;
+  className?: string;
+};
 
-export function Canvas({ children, css }: Props) {
+export function Canvas({ children, css, className }: Props) {
   const { reactFlowWrapperRef } = useEditor();
 
   return (
-    <Container ref={reactFlowWrapperRef} css={css}>
+    <Container ref={reactFlowWrapperRef} css={css} className={className}>
       <Nodes />
       {children}
     </Container>
@@ -49,35 +54,24 @@ export function Canvas({ children, css }: Props) {
 }
 
 function Nodes() {
-  const nodes = useNodes();
+  const syncedNodes = useNodes();
   const edges = useEdges();
+  const {
+    selection: { nodes: selectedNodeIds },
+  } = useSnapshot(nonSyncedStore);
+
+  const nodes = React.useMemo(
+    () =>
+      syncedNodes.map((node) => ({
+        ...node,
+        selected: selectedNodeIds.includes(node.id),
+      })),
+    [selectedNodeIds, syncedNodes]
+  );
+
   const startNode = useStartNode();
 
-  const {
-    closeNodeEditingSidebar,
-    projectCoordinates,
-    zoomToNode,
-    unselectNodesAndEdges,
-  } = useEditor();
-
-  const onDragOver = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    event.dataTransfer.dropEffect = "move";
-  };
-
-  const onDrop = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    const name = event.dataTransfer.getData("nodeLabel");
-
-    const coordinates = projectCoordinates({
-      x: event.clientX,
-      y: event.clientY,
-    });
-
-    if (coordinates && name) {
-      addNode({ position: coordinates, data: { name } });
-    }
-  };
+  const { closeNodeEditingSidebar, zoomToNode } = useEditor();
 
   return (
     <ReactFlow
@@ -88,7 +82,7 @@ function Nodes() {
       zoomOnDoubleClick={false}
       panOnScroll={true}
       selectNodesOnDrag={false}
-      onNodeDragStart={() => unselectNodesAndEdges()}
+      // onNodeDragStart={() => unselectNodesAndEdges()}
       onNodesChange={(nodeChanges) => {
         nodeChanges.forEach((nodeChange) => {
           switch (nodeChange.type) {
@@ -104,14 +98,15 @@ function Nodes() {
                 : null;
               break;
             case "select": {
-              updateSelectedNode(nodeChange.id, nodeChange.selected);
-
               if (nodeChange.selected) {
+                addSelectedNodes([nodeChange.id]);
                 const node = nodes.find((node) => node.id === nodeChange.id);
 
                 if (node) {
                   zoomToNode(node);
                 }
+              } else {
+                removeSelectedNodes([nodeChange.id]);
               }
               break;
             }
@@ -132,11 +127,9 @@ function Nodes() {
           target: event.target.dataset.nodeid,
         });
       }}
-      onDragOver={onDragOver}
-      onDrop={onDrop}
       style={{
         gridColumn: "1 / -1",
-        gridRow: "1",
+        gridRow: "1 / -1",
         isolation: "isolate",
       }}
     />

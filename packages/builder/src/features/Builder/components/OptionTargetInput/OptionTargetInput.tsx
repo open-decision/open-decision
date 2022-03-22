@@ -29,13 +29,14 @@ import {
 import {
   addAssociatedNode,
   addEdge,
+  addSelectedNodes,
   deleteEdges,
+  removeSelectedNodes,
   updateEdge,
   updateEdgeAnswer,
   updateEdgeTarget,
   updateNodeRelations,
 } from "features/Builder/state/treeStore/treeStore";
-import { useEditor } from "features/Builder/state/useEditor";
 
 const StyledReorderGroup = styled(Reorder.Group, {
   listStyle: "none",
@@ -205,10 +206,9 @@ export function OptionTargetInput({
             onCreate={(name) => {
               const newNode = addAssociatedNode(
                 node.id,
-                { data: { name } },
+                { selected: true, data: { name } },
                 edge.id
               );
-              if (!newNode) return { id: "", label: "" };
 
               return { id: newNode.id, label: newNode.data.name };
             }}
@@ -271,8 +271,6 @@ type NodeLinkProps = { target?: string } & Omit<ButtonProps, "label" | "Icon">;
 
 function NodeLink({ target, ...props }: NodeLinkProps) {
   const node = useNode(target ?? "");
-
-  const { addSelectedNodes } = useEditor();
 
   return (
     <Button

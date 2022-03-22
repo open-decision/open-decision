@@ -3,7 +3,6 @@ import {
   BuilderNode,
   BuilderTree,
 } from "@open-decision/type-classes";
-import { OnSelectionChangeParams } from "react-flow-renderer";
 import { groupBy, merge } from "remeda";
 import { DeepPartial } from "utility-types";
 import { proxy } from "valtio";
@@ -20,7 +19,7 @@ const yMap = yDoc.getMap("tree");
 export const nonSyncedStore = proxy({
   connectionSourceNodeId: "",
   validConnections: [] as string[],
-  selection: {} as OnSelectionChangeParams,
+  selection: { nodes: [], edges: [] } as { nodes: string[]; edges: string[] },
 });
 
 export const syncedStore = proxy({
@@ -95,13 +94,6 @@ export function updateNodeRelations(
   node.data.relations = relations;
 }
 
-export function updateSelectedNode(nodeId: string, selected: boolean) {
-  const node = getNode(nodeId);
-  if (!node) return;
-
-  node.selected = selected;
-}
-
 export function deleteNodes(ids: string[]) {
   syncedStore.nodes.filter((node) => ids.includes(node.id));
   syncedStore.edges.filter((edge) => ids.includes(edge.source || edge.target));
@@ -113,11 +105,14 @@ export function addAssociatedNode(
   edgeId: string
 ) {
   const node = getNode(nodeId);
-  if (!node) return;
 
-  const newNode = BuilderNode.createNewAssociatedNode(node, newNodeData);
+  const newNode = !node
+    ? BuilderNode.create(newNodeData)
+    : BuilderNode.createNewAssociatedNode(node, newNodeData);
 
-  addNode(newNode);
+  syncedStore.nodes.push(newNode);
+  if (!syncedStore.startNode) syncedStore.startNode = newNode.id;
+
   edgeId
     ? updateEdgeTarget(edgeId, newNode.id)
     : addEdge({ source: nodeId, target: newNode.id });
@@ -194,25 +189,18 @@ export function updateEdgeAnswer(edgeId: string, newAnswer: string) {
 // ------------------------------------------------------------------
 // Selection
 
-// export function addSelectedNodes(nodeIds: string[]) {
-//   nonSyncedStore.selection.nodes = [
-//     ...nonSyncedStore.selection.nodes,
-//     ...nodeIds,
-//   ];
-// }
-// export function replaceSelectedNodes(nodeIds: string[]) {
-//   nonSyncedStore.selection.nodes = nodeIds;
-// }
+export function removeSelectedNodes(nodeIds?: string[]) {
+  if (nodeIds)
+    nonSyncedStore.selection.nodes.filter((nodeId) => nodeIds.includes(nodeId));
+  return (nonSyncedStore.selection.nodes = []);
+}
 
-// export function deselectNodes(nodeIds: string[]) {
-//   nonSyncedStore.selection.nodes = nonSyncedStore.selection.nodes.filter(
-//     (id) => !nodeIds.includes(id)
-//   );
-// }
-
-// export function deselectAllNodes() {
-//   nonSyncedStore.selection.nodes = [];
-// }
+export function addSelectedNodes(nodeIds: string[]) {
+  nonSyncedStore.selection.nodes = [
+    ...nonSyncedStore.selection.nodes,
+    ...nodeIds,
+  ];
+}
 
 // export function addSelectedEdges(edgeIds: string[]) {
 //   nonSyncedStore.selection.edges = [
