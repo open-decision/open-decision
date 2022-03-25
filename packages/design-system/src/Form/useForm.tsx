@@ -14,7 +14,7 @@ import {
 
 const StyledForm = styled("form", {});
 
-export type FormProps<TFieldValues> = Omit<
+export type FormProps<TFieldValues extends object> = Omit<
   React.ComponentProps<typeof StyledForm>,
   "onSubmit"
 > & {
