@@ -32,7 +32,7 @@ const Container = styled("header", responsiveFontSize);
 export const headingStyles = css(
   {
     fontFamily: "$heading",
-    colorFallback: "$black",
+    colorFallback: "$colorScheme-text",
     margin: "unset",
   },
   responsiveFontSize

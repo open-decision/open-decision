@@ -1,3 +1,4 @@
+import { disabledStyle, focusStyle } from "../shared/utils";
 import { css, keyframes } from "../stitches";
 
 const scaleIn = keyframes({
@@ -22,7 +23,7 @@ export const menuItemStyles = css({
   all: "unset",
   colorScheme: "primary",
   textStyle: "medium-text",
-  focusStyle: "inner",
+  focusType: "inner",
   userSelect: "none",
   display: "flex",
   gap: "$3",
@@ -38,15 +39,15 @@ export const menuItemStyles = css({
     backgroundColor: "$primary3",
   },
 
-  "&:focus, &[data-focus='true']": {
+  ...focusStyle({
     backgroundColor: "$primary5",
     focusColor: "$primary5",
-  },
+  }),
 
-  "&[data-disabled]": {
+  ...disabledStyle({
     color: "$gray11",
     pointerEvents: "none",
-  },
+  }),
 });
 
 export const menuLabelStyles = css({

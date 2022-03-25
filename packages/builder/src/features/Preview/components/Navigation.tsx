@@ -4,15 +4,16 @@ import {
   Icon,
   Button,
   styled,
+  hoverStyle,
 } from "@open-decision/design-system";
 import { ArrowLeft, ArrowRight } from "react-feather";
 import { Interpreter } from "@open-decision/interpreter";
 import { Separator } from "@radix-ui/react-separator";
 
 const StyledButton = styled(Button, {
-  "&:hover": {
+  ...hoverStyle({
     backgroundColor: "$gray3",
-  },
+  }),
 });
 
 const StyledSeparator = styled(Separator, {

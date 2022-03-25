@@ -5,7 +5,7 @@ import { extensions } from "./shared";
 import { updateNodeContent } from "features/Builder/state/treeStore/treeStore";
 
 const StyledEditorContent = styled(EditorContent, {
-  focusStyle: "inner-within",
+  focusType: "inner-within",
   border: "1px solid $gray8",
   overflow: "auto",
   borderBottomLeftRadius: "$md",

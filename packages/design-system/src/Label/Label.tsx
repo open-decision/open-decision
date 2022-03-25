@@ -2,7 +2,7 @@ import { styled, css } from "../stitches";
 
 export const labelStyles = css({
   display: "flex",
-  colorFallback: "$black",
+  colorFallback: "$colorScheme-text",
   alignItems: "center",
   gap: "$3",
 

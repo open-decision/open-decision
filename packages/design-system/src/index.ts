@@ -23,5 +23,5 @@ export * from "./LoadingSpinner/LoadingSpinner";
 export * from "./stitches";
 export { aliasColor } from "./internal/utils";
 export type { SystemColors } from "./internal/utils";
-export { visuallyHidden } from "./shared/utils";
+export * from "./shared/utils";
 export * from "./shared/variants";

@@ -9,7 +9,7 @@ const StyledBox = styled(Box, baseTextInputStyle, baseInputStyles, {
   borderRadius: "$md",
   display: "flex",
   alignItems: "center",
-  focusStyle: "inner-within",
+  focusType: "inner-within",
   overflow: "hidden",
   colorScheme: "primary",
 });
@@ -106,7 +106,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           disabled={!inputValue}
           square
           css={{
-            focusStyle: "inner",
+            focusType: "inner",
             opacity: inputValue ? 1 : "0 !important",
           }}
           onClick={() => {

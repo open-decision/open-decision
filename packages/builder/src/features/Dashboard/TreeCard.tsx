@@ -2,6 +2,7 @@ import * as React from "react";
 import {
   Button,
   DropdownMenu,
+  focusStyle,
   Heading,
   Icon,
   Stack,
@@ -25,10 +26,10 @@ const Card = styled("a", Stack, {
   transition: "all 0.2s ease-in-out",
   textDecoration: "none",
 
-  "&:hover, &:focus-within": {
+  ...focusStyle({
     transform: "scale(1.02)",
     boxShadow: "$3",
-  },
+  }),
 });
 
 type Props = { tree: TreesQuery["decisionTrees"][0] };

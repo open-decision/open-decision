@@ -26,7 +26,7 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
           size="small"
           variant="neutral"
           css={{
-            focusStyle: "inner",
+            focusType: "inner",
             ...css,
           }}
           square

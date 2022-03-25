@@ -1,3 +1,4 @@
+import { activeStyle, disabledStyle, intentStyle } from "../shared/utils";
 import { alignByContent } from "../shared/variants";
 import { styled, css } from "../stitches";
 
@@ -17,17 +18,17 @@ export const buttonStyles = css(alignByContent, {
   transitionDuration: "0.1s",
   transform: "translate($$XTranslation, $$YTranslation)",
 
-  "&:disabled": {
+  ...disabledStyle({
     opacity: 0.4,
     pointerEvents: "none",
-  },
+  }),
 
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
   border: "$$borderWidth solid transparent",
   padding: "$$paddingBlock $$paddingInline",
-  focusStyle: "outer",
+  focusType: "outer",
 
   variants: {
     size: {
@@ -56,34 +57,34 @@ export const buttonStyles = css(alignByContent, {
         backgroundColor: "$colorScheme9",
         color: "$white",
 
-        "&:hover, &:focus-visible": {
+        ...intentStyle({
           backgroundColor: "$colorScheme10",
-        },
+        }),
 
-        "&:active, &[data-active='true'], &[data-state=on]": {
+        ...activeStyle({
           backgroundColor: "$colorScheme11",
-        },
+        }),
 
-        "&:disabled": {
+        ...disabledStyle({
           backgroundColor: "$colorScheme9",
-        },
+        }),
       },
 
       secondary: {
         backgroundColor: "$colorScheme3",
         color: "$colorScheme11",
 
-        "&:hover, &:focus-visible": {
+        ...intentStyle({
           backgroundColor: "$colorScheme5",
-        },
+        }),
 
-        "&:active, &[data-active='true'], &[data-state=on]": {
+        ...activeStyle({
           backgroundColor: "$colorScheme7",
-        },
+        }),
 
-        "&:disabled": {
+        ...disabledStyle({
           backgroundColor: "$colorScheme3",
-        },
+        }),
       },
 
       tertiary: {
@@ -91,52 +92,52 @@ export const buttonStyles = css(alignByContent, {
         color: "$colorScheme11",
         borderColor: "currentcolor",
 
-        "&:hover, &:focus-visible": {
+        ...intentStyle({
           backgroundColor: "$colorScheme3",
-        },
+        }),
 
-        "&:active, &[data-active='true'], &[data-state=on]": {
+        ...activeStyle({
           backgroundColor: "$colorScheme5",
-        },
+        }),
 
-        "&:disabled": {
+        ...disabledStyle({
           backgroundColor: "$colorScheme1",
-        },
+        }),
       },
 
       ghost: {
         backgroundColor: "unset",
-        focusStyle: "inner",
-        colorFallback: "$black",
+        focusType: "inner",
+        colorFallback: "$colorScheme-text",
       },
 
       neutral: {
         colorScheme: "gray",
         color: "$colorScheme11",
         backgroundColor: "unset",
-        focusStyle: "inner",
+        focusType: "inner",
 
-        customIntentStyle: {
+        ...intentStyle({
           backgroundColor: "$colorScheme3",
           color: "$colorScheme12",
-        },
+        }),
 
-        "&:active, &[data-active='true'], &[data-state=on]": {
+        ...activeStyle({
           color: "$colorScheme12",
           backgroundColor: "$colorScheme5",
-        },
+        }),
 
-        "&:disabled": {
+        ...disabledStyle({
           backgroundColor: "unset",
-        },
+        }),
       },
     },
 
     pressable: {
       true: {
-        "&:active": {
+        ...activeStyle({
           $$YTranslation: "1px",
-        },
+        }),
       },
     },
 

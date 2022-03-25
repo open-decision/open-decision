@@ -12,7 +12,7 @@ export const baseLinkStyles = css({
   textStyle: "medium-text",
   colorFallback: "$info11",
 
-  focusStyle: "outer",
+  focusType: "outer",
 });
 
 export const underlineLinkStyles = css({

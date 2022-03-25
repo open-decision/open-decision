@@ -1,7 +1,6 @@
 import {
   createStitches,
   CSS,
-  CSSProperties,
   ScaleValue as StitchesScaleValue,
 } from "@stitches/react";
 import {
@@ -37,12 +36,7 @@ import {
   SystemColors,
 } from "../internal/utils";
 
-type focusStyleTypes =
-  | "inner-within"
-  | "outer-within"
-  | "outer"
-  | "inner"
-  | "none";
+type focusTypes = "inner-within" | "outer-within" | "outer" | "inner" | "none";
 
 export const designSystem = createStitches({
   theme: {
@@ -70,6 +64,7 @@ export const designSystem = createStitches({
       layer3: "$gray2",
       layer4: "$gray3",
       layer5: "$gray6",
+      focusColor: "$colors$primary10",
     },
     space: {
       1: "4px",
@@ -190,9 +185,6 @@ export const designSystem = createStitches({
       "--colors-colorScheme11": `$colors$${value}11`,
       "--colors-colorScheme12": `$colors$${value}12`,
     }),
-    colorFallback: (value: `$${keyof SystemColors}`) => ({
-      color: `var(--color, $colors${value})`,
-    }),
     textStyle: (value: TextStyles | "inherit") => {
       const sharedTextStyles = {
         fontSize: `$${value}`,
@@ -227,7 +219,7 @@ export const designSystem = createStitches({
           return { fontFamily: "$text", ...sharedTextStyles };
       }
     },
-    focusStyle: (value: focusStyleTypes) => {
+    focusType: (value: focusTypes) => {
       switch (value) {
         case "none": {
           return { outline: "none" };
@@ -239,7 +231,7 @@ export const designSystem = createStitches({
 
           return {
             [`&:focus-visible, ${focusWithin}, &[data-focus='true']`]: {
-              boxShadow: `0 0 0 1px var(--layer), 0 0 0 3px var(--focusColor, $colors$primary10)`,
+              boxShadow: `0 0 0 1px var(--layer), 0 0 0 3px var(--colors-focusColor, $colors$primary10)`,
               outline: "none",
             },
           };
@@ -251,25 +243,19 @@ export const designSystem = createStitches({
 
           return {
             [`&:focus-visible, ${focusWithin}, &[data-focus='true']`]: {
-              boxShadow: `inset 0 0 0 1px var(--focusColor, $colors$primary10)`,
-              borderColor: `var(--focusColor, $colors$primary10)`,
+              boxShadow: `inset 0 0 0 1px var(--colors-focusColor, $colors$primary10)`,
+              borderColor: `var(--colors-focusColor, $colors$primary10)`,
               outline: "none",
             },
           };
         }
       }
     },
-    customFocusStyle: (value: CSSProperties) => ({
-      "&:focus-visible, &[data-focus='true']": value,
-    }),
-    customHoverStyle: (value: CSSProperties) => ({
-      "&:hover": value,
-    }),
-    customIntentStyle: (value: CSSProperties) => ({
-      "&:focus-visible, &[data-focus='true'], &:hover": value,
-    }),
     focusColor: (value: `$${keyof SystemColors}`) => ({
-      $focusColor: `$colors${value}`,
+      $colors$focusColor: `$colors${value}`,
+    }),
+    colorFallback: (value: `$${keyof SystemColors}`) => ({
+      color: `var(--color, $colors${value})`,
     }),
     groupColor: (value: `$${keyof SystemColors}`) => ({
       "--color": `$colors${value}`,

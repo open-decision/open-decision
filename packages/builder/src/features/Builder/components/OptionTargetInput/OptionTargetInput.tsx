@@ -9,6 +9,7 @@ import {
   Label,
   styled,
   useForm,
+  focusStyle,
 } from "@open-decision/design-system";
 import * as React from "react";
 import {
@@ -188,9 +189,9 @@ export function OptionTargetInput({
                   gridColumn: "1 / -1",
                   marginBottom: "-1px",
 
-                  "&:focus-within, &:focus-visible": {
+                  ...focusStyle({
                     zIndex: "$10",
-                  },
+                  }),
                 }}
                 placeholder="Antwort"
                 onBlur={() => {
@@ -278,7 +279,7 @@ function NodeLink({ target, ...props }: NodeLinkProps) {
         boxShadow: "none",
         borderRadius: "0",
         borderBottomLeftRadius: "inherit",
-        focusStyle: "inner",
+        focusType: "inner",
         maxWidth: "100%",
         colorScheme: target ? "primary" : "gray",
         border: "1px solid",

@@ -33,6 +33,7 @@ const Link = styled("a", {
   paddingBlock: "$2",
   textDecoration: "none",
   textStyle: "medium-text",
+  colorFallback: "$colorScheme-text",
 
   [`${ListMenu} & `]: {
     textStyle: "small-text",

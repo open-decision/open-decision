@@ -8,6 +8,7 @@ import {
   Tooltip,
   Text,
   styled,
+  hoverStyle,
 } from "@open-decision/design-system";
 import { Interpreter } from "@open-decision/interpreter";
 import { Navigation } from "./Navigation";
@@ -85,9 +86,9 @@ const StyledTooltipTrigger = styled(Tooltip.Trigger, {
         },
       },
       default: {
-        "&:hover": {
+        ...hoverStyle({
           backgroundColor: "$primary4",
-        },
+        }),
       },
     },
   },

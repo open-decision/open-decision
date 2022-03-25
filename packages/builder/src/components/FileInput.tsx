@@ -9,7 +9,7 @@ import React, { ForwardedRef } from "react";
 import { Download } from "react-feather";
 
 const StyledLabel = styled(Label, buttonStyles, {
-  focusStyle: "outer-within",
+  focusType: "outer-within",
 });
 
 const HiddenInput = styled("input", {

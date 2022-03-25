@@ -3,6 +3,7 @@ import {
   Heading,
   Icon,
   Input,
+  intentStyle,
   Label,
   Stack,
   styled,
@@ -45,9 +46,9 @@ const SideMenuLink = styled("a", Label, {
   borderRadius: "$md",
   textDecoration: "none",
 
-  customIntentStyle: {
+  ...intentStyle({
     backgroundColor: "$gray3",
-  },
+  }),
 
   "&[data-active='true']": {
     backgroundColor: "$gray5",
