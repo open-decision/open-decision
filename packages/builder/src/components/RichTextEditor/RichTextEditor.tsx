@@ -2,7 +2,7 @@ import { Box, styled } from "@open-decision/design-system";
 import { EditorContent, Content, useEditor } from "@tiptap/react";
 import { Toolbar } from "./Toolbar";
 import { extensions } from "./shared";
-import { updateNodeContent } from "features/Builder/state/treeStore/treeStore";
+import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
 
 const StyledEditorContent = styled(EditorContent, {
   focusType: "inner-within",
@@ -31,6 +31,8 @@ const StyledEditorContent = styled(EditorContent, {
 type Props = { id: string; content: Content };
 
 export const RichTextEditor = ({ id, content }: Props) => {
+  const { updateNodeContent } = useTreeContext();
+
   const editor = useEditor({
     extensions,
     content,

@@ -11,6 +11,7 @@ import { QueryClientProvider } from "react-query";
 import { queryClient } from "features/Data/queryClient";
 import { GetServerSideProps } from "next";
 import { useYjsConnection } from "features/Builder/state/treeStore/useYjsConnection";
+import { TreeProvider } from "features/Builder/state/treeStore/TreeContext";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
@@ -23,7 +24,9 @@ export default function BuilderPage({ id }): JSX.Element {
     <React.Suspense fallback={<div>Loading...</div>}>
       <ErrorBoundary fallback={ErrorFallback}>
         <QueryClientProvider client={queryClient}>
-          {typeof window !== undefined ? <BuilderPageImpl id={id} /> : null}
+          <TreeProvider id={id}>
+            {typeof window !== undefined ? <BuilderPageImpl id={id} /> : null}
+          </TreeProvider>
         </QueryClientProvider>
       </ErrorBoundary>
     </React.Suspense>

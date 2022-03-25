@@ -7,13 +7,10 @@ import { useEditor } from "features/Builder/state/useEditor";
 import { NodeMenu } from "./NodeMenu";
 import { SourcePort, TargetPort } from "./Port";
 import { NodeLabel } from "./NodeLabel";
-import {
-  useIsSelected,
-  useStartNode,
-} from "features/Builder/state/treeStore/hooks";
-import { nonSyncedStore } from "features/Builder/state/treeStore/treeStore";
+import { useStartNode } from "features/Builder/state/treeStore/hooks";
 import { useSnapshot } from "valtio";
 import { BuilderNode } from "@open-decision/type-classes";
+import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
 
 const NodeContainer = styled(Stack, {
   layer: "1",
@@ -37,6 +34,7 @@ const NodeContainer = styled(Stack, {
 
 export const Node = memo(
   ({ id, selected, data }: NodeProps<BuilderNode.TNodeData>) => {
+    const { nonSyncedStore } = useTreeContext();
     const { isConnecting, connectingNodeId } = useEditor();
     const { validConnections } = useSnapshot(nonSyncedStore);
     const startNode = useStartNode();

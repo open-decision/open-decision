@@ -9,7 +9,7 @@ import {
 import * as React from "react";
 import { ProjectMenu } from "./ProjectMenu";
 import { useTreeData } from "../state/treeStore/hooks";
-import { updateTreeName } from "../state/treeStore/treeStore";
+import { useTreeContext } from "../state/treeStore/TreeContext";
 
 const Container = styled(Box, {
   display: "flex",
@@ -19,6 +19,7 @@ const Container = styled(Box, {
 type Props = { css?: StyleObject };
 
 export function TreeNameInput({ css }: Props) {
+  const { updateTreeName } = useTreeContext();
   const { name } = useTreeData();
   const [Form] = useForm({ defaultValues: { name: name ?? "" } });
 

@@ -3,7 +3,7 @@ import { useReactFlow, useStore } from "react-flow-renderer";
 import { calculateCenterOfNode } from "../utilities/calculateCenterOfNode";
 import { sidebarWidth } from "../utilities/constants";
 import { BuilderNode } from "@open-decision/type-classes";
-import { removeSelectedNodes } from "./treeStore/treeStore";
+import { useTreeContext } from "./treeStore/TreeContext";
 
 type projectCoordinatesFn = (
   coordinates: BuilderNode.TCoordinates
@@ -26,6 +26,7 @@ type TreeProviderProps = Omit<
   "value"
 >;
 export function EditorProvider({ children }: TreeProviderProps) {
+  const { removeSelectedNodes } = useTreeContext();
   const reactFlowWrapperRef = React.useRef<HTMLDivElement | null>(null);
   const reactFlowBounds = reactFlowWrapperRef.current?.getBoundingClientRect();
 

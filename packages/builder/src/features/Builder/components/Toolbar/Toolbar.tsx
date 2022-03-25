@@ -9,11 +9,7 @@ import {
 } from "@open-decision/design-system";
 import { GroupIcon } from "@radix-ui/react-icons";
 import { Separator } from "components/Separator";
-import {
-  addNode,
-  addSelectedNodes,
-  removeSelectedNodes,
-} from "features/Builder/state/treeStore/treeStore";
+import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
 import { useEditor } from "features/Builder/state/useEditor";
 import {
   ArrowLeft,
@@ -59,7 +55,8 @@ type Props = { css?: StyleObject };
 
 export function Toolbar({ css }: Props) {
   const { zoomIn, zoomOut } = useReactFlow();
-  const { getCenter, zoomToNode, unselectNodesAndEdges } = useEditor();
+  const { getCenter, zoomToNode } = useEditor();
+  const { addNode, addSelectedNodes, removeSelectedNodes } = useTreeContext();
 
   return (
     <Container css={css}>

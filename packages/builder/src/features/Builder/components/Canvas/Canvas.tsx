@@ -8,17 +8,8 @@ import {
   useNodes,
   useStartNode,
 } from "features/Builder/state/treeStore/hooks";
-import {
-  abortConnecting,
-  addEdge,
-  addSelectedNodes,
-  deleteNodes,
-  nonSyncedStore,
-  removeSelectedNodes,
-  startConnecting,
-  updateNodePosition,
-} from "features/Builder/state/treeStore/treeStore";
 import { useSnapshot } from "valtio";
+import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
 
 const validConnectEvent = (
   target: MouseEvent["target"]
@@ -57,6 +48,17 @@ function Nodes() {
   const syncedNodes = useNodes();
   const edges = useEdges();
   const {
+    abortConnecting,
+    addEdge,
+    addSelectedNodes,
+    deleteNodes,
+    nonSyncedStore,
+    removeSelectedNodes,
+    startConnecting,
+    updateNodePosition,
+  } = useTreeContext();
+
+  const {
     selection: { nodes: selectedNodeIds },
   } = useSnapshot(nonSyncedStore);
 
@@ -82,7 +84,6 @@ function Nodes() {
       zoomOnDoubleClick={false}
       panOnScroll={true}
       selectNodesOnDrag={false}
-      // onNodeDragStart={() => unselectNodesAndEdges()}
       onNodesChange={(nodeChanges) => {
         nodeChanges.forEach((nodeChange) => {
           switch (nodeChange.type) {

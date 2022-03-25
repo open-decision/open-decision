@@ -27,17 +27,7 @@ import {
   useNode,
   useNodes,
 } from "features/Builder/state/treeStore/hooks";
-import {
-  addAssociatedNode,
-  addEdge,
-  addSelectedNodes,
-  deleteEdges,
-  removeSelectedNodes,
-  updateEdge,
-  updateEdgeAnswer,
-  updateEdgeTarget,
-  updateNodeRelations,
-} from "features/Builder/state/treeStore/treeStore";
+import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
 
 const StyledReorderGroup = styled(Reorder.Group, {
   listStyle: "none",
@@ -52,6 +42,13 @@ type SingleSelectProps = {
 };
 
 export function OptionTargetInputs({ nodeId, relations }: SingleSelectProps) {
+  const {
+    addEdge,
+
+    deleteEdges,
+
+    updateNodeRelations,
+  } = useTreeContext();
   const ref = React.useRef<HTMLDivElement | null>(null);
   const edges = useEdges(relations);
 
@@ -117,6 +114,13 @@ export function OptionTargetInput({
 }: SingleSelectInputProps): JSX.Element {
   const nodes = useNodes();
   const node = useNode(nodeId);
+  const {
+    addAssociatedNode,
+
+    updateEdge,
+    updateEdgeAnswer,
+    updateEdgeTarget,
+  } = useTreeContext();
 
   const allOptions = pipe(
     nodes,
@@ -272,6 +276,7 @@ type NodeLinkProps = { target?: string } & Omit<ButtonProps, "label" | "Icon">;
 
 function NodeLink({ target, ...props }: NodeLinkProps) {
   const node = useNode(target ?? "");
+  const { addSelectedNodes } = useTreeContext();
 
   return (
     <Button

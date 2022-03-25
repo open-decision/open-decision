@@ -19,7 +19,6 @@ import { ErrorFallback } from "features/Error/ErrorFallback";
 import { QueryClientProvider } from "react-query";
 import { queryClient } from "features/Data/queryClient";
 import { GetServerSideProps } from "next";
-import { treeStore } from "features/Builder/state/treeStore/useYjsConnection";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {

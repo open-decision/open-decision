@@ -18,15 +18,12 @@ import { NodeLabel } from "./Canvas/Nodes/NodeLabel";
 import { ChevronRight, Star } from "react-feather";
 import { useNodes, useParents, useStartNode } from "../state/treeStore/hooks";
 import { RichTextEditor } from "components/RichTextEditor/RichTextEditor";
-import {
-  updateNodeName,
-  syncedStore,
-  addSelectedNodes,
-} from "../state/treeStore/treeStore";
+import { useTreeContext } from "../state/treeStore/TreeContext";
 
 type Props = { node: BuilderNode.TNode };
 
 export function NodeEditingSidebar({ node }: Props) {
+  const { updateNodeName, syncedStore, addSelectedNodes } = useTreeContext();
   const parentNodeIds = useParents(node);
   const startNode = useStartNode();
 

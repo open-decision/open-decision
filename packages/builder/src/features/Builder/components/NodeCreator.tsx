@@ -14,12 +14,13 @@ import { Plus } from "react-feather";
 import { useEditor } from "../state/useEditor";
 import { nodeNameMaxLength } from "../utilities/constants";
 import { useNodes } from "../state/treeStore/hooks";
-import { addNode, addSelectedNodes } from "../state/treeStore/treeStore";
+import { useTreeContext } from "../state/treeStore/TreeContext";
 
 type Props = { css?: StyleObject };
 
 export const NodeCreator = ({ css }: Props) => {
   const nodes = useNodes();
+  const { addNode, addSelectedNodes } = useTreeContext();
 
   const { getCenter, zoomToNode } = useEditor();
   const [Form] = useForm({
@@ -82,6 +83,8 @@ export const NodeCreator = ({ css }: Props) => {
 };
 
 const NodeCreatorInput = ({ createHandler, autoFocus }) => {
+  const { addSelectedNodes } = useTreeContext();
+
   const onDragStart = (event: React.DragEvent<HTMLButtonElement>) => {
     event.dataTransfer.setData("nodeLabel", inputValue);
     event.dataTransfer.effectAllowed = "move";

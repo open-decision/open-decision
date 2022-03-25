@@ -2,14 +2,15 @@ import { useAuth } from "features/Auth/useAuth";
 import * as React from "react";
 import { WebsocketProvider } from "y-websocket";
 import { IndexeddbPersistence } from "y-indexeddb";
-import { yDoc } from "./treeStore";
+import { useTreeContext } from "./TreeContext";
 
 const isBrowser = typeof window !== "undefined";
 export function useYjsConnection(id: string) {
   const [{ context }] = useAuth();
+  const { yDoc } = useTreeContext();
 
   React.useEffect(() => {
-    const persistence = new IndexeddbPersistence(id, yDoc);
+    // const persistence = new IndexeddbPersistence(id, yDoc);
 
     const websocket =
       isBrowser && context.user?.access.token
@@ -18,16 +19,14 @@ export function useYjsConnection(id: string) {
               "wss://od-mono-api.onrender.com/v1/builder-sync",
             id,
             yDoc,
-            {
-              params: { auth: context.user?.access.token },
-            }
+            { params: { auth: context.user?.access.token } }
           )
         : null;
 
     return () => {
-      yDoc?.destroy();
       websocket?.destroy();
-      persistence.destroy();
+      yDoc?.destroy();
+      // persistence.destroy();
     };
-  }, [context.user?.access.token, id]);
+  }, [context.user?.access.token, id, yDoc]);
 }

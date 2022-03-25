@@ -13,239 +13,253 @@ declare module "valtio" {
   function useSnapshot<T extends object>(p: T): T;
 }
 
-export const yDoc = new Y.Doc();
-const yMap = yDoc.getMap("tree");
+export function createTreeStore(id: string) {
+  const yDoc = new Y.Doc({ guid: id });
+  const yMap = yDoc.getMap("tree");
 
-export const nonSyncedStore = proxy({
-  connectionSourceNodeId: "",
-  validConnections: [] as string[],
-  selection: { nodes: [], edges: [] } as { nodes: string[]; edges: string[] },
-});
-
-export const syncedStore = proxy({
-  startNode: "",
-  nodes: [] as BuilderNode.TNodesRecord,
-  edges: [] as BuilderEdge.TEdgeArray,
-  name: "",
-});
-
-bindProxyAndYMap(syncedStore, yMap, { transactionOrigin: `valtio` });
-
-// ------------------------------------------------------------------
-// Tree
-export function updateStartNode(startNode: string) {
-  syncedStore.startNode = startNode;
-}
-
-export function updateTreeName(name: string) {
-  syncedStore.name = name;
-}
-
-// ------------------------------------------------------------------
-// Nodes
-
-export function getNode(nodeId: string) {
-  return syncedStore.nodes.find((node) => node.id === nodeId);
-}
-
-export function addNode(node: Parameters<typeof BuilderNode.create>[0]) {
-  const newNode = BuilderNode.create(node);
-
-  syncedStore.nodes.push(newNode);
-  if (!syncedStore.startNode) syncedStore.startNode = newNode.id;
-
-  return newNode;
-}
-
-export function updateNodeName(nodeId: string, name: string) {
-  const node = getNode(nodeId);
-  if (!node) return;
-
-  node.data.name = name;
-}
-
-export function updateNodePosition(
-  nodeId: string,
-  position: BuilderNode.TCoordinates
-) {
-  const node = getNode(nodeId);
-  if (!node) return;
-
-  node.position = position;
-}
-
-export function updateNodeContent(
-  nodeId: string,
-  content: BuilderNode.TNodeData["content"]
-) {
-  const node = getNode(nodeId);
-  if (!node) return;
-
-  node.data.content = content;
-}
-
-export function updateNodeRelations(
-  nodeId: string,
-  relations: BuilderNode.TNodeData["relations"]
-) {
-  const node = getNode(nodeId);
-  if (!node) return;
-
-  node.data.relations = relations;
-}
-
-export function deleteNodes(ids: string[]) {
-  syncedStore.nodes.filter((node) => ids.includes(node.id));
-  syncedStore.edges.filter((edge) => ids.includes(edge.source || edge.target));
-}
-
-export function addAssociatedNode(
-  nodeId: string,
-  newNodeData: Parameters<typeof BuilderNode.createNewAssociatedNode>[1],
-  edgeId: string
-) {
-  const node = getNode(nodeId);
-
-  const newNode = !node
-    ? BuilderNode.create(newNodeData)
-    : BuilderNode.createNewAssociatedNode(node, newNodeData);
-
-  syncedStore.nodes.push(newNode);
-  if (!syncedStore.startNode) syncedStore.startNode = newNode.id;
-
-  edgeId
-    ? updateEdgeTarget(edgeId, newNode.id)
-    : addEdge({ source: nodeId, target: newNode.id });
-
-  return newNode;
-}
-
-// ------------------------------------------------------------------
-// Edges
-
-export function getEdge(edgeId: string) {
-  return syncedStore.edges.find((edge) => edge.id === edgeId);
-}
-
-export function addEdge(edge: Parameters<typeof BuilderEdge.create>[0]) {
-  const newEdge = BuilderEdge.create(edge);
-
-  getNode(newEdge.source)?.data.relations.push(newEdge.id);
-  syncedStore.edges.push(newEdge);
-
-  return newEdge;
-}
-
-export function updateEdge(
-  edge: DeepPartial<BuilderEdge.TEdge> & { id: BuilderEdge.TEdge["id"] }
-) {
-  const existingEdgeIndex = syncedStore.edges.findIndex(
-    (existingEdge) => existingEdge.id === edge.id
-  );
-
-  syncedStore.edges[existingEdgeIndex] = merge(
-    syncedStore.edges[existingEdgeIndex],
-    edge
-  );
-}
-
-export function deleteEdges(ids: string[]) {
-  const { toDelete, rest } = groupBy(syncedStore.edges, (edge) =>
-    ids.includes(edge.id) ? "toDelete" : "rest"
-  );
-
-  syncedStore.edges = rest;
-
-  toDelete.forEach((edge) => {
-    const sourceNode = getNode(edge.source);
-    const targetNode = getNode(edge.target);
-
-    sourceNode?.data.relations.filter((relation) => relation !== edge.id);
-    targetNode?.data.relations.filter((relation) => relation !== edge.id);
+  const nonSyncedStore = proxy({
+    connectionSourceNodeId: "",
+    validConnections: [] as string[],
+    selection: { nodes: [], edges: [] } as { nodes: string[]; edges: string[] },
   });
-}
 
-export function updateEdgeTarget(edgeId: string, newTarget: string) {
-  const edge = getEdge(edgeId);
-  if (!edge) return;
+  const syncedStore = proxy({
+    startNode: "",
+    nodes: [] as BuilderNode.TNodesRecord,
+    edges: [] as BuilderEdge.TEdgeArray,
+    name: "",
+  });
 
-  edge.target = newTarget;
-}
+  bindProxyAndYMap(syncedStore, yMap, {
+    transactionOrigin: `valtio for ${id}`,
+  });
 
-export function updateEdgeSource(edgeId: string, newSource: string) {
-  const edge = getEdge(edgeId);
-  if (!edge) return;
+  // ------------------------------------------------------------------
+  // Tree
+  function updateStartNode(startNode: string) {
+    syncedStore.startNode = startNode;
+  }
 
-  edge.source = newSource;
-}
+  function updateTreeName(name: string) {
+    syncedStore.name = name;
+  }
 
-export function updateEdgeAnswer(edgeId: string, newAnswer: string) {
-  const edge = getEdge(edgeId);
-  if (!edge) return;
+  // ------------------------------------------------------------------
+  // Nodes
 
-  edge.data.answer = newAnswer;
-}
+  function getNode(nodeId: string) {
+    return syncedStore.nodes.find((node) => node.id === nodeId);
+  }
 
-// ------------------------------------------------------------------
-// Selection
+  function addNode(node: Parameters<typeof BuilderNode.create>[0]) {
+    const newNode = BuilderNode.create(node);
 
-export function removeSelectedNodes(nodeIds?: string[]) {
-  if (nodeIds)
-    nonSyncedStore.selection.nodes.filter((nodeId) => nodeIds.includes(nodeId));
-  return (nonSyncedStore.selection.nodes = []);
-}
+    syncedStore.nodes.push(newNode);
+    if (!syncedStore.startNode) syncedStore.startNode = newNode.id;
 
-export function addSelectedNodes(nodeIds: string[]) {
-  nonSyncedStore.selection.nodes = [
-    ...nonSyncedStore.selection.nodes,
-    ...nodeIds,
-  ];
-}
+    return newNode;
+  }
 
-// export function addSelectedEdges(edgeIds: string[]) {
-//   nonSyncedStore.selection.edges = [
-//     ...nonSyncedStore.selection.edges,
-//     ...edgeIds,
-//   ];
-// }
+  function updateNodeName(nodeId: string, name: string) {
+    const node = getNode(nodeId);
+    if (!node) return;
 
-// export function replaceSelectedEdges(edgeIds: string[]) {
-//   nonSyncedStore.selection.edges = edgeIds;
-// }
+    node.data.name = name;
+  }
 
-// export function deselectEdges(edgeIds: string[]) {
-//   nonSyncedStore.selection.edges = nonSyncedStore.selection.edges.filter(
-//     (id) => !edgeIds.includes(id)
-//   );
-// }
+  function updateNodePosition(
+    nodeId: string,
+    position: BuilderNode.TCoordinates
+  ) {
+    const node = getNode(nodeId);
+    if (!node) return;
 
-// export function deselectAllEdges() {
-//   nonSyncedStore.selection.edges = [];
-// }
+    node.position.x = position.x;
+    node.position.y = position.y;
+  }
 
-// ------------------------------------------------------------------
-// Connection
+  function updateNodeContent(
+    nodeId: string,
+    content: BuilderNode.TNodeData["content"]
+  ) {
+    const node = getNode(nodeId);
+    if (!node) return;
 
-export function startConnecting(sourceNodeId: string) {
-  const connectionOriginNode = getNode(sourceNodeId);
-  if (!connectionOriginNode) return;
+    node.data.content = content;
+  }
 
-  nonSyncedStore.connectionSourceNodeId = sourceNodeId;
+  function updateNodeRelations(
+    nodeId: string,
+    relations: BuilderNode.TNodeData["relations"]
+  ) {
+    const node = getNode(nodeId);
+    if (!node) return;
 
-  const validConnections = BuilderTree.getConnectableNodes(
-    connectionOriginNode.id
-  )(syncedStore.nodes ?? []);
+    node.data.relations = relations;
+  }
 
-  nonSyncedStore.validConnections = validConnections;
-}
+  function deleteNodes(ids: string[]) {
+    syncedStore.nodes.filter((node) => ids.includes(node.id));
+    syncedStore.edges.filter((edge) =>
+      ids.includes(edge.source || edge.target)
+    );
+  }
 
-export function abortConnecting() {
-  nonSyncedStore.connectionSourceNodeId = "";
-  nonSyncedStore.validConnections = [];
-}
+  function addAssociatedNode(
+    nodeId: string,
+    newNodeData: Parameters<typeof BuilderNode.createNewAssociatedNode>[1],
+    edgeId: string
+  ) {
+    const node = getNode(nodeId);
 
-export function connect(target: string) {
-  if (nonSyncedStore.connectionSourceNodeId == null) return;
+    const newNode = !node
+      ? BuilderNode.create(newNodeData)
+      : BuilderNode.createNewAssociatedNode(node, newNodeData);
 
-  addEdge({ source: nonSyncedStore.connectionSourceNodeId, target });
+    syncedStore.nodes.push(newNode);
+    if (!syncedStore.startNode) syncedStore.startNode = newNode.id;
+
+    edgeId
+      ? updateEdgeTarget(edgeId, newNode.id)
+      : addEdge({ source: nodeId, target: newNode.id });
+
+    return newNode;
+  }
+
+  // ------------------------------------------------------------------
+  // Edges
+
+  function getEdge(edgeId: string) {
+    return syncedStore.edges.find((edge) => edge.id === edgeId);
+  }
+
+  function addEdge(edge: Parameters<typeof BuilderEdge.create>[0]) {
+    const newEdge = BuilderEdge.create(edge);
+
+    getNode(newEdge.source)?.data.relations.push(newEdge.id);
+    syncedStore.edges.push(newEdge);
+
+    return newEdge;
+  }
+
+  function updateEdge(
+    edge: DeepPartial<BuilderEdge.TEdge> & { id: BuilderEdge.TEdge["id"] }
+  ) {
+    const existingEdgeIndex = syncedStore.edges.findIndex(
+      (existingEdge) => existingEdge.id === edge.id
+    );
+
+    syncedStore.edges[existingEdgeIndex] = merge(
+      syncedStore.edges[existingEdgeIndex],
+      edge
+    );
+  }
+
+  function deleteEdges(ids: string[]) {
+    const { toDelete, rest } = groupBy(syncedStore.edges, (edge) =>
+      ids.includes(edge.id) ? "toDelete" : "rest"
+    );
+
+    syncedStore.edges = rest;
+
+    toDelete.forEach((edge) => {
+      const sourceNode = getNode(edge.source);
+      const targetNode = getNode(edge.target);
+
+      sourceNode?.data.relations.filter((relation) => relation !== edge.id);
+      targetNode?.data.relations.filter((relation) => relation !== edge.id);
+    });
+  }
+
+  function updateEdgeTarget(edgeId: string, newTarget: string) {
+    const edge = getEdge(edgeId);
+    if (!edge) return;
+
+    edge.target = newTarget;
+  }
+
+  function updateEdgeSource(edgeId: string, newSource: string) {
+    const edge = getEdge(edgeId);
+    if (!edge) return;
+
+    edge.source = newSource;
+  }
+
+  function updateEdgeAnswer(edgeId: string, newAnswer: string) {
+    const edge = getEdge(edgeId);
+    if (!edge) return;
+
+    edge.data.answer = newAnswer;
+  }
+
+  // ------------------------------------------------------------------
+  // Selection
+
+  function removeSelectedNodes(nodeIds?: string[]) {
+    if (nodeIds)
+      nonSyncedStore.selection.nodes.filter((nodeId) =>
+        nodeIds.includes(nodeId)
+      );
+    return (nonSyncedStore.selection.nodes = []);
+  }
+
+  function addSelectedNodes(nodeIds: string[]) {
+    nonSyncedStore.selection.nodes = [
+      ...nonSyncedStore.selection.nodes,
+      ...nodeIds,
+    ];
+  }
+
+  // ------------------------------------------------------------------
+  // Connection
+
+  function startConnecting(sourceNodeId: string) {
+    const connectionOriginNode = getNode(sourceNodeId);
+    if (!connectionOriginNode) return;
+
+    nonSyncedStore.connectionSourceNodeId = sourceNodeId;
+
+    const validConnections = BuilderTree.getConnectableNodes(
+      connectionOriginNode.id
+    )(syncedStore.nodes ?? []);
+
+    nonSyncedStore.validConnections = validConnections;
+  }
+
+  function abortConnecting() {
+    nonSyncedStore.connectionSourceNodeId = "";
+    nonSyncedStore.validConnections = [];
+  }
+
+  function connect(target: string) {
+    if (nonSyncedStore.connectionSourceNodeId == null) return;
+
+    addEdge({ source: nonSyncedStore.connectionSourceNodeId, target });
+  }
+
+  return {
+    yDoc,
+    nonSyncedStore,
+    syncedStore,
+    connect,
+    abortConnecting,
+    startConnecting,
+    addAssociatedNode,
+    addEdge,
+    addNode,
+    addSelectedNodes,
+    removeSelectedNodes,
+    updateEdge,
+    updateEdgeAnswer,
+    updateEdgeSource,
+    updateEdgeTarget,
+    deleteEdges,
+    deleteNodes,
+    updateNodeContent,
+    updateNodeName,
+    updateNodeRelations,
+    updateNodePosition,
+    updateStartNode,
+    updateTreeName,
+  };
 }
