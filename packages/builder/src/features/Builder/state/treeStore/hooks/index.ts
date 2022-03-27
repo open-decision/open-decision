@@ -26,6 +26,24 @@ export function useSelectedNodes():
   return ["none", []];
 }
 
+export function useSelectedNodeIds():
+  | ["none", []]
+  | ["multi", string[]]
+  | ["single", string[]] {
+  const { nonSyncedStore } = useTreeContext();
+
+  const {
+    selection: { nodes: selectedNodeIds },
+  } = useSnapshot(nonSyncedStore);
+
+  if (selectedNodeIds.length > 0) {
+    if (selectedNodeIds.length > 1) return ["multi", selectedNodeIds];
+    return ["single", selectedNodeIds];
+  }
+
+  return ["none", []];
+}
+
 export function useIsSelected(id: string) {
   const { syncedStore } = useTreeContext();
 

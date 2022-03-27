@@ -207,10 +207,7 @@ export function createTreeStore(id: string) {
   }
 
   function addSelectedNodes(nodeIds: string[]) {
-    nonSyncedStore.selection.nodes = [
-      ...nonSyncedStore.selection.nodes,
-      ...nodeIds,
-    ];
+    nonSyncedStore.selection.nodes.push(...nodeIds);
   }
 
   // ------------------------------------------------------------------

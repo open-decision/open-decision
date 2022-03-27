@@ -6,6 +6,8 @@ import { Node } from "./Nodes/Node";
 import {
   useEdges,
   useNodes,
+  useSelectedNodeIds,
+  useSelectedNodes,
   useStartNode,
 } from "features/Builder/state/treeStore/hooks";
 import { useSnapshot } from "valtio";
@@ -58,17 +60,16 @@ function Nodes() {
     updateNodePosition,
   } = useTreeContext();
 
-  const {
-    selection: { nodes: selectedNodeIds },
-  } = useSnapshot(nonSyncedStore);
+  const [selectedStatus, selectedNodeIds] = useSelectedNodeIds();
 
   const nodes = React.useMemo(
     () =>
       syncedNodes.map((node) => ({
         ...node,
-        selected: selectedNodeIds.includes(node.id),
+        selected:
+          selectedStatus !== "none" && selectedNodeIds.includes(node.id),
       })),
-    [selectedNodeIds, syncedNodes]
+    [selectedNodeIds, syncedNodes, selectedStatus]
   );
 
   const startNode = useStartNode();
@@ -84,6 +85,7 @@ function Nodes() {
       zoomOnDoubleClick={false}
       panOnScroll={true}
       selectNodesOnDrag={false}
+      selectionKeyCode={null}
       onNodesChange={(nodeChanges) => {
         nodeChanges.forEach((nodeChange) => {
           switch (nodeChange.type) {
@@ -101,10 +103,10 @@ function Nodes() {
             case "select": {
               if (nodeChange.selected) {
                 addSelectedNodes([nodeChange.id]);
-                const node = nodes.find((node) => node.id === nodeChange.id);
 
-                if (node) {
-                  zoomToNode(node);
+                if (selectedNodeIds.length === 0) {
+                  const node = nodes.find((node) => node.id === nodeChange.id);
+                  node && zoomToNode(node);
                 }
               } else {
                 removeSelectedNodes([nodeChange.id]);
