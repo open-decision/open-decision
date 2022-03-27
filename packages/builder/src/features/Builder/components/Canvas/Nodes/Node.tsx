@@ -81,25 +81,6 @@ export const Node = memo(
           id={id}
           isConnectable={isConnecting}
         />
-        {selected && !isConnecting ? (
-          <Box
-            data-connecting={isConnecting}
-            data-nodeid={id}
-            css={{
-              position: "absolute",
-              top: "$1",
-              right: "$1",
-              transition: "opacity 100ms ease-in",
-            }}
-          >
-            <NodeMenu
-              data-connecting={isConnecting}
-              name={data.name}
-              nodeId={id}
-              isStartNode={isStartNode}
-            />
-          </Box>
-        ) : null}
         <Text
           data-connecting={isConnecting}
           data-nodeid={id}
