@@ -64,9 +64,9 @@ export function useIsPreviewable() {
 export function useStartNode() {
   const { syncedStore } = useTreeContext();
 
-  const { startNode } = useSnapshot(syncedStore);
+  const { startNode, nodes } = useSnapshot(syncedStore);
 
-  return startNode;
+  return nodes.find((node) => node.id === startNode);
 }
 
 export function useConnect() {

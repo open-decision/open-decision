@@ -1,16 +1,13 @@
 import React from "react";
 import {
   Combobox,
-  Button,
   StyleObject,
   Input,
-  useCombobox,
   Box,
-  InputWithButton,
   Icon,
   useForm,
 } from "@open-decision/design-system";
-import { Plus } from "react-feather";
+import { Search } from "react-feather";
 import { useEditor } from "../state/useEditor";
 import { nodeNameMaxLength } from "../utilities/constants";
 import { useNodes } from "../state/treeStore/hooks";
@@ -18,9 +15,9 @@ import { useTreeContext } from "../state/treeStore/TreeContext";
 
 type Props = { css?: StyleObject };
 
-export const NodeCreator = ({ css }: Props) => {
+export const NodeSearch = ({ css }: Props) => {
   const nodes = useNodes();
-  const { addNode, addSelectedNodes } = useTreeContext();
+  const { addNode, addSelectedNodes, removeSelectedNodes } = useTreeContext();
 
   const { getCenter, zoomToNode } = useEditor();
   const [Form] = useForm({
@@ -53,6 +50,7 @@ export const NodeCreator = ({ css }: Props) => {
   }
 
   function changeHandler(newSelectedItemId: string) {
+    removeSelectedNodes();
     addSelectedNodes([newSelectedItemId]);
     const node = nodes.find((node) => node.id === newSelectedItemId);
 
@@ -73,63 +71,27 @@ export const NodeCreator = ({ css }: Props) => {
         key={items.length}
         onSelectedItemChange={(newItem) => changeHandler(newItem?.id ?? "")}
       >
-        <NodeCreatorInput
-          autoFocus={Object.keys(nodes).length === 0}
-          createHandler={createHandler}
-        />
-      </Combobox.Root>
-    </Form>
-  );
-};
-
-const NodeCreatorInput = ({ createHandler, autoFocus }) => {
-  const { addSelectedNodes } = useTreeContext();
-
-  const onDragStart = (event: React.DragEvent<HTMLButtonElement>) => {
-    event.dataTransfer.setData("nodeLabel", inputValue);
-    event.dataTransfer.effectAllowed = "move";
-  };
-
-  const { isCreating, inputValue, setInputValue } = useCombobox();
-
-  return (
-    <Box css={{ width: "300px" }}>
-      <Combobox.Input
-        css={{ zIndex: "5" }}
-        name="search"
-        maxLength={nodeNameMaxLength}
-      >
-        {(field) => (
-          <InputWithButton
-            css={{ layer: "2" }}
-            Input={
+        <Box css={{ width: "300px" }}>
+          <Combobox.Input
+            css={{ zIndex: "5" }}
+            name="search"
+            maxLength={nodeNameMaxLength}
+          >
+            {(field) => (
               <Input
                 {...field}
-                autoFocus={autoFocus}
+                Icon={
+                  <Icon>
+                    <Search />
+                  </Icon>
+                }
                 placeholder="Knotenname"
+                css={{ layer: "2" }}
               />
-            }
-            Button={
-              <Button
-                css={{ boxShadow: "$1" }}
-                onDragStart={(event) => onDragStart(event)}
-                disabled={!isCreating}
-                onClick={() => {
-                  const newNode = createHandler(inputValue);
-                  addSelectedNodes([newNode.id]);
-                  setInputValue("");
-                }}
-                square
-                draggable
-              >
-                <Icon label="Füge einen neuen Knoten hinzu">
-                  <Plus />
-                </Icon>
-              </Button>
-            }
-          />
-        )}
-      </Combobox.Input>
-    </Box>
+            )}
+          </Combobox.Input>
+        </Box>
+      </Combobox.Root>
+    </Form>
   );
 };

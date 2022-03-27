@@ -210,6 +210,11 @@ export function createTreeStore(id: string) {
     nonSyncedStore.selection.nodes.push(...nodeIds);
   }
 
+  function replaceSelectedNodes(nodeIds: string[]) {
+    removeSelectedNodes();
+    addSelectedNodes(nodeIds);
+  }
+
   // ------------------------------------------------------------------
   // Connection
 
@@ -249,6 +254,7 @@ export function createTreeStore(id: string) {
     addNode,
     addSelectedNodes,
     removeSelectedNodes,
+    replaceSelectedNodes,
     updateEdge,
     updateEdgeAnswer,
     updateEdgeSource,

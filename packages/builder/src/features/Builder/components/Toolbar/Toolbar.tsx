@@ -2,25 +2,25 @@ import {
   Button,
   ButtonProps,
   Icon,
-  Input,
   Row,
   styled,
   StyleObject,
 } from "@open-decision/design-system";
 import { GroupIcon } from "@radix-ui/react-icons";
 import { Separator } from "components/Separator";
+import { useStartNode } from "features/Builder/state/treeStore/hooks";
 import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
 import { useEditor } from "features/Builder/state/useEditor";
 import {
   ArrowLeft,
   ArrowRight,
   PlusCircle,
-  Search,
   Star,
   ZoomIn,
   ZoomOut,
 } from "react-feather";
 import { useReactFlow } from "react-flow-renderer";
+import { NodeSearch } from "../NodeCreator";
 
 const Container = styled(Row, {
   layer: "1",
@@ -56,7 +56,13 @@ type Props = { css?: StyleObject };
 export function Toolbar({ css }: Props) {
   const { zoomIn, zoomOut } = useReactFlow();
   const { getCenter, zoomToNode } = useEditor();
-  const { addNode, addSelectedNodes, removeSelectedNodes } = useTreeContext();
+  const {
+    addNode,
+    addSelectedNodes,
+    removeSelectedNodes,
+    replaceSelectedNodes,
+  } = useTreeContext();
+  const startNode = useStartNode();
 
   return (
     <Container css={css}>
@@ -109,21 +115,22 @@ export function Toolbar({ css }: Props) {
         </Icon>
       </Button>
       <ToolbarSeparator />
-      <Button {...buttonProps} size="medium">
+      <Button
+        {...buttonProps}
+        onClick={() => {
+          if (!startNode) return;
+          replaceSelectedNodes([startNode.id]);
+          zoomToNode(startNode);
+        }}
+        disabled={!startNode}
+        size="medium"
+      >
         <Icon>
           <Star />
         </Icon>
       </Button>
       <ToolbarSeparator />
-      <Input
-        css={{ layer: "3", borderColor: "transparent" }}
-        placeholder="Knotenname"
-        Icon={
-          <Icon>
-            <Search />
-          </Icon>
-        }
-      />
+      <NodeSearch />
     </Container>
   );
 }

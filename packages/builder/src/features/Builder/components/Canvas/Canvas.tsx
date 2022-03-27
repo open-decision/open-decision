@@ -90,7 +90,9 @@ function Nodes() {
         nodeChanges.forEach((nodeChange) => {
           switch (nodeChange.type) {
             case "remove":
-              nodeChange.id !== startNode ? deleteNodes([nodeChange.id]) : null;
+              nodeChange.id !== startNode?.id
+                ? deleteNodes([nodeChange.id])
+                : null;
               break;
             case "position":
               nodeChange.dragging
