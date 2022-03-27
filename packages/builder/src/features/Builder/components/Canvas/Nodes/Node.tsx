@@ -44,7 +44,7 @@ export const Node = memo(
       [isConnecting, validConnections, id]
     );
 
-    const isStartNode = startNode === id;
+    const isStartNode = startNode?.id === id;
     const isConnectingNode = connectingNodeId === id;
     const connectable = validConnectionTarget && !isConnectingNode;
 

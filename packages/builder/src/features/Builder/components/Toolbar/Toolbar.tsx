@@ -20,7 +20,7 @@ import {
   ZoomOut,
 } from "react-feather";
 import { useReactFlow } from "react-flow-renderer";
-import { NodeSearch } from "../NodeCreator";
+import { NodeSearch } from "../NodeSearch";
 
 const Container = styled(Row, {
   layer: "1",

@@ -34,7 +34,7 @@ export function NodeEditingSidebar({ node }: Props) {
     mode: "onChange",
   });
 
-  const isStartNode = node?.id === startNode;
+  const isStartNode = node?.id === startNode?.id;
 
   return node ? (
     <>

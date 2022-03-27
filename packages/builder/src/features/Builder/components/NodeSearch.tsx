@@ -86,7 +86,7 @@ export const NodeSearch = ({ css }: Props) => {
                   </Icon>
                 }
                 placeholder="Knotenname"
-                css={{ layer: "2" }}
+                css={{ layer: "3", borderColor: "transparent" }}
               />
             )}
           </Combobox.Input>
