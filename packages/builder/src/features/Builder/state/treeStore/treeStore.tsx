@@ -99,10 +99,13 @@ export function createTreeStore(id: string) {
   }
 
   function deleteNodes(ids: string[]) {
-    syncedStore.nodes.filter((node) => ids.includes(node.id));
-    syncedStore.edges.filter((edge) =>
-      ids.includes(edge.source || edge.target)
+    const nodes = syncedStore.nodes.filter((node) => !ids.includes(node.id));
+    const edges = syncedStore.edges.filter(
+      (edge) => !ids.includes(edge.source || edge.target)
     );
+
+    syncedStore.nodes = nodes;
+    syncedStore.edges = edges;
   }
 
   function addAssociatedNode(

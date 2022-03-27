@@ -80,6 +80,14 @@ export function useEdges(ids?: string[]) {
   return edges;
 }
 
+export function useEdge(id: string) {
+  const { syncedStore } = useTreeContext();
+
+  const { edges } = useSnapshot(syncedStore);
+
+  return edges.find((edge) => edge.id === id);
+}
+
 export function useNodeNames() {
   const { syncedStore } = useTreeContext();
 

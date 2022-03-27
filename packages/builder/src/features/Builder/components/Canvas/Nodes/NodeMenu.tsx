@@ -5,10 +5,7 @@ import {
   Tooltip,
   StyleObject,
 } from "@open-decision/design-system";
-import {
-  deleteNodes,
-  updateStartNode,
-} from "features/Builder/state/treeStore/treeStore";
+import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
 import { MoreHorizontal, Trash, Star } from "react-feather";
 
 type Props = {
@@ -19,6 +16,8 @@ type Props = {
 };
 
 export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
+  const { deleteNodes, updateStartNode } = useTreeContext();
+
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>

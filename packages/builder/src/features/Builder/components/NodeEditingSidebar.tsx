@@ -23,7 +23,8 @@ import { useTreeContext } from "../state/treeStore/TreeContext";
 type Props = { node: BuilderNode.TNode };
 
 export function NodeEditingSidebar({ node }: Props) {
-  const { updateNodeName, syncedStore, addSelectedNodes } = useTreeContext();
+  const { updateNodeName, syncedStore, addSelectedNodes, removeSelectedNodes } =
+    useTreeContext();
   const parentNodeIds = useParents(node);
   const startNode = useStartNode();
 
@@ -133,7 +134,10 @@ export function NodeEditingSidebar({ node }: Props) {
               return (
                 <Link
                   key={parentNode.id}
-                  onClick={() => addSelectedNodes([parentNode.id])}
+                  onClick={() => {
+                    removeSelectedNodes();
+                    return addSelectedNodes([parentNode.id]);
+                  }}
                   css={{
                     color: "$primary11",
                     fontWeight: 500,

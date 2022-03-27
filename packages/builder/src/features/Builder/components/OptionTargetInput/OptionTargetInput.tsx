@@ -12,18 +12,14 @@ import {
   focusStyle,
 } from "@open-decision/design-system";
 import * as React from "react";
-import {
-  BuilderTree,
-  BuilderNode,
-  BuilderEdge,
-} from "@open-decision/type-classes";
+import { BuilderTree, BuilderNode } from "@open-decision/type-classes";
 import { pipe } from "remeda";
 import { Plus, Trash, Crosshair } from "react-feather";
 import { DragHandle } from "./DragHandle";
 import { Reorder, useDragControls } from "framer-motion";
 import { map } from "remeda";
 import {
-  useEdges,
+  useEdge,
   useNode,
   useNodes,
 } from "features/Builder/state/treeStore/hooks";
@@ -42,15 +38,8 @@ type SingleSelectProps = {
 };
 
 export function OptionTargetInputs({ nodeId, relations }: SingleSelectProps) {
-  const {
-    addEdge,
-
-    deleteEdges,
-
-    updateNodeRelations,
-  } = useTreeContext();
+  const { addEdge, updateNodeRelations } = useTreeContext();
   const ref = React.useRef<HTMLDivElement | null>(null);
-  const edges = useEdges(relations);
 
   return (
     <>
@@ -81,18 +70,16 @@ export function OptionTargetInputs({ nodeId, relations }: SingleSelectProps) {
         ref={ref}
         axis="y"
         values={relations}
-        initial={false}
         onReorder={(newOrder: BuilderNode.TNodeData["relations"]) =>
           updateNodeRelations(nodeId, newOrder)
         }
       >
-        {edges.map((edge) => (
+        {relations.map((relation) => (
           <OptionTargetInput
-            groupRef={ref}
-            key={edge.id}
-            edge={edge}
-            onDelete={() => deleteEdges([edge.id])}
             nodeId={nodeId}
+            relation={relation}
+            key={relation}
+            groupRef={ref}
           />
         ))}
       </StyledReorderGroup>
@@ -100,27 +87,26 @@ export function OptionTargetInputs({ nodeId, relations }: SingleSelectProps) {
   );
 }
 type SingleSelectInputProps = {
-  edge: BuilderEdge.TEdge;
+  relation: string;
   nodeId: string;
-  onDelete: (id: string) => void;
   groupRef: React.MutableRefObject<HTMLDivElement | null>;
 };
 
 export function OptionTargetInput({
-  edge,
+  relation,
   nodeId,
-  onDelete,
   groupRef,
-}: SingleSelectInputProps): JSX.Element {
+}: SingleSelectInputProps) {
   const nodes = useNodes();
   const node = useNode(nodeId);
   const {
     addAssociatedNode,
-
     updateEdge,
     updateEdgeAnswer,
     updateEdgeTarget,
+    deleteEdges,
   } = useTreeContext();
+  const edge = useEdge(relation);
 
   const allOptions = pipe(
     nodes,
@@ -143,12 +129,12 @@ export function OptionTargetInput({
 
   const [Form] = useForm({
     defaultValues: {
-      answer: edge.data?.answer ?? "",
-      target: edge.target ?? "",
+      answer: edge?.data?.answer ?? "",
+      target: edge?.target ?? "",
     },
   });
 
-  return node ? (
+  return node && edge ? (
     <Reorder.Item
       value={edge.id}
       dragListener={false}
@@ -258,7 +244,7 @@ export function OptionTargetInput({
             variant="neutral"
             type="button"
             square
-            onClick={() => onDelete(edge.id)}
+            onClick={() => deleteEdges([edge.id])}
           >
             <Icon label="Entferne den Input">
               <Trash />
@@ -276,7 +262,7 @@ type NodeLinkProps = { target?: string } & Omit<ButtonProps, "label" | "Icon">;
 
 function NodeLink({ target, ...props }: NodeLinkProps) {
   const node = useNode(target ?? "");
-  const { addSelectedNodes } = useTreeContext();
+  const { addSelectedNodes, removeSelectedNodes } = useTreeContext();
 
   return (
     <Button
@@ -294,6 +280,7 @@ function NodeLink({ target, ...props }: NodeLinkProps) {
       variant="secondary"
       onClick={() => {
         if (target) {
+          removeSelectedNodes();
           addSelectedNodes([target]);
         }
       }}
