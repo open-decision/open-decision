@@ -21,13 +21,21 @@ const Content = styled("header", {
   paddingBlock: "$3",
 });
 
-type BaseHeaderProps = { children?: React.ReactNode; css?: StyleObject };
+type BaseHeaderProps = {
+  children?: React.ReactNode;
+  css?: StyleObject;
+  LogoSlot?: React.ReactNode;
+};
 
-export const BaseHeader = ({ children, css }: BaseHeaderProps) => {
+export const BaseHeader = ({
+  children,
+  css,
+  LogoSlot = <Logo css={{ width: "40px", height: "40px" }} />,
+}: BaseHeaderProps) => {
   return (
     <Container css={css} className={darkTheme}>
       <Content>
-        <Logo css={{ width: "40px", height: "40px" }} />
+        {LogoSlot}
         <Box
           css={{
             display: "flex",

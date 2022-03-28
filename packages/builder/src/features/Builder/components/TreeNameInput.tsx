@@ -1,20 +1,15 @@
 import {
-  Box,
-  styled,
   StyleObject,
   useForm,
   ControlledInput,
   Input,
+  Text,
+  Popover,
+  Field,
 } from "@open-decision/design-system";
 import * as React from "react";
-import { ProjectMenu } from "./ProjectMenu";
 import { useTreeData } from "../state/treeStore/hooks";
 import { useTreeContext } from "../state/treeStore/TreeContext";
-
-const Container = styled(Box, {
-  display: "flex",
-  alignItems: "center",
-});
 
 type Props = { css?: StyleObject };
 
@@ -24,22 +19,30 @@ export function TreeNameInput({ css }: Props) {
   const [Form] = useForm({ defaultValues: { name: name ?? "" } });
 
   return (
-    <Container css={css}>
-      <ProjectMenu css={{ marginRight: "10px" }} />
-      <Form onSubmit={({ name }) => updateTreeName(name)}>
-        <ControlledInput
-          name="name"
-          onChange={(event) => updateTreeName(event.target.value)}
-        >
-          {(field) => (
-            <Input
-              {...field}
-              css={{ color: "$white", width: "300px" }}
-              id="treeName"
-            />
-          )}
-        </ControlledInput>
-      </Form>
-    </Container>
+    <Popover.Root>
+      <Popover.Trigger asChild>
+        <Text css={{ fontWeight: "500", flex: 1, ...css }}>
+          {name && name?.length > 1 ? name : "Kein Name"}
+        </Text>
+      </Popover.Trigger>
+      <Popover.Content align="start" sideOffset={10}>
+        <Form onSubmit={({ name }) => updateTreeName(name)}>
+          <Field label="Projektnamen ändern">
+            <ControlledInput
+              name="name"
+              onChange={(event) => updateTreeName(event.target.value)}
+            >
+              {(field) => (
+                <Input
+                  {...field}
+                  css={{ color: "$white", width: "300px" }}
+                  id="treeName"
+                />
+              )}
+            </ControlledInput>
+          </Field>
+        </Form>
+      </Popover.Content>
+    </Popover.Root>
   );
 }

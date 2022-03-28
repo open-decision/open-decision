@@ -24,10 +24,10 @@ export function createTreeStore(id: string) {
   });
 
   const syncedStore = proxy({
-    startNode: "",
+    startNode: undefined as string | undefined,
     nodes: [] as BuilderNode.TNodesRecord,
     edges: [] as BuilderEdge.TEdgeArray,
-    name: "",
+    name: undefined as string | undefined,
   });
 
   bindProxyAndYMap(syncedStore, yMap, {

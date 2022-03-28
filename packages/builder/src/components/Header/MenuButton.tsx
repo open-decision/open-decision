@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Button, ButtonProps, Icon } from "@open-decision/design-system";
 import { ChevronDown } from "react-feather";
-type Props = { label: string } & ButtonProps;
+type Props = { label: React.ReactNode } & ButtonProps;
 
 function MenuButtonImpl({ label, css, ...props }: Props, ref) {
   return (
@@ -10,7 +10,7 @@ function MenuButtonImpl({ label, css, ...props }: Props, ref) {
       css={{
         minWidth: "max-content",
 
-        "&[data-state='open'] svg": {
+        "&[data-state='open'] .rotate": {
           transform: "rotate(180deg)",
         },
         ...css,
@@ -20,8 +20,10 @@ function MenuButtonImpl({ label, css, ...props }: Props, ref) {
     >
       {label}
       <Icon
+        className="rotate"
         css={{
           marginTop: "2px",
+
           "& svg": {
             transition: "transform 200ms ease-in-out",
           },
