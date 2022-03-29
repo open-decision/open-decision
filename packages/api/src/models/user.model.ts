@@ -2,7 +2,7 @@ import ApiError from "../utils/ApiError";
 import { User as PrismaUser, Prisma } from "@prisma-client";
 import { UserBody } from "../types/types";
 import prisma from "../init-prisma-client";
-// import * as argon2 from "argon2";
+import * as argon2 from "argon2";
 import getConstraint from "../utils/getConstraint";
 import httpStatus from "http-status";
 import config from "../config/config";
@@ -62,12 +62,11 @@ async function emailIsTaken(email: string) {
  * @returns {Promise<string>}
  */
 async function hashPassword(plainPassword: string) {
-  return plainPassword
-  // return argon2.hash(plainPassword, {
-  //   type: argon2.argon2id,
-  //   timeCost: 2,
-  //   memoryCost: 15360,
-  // });
+  return argon2.hash(plainPassword, {
+    type: argon2.argon2id,
+    timeCost: 2,
+    memoryCost: 15360,
+  });
 }
 
 /**
@@ -77,8 +76,7 @@ async function hashPassword(plainPassword: string) {
  * @returns {Promise<boolean>}
  */
 async function isPasswordMatch(password: string, user: PrismaUser) {
-    return  user.password === password
-  // return argon2.verify(user.password, password);
+  return argon2.verify(user.password, password);
 }
 
 /**

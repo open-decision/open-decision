@@ -39,6 +39,7 @@
     "@zxcvbn-ts/language-common": "^1.0.0",
     "@zxcvbn-ts/language-de": "^1.0.0",
     "@zxcvbn-ts/language-en": "^1.0.0",
+    "argon2": "^0.28.5",
     "class-validator": "^0.13.2",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",
@@ -69,6 +70,7 @@
     "remeda": "^0.0.31",
     "swagger-jsdoc": "^6.1.0",
     "swagger-ui-express": "^4.2.0",
+    "tsconfig-paths": "^3.12.0",
     "tslib": "^2.3.1",
     "type-graphql": "^1.1.1",
     "typegraphql-prisma": "^0.19.1",
@@ -80,8 +82,7 @@
     "y-protocols": "^1.0.5",
     "y-websocket": "^1.3.18",
     "yjs": "^13.5.27",
-    "zod": "^3.11.6",
-    "tsconfig-paths": "^3.12.0"
+    "zod": "^3.11.6"
   },
   "devDependencies": {
     "@types/compression": "^1.7.2",

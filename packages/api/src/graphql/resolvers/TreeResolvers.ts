@@ -72,6 +72,7 @@ export class DecisionTreeCrudResolver {
     return getPrismaFromContext(ctx).decisionTree.create({
       data: {
         ...newTree,
+        name: args.data.name,
         owner: { connect: { uuid: ctx.user.uuid } },
       },
     });
