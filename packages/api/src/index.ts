@@ -11,6 +11,7 @@ async function asyncPreparation() {
     logger.info("Connected to database");
   } catch (e) {
     logger.error("Connection to database failed.");
+    app.locals["dbConnection"] = false;
   }
   // cleanBlocklist();
 }

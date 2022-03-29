@@ -1,7 +1,7 @@
 import { logger } from "../config/logger";
 import nodemailer from "nodemailer";
 import config from "../config/config";
-
+import { app } from "./../app";
 const transporter = nodemailer.createTransport({
   host: config.SMTP_HOST,
   port: config.SMTP_PORT,
@@ -15,12 +15,17 @@ const transporter = nodemailer.createTransport({
 if (config.NODE_ENV !== "test") {
   transporter
     .verify()
-    .then(() => logger.info("Connected to email server"))
-    .catch(() =>
+    .then(() => {
+      logger.info("Connected to email server");
+      app.locals["mailConnection"] = true;
+    })
+
+    .catch(() => {
       logger.error(
         "Unable to connect to email server. Make sure you have configured the SMTP options in .env"
-      )
-    );
+      );
+      app.locals["mailConnection"] = false;
+    });
 }
 
 /**
@@ -32,6 +37,7 @@ if (config.NODE_ENV !== "test") {
  */
 
 const sendEmail = async (to: string, subject: string, text: string) => {
+  if (app.locals.mailConnection != true) return;
   const msg = {
     from: config.EMAIL_FROM_ADDRESS,
     replyTo: config.EMAIL_REPLY_TO_ADDRESS
