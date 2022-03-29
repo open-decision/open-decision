@@ -169,8 +169,19 @@ export function createTreeStore(id: string) {
       const sourceNode = getNode(edge.source);
       const targetNode = getNode(edge.target);
 
-      sourceNode?.data.relations.filter((relation) => relation !== edge.id);
-      targetNode?.data.relations.filter((relation) => relation !== edge.id);
+      if (sourceNode) {
+        const sourceNodeRelations = sourceNode?.data.relations.filter(
+          (relation) => relation !== edge.id
+        );
+        sourceNode.data.relations = sourceNodeRelations;
+      }
+
+      if (targetNode) {
+        const targetNodeRelations = targetNode?.data.relations.filter(
+          (relation) => relation !== edge.id
+        );
+        targetNode.data.relations = targetNodeRelations;
+      }
     });
   }
 
