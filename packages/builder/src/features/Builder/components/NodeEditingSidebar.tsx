@@ -8,6 +8,7 @@ import {
   Icon,
   ValidationMessage,
   Link,
+  css,
 } from "@open-decision/design-system";
 import { OptionTargetInputs } from "features/Builder/components/OptionTargetInput/OptionTargetInput";
 import * as React from "react";
@@ -16,13 +17,61 @@ import { nodeNameMaxLength } from "../utilities/constants";
 import { NodeMenu } from "./Canvas/Nodes/NodeMenu";
 import { NodeLabel } from "./Canvas/Nodes/NodeLabel";
 import { ChevronRight, Star } from "react-feather";
-import { useNodes, useParents, useStartNode } from "../state/treeStore/hooks";
+import {
+  useNodes,
+  useParents,
+  useSelectedNodes,
+  useStartNode,
+} from "../state/treeStore/hooks";
 import { RichTextEditor } from "components/RichTextEditor/RichTextEditor";
 import { useTreeContext } from "../state/treeStore/TreeContext";
+import { AnimatePresence, motion } from "framer-motion";
+
+const styledMotionDiv = css({
+  position: "relative",
+  backgroundColor: "$gray2",
+  gap: "$6",
+  paddingInlineEnd: "$5",
+  paddingInlineStart: "$5",
+  paddingBlock: "$5",
+
+  gridRow: "1 / -1",
+  gridColumn: "2",
+  groupColor: "$gray11",
+  layer: "1",
+  width: "100%",
+  display: "grid",
+  gridAutoRows: "max-content",
+  overflow: "auto",
+  height: "100%",
+});
+
+export function NodeEditingSidebar() {
+  const [selectionStatus, selectedNode] = useSelectedNodes();
+
+  if (selectionStatus !== "single") return null;
+
+  return (
+    <AnimatePresence exitBeforeEnter>
+      {selectionStatus === "single" && (
+        <motion.div
+          key="sidebar"
+          initial={{ x: "100%" }}
+          animate={{ x: 0 }}
+          exit={{ x: "100%" }}
+          transition={{ duration: 0.3, type: "spring", bounce: 0, delay: 0.1 }}
+          className={styledMotionDiv()}
+        >
+          <NodeEditingSidebarContent node={selectedNode[0]} />
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
 
 type Props = { node: BuilderNode.TNode };
 
-export function NodeEditingSidebar({ node }: Props) {
+export function NodeEditingSidebarContent({ node }: Props) {
   const { updateNodeName, syncedStore, addSelectedNodes, removeSelectedNodes } =
     useTreeContext();
   const parentNodeIds = useParents(node);
@@ -36,7 +85,7 @@ export function NodeEditingSidebar({ node }: Props) {
 
   const isStartNode = node?.id === startNode?.id;
 
-  return node ? (
+  return (
     <>
       <Box as="header" key={node.id ?? ""}>
         <Form
@@ -161,5 +210,5 @@ export function NodeEditingSidebar({ node }: Props) {
         <OptionTargetInputs nodeId={node.id} relations={node.data.relations} />
       </Box>
     </>
-  ) : null;
+  );
 }

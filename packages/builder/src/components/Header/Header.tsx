@@ -17,7 +17,7 @@ const Content = styled("header", {
   display: "flex",
   alignItems: "center",
   gap: "$6",
-  groupColor: "$gray11",
+  groupColor: "$gray12",
   paddingBlock: "$3",
 });
 

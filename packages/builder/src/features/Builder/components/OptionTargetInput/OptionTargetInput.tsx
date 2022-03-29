@@ -70,6 +70,7 @@ export function OptionTargetInputs({ nodeId, relations }: SingleSelectProps) {
         ref={ref}
         axis="y"
         values={relations}
+        layoutScroll
         onReorder={(newOrder: BuilderNode.TNodeData["relations"]) =>
           updateNodeRelations(nodeId, newOrder)
         }

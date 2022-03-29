@@ -39,7 +39,6 @@ function BuilderPageImpl({ id }) {
   return (
     <MainContent
       css={{
-        overflow: "hidden",
         display: "grid",
         gridTemplateColumns: `1fr ${sidebarWidth}px`,
         gridTemplateRows: "max-content 1fr",
