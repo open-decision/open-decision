@@ -4,6 +4,7 @@ gql`
   query Trees {
     decisionTrees {
       id
+      uuid
       name
       updatedAt
       createdAt

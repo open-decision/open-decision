@@ -3,7 +3,10 @@ import prisma from "./init-prisma-client";
 import { app } from "./app";
 import config from "./config/config";
 import { logger } from "./config/logger";
-import { websocketUpgradeHandler } from "./websocket-server";
+import {
+  websocketUpgradeHandler,
+  setupSyncBindings,
+} from "./controllers/sync.controller";
 
 async function asyncPreparation() {
   try {
@@ -13,10 +16,11 @@ async function asyncPreparation() {
     logger.error("Connection to database failed.");
     app.locals["dbConnection"] = false;
   }
-  // cleanBlocklist();
 }
 
 asyncPreparation();
+
+setupSyncBindings();
 
 export const server = app.listen({ port: config.PORT }, () => {
   logger.info(`Listening to port ${config.PORT}`);

@@ -16,7 +16,7 @@ export function useYjsConnection(id: string) {
       isBrowser && context.user?.access.token
         ? new WebsocketProvider(
             process.env.OD_WEBSOCKET_ENDPOINT ??
-              "wss://od-mono-api.onrender.com/v1/builder-sync",
+              "ws://localhost:4000/v1/builder-sync",
             id,
             yDoc,
             { params: { auth: context.user?.access.token } }

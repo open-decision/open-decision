@@ -17,11 +17,13 @@ generator typegraphql {
 
 model DecisionTree {
   id        Int      @id @default(autoincrement())
+  uuid  String   @db.Uuid @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String
   tags      Json?
   treeData  Json?     @db.JsonB
+  yDocument String?
   /// @TypeGraphQL.omit(output: true, input: true)
   owner     User     @relation(fields: [ownerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   /// @TypeGraphQL.omit(output: true, input: true)

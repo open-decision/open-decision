@@ -1,138 +1,104 @@
+import { WebSocketServer } from "ws";
+import catchAsync from "../utils/catchAsync";
+import { wsAuth } from "./../middlewares/auth";
+import { setupWSConnection } from "y-websocket/bin/utils";
+import { setPersistence } from "y-websocket/bin/utils";
+import { hasPermissionsForTree } from "src/services/permission.service";
+import * as http from "http";
+import * as net from "net";
 import * as Y from "yjs";
-import * as syncProtocol from "y-protocols/sync";
-import * as awarenessProtocol from "y-protocols/awareness";
+import prisma from "src/init-prisma-client";
+import * as buffer from "lib0/buffer";
 
-import * as encoding from "lib0/encoding";
-import * as decoding from "lib0/decoding";
-import * as mutex from "lib0/mutex";
-import * as map from "lib0/map";
+export const wss = new WebSocketServer({
+  noServer: true,
+});
 
-import {
-  messageListener,
-  closeConn,
-  messageSync,
-  messageAwareness,
-  send,
-  WSSharedDoc,
-  docs,
-  getPersistence,
-} from "y-websocket/bin/utils";
+wss.on("connection", (websocket, request) =>
+  setupWSConnection(websocket, request, {
+    docName: getUuidFromRequest(request),
+  })
+);
 
-const persistence = getPersistence();
-const pingTimeout = 30000;
-
-/**
- * Gets a Y.Doc by name, whether in memory or on disk
- *
- * @param {string} docname - the name of the Y.Doc to find or create
- * @param {boolean} gc - whether to allow gc on the doc (applies only when created)
- * @return {WSSharedDoc}
- */
-export const getYDoc = (docname, gc = true) =>
-  map.setIfUndefined(docs, docname, () => {
-    const doc = new WSSharedDoc(docname);
-    doc.gc = gc;
-    if (persistence !== null) {
-      persistence.bindState(docname, doc);
-    }
-    docs.set(docname, doc);
-    return doc;
-  });
-
-/**
- * @param {any} conn
- * @param {WSSharedDoc} doc
- * @param {Uint8Array} message
- */
-const messageListener = (conn, doc, message) => {
-  try {
-    const encoder = encoding.createEncoder();
-    const decoder = decoding.createDecoder(message);
-    const messageType = decoding.readVarUint(decoder);
-    switch (messageType) {
-      case messageSync:
-        encoding.writeVarUint(encoder, messageSync);
-        syncProtocol.readSyncMessage(decoder, encoder, doc, null);
-        if (encoding.length(encoder) > 1) {
-          send(doc, conn, encoding.toUint8Array(encoder));
-        }
-        break;
-      case messageAwareness: {
-        awarenessProtocol.applyAwarenessUpdate(
-          doc.awareness,
-          decoding.readVarUint8Array(decoder),
-          conn
-        );
-        break;
+export const websocketUpgradeHandler = catchAsync(
+  async (request: http.IncomingMessage, socket: net.Socket, head: Buffer) => {
+    console.log(request.url);
+    wsAuth(request, async function next(err, client) {
+      if (err || !client) {
+        console.log(err);
+        socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
+        socket.destroy();
+        return;
       }
-    }
-  } catch (err) {
-    console.error(err);
-    doc.emit("error", [err]);
+      if (!request.url!.startsWith("/v1/builder-sync/")) {
+        socket.write("HTTP/1.1 404 Not found\r\n\r\n");
+        socket.destroy();
+        return;
+      }
+
+      if (!request.url) return;
+      const treeUuid = getUuidFromRequest(request);
+
+      if (!(await hasPermissionsForTree(client.uuid, treeUuid))) {
+        socket.write("HTTP/1.1 403 Forbidden\r\n\r\n");
+        socket.destroy();
+        return;
+      }
+
+      wss.handleUpgrade(request, socket, head, function done(ws) {
+        wss.emit("connection", ws, request);
+      });
+    });
   }
+);
+
+export const setupSyncBindings = () => {
+  setPersistence({
+    bindState: async (docName, ydoc) => {
+      console.log("Called bind state", docName);
+      // const persistedYdoc = await ldb.getYDoc(docName);
+      // Y.applyUpdate(ydoc, Y.encodeStateAsUpdate(persistedYdoc));
+      // ydoc.on("update", (update) => {
+      //   ldb.storeUpdate(docName, update);
+      // });
+      const persistedDoc = await getYDocFromDatabase(docName); // retrieve the original Yjs doc here
+      console.log(persistedDoc);
+      if (persistedDoc) {
+        Y.applyUpdate(ydoc, persistedDoc as any);
+      }
+    },
+    writeState: async (docName, ydoc) => {
+      console.log("Called write state", docName);
+      await saveYDocToDatabase(docName, Y.encodeStateAsUpdate(ydoc));
+    },
+  });
 };
 
-export const setupWSConnection = (
-  conn,
-  req,
-  { docName = req.url.slice(1).split("?")[0], gc = true } = {}
-) => {
-  conn.binaryType = "arraybuffer";
-  // get doc, initialize if it does not exist yet
-  const doc = getYDoc(docName, gc);
-  doc.conns.set(conn, new Set());
-  // listen and reply to events
-  conn.on(
-    "message",
-    /** @param {ArrayBuffer} message */ (message) =>
-      messageListener(conn, doc, new Uint8Array(message))
-  );
+const saveYDocToDatabase = async (docName: string, yData) => {
+  await prisma.decisionTree.updateMany({
+    where: {
+      uuid: { equals: docName },
+    },
+    data: {
+      yDocument: buffer.toBase64(yData),
+    },
+  });
+};
 
-  // Check if connection is still alive
-  let pongReceived = true;
-  const pingInterval = setInterval(() => {
-    if (!pongReceived) {
-      if (doc.conns.has(conn)) {
-        closeConn(doc, conn);
-      }
-      clearInterval(pingInterval);
-    } else if (doc.conns.has(conn)) {
-      pongReceived = false;
-      try {
-        conn.ping();
-      } catch (e) {
-        closeConn(doc, conn);
-        clearInterval(pingInterval);
-      }
-    }
-  }, pingTimeout);
-  conn.on("close", () => {
-    closeConn(doc, conn);
-    clearInterval(pingInterval);
+const getYDocFromDatabase = async (docName: string) => {
+  const data = await prisma.decisionTree.findFirst({
+    where: {
+      uuid: { equals: docName },
+    },
   });
-  conn.on("pong", () => {
-    pongReceived = true;
-  });
-  // put the following in a variables in a block so the interval handlers don't keep in in
-  // scope
-  {
-    // send sync step 1
-    const encoder = encoding.createEncoder();
-    encoding.writeVarUint(encoder, messageSync);
-    syncProtocol.writeSyncStep1(encoder, doc);
-    send(doc, conn, encoding.toUint8Array(encoder));
-    const awarenessStates = doc.awareness.getStates();
-    if (awarenessStates.size > 0) {
-      const encoder = encoding.createEncoder();
-      encoding.writeVarUint(encoder, messageAwareness);
-      encoding.writeVarUint8Array(
-        encoder,
-        awarenessProtocol.encodeAwarenessUpdate(
-          doc.awareness,
-          Array.from(awarenessStates.keys())
-        )
-      );
-      send(doc, conn, encoding.toUint8Array(encoder));
-    }
-  }
+
+  if (!data?.yDocument) return false;
+  return buffer.fromBase64(data.yDocument);
+};
+
+const getUuidFromRequest = (request: http.IncomingMessage) => {
+  return new URL(
+    request.url!,
+    `http://${request.headers.host}`
+  ).pathname.replace("/v1/builder-sync/", "");
 };
