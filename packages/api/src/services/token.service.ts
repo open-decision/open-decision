@@ -122,8 +122,8 @@ const refreshTokens = async (refreshToken: string) => {
  */
 const generateAccessToken = (userUuid: string, isDevAccount = false) => {
   const accessTokenExpires = dayjs().add(
-    // Dev accounts get an access token that is valid for 7 days
-    !isDevAccount ? config.JWT_ACCESS_EXPIRATION_MINUTES : 60 * 24 * 7,
+    // Dev accounts get an access token that is valid for one year
+    !isDevAccount ? config.JWT_ACCESS_EXPIRATION_MINUTES : 60 * 24 * 365,
     "minutes"
   );
   const accessToken = generateToken(
