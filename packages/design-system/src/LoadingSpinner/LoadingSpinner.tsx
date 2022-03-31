@@ -4,11 +4,14 @@ import { Icon } from "../Icon/Icon";
 import { ColorKeys } from "../internal/utils";
 import { theme } from "../stitches";
 
-type Props = { colorScheme?: ColorKeys; width?: React.CSSProperties["width"] };
+type Props = {
+  colorScheme?: ColorKeys;
+  size?: React.CSSProperties["fontSize"];
+};
 
-export function LoadingSpinner({ colorScheme = "primary" }: Props) {
+export function LoadingSpinner({ colorScheme = "primary", size }: Props) {
   return (
-    <Icon label="Lädt" css={{ fontSize: "1.3em" }}>
+    <Icon label="Lädt" css={{ fontSize: size ?? "1.3em" }}>
       <SpinnerCircular
         color={theme.colors[`${colorScheme}11`].value}
         secondaryColor={theme.colors[`${colorScheme}4`].value}
