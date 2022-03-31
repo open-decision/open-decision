@@ -3,17 +3,24 @@ import { fuzzySearch, sortByKey } from "./filter";
 import { motion } from "framer-motion";
 import { identity, pipe } from "remeda";
 import {
+  Box,
   Button,
   DropdownMenu,
   Field,
+  Heading,
   Icon,
   Input,
+  Link,
+  LoadingSpinner,
   Stack,
+  Text,
   useForm,
 } from "@open-decision/design-system";
 import { ChevronUp, Search } from "react-feather";
-import { TreesQuery } from "features/Data/generated/graphql";
+import { TreesQuery, useTreesQuery } from "features/Data/generated/graphql";
 import { TreeCard } from "./TreeCard";
+import Image from "next/image";
+import { ErrorBoundary } from "@sentry/nextjs";
 
 const sortReadableNames = {
   updatedAt: "Zuletzt bearbeitet",
@@ -25,7 +32,6 @@ const sortDirectionReadableNames = {
   ascending: "Aufsteigend",
 };
 
-type TreeListProps = { data: TreesQuery["decisionTrees"] };
 type sortState = { key: string; direction: "ascending" | "descending" };
 
 const sortData = (sort: sortState) => (data: any[]) =>
@@ -36,7 +42,10 @@ const sortData = (sort: sortState) => (data: any[]) =>
 const filterData = (filter: string) => (data: any[]) =>
   fuzzySearch(data, filter);
 
-export const TreeList = ({ data }: TreeListProps) => {
+export const TreeListBody = () => {
+  const { data: trees } = useTreesQuery();
+  const hasTrees = trees && trees?.decisionTrees.length > 0;
+
   const [filter, setFilter] = React.useState("");
   const [filteredData, setFilteredData] = React.useState<
     TreesQuery["decisionTrees"]
@@ -54,22 +63,24 @@ export const TreeList = ({ data }: TreeListProps) => {
 
   const handleFilterChange = React.useCallback(
     function handleFilterChange() {
+      if (!trees?.decisionTrees) return;
+
       const modifiedData = pipe(
-        data,
+        trees?.decisionTrees,
         filter ? filterData(filter) : identity,
         sort.key ? sortData(sort) : identity
       );
 
       setFilteredData(modifiedData);
     },
-    [data, filter, sort]
+    [trees?.decisionTrees, filter, sort]
   );
 
   React.useEffect(() => {
     handleFilterChange();
   }, [handleFilterChange]);
 
-  return (
+  return hasTrees ? (
     <>
       <Form
         onSubmit={handleFilterChange}
@@ -176,5 +187,68 @@ export const TreeList = ({ data }: TreeListProps) => {
         ))}
       </Stack>
     </>
+  ) : (
+    <EmptyState />
   );
 };
+
+const EmptyState = () => (
+  <Box
+    css={{
+      transform: "scaleX(-1)",
+      height: "70%",
+      width: "100%",
+      position: "relative",
+    }}
+  >
+    <Image
+      src="/EmptyIllustration.png"
+      layout="fill"
+      objectFit="contain"
+      priority
+    />
+  </Box>
+);
+
+export function TreeList() {
+  return (
+    <Stack
+      css={{
+        justifyContent: "center",
+        overflow: "auto",
+        marginInline: "-$4",
+        gridColumn: 2,
+        height: "100%",
+      }}
+    >
+      <ErrorBoundary
+        fallback={
+          <Box
+            css={{
+              gridColumn: "1 / -1",
+              gridRow: "2",
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "column",
+            }}
+          >
+            <Heading>
+              Beim laden ihrer Bäume ist ein Fehler aufgetreten.
+            </Heading>
+            <Text size="large" css={{ marginTop: "$3" }}>
+              Bitte laden sie die Seite neu oder schreiben sie uns wenn der
+              Fehler weiterhin auftreten sollte.
+              <Link href="https://www.notion.so/openlegaltech/a8a6b8db7e2b485294b6e31c1b3ae9da?v=ae3429d3f8d04d3395126baaa8147fe5">
+                Feedback Formular
+              </Link>
+            </Text>
+          </Box>
+        }
+      >
+        <React.Suspense fallback={<LoadingSpinner />}>
+          <TreeListBody />
+        </React.Suspense>
+      </ErrorBoundary>
+    </Stack>
+  );
+}

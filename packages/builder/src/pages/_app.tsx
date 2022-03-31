@@ -33,7 +33,20 @@ function ProtectedRoute({ children }) {
   const [state] = useAuth();
   const { pathname } = useRouter();
 
-  if (state.matches("undetermined")) return <LoadingSpinner />;
+  if (state.matches("undetermined"))
+    return (
+      <Box
+        css={{
+          flex: "1",
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <LoadingSpinner size="3em" />
+      </Box>
+    );
 
   if (
     !state.matches("loggedIn") &&

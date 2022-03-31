@@ -27,7 +27,6 @@ export function createTreeStore(id: string) {
     startNode: undefined as string | undefined,
     nodes: [] as BuilderNode.TNodesRecord,
     edges: [] as BuilderEdge.TEdgeArray,
-    name: undefined as string | undefined,
   });
 
   bindProxyAndYMap(syncedStore, yMap, {
@@ -38,10 +37,6 @@ export function createTreeStore(id: string) {
   // Tree
   function updateStartNode(startNode: string) {
     syncedStore.startNode = startNode;
-  }
-
-  function updateTreeName(name: string) {
-    syncedStore.name = name;
   }
 
   // ------------------------------------------------------------------
@@ -277,6 +272,5 @@ export function createTreeStore(id: string) {
     updateNodeRelations,
     updateNodePosition,
     updateStartNode,
-    updateTreeName,
   };
 }

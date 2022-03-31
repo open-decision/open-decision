@@ -29,8 +29,11 @@ export function ErrorFallback() {
         <Heading>Es ist ein Fehler aufgetreten.</Heading>
         <Text size="large" css={{ marginTop: "$3" }}>
           Bitte lade die Seite neu. Sollte der Fehler erneut auftreten dann
-          erstelle bitte einen Bugreport hier:{" "}
-          <Link href="https://www.notion.so/openlegaltech/a8a6b8db7e2b485294b6e31c1b3ae9da?v=ae3429d3f8d04d3395126baaa8147fe5">
+          erstelle bitte einen Bugreport hier:
+          <Link
+            css={{ marginLeft: "$2", textStyle: "inherit" }}
+            href="https://www.notion.so/openlegaltech/a8a6b8db7e2b485294b6e31c1b3ae9da?v=ae3429d3f8d04d3395126baaa8147fe5"
+          >
             Feedback Formular
           </Link>
         </Text>
