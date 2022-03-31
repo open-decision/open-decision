@@ -5,10 +5,10 @@ import { userOne, userTwo } from "./user.fixture";
 
 type PartialTree = Pick<
   DecisionTree,
-  "id" | "name" | "tags" | "treeData" | "ownerUuid"
+  "uuid" | "name" | "tags" | "treeData" | "ownerUuid"
 >;
 export const treeOne: PartialTree = {
-  id: 1,
+  uuid: "cfc6ebad-c9d4-4518-8f00-b1c8c83928f0",
   name: "This is the First Tree",
   tags: [
     {
@@ -22,7 +22,7 @@ export const treeOne: PartialTree = {
 };
 
 export const treeTwo: PartialTree = {
-  id: 2,
+  uuid: "e10a4f0a-71e5-48ea-91a9-f727829247fc",
   name: "This is the Second Tree",
   tags: [
     {
@@ -36,7 +36,7 @@ export const treeTwo: PartialTree = {
 };
 
 export const treeThree: PartialTree = {
-  id: 3,
+  uuid: "83032fe2-5f44-4999-867c-d6f3311f95fe",
   name: "This is a foreign Tree",
   tags: [
     {

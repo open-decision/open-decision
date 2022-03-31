@@ -50,7 +50,7 @@ describe("GraphQL route", () => {
       expect(res.body).toEqual({
         data: {
           createDecisionTree: {
-            id: expect.anything(),
+            uuid: expect.anything(),
             createdAt: expect.anything(),
             updatedAt: expect.anything(),
             name: treeName,
@@ -81,13 +81,13 @@ describe("GraphQL route", () => {
         .post("/v1/graphql")
         .set("Authorization", `Bearer ${userOneAccessToken}`)
         .set("Accept", "application/json")
-        .send(getSingleTree(treeOne.id))
+        .send(getSingleTree(treeOne.uuid))
         .expect(httpStatus.OK);
 
       expect(res.body).toEqual({
         data: {
           decisionTree: {
-            id: treeOne.id,
+            uuid: treeOne.uuid,
             name: treeOne.name,
           },
         },
@@ -114,11 +114,11 @@ describe("GraphQL route", () => {
       data: {
         decisionTrees: [
           {
-            id: treeOne.id,
+            uuid: treeOne.uuid,
             name: treeOne.name,
           },
           {
-            id: treeTwo.id,
+            uuid: treeTwo.uuid,
             name: treeTwo.name,
           },
         ],
@@ -144,13 +144,13 @@ describe("GraphQL route", () => {
         .post("/v1/graphql")
         .set("Authorization", `Bearer ${userOneAccessToken}`)
         .set("Accept", "application/json")
-        .send(updateSingleTree(updateData, treeOne.id))
+        .send(updateSingleTree(updateData, treeOne.uuid))
         .expect(httpStatus.OK);
 
       expect(res.body).toEqual({
         data: {
           updateDecisionTree: {
-            id: treeOne.id,
+            uuid: treeOne.uuid,
             name: updateData.name.set,
             treeData: updateData.treeData,
           },
@@ -159,7 +159,7 @@ describe("GraphQL route", () => {
 
       const treeFromDb = await prisma.decisionTree.findUnique({
         where: {
-          id: treeOne.id,
+          uuid: treeOne.uuid,
         },
       });
 
@@ -174,7 +174,7 @@ describe("GraphQL route", () => {
       await insertTrees([treeOne, treeTwo, treeThree]);
 
       const updateData: any = {
-        id: {
+        uuid: {
           set: 10,
         },
       };
@@ -183,7 +183,7 @@ describe("GraphQL route", () => {
         .post("/v1/graphql")
         .set("Authorization", `Bearer ${userOneAccessToken}`)
         .set("Accept", "application/json")
-        .send(updateSingleTree(updateData, treeOne.id))
+        .send(updateSingleTree(updateData, treeOne.uuid))
         //for some reason this returns 500 in tests
         //it should be 400, which works outside of tests
         .expect(httpStatus.INTERNAL_SERVER_ERROR);
@@ -204,7 +204,7 @@ describe("GraphQL route", () => {
         .post("/v1/graphql")
         .set("Authorization", `Bearer ${userOneAccessToken}`)
         .set("Accept", "application/json")
-        .send(updateSingleTree(updateData, 460))
+        .send(updateSingleTree(updateData, "460"))
         .expect(httpStatus.BAD_REQUEST);
     });
 
@@ -257,20 +257,20 @@ describe("GraphQL route", () => {
         .post("/v1/graphql")
         .set("Authorization", `Bearer ${userOneAccessToken}`)
         .set("Accept", "application/json")
-        .send(deleteSingleTree(treeOne.id))
+        .send(deleteSingleTree(treeOne.uuid))
         .expect(httpStatus.OK);
 
       expect(res.body).toEqual({
         data: {
           deleteDecisionTree: {
-            id: treeOne.id,
+            uuid: treeOne.uuid,
             name: treeOne.name,
           },
         },
       });
       const treeFromDb = await prisma.decisionTree.findUnique({
         where: {
-          id: treeOne.id,
+          uuid: treeOne.uuid,
         },
       });
 

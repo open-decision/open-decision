@@ -37,7 +37,7 @@ export class FindManyDecisionTreeArgs {
   })
   distinct?:
     | Array<
-        | "id"
+        | "uuid"
         | "createdAt"
         | "updatedAt"
         | "name"

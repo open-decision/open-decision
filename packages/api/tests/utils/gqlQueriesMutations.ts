@@ -5,7 +5,7 @@ export const createTree = (name: string) => ({
   query: `#graphql 
   mutation ($name: String!) {
     createDecisionTree(data: { name: $name }) {
-      id
+      uuid
       createdAt
       updatedAt
       name
@@ -20,17 +20,17 @@ export const createTree = (name: string) => ({
   },
 });
 
-export const getSingleTree = (id: number) => ({
+export const getSingleTree = (uuid: string) => ({
   query: `#graphql
-    query ($id: Int!){
+    query ($uuid: String!){
       decisionTree(where: {
-      id: $id
+      uuid: $uuid
     }) {
-      id
+      uuid
       name
     }
 }`,
-  variables: { id },
+  variables: { uuid },
 });
 
 export const getManyTrees = (whereInput: any) => ({
@@ -39,9 +39,9 @@ export const getManyTrees = (whereInput: any) => ({
     decisionTrees(
       where: $whereInput,
       orderBy: [{}]
-      distinct: [id]
+      distinct: [uuid]
     ) {
-      id
+      uuid
       name
     }
   }`,
@@ -50,17 +50,20 @@ export const getManyTrees = (whereInput: any) => ({
   },
 });
 
-export const updateSingleTree = (data: Partial<DecisionTree>, id: number) => ({
+export const updateSingleTree = (
+  data: Partial<DecisionTree>,
+  uuid: string
+) => ({
   query: `#graphql
-  mutation ($data: DecisionTreeUpdateInput!, $id: Int!){
-    updateDecisionTree(data: $data, where: {id:$id }) {
-      id
+  mutation ($data: DecisionTreeUpdateInput!, $uuid: Int!){
+    updateDecisionTree(data: $data, where: {uuid:$uuid }) {
+      uuid
       name
       treeData
     }
   }
   `,
-  variables: { data, id },
+  variables: { data, uuid },
 });
 
 export const updateManyTree = (
@@ -80,17 +83,17 @@ export const updateManyTree = (
   },
 });
 
-export const deleteSingleTree = (id: number) => ({
+export const deleteSingleTree = (uuid: string) => ({
   query: `#graphql
-  mutation ($id: Int!){
-    deleteDecisionTree(where: {id: $id}) {
-      id 
+  mutation ($uuid: String!){
+    deleteDecisionTree(where: {uuid: $uuid}) {
+      uuid 
       name
     }
   }
   `,
   variables: {
-    id,
+    uuid,
   },
 });
 

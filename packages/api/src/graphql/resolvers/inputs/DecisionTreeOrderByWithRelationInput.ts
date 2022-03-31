@@ -11,7 +11,7 @@ export class DecisionTreeOrderByWithRelationInput {
   @TypeGraphQL.Field((_type) => SortOrder, {
     nullable: true,
   })
-  id?: "asc" | "desc" | undefined;
+  uuid?: "asc" | "desc" | undefined;
 
   @TypeGraphQL.Field((_type) => SortOrder, {
     nullable: true,

@@ -102,7 +102,7 @@ export class DecisionTreeCrudResolver {
     }
     return getPrismaFromContext(ctx).decisionTree.delete({
       where: {
-        id: treeToDelete.id,
+        id: treeToDelete.uuid,
         ...(_count && transformCountFieldIntoSelectRelationsCount(_count)),
       },
     });
@@ -136,7 +136,7 @@ export class DecisionTreeCrudResolver {
         ...args.data,
       },
       where: {
-        id: treeToUpdate.id,
+        id: treeToUpdate.uuid,
       },
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count)),
     });
@@ -174,7 +174,7 @@ export class DecisionTreeCrudResolver {
         treeData: updatedTree.treeData,
       },
       where: {
-        id: treeToUpdate.id,
+        id: treeToUpdate.uuid,
       },
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count)),
     });

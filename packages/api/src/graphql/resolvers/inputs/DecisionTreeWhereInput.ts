@@ -23,10 +23,10 @@ export class DecisionTreeWhereInput {
   })
   NOT?: DecisionTreeWhereInput[] | undefined;
 
-  @TypeGraphQL.Field((_type) => IntFilter, {
+  @TypeGraphQL.Field((_type) => StringFilter, {
     nullable: true,
   })
-  id?: IntFilter | undefined;
+  uuid?: StringFilter | undefined;
 
   @TypeGraphQL.Field((_type) => DateTimeFilter, {
     nullable: true,

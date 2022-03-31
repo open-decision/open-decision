@@ -7,8 +7,8 @@ import { DecimalJSScalar } from "../../scalars";
   isAbstract: true,
 })
 export class DecisionTreeWhereUniqueInput {
-  @TypeGraphQL.Field((_type) => TypeGraphQL.Int, {
+  @TypeGraphQL.Field((_type) => String, {
     nullable: true,
   })
-  id?: number | undefined;
+  uuid?: string | undefined;
 }

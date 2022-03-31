@@ -7,11 +7,6 @@ import { DecimalJSScalar } from "../../scalars";
   isAbstract: true,
 })
 export class DecisionTreeCreateManyInput {
-  @TypeGraphQL.Field((_type) => TypeGraphQL.Int, {
-    nullable: true,
-  })
-  id?: number | undefined;
-
   @TypeGraphQL.Field((_type) => Date, {
     nullable: true,
   })
