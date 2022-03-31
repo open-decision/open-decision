@@ -24,3 +24,11 @@ gql`
     }
   }
 `;
+
+gql`
+  query getTreeName($id: Int!) {
+    decisionTree(where: { id: $id }) {
+      name
+    }
+  }
+`;
