@@ -20,7 +20,7 @@ type Props = { css?: StyleObject };
 export function TreeNameInput({ css }: Props) {
   const id = useTreeId();
 
-  const { data } = useGetTreeNameQuery({ id: Number(id) });
+  const { data } = useGetTreeNameQuery({ uuid: id });
   const { mutate: updateTreeName } = useUpdateTreeMutation({
     onSuccess: () => queryClient.invalidateQueries("getTreeName"),
   });
@@ -37,7 +37,7 @@ export function TreeNameInput({ css }: Props) {
       <Popover.Content align="start" sideOffset={10}>
         <Form
           onSubmit={({ name }) => {
-            updateTreeName({ data: { name: { set: name } }, id: Number(id) });
+            updateTreeName({ data: { name: { set: name } }, uuid: id });
           }}
         >
           <Field label="Projektnamen ändern">
@@ -46,7 +46,7 @@ export function TreeNameInput({ css }: Props) {
               onChange={(event) => {
                 updateTreeName({
                   data: { name: { set: event.target.value } },
-                  id: Number(id),
+                  uuid: id,
                 });
               }}
             >

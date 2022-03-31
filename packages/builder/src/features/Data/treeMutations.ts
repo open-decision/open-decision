@@ -3,15 +3,15 @@ import { gql } from "graphql-request";
 gql`
   mutation createTree($data: DecisionTreeCreateInput!) {
     createDecisionTree(data: $data) {
-      id
+      uuid
     }
   }
 `;
 
 gql`
-  mutation updateTree($data: DecisionTreeUpdateInput!, $id: Int!) {
-    updateDecisionTree(data: $data, where: { id: $id }) {
-      id
+  mutation updateTree($data: DecisionTreeUpdateInput!, $uuid: String!) {
+    updateDecisionTree(data: $data, where: { uuid: $uuid }) {
+      uuid
       createdAt
       name
       treeData
@@ -21,9 +21,9 @@ gql`
 `;
 
 gql`
-  mutation deleteTree($id: Int!) {
-    deleteDecisionTree(where: { id: $id }) {
-      id
+  mutation deleteTree($uuid: String!) {
+    deleteDecisionTree(where: { uuid: $uuid }) {
+      uuid
     }
   }
 `;

@@ -57,7 +57,7 @@ export function DeleteTreeDialog({
         </Dialog.Description>
         <Form
           css={{ display: "flex", flexDirection: "column" }}
-          onSubmit={() => deleteTree({ id: tree.id })}
+          onSubmit={() => deleteTree({ uuid: tree.uuid })}
         >
           <Label size="small" htmlFor="treeName">
             Projektname

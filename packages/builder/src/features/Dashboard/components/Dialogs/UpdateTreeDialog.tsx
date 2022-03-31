@@ -11,7 +11,7 @@ import { queryClient } from "features/Data/queryClient";
 import * as React from "react";
 
 type Props = DialogTriggerProps & {
-  treeId: number;
+  treeId: string;
   open?: boolean;
   setOpen?: (open: boolean) => void;
   focusOnClose?: () => void;
@@ -43,7 +43,7 @@ export function UpdateTreeDialog({
         <Form
           css={{ display: "flex", flexDirection: "column" }}
           onSubmit={({ treeName }) =>
-            updateTree({ data: { name: { set: treeName } }, id: treeId })
+            updateTree({ data: { name: { set: treeName } }, uuid: treeId })
           }
         >
           <Dialog.Description asChild>
