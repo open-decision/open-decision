@@ -22,10 +22,8 @@ wss.on("connection", (websocket, request) =>
 
 export const websocketUpgradeHandler = catchAsync(
   async (request: http.IncomingMessage, socket: net.Socket, head: Buffer) => {
-    console.log(request.url);
     wsAuth(request, async function next(err, client) {
       if (err || !client) {
-        console.log(err);
         socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
         socket.destroy();
         return;
@@ -55,20 +53,17 @@ export const websocketUpgradeHandler = catchAsync(
 export const setupSyncBindings = () => {
   setPersistence({
     bindState: async (docName, ydoc) => {
-      console.log("Called bind state", docName);
       // const persistedYdoc = await ldb.getYDoc(docName);
       // Y.applyUpdate(ydoc, Y.encodeStateAsUpdate(persistedYdoc));
       // ydoc.on("update", (update) => {
       //   ldb.storeUpdate(docName, update);
       // });
       const persistedDoc = await getYDocFromDatabase(docName); // retrieve the original Yjs doc here
-      console.log(persistedDoc);
       if (persistedDoc) {
         Y.applyUpdate(ydoc, persistedDoc as any);
       }
     },
     writeState: async (docName, ydoc) => {
-      console.log("Called write state", docName);
       await saveYDocToDatabase(docName, Y.encodeStateAsUpdate(ydoc));
     },
   });
