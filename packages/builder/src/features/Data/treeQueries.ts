@@ -3,7 +3,6 @@ import { gql } from "graphql-request";
 gql`
   query Trees {
     decisionTrees {
-      id
       uuid
       name
       updatedAt
@@ -14,21 +13,8 @@ gql`
 `;
 
 gql`
-  query getFullTree($id: Int!) {
-    decisionTree(where: { id: $id }) {
-      id
-      createdAt
-      name
-      treeData
-      updatedAt
-      tags
-    }
-  }
-`;
-
-gql`
-  query getTreeName($id: Int!) {
-    decisionTree(where: { id: $id }) {
+  query getTreeName($uuid: String!) {
+    decisionTree(where: { uuid: $uuid }) {
       name
     }
   }

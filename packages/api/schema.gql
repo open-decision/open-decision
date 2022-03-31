@@ -25,12 +25,11 @@ input DateTimeFilter {
 
 type DecisionTree {
   createdAt: DateTime!
-  id: Int!
   name: String!
   tags: JSON
   treeData: JSON
-  treeUuid: String!
   updatedAt: DateTime!
+  uuid: String!
   yDocument: String
 }
 
@@ -45,12 +44,12 @@ input DecisionTreeCreateInput {
 
 input DecisionTreeOrderByWithRelationInput {
   createdAt: SortOrder
-  id: SortOrder
   language: SortOrder
   name: SortOrder
   tags: SortOrder
   treeData: SortOrder
   updatedAt: SortOrder
+  uuid: SortOrder
 }
 
 input DecisionTreePartialUpdateInput {
@@ -62,13 +61,12 @@ input DecisionTreePartialUpdateInput {
 
 enum DecisionTreeScalarFieldEnum {
   createdAt
-  id
   name
   ownerUuid
   tags
   treeData
-  treeUuid
   updatedAt
+  uuid
   yDocument
 }
 
@@ -91,27 +89,16 @@ input DecisionTreeWhereInput {
   NOT: [DecisionTreeWhereInput!]
   OR: [DecisionTreeWhereInput!]
   createdAt: DateTimeFilter
-  id: IntFilter
   language: StringFilter
   name: StringFilter
   tags: JsonNullableFilter
   treeData: JsonNullableFilter
   updatedAt: DateTimeFilter
+  uuid: StringFilter
 }
 
 input DecisionTreeWhereUniqueInput {
-  id: Int
-}
-
-input IntFilter {
-  equals: Int
-  gt: Int
-  gte: Int
-  in: [Int!]
-  lt: Int
-  lte: Int
-  not: NestedIntFilter
-  notIn: [Int!]
+  uuid: String
 }
 
 """
@@ -142,17 +129,6 @@ input NestedDateTimeFilter {
   lte: DateTime
   not: NestedDateTimeFilter
   notIn: [DateTime!]
-}
-
-input NestedIntFilter {
-  equals: Int
-  gt: Int
-  gte: Int
-  in: [Int!]
-  lt: Int
-  lte: Int
-  not: NestedIntFilter
-  notIn: [Int!]
 }
 
 input NestedStringFilter {
