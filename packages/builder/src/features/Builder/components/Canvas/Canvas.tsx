@@ -7,10 +7,8 @@ import {
   useEdges,
   useNodes,
   useSelectedNodeIds,
-  useSelectedNodes,
   useStartNode,
 } from "features/Builder/state/treeStore/hooks";
-import { useSnapshot } from "valtio";
 import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
 
 const validConnectEvent = (

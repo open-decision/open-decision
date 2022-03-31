@@ -31,9 +31,6 @@
     "test": "jest"
   },
   "dependencies": {
-    "immer": "^9.0.12",
-    "json-stable-stringify": "^1.0.1",
-    "murmurhash-js": "1.0.0",
     "ramda": "^0.28.0",
     "react-flow-renderer": "^10.0.2",
     "remeda": "^0.0.32",

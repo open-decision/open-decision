@@ -1,29 +1,19 @@
-/**
- * Get a Record of all object keys with their targets in an array.
- * {@link https://en.wikipedia.org/wiki/Adjacency_list}
- */
 export function createAdjacencyList<
   T extends {
-    id: string;
-    data: { relations: string[] };
+    source: string;
+    target: string;
   }[]
 >(array: T) {
-  const adjacencyList = {};
+  const adjacencyList: Record<string, string[]> = {};
 
-  array.forEach((sourceNode) => {
+  array.forEach(({ source, target }) => {
     // If there is no key for this sourceNode yet; add it with a value of an empty array.
-    if (!adjacencyList[sourceNode.id]) adjacencyList[sourceNode.id] = [];
+    if (!adjacencyList[source]) adjacencyList[source] = [];
 
-    Object.values(sourceNode.data.relations).forEach((targetNodeId) => {
-      if (!targetNodeId) return;
+    if (!adjacencyList[target]) adjacencyList[target] = [];
 
-      // If there is no key for this targetNodeId yet; add it with a value of an empty array.
-
-      if (!adjacencyList[targetNodeId]) adjacencyList[targetNodeId] = [];
-
-      // Push the sourceNodeId to the targets array.
-      adjacencyList[targetNodeId].push(sourceNode.id);
-    });
+    // Push the sourceNodeId to the targets array.
+    adjacencyList[target].push(source);
   });
 
   return adjacencyList;

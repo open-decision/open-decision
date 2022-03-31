@@ -12,7 +12,7 @@ import {
 } from "@open-decision/design-system";
 import { OptionTargetInputs } from "features/Builder/components/OptionTargetInput/OptionTargetInput";
 import * as React from "react";
-import { BuilderNode, BuilderTree } from "@open-decision/type-classes";
+import { Node } from "@open-decision/type-classes";
 import { nodeNameMaxLength } from "../utilities/constants";
 import { NodeMenu } from "./Canvas/Nodes/NodeMenu";
 import { NodeLabel } from "./Canvas/Nodes/NodeLabel";
@@ -69,10 +69,10 @@ export function NodeEditingSidebar() {
   );
 }
 
-type Props = { node: BuilderNode.TNode };
+type Props = { node: Node.TNode };
 
 export function NodeEditingSidebarContent({ node }: Props) {
-  const { updateNodeName, syncedStore, addSelectedNodes, removeSelectedNodes } =
+  const { updateNodeName, addSelectedNodes, removeSelectedNodes } =
     useTreeContext();
   const parentNodeIds = useParents(node);
   const startNode = useStartNode();
@@ -119,7 +119,7 @@ export function NodeEditingSidebarContent({ node }: Props) {
                 </NodeLabel>
               ) : null}
               <NodeMenu
-                name={node.data.name}
+                name={node.data.name ?? ""}
                 nodeId={node.id}
                 isStartNode={isStartNode}
               />
@@ -128,11 +128,6 @@ export function NodeEditingSidebarContent({ node }: Props) {
           <ControlledInput
             name="name"
             maxLength={nodeNameMaxLength}
-            validate={(val) =>
-              BuilderTree.isUnique({ name: val })(syncedStore.nodes)
-                ? true
-                : "Eine Node mit diesem Namen existiert bereits."
-            }
             onChange={(event) => updateNodeName(node.id, event.target.value)}
           >
             {(field) => (

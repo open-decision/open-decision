@@ -1,24 +1,27 @@
-import * as BuilderNode from "../Node/BuilderNode";
-import * as BuilderTree from "../Tree/BuilderTree";
-import * as PublicTree from "../Tree/PublicTree";
-import { pipe, flatMap, filter, map, reduce, uniq } from "remeda";
+import * as Tree from "../Tree/Tree";
+import * as Edge from "../Edge/Edge";
+import * as Node from "../Node/Node";
+import { z } from "zod";
+import { pipe, filter, map, reduce, uniq } from "remeda";
 import { createAdjacencyList, depthFirstSearch } from "./utils";
-import stringify from "json-stable-stringify";
-import * as murmur from "murmurhash-js";
 
-type Nodes =
-  // | PublicTree.TTree["treeData"]["nodes"]
-  BuilderTree.TTree["treeData"]["nodes"];
+export const Type = z.object({
+  nodes: Node.Array,
+  edges: Edge.Array,
+  startNode: z.string(),
+});
 
-type Edges = BuilderTree.TTree["treeData"]["edges"];
+type Nodes = Tree.TTree["nodes"];
+type Edges = Tree.TTree["edges"];
 
 // ------------------------------------------------------------------
 // Methods
+
 /**
  * Get the immediate parents of the node with the provided id.
  */
 export const getParents =
-  (node: BuilderNode.TNode) =>
+  (node: Node.TNode) =>
   (edges: Edges): string[] =>
     pipe(
       edges,
@@ -33,44 +36,40 @@ export const getParents =
 /**
  * Get the immediate Children of the node with the provided id.
  */
-export const getChildren = (nodeId: string) => (nodes: Nodes) => {
-  const node = getNode(nodeId)(nodes);
-
-  if (!node) return [] as string[];
-
+export const getChildren = (nodeId: string) => (edges: Edge.TEdgeArray) => {
   return pipe(
-    node.data.relations,
+    edges,
     // Filter out relations without targets
-    filter((relation) => Boolean(relation)),
+    filter((edge) => edge.source === nodeId),
     // Return an array of the target ids
-    map((relation) => relation)
+    map((edge) => edge.target)
   );
 };
 
 export const circularConnection =
   ({ source, target }: { source: string; target: string }) =>
-  (nodes: Nodes): boolean => {
-    const nodesOnPaths = getPaths(source)(nodes).flatMap((path) => path);
+  (edges: Edge.TEdgeArray): boolean => {
+    const nodesOnPaths = getPaths(source)(edges).flatMap((path) => path);
 
     if (nodesOnPaths.includes(target)) return true;
 
     return false;
   };
 
-export const getPaths = (nodeId: string) => (nodes: Nodes) => {
-  const adjacencyList = createAdjacencyList(nodes);
+export const getPaths = (nodeId: string) => (edges: Edge.TEdgeArray) => {
+  const adjacencyList = createAdjacencyList(edges);
 
   return depthFirstSearch(nodeId, adjacencyList);
 };
 
 export const getConnectableNodes =
   (nodeId: string) =>
-  (nodes: Nodes): string[] => {
-    const nodesOnPath = getPaths(nodeId)(nodes).flatMap((path) => path);
-    const nodesChildren = getChildren(nodeId)(nodes);
+  (edges: Edge.TEdgeArray): string[] => {
+    const nodesOnPath = getPaths(nodeId)(edges).flatMap((path) => path);
+    const nodesChildren = getChildren(nodeId)(edges);
 
     return pipe(
-      nodes,
+      edges,
       Object.values,
       filter(
         (iteratedNode) =>
@@ -81,12 +80,6 @@ export const getConnectableNodes =
       map((node) => node.id)
     );
   };
-
-export const getTreeHash = (tree: Omit<PublicTree.TTree, "checksum">) => {
-  // Use "json-stable-stringify" to get a deterministic JSON string
-  // then hash using murmur3 as hash-algo, as it's lightweight and small, seed is 0
-  return murmur.murmur3(stringify({ id: tree.id, treeData: tree.treeData }), 0);
-};
 
 type IsUniqueNode =
   | { name?: string; id: string }
@@ -103,3 +96,5 @@ export const isUnique = (node: IsUniqueNode) => (nodes: Nodes) => {
 export const getNode = (nodeId: string) => (nodes: Nodes) => {
   return nodes.find((node) => node.id === nodeId);
 };
+
+export type TTree = z.infer<typeof Type>;

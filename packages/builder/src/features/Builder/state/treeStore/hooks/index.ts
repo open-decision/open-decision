@@ -1,12 +1,12 @@
-import { BuilderNode, BuilderTree } from "@open-decision/type-classes";
+import { Node, Tree } from "@open-decision/type-classes";
 import { useSnapshot } from "valtio";
 import { derive } from "valtio/utils";
 import { useTreeContext } from "../TreeContext";
 
 export function useSelectedNodes():
   | ["none", []]
-  | ["multi", BuilderNode.TNode[]]
-  | ["single", BuilderNode.TNode[]] {
+  | ["multi", Node.TNode[]]
+  | ["single", Node.TNode[]] {
   const { nonSyncedStore, syncedStore } = useTreeContext();
 
   const {
@@ -78,7 +78,7 @@ export function useConnect() {
   return { connectionSourceNodeId, validConnections };
 }
 
-export function useNodes(ids?: string[]) {
+export function useNodes(ids?: string[]): Node.TNodesArray {
   const { syncedStore } = useTreeContext();
 
   const { nodes } = useSnapshot(syncedStore);
@@ -130,8 +130,8 @@ export function useTreeData() {
   return useSnapshot(syncedStore);
 }
 
-export function useParents(node: BuilderNode.TNode) {
+export function useParents(node: Node.TNode) {
   const { syncedStore } = useTreeContext();
 
-  return BuilderTree.getParents(node)(syncedStore.edges ?? []);
+  return Tree.getParents(node)(syncedStore.edges ?? []);
 }

@@ -2,19 +2,19 @@ import * as React from "react";
 import { useReactFlow, useStore } from "react-flow-renderer";
 import { calculateCenterOfNode } from "../utilities/calculateCenterOfNode";
 import { sidebarWidth } from "../utilities/constants";
-import { BuilderNode } from "@open-decision/type-classes";
+import { Node } from "@open-decision/type-classes";
 import { useTreeContext } from "./treeStore/TreeContext";
 
 type projectCoordinatesFn = (
-  coordinates: BuilderNode.TCoordinates
-) => BuilderNode.TCoordinates | undefined;
+  coordinates: Node.TCoordinates
+) => Node.TCoordinates | undefined;
 
 type EditorState = {
-  getCenter: () => BuilderNode.TCoordinates | undefined;
+  getCenter: () => Node.TCoordinates | undefined;
   projectCoordinates: projectCoordinatesFn;
   reactFlowWrapperRef: React.MutableRefObject<HTMLDivElement | null>;
   closeNodeEditingSidebar: () => void;
-  zoomToNode: (node: BuilderNode.TNode) => void;
+  zoomToNode: (node: Node.TNode) => void;
   isConnecting: boolean;
   connectingNodeId?: string;
 };
@@ -49,7 +49,7 @@ export function EditorProvider({ children }: TreeProviderProps) {
     });
   };
 
-  function zoomToNode(node: BuilderNode.TNode) {
+  function zoomToNode(node: Node.TNode) {
     const positionOfNodeFromCenter = calculateCenterOfNode(
       node.position,
       node.id ? { x: sidebarWidth / 2, y: 0 } : undefined

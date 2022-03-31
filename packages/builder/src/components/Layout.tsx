@@ -7,7 +7,7 @@ const AppContainer = styled("div", {
   height: "100vh",
 });
 
-export const MainContent = styled("main", { width: "100vw" });
+export const MainContent = styled("main", { width: "100vw", height: "100%" });
 
 export const Layout = ({
   children,

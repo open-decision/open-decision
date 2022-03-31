@@ -1,15 +1,14 @@
-import { Box, styled, Text, Icon, Stack } from "@open-decision/design-system";
+import { styled, Text, Icon, Stack } from "@open-decision/design-system";
 import React, { memo } from "react";
 import { Star } from "react-feather";
 import { NodeProps, Position } from "react-flow-renderer";
 import { nodeHeight, nodeWidth } from "../../../utilities/constants";
 import { useEditor } from "features/Builder/state/useEditor";
-import { NodeMenu } from "./NodeMenu";
 import { SourcePort, TargetPort } from "./Port";
 import { NodeLabel } from "./NodeLabel";
 import { useStartNode } from "features/Builder/state/treeStore/hooks";
 import { useSnapshot } from "valtio";
-import { BuilderNode } from "@open-decision/type-classes";
+import { Node as NodeType } from "@open-decision/type-classes";
 import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
 
 const NodeContainer = styled(Stack, {
@@ -33,7 +32,7 @@ const NodeContainer = styled(Stack, {
 });
 
 export const Node = memo(
-  ({ id, selected, data }: NodeProps<BuilderNode.TNodeData>) => {
+  ({ id, selected, data }: NodeProps<NodeType.TNodeData>) => {
     const { nonSyncedStore } = useTreeContext();
     const { isConnecting, connectingNodeId } = useEditor();
     const { validConnections } = useSnapshot(nonSyncedStore);

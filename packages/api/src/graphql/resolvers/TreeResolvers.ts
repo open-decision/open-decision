@@ -20,7 +20,7 @@ import {
   transformCountFieldIntoSelectRelationsCount,
 } from "../helpers";
 import ApiError from "../../utils/ApiError";
-import { BuilderTree } from "@open-decision/type-classes";
+import { Tree } from "@open-decision/type-classes";
 @TypeGraphQL.Resolver((_of) => DecisionTree)
 export class DecisionTreeCrudResolver {
   @TypeGraphQL.Query((_returns) => DecisionTree, {
@@ -67,11 +67,8 @@ export class DecisionTreeCrudResolver {
     @TypeGraphQL.Info() info: GraphQLResolveInfo,
     @TypeGraphQL.Args() args: CreateDecisionTreeArgs
   ): Promise<DecisionTree> {
-    const newTree = BuilderTree.create(args.data.name);
-
     return getPrismaFromContext(ctx).decisionTree.create({
       data: {
-        ...newTree,
         name: args.data.name,
         owner: { connect: { uuid: ctx.user.uuid } },
       },
@@ -102,7 +99,7 @@ export class DecisionTreeCrudResolver {
     }
     return getPrismaFromContext(ctx).decisionTree.delete({
       where: {
-        id: treeToDelete.uuid,
+        uuid: treeToDelete.uuid,
         ...(_count && transformCountFieldIntoSelectRelationsCount(_count)),
       },
     });
@@ -136,45 +133,7 @@ export class DecisionTreeCrudResolver {
         ...args.data,
       },
       where: {
-        id: treeToUpdate.uuid,
-      },
-      ...(_count && transformCountFieldIntoSelectRelationsCount(_count)),
-    });
-  }
-
-  @TypeGraphQL.Mutation((_returns) => DecisionTree, {
-    nullable: true,
-  })
-  async updatePartialDecisionTree(
-    @TypeGraphQL.Ctx() ctx: GqlContext,
-    @TypeGraphQL.Info() info: GraphQLResolveInfo,
-    @TypeGraphQL.Args() args: UpdatePartialDecisionTreeArgs
-  ): Promise<DecisionTree | null> {
-    const { _count } = transformFields(graphqlFields(info as any));
-    const treeToUpdate = await getPrismaFromContext(ctx).decisionTree.findFirst(
-      {
-        where: {
-          ...args.where,
-          ownerUuid: ctx.user.uuid,
-          ...(_count && transformCountFieldIntoSelectRelationsCount(_count)),
-        },
-      }
-    );
-
-    if (!treeToUpdate) {
-      throw new ApiError({ message: "Not found." });
-    }
-
-    const updatedTree = BuilderTree.applyPatches(args.data.treePatches as any)(
-      treeToUpdate as any
-    );
-
-    return getPrismaFromContext(ctx).decisionTree.update({
-      data: {
-        treeData: updatedTree.treeData,
-      },
-      where: {
-        id: treeToUpdate.uuid,
+        uuid: treeToUpdate.uuid,
       },
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count)),
     });

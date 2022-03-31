@@ -9,19 +9,25 @@ export const Type = z.object({
   id: z.string(),
   source: z.string(),
   target: z.string(),
+  type: z.enum(["default"]),
   data: EdgeData,
 });
 
 export function create({
   data,
+  type = "default",
   ...edge
-}: Omit<TEdge, "id" | "data"> & { data?: { answer?: string } }): TEdge {
+}: Omit<TEdge, "id" | "data" | "type"> & {
+  data?: { answer?: string };
+  type?: TEdge["type"];
+}): TEdge {
   return {
     id: uuidV4(),
     data: {
       answer: "",
       ...data,
     },
+    type,
     ...edge,
   };
 }

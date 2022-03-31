@@ -181,7 +181,7 @@ export const TreeListBody = () => {
         }}
       >
         {filteredData.map((tree) => (
-          <motion.div key={tree.id} layout transition={{ duration: 0.5 }}>
+          <motion.div key={tree.uuid} layout transition={{ duration: 0.5 }}>
             <TreeCard tree={tree} />
           </motion.div>
         ))}

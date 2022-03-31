@@ -1,8 +1,4 @@
-import {
-  BuilderEdge,
-  BuilderNode,
-  BuilderTree,
-} from "@open-decision/type-classes";
+import { Edge, Node, Relation, Tree } from "@open-decision/type-classes";
 import { groupBy, merge } from "remeda";
 import { DeepPartial } from "utility-types";
 import { proxy } from "valtio";
@@ -25,8 +21,8 @@ export function createTreeStore(id: string) {
 
   const syncedStore = proxy({
     startNode: undefined as string | undefined,
-    nodes: [] as BuilderNode.TNodesRecord,
-    edges: [] as BuilderEdge.TEdgeArray,
+    nodes: [] as Node.TNodesArray,
+    edges: [] as Edge.TEdgeArray,
   });
 
   bindProxyAndYMap(syncedStore, yMap, {
@@ -46,8 +42,14 @@ export function createTreeStore(id: string) {
     return syncedStore.nodes.find((node) => node.id === nodeId);
   }
 
-  function addNode(node: Parameters<typeof BuilderNode.create>[0]) {
-    const newNode = BuilderNode.create(node);
+  function getRelation(nodeId: string, relationId: string) {
+    return getNode(nodeId)?.data.relations.find(
+      (relation) => relation.id === relationId
+    );
+  }
+
+  function addNode(node: Parameters<typeof Node.create>[0]) {
+    const newNode = Node.create(node);
 
     syncedStore.nodes.push(newNode);
     if (!syncedStore.startNode) syncedStore.startNode = newNode.id;
@@ -62,10 +64,7 @@ export function createTreeStore(id: string) {
     node.data.name = name;
   }
 
-  function updateNodePosition(
-    nodeId: string,
-    position: BuilderNode.TCoordinates
-  ) {
+  function updateNodePosition(nodeId: string, position: Node.TCoordinates) {
     const node = getNode(nodeId);
     if (!node) return;
 
@@ -75,7 +74,7 @@ export function createTreeStore(id: string) {
 
   function updateNodeContent(
     nodeId: string,
-    content: BuilderNode.TNodeData["content"]
+    content: Node.TNodeData["content"]
   ) {
     const node = getNode(nodeId);
     if (!node) return;
@@ -85,7 +84,7 @@ export function createTreeStore(id: string) {
 
   function updateNodeRelations(
     nodeId: string,
-    relations: BuilderNode.TNodeData["relations"]
+    relations: Node.TNodeData["relations"]
   ) {
     const node = getNode(nodeId);
     if (!node) return;
@@ -105,23 +104,33 @@ export function createTreeStore(id: string) {
 
   function addAssociatedNode(
     nodeId: string,
-    newNodeData: Parameters<typeof BuilderNode.createNewAssociatedNode>[1],
+    newNodeData: Parameters<typeof Node.createNewAssociatedNode>[1],
     edgeId: string
   ) {
     const node = getNode(nodeId);
 
     const newNode = !node
-      ? BuilderNode.create(newNodeData)
-      : BuilderNode.createNewAssociatedNode(node, newNodeData);
+      ? Node.create(newNodeData)
+      : Node.createNewAssociatedNode(node, newNodeData);
 
     syncedStore.nodes.push(newNode);
     if (!syncedStore.startNode) syncedStore.startNode = newNode.id;
 
     edgeId
       ? updateEdgeTarget(edgeId, newNode.id)
-      : addEdge({ source: nodeId, target: newNode.id });
+      : addEdge({ source: nodeId, target: newNode.id, type: "default" });
 
     return newNode;
+  }
+
+  // ------------------------------------------------------------------
+  // Relations
+
+  function addRelation(nodeId: string) {
+    const newRelation = Relation.create();
+
+    getNode(nodeId)?.data.relations.push(newRelation);
+    return newRelation;
   }
 
   // ------------------------------------------------------------------
@@ -131,17 +140,25 @@ export function createTreeStore(id: string) {
     return syncedStore.edges.find((edge) => edge.id === edgeId);
   }
 
-  function addEdge(edge: Parameters<typeof BuilderEdge.create>[0]) {
-    const newEdge = BuilderEdge.create(edge);
-
-    getNode(newEdge.source)?.data.relations.push(newEdge.id);
+  function addEdge(
+    edge: Parameters<typeof Edge.create>[0],
+    relationId?: string
+  ) {
+    const newEdge = Edge.create(edge);
     syncedStore.edges.push(newEdge);
+
+    if (!relationId) {
+      const newRelation = addRelation(edge.source);
+      getRelation(newEdge.source, newRelation.id)?.edges.push(newEdge.id);
+    } else {
+      getRelation(newEdge.source, relationId)?.edges.push(newEdge.id);
+    }
 
     return newEdge;
   }
 
   function updateEdge(
-    edge: DeepPartial<BuilderEdge.TEdge> & { id: BuilderEdge.TEdge["id"] }
+    edge: DeepPartial<Edge.TEdge> & { id: Edge.TEdge["id"] }
   ) {
     const existingEdgeIndex = syncedStore.edges.findIndex(
       (existingEdge) => existingEdge.id === edge.id
@@ -166,14 +183,14 @@ export function createTreeStore(id: string) {
 
       if (sourceNode) {
         const sourceNodeRelations = sourceNode?.data.relations.filter(
-          (relation) => relation !== edge.id
+          (relation) => relation.edges.includes(edge.id)
         );
         sourceNode.data.relations = sourceNodeRelations;
       }
 
       if (targetNode) {
         const targetNodeRelations = targetNode?.data.relations.filter(
-          (relation) => relation !== edge.id
+          (relation) => relation.edges.includes(edge.id)
         );
         targetNode.data.relations = targetNodeRelations;
       }
@@ -230,9 +247,9 @@ export function createTreeStore(id: string) {
 
     nonSyncedStore.connectionSourceNodeId = sourceNodeId;
 
-    const validConnections = BuilderTree.getConnectableNodes(
-      connectionOriginNode.id
-    )(syncedStore.nodes ?? []);
+    const validConnections = Tree.getConnectableNodes(connectionOriginNode.id)(
+      syncedStore.edges
+    );
 
     nonSyncedStore.validConnections = validConnections;
   }
@@ -242,10 +259,13 @@ export function createTreeStore(id: string) {
     nonSyncedStore.validConnections = [];
   }
 
-  function connect(target: string) {
+  function connect(target: string, relationId: string) {
     if (nonSyncedStore.connectionSourceNodeId == null) return;
 
-    addEdge({ source: nonSyncedStore.connectionSourceNodeId, target });
+    addEdge(
+      { source: nonSyncedStore.connectionSourceNodeId, target },
+      relationId
+    );
   }
 
   return {

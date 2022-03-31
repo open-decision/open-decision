@@ -12,7 +12,7 @@ import {
   focusStyle,
 } from "@open-decision/design-system";
 import * as React from "react";
-import { BuilderTree, BuilderNode } from "@open-decision/type-classes";
+import { Tree, Node, Relation } from "@open-decision/type-classes";
 import { pipe } from "remeda";
 import { Plus, Trash, Crosshair } from "react-feather";
 import { DragHandle } from "./DragHandle";
@@ -20,6 +20,7 @@ import { Reorder, useDragControls } from "framer-motion";
 import { map } from "remeda";
 import {
   useEdge,
+  useEdges,
   useNode,
   useNodes,
 } from "features/Builder/state/treeStore/hooks";
@@ -34,7 +35,7 @@ const StyledReorderGroup = styled(Reorder.Group, {
 
 type SingleSelectProps = {
   nodeId: string;
-  relations: BuilderNode.TNodeData["relations"];
+  relations: Node.TNodeData["relations"];
 };
 
 export function OptionTargetInputs({ nodeId, relations }: SingleSelectProps) {
@@ -71,7 +72,7 @@ export function OptionTargetInputs({ nodeId, relations }: SingleSelectProps) {
         axis="y"
         values={relations}
         layoutScroll
-        onReorder={(newOrder: BuilderNode.TNodeData["relations"]) =>
+        onReorder={(newOrder: Node.TNodeData["relations"]) =>
           updateNodeRelations(nodeId, newOrder)
         }
       >
@@ -79,7 +80,7 @@ export function OptionTargetInputs({ nodeId, relations }: SingleSelectProps) {
           <OptionTargetInput
             nodeId={nodeId}
             relation={relation}
-            key={relation}
+            key={relation.id}
             groupRef={ref}
           />
         ))}
@@ -88,7 +89,7 @@ export function OptionTargetInputs({ nodeId, relations }: SingleSelectProps) {
   );
 }
 type SingleSelectInputProps = {
-  relation: string;
+  relation: Relation.TRelation;
   nodeId: string;
   groupRef: React.MutableRefObject<HTMLDivElement | null>;
 };
@@ -98,6 +99,7 @@ export function OptionTargetInput({
   nodeId,
   groupRef,
 }: SingleSelectInputProps) {
+  const edges = useEdges();
   const nodes = useNodes();
   const node = useNode(nodeId);
   const {
@@ -107,7 +109,7 @@ export function OptionTargetInput({
     updateEdgeTarget,
     deleteEdges,
   } = useTreeContext();
-  const edge = useEdge(relation);
+  const edge = useEdge(relation.edges[0]);
 
   const allOptions = pipe(
     nodes,
@@ -116,10 +118,10 @@ export function OptionTargetInput({
 
   const nodeOptions = node
     ? pipe(
-        BuilderTree.getConnectableNodes(node.id)(nodes),
+        Tree.getConnectableNodes(node.id)(edges),
         map((nodeId) => ({
           id: nodeId,
-          label: nodes.find((node) => node.id === nodeId)?.data.name ?? "",
+          label: nodes.find((node) => node.id === nodeId)?.data.name,
         }))
       )
     : [];
@@ -137,7 +139,7 @@ export function OptionTargetInput({
 
   return node && edge ? (
     <Reorder.Item
-      value={edge.id}
+      value={relation}
       dragListener={false}
       dragControls={controls}
       dragConstraints={groupRef}
