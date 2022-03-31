@@ -72,7 +72,7 @@ export function TreeCard({ tree }: Props) {
   return (
     <>
       <Dialog />
-      <Link href={`/builder/${tree.id}`} passHref>
+      <Link href={`/builder/${tree.uuid}`} passHref>
         <Card
           css={{ cursor: "pointer" }}
           title={`Öffne das Projekt ${tree.name}`}

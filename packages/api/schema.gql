@@ -29,7 +29,9 @@ type DecisionTree {
   name: String!
   tags: JSON
   treeData: JSON
+  treeUuid: String!
   updatedAt: DateTime!
+  yDocument: String
 }
 
 input DecisionTreeCreateInput {
@@ -65,7 +67,9 @@ enum DecisionTreeScalarFieldEnum {
   ownerUuid
   tags
   treeData
+  treeUuid
   updatedAt
+  yDocument
 }
 
 input DecisionTreeUpdateInput {
