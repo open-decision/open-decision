@@ -12,7 +12,7 @@ import {
   focusStyle,
 } from "@open-decision/design-system";
 import * as React from "react";
-import { Tree, Node, Relation } from "@open-decision/type-classes";
+import { Node, Relation } from "@open-decision/type-classes";
 import { pipe } from "remeda";
 import { Plus, Trash, Crosshair } from "react-feather";
 import { DragHandle } from "./DragHandle";
@@ -20,7 +20,6 @@ import { Reorder, useDragControls } from "framer-motion";
 import { map } from "remeda";
 import {
   useEdge,
-  useEdges,
   useNode,
   useNodes,
 } from "features/Builder/state/treeStore/hooks";
@@ -99,7 +98,6 @@ export function OptionTargetInput({
   nodeId,
   groupRef,
 }: SingleSelectInputProps) {
-  const edges = useEdges();
   const nodes = useNodes();
   const node = useNode(nodeId);
   const {
@@ -108,6 +106,7 @@ export function OptionTargetInput({
     updateEdgeAnswer,
     updateEdgeTarget,
     deleteEdges,
+    getConnectableNodes,
   } = useTreeContext();
   const edge = useEdge(relation.edges[0]);
 
@@ -118,7 +117,7 @@ export function OptionTargetInput({
 
   const nodeOptions = node
     ? pipe(
-        Tree.getConnectableNodes(node.id)(edges),
+        getConnectableNodes(node.id),
         map((nodeId) => ({
           id: nodeId,
           label: nodes.find((node) => node.id === nodeId)?.data.name,
@@ -200,7 +199,7 @@ export function OptionTargetInput({
             onCreate={(name) => {
               const newNode = addAssociatedNode(
                 node.id,
-                { selected: true, data: { name } },
+                { data: { name } },
                 edge.id
               );
 

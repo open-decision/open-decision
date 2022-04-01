@@ -1,4 +1,4 @@
-import { Node, Tree } from "@open-decision/type-classes";
+import { Node } from "@open-decision/type-classes";
 import { useSnapshot } from "valtio";
 import { derive } from "valtio/utils";
 import { useTreeContext } from "../TreeContext";
@@ -7,12 +7,12 @@ export function useSelectedNodes():
   | ["none", []]
   | ["multi", Node.TNode[]]
   | ["single", Node.TNode[]] {
-  const { nonSyncedStore, syncedStore } = useTreeContext();
+  const { nonSyncedStore, tree } = useTreeContext();
 
   const {
     selection: { nodes: selectedNodeIds },
   } = useSnapshot(nonSyncedStore);
-  const { nodes } = useSnapshot(syncedStore);
+  const { nodes } = useSnapshot(tree);
 
   if (selectedNodeIds.length > 0) {
     const selectedNodes = nodes.filter((node) =>
@@ -44,27 +44,18 @@ export function useSelectedNodeIds():
   return ["none", []];
 }
 
-export function useIsSelected(id: string) {
-  const { syncedStore } = useTreeContext();
-
-  const { nodes } = useSnapshot(syncedStore);
-  const selectedNodes = nodes.filter((node) => node.selected);
-
-  return selectedNodes.some((selectedNode) => selectedNode.id === id);
-}
-
 export function useIsPreviewable() {
-  const { syncedStore } = useTreeContext();
+  const { tree } = useTreeContext();
 
-  const { startNode } = useSnapshot(syncedStore);
+  const { startNode } = useSnapshot(tree);
 
   return Boolean(startNode);
 }
 
 export function useStartNode() {
-  const { syncedStore } = useTreeContext();
+  const { tree } = useTreeContext();
 
-  const { startNode, nodes } = useSnapshot(syncedStore);
+  const { startNode, nodes } = useSnapshot(tree);
 
   return nodes.find((node) => node.id === startNode);
 }
@@ -79,9 +70,9 @@ export function useConnect() {
 }
 
 export function useNodes(ids?: string[]): Node.TNodesArray {
-  const { syncedStore } = useTreeContext();
+  const { tree } = useTreeContext();
 
-  const { nodes } = useSnapshot(syncedStore);
+  const { nodes } = useSnapshot(tree);
 
   if (ids && nodes) return nodes.filter((node) => ids.includes(node.id));
 
@@ -89,9 +80,9 @@ export function useNodes(ids?: string[]): Node.TNodesArray {
 }
 
 export function useEdges(ids?: string[]) {
-  const { syncedStore } = useTreeContext();
+  const { tree } = useTreeContext();
 
-  const { edges } = useSnapshot(syncedStore);
+  const { edges } = useSnapshot(tree);
 
   if (ids && edges) return edges.filter((node) => ids.includes(node.id));
 
@@ -99,39 +90,39 @@ export function useEdges(ids?: string[]) {
 }
 
 export function useEdge(id: string) {
-  const { syncedStore } = useTreeContext();
+  const { tree } = useTreeContext();
 
-  const { edges } = useSnapshot(syncedStore);
+  const { edges } = useSnapshot(tree);
 
   return edges.find((edge) => edge.id === id);
 }
 
 export function useNodeNames() {
-  const { syncedStore } = useTreeContext();
+  const { tree } = useTreeContext();
 
   const { nodeNames } = derive({
-    nodeNames: (get) => get(syncedStore).nodes.map((node) => node.data.name),
+    nodeNames: (get) => get(tree).nodes.map((node) => node.data.name),
   });
 
   return nodeNames;
 }
 
 export function useNode(id: string) {
-  const { syncedStore } = useTreeContext();
+  const { tree } = useTreeContext();
 
-  const { nodes } = useSnapshot(syncedStore);
+  const { nodes } = useSnapshot(tree);
 
   return nodes.find((node) => node.id === id);
 }
 
 export function useTreeData() {
-  const { syncedStore } = useTreeContext();
+  const { tree } = useTreeContext();
 
-  return useSnapshot(syncedStore);
+  return useSnapshot(tree);
 }
 
 export function useParents(node: Node.TNode) {
-  const { syncedStore } = useTreeContext();
+  const { getParents } = useTreeContext();
 
-  return Tree.getParents(node)(syncedStore.edges ?? []);
+  return getParents(node);
 }
