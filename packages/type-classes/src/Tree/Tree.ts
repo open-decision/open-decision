@@ -9,8 +9,8 @@ import { createAdjacencyList, depthFirstSearch } from "./utils";
 import { DeepPartial } from "utility-types";
 
 export const Type = z.object({
-  nodes: Node.Array,
-  edges: Edge.Array,
+  nodes: Node.Array.optional(),
+  edges: Edge.Array.optional(),
   startNode: z.string().optional(),
 });
 
@@ -28,7 +28,7 @@ export function createTreeMethods(tree: Tree.TTree) {
   // Nodes
 
   function getNode(nodeId: string) {
-    return tree.nodes.find((node) => node.id === nodeId);
+    return tree.nodes?.find((node) => node.id === nodeId);
   }
 
   function getRelation(nodeId: string, relationId: string) {
@@ -40,7 +40,9 @@ export function createTreeMethods(tree: Tree.TTree) {
   function addNode(node: Parameters<typeof Node.create>[0]) {
     const newNode = Node.create(node);
 
-    tree.nodes.push(newNode);
+    if (!tree.nodes) tree.nodes = [];
+
+    tree.nodes?.push(newNode);
     if (!tree.startNode) tree.startNode = newNode.id;
 
     return newNode;
@@ -82,8 +84,8 @@ export function createTreeMethods(tree: Tree.TTree) {
   }
 
   function deleteNodes(ids: string[]) {
-    const nodes = tree.nodes.filter((node) => !ids.includes(node.id));
-    const edges = tree.edges.filter(
+    const nodes = tree.nodes?.filter((node) => !ids.includes(node.id));
+    const edges = tree.edges?.filter(
       (edge) => !ids.includes(edge.source || edge.target)
     );
 
@@ -102,7 +104,8 @@ export function createTreeMethods(tree: Tree.TTree) {
       ? Node.create(newNodeData)
       : Node.createNewAssociatedNode(node, newNodeData);
 
-    tree.nodes.push(newNode);
+    if (!tree.nodes) tree.nodes = [];
+    tree.nodes?.push(newNode);
     if (!tree.startNode) tree.startNode = newNode.id;
 
     edgeId
@@ -126,7 +129,7 @@ export function createTreeMethods(tree: Tree.TTree) {
   // Edges
 
   function getEdge(edgeId: string) {
-    return tree.edges.find((edge) => edge.id === edgeId);
+    return tree.edges?.find((edge) => edge.id === edgeId);
   }
 
   function addEdge(
@@ -134,7 +137,9 @@ export function createTreeMethods(tree: Tree.TTree) {
     relationId?: string
   ) {
     const newEdge = Edge.create(edge);
-    tree.edges.push(newEdge);
+    if (!tree.edges) tree.edges = [];
+
+    tree.edges?.push(newEdge);
 
     if (!relationId) {
       const newRelation = addRelation(edge.source);
@@ -149,15 +154,20 @@ export function createTreeMethods(tree: Tree.TTree) {
   function updateEdge(
     edge: DeepPartial<Edge.TEdge> & { id: Edge.TEdge["id"] }
   ) {
-    const existingEdgeIndex = tree.edges.findIndex(
+    const existingEdgeIndex = tree.edges?.findIndex(
       (existingEdge) => existingEdge.id === edge.id
     );
 
-    tree.edges[existingEdgeIndex] = merge(tree.edges[existingEdgeIndex], edge);
+    if (!existingEdgeIndex || !tree.edges) return;
+
+    tree.edges[existingEdgeIndex] = merge(
+      tree.edges?.[existingEdgeIndex],
+      edge
+    );
   }
 
   function deleteEdges(ids: string[]) {
-    const { toDelete, rest } = groupBy(tree.edges, (edge) =>
+    const { toDelete, rest } = groupBy(tree.edges ?? [], (edge) =>
       ids.includes(edge.id) ? "toDelete" : "rest"
     );
 
@@ -209,7 +219,7 @@ export function createTreeMethods(tree: Tree.TTree) {
    */
   const getParents = (node: Node.TNode): string[] =>
     pipe(
-      tree.edges,
+      tree.edges ?? [],
       reduce((acc: string[], edge) => {
         if (edge.target === node.id) return [...acc, edge.source];
 
@@ -223,7 +233,7 @@ export function createTreeMethods(tree: Tree.TTree) {
    */
   const getChildren = (nodeId: string) => {
     return pipe(
-      tree.edges,
+      tree.edges ?? [],
       // Filter out relations without targets
       filter((edge) => edge.source === nodeId),
       // Return an array of the target ids
@@ -246,7 +256,7 @@ export function createTreeMethods(tree: Tree.TTree) {
   };
 
   const getPaths = (nodeId: string) => {
-    const adjacencyList = createAdjacencyList(tree.edges);
+    const adjacencyList = createAdjacencyList(tree.edges ?? []);
 
     return depthFirstSearch(nodeId, adjacencyList);
   };
@@ -256,7 +266,7 @@ export function createTreeMethods(tree: Tree.TTree) {
     const nodesChildren = getChildren(nodeId);
 
     return pipe(
-      tree.edges,
+      tree.edges ?? [],
       Object.values,
       filter(
         (iteratedNode) =>

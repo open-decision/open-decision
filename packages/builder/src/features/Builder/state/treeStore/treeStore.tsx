@@ -21,8 +21,8 @@ export function createTreeStore(id: string) {
 
   const tree = proxy({
     startNode: undefined as string | undefined,
-    nodes: [] as Node.TNodesArray,
-    edges: [] as Edge.TEdgeArray,
+    nodes: undefined as Node.TNodesArray | undefined,
+    edges: undefined as Edge.TEdgeArray | undefined,
   });
 
   const methods = Tree.createTreeMethods(tree);

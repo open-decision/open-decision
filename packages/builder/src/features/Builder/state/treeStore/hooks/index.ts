@@ -15,9 +15,8 @@ export function useSelectedNodes():
   const { nodes } = useSnapshot(tree);
 
   if (selectedNodeIds.length > 0) {
-    const selectedNodes = nodes.filter((node) =>
-      selectedNodeIds.includes(node.id)
-    );
+    const selectedNodes =
+      nodes?.filter((node) => selectedNodeIds.includes(node.id)) ?? [];
 
     if (selectedNodes.length > 1) return ["multi", selectedNodes];
     if (selectedNodes.length > 0) return ["single", selectedNodes];
@@ -57,7 +56,7 @@ export function useStartNode() {
 
   const { startNode, nodes } = useSnapshot(tree);
 
-  return nodes.find((node) => node.id === startNode);
+  return nodes?.find((node) => node.id === startNode);
 }
 
 export function useConnect() {
@@ -76,7 +75,7 @@ export function useNodes(ids?: string[]): Node.TNodesArray {
 
   if (ids && nodes) return nodes.filter((node) => ids.includes(node.id));
 
-  return nodes;
+  return nodes ?? [];
 }
 
 export function useEdges(ids?: string[]) {
@@ -94,14 +93,14 @@ export function useEdge(id: string) {
 
   const { edges } = useSnapshot(tree);
 
-  return edges.find((edge) => edge.id === id);
+  return edges?.find((edge) => edge.id === id);
 }
 
 export function useNodeNames() {
   const { tree } = useTreeContext();
 
   const { nodeNames } = derive({
-    nodeNames: (get) => get(tree).nodes.map((node) => node.data.name),
+    nodeNames: (get) => get(tree).nodes?.map((node) => node.data.name),
   });
 
   return nodeNames;
@@ -112,7 +111,7 @@ export function useNode(id: string) {
 
   const { nodes } = useSnapshot(tree);
 
-  return nodes.find((node) => node.id === id);
+  return nodes?.find((node) => node.id === id);
 }
 
 export function useTreeData() {
