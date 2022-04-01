@@ -7,7 +7,7 @@ import { useTreeContext } from "./TreeContext";
 const isBrowser = typeof window !== "undefined";
 export function useYjsConnection(id: string) {
   const [{ context }] = useAuth();
-  const { yDoc } = useTreeContext();
+  const { yDoc, nonSyncedStore, resolve } = useTreeContext();
 
   React.useEffect(() => {
     // const persistence = new IndexeddbPersistence(id, yDoc);
@@ -23,10 +23,12 @@ export function useYjsConnection(id: string) {
           )
         : null;
 
+    websocket?.on("sync", () => resolve());
+
     return () => {
       websocket?.destroy();
       yDoc?.destroy();
       // persistence.destroy();
     };
-  }, [context.user?.access.token, id, yDoc]);
+  }, [context.user?.access.token, id, nonSyncedStore, resolve, yDoc]);
 }

@@ -4,6 +4,8 @@ import { NodeEditingSidebar } from "./components/NodeEditingSidebar";
 import { Canvas } from "./components/Canvas/Canvas";
 import { Toolbar } from "./components/Toolbar/Toolbar";
 import { sidebarWidth } from "./utilities/constants";
+import { useTreeContext } from "./state/treeStore/TreeContext";
+import { useSnapshot } from "valtio";
 
 const StyledCanvas = styled(Canvas, {
   display: "grid",
@@ -18,6 +20,9 @@ type NodeEditorProps = {
 };
 
 export const NodeEditor = ({ css }: NodeEditorProps) => {
+  const { nonSyncedStore } = useTreeContext();
+  const { synced } = useSnapshot(nonSyncedStore);
+
   return (
     <StyledCanvas css={css}>
       <Toolbar

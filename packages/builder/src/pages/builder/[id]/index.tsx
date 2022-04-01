@@ -12,6 +12,22 @@ import { queryClient } from "features/Data/queryClient";
 import { GetServerSideProps } from "next";
 import { useYjsConnection } from "features/Builder/state/treeStore/useYjsConnection";
 import { TreeProvider } from "features/Builder/state/treeStore/TreeContext";
+import { Box, LoadingSpinner } from "@open-decision/design-system";
+
+function Loading() {
+  return (
+    <Box
+      css={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+      }}
+    >
+      <LoadingSpinner size="50px" />
+    </Box>
+  );
+}
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
@@ -21,7 +37,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 export default function BuilderPage({ id }): JSX.Element {
   return (
-    <React.Suspense fallback={<div>Loading...</div>}>
+    <React.Suspense fallback={<Loading />}>
       <ErrorBoundary fallback={ErrorFallback}>
         <QueryClientProvider client={queryClient}>
           <TreeProvider id={id}>
