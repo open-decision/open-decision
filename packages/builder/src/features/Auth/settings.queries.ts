@@ -9,7 +9,9 @@ export const useUserUpdateMutation = () => {
   return useMutation((data: Data) => {
     return fetch(`/users/${context.user?.user.uuid}`, {
       body: JSON.stringify(data),
+      method: "PATCH",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${context.user?.access.token}`,
       },
     });
@@ -17,13 +19,14 @@ export const useUserUpdateMutation = () => {
 };
 
 export const useDeleteUserMutation = () => {
-  const [{ context }] = useAuth();
+  const [{ context }, send] = useAuth();
 
   return useMutation(() => {
     return fetch(`/users/${context.user?.user.uuid}`, {
+      method: "DELETE",
       headers: {
         Authorization: `Bearer ${context.user?.access.token}`,
       },
-    });
+    }).then(() => send({ type: "LOG_OUT" }));
   });
 };

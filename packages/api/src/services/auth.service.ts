@@ -38,10 +38,7 @@ const logout = async (refreshToken: string) => {
   });
 
   if (!refreshTokenFromDb) {
-    throw new ApiError({
-      statusCode: httpStatus.NOT_FOUND,
-      message: "Not found",
-    });
+    return;
   }
 
   await tokenHandler.deleteFromDbById(refreshTokenFromDb.id);

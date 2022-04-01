@@ -41,7 +41,6 @@ const getUser = catchAsync(async (req: Request, res: Response) => {
 const updateUser = catchAsync(async (req: Request, res: Response) => {
   //These are the only values an user is allowed to change, check how to allow editing by admins
   const updateData = R.pick(req.body, ["name", "email", "password"]);
-
   const user = await userService.updateUserByUuidOrId(
     res.locals.userUuid,
     updateData
@@ -51,7 +50,7 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
 
 const deleteUser = catchAsync(async (req: Request, res: Response) => {
   // @ts-ignore
-  await userService.deleteUserByUuidOrId(req.user!.userUuid);
+  await userService.deleteUserByUuidOrId(req.user.uuid);
   res.status(httpStatus.NO_CONTENT).send();
 });
 
