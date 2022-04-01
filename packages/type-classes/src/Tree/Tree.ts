@@ -132,20 +132,68 @@ export function createTreeMethods(tree: Tree.TTree) {
     return tree.edges?.find((edge) => edge.id === edgeId);
   }
 
+  /**
+   * @summary Adds an edge to the tree under certain conditions.
+   * @description
+   * This functions adds a new edge if the following conditions are true:
+   * - Does not connect to itself
+   * - Edge does not already exist
+   * - The Edge would not result in a circularly connected tree
+   *
+   * @param edge - The data for the edge that should be added.
+   * @param relationId - Since edges are associated to Nodes through the relations key this also adds a new relation to the source node. This behavior can be adjusted by passing a relationId as a second parameter. The new Edge is then added to that relation instead.
+   */
   function addEdge(
     edge: Parameters<typeof Edge.create>[0],
     relationId?: string
   ) {
+    // ------------------------------------------------------------------
+    // Edge Creation Rules
+    // Make sure the edge does not already exist based on the combination of source and target.
+    if (
+      tree.edges?.find(
+        (existingEdge) =>
+          existingEdge.source === edge.source &&
+          existingEdge.target === edge.target
+      )
+    ) {
+      return new Error(
+        "Eine Verbindung zwischen diesen Knoten existiert bereits."
+      );
+    }
+    // Make sure the edge does not result in a circular connection.
+    const isCircular = circularConnection(edge);
+
+    if (isCircular)
+      return new Error(
+        "Knoten können nicht mit vorherigen Knoten verbunden sein."
+      );
+
+    // ------------------------------------------------------------------
+    // Only after the above rules did not cause an early exist are we starting to modify anything in the edges array.
     const newEdge = Edge.create(edge);
+
+    // Edge.create might return an error that we return similarly to the above rules.
+    if (newEdge instanceof Error) return newEdge;
+
+    // If there is no edges array yet assign it.
     if (!tree.edges) tree.edges = [];
 
-    tree.edges?.push(newEdge);
-
+    //
     if (!relationId) {
       const newRelation = addRelation(edge.source);
+      tree.edges?.push(newEdge);
+
       getRelation(newEdge.source, newRelation.id)?.edges.push(newEdge.id);
     } else {
-      getRelation(newEdge.source, relationId)?.edges.push(newEdge.id);
+      const relation = getRelation(newEdge.source, relationId);
+      if (!relation)
+        throw new Error(
+          `The edge cannot be added to relation ${relationId} on node ${edge.source}, because it does not exist.`
+        );
+
+      tree.edges?.push(newEdge);
+      relation.edges.push(newEdge.id);
     }
 
     return newEdge;
@@ -266,7 +314,7 @@ export function createTreeMethods(tree: Tree.TTree) {
     const nodesChildren = getChildren(nodeId);
 
     return pipe(
-      tree.edges ?? [],
+      tree.nodes ?? [],
       Object.values,
       filter(
         (iteratedNode) =>

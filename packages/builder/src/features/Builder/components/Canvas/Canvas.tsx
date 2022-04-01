@@ -10,6 +10,7 @@ import {
   useStartNode,
 } from "features/Builder/state/treeStore/hooks";
 import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
+import { useNotificationStore } from "features/Notifications/NotificationState";
 
 const validConnectEvent = (
   target: MouseEvent["target"]
@@ -73,6 +74,7 @@ function Nodes() {
   const startNode = useStartNode();
 
   const { closeNodeEditingSidebar, zoomToNode } = useEditor();
+  const { addNotification } = useNotificationStore();
 
   return (
     <ReactFlow
@@ -125,10 +127,17 @@ function Nodes() {
         if (!validConnectEvent(event.target) || !event.target.dataset.nodeid)
           return abortConnecting();
 
-        addEdge({
+        const possibleEdge = addEdge({
           source: nonSyncedStore.connectionSourceNodeId,
           target: event.target.dataset.nodeid,
         });
+
+        if (possibleEdge instanceof Error)
+          addNotification({
+            title: "Verbindung fehlgeschlagen",
+            content: possibleEdge.message,
+            variant: "danger",
+          });
       }}
       style={{
         gridColumn: "1 / -1",

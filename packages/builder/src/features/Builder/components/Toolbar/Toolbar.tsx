@@ -48,7 +48,6 @@ const ToolbarSeparator = () => (
 const buttonProps: ButtonProps = {
   variant: "neutral",
   square: true,
-  size: "small",
 };
 
 type Props = { css?: StyleObject };
@@ -91,11 +90,9 @@ export function Toolbar({ css }: Props) {
       <ToolbarSeparator />
       <Button
         {...buttonProps}
-        size="medium"
         onClick={() => {
           removeSelectedNodes();
           const newNode = addNode({
-            selected: true,
             data: {},
             position: getCenter(),
           });
@@ -109,12 +106,6 @@ export function Toolbar({ css }: Props) {
         </Icon>
       </Button>
       <ToolbarSeparator />
-      <Button {...buttonProps} size="medium">
-        <Icon>
-          <GroupIcon />
-        </Icon>
-      </Button>
-      <ToolbarSeparator />
       <Button
         {...buttonProps}
         onClick={() => {
@@ -123,7 +114,6 @@ export function Toolbar({ css }: Props) {
           zoomToNode(startNode);
         }}
         disabled={!startNode}
-        size="medium"
       >
         <Icon>
           <Star />

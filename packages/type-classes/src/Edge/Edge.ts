@@ -20,7 +20,10 @@ export function create({
 }: Omit<TEdge, "id" | "data" | "type"> & {
   data?: { answer?: string };
   type?: TEdge["type"];
-}): TEdge {
+}): TEdge | Error {
+  if (edge.source === edge.target)
+    return new Error("Ein Knoten kann nicht mit sich selbst verbunden werden.");
+
   return {
     id: uuidV4(),
     data: {
