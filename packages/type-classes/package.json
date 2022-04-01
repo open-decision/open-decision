@@ -32,7 +32,6 @@
   },
   "dependencies": {
     "ramda": "^0.28.0",
-    "react-flow-renderer": "^10.0.2",
     "remeda": "^0.0.32",
     "utility-types": "^3.10.0",
     "uuid": "^8.3.2",
