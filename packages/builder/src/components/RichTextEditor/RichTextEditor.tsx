@@ -13,18 +13,18 @@ const StyledEditorContent = styled(EditorContent, {
   minHeight: "200px",
   maxHeight: "500px",
   layer: "2",
+  padding: "$2",
 
   ".ProseMirror": {
     colorScheme: "primary",
     display: "flex",
     gap: "10px",
     flexDirection: "column",
-    padding: "$2",
     outline: "none",
     margin: "1px",
     borderBottomLeftRadius: "$sm",
     borderBottomRightRadius: "$sm",
-    height: "100%",
+    height: "calc(100% - $space$2)",
   },
 });
 
