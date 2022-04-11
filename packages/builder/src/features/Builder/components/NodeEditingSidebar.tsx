@@ -84,7 +84,7 @@ type Props = { node: Pick<Node.TNode, "id" | "data"> };
 
 export function NodeEditingSidebarContent({ node }: Props) {
   const { updateNodeName } = useTreeContext();
-  const { addSelectedNodes, removeSelectedNodes } = useEditor();
+  const { addSelectedNodes } = useEditor();
   const parentNodes = useParents(node.id);
   const startNode = useStartNode();
 
@@ -190,10 +190,7 @@ export function NodeEditingSidebarContent({ node }: Props) {
               return (
                 <Link
                   key={parentNode.id}
-                  onClick={() => {
-                    removeSelectedNodes();
-                    return addSelectedNodes([parentNode.id]);
-                  }}
+                  onClick={() => addSelectedNodes([parentNode.id])}
                   css={{
                     color: "$primary11",
                     fontWeight: 500,

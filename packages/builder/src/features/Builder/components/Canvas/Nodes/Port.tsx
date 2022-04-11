@@ -15,6 +15,7 @@ export const Port = styled(Handle, {
 });
 export const TargetPort = styled(Port, {
   top: `-${portWidth / 2}px !important`,
+  opacity: 0,
 
   "&[data-connecting='true'][data-connectingnode='false'][data-connectable='true']:hover":
     {

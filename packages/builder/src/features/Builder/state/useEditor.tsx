@@ -16,7 +16,8 @@ type EditorState = {
   closeNodeEditingSidebar: () => void;
   zoomToNode: (node: Node.TNode) => void;
   addSelectedNodes: (nodeIds: string[]) => void;
-  removeSelectedNodes: () => void;
+  removeSelectedElements: () => void;
+  addSelectedEdges: (edgeIds: string[]) => void;
   connectingNodeId: string | null;
   isConnecting: boolean;
 };
@@ -33,7 +34,8 @@ export function EditorProvider({ children }: TreeProviderProps) {
   const selectionFunctions = useStore(
     (state) => ({
       addSelectedNodes: state.addSelectedNodes,
-      removeSelectedNodes: state.unselectNodesAndEdges,
+      removeSelectedElements: state.unselectNodesAndEdges,
+      addSelectedEdges: state.addSelectedEdges,
       connectingNodeId: state.connectionNodeId,
       isConnecting: state.connectionNodeId != null ? true : false,
     }),
@@ -81,7 +83,7 @@ export function EditorProvider({ children }: TreeProviderProps) {
         projectCoordinates,
         getCenter,
         reactFlowWrapperRef,
-        closeNodeEditingSidebar: selectionFunctions.removeSelectedNodes,
+        closeNodeEditingSidebar: selectionFunctions.removeSelectedElements,
         zoomToNode,
         ...selectionFunctions,
       }}

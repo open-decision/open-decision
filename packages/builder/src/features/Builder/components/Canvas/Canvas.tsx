@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useEditor } from "features/Builder/state/useEditor";
-import ReactFlow from "react-flow-renderer";
-import { styled, StyleObject } from "@open-decision/design-system";
+import ReactFlow, { MarkerType } from "react-flow-renderer";
+import { styled, StyleObject, theme } from "@open-decision/design-system";
 import { Node } from "./Nodes/Node";
 import {
   useEdges,
@@ -11,6 +11,8 @@ import {
 import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
 import { useNotificationStore } from "features/Notifications/NotificationState";
 import { clone } from "remeda";
+import { ConnectionLine } from "./Edges/ConnectionLine";
+import { CustomEdge } from "./Edges/CustomEdge";
 
 const validConnectEvent = (
   target: MouseEvent["target"]
@@ -27,6 +29,7 @@ const Container = styled("div", {
 });
 
 const customNodes = { customNode: Node };
+const customEdges = { default: CustomEdge };
 
 type Props = {
   children?: React.ReactNode;
@@ -65,13 +68,24 @@ function Nodes() {
 
   const nodes = React.useMemo(() => Object.values(syncedNodes), [syncedNodes]);
   const edges = React.useMemo(
-    () => Object.values(clone(syncedEdges)),
+    () =>
+      Object.values(clone(syncedEdges)).map((edge) => ({
+        ...edge,
+        markerEnd: {
+          type: MarkerType.ArrowClosed,
+          color: "#3352C5",
+        },
+        markerStart: {
+          type: MarkerType.ArrowClosed,
+          color: "#c1c8cd",
+        },
+      })),
     [syncedEdges]
   );
 
   const startNode = useStartNode();
 
-  const { closeNodeEditingSidebar, zoomToNode, removeSelectedNodes } =
+  const { closeNodeEditingSidebar, zoomToNode, removeSelectedElements } =
     useEditor();
   const { addNotification } = useNotificationStore();
 
@@ -79,6 +93,7 @@ function Nodes() {
     <ReactFlow
       onPaneClick={closeNodeEditingSidebar}
       nodeTypes={customNodes}
+      edgeTypes={customEdges}
       nodes={nodes}
       edges={edges}
       zoomOnDoubleClick={false}
@@ -93,7 +108,7 @@ function Nodes() {
             case "remove":
               if (nodeChange.id !== startNode?.id) {
                 deleteNodes([nodeChange.id]);
-                removeSelectedNodes();
+                removeSelectedElements();
               }
               break;
             case "position":
@@ -157,6 +172,7 @@ function Nodes() {
         gridRow: "1 / -1",
         isolation: "isolate",
       }}
+      connectionLineComponent={ConnectionLine}
     />
   );
 }
