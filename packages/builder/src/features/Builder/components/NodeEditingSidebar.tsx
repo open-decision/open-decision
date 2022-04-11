@@ -69,19 +69,20 @@ export function NodeEditingSidebar() {
   );
 }
 
-type Props = { node: Node.TNode };
+type Props = { node: Pick<Node.TNode, "id" | "data"> };
 
 export function NodeEditingSidebarContent({ node }: Props) {
-  const { updateNodeName, addSelectedNodes, removeSelectedNodes } =
-    useTreeContext();
-  const parentNodeIds = useParents(node);
+  const { updateNodeName } = useTreeContext();
+  const { addSelectedNodes, removeSelectedNodes } = useEditor();
+  const parentNodes = useParents(node.id);
   const startNode = useStartNode();
 
-  const parentNodes = useNodes(parentNodeIds);
   const [Form] = useForm({
     defaultValues: { name: node?.data.name ?? "" },
     mode: "onChange",
   });
+
+  const inputs = useInputs(node.data.inputs);
 
   const isStartNode = node?.id === startNode?.id;
 
@@ -194,7 +195,7 @@ export function NodeEditingSidebarContent({ node }: Props) {
                   <Icon>
                     <ChevronRight />
                   </Icon>
-                  {parentNode.data.name}
+                  {parentNode.name}
                 </Link>
               );
             })}
@@ -202,7 +203,9 @@ export function NodeEditingSidebarContent({ node }: Props) {
         </Box>
       ) : null}
       <Box as="section">
-        <OptionTargetInputs nodeId={node.id} relations={node.data.relations} />
+        {Object.values(inputs).map((input) => (
+          <OptionTargetInputs nodeId={node.id} input={input} key={input.id} />
+        ))}
       </Box>
     </>
   );

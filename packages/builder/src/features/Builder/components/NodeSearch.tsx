@@ -17,9 +17,18 @@ type Props = { css?: StyleObject };
 
 export const NodeSearch = ({ css }: Props) => {
   const nodes = useNodes();
-  const { addNode, addSelectedNodes, removeSelectedNodes } = useTreeContext();
+  const {
+    createNode,
+    addNode,
+    getNode,
+    createInput,
+    createAnswer,
+    createCondition,
+    addCondition,
+    addInput,
+  } = useTreeContext();
 
-  const { getCenter, zoomToNode } = useEditor();
+  const { getCenter, zoomToNode, addSelectedNodes } = useEditor();
   const [Form] = useForm({
     defaultValues: {
       selectedNodeId: "",
@@ -38,21 +47,33 @@ export const NodeSearch = ({ css }: Props) => {
   );
 
   function createHandler(label: string) {
-    const newNode = addNode({
+    const newAnswer = createAnswer({ text: "" });
+    const newInput = createInput({ answers: [newAnswer] });
+    const newCondition = createCondition({
+      inputId: newInput.id,
+      answer: newAnswer.id,
+    });
+    const newNode = createNode({
       position: getCenter(),
-      data: { name: label },
-      selected: true,
+      data: {
+        name: label,
+        inputs: [newInput.id],
+        conditions: [newCondition.id],
+      },
     });
 
+    addNode(newNode);
+    addCondition(newCondition);
+    addInput(newInput);
+    addSelectedNodes([newNode.id]);
     zoomToNode(newNode);
 
     return { id: newNode.id, label: newNode.data.name };
   }
 
   function changeHandler(newSelectedItemId: string) {
-    removeSelectedNodes();
     addSelectedNodes([newSelectedItemId]);
-    const node = nodes.find((node) => node.id === newSelectedItemId);
+    const node = getNode(newSelectedItemId);
 
     if (!node) return;
     zoomToNode(node);

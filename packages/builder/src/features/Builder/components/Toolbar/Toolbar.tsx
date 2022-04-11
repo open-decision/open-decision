@@ -6,7 +6,6 @@ import {
   styled,
   StyleObject,
 } from "@open-decision/design-system";
-import { GroupIcon } from "@radix-ui/react-icons";
 import { Separator } from "components/Separator";
 import { useStartNode } from "features/Builder/state/treeStore/hooks";
 import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
@@ -54,14 +53,17 @@ type Props = { css?: StyleObject };
 
 export function Toolbar({ css }: Props) {
   const { zoomIn, zoomOut } = useReactFlow();
-  const { getCenter, zoomToNode } = useEditor();
+  const { getCenter, zoomToNode, addSelectedNodes } = useEditor();
   const {
+    createNode,
     addNode,
-    addSelectedNodes,
-    removeSelectedNodes,
-    replaceSelectedNodes,
+    createCondition,
+    createInput,
+    createAnswer,
+    addInputAnswer,
+    addInput,
+    addCondition,
   } = useTreeContext();
-  const startNode = useStartNode();
 
   return (
     <Container css={css}>
@@ -91,13 +93,23 @@ export function Toolbar({ css }: Props) {
       <Button
         {...buttonProps}
         onClick={() => {
-          removeSelectedNodes();
-          const newNode = addNode({
-            data: {},
+          const newInput = createInput();
+          const newAnswer = createAnswer({ text: "" });
+          const newCondition = createCondition({
+            inputId: newInput.id,
+            answer: newAnswer.id,
+          });
+          const newNode = createNode({
+            data: { inputs: [newInput.id], conditions: [newCondition.id] },
             position: getCenter(),
           });
-          addSelectedNodes([newNode.id]);
 
+          addNode(newNode);
+          addInput(newInput);
+          addInputAnswer(newInput.id, newAnswer);
+          addCondition(newCondition);
+
+          addSelectedNodes([newNode.id]);
           zoomToNode(newNode);
         }}
       >
@@ -106,21 +118,30 @@ export function Toolbar({ css }: Props) {
         </Icon>
       </Button>
       <ToolbarSeparator />
-      <Button
-        {...buttonProps}
-        onClick={() => {
-          if (!startNode) return;
-          replaceSelectedNodes([startNode.id]);
-          zoomToNode(startNode);
-        }}
-        disabled={!startNode}
-      >
-        <Icon>
-          <Star />
-        </Icon>
-      </Button>
+      <GoToStartnodeButton />
       <ToolbarSeparator />
       <NodeSearch />
     </Container>
+  );
+}
+
+function GoToStartnodeButton() {
+  const { zoomToNode, addSelectedNodes } = useEditor();
+  const startNode = useStartNode();
+
+  return (
+    <Button
+      {...buttonProps}
+      onClick={() => {
+        if (!startNode) return;
+        addSelectedNodes([startNode.id]);
+        zoomToNode(startNode);
+      }}
+      disabled={!startNode}
+    >
+      <Icon>
+        <Star />
+      </Icon>
+    </Button>
   );
 }

@@ -56,26 +56,19 @@ export function useStartNode() {
 
   const { startNode, nodes } = useSnapshot(tree);
 
-  return nodes?.find((node) => node.id === startNode);
+  return startNode ? nodes?.[startNode] : undefined;
 }
 
-export function useConnect() {
-  const { nonSyncedStore } = useTreeContext();
-
-  const { connectionSourceNodeId, validConnections } =
-    useSnapshot(nonSyncedStore);
-
-  return { connectionSourceNodeId, validConnections };
-}
-
-export function useNodes(ids?: string[]): Node.TNodesArray {
+export function useNodes(ids?: string[]): Node.TNodesRecord {
   const { tree } = useTreeContext();
 
   const { nodes } = useSnapshot(tree);
 
-  if (ids && nodes) return nodes.filter((node) => ids.includes(node.id));
-
-  return nodes ?? [];
+  return React.useMemo(() => {
+    if (!nodes) return {};
+    if (ids) return pick(nodes, ids);
+    return nodes;
+  }, [ids, nodes]);
 }
 
 export function useEdges(ids?: string[]) {
@@ -83,7 +76,8 @@ export function useEdges(ids?: string[]) {
 
   const { edges } = useSnapshot(tree);
 
-  if (ids && edges) return edges.filter((node) => ids.includes(node.id));
+  if (!edges) return {};
+  if (ids) return pick(edges, ids);
 
   return edges;
 }
@@ -93,17 +87,7 @@ export function useEdge(id: string) {
 
   const { edges } = useSnapshot(tree);
 
-  return edges?.find((edge) => edge.id === id);
-}
-
-export function useNodeNames() {
-  const { tree } = useTreeContext();
-
-  const { nodeNames } = derive({
-    nodeNames: (get) => get(tree).nodes?.map((node) => node.data.name),
-  });
-
-  return nodeNames;
+  return edges?.[id];
 }
 
 export function useNode(id: string) {
@@ -111,17 +95,65 @@ export function useNode(id: string) {
 
   const { nodes } = useSnapshot(tree);
 
-  return nodes?.find((node) => node.id === id);
+  return nodes?.[id];
 }
 
-export function useTreeData() {
+export function useInput(id: string) {
+  const { tree } = useTreeContext();
+  const { inputs } = useSnapshot(tree);
+
+  return inputs?.[id];
+}
+
+export function useInputs(ids: string[]) {
+  const { tree } = useTreeContext();
+  const { inputs } = useSnapshot(tree);
+
+  if (!inputs) return {};
+  if (ids) return pick(inputs, ids);
+
+  return inputs;
+}
+
+export function useEdgesOfNode(nodeId: string) {
+  const { tree } = useTreeContext();
+  const { edges } = useSnapshot(tree);
+
+  const nodesEdges: Edge.TEdgesRecord = {};
+
+  if (edges) {
+    for (const key in edges) {
+      const edge = edges[key];
+
+      if (edge.source === nodeId) nodesEdges[key] = edge;
+    }
+  }
+
+  return nodesEdges;
+}
+
+export function useConditionsOfNode(
+  nodeId: string
+): Condition.TRecord | undefined {
+  const { tree, getNode } = useTreeContext();
+  const { conditions } = useSnapshot(tree);
+  const node = getNode(nodeId);
+
+  if (conditions && node) {
+    return pick(conditions, node.data.conditions);
+  }
+}
+
+export function useTree() {
   const { tree } = useTreeContext();
 
   return useSnapshot(tree);
 }
 
-export function useParents(node: Node.TNode) {
-  const { getParents } = useTreeContext();
+export function useParents(nodeId: string) {
+  const { getParents, nodeData } = useTreeContext();
 
-  return getParents(node);
+  const parentIds = getParents(nodeId);
+
+  return pick(nodeData, parentIds);
 }

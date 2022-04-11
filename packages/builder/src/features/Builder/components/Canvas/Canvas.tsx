@@ -6,11 +6,11 @@ import { Node } from "./Nodes/Node";
 import {
   useEdges,
   useNodes,
-  useSelectedNodeIds,
   useStartNode,
 } from "features/Builder/state/treeStore/hooks";
 import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
 import { useNotificationStore } from "features/Notifications/NotificationState";
+import { clone } from "remeda";
 
 const validConnectEvent = (
   target: MouseEvent["target"]
@@ -47,52 +47,54 @@ export function Canvas({ children, css, className }: Props) {
 
 function Nodes() {
   const syncedNodes = useNodes();
-  const edges = useEdges();
+  const syncedEdges = useEdges();
   const {
     abortConnecting,
-    addEdge,
-    addSelectedNodes,
+    createAndAddEdge,
     deleteNodes,
     nonSyncedStore,
-    removeSelectedNodes,
     startConnecting,
     updateNodePosition,
+    getNode,
+    createAnswer,
+    addCondition,
+    relateConditionToNode,
+    createCondition,
+    addInputAnswer,
   } = useTreeContext();
 
-  const [selectedStatus, selectedNodeIds] = useSelectedNodeIds();
-
-  const nodes = React.useMemo(
-    () =>
-      syncedNodes.map((node) => ({
-        ...node,
-        selected:
-          selectedStatus !== "none" && selectedNodeIds.includes(node.id),
-      })),
-    [selectedNodeIds, syncedNodes, selectedStatus]
+  const nodes = React.useMemo(() => Object.values(syncedNodes), [syncedNodes]);
+  const edges = React.useMemo(
+    () => Object.values(clone(syncedEdges)),
+    [syncedEdges]
   );
 
   const startNode = useStartNode();
 
-  const { closeNodeEditingSidebar, zoomToNode } = useEditor();
+  const { closeNodeEditingSidebar, zoomToNode, removeSelectedNodes } =
+    useEditor();
   const { addNotification } = useNotificationStore();
 
   return (
     <ReactFlow
-      onPaneClick={() => closeNodeEditingSidebar()}
+      onPaneClick={closeNodeEditingSidebar}
       nodeTypes={customNodes}
       nodes={nodes}
       edges={edges}
       zoomOnDoubleClick={false}
       panOnScroll={true}
+      panOnScrollSpeed={1.1}
       selectNodesOnDrag={false}
-      selectionKeyCode={null}
+      fitView
+      fitViewOptions={{ maxZoom: 1, minZoom: 0.5, padding: 0.2 }}
       onNodesChange={(nodeChanges) => {
         nodeChanges.forEach((nodeChange) => {
           switch (nodeChange.type) {
             case "remove":
-              nodeChange.id !== startNode?.id
-                ? deleteNodes([nodeChange.id])
-                : null;
+              if (nodeChange.id !== startNode?.id) {
+                deleteNodes([nodeChange.id]);
+                removeSelectedNodes();
+              }
               break;
             case "position":
               nodeChange.dragging
@@ -104,14 +106,8 @@ function Nodes() {
               break;
             case "select": {
               if (nodeChange.selected) {
-                addSelectedNodes([nodeChange.id]);
-
-                if (selectedNodeIds.length === 0) {
-                  const node = nodes.find((node) => node.id === nodeChange.id);
-                  node && zoomToNode(node);
-                }
-              } else {
-                removeSelectedNodes([nodeChange.id]);
+                const node = getNode(nodeChange.id);
+                node && zoomToNode(node);
               }
               break;
             }
@@ -127,9 +123,20 @@ function Nodes() {
         if (!validConnectEvent(event.target) || !event.target.dataset.nodeid)
           return abortConnecting();
 
-        const possibleEdge = addEdge({
+        const sourceNode = getNode(nonSyncedStore.connectionSourceNodeId);
+        if (!sourceNode) return abortConnecting();
+        const firstInputId = sourceNode?.data.inputs[0];
+
+        const newAnswer = createAnswer({ text: "" });
+        addInputAnswer(firstInputId, newAnswer);
+        const newCondition = createCondition({
+          inputId: firstInputId,
+          answer: newAnswer.id,
+        });
+        const possibleEdge = createAndAddEdge({
           source: nonSyncedStore.connectionSourceNodeId,
           target: event.target.dataset.nodeid,
+          conditionId: newCondition.id,
         });
 
         if (possibleEdge instanceof Error)
@@ -138,6 +145,12 @@ function Nodes() {
             content: possibleEdge.message,
             variant: "danger",
           });
+
+        addCondition(newCondition);
+        relateConditionToNode(
+          nonSyncedStore.connectionSourceNodeId,
+          newCondition.id
+        );
       }}
       style={{
         gridColumn: "1 / -1",
