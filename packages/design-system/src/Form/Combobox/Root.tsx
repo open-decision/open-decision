@@ -12,19 +12,20 @@ const fallbackSelectedItem = {
 };
 
 const cleanLabel = (label: string) => label.replace("Erstelle ", "");
-const itemToString = (item: Item | null) => cleanLabel(item?.label ?? "");
+
 export type ComboboxRootProps = {
   css?: StyleObject;
   items: Item[];
   subsetOfItems?: Item[];
   onReset?: () => void;
-  onCreate?: (itemLabel: string) => Item;
+  onCreate?: (itemLabel: string) => Item | Error;
   onInputValueChange?: (inputValue: string) => void;
   onIsCreatingChange?: (isCreating: boolean) => void;
   onSelectedItemChange?: (item: Item | null | undefined) => void;
   children: React.ReactNode;
   name: string;
   defaultValue?: string;
+  missingLabelPlaceholder?: string;
 };
 
 export function Root({
@@ -37,7 +38,11 @@ export function Root({
   children,
   name,
   defaultValue,
+  missingLabelPlaceholder = "",
 }: ComboboxRootProps) {
+  const itemToString = (item: Item | null) =>
+    cleanLabel(item?.label ?? missingLabelPlaceholder);
+
   const { trigger } = useFormContext();
   const {
     field: { onChange, value: selectedItemId },
@@ -47,8 +52,12 @@ export function Root({
     defaultValue,
   });
 
+  const initialItem = items.find((item) => item.id === selectedItemId);
+
   const itemSubset = subsetOfItems ?? items;
   const [inputItems, setInputItems] = React.useState(itemSubset);
+
+  const hasLabel = (initialItem?.label?.length ?? "") > 0;
 
   // ------------------------------------------------------------------
   // The following state is used to determine when the user is able to create a new item.
@@ -86,10 +95,14 @@ export function Root({
       let item = selectedItem;
 
       if (isCreating && item?.id === "create" && onCreate && isValid) {
-        item = onCreate(cleanLabel(selectedItem?.label ?? ""));
+        const possibleItem = onCreate(cleanLabel(selectedItem?.label ?? ""));
+
+        if (possibleItem instanceof Error) return;
+        item = possibleItem;
+      } else {
+        onSelectedItemChange?.(item);
       }
 
-      onSelectedItemChange?.(item);
       onChange(item?.id ?? fallbackSelectedItem.id);
     },
     onInputValueChange: async ({ inputValue }) => {
@@ -133,7 +146,14 @@ export function Root({
         name,
         propGetters: {
           getMenuProps,
-          getInputProps,
+          getInputProps: () =>
+            getInputProps(
+              selectedItemId && !hasLabel
+                ? {
+                    placeholder: missingLabelPlaceholder,
+                  }
+                : {}
+            ),
           getComboboxProps,
           getLabelProps,
           getToggleButtonProps,

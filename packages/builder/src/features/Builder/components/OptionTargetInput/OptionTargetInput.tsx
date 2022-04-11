@@ -12,18 +12,21 @@ import {
   focusStyle,
 } from "@open-decision/design-system";
 import * as React from "react";
-import { Node, Relation } from "@open-decision/type-classes";
-import { pipe } from "remeda";
+import { Edge, Input as InputType } from "@open-decision/type-classes";
+import { pipe, values } from "remeda";
 import { Plus, Trash, Crosshair } from "react-feather";
 import { DragHandle } from "./DragHandle";
 import { Reorder, useDragControls } from "framer-motion";
 import { map } from "remeda";
 import {
-  useEdge,
+  useConditionsOfNode,
+  useEdgesOfNode,
   useNode,
   useNodes,
 } from "features/Builder/state/treeStore/hooks";
 import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
+import { useNotificationStore } from "features/Notifications/NotificationState";
+import { useEditor } from "features/Builder/state/useEditor";
 
 const StyledReorderGroup = styled(Reorder.Group, {
   listStyle: "none",
@@ -34,12 +37,19 @@ const StyledReorderGroup = styled(Reorder.Group, {
 
 type SingleSelectProps = {
   nodeId: string;
-  relations: Node.TNodeData["relations"];
+  input: InputType.TInput;
 };
 
-export function OptionTargetInputs({ nodeId, relations }: SingleSelectProps) {
-  const { addEdge, updateNodeRelations } = useTreeContext();
+export function OptionTargetInputs({ nodeId, input }: SingleSelectProps) {
+  const {
+    addInputAnswer,
+    createAnswer,
+    createAndAddCondition,
+    updateInputAnswerOrder,
+  } = useTreeContext();
   const ref = React.useRef<HTMLDivElement | null>(null);
+  const edges = useEdgesOfNode(nodeId);
+  const conditions = useConditionsOfNode(nodeId);
 
   return (
     <>
@@ -58,7 +68,13 @@ export function OptionTargetInputs({ nodeId, relations }: SingleSelectProps) {
         <Button
           size="small"
           variant="secondary"
-          onClick={() => addEdge({ source: nodeId, target: "" })}
+          onClick={() => {
+            const newAnswer = createAnswer({ text: "" });
+            if (!newAnswer) return;
+
+            addInputAnswer(input.id, newAnswer);
+            createAndAddCondition({ inputId: input.id, answer: newAnswer.id });
+          }}
         >
           <Icon label="Neue Antwortmöglichkeit hinzufügen">
             <Plus />
@@ -66,52 +82,76 @@ export function OptionTargetInputs({ nodeId, relations }: SingleSelectProps) {
           Hinzufügen
         </Button>
       </Box>
-      <StyledReorderGroup
-        ref={ref}
-        axis="y"
-        values={relations}
-        layoutScroll
-        onReorder={(newOrder: Node.TNodeData["relations"]) =>
-          updateNodeRelations(nodeId, newOrder)
-        }
-      >
-        {relations.map((relation) => (
-          <OptionTargetInput
-            nodeId={nodeId}
-            relation={relation}
-            key={relation.id}
-            groupRef={ref}
-          />
-        ))}
-      </StyledReorderGroup>
+      {input?.answers ? (
+        <StyledReorderGroup
+          ref={ref}
+          axis="y"
+          values={input?.answers}
+          layoutScroll
+          onReorder={(newOrder) => updateInputAnswerOrder(input.id, newOrder)}
+        >
+          {input.answers.map((answer) => {
+            const edge = Object.values(edges).find((edge) => {
+              if (!edge.conditionId || !conditions) return false;
+
+              const condition = conditions[edge.conditionId];
+              return condition.answer === answer.id;
+            });
+
+            return (
+              <OptionTargetInput
+                nodeId={nodeId}
+                answer={answer}
+                edge={edge}
+                inputId={input.id}
+                key={answer.id}
+                groupRef={ref}
+              />
+            );
+          })}
+        </StyledReorderGroup>
+      ) : null}
     </>
   );
 }
 type SingleSelectInputProps = {
-  relation: Relation.TRelation;
+  answer: InputType.TAnswer;
+  edge?: Edge.TEdge;
   nodeId: string;
+  inputId: string;
   groupRef: React.MutableRefObject<HTMLDivElement | null>;
 };
 
 export function OptionTargetInput({
-  relation,
+  answer,
+  edge,
+  inputId,
   nodeId,
   groupRef,
 }: SingleSelectInputProps) {
   const nodes = useNodes();
   const node = useNode(nodeId);
   const {
-    addAssociatedNode,
-    updateEdge,
-    updateEdgeAnswer,
-    updateEdgeTarget,
-    deleteEdges,
+    deleteInputAnswer,
+    updateInputAnswer,
     getConnectableNodes,
+    createAndAddEdge,
+    relateConditionToNode,
+    updateEdgeTarget,
+    addNode,
+    addCondition,
+    createInput,
+    addEdge,
+    createChildNode,
+    createCondition,
+    createEdge,
+    addInput,
   } = useTreeContext();
-  const edge = useEdge(relation.edges[0]);
+  const { addNotification } = useNotificationStore();
 
   const allOptions = pipe(
     nodes,
+    values,
     map((node) => ({ id: node.id, label: node.data.name }))
   );
 
@@ -120,7 +160,7 @@ export function OptionTargetInput({
         getConnectableNodes(node.id),
         map((nodeId) => ({
           id: nodeId,
-          label: nodes.find((node) => node.id === nodeId)?.data.name,
+          label: nodes[nodeId].data.name,
         }))
       )
     : [];
@@ -131,26 +171,19 @@ export function OptionTargetInput({
 
   const [Form] = useForm({
     defaultValues: {
-      answer: edge?.data?.answer ?? "",
+      answer: answer.text ?? "",
       target: edge?.target ?? "",
     },
   });
 
-  return node && edge ? (
+  return node ? (
     <Reorder.Item
-      value={relation}
+      value={answer}
       dragListener={false}
       dragControls={controls}
       dragConstraints={groupRef}
     >
       <Form
-        onSubmit={(data) =>
-          updateEdge({
-            ...edge,
-            target: data.target,
-            data: { answer: data.answer },
-          })
-        }
         css={{
           display: "flex",
           position: "relative",
@@ -170,7 +203,9 @@ export function OptionTargetInput({
         >
           <ControlledInput
             name="answer"
-            onChange={(event) => updateEdgeAnswer(edge.id, event.target.value)}
+            onChange={(event) =>
+              updateInputAnswer(inputId, answer.id, event.target.value)
+            }
           >
             {({ onBlur, ...field }) => (
               <Input
@@ -186,28 +221,76 @@ export function OptionTargetInput({
                   }),
                 }}
                 placeholder="Antwort"
-                onBlur={() => {
-                  onBlur?.();
-                }}
+                onBlur={onBlur}
                 {...field}
               />
             )}
           </ControlledInput>
-          <NodeLink target={edge.target} />
+          <NodeLink target={edge?.target} />
           <Combobox.Root
+            missingLabelPlaceholder="Ziel hat keinen Namen"
             name="target"
             onCreate={(name) => {
-              const newNode = addAssociatedNode(
-                node.id,
-                { data: { name } },
-                edge.id
-              );
+              const newCondition = createCondition({
+                inputId,
+                answer: answer.id,
+              });
+              const newInput = createInput();
 
-              return { id: newNode.id, label: newNode.data.name };
+              const childNode = createChildNode(nodeId, {
+                data: {
+                  inputs: [newInput.id],
+                  name,
+                  conditions: [newCondition.id],
+                },
+              });
+
+              if (childNode instanceof Error) return childNode;
+
+              const newEdge = createEdge({
+                source: nodeId,
+                target: childNode.id,
+                conditionId: newCondition.id,
+              });
+
+              if (newEdge instanceof Error) {
+                addNotification({
+                  title: "Es konnte keine verbundender Knoten erstellt werden.",
+                  content: newEdge.message,
+                  variant: "danger",
+                });
+
+                return newEdge;
+              }
+
+              addCondition(newCondition);
+              relateConditionToNode(nodeId, newCondition.id);
+              addInput(newInput);
+              addNode(childNode);
+              addEdge(newEdge);
+
+              return { id: childNode.id, label: childNode.data.name };
             }}
-            onSelectedItemChange={(newItem) =>
-              updateEdgeTarget(edge.id, newItem?.id ?? "")
-            }
+            onSelectedItemChange={(newItem) => {
+              if (!edge?.target && newItem) {
+                const newCondition = createCondition({
+                  inputId,
+                  answer: answer.id,
+                });
+
+                addCondition(newCondition);
+                relateConditionToNode(nodeId, newCondition.id);
+
+                createAndAddEdge({
+                  source: nodeId,
+                  target: newItem.id,
+                  conditionId: newCondition.id,
+                });
+              }
+
+              if (edge?.target && newItem)
+                updateEdgeTarget(edge.id, newItem.id);
+            }}
             items={allOptions}
             subsetOfItems={nodeOptions}
           >
@@ -246,7 +329,7 @@ export function OptionTargetInput({
             variant="neutral"
             type="button"
             square
-            onClick={() => deleteEdges([edge.id])}
+            onClick={() => deleteInputAnswer(inputId, answer.id)}
           >
             <Icon label="Entferne den Input">
               <Trash />
@@ -264,7 +347,7 @@ type NodeLinkProps = { target?: string } & Omit<ButtonProps, "label" | "Icon">;
 
 function NodeLink({ target, ...props }: NodeLinkProps) {
   const node = useNode(target ?? "");
-  const { addSelectedNodes, removeSelectedNodes } = useTreeContext();
+  const { addSelectedNodes } = useEditor();
 
   return (
     <Button
@@ -282,7 +365,6 @@ function NodeLink({ target, ...props }: NodeLinkProps) {
       variant="secondary"
       onClick={() => {
         if (target) {
-          removeSelectedNodes();
           addSelectedNodes([target]);
         }
       }}
