@@ -3,7 +3,7 @@ import { useReactFlow, useStore } from "react-flow-renderer";
 import { calculateCenterOfNode } from "../utilities/calculateCenterOfNode";
 import { sidebarWidth } from "../utilities/constants";
 import { Node } from "@open-decision/type-classes";
-import { useTreeContext } from "./treeStore/TreeContext";
+import shallow from "zustand/shallow";
 
 type projectCoordinatesFn = (
   coordinates: Node.TCoordinates
@@ -15,8 +15,10 @@ type EditorState = {
   reactFlowWrapperRef: React.MutableRefObject<HTMLDivElement | null>;
   closeNodeEditingSidebar: () => void;
   zoomToNode: (node: Node.TNode) => void;
+  addSelectedNodes: (nodeIds: string[]) => void;
+  removeSelectedNodes: () => void;
+  connectingNodeId: string | null;
   isConnecting: boolean;
-  connectingNodeId?: string;
 };
 
 export const EditorContext = React.createContext<EditorState | null>(null);
@@ -26,11 +28,22 @@ type TreeProviderProps = Omit<
   "value"
 >;
 export function EditorProvider({ children }: TreeProviderProps) {
-  const { removeSelectedNodes } = useTreeContext();
   const reactFlowWrapperRef = React.useRef<HTMLDivElement | null>(null);
   const reactFlowBounds = reactFlowWrapperRef.current?.getBoundingClientRect();
+  const selectionFunctions = useStore(
+    (state) => ({
+      addSelectedNodes: state.addSelectedNodes,
+      removeSelectedNodes: state.unselectNodesAndEdges,
+      connectingNodeId: state.connectionNodeId,
+      isConnecting: state.connectionNodeId != null ? true : false,
+    }),
+    shallow
+  );
+  const userSelectionActive = useStore((state) => state.userSelectionActive);
+  const multiSelectionActive = useStore((state) => state.multiSelectionActive);
 
   const { project, setCenter, getZoom } = useReactFlow();
+
   const getCenter = () => {
     if (!reactFlowBounds) return undefined;
 
@@ -50,6 +63,7 @@ export function EditorProvider({ children }: TreeProviderProps) {
   };
 
   function zoomToNode(node: Node.TNode) {
+    if (userSelectionActive || multiSelectionActive) return;
     const positionOfNodeFromCenter = calculateCenterOfNode(
       node.position,
       node.id ? { x: sidebarWidth / 2, y: 0 } : undefined
@@ -61,21 +75,15 @@ export function EditorProvider({ children }: TreeProviderProps) {
     });
   }
 
-  const connectingNodeId = useStore((state) => state.connectionNodeId);
-  const isConnecting = useStore((state) => state.connectionNodeId != null);
-
   return (
     <EditorContext.Provider
       value={{
         projectCoordinates,
         getCenter,
         reactFlowWrapperRef,
-        closeNodeEditingSidebar: () => {
-          removeSelectedNodes();
-        },
+        closeNodeEditingSidebar: selectionFunctions.removeSelectedNodes,
         zoomToNode,
-        isConnecting,
-        connectingNodeId: connectingNodeId ? connectingNodeId : undefined,
+        ...selectionFunctions,
       }}
     >
       {children}

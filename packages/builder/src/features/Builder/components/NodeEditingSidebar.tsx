@@ -18,7 +18,7 @@ import { NodeMenu } from "./Canvas/Nodes/NodeMenu";
 import { NodeLabel } from "./Canvas/Nodes/NodeLabel";
 import { ChevronRight, Star } from "react-feather";
 import {
-  useNodes,
+  useInputs,
   useParents,
   useSelectedNodes,
   useStartNode,
@@ -26,6 +26,7 @@ import {
 import { RichTextEditor } from "components/RichTextEditor/RichTextEditor";
 import { useTreeContext } from "../state/treeStore/TreeContext";
 import { AnimatePresence, motion } from "framer-motion";
+import { useEditor } from "../state/useEditor";
 
 const styledMotionDiv = css({
   position: "relative",
@@ -47,24 +48,34 @@ const styledMotionDiv = css({
 });
 
 export function NodeEditingSidebar() {
-  const [selectionStatus, selectedNode] = useSelectedNodes();
-
-  if (selectionStatus !== "single") return null;
+  const [selectionType, selectedNode] = useSelectedNodes();
 
   return (
     <AnimatePresence exitBeforeEnter>
-      {selectionStatus === "single" && (
+      {selectionType === "single" ? (
         <motion.div
           key="sidebar"
           initial={{ x: "100%" }}
-          animate={{ x: 0 }}
-          exit={{ x: "100%" }}
-          transition={{ duration: 0.3, type: "spring", bounce: 0, delay: 0.1 }}
+          animate={{
+            x: 0,
+            transition: { duration: 0.5, type: "spring", bounce: 0 },
+          }}
+          exit={{
+            x: "100%",
+            transition: {
+              duration: 0.3,
+              type: "spring",
+              bounce: 0,
+              delay: 0.1,
+            },
+          }}
           className={styledMotionDiv()}
         >
-          <NodeEditingSidebarContent node={selectedNode[0]} />
+          <NodeEditingSidebarContent
+            node={{ id: selectedNode.id, data: selectedNode.data }}
+          />
         </motion.div>
-      )}
+      ) : null}
     </AnimatePresence>
   );
 }

@@ -1,46 +1,27 @@
-import { Node } from "@open-decision/type-classes";
+import * as React from "react";
+import { Condition, Edge, Node } from "@open-decision/type-classes";
+import { pick } from "remeda";
 import { useSnapshot } from "valtio";
-import { derive } from "valtio/utils";
 import { useTreeContext } from "../TreeContext";
+import { useNodes as useRFNodes } from "react-flow-renderer";
 
 export function useSelectedNodes():
-  | ["none", []]
-  | ["multi", Node.TNode[]]
-  | ["single", Node.TNode[]] {
-  const { nonSyncedStore, tree } = useTreeContext();
+  | ["none", undefined]
+  | ["single", Node.TNode]
+  | ["multi", Record<string, Node.TNode>] {
+  const rfNodes = useRFNodes();
 
-  const {
-    selection: { nodes: selectedNodeIds },
-  } = useSnapshot(nonSyncedStore);
-  const { nodes } = useSnapshot(tree);
+  const selectedNodeIds = rfNodes
+    .filter((node) => node.selected)
+    .map((node) => node.id);
 
-  if (selectedNodeIds.length > 0) {
-    const selectedNodes =
-      nodes?.filter((node) => selectedNodeIds.includes(node.id)) ?? [];
+  const nodes = useNodes(selectedNodeIds);
 
-    if (selectedNodes.length > 1) return ["multi", selectedNodes];
-    if (selectedNodes.length > 0) return ["single", selectedNodes];
-  }
+  if (selectedNodeIds.length === 1)
+    return ["single", nodes[selectedNodeIds[0]]];
+  if (selectedNodeIds.length > 1) return ["multi", nodes];
 
-  return ["none", []];
-}
-
-export function useSelectedNodeIds():
-  | ["none", []]
-  | ["multi", string[]]
-  | ["single", string[]] {
-  const { nonSyncedStore } = useTreeContext();
-
-  const {
-    selection: { nodes: selectedNodeIds },
-  } = useSnapshot(nonSyncedStore);
-
-  if (selectedNodeIds.length > 0) {
-    if (selectedNodeIds.length > 1) return ["multi", selectedNodeIds];
-    return ["single", selectedNodeIds];
-  }
-
-  return ["none", []];
+  return ["none", undefined];
 }
 
 export function useIsPreviewable() {
