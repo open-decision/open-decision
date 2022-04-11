@@ -5,13 +5,12 @@ import {
   Link as SystemLink,
   Button,
   Icon,
-  Stack,
   Row,
 } from "@open-decision/design-system";
 import { BaseHeader } from "components";
 import { TreeNameInput } from "./TreeNameInput";
 import Link from "next/link";
-import { ExportButton } from "./ExportButton";
+import { ExportDialog } from "./ExportDialog";
 import { useNotificationStore } from "features/Notifications/NotificationState";
 import { useRouter } from "next/router";
 import { useIsPreviewable } from "../state/treeStore/hooks";
@@ -68,7 +67,9 @@ export const EditorHeader = ({ css }: HeaderProps) => {
             Vorschau
           </Button>
         )}
-        <ExportButton />
+        <ExportDialog>
+          <Button variant="secondary">Export</Button>
+        </ExportDialog>
       </Box>
     </BaseHeader>
   );
