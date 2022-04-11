@@ -1,3 +1,5 @@
+import { Tree } from "../type-classes";
+
 export function createAdjacencyList<
   T extends {
     source: string;
@@ -43,3 +45,9 @@ export function depthFirstSearch(
 
   return result;
 }
+
+export const getPaths = (tree: Tree.TTree) => (nodeId: string) => {
+  const adjacencyList = createAdjacencyList(Object.values(tree.edges ?? {}));
+
+  return depthFirstSearch(nodeId, adjacencyList);
+};
