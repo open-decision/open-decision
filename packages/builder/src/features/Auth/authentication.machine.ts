@@ -1,3 +1,4 @@
+import { isBefore } from "date-fns";
 import { NextRouter } from "next/router";
 import { protectedRoutes } from "src/config/protectedRoutes";
 import { assign, createMachine, Interpreter } from "xstate";
@@ -59,7 +60,9 @@ export type Events =
   | { type: "FAILED_PASSWORD_RESET"; error: string }
   | { type: "SUCCESSFULL_PASSWORD_RESET_REQUEST" }
   | { type: "FAILED_PASSWORD_RESET_REQUEST"; error: string }
-  | { type: "REDIRECT" };
+  | { type: "REDIRECT" }
+  | { type: "REFRESH" }
+  | { type: "TOKEN_VALID" };
 
 export type AuthService = Interpreter<Context, any, Events, State, any>;
 
@@ -109,8 +112,13 @@ export const createAuthenticationMachine = (router: NextRouter) =>
           states: {
             idle: {
               after: {
-                870000: {
+                1000: {
                   target: "refresh",
+                },
+              },
+              on: {
+                REFRESH: {
+                  target: "#authentication.loggedIn.refresh",
                 },
               },
             },
@@ -119,7 +127,7 @@ export const createAuthenticationMachine = (router: NextRouter) =>
             },
             refresh: {
               invoke: {
-                src: "checkIfLoggedIn",
+                src: "refreshToken",
                 onError: {
                   target: "#authentication.loggedOut",
                 },
@@ -129,6 +137,7 @@ export const createAuthenticationMachine = (router: NextRouter) =>
                   target: "#authentication.loggedIn.idle",
                   actions: "assignUserToContext",
                 },
+                TOKEN_VALID: "#authentication.loggedIn.idle",
                 REPORT_IS_LOGGED_OUT: "#authentication.loggedOut",
               },
             },
@@ -238,6 +247,23 @@ export const createAuthenticationMachine = (router: NextRouter) =>
     {
       services: {
         checkIfLoggedIn: () => async (send) => {
+          await refresh(
+            (user) =>
+              send({
+                type: "REPORT_IS_LOGGED_IN",
+                user,
+              }),
+            () => send({ type: "REPORT_IS_LOGGED_OUT" })
+          );
+        },
+        refreshToken: (context) => async (send) => {
+          const tokenHasExpired =
+            context.user?.access.expires &&
+            isBefore(new Date(context.user?.access.expires), new Date());
+
+          console.log(context.user?.access);
+          if (!tokenHasExpired) return send({ type: "TOKEN_VALID" });
+
           await refresh(
             (user) =>
               send({
