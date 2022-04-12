@@ -70,10 +70,7 @@ export function OptionTargetInputs({ nodeId, input }: SingleSelectProps) {
           variant="secondary"
           onClick={() => {
             const newAnswer = createAnswer({ text: "" });
-            if (!newAnswer) return;
-
             addInputAnswer(input.id, newAnswer);
-            createAndAddCondition({ inputId: input.id, answer: newAnswer.id });
           }}
         >
           <Icon label="Neue Antwortmöglichkeit hinzufügen">
@@ -93,8 +90,8 @@ export function OptionTargetInputs({ nodeId, input }: SingleSelectProps) {
           {input.answers.map((answer) => {
             const edge = Object.values(edges).find((edge) => {
               if (!edge.conditionId || !conditions) return false;
-
               const condition = conditions[edge.conditionId];
+
               return condition.answer === answer.id;
             });
 
@@ -231,21 +228,23 @@ export function OptionTargetInput({
             missingLabelPlaceholder="Ziel hat keinen Namen"
             name="target"
             onCreate={(name) => {
-              const newCondition = createCondition({
-                inputId,
-                answer: answer.id,
-              });
+              // Construct the childNode
               const newInput = createInput();
-
               const childNode = createChildNode(nodeId, {
                 data: {
                   inputs: [newInput.id],
                   name,
-                  conditions: [newCondition.id],
+                  conditions: [],
                 },
               });
 
               if (childNode instanceof Error) return childNode;
+
+              // Construct the Relationship
+              const newCondition = createCondition({
+                inputId,
+                answer: answer.id,
+              });
 
               const newEdge = createEdge({
                 source: nodeId,

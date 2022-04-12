@@ -49,21 +49,17 @@ export const NodeSearch = ({ css }: Props) => {
   function createHandler(label: string) {
     const newAnswer = createAnswer({ text: "" });
     const newInput = createInput({ answers: [newAnswer] });
-    const newCondition = createCondition({
-      inputId: newInput.id,
-      answer: newAnswer.id,
-    });
+
     const newNode = createNode({
       position: getCenter(),
       data: {
         name: label,
         inputs: [newInput.id],
-        conditions: [newCondition.id],
+        conditions: [],
       },
     });
 
     addNode(newNode);
-    addCondition(newCondition);
     addInput(newInput);
     addSelectedNodes([newNode.id]);
     zoomToNode(newNode);

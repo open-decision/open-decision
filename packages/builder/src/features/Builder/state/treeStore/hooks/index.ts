@@ -116,9 +116,9 @@ export function useEdgesOfNode(nodeId: string) {
 export function useConditionsOfNode(
   nodeId: string
 ): Condition.TRecord | undefined {
-  const { tree, getNode } = useTreeContext();
-  const { conditions } = useSnapshot(tree);
-  const node = getNode(nodeId);
+  const { tree } = useTreeContext();
+  const { conditions, nodes } = useSnapshot(tree);
+  const node = nodes?.[nodeId];
 
   if (conditions && node) {
     return pick(conditions, node.data.conditions);

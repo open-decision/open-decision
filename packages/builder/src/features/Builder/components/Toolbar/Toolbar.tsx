@@ -57,12 +57,10 @@ export function Toolbar({ css }: Props) {
   const {
     createNode,
     addNode,
-    createCondition,
     createInput,
     createAnswer,
     addInputAnswer,
     addInput,
-    addCondition,
   } = useTreeContext();
 
   return (
@@ -95,19 +93,15 @@ export function Toolbar({ css }: Props) {
         onClick={() => {
           const newInput = createInput();
           const newAnswer = createAnswer({ text: "" });
-          const newCondition = createCondition({
-            inputId: newInput.id,
-            answer: newAnswer.id,
-          });
+
           const newNode = createNode({
-            data: { inputs: [newInput.id], conditions: [newCondition.id] },
+            data: { inputs: [newInput.id], conditions: [] },
             position: getCenter(),
           });
 
           addNode(newNode);
           addInput(newInput);
           addInputAnswer(newInput.id, newAnswer);
-          addCondition(newCondition);
 
           addSelectedNodes([newNode.id]);
           zoomToNode(newNode);
