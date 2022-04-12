@@ -29,5 +29,4 @@ export const deleteNodes = (tree: Tree.TTree) => (ids: string[]) => {
       deleteConditions(tree)(node.data.conditions);
     }
   });
-  console.log(tree);
 };

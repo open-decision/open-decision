@@ -3,7 +3,6 @@ import { deleteConditions } from "./deleteConditions";
 import { removeInputFromNode } from "./removeInputFromNode";
 
 export const deleteInputs = (tree: Tree.TTree) => (ids: string[]) => {
-  console.log(ids);
   ids.forEach((id) => {
     delete tree.inputs?.[id];
 
