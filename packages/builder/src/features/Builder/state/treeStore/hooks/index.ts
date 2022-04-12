@@ -132,9 +132,12 @@ export function useTree() {
 }
 
 export function useParents(nodeId: string) {
-  const { getParents, nodeData } = useTreeContext();
+  const { getParents, derivedNodeNames } = useTreeContext();
+  const { nodeNames } = useSnapshot(derivedNodeNames);
+
+  if (!nodeNames) return;
 
   const parentIds = getParents(nodeId);
 
-  return pick(nodeData, parentIds);
+  return pick(nodeNames, parentIds);
 }

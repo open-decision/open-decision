@@ -1,8 +1,8 @@
 import { Tree, Node, Edge, Input } from "@open-decision/type-classes";
 import { proxy } from "valtio";
+import { derive } from "valtio/utils";
 import { bindProxyAndYMap } from "valtio-yjs";
 import * as Y from "yjs";
-import { derive } from "valtio/utils";
 import { mapValues } from "remeda";
 
 declare module "valtio" {
@@ -27,12 +27,14 @@ export function createTreeStore(id: string) {
     inputs: undefined as Input.TInputsRecord | undefined,
   });
 
-  const { nodeData } = derive({
-    nodeData: (get) => {
-      if (!tree.nodes) return {};
-      const nodes = get(tree.nodes);
+  const derivedNodeNames = derive({
+    nodeNames: (get) => {
+      const { nodes } = get(tree);
 
-      return mapValues(nodes ?? {}, (node) => ({ id: node.id, ...node.data }));
+      return mapValues(nodes ?? {}, (node) => ({
+        id: node.id,
+        name: node.data.name,
+      }));
     },
   });
 
@@ -66,7 +68,7 @@ export function createTreeStore(id: string) {
   return {
     resolve,
     tree,
-    nodeData,
+    derivedNodeNames,
     yDoc,
     nonSyncedStore,
     abortConnecting,

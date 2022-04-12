@@ -166,7 +166,7 @@ export function NodeEditingSidebarContent({ node }: Props) {
           key={node.id}
         />
       </Box>
-      {Object.values(parentNodes).length > 0 ? (
+      {parentNodes ? (
         <Box as="section">
           <Label
             as="h2"
@@ -203,7 +203,7 @@ export function NodeEditingSidebarContent({ node }: Props) {
                   <Icon>
                     <ChevronRight />
                   </Icon>
-                  {parentNode.name}
+                  {parentNode.name ?? <i>Elternknoten ohne Namen</i>}
                 </Link>
               );
             })}
