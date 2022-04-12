@@ -13,7 +13,7 @@ export type NewNodeData = {
 
 export function createNode({
   position = { x: 0, y: 0 },
-  data: { name = "", inputs, conditions = [] },
+  data: { name, inputs, conditions = [] },
   ...node
 }: NewNodeData): Node.TNode {
   return {
