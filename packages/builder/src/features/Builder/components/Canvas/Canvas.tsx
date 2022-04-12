@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useEditor } from "features/Builder/state/useEditor";
 import ReactFlow, { MarkerType } from "react-flow-renderer";
-import { styled, StyleObject, theme } from "@open-decision/design-system";
+import { styled, StyleObject } from "@open-decision/design-system";
 import { Node } from "./Nodes/Node";
 import {
   useEdges,
@@ -129,6 +129,7 @@ function Nodes() {
           }
         });
       }}
+      onNodeDragStart={removeSelectedElements}
       onConnectStart={(event) => {
         if (validConnectEvent(event.target) && event.target.dataset.nodeid) {
           startConnecting(event.target.dataset.nodeid);
