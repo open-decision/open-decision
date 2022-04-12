@@ -261,7 +261,6 @@ export const createAuthenticationMachine = (router: NextRouter) =>
             context.user?.access.expires &&
             isBefore(new Date(context.user?.access.expires), new Date());
 
-          console.log(context.user?.access);
           if (!tokenHasExpired) return send({ type: "TOKEN_VALID" });
 
           await refresh(
