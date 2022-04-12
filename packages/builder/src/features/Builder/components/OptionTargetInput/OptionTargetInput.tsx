@@ -10,11 +10,12 @@ import {
   styled,
   useForm,
   focusStyle,
+  Row,
 } from "@open-decision/design-system";
 import * as React from "react";
 import { Edge, Input as InputType } from "@open-decision/type-classes";
-import { pipe, values } from "remeda";
-import { Plus, Trash, Crosshair } from "react-feather";
+import { filter, pipe, values } from "remeda";
+import { Plus, Crosshair, GitMerge, Trash2 } from "react-feather";
 import { DragHandle } from "./DragHandle";
 import { Reorder, useDragControls } from "framer-motion";
 import { map } from "remeda";
@@ -41,12 +42,8 @@ type SingleSelectProps = {
 };
 
 export function OptionTargetInputs({ nodeId, input }: SingleSelectProps) {
-  const {
-    addInputAnswer,
-    createAnswer,
-    createAndAddCondition,
-    updateInputAnswerOrder,
-  } = useTreeContext();
+  const { addInputAnswer, createAnswer, updateInputAnswerOrder } =
+    useTreeContext();
   const ref = React.useRef<HTMLDivElement | null>(null);
   const edges = useEdgesOfNode(nodeId);
   const conditions = useConditionsOfNode(nodeId);
@@ -146,21 +143,33 @@ export function OptionTargetInput({
   } = useTreeContext();
   const { addNotification } = useNotificationStore();
 
-  const allOptions = pipe(
+  const allOptions: Combobox.Item[] = pipe(
     nodes,
     values,
-    map((node) => ({ id: node.id, label: node.data.name }))
+    filter((node) => Boolean(node.data.name)),
+    map((node) => ({
+      id: node.id,
+      label: node.data.name,
+      labelIcon: (
+        <Row
+          css={{
+            fontWeight: "500",
+            alignItems: "center",
+            color: "$primary11",
+            gap: "$1",
+            minWidth: "max-content",
+          }}
+        >
+          Verbinden
+          <Icon css={{ marginTop: "2px" }}>
+            <GitMerge />
+          </Icon>
+        </Row>
+      ),
+    }))
   );
 
-  const nodeOptions = node
-    ? pipe(
-        getConnectableNodes(node.id),
-        map((nodeId) => ({
-          id: nodeId,
-          label: nodes[nodeId].data.name,
-        }))
-      )
-    : [];
+  const nodeOptions = node ? getConnectableNodes(node.id) : [];
 
   const controls = useDragControls();
 
@@ -294,12 +303,13 @@ export function OptionTargetInput({
             subsetOfItems={nodeOptions}
           >
             <Combobox.Input name="target">
-              {(field) => (
+              {({ css, ...field }) => (
                 <Input
                   placeholder="Zielknoten auswählen"
                   css={{
                     borderRadius: 0,
                     borderBottomRightRadius: "$md",
+                    ...css,
                   }}
                   {...field}
                 />
@@ -331,7 +341,7 @@ export function OptionTargetInput({
             onClick={() => deleteInputAnswer(inputId, answer.id)}
           >
             <Icon label="Entferne den Input">
-              <Trash />
+              <Trash2 />
             </Icon>
           </Button>
         </Box>

@@ -9,7 +9,11 @@ import {
   UseComboboxGetToggleButtonPropsOptions,
 } from "downshift";
 
-export type Item = { readonly id: string; readonly label?: string };
+export type Item = {
+  readonly id: string;
+  readonly label?: string;
+  readonly labelIcon?: React.ReactNode;
+};
 
 type Context = {
   inputValue: string;

@@ -5,18 +5,19 @@ import { Item, ComboboxContext } from "./useCombobox";
 import { useCombobox as useComboboxPrimitive } from "downshift";
 import { StyleObject } from "../../stitches";
 import { useController, useFormContext } from "react-hook-form";
+import { Row } from "../../Layout";
+import { Plus } from "react-feather";
+import { Icon } from "../../Icon/Icon";
 
 const fallbackSelectedItem = {
   id: "",
   label: "",
 };
 
-const cleanLabel = (label: string) => label.replace("Erstelle ", "");
-
 export type ComboboxRootProps = {
   css?: StyleObject;
   items: Item[];
-  subsetOfItems?: Item[];
+  subsetOfItems?: string[];
   onReset?: () => void;
   onCreate?: (itemLabel: string) => Item | Error;
   onInputValueChange?: (inputValue: string) => void;
@@ -40,8 +41,7 @@ export function Root({
   defaultValue,
   missingLabelPlaceholder = "",
 }: ComboboxRootProps) {
-  const itemToString = (item: Item | null) =>
-    cleanLabel(item?.label ?? missingLabelPlaceholder);
+  const itemToString = (item: Item | null) => item?.label ?? "";
 
   const { trigger } = useFormContext();
   const {
@@ -54,7 +54,9 @@ export function Root({
 
   const initialItem = items.find((item) => item.id === selectedItemId);
 
-  const itemSubset = subsetOfItems ?? items;
+  const itemSubset = subsetOfItems
+    ? items.filter((item) => subsetOfItems.includes(item.id))
+    : items;
   const [inputItems, setInputItems] = React.useState(itemSubset);
 
   const hasLabel = (initialItem?.label?.length ?? "") > 0;
@@ -95,7 +97,7 @@ export function Root({
       let item = selectedItem;
 
       if (isCreating && item?.id === "create" && onCreate && isValid) {
-        const possibleItem = onCreate(cleanLabel(selectedItem?.label ?? ""));
+        const possibleItem = onCreate(selectedItem?.label ?? "");
 
         if (possibleItem instanceof Error) return;
         item = possibleItem;
@@ -123,8 +125,24 @@ export function Root({
 
       if (isCreating)
         filteredItems.unshift({
-          label: inputValue ? `Erstelle ${inputValue}` : "",
+          label: inputValue,
           id: "create",
+          labelIcon: (
+            <Row
+              css={{
+                fontWeight: "500",
+                alignItems: "center",
+                color: "$success11",
+                gap: "$1",
+                minWidth: "max-content",
+              }}
+            >
+              Erstellen
+              <Icon css={{ marginTop: "2px" }}>
+                <Plus />
+              </Icon>
+            </Row>
+          ),
         });
 
       updateIsCreating(isCreating);
@@ -149,9 +167,15 @@ export function Root({
           getInputProps: () =>
             getInputProps(
               selectedItemId && !hasLabel
-                ? {
+                ? ({
                     placeholder: missingLabelPlaceholder,
-                  }
+                    css: {
+                      "::placeholder": {
+                        fontStyle: "italic",
+                        fontWeight: "600",
+                      },
+                    },
+                  } as any)
                 : {}
             ),
           getComboboxProps,

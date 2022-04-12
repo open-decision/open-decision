@@ -6,7 +6,7 @@ import {
   StyleObject,
 } from "@open-decision/design-system";
 import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
-import { MoreHorizontal, Trash, Star } from "react-feather";
+import { MoreHorizontal, Star, Trash2 } from "react-feather";
 
 type Props = {
   isStartNode?: boolean;
@@ -44,7 +44,7 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
                 disabled
               >
                 <Icon label="Löschen Icon" css={{ $$paddingInline: 0 }}>
-                  <Trash />
+                  <Trash2 />
                 </Icon>
                 Node löschen
               </DropdownMenu.Item>
@@ -65,7 +65,7 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
             </DropdownMenu.Item>
             <DropdownMenu.Item onSelect={() => deleteNodes([nodeId])}>
               <Icon label="Löschen Icon" css={{ $$paddingInline: 0 }}>
-                <Trash />
+                <Trash2 />
               </Icon>
               Node löschen
             </DropdownMenu.Item>

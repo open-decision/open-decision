@@ -6,8 +6,9 @@ import {
   Box,
   Icon,
   useForm,
+  Row,
 } from "@open-decision/design-system";
-import { Search } from "react-feather";
+import { LogIn, Search } from "react-feather";
 import { useEditor } from "../state/useEditor";
 import { nodeNameMaxLength } from "../utilities/constants";
 import { useNodes } from "../state/treeStore/hooks";
@@ -17,16 +18,8 @@ type Props = { css?: StyleObject };
 
 export const NodeSearch = ({ css }: Props) => {
   const nodes = useNodes();
-  const {
-    createNode,
-    addNode,
-    getNode,
-    createInput,
-    createAnswer,
-    createCondition,
-    addCondition,
-    addInput,
-  } = useTreeContext();
+  const { createNode, addNode, getNode, createInput, createAnswer, addInput } =
+    useTreeContext();
 
   const { getCenter, zoomToNode, addSelectedNodes } = useEditor();
   const [Form] = useForm({
@@ -37,12 +30,30 @@ export const NodeSearch = ({ css }: Props) => {
     mode: "onChange",
   });
 
-  const items = React.useMemo(
+  const items: Combobox.Item[] = React.useMemo(
     () =>
-      Object.values(nodes).map((node) => ({
-        id: node.id,
-        label: node.data.name,
-      })),
+      Object.values(nodes)
+        .filter((node) => node.data.name)
+        .map((node) => ({
+          id: node.id,
+          label: node.data.name,
+          labelIcon: (
+            <Row
+              css={{
+                fontWeight: "500",
+                alignItems: "center",
+                color: "$primary11",
+                gap: "$1",
+                minWidth: "max-content",
+              }}
+            >
+              Auswählen
+              <Icon>
+                <LogIn />
+              </Icon>
+            </Row>
+          ),
+        })),
     [nodes]
   );
 
