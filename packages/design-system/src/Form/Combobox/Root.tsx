@@ -5,26 +5,28 @@ import { Item, ComboboxContext } from "./useCombobox";
 import { useCombobox as useComboboxPrimitive } from "downshift";
 import { StyleObject } from "../../stitches";
 import { useController, useFormContext } from "react-hook-form";
+import { Row } from "../../Layout";
+import { Plus } from "react-feather";
+import { Icon } from "../../Icon/Icon";
 
 const fallbackSelectedItem = {
   id: "",
   label: "",
 };
 
-const cleanLabel = (label: string) => label.replace("Erstelle ", "");
-const itemToString = (item: Item | null) => cleanLabel(item?.label ?? "");
 export type ComboboxRootProps = {
   css?: StyleObject;
   items: Item[];
-  subsetOfItems?: Item[];
+  subsetOfItems?: string[];
   onReset?: () => void;
-  onCreate?: (itemLabel: string) => Item;
+  onCreate?: (itemLabel: string) => Item | Error;
   onInputValueChange?: (inputValue: string) => void;
   onIsCreatingChange?: (isCreating: boolean) => void;
   onSelectedItemChange?: (item: Item | null | undefined) => void;
   children: React.ReactNode;
   name: string;
   defaultValue?: string;
+  missingLabelPlaceholder?: string;
 };
 
 export function Root({
@@ -37,7 +39,10 @@ export function Root({
   children,
   name,
   defaultValue,
+  missingLabelPlaceholder = "",
 }: ComboboxRootProps) {
+  const itemToString = (item: Item | null) => item?.label ?? "";
+
   const { trigger } = useFormContext();
   const {
     field: { onChange, value: selectedItemId },
@@ -47,8 +52,14 @@ export function Root({
     defaultValue,
   });
 
-  const itemSubset = subsetOfItems ?? items;
+  const initialItem = items.find((item) => item.id === selectedItemId);
+
+  const itemSubset = subsetOfItems
+    ? items.filter((item) => subsetOfItems.includes(item.id))
+    : items;
   const [inputItems, setInputItems] = React.useState(itemSubset);
+
+  const hasLabel = (initialItem?.label?.length ?? "") > 0;
 
   // ------------------------------------------------------------------
   // The following state is used to determine when the user is able to create a new item.
@@ -86,10 +97,14 @@ export function Root({
       let item = selectedItem;
 
       if (isCreating && item?.id === "create" && onCreate && isValid) {
-        item = onCreate(cleanLabel(selectedItem?.label ?? ""));
+        const possibleItem = onCreate(selectedItem?.label ?? "");
+
+        if (possibleItem instanceof Error) return;
+        item = possibleItem;
+      } else {
+        onSelectedItemChange?.(item);
       }
 
-      onSelectedItemChange?.(item);
       onChange(item?.id ?? fallbackSelectedItem.id);
     },
     onInputValueChange: async ({ inputValue }) => {
@@ -110,8 +125,24 @@ export function Root({
 
       if (isCreating)
         filteredItems.unshift({
-          label: inputValue ? `Erstelle ${inputValue}` : "",
+          label: inputValue,
           id: "create",
+          labelIcon: (
+            <Row
+              css={{
+                fontWeight: "500",
+                alignItems: "center",
+                color: "$success11",
+                gap: "$1",
+                minWidth: "max-content",
+              }}
+            >
+              Erstellen
+              <Icon css={{ marginTop: "2px" }}>
+                <Plus />
+              </Icon>
+            </Row>
+          ),
         });
 
       updateIsCreating(isCreating);
@@ -133,7 +164,20 @@ export function Root({
         name,
         propGetters: {
           getMenuProps,
-          getInputProps,
+          getInputProps: () =>
+            getInputProps(
+              selectedItemId && !hasLabel
+                ? ({
+                    placeholder: missingLabelPlaceholder,
+                    css: {
+                      "::placeholder": {
+                        fontStyle: "italic",
+                        fontWeight: "600",
+                      },
+                    },
+                  } as any)
+                : {}
+            ),
           getComboboxProps,
           getLabelProps,
           getToggleButtonProps,

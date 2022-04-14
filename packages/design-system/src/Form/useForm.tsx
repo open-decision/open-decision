@@ -21,7 +21,7 @@ export type FormProps<TFieldValues extends object> = Omit<
   children:
     | React.ReactNode
     | ((methods: UseFormReturn<TFieldValues>) => JSX.Element);
-  onSubmit: SubmitHandler<TFieldValues>;
+  onSubmit?: SubmitHandler<TFieldValues>;
   onSubmitError?: SubmitErrorHandler<TFieldValues>;
 };
 
@@ -36,7 +36,7 @@ export function useForm<TFieldValues extends FieldValues>(
   const Form = React.useCallback(
     function Form({
       children,
-      onSubmit,
+      onSubmit = () => null,
       onSubmitError,
       ...props
     }: FormProps<TFieldValues>) {

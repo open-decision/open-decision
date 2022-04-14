@@ -82,11 +82,14 @@ export function Input({
                 data-state={openState}
                 as="li"
                 data-focus={highlightedIndex === index}
-                className={menuItemStyles()}
+                className={menuItemStyles({
+                  css: { justifyContent: "space-between" },
+                })}
                 key={`${item?.id}${index}`}
                 {...getItemProps({ item, index })}
               >
                 {item?.label}
+                {item?.labelIcon}
               </Text>
             );
           })}

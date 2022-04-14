@@ -1,16 +1,37 @@
-import { BuilderTree } from "@open-decision/type-classes";
+import * as React from "react";
+import { Tree } from "@open-decision/type-classes";
 import { FileInput } from "components";
 import { useCreateTreeMutation } from "features/Data/generated/graphql";
 import { queryClient } from "features/Data/queryClient";
 import { useNotificationStore } from "features/Notifications/NotificationState";
+import { z } from "zod";
+import * as Y from "yjs";
+import { IndexeddbPersistence } from "y-indexeddb";
+import { proxy } from "valtio";
+import { bindProxyAndYMap } from "valtio-yjs";
+
+const TreeImport = Tree.Type.extend({ name: z.string() });
 
 export function FileImport() {
+  const [importedData, setImportedData] = React.useState<
+    Tree.TTree | undefined
+  >();
   const addNotification = useNotificationStore(
     (state) => state.addNotification
   );
 
   const { mutate: createTree } = useCreateTreeMutation({
-    onSuccess: () => queryClient.invalidateQueries("Trees"),
+    onSuccess: ({ createDecisionTree: { uuid } }) => {
+      if (!importedData) return;
+
+      const yDoc = new Y.Doc();
+      const yMap = yDoc.getMap("tree");
+      new IndexeddbPersistence(uuid, yDoc);
+      const importStore = proxy(importedData);
+      bindProxyAndYMap(importStore, yMap);
+
+      return queryClient.invalidateQueries("Trees");
+    },
   });
 
   return (
@@ -25,7 +46,7 @@ export function FileImport() {
 
           const parsedResult = JSON.parse(result);
 
-          const validatedResult = BuilderTree.Type.safeParse(parsedResult);
+          const validatedResult = TreeImport.safeParse(parsedResult);
 
           if (!validatedResult.success) {
             return addNotification({
@@ -36,11 +57,12 @@ export function FileImport() {
             });
           }
 
+          const { name, ...data } = validatedResult.data;
+
+          setImportedData(data);
+
           return createTree({
-            data: {
-              name: validatedResult.data?.name ?? "",
-              treeData: validatedResult.data.treeData,
-            },
+            data: { name },
           });
         };
 

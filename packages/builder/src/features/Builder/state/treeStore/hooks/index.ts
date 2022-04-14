@@ -1,46 +1,27 @@
-import { Node } from "@open-decision/type-classes";
+import * as React from "react";
+import { Condition, Edge, Node } from "@open-decision/type-classes";
+import { pick } from "remeda";
 import { useSnapshot } from "valtio";
-import { derive } from "valtio/utils";
 import { useTreeContext } from "../TreeContext";
+import { useNodes as useRFNodes } from "react-flow-renderer";
 
 export function useSelectedNodes():
-  | ["none", []]
-  | ["multi", Node.TNode[]]
-  | ["single", Node.TNode[]] {
-  const { nonSyncedStore, tree } = useTreeContext();
+  | ["none", undefined]
+  | ["single", Node.TNode]
+  | ["multi", Record<string, Node.TNode>] {
+  const rfNodes = useRFNodes();
 
-  const {
-    selection: { nodes: selectedNodeIds },
-  } = useSnapshot(nonSyncedStore);
-  const { nodes } = useSnapshot(tree);
+  const selectedNodeIds = rfNodes
+    .filter((node) => node.selected)
+    .map((node) => node.id);
 
-  if (selectedNodeIds.length > 0) {
-    const selectedNodes =
-      nodes?.filter((node) => selectedNodeIds.includes(node.id)) ?? [];
+  const nodes = useNodes(selectedNodeIds);
 
-    if (selectedNodes.length > 1) return ["multi", selectedNodes];
-    if (selectedNodes.length > 0) return ["single", selectedNodes];
-  }
+  if (selectedNodeIds.length === 1)
+    return ["single", nodes[selectedNodeIds[0]]];
+  if (selectedNodeIds.length > 1) return ["multi", nodes];
 
-  return ["none", []];
-}
-
-export function useSelectedNodeIds():
-  | ["none", []]
-  | ["multi", string[]]
-  | ["single", string[]] {
-  const { nonSyncedStore } = useTreeContext();
-
-  const {
-    selection: { nodes: selectedNodeIds },
-  } = useSnapshot(nonSyncedStore);
-
-  if (selectedNodeIds.length > 0) {
-    if (selectedNodeIds.length > 1) return ["multi", selectedNodeIds];
-    return ["single", selectedNodeIds];
-  }
-
-  return ["none", []];
+  return ["none", undefined];
 }
 
 export function useIsPreviewable() {
@@ -56,26 +37,19 @@ export function useStartNode() {
 
   const { startNode, nodes } = useSnapshot(tree);
 
-  return nodes?.find((node) => node.id === startNode);
+  return startNode ? nodes?.[startNode] : undefined;
 }
 
-export function useConnect() {
-  const { nonSyncedStore } = useTreeContext();
-
-  const { connectionSourceNodeId, validConnections } =
-    useSnapshot(nonSyncedStore);
-
-  return { connectionSourceNodeId, validConnections };
-}
-
-export function useNodes(ids?: string[]): Node.TNodesArray {
+export function useNodes(ids?: string[]): Node.TNodesRecord {
   const { tree } = useTreeContext();
 
   const { nodes } = useSnapshot(tree);
 
-  if (ids && nodes) return nodes.filter((node) => ids.includes(node.id));
-
-  return nodes ?? [];
+  return React.useMemo(() => {
+    if (!nodes) return {};
+    if (ids) return pick(nodes, ids);
+    return nodes;
+  }, [ids, nodes]);
 }
 
 export function useEdges(ids?: string[]) {
@@ -83,7 +57,8 @@ export function useEdges(ids?: string[]) {
 
   const { edges } = useSnapshot(tree);
 
-  if (ids && edges) return edges.filter((node) => ids.includes(node.id));
+  if (!edges) return {};
+  if (ids) return pick(edges, ids);
 
   return edges;
 }
@@ -93,17 +68,7 @@ export function useEdge(id: string) {
 
   const { edges } = useSnapshot(tree);
 
-  return edges?.find((edge) => edge.id === id);
-}
-
-export function useNodeNames() {
-  const { tree } = useTreeContext();
-
-  const { nodeNames } = derive({
-    nodeNames: (get) => get(tree).nodes?.map((node) => node.data.name),
-  });
-
-  return nodeNames;
+  return edges?.[id];
 }
 
 export function useNode(id: string) {
@@ -111,17 +76,68 @@ export function useNode(id: string) {
 
   const { nodes } = useSnapshot(tree);
 
-  return nodes?.find((node) => node.id === id);
+  return nodes?.[id];
 }
 
-export function useTreeData() {
+export function useInput(id: string) {
+  const { tree } = useTreeContext();
+  const { inputs } = useSnapshot(tree);
+
+  return inputs?.[id];
+}
+
+export function useInputs(ids: string[]) {
+  const { tree } = useTreeContext();
+  const { inputs } = useSnapshot(tree);
+
+  if (!inputs) return {};
+  if (ids) return pick(inputs, ids);
+
+  return inputs;
+}
+
+export function useEdgesOfNode(nodeId: string) {
+  const { tree } = useTreeContext();
+  const { edges } = useSnapshot(tree);
+
+  const nodesEdges: Edge.TEdgesRecord = {};
+
+  if (edges) {
+    for (const key in edges) {
+      const edge = edges[key];
+
+      if (edge.source === nodeId) nodesEdges[key] = edge;
+    }
+  }
+
+  return nodesEdges;
+}
+
+export function useConditionsOfNode(
+  nodeId: string
+): Condition.TRecord | undefined {
+  const { tree } = useTreeContext();
+  const { conditions, nodes } = useSnapshot(tree);
+  const node = nodes?.[nodeId];
+
+  if (conditions && node) {
+    return pick(conditions, node.data.conditions);
+  }
+}
+
+export function useTree() {
   const { tree } = useTreeContext();
 
   return useSnapshot(tree);
 }
 
-export function useParents(node: Node.TNode) {
-  const { getParents } = useTreeContext();
+export function useParents(nodeId: string) {
+  const { getParents, derivedNodeNames } = useTreeContext();
+  const { nodeNames } = useSnapshot(derivedNodeNames);
 
-  return getParents(node);
+  if (!nodeNames) return;
+
+  const parentIds = getParents(nodeId);
+
+  return pick(nodeNames, parentIds);
 }

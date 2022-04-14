@@ -348,6 +348,35 @@ export const globalStyles = globalCss({
   },
 });
 
+export const defaultTheme = createTheme("light", {
+  colors: {
+    ...aliasColor("gray", slate, true),
+    ...aliasColor("grayA", slateA, true),
+    ...aliasColor("primary", indigo),
+    ...aliasColor("primaryA", indigoA),
+    ...aliasColor("accent", amber, true),
+    ...aliasColor("accentA", amberA, true),
+    ...aliasColor("danger", red),
+    ...aliasColor("dangerA", redA),
+    ...aliasColor("success", green),
+    ...aliasColor("successA", greenA),
+    ...aliasColor("warning", amber, true),
+    ...aliasColor("warningA", amberA, true),
+    ...aliasColor("info", blue),
+    ...aliasColor("infoA", blueA),
+    ...aliasColor("colorScheme", slate, true),
+    black: "$colors$gray12",
+    white: "#ffffff",
+    shadowColor: "rgba(17, 24, 28, 0.1)",
+    layer1: "$white",
+    layer2: "$gray1",
+    layer3: "$gray2",
+    layer4: "$gray3",
+    layer5: "$gray6",
+    focusColor: "$colors$primary10",
+  },
+});
+
 export const darkTheme = createTheme("dark", {
   colors: {
     ...aliasColor("gray", slateDark),

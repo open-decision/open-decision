@@ -18,7 +18,7 @@ import { NodeMenu } from "./Canvas/Nodes/NodeMenu";
 import { NodeLabel } from "./Canvas/Nodes/NodeLabel";
 import { ChevronRight, Star } from "react-feather";
 import {
-  useNodes,
+  useInputs,
   useParents,
   useSelectedNodes,
   useStartNode,
@@ -26,6 +26,7 @@ import {
 import { RichTextEditor } from "components/RichTextEditor/RichTextEditor";
 import { useTreeContext } from "../state/treeStore/TreeContext";
 import { AnimatePresence, motion } from "framer-motion";
+import { useEditor } from "../state/useEditor";
 
 const styledMotionDiv = css({
   position: "relative",
@@ -47,41 +48,52 @@ const styledMotionDiv = css({
 });
 
 export function NodeEditingSidebar() {
-  const [selectionStatus, selectedNode] = useSelectedNodes();
-
-  if (selectionStatus !== "single") return null;
+  const [selectionType, selectedNode] = useSelectedNodes();
 
   return (
     <AnimatePresence exitBeforeEnter>
-      {selectionStatus === "single" && (
+      {selectionType === "single" ? (
         <motion.div
           key="sidebar"
           initial={{ x: "100%" }}
-          animate={{ x: 0 }}
-          exit={{ x: "100%" }}
-          transition={{ duration: 0.3, type: "spring", bounce: 0, delay: 0.1 }}
+          animate={{
+            x: 0,
+            transition: { duration: 0.5, type: "spring", bounce: 0 },
+          }}
+          exit={{
+            x: "100%",
+            transition: {
+              duration: 0.3,
+              type: "spring",
+              bounce: 0,
+              delay: 0.1,
+            },
+          }}
           className={styledMotionDiv()}
         >
-          <NodeEditingSidebarContent node={selectedNode[0]} />
+          <NodeEditingSidebarContent
+            node={{ id: selectedNode.id, data: selectedNode.data }}
+          />
         </motion.div>
-      )}
+      ) : null}
     </AnimatePresence>
   );
 }
 
-type Props = { node: Node.TNode };
+type Props = { node: Pick<Node.TNode, "id" | "data"> };
 
 export function NodeEditingSidebarContent({ node }: Props) {
-  const { updateNodeName, addSelectedNodes, removeSelectedNodes } =
-    useTreeContext();
-  const parentNodeIds = useParents(node);
+  const { updateNodeName } = useTreeContext();
+  const { addSelectedNodes } = useEditor();
+  const parentNodes = useParents(node.id);
   const startNode = useStartNode();
 
-  const parentNodes = useNodes(parentNodeIds);
   const [Form] = useForm({
     defaultValues: { name: node?.data.name ?? "" },
     mode: "onChange",
   });
+
+  const inputs = useInputs(node.data.inputs);
 
   const isStartNode = node?.id === startNode?.id;
 
@@ -154,7 +166,7 @@ export function NodeEditingSidebarContent({ node }: Props) {
           key={node.id}
         />
       </Box>
-      {Object.values(parentNodes).length > 0 ? (
+      {parentNodes ? (
         <Box as="section">
           <Label
             as="h2"
@@ -178,10 +190,7 @@ export function NodeEditingSidebarContent({ node }: Props) {
               return (
                 <Link
                   key={parentNode.id}
-                  onClick={() => {
-                    removeSelectedNodes();
-                    return addSelectedNodes([parentNode.id]);
-                  }}
+                  onClick={() => addSelectedNodes([parentNode.id])}
                   css={{
                     color: "$primary11",
                     fontWeight: 500,
@@ -194,7 +203,7 @@ export function NodeEditingSidebarContent({ node }: Props) {
                   <Icon>
                     <ChevronRight />
                   </Icon>
-                  {parentNode.data.name}
+                  {parentNode.name ?? <i>Elternknoten ohne Namen</i>}
                 </Link>
               );
             })}
@@ -202,7 +211,9 @@ export function NodeEditingSidebarContent({ node }: Props) {
         </Box>
       ) : null}
       <Box as="section">
-        <OptionTargetInputs nodeId={node.id} relations={node.data.relations} />
+        {Object.values(inputs).map((input) => (
+          <OptionTargetInputs nodeId={node.id} input={input} key={input.id} />
+        ))}
       </Box>
     </>
   );

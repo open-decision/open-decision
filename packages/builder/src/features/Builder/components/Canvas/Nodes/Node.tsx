@@ -32,7 +32,7 @@ const NodeContainer = styled(Stack, {
 });
 
 export const Node = memo(
-  ({ id, selected, data }: NodeProps<NodeType.TNodeData>) => {
+  ({ id, data, selected: isSelected }: NodeProps<NodeType.TNodeData>) => {
     const { nonSyncedStore } = useTreeContext();
     const { isConnecting, connectingNodeId } = useEditor();
     const { validConnections } = useSnapshot(nonSyncedStore);
@@ -53,12 +53,12 @@ export const Node = memo(
         data-connecting={isConnecting}
         data-connectable={connectable}
         css={{
-          boxShadow: selected ? "$4" : "$3",
+          boxShadow: isSelected ? "$4" : "$3",
           border:
-            selected && !isConnecting
+            isSelected && !isConnecting
               ? "2px solid $primary9"
               : "1px solid $gray8",
-          padding: selected ? "calc($5 - 1px)" : "$5",
+          padding: isSelected ? "calc($5 - 1px)" : "$5",
           opacity: validConnectionTarget ? 1 : 0.2,
         }}
         center

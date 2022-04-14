@@ -1,7 +1,9 @@
-import { Tree, Node, Edge } from "@open-decision/type-classes";
+import { Tree, Node, Edge, Input } from "@open-decision/type-classes";
 import { proxy } from "valtio";
+import { derive } from "valtio/utils";
 import { bindProxyAndYMap } from "valtio-yjs";
 import * as Y from "yjs";
+import { mapValues } from "remeda";
 
 declare module "valtio" {
   function useSnapshot<T extends object>(p: T): T;
@@ -15,14 +17,25 @@ export function createTreeStore(id: string) {
   const nonSyncedStore = proxy({
     connectionSourceNodeId: "",
     validConnections: [] as string[],
-    selection: { nodes: [], edges: [] } as { nodes: string[]; edges: string[] },
     synced: new Promise((r) => (resolve = r)),
   });
 
-  const tree = proxy({
+  const tree = proxy<Tree.TTree>({
     startNode: undefined as string | undefined,
-    nodes: undefined as Node.TNodesArray | undefined,
-    edges: undefined as Edge.TEdgeArray | undefined,
+    nodes: undefined as Node.TNodesRecord | undefined,
+    edges: undefined as Edge.TEdgesRecord | undefined,
+    inputs: undefined as Input.TInputsRecord | undefined,
+  });
+
+  const derivedNodeNames = derive({
+    nodeNames: (get) => {
+      const { nodes } = get(tree);
+
+      return mapValues(nodes ?? {}, (node) => ({
+        id: node.id,
+        name: node.data.name,
+      }));
+    },
   });
 
   const methods = Tree.createTreeMethods(tree);
@@ -30,26 +43,6 @@ export function createTreeStore(id: string) {
   bindProxyAndYMap(tree, yMap, {
     transactionOrigin: `valtio for ${id}`,
   });
-
-  // ------------------------------------------------------------------
-  // Selection
-
-  function removeSelectedNodes(nodeIds?: string[]) {
-    if (nodeIds)
-      nonSyncedStore.selection.nodes.filter((nodeId) =>
-        nodeIds.includes(nodeId)
-      );
-    return (nonSyncedStore.selection.nodes = []);
-  }
-
-  function addSelectedNodes(nodeIds: string[]) {
-    nonSyncedStore.selection.nodes.push(...nodeIds);
-  }
-
-  function replaceSelectedNodes(nodeIds: string[]) {
-    removeSelectedNodes();
-    addSelectedNodes(nodeIds);
-  }
 
   // ------------------------------------------------------------------
   // Connection
@@ -72,26 +65,14 @@ export function createTreeStore(id: string) {
     nonSyncedStore.validConnections = [];
   }
 
-  function connect(target: string, relationId: string) {
-    if (nonSyncedStore.connectionSourceNodeId == null) return;
-
-    methods.addEdge(
-      { source: nonSyncedStore.connectionSourceNodeId, target },
-      relationId
-    );
-  }
-
   return {
     resolve,
     tree,
+    derivedNodeNames,
     yDoc,
     nonSyncedStore,
-    connect,
     abortConnecting,
     startConnecting,
-    addSelectedNodes,
-    removeSelectedNodes,
-    replaceSelectedNodes,
     ...methods,
   };
 }

@@ -10,7 +10,7 @@ export function useYjsConnection(id: string) {
   const { yDoc, nonSyncedStore, resolve } = useTreeContext();
 
   React.useEffect(() => {
-    // const persistence = new IndexeddbPersistence(id, yDoc);
+    const persistence = new IndexeddbPersistence(id, yDoc);
 
     const websocket =
       isBrowser && context.user?.access.token
