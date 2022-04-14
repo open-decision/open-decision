@@ -3,7 +3,7 @@ import * as GraphQLScalars from "graphql-scalars";
 import { Prisma } from "@prisma-client";
 import { StringFieldUpdateOperationsInput } from "./StringFieldUpdateOperationsInput";
 import { EnumTreeStatusFieldUpdateOperationsInput } from "./EnumTreeStatusFieldUpdateOperationsInput";
-import { TagUpdateManyWithoutDecisionTreesInput } from "./TagUpdateManyWithoutDecisionTreesInput";
+// import { TagUpdateManyWithoutDecisionTreesInput } from "./TagUpdateManyWithoutDecisionTreesInput";
 @TypeGraphQL.InputType("DecisionTreeUpdateInput", {
   isAbstract: true,
 })
@@ -18,10 +18,10 @@ export class DecisionTreeUpdateInput {
   })
   name?: StringFieldUpdateOperationsInput | undefined;
 
-  @TypeGraphQL.Field((_type) => TagUpdateManyWithoutDecisionTreesInput, {
-    nullable: true,
-  })
-  Tags?: TagUpdateManyWithoutDecisionTreesInput | undefined;
+  // @TypeGraphQL.Field((_type) => TagUpdateManyWithoutDecisionTreesInput, {
+  //   nullable: true,
+  // })
+  // Tags?: TagUpdateManyWithoutDecisionTreesInput | undefined;
 
   @TypeGraphQL.Field((_type) => StringFieldUpdateOperationsInput, {
     nullable: true,

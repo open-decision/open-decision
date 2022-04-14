@@ -4,7 +4,7 @@ import { IntFilter } from "./IntFilter";
 import { JsonNullableFilter } from "./JsonNullableFilter";
 import { StringFilter } from "./StringFilter";
 import { EnumTreeStatusFilter } from "./EnumTreeStatusFilter";
-import { TagListRelationFilter } from "./TagListRelationFilter";
+// import { TagListRelationFilter } from "./TagListRelationFilter";
 @TypeGraphQL.InputType("DecisionTreeWhereInput", {
   isAbstract: true,
 })
@@ -44,10 +44,10 @@ export class DecisionTreeWhereInput {
   })
   status?: EnumTreeStatusFilter | undefined;
 
-  @TypeGraphQL.Field((_type) => TagListRelationFilter, {
-    nullable: true,
-  })
-  Tags?: TagListRelationFilter | undefined;
+  // @TypeGraphQL.Field((_type) => TagListRelationFilter, {
+  //   nullable: true,
+  // })
+  // Tags?: TagListRelationFilter | undefined;
 
   @TypeGraphQL.Field((_type) => StringFilter, {
     nullable: true,
