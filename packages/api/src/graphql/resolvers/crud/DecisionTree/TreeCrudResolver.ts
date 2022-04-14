@@ -2,7 +2,7 @@ import * as TypeGraphQL from "type-graphql";
 import graphqlFields from "graphql-fields";
 import { GraphQLResolveInfo } from "graphql";
 import { DecisionTree } from "@type-graphql-prisma/models/DecisionTree";
-import { GqlContext } from "../types";
+import { GqlContext } from "../../../types";
 import {
   CreateDecisionTreeArgs,
   FindUniqueDecisionTreeArgs,
@@ -11,16 +11,10 @@ import {
   DeleteDecisionTreeArgs,
   UpdateDecisionTreeArgs,
   UpdateManyDecisionTreeArgs,
-  UpdatePartialDecisionTreeArgs,
 } from "./args";
-import { AffectedRowsOutput } from "./outputs";
-import {
-  transformFields,
-  getPrismaFromContext,
-  transformCountFieldIntoSelectRelationsCount,
-} from "../helpers";
-import ApiError from "../../utils/ApiError";
-import { Tree } from "@open-decision/type-classes";
+import { AffectedRowsOutput } from "../../outputs";
+import { getPrismaFromContext } from "../../../helpers";
+import ApiError from "../../../../utils/ApiError";
 @TypeGraphQL.Resolver((_of) => DecisionTree)
 export class DecisionTreeCrudResolver {
   @TypeGraphQL.Query((_returns) => DecisionTree, {
@@ -31,12 +25,10 @@ export class DecisionTreeCrudResolver {
     @TypeGraphQL.Info() info: GraphQLResolveInfo,
     @TypeGraphQL.Args() args: FindUniqueDecisionTreeArgs
   ): Promise<DecisionTree | null> {
-    const { _count } = transformFields(graphqlFields(info as any));
     return getPrismaFromContext(ctx).decisionTree.findFirst({
       where: {
         ...args.where,
         ownerUuid: ctx.user.uuid,
-        ...(_count && transformCountFieldIntoSelectRelationsCount(_count)),
       },
     });
   }
@@ -49,13 +41,11 @@ export class DecisionTreeCrudResolver {
     @TypeGraphQL.Info() info: GraphQLResolveInfo,
     @TypeGraphQL.Args() args: FindManyDecisionTreeArgs
   ): Promise<DecisionTree[]> {
-    const { _count } = transformFields(graphqlFields(info as any));
     return getPrismaFromContext(ctx).decisionTree.findMany({
       where: {
         ...args.where,
         ownerUuid: ctx.user.uuid,
       },
-      ...(_count && transformCountFieldIntoSelectRelationsCount(_count)),
     });
   }
 
@@ -83,13 +73,11 @@ export class DecisionTreeCrudResolver {
     @TypeGraphQL.Info() info: GraphQLResolveInfo,
     @TypeGraphQL.Args() args: DeleteDecisionTreeArgs
   ): Promise<DecisionTree | null> {
-    const { _count } = transformFields(graphqlFields(info as any));
     const treeToDelete = await getPrismaFromContext(ctx).decisionTree.findFirst(
       {
         where: {
           ...args.where,
           ownerUuid: ctx.user.uuid,
-          ...(_count && transformCountFieldIntoSelectRelationsCount(_count)),
         },
       }
     );
@@ -100,7 +88,6 @@ export class DecisionTreeCrudResolver {
     return getPrismaFromContext(ctx).decisionTree.delete({
       where: {
         uuid: treeToDelete.uuid,
-        ...(_count && transformCountFieldIntoSelectRelationsCount(_count)),
       },
     });
   }
@@ -113,13 +100,11 @@ export class DecisionTreeCrudResolver {
     @TypeGraphQL.Info() info: GraphQLResolveInfo,
     @TypeGraphQL.Args() args: UpdateDecisionTreeArgs
   ): Promise<DecisionTree | null> {
-    const { _count } = transformFields(graphqlFields(info as any));
     const treeToUpdate = await getPrismaFromContext(ctx).decisionTree.findFirst(
       {
         where: {
           ...args.where,
           ownerUuid: ctx.user.uuid,
-          ...(_count && transformCountFieldIntoSelectRelationsCount(_count)),
         },
       }
     );
@@ -135,7 +120,6 @@ export class DecisionTreeCrudResolver {
       where: {
         uuid: treeToUpdate.uuid,
       },
-      ...(_count && transformCountFieldIntoSelectRelationsCount(_count)),
     });
   }
 
@@ -147,13 +131,11 @@ export class DecisionTreeCrudResolver {
     @TypeGraphQL.Info() info: GraphQLResolveInfo,
     @TypeGraphQL.Args() args: DeleteManyDecisionTreeArgs
   ): Promise<AffectedRowsOutput> {
-    const { _count } = transformFields(graphqlFields(info as any));
     return getPrismaFromContext(ctx).decisionTree.deleteMany({
       where: {
         ...args.where,
         ownerUuid: ctx.user.uuid,
       },
-      ...(_count && transformCountFieldIntoSelectRelationsCount(_count)),
     });
   }
 
@@ -165,7 +147,6 @@ export class DecisionTreeCrudResolver {
     @TypeGraphQL.Info() info: GraphQLResolveInfo,
     @TypeGraphQL.Args() args: UpdateManyDecisionTreeArgs
   ): Promise<AffectedRowsOutput> {
-    const { _count } = transformFields(graphqlFields(info as any));
     return getPrismaFromContext(ctx).decisionTree.updateMany({
       where: {
         ...args.where,
@@ -174,7 +155,6 @@ export class DecisionTreeCrudResolver {
       data: {
         ...args.data,
       },
-      ...(_count && transformCountFieldIntoSelectRelationsCount(_count)),
     });
   }
 }

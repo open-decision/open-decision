@@ -36,10 +36,5 @@ export class DecisionTreeOrderByWithRelationInput {
   @TypeGraphQL.Field((_type) => SortOrder, {
     nullable: true,
   })
-  treeData?: "asc" | "desc" | undefined;
-
-  @TypeGraphQL.Field((_type) => SortOrder, {
-    nullable: true,
-  })
   language?: "asc" | "desc" | undefined;
 }

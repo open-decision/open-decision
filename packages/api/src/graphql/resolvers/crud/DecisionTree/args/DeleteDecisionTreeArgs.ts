@@ -1,9 +1,8 @@
 import * as TypeGraphQL from "type-graphql";
-import * as GraphQLScalars from "graphql-scalars";
-import { DecisionTreeWhereUniqueInput } from "../inputs/DecisionTreeWhereUniqueInput";
+import { DecisionTreeWhereUniqueInput } from "../../../inputs/DecisionTreeWhereUniqueInput";
 
 @TypeGraphQL.ArgsType()
-export class FindUniqueDecisionTreeArgs {
+export class DeleteDecisionTreeArgs {
   @TypeGraphQL.Field((_type) => DecisionTreeWhereUniqueInput, {
     nullable: false,
   })

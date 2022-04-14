@@ -3,7 +3,8 @@ import { DateTimeFilter } from "./DateTimeFilter";
 import { IntFilter } from "./IntFilter";
 import { JsonNullableFilter } from "./JsonNullableFilter";
 import { StringFilter } from "./StringFilter";
-
+import { EnumTreeStatusFilter } from "./EnumTreeStatusFilter";
+import { TagListRelationFilter } from "./TagListRelationFilter";
 @TypeGraphQL.InputType("DecisionTreeWhereInput", {
   isAbstract: true,
 })
@@ -38,20 +39,20 @@ export class DecisionTreeWhereInput {
   })
   updatedAt?: DateTimeFilter | undefined;
 
+  @TypeGraphQL.Field((_type) => EnumTreeStatusFilter, {
+    nullable: true,
+  })
+  status?: EnumTreeStatusFilter | undefined;
+
+  @TypeGraphQL.Field((_type) => TagListRelationFilter, {
+    nullable: true,
+  })
+  Tags?: TagListRelationFilter | undefined;
+
   @TypeGraphQL.Field((_type) => StringFilter, {
     nullable: true,
   })
   name?: StringFilter | undefined;
-
-  @TypeGraphQL.Field((_type) => JsonNullableFilter, {
-    nullable: true,
-  })
-  tags?: JsonNullableFilter | undefined;
-
-  @TypeGraphQL.Field((_type) => JsonNullableFilter, {
-    nullable: true,
-  })
-  treeData?: JsonNullableFilter | undefined;
 
   @TypeGraphQL.Field((_type) => StringFilter, {
     nullable: true,
