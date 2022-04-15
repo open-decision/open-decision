@@ -15,7 +15,6 @@ import {
 import * as React from "react";
 import { Edge, Input as InputType } from "@open-decision/type-classes";
 import { filter, pipe, values } from "remeda";
-import { Plus, Crosshair, GitMerge, Trash2 } from "react-feather";
 import { DragHandle } from "./DragHandle";
 import { Reorder, useDragControls } from "framer-motion";
 import { map } from "remeda";
@@ -28,6 +27,7 @@ import {
 import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
 import { useNotificationStore } from "features/Notifications/NotificationState";
 import { useEditor } from "features/Builder/state/useEditor";
+import { Crosshair2Icon, PlusIcon, TrashIcon } from "@radix-ui/react-icons";
 
 const StyledReorderGroup = styled(Reorder.Group, {
   listStyle: "none",
@@ -71,7 +71,7 @@ export function OptionTargetInputs({ nodeId, input }: SingleSelectProps) {
           }}
         >
           <Icon label="Neue Antwortmöglichkeit hinzufügen">
-            <Plus />
+            <PlusIcon />
           </Icon>
           Hinzufügen
         </Button>
@@ -161,9 +161,6 @@ export function OptionTargetInput({
           }}
         >
           Verbinden
-          <Icon css={{ marginTop: "2px" }}>
-            <GitMerge />
-          </Icon>
         </Row>
       ),
     }))
@@ -221,9 +218,11 @@ export function OptionTargetInput({
                   borderTopRightRadius: "inherit",
                   gridColumn: "1 / -1",
                   marginBottom: "-1px",
+                  borderBottomColor: "transparent",
 
                   ...focusStyle({
-                    zIndex: "$10",
+                    borderBottomColor: "$primary9",
+                    zIndex: "2",
                   }),
                 }}
                 placeholder="Antwort"
@@ -309,6 +308,12 @@ export function OptionTargetInput({
                   css={{
                     borderRadius: 0,
                     borderBottomRightRadius: "$md",
+                    marginLeft: "-1px",
+                    borderLeftColor: "transparent",
+
+                    ...focusStyle({
+                      borderLeftColor: "$primary9",
+                    }),
                     ...css,
                   }}
                   {...field}
@@ -341,7 +346,7 @@ export function OptionTargetInput({
             onClick={() => deleteInputAnswer(inputId, answer.id)}
           >
             <Icon label="Entferne den Input">
-              <Trash2 />
+              <TrashIcon />
             </Icon>
           </Button>
         </Box>
@@ -354,7 +359,7 @@ export function OptionTargetInput({
 
 type NodeLinkProps = { target?: string } & Omit<ButtonProps, "label" | "Icon">;
 
-function NodeLink({ target, ...props }: NodeLinkProps) {
+function NodeLink({ target, css, ...props }: NodeLinkProps) {
   const node = useNode(target ?? "");
   const { addSelectedNodes } = useEditor();
 
@@ -365,9 +370,10 @@ function NodeLink({ target, ...props }: NodeLinkProps) {
         borderRadius: "0",
         borderBottomLeftRadius: "inherit",
         focusType: "inner",
-        maxWidth: "100%",
         colorScheme: target ? "primary" : "gray",
-        border: "1px solid",
+        border: "1px solid $colors$gray7",
+        width: "40px",
+        ...css,
       }}
       pressable={false}
       size="small"
@@ -386,7 +392,7 @@ function NodeLink({ target, ...props }: NodeLinkProps) {
           node ? `Gehe zu Node: ${node.data.name}` : "Keine Node verbunden"
         }
       >
-        <Crosshair />
+        <Crosshair2Icon />
       </Icon>
     </Button>
   );

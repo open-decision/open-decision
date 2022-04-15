@@ -6,8 +6,6 @@ import { useCombobox as useComboboxPrimitive } from "downshift";
 import { StyleObject } from "../../stitches";
 import { useController, useFormContext } from "react-hook-form";
 import { Row } from "../../Layout";
-import { Plus } from "react-feather";
-import { Icon } from "../../Icon/Icon";
 
 const fallbackSelectedItem = {
   id: "",
@@ -138,9 +136,6 @@ export function Root({
               }}
             >
               Erstellen
-              <Icon css={{ marginTop: "2px" }}>
-                <Plus />
-              </Icon>
             </Row>
           ),
         });

@@ -13,6 +13,7 @@ import { GetServerSideProps } from "next";
 import { useYjsConnection } from "features/Builder/state/treeStore/useYjsConnection";
 import { TreeProvider } from "features/Builder/state/treeStore/TreeContext";
 import { Box, LoadingSpinner } from "@open-decision/design-system";
+import { SideMenu } from "features/Builder/SideMenu";
 
 function Loading() {
   return (
@@ -56,14 +57,15 @@ function BuilderPageImpl({ id }) {
     <MainContent
       css={{
         display: "grid",
-        gridTemplateColumns: `1fr ${sidebarWidth}px`,
+        gridTemplateColumns: `max-content 1fr`,
         gridTemplateRows: "max-content 1fr",
       }}
     >
       <ReactFlowProvider>
         <EditorProvider>
           <EditorHeader css={{ gridColumn: "1 / -1", gridRow: "1" }} />
-          <NodeEditor css={{ gridColumn: "1 / -1", gridRow: "2" }} />
+          <SideMenu css={{ gridRow: "2", gridColumn: "1" }} />
+          <NodeEditor css={{ gridColumn: "2 / 3", gridRow: "2" }} />
         </EditorProvider>
       </ReactFlowProvider>
     </MainContent>

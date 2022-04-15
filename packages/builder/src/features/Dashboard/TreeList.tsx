@@ -16,11 +16,11 @@ import {
   Text,
   useForm,
 } from "@open-decision/design-system";
-import { ChevronUp, Search } from "react-feather";
 import { TreesQuery, useTreesQuery } from "features/Data/generated/graphql";
 import { TreeCard } from "./TreeCard";
 import Image from "next/image";
 import { ErrorBoundary } from "@sentry/nextjs";
+import { MagnifyingGlassIcon, TriangleUpIcon } from "@radix-ui/react-icons";
 
 const sortReadableNames = {
   updatedAt: "Zuletzt bearbeitet",
@@ -102,7 +102,7 @@ export const TreeListBody = () => {
             onChange={(event) => setFilter(event.target.value)}
             Icon={
               <Icon>
-                <Search />
+                <MagnifyingGlassIcon />
               </Icon>
             }
             placeholder="Suche"
@@ -150,7 +150,7 @@ export const TreeListBody = () => {
             >
               {sortDirectionReadableNames[sort.direction]}
               <Icon>
-                <ChevronUp />
+                <TriangleUpIcon />
               </Icon>
             </Button>
           </Stack>

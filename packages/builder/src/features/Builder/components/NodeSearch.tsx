@@ -8,11 +8,11 @@ import {
   useForm,
   Row,
 } from "@open-decision/design-system";
-import { LogIn, Search } from "react-feather";
 import { useEditor } from "../state/useEditor";
 import { nodeNameMaxLength } from "../utilities/constants";
 import { useNodes } from "../state/treeStore/hooks";
 import { useTreeContext } from "../state/treeStore/TreeContext";
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 
 type Props = { css?: StyleObject };
 
@@ -48,9 +48,6 @@ export const NodeSearch = ({ css }: Props) => {
               }}
             >
               Auswählen
-              <Icon>
-                <LogIn />
-              </Icon>
             </Row>
           ),
         })),
@@ -110,11 +107,11 @@ export const NodeSearch = ({ css }: Props) => {
                 {...field}
                 Icon={
                   <Icon>
-                    <Search />
+                    <MagnifyingGlassIcon />
                   </Icon>
                 }
-                placeholder="Knotenname"
-                css={{ layer: "3", borderColor: "transparent" }}
+                placeholder="Suche"
+                css={{ layer: "4", borderColor: "transparent" }}
               />
             )}
           </Combobox.Input>

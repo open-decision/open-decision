@@ -139,5 +139,7 @@ export function useParents(nodeId: string) {
 
   const parentIds = getParents(nodeId);
 
+  if (!(parentIds.length > 0)) return undefined;
+
   return pick(nodeNames, parentIds);
 }

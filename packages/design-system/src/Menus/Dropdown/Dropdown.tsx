@@ -2,13 +2,13 @@ import * as React from "react";
 import * as DropdownMenuPrimitives from "@radix-ui/react-dropdown-menu";
 import { styled } from "../../stitches";
 import { Icon } from "../../Icon/Icon";
-import { Check } from "../../icons";
 import {
   menuContainerStyles,
   menuItemStyles,
   menuLabelStyles,
   menuSeparatorStyles,
 } from "../shared";
+import { CheckIcon } from "@radix-ui/react-icons";
 
 type IndicatorProps = { children?: React.ReactNode };
 
@@ -19,7 +19,7 @@ const ItemIndicator = ({ children }: IndicatorProps) => {
         children
       ) : (
         <Icon label="Checked" css={{ padding: 0 }}>
-          <Check />
+          <CheckIcon />
         </Icon>
       )}
     </DropdownMenuPrimitives.ItemIndicator>

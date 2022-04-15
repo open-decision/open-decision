@@ -1,13 +1,13 @@
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Button, Icon, ButtonProps } from "../../index";
-import { X } from "../../icons";
 import { styled, keyframes, StyleObject } from "../../stitches";
 import { Heading } from "../../Heading";
 import { Box } from "../../Box";
 import { ColorKeys } from "../../internal/utils";
 import { Stack } from "../../Layout/Stack";
 import { SubmitButton, SubmitButtonProps } from "../../Button/SubmitButton";
+import { Cross2Icon } from "@radix-ui/react-icons";
 
 function DialogRoot({ children, ...props }: DialogRootProps) {
   return (
@@ -69,7 +69,7 @@ function CloseButton(props: Partial<ButtonProps>) {
     <DialogPrimitive.Close asChild>
       <Button variant="ghost" square alignByContent="right" {...props}>
         <Icon label="Schließe den Dialog">
-          <X />
+          <Cross2Icon />
         </Icon>
       </Button>
     </DialogPrimitive.Close>

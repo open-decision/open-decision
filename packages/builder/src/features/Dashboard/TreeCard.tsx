@@ -12,10 +12,10 @@ import {
 import { formatRelative, parseISO } from "date-fns";
 import de from "date-fns/locale/de";
 import { TreesQuery } from "features/Data/generated/graphql";
-import { MoreHorizontal } from "react-feather";
 import { DeleteTreeDialog } from "./components/Dialogs/DeleteTreeDialog";
 import Link from "next/link";
 import { UpdateTreeDialog } from "./components/Dialogs/UpdateTreeDialog";
+import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 
 const Card = styled("a", Stack, {
   position: "relative",
@@ -49,7 +49,7 @@ export function TreeCard({ tree }: Props) {
             <UpdateTreeDialog
               open={true}
               setOpen={() => setOpenDialog("")}
-              treeId={tree.id}
+              treeId={tree.uuid}
               focusOnClose={() => dropdownTriggerRef.current?.focus()}
             />
           );
@@ -88,7 +88,7 @@ export function TreeCard({ tree }: Props) {
                 css={{ position: "absolute", right: 20, top: 12 }}
               >
                 <Icon label={`Projektmenü ${tree.name}`}>
-                  <MoreHorizontal />
+                  <HamburgerMenuIcon />
                 </Icon>
               </Button>
             </DropdownMenu.Trigger>

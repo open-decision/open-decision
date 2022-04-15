@@ -6,7 +6,7 @@ import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
 
 const StyledEditorContent = styled(EditorContent, {
   focusType: "inner-within",
-  border: "1px solid $gray8",
+  border: "1px solid $gray7",
   overflow: "auto",
   borderBottomLeftRadius: "$md",
   borderBottomRightRadius: "$md",
@@ -50,7 +50,7 @@ export const RichTextEditor = ({ id, content }: Props) => {
       <Toolbar
         editor={editor}
         css={{
-          border: "1px solid $gray8",
+          border: "1px solid $gray7",
           borderBottom: "0",
           borderTopLeftRadius: "$md",
           borderTopRightRadius: "$md",

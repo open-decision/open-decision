@@ -1,4 +1,5 @@
-import { DropdownMenu } from "@open-decision/design-system";
+import { darkTheme, DropdownMenu, Icon } from "@open-decision/design-system";
+import { ExitIcon, GearIcon } from "@radix-ui/react-icons";
 import { useAuth } from "features/Auth/useAuth";
 import Link from "next/link";
 import { MenuButton } from "./MenuButton";
@@ -11,11 +12,24 @@ export function UserMenu() {
       <DropdownMenu.Trigger asChild>
         <MenuButton label="Mein Account" />
       </DropdownMenu.Trigger>
-      <DropdownMenu.Content>
+      <DropdownMenu.Content
+        sideOffset={15}
+        alignOffset={4}
+        className={darkTheme}
+        css={{ groupColor: "$gray12" }}
+      >
         <Link href="/settings">
-          <DropdownMenu.Item>Einstellungen</DropdownMenu.Item>
+          <DropdownMenu.Item>
+            <Icon>
+              <GearIcon />
+            </Icon>
+            Einstellungen
+          </DropdownMenu.Item>
         </Link>
         <DropdownMenu.Item onSelect={() => send({ type: "LOG_OUT" })}>
+          <Icon>
+            <ExitIcon />
+          </Icon>
           Logout
         </DropdownMenu.Item>
       </DropdownMenu.Content>

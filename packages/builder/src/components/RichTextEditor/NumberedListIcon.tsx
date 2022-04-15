@@ -1,14 +1,14 @@
 import * as React from "react";
-import { IconProps } from "react-feather";
+import { IconProps } from "@radix-ui/react-icons/dist/types";
 
 export const NumberedList = React.forwardRef<SVGSVGElement, IconProps>(
-  ({ size = 24, color = "currentColor", ...rest }, ref) => {
+  ({ color = "currentColor", ...rest }, ref) => {
     return (
       <svg
         ref={ref}
         xmlns="http://www.w3.org/2000/svg"
-        width={size}
-        height={size}
+        width="15px"
+        height="15px"
         viewBox="0 0 14 10"
         fill={color}
         strokeWidth="2"

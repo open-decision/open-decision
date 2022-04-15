@@ -1,3 +1,4 @@
+import { theme } from "@open-decision/design-system";
 import React from "react";
 import {
   ConnectionLineComponentProps,
@@ -25,7 +26,7 @@ export function ConnectionLine({
     <g>
       <path
         fill="none"
-        stroke="#222"
+        stroke={theme.colors.primary9.value}
         strokeWidth={1.5}
         className="animated"
         d={path}

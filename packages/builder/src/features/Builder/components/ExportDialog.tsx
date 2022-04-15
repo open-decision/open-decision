@@ -99,7 +99,7 @@ export function ExportDialog({ children }) {
               </Dialog.Description>
               <Link
                 className={buttonStyles({
-                  css: { marginTop: "$2", alignSelf: "flex-end" },
+                  css: { marginTop: "$4", alignSelf: "flex-end" },
                 })}
                 download={`${fileName}.json`}
                 href={URL.createObjectURL(file)}

@@ -1,5 +1,4 @@
 import {
-  Button,
   ErrorMessage,
   Field,
   Heading,
@@ -11,10 +10,10 @@ import {
   Text,
   useForm,
 } from "@open-decision/design-system";
+import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import { MainContent } from "components";
 import { useAuth } from "features/Auth/useAuth";
 import * as React from "react";
-import { ArrowLeft } from "react-feather";
 
 export default function ForgotPassword(): JSX.Element {
   const [Form, { register }] = useForm({
@@ -69,7 +68,7 @@ export default function ForgotPassword(): JSX.Element {
                 href="/login"
               >
                 <Icon>
-                  <ArrowLeft />
+                  <ArrowLeftIcon />
                 </Icon>
                 Zurück zum Login
               </Link>

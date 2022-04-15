@@ -25,10 +25,15 @@ export const TargetPort = styled(Port, {
 });
 
 export const SourcePort = styled(Port, {
-  bottom: `-${portWidth / 2}px !important`,
+  bottom: `-${(portWidth - 2) / 2}px !important`,
+  border: "1px solid",
 
   "&[data-active='true']": {
     boxShadow: "0px 0px 0px 1px $colors$primary9, $2",
-    border: "1px solid $primary9 !important",
+    borderColor: "$primary9 !important",
+  },
+
+  "&:hover": {
+    borderColor: "$primary9 !important",
   },
 });

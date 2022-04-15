@@ -1,5 +1,5 @@
-import { disabledStyle, focusStyle } from "../shared/utils";
-import { css, keyframes } from "../stitches";
+import { disabledStyle, intentStyle } from "../shared/utils";
+import { css, darkTheme, keyframes } from "../stitches";
 
 const scaleIn = keyframes({
   "0%": { opacity: 0, transform: "scale(0)" },
@@ -9,11 +9,14 @@ const scaleIn = keyframes({
 export const menuContainerStyles = css({
   layer: "1",
   paddingBlock: "$1",
-  boxShadow: "$4",
+  boxShadow: "$7",
   borderRadius: "$md",
   overflow: "hidden",
   zIndex: "$10",
   overflowY: "auto",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
 
   transformOrigin: "var(--radix-dropdown-menu-content-transform-origin)",
   animation: `${scaleIn} 0.1s ease-out`,
@@ -36,12 +39,12 @@ export const menuItemStyles = css({
   cursor: "pointer",
 
   "&[data-state='checked']": {
-    backgroundColor: "$primary3",
+    backgroundColor: "$colorScheme3",
   },
 
-  ...focusStyle({
-    backgroundColor: "$primary5",
-    focusColor: "$primary5",
+  ...intentStyle({
+    backgroundColor: "$colorScheme5",
+    focusColor: "$colorScheme5",
   }),
 
   ...disabledStyle({
@@ -68,5 +71,13 @@ export const menuLabelStyles = css({
 });
 
 export const menuSeparatorStyles = css({
-  fill: "$gray8",
+  backgroundColor: "$gray4",
+  width: "95%",
+  height: "1px",
+  marginBlock: "$1",
+  borderRadius: "$full",
+
+  [`.${darkTheme} &`]: {
+    backgroundColor: "$gray8",
+  },
 });

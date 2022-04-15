@@ -4,9 +4,9 @@ import { Text } from "../../Text";
 import { styled, StyleObject } from "../../stitches";
 
 import { InputGroupProvider, useInputGroup } from "../shared/Context";
-import { Check } from "react-feather";
 import { baseInputBoxStyles, baseInputStyles } from "../shared/styles";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
+import { CheckIcon } from "@radix-ui/react-icons";
 
 const Indicator = styled(CheckboxPrimitive.Indicator, {
   display: "flex",
@@ -51,7 +51,7 @@ function Box({ value, css, disabled, id }: CheckboxBoxProps) {
           ref={ref}
         >
           <Indicator>
-            <Check width="100%" height="100%" />
+            <CheckIcon width="100%" height="100%" />
           </Indicator>
         </StyledCheckbox>
       )}

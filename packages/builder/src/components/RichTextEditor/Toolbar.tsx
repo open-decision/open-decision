@@ -6,10 +6,16 @@ import {
   Button,
   hoverStyle,
 } from "@open-decision/design-system";
-import { Type } from "react-feather";
 import * as React from "react";
-import { Bold, Italic, Link, List, Underline } from "react-feather";
-import { HeadingIcon } from "@radix-ui/react-icons";
+import {
+  FontBoldIcon,
+  FontItalicIcon,
+  HeadingIcon,
+  Link2Icon,
+  ListBulletIcon,
+  TextIcon,
+  UnderlineIcon,
+} from "@radix-ui/react-icons";
 import { Editor } from "@tiptap/react";
 import { NumberedList } from "./NumberedListIcon";
 import { Separator } from "components/Separator";
@@ -46,7 +52,7 @@ export function Toolbar({ css, editor, ...props }: Props) {
       >
         <Icon label="Konvertiere den ausgewählten Text in eine Überschrift">
           {editor.isActive("heading", { level: 1 }) ? (
-            <Type />
+            <TextIcon />
           ) : (
             <HeadingIcon />
           )}
@@ -64,7 +70,7 @@ export function Toolbar({ css, editor, ...props }: Props) {
         onClick={() => editor.chain().focus().toggleBold().run()}
       >
         <Icon label="Markiere den ausgewählten Text fett">
-          <Bold />
+          <FontBoldIcon />
         </Icon>
       </ToggleButton>
       <ToggleButton
@@ -74,7 +80,7 @@ export function Toolbar({ css, editor, ...props }: Props) {
         onClick={() => editor.chain().focus().toggleItalic().run()}
       >
         <Icon label="Markiere den ausgewählten Text kursiv">
-          <Italic />
+          <FontItalicIcon />
         </Icon>
       </ToggleButton>
       <ToggleButton
@@ -84,7 +90,7 @@ export function Toolbar({ css, editor, ...props }: Props) {
         onClick={() => editor.chain().focus().toggleUnderline().run()}
       >
         <Icon label="Unterstreiche den ausgewählten Text">
-          <Underline />
+          <UnderlineIcon />
         </Icon>
       </ToggleButton>
       <Separator
@@ -99,7 +105,7 @@ export function Toolbar({ css, editor, ...props }: Props) {
         onClick={() => editor.chain().focus().toggleBulletList().run()}
       >
         <Icon label="Erstelle eine unnumerierte Liste">
-          <List />
+          <ListBulletIcon />
         </Icon>
       </ToggleButton>
 
@@ -109,7 +115,10 @@ export function Toolbar({ css, editor, ...props }: Props) {
         pressed={editor.isActive("orderedList")}
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
       >
-        <Icon label="Erstelle eine numerierte Liste">
+        <Icon
+          label="Erstelle eine numerierte Liste"
+          css={{ width: "0.8em", height: "0.8em" }}
+        >
           <NumberedList />
         </Icon>
       </ToggleButton>
@@ -127,7 +136,7 @@ export function Toolbar({ css, editor, ...props }: Props) {
         }
       >
         <Icon label="Erstelle einen Link">
-          <Link />
+          <Link2Icon />
         </Icon>
       </ToggleButton>
     </StyledToolbar>

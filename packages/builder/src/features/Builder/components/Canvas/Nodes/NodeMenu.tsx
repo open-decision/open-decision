@@ -5,8 +5,13 @@ import {
   Tooltip,
   StyleObject,
 } from "@open-decision/design-system";
+import {
+  DotsVerticalIcon,
+  HamburgerMenuIcon,
+  RocketIcon,
+  TrashIcon,
+} from "@radix-ui/react-icons";
 import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
-import { MoreHorizontal, Star, Trash2 } from "react-feather";
 
 type Props = {
   isStartNode?: boolean;
@@ -23,15 +28,15 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
       <DropdownMenu.Trigger asChild>
         <Button
           size="small"
-          variant="neutral"
+          variant="secondary"
           css={{
-            focusType: "inner",
+            colorScheme: "gray",
             ...css,
           }}
           square
         >
           <Icon label={`Öffne Menü Node: ${name}`}>
-            <MoreHorizontal />
+            <HamburgerMenuIcon />
           </Icon>
         </Button>
       </DropdownMenu.Trigger>
@@ -44,7 +49,7 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
                 disabled
               >
                 <Icon label="Löschen Icon" css={{ $$paddingInline: 0 }}>
-                  <Trash2 />
+                  <TrashIcon />
                 </Icon>
                 Node löschen
               </DropdownMenu.Item>
@@ -59,13 +64,13 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
           <>
             <DropdownMenu.Item onSelect={() => updateStartNode(nodeId)}>
               <Icon label="Zur Startnode machen" css={{ $$paddingInline: 0 }}>
-                <Star />
+                <RocketIcon />
               </Icon>
               Zur Startnode machen
             </DropdownMenu.Item>
             <DropdownMenu.Item onSelect={() => deleteNodes([nodeId])}>
               <Icon label="Löschen Icon" css={{ $$paddingInline: 0 }}>
-                <Trash2 />
+                <TrashIcon />
               </Icon>
               Node löschen
             </DropdownMenu.Item>

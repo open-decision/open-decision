@@ -10,13 +10,19 @@ import {
 import { notification, useNotificationStore } from "./NotificationState";
 import * as Progress from "@radix-ui/react-progress";
 import { motion, useAnimation } from "framer-motion";
-import { Info, XCircle, CheckCircle, HelpCircle, X } from "react-feather";
+import {
+  CheckCircledIcon,
+  Cross2Icon,
+  CrossCircledIcon,
+  ExclamationTriangleIcon,
+  InfoCircledIcon,
+} from "@radix-ui/react-icons";
 
 const icons = {
-  danger: XCircle,
-  info: HelpCircle,
-  success: CheckCircle,
-  warning: Info,
+  danger: CrossCircledIcon,
+  info: InfoCircledIcon,
+  success: CheckCircledIcon,
+  warning: ExclamationTriangleIcon,
 } as const;
 
 type NotificationProps = {
@@ -118,7 +124,7 @@ export const Notification = ({ notification, id }: NotificationProps) => {
         </Stack>
         <Button square variant="neutral" onClick={() => removeNotification(id)}>
           <Icon label="Benachrichtigung schließen">
-            <X />
+            <Cross2Icon />
           </Icon>
         </Button>
       </Stack>

@@ -23,7 +23,7 @@ const validConnectEvent = (
 const Container = styled("div", {
   display: "grid",
   height: "100%",
-  width: "100vw",
+  width: "100%",
   position: "relative",
   layer: "4",
 });

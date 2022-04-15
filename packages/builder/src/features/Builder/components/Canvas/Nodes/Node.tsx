@@ -1,6 +1,5 @@
 import { styled, Text, Icon, Stack } from "@open-decision/design-system";
 import React, { memo } from "react";
-import { Star } from "react-feather";
 import { NodeProps, Position } from "react-flow-renderer";
 import { nodeHeight, nodeWidth } from "../../../utilities/constants";
 import { useEditor } from "features/Builder/state/useEditor";
@@ -10,6 +9,7 @@ import { useStartNode } from "features/Builder/state/treeStore/hooks";
 import { useSnapshot } from "valtio";
 import { Node as NodeType } from "@open-decision/type-classes";
 import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
+import { RocketIcon } from "@radix-ui/react-icons";
 
 const NodeContainer = styled(Stack, {
   layer: "1",
@@ -59,14 +59,14 @@ export const Node = memo(
               ? "2px solid $primary9"
               : "1px solid $gray8",
           padding: isSelected ? "calc($5 - 1px)" : "$5",
-          opacity: validConnectionTarget ? 1 : 0.2,
+          opacity: validConnectionTarget ? 1 : 0.5,
         }}
         center
       >
         {isStartNode ? (
           <NodeLabel css={{ colorScheme: "success" }}>
             <Icon>
-              <Star />
+              <RocketIcon />
             </Icon>
             Start
           </NodeLabel>

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button, ButtonProps, Icon } from "@open-decision/design-system";
-import { ChevronDown } from "react-feather";
+import { TriangleDownIcon } from "@radix-ui/react-icons";
 type Props = { label: React.ReactNode } & ButtonProps;
 
 function MenuButtonImpl({ label, css, ...props }: Props, ref) {
@@ -22,14 +22,12 @@ function MenuButtonImpl({ label, css, ...props }: Props, ref) {
       <Icon
         className="rotate"
         css={{
-          marginTop: "2px",
-
           "& svg": {
             transition: "transform 200ms ease-in-out",
           },
         }}
       >
-        <ChevronDown />
+        <TriangleDownIcon />
       </Icon>
     </Button>
   );

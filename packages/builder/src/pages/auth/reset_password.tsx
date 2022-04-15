@@ -10,11 +10,11 @@ import {
   Text,
   useForm,
 } from "@open-decision/design-system";
+import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { MainContent } from "components";
 import { useAuth } from "features/Auth/useAuth";
 import { useRouter } from "next/router";
 import * as React from "react";
-import { ArrowRight } from "react-feather";
 
 export default function ResetPassword(): JSX.Element {
   const [Form, { register }] = useForm({
@@ -110,7 +110,7 @@ export default function ResetPassword(): JSX.Element {
                 }}
               >
                 <Icon css={{ color: "$primary9" }}>
-                  <ArrowRight />
+                  <ArrowRightIcon />
                 </Icon>
                 <Link
                   css={{

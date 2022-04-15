@@ -45,7 +45,7 @@ export const underlineLinkStyles = css({
   },
 
   defaultVariants: {
-    underline: true,
+    underline: false,
   },
 });
 

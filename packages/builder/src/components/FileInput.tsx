@@ -5,8 +5,8 @@ import {
   styled,
   StyleObject,
 } from "@open-decision/design-system";
+import { DownloadIcon } from "@radix-ui/react-icons";
 import React, { ForwardedRef } from "react";
-import { Download } from "react-feather";
 
 const StyledLabel = styled(Label, buttonStyles, {
   focusType: "outer-within",
@@ -40,7 +40,7 @@ const FileInputImpl = (
   return (
     <StyledLabel variant="secondary" css={css} ref={ref} {...props}>
       <Icon css={{ marginTop: "2px" }}>
-        <Download />
+        <DownloadIcon />
       </Icon>
       {children}
       <HiddenInput type="file" onChange={onChange} />

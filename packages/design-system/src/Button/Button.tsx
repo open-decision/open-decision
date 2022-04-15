@@ -7,6 +7,7 @@ export const buttonStyles = css(alignByContent, {
   $$YTranslation: "0px",
   $$gap: "$space$2",
   gap: "$$gap",
+  cursor: "pointer",
 
   //Mini reset
   appearance: "none",
@@ -19,8 +20,7 @@ export const buttonStyles = css(alignByContent, {
   transform: "translate($$XTranslation, $$YTranslation)",
 
   ...disabledStyle({
-    opacity: 0.4,
-    pointerEvents: "none",
+    cursor: "not-allowed",
   }),
 
   display: "flex",

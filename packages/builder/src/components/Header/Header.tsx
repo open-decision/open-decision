@@ -16,7 +16,7 @@ const Container = styled("div", {
 const Content = styled("header", {
   display: "flex",
   alignItems: "center",
-  gap: "$6",
+  gap: "$2",
   groupColor: "$gray12",
   paddingBlock: "$3",
 });

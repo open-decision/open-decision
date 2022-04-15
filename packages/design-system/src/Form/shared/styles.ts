@@ -3,7 +3,7 @@ import { alignByContent } from "../../shared/variants";
 
 export const baseInputStyles = css({
   $$borderWidth: "1px",
-  border: "$$borderWidth solid $colors$gray8",
+  border: "$$borderWidth solid $colors$gray7",
   textStyle: "medium-text",
 
   transition: "all 0.2s",

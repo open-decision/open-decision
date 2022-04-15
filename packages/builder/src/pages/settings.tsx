@@ -10,7 +10,7 @@ import {
   SubmitButton,
   useForm,
 } from "@open-decision/design-system";
-import { EyeClosedIcon, RocketIcon } from "@radix-ui/react-icons";
+import { AvatarIcon, EyeClosedIcon, RocketIcon } from "@radix-ui/react-icons";
 import { BaseHeader, MainContent } from "components";
 import {
   useUserUpdateMutation,
@@ -19,7 +19,6 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/router";
 import * as React from "react";
-import { Eye, User } from "react-feather";
 import { QueryClientProvider } from "react-query";
 import { queryClient } from "features/Data/queryClient";
 
@@ -86,7 +85,7 @@ function SettingsPageImpl() {
         <Link href="#account" passHref>
           <SideMenuLink data-active={router.asPath.includes("account")}>
             <Icon css={{ fontSize: "1.5em" }}>
-              <User />
+              <AvatarIcon />
             </Icon>
             Account
           </SideMenuLink>
@@ -102,7 +101,7 @@ function SettingsPageImpl() {
         <Link href="#display" passHref>
           <SideMenuLink data-active={router.asPath.includes("display")}>
             <Icon css={{ fontSize: "1.5em" }}>
-              <Eye />
+              <EyeClosedIcon />
             </Icon>
             Display
           </SideMenuLink>

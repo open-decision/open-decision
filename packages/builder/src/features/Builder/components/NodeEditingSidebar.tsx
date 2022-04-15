@@ -6,9 +6,9 @@ import {
   ControlledInput,
   Stack,
   Icon,
-  ValidationMessage,
-  Link,
   css,
+  hoverStyle,
+  DropdownMenu,
 } from "@open-decision/design-system";
 import { OptionTargetInputs } from "features/Builder/components/OptionTargetInput/OptionTargetInput";
 import * as React from "react";
@@ -16,7 +16,6 @@ import { Node } from "@open-decision/type-classes";
 import { nodeNameMaxLength } from "../utilities/constants";
 import { NodeMenu } from "./Canvas/Nodes/NodeMenu";
 import { NodeLabel } from "./Canvas/Nodes/NodeLabel";
-import { ChevronRight, Star } from "react-feather";
 import {
   useInputs,
   useParents,
@@ -27,6 +26,8 @@ import { RichTextEditor } from "components/RichTextEditor/RichTextEditor";
 import { useTreeContext } from "../state/treeStore/TreeContext";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEditor } from "../state/useEditor";
+import { MenuButton } from "components/Header/MenuButton";
+import { RocketIcon } from "@radix-ui/react-icons";
 
 const styledMotionDiv = css({
   position: "relative",
@@ -112,9 +113,39 @@ export function NodeEditingSidebarContent({ node }: Props) {
             }}
           >
             <Label>Knoten</Label>
+
             <Stack
               css={{ flexDirection: "row", gap: "$2", alignItems: "center" }}
             >
+              {parentNodes ? (
+                <Box as="section">
+                  <DropdownMenu.Root>
+                    <DropdownMenu.Trigger asChild>
+                      <MenuButton
+                        label="Elternknoten"
+                        css={{}}
+                        variant="secondary"
+                        size="small"
+                      />
+                    </DropdownMenu.Trigger>
+                    <DropdownMenu.Content align="end">
+                      {Object.values(parentNodes).map((parentNode) => {
+                        return (
+                          <DropdownMenu.Item
+                            key={parentNode.id}
+                            onClick={() => addSelectedNodes([parentNode.id])}
+                            css={{
+                              ...hoverStyle({ textDecoration: "underline" }),
+                            }}
+                          >
+                            {parentNode.name ?? <i>Elternknoten ohne Namen</i>}
+                          </DropdownMenu.Item>
+                        );
+                      })}
+                    </DropdownMenu.Content>
+                  </DropdownMenu.Root>
+                </Box>
+              ) : null}
               {isStartNode ? (
                 <NodeLabel
                   css={{
@@ -125,7 +156,7 @@ export function NodeEditingSidebarContent({ node }: Props) {
                   }}
                 >
                   <Icon>
-                    <Star />
+                    <RocketIcon />
                   </Icon>
                   Start
                 </NodeLabel>
@@ -143,12 +174,18 @@ export function NodeEditingSidebarContent({ node }: Props) {
             onChange={(event) => updateNodeName(node.id, event.target.value)}
           >
             {(field) => (
-              <Input css={{ layer: "2", color: "$gray12" }} {...field} />
+              <Input
+                css={{
+                  layer: "2",
+                  color: "$gray12",
+                }}
+                {...field}
+              />
             )}
           </ControlledInput>
-          <ValidationMessage name="name" />
         </Form>
       </Box>
+
       <Box as="section">
         <Label
           as="h2"
@@ -166,50 +203,7 @@ export function NodeEditingSidebarContent({ node }: Props) {
           key={node.id}
         />
       </Box>
-      {parentNodes ? (
-        <Box as="section">
-          <Label
-            as="h2"
-            css={{
-              margin: 0,
-              marginBottom: "$3",
-              display: "block",
-            }}
-          >
-            Elternknoten
-          </Label>
-          <Box
-            css={{
-              display: "flex",
-              gap: "$3",
-              marginTop: "$3",
-              flexWrap: "wrap",
-            }}
-          >
-            {Object.values(parentNodes).map((parentNode) => {
-              return (
-                <Link
-                  key={parentNode.id}
-                  onClick={() => addSelectedNodes([parentNode.id])}
-                  css={{
-                    color: "$primary11",
-                    fontWeight: 500,
-                    cursor: "pointer",
-                    wordBreak: "break-word",
-                    display: "flex",
-                    paddingRight: "$1",
-                  }}
-                >
-                  <Icon>
-                    <ChevronRight />
-                  </Icon>
-                  {parentNode.name ?? <i>Elternknoten ohne Namen</i>}
-                </Link>
-              );
-            })}
-          </Box>
-        </Box>
-      ) : null}
+
       <Box as="section">
         {Object.values(inputs).map((input) => (
           <OptionTargetInputs nodeId={node.id} input={input} key={input.id} />
