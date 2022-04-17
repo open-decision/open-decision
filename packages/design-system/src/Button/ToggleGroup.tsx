@@ -1,3 +1,4 @@
+import * as React from "react";
 import { activeStyle } from "../shared/utils";
 import { styled, darkTheme } from "../stitches";
 import { Button as SystemButton, ButtonProps } from "./Button";
@@ -28,8 +29,12 @@ export const Item = ({ children, ...props }: ToggleItemProps) => {
   );
 };
 
-export const Button = ({ children, css, ...props }: ButtonProps) => (
+const ButtonImpl = (
+  { children, css, ...props }: ButtonProps,
+  ref: React.Ref<HTMLButtonElement>
+) => (
   <SystemButton
+    ref={ref}
     variant="neutral"
     pressable={false}
     size="small"
@@ -50,3 +55,5 @@ export const Button = ({ children, css, ...props }: ButtonProps) => (
     {children}
   </SystemButton>
 );
+
+export const Button = React.forwardRef(ButtonImpl);
