@@ -14,6 +14,8 @@ import { useIsPreviewable } from "../state/treeStore/hooks";
 import { ProjectMenu } from "./ProjectMenu";
 import { FileTextIcon } from "@radix-ui/react-icons";
 import { NodeSearch } from "./NodeSearch";
+import { queryClient } from "features/Data/queryClient";
+import { useTreeContext } from "../state/treeStore/TreeContext";
 
 type HeaderProps = {
   css?: StyleObject;
@@ -24,6 +26,7 @@ export const EditorHeader = ({ css }: HeaderProps) => {
   const {
     query: { id },
   } = useRouter();
+  const { getTreeData } = useTreeContext();
 
   const isPreviewable = useIsPreviewable();
 
@@ -37,6 +40,13 @@ export const EditorHeader = ({ css }: HeaderProps) => {
           <SystemLink
             className={buttonStyles({ variant: "secondary" })}
             underline={false}
+            onClick={() => {
+              const tree = getTreeData();
+              return queryClient.setQueryData(
+                ["getTreeContent", { uuid: id }],
+                { decisionTree: { treeData: tree } }
+              );
+            }}
           >
             <Icon>
               <FileTextIcon />

@@ -73,6 +73,7 @@ export function createTreeStore(id: string) {
     nonSyncedStore,
     abortConnecting,
     startConnecting,
+    getTreeData: () => yMap.toJSON(),
     ...methods,
   };
 }
