@@ -25,7 +25,7 @@ export function CreateNodeButton({ css }: Props) {
 
   return (
     <Tooltip.Root>
-      <Tooltip.Trigger>
+      <Tooltip.Trigger asChild>
         <Button
           square
           css={{ boxShadow: "$2", ...css }}
