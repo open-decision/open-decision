@@ -1,19 +1,15 @@
-import {
-  BuilderNode,
-  BuilderRelation,
-  BuilderTree,
-} from "@open-decision/type-classes";
+import { Tree } from "@open-decision/type-classes";
 
 export class Interpreter {
   history: { nodes: string[]; answers: Record<string, string> };
   state: "initialized" | "idle" | "error" | "interpreting";
   currentNode: string;
   hasHistory: boolean;
-  tree: BuilderTree.TTree;
+  tree: Tree.TTree;
 
-  constructor(json: BuilderTree.TTree) {
+  constructor(json: Tree.TTree) {
     /**
-     * The log of visited nodes and given answers.
+     * The log of visited inputs and given answers.
      */
     this.history = { nodes: [], answers: {} };
     /**
@@ -23,7 +19,7 @@ export class Interpreter {
     this.currentNode = "";
     this.hasHistory = this.history.nodes.length > 0;
 
-    const decodedJSON = BuilderTree.Type.safeParse(json);
+    const decodedJSON = Tree.Type.safeParse(json);
 
     if (!decodedJSON.success) {
       throw new Error(
@@ -32,17 +28,17 @@ export class Interpreter {
     }
 
     this.tree = decodedJSON.data;
-    this.currentNode = this.tree.treeData.startNode ?? "";
+    this.currentNode = this.tree.startNode ?? "";
   }
 
   updateTree(json: any) {
-    const decodedJSON = BuilderTree.Type.safeParse(json);
+    const decodedJSON = Tree.Type.safeParse(json);
 
     if (!decodedJSON.success)
       throw new Error(`The provided tree is not in the correct format`);
 
     this.tree = decodedJSON.data;
-    this.currentNode = this.tree.treeData.startNode ?? "";
+    this.currentNode = this.tree.startNode ?? "";
   }
 
   /**
@@ -50,29 +46,51 @@ export class Interpreter {
    * @returns JSON String of the `currentNodes` `renderData`
    */
   getCurrentNode() {
-    return this.tree.treeData.nodes[this.currentNode];
+    return this.tree.nodes?.[this.currentNode];
   }
 
-  /**
-   * Interprets the answer received from the user to determine the next node.
-   */
-  evaluateUserInput(relation: BuilderRelation.TRelation) {
-    this.state = "interpreting";
+  addUserAnswer(inputId: string, answerId: string) {
+    const currentNode = this.getCurrentNode();
 
-    if (!relation.target) {
+    if (!currentNode?.data.inputs.includes(inputId))
+      return new Error(
+        `The input of id ${inputId} is not part of the currentNode`
+      );
+
+    const input = Tree.getInput(this.tree)(inputId);
+    const answer = input?.answers.find((answer) => answer.id === answerId);
+
+    if (!input || !answer)
+      return new Error(`The provided answer could not be found on the input`);
+
+    this._addToHistory(input.id, answer.id);
+  }
+
+  evaluateNodeConditions(conditionIds: string[]) {
+    this.state = "interpreting";
+    const conditions = Tree.getConditions(this.tree)(conditionIds);
+
+    if (!conditions) {
       this.state = "error";
-      return new Error(`The relation provided does not have a target.`);
+      return new Error(`The node does not have any conditions associated.`);
     }
 
-    this._addToHistory(relation.id);
-    this.currentNode = relation.target;
+    for (const conditionId in conditions) {
+      const condition = conditions[conditionId];
+      const existingAnswerId = this.getAnswer(condition.inputId);
+
+      if (condition.answerId === existingAnswerId) {
+        const edge = Object.values(this.tree.edges ?? {}).find(
+          (edge) => edge.conditionId === conditionId
+        );
+
+        if (!edge) return new Error("There is no Edge for this condition.");
+
+        this.currentNode = edge.target;
+      }
+    }
 
     return this.getCurrentNode();
-  }
-
-  //Helper functions
-  get treeName() {
-    return this.tree.name;
   }
 
   /**
@@ -96,7 +114,7 @@ export class Interpreter {
    * Restart the Interpretation.
    */
   reset() {
-    this.currentNode = this.tree.treeData.startNode ?? "";
+    this.currentNode = this.tree.startNode ?? "";
     this.history = { nodes: [], answers: {} };
     return this.getCurrentNode();
   }
@@ -118,30 +136,18 @@ export class Interpreter {
     return this.getCurrentNode();
   }
 
-  getNode(nodeId: string): BuilderNode.TNode | undefined {
-    return this.tree.treeData.nodes[nodeId];
+  getAnswer(inputId: string) {
+    const maybeAnswer = this.history.answers[inputId];
+
+    if (!maybeAnswer) return undefined;
+
+    return maybeAnswer;
   }
 
-  getRelationById(nodeId: string, relationId: string) {
-    const relation = this.getNode(nodeId)?.data.relations[relationId];
+  _addToHistory(inputId: string, answerId: string) {
+    this.history.nodes.push(this.currentNode);
+    this.history.answers[inputId] = answerId;
 
-    if (!relation) return undefined;
-
-    return relation;
-  }
-
-  getAnswer(nodeId: string) {
-    const maybeAnswer = this.history.answers[nodeId];
-    const relation = this.getRelationById(nodeId, maybeAnswer);
-
-    if (!relation) return undefined;
-
-    return relation;
-  }
-
-  _addToHistory(answerId: string) {
-    this.history["nodes"].push(this.currentNode);
-    this.history["answers"][this.currentNode] = answerId;
     this.hasHistory = this.history.nodes.length > 0;
   }
 }
