@@ -4,7 +4,7 @@ import { graphqlHTTP } from "express-graphql";
 import { auth } from "../../middlewares/auth";
 import prisma from "../../init-prisma-client";
 import { buildSchemaSync } from "type-graphql";
-import { DecisionTreeCrudResolver } from "../../graphql/resolvers/TreeResolvers";
+import { DecisionTreeCrudResolver } from "../../graphql/resolvers/crud/DecisionTree/TreeCrudResolver";
 const graphqlRouter = express.Router();
 
 const schema = buildSchemaSync({

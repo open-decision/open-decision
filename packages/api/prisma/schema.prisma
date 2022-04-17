@@ -12,21 +12,23 @@ generator client {
 generator typegraphql {
   provider = "typegraphql-prisma"
   output   = "../prisma/generated/type-graphql"
-    emitOnly = "models"
+  emitOnly = "models"
 }
 
 model DecisionTree {
-  uuid      String   @id @db.Uuid @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String
-  tags      Json?
-  treeData  Json?     @db.JsonB
-  yDocument String?
+  uuid                  String   @id @db.Uuid @default(uuid())
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  status                TreeStatus @default(ACTIVE)
+  name                  String
   /// @TypeGraphQL.omit(output: true, input: true)
-  owner     User     @relation(fields: [ownerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  Tags                  Tag[]
+  treeData              Json?     @db.JsonB
+  yDocument             String?
   /// @TypeGraphQL.omit(output: true, input: true)
-  ownerUuid String   @db.Uuid
+  owner                 User     @relation(fields: [ownerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  ownerUuid             String   @db.Uuid
 }
 
 model User {
@@ -39,16 +41,27 @@ model User {
   emailIsVerified       Boolean       @default(false)
   DecisionTrees         DecisionTree[]
   Token                 Token[]
+  UserTags              Tag[]
 }
 
 model Token {
-  id                    Int           @id @unique @default(autoincrement())
+  id                    Int           @id @default(autoincrement())
   token                 String
   type                  TokenType
   owner                 User          @relation(fields: [ownerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
   ownerUuid             String        @db.Uuid
   expires               DateTime
   blacklisted           Boolean       @default(false)
+}
+
+model Tag {
+  id                   Int           @id @default(autoincrement())
+  text                 String
+  color                String?
+  owner                User?          @relation(fields: [ownerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  ownerUuid            String?        @db.Uuid
+  DecisionTrees        DecisionTree[]
+  // @@unique([ownerUuid, text], map: "TheLastUser_firstName_lastName_unique_constraint")
 }
 
 enum Role {
@@ -63,4 +76,9 @@ enum TokenType {
   REFRESH
   RESET_PASSWORD
   VERIFY_EMAIL
+}
+
+enum TreeStatus {
+  ACTIVE
+  ARCHIVED
 }

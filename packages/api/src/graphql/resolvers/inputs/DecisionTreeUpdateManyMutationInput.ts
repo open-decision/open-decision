@@ -1,10 +1,7 @@
 import * as TypeGraphQL from "type-graphql";
 import * as GraphQLScalars from "graphql-scalars";
-import { Prisma } from "@prisma-client";
-import { DecimalJSScalar } from "../../scalars";
-import { DateTimeFieldUpdateOperationsInput } from "./DateTimeFieldUpdateOperationsInput";
 import { StringFieldUpdateOperationsInput } from "./StringFieldUpdateOperationsInput";
-
+import { EnumTreeStatusFieldUpdateOperationsInput } from "./EnumTreeStatusFieldUpdateOperationsInput";
 @TypeGraphQL.InputType("DecisionTreeUpdateManyMutationInput", {
   isAbstract: true,
 })
@@ -14,15 +11,10 @@ export class DecisionTreeUpdateManyMutationInput {
   })
   name?: StringFieldUpdateOperationsInput | undefined;
 
-  @TypeGraphQL.Field((_type) => GraphQLScalars.JSONResolver, {
+  @TypeGraphQL.Field((_type) => EnumTreeStatusFieldUpdateOperationsInput, {
     nullable: true,
   })
-  tags?: Prisma.InputJsonValue | undefined;
-
-  @TypeGraphQL.Field((_type) => GraphQLScalars.JSONResolver, {
-    nullable: true,
-  })
-  treeData?: Prisma.InputJsonValue | undefined;
+  status?: EnumTreeStatusFieldUpdateOperationsInput | undefined;
 
   @TypeGraphQL.Field((_type) => StringFieldUpdateOperationsInput, {
     nullable: true,

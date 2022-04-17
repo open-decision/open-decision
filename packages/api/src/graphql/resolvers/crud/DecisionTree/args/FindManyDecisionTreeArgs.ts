@@ -1,9 +1,9 @@
 import * as TypeGraphQL from "type-graphql";
 import * as GraphQLScalars from "graphql-scalars";
-import { DecisionTreeOrderByWithRelationInput } from "../inputs/DecisionTreeOrderByWithRelationInput";
-import { DecisionTreeWhereInput } from "../inputs/DecisionTreeWhereInput";
-import { DecisionTreeWhereUniqueInput } from "../inputs/DecisionTreeWhereUniqueInput";
-import { DecisionTreeScalarFieldEnum } from "../../enums";
+import { DecisionTreeOrderByWithRelationInput } from "../../../inputs/DecisionTreeOrderByWithRelationInput";
+import { DecisionTreeWhereInput } from "../../../inputs/DecisionTreeWhereInput";
+import { DecisionTreeWhereUniqueInput } from "../../../inputs/DecisionTreeWhereUniqueInput";
+import { DecisionTreeScalarFieldEnum } from "../../../../enums";
 
 @TypeGraphQL.ArgsType()
 export class FindManyDecisionTreeArgs {
