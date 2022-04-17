@@ -1,45 +1,18 @@
 import React, { useEffect } from "react";
+import { styled, Icon, Button } from "@open-decision/design-system";
 import {
-  styled,
-  Text,
-  Heading,
-  Icon,
-  Button,
-  Stack,
-} from "@open-decision/design-system";
-import { notification, useNotificationStore } from "./NotificationState";
+  Notification as NotificationType,
+  useNotificationStore,
+} from "./NotificationState";
 import * as Progress from "@radix-ui/react-progress";
 import { motion, useAnimation } from "framer-motion";
-import {
-  CheckCircledIcon,
-  Cross2Icon,
-  CrossCircledIcon,
-  ExclamationTriangleIcon,
-  InfoCircledIcon,
-} from "@radix-ui/react-icons";
-
-const icons = {
-  danger: CrossCircledIcon,
-  info: InfoCircledIcon,
-  success: CheckCircledIcon,
-  warning: ExclamationTriangleIcon,
-} as const;
+import { Cross2Icon } from "@radix-ui/react-icons";
+import { InfoBox } from "./InfoBox";
 
 type NotificationProps = {
-  notification: notification;
+  notification: NotificationType;
   id: string;
 };
-
-const Container = styled(motion.div, {
-  $$accentColor: "$colors$colorScheme11",
-  boxShadow: "$6",
-  borderRadius: "$md",
-  backgroundColor: "$white",
-
-  defaultVariants: {
-    variant: "neutral",
-  },
-});
 
 const ProgressBar = styled(Progress.Root, {
   height: 3,
@@ -66,7 +39,6 @@ export const Notification = ({ notification, id }: NotificationProps) => {
     animation.start("empty");
   }, [notification.duration]);
 
-  const IconSVG = icons[notification.variant];
   const removeNotification = useNotificationStore(
     (state) => state.removeNotification
   );
@@ -83,13 +55,11 @@ export const Notification = ({ notification, id }: NotificationProps) => {
   };
 
   return (
-    <Container
+    <motion.div
       variants={container}
       initial="hidden"
       animate="visible"
       exit="exit"
-      css={{ colorScheme: notification.variant }}
-      role="alert"
       layout
       onPointerEnter={() => animation.stop()}
       onPointerLeave={() => animation.start("empty")}
@@ -97,47 +67,32 @@ export const Notification = ({ notification, id }: NotificationProps) => {
       onFocus={() => animation.stop()}
       onBlur={() => animation.start("empty")}
     >
-      <Stack
-        css={{
-          padding: "$5",
-          flexDirection: "row",
-          gap: "$5",
-          alignItems: "center",
-        }}
+      <InfoBox
+        CloseButton={
+          <Button
+            square
+            variant="neutral"
+            onClick={() => removeNotification(id)}
+          >
+            <Icon label="Benachrichtigung schließen">
+              <Cross2Icon />
+            </Icon>
+          </Button>
+        }
+        css={{ boxShadow: "$6" }}
+        {...notification}
       >
-        <Icon
-          css={{
-            marginBottom: "-2px",
-            backgroundColor: "$colorScheme3",
-            borderRadius: "$full",
-            width: "$5",
-            height: "$5",
-            padding: "$3",
-            color: "$$accentColor",
-          }}
-        >
-          <IconSVG />
-        </Icon>
-        <Stack css={{ gap: "$1", flex: 1 }}>
-          <Heading size="extra-small">{notification.title}</Heading>
-          <Text>{notification.content}</Text>
-        </Stack>
-        <Button square variant="neutral" onClick={() => removeNotification(id)}>
-          <Icon label="Benachrichtigung schließen">
-            <Cross2Icon />
-          </Icon>
-        </Button>
-      </Stack>
-      <ProgressBar>
-        <ProgressIndicator
-          as={motion.div}
-          variants={progress}
-          transition={{ duration }}
-          initial="full"
-          animate={animation}
-          onAnimationComplete={() => removeNotification(id)}
-        />
-      </ProgressBar>
-    </Container>
+        <ProgressBar>
+          <ProgressIndicator
+            as={motion.div}
+            variants={progress}
+            transition={{ duration }}
+            initial="full"
+            animate={animation}
+            onAnimationComplete={() => removeNotification(id)}
+          />
+        </ProgressBar>
+      </InfoBox>
+    </motion.div>
   );
 };

@@ -4,7 +4,7 @@ import { v4 as uuidV4 } from "uuid";
 
 export type notificationVariants = "success" | "danger" | "info" | "warning";
 
-export type notification = {
+export type Notification = {
   variant: notificationVariants;
   title: string;
   content: string;
@@ -12,8 +12,8 @@ export type notification = {
 };
 
 export type NotificationState = {
-  notifications: Record<string, notification>;
-  addNotification: (notification: Omit<notification, "id">) => void;
+  notifications: Record<string, Notification>;
+  addNotification: (notification: Omit<Notification, "id">) => void;
   removeNotification: (id: string) => void;
 };
 
