@@ -28,7 +28,7 @@ export const baseTextInputStyle = css(alignByContent, {
         textStyle: "small-text",
       },
       medium: {
-        $$paddingBlock: "calc($space$3 - 2px)",
+        $$paddingBlock: "$space$2",
         $$paddingInline: "$space$3",
         textStyle: "medium-text",
       },

@@ -1,6 +1,6 @@
 import { activeStyle, disabledStyle, intentStyle } from "../shared/utils";
 import { alignByContent } from "../shared/variants";
-import { styled, css } from "../stitches";
+import { styled, css, darkTheme } from "../stitches";
 
 export const buttonStyles = css(alignByContent, {
   $$borderWidth: "1px",
@@ -39,12 +39,19 @@ export const buttonStyles = css(alignByContent, {
         fontWeight: 600,
       },
       medium: {
-        $$paddingInline: "$space$4",
-        $$paddingBlock: "calc($space$3 - 2px)",
+        $$paddingInline: "$space$3",
+        $$paddingBlock: "$space$2",
         textStyle: "medium-text",
         fontWeight: 600,
       },
       large: {
+        $$paddingInline: "$space$4",
+        $$paddingBlock: "$space$3",
+        textStyle: "large-text",
+        fontWeight: 600,
+        $$gap: "$space$2",
+      },
+      xl: {
         $$paddingInline: "$space$5",
         $$paddingBlock: "$space$3",
         textStyle: "large-text",
@@ -74,8 +81,17 @@ export const buttonStyles = css(alignByContent, {
         backgroundColor: "$colorScheme3",
         color: "$colorScheme11",
 
+        [`.${darkTheme} &`]: {
+          backgroundColor: "$colorScheme4",
+        },
+
         ...intentStyle({
           backgroundColor: "$colorScheme5",
+
+          [`.${darkTheme} &`]: {
+            backgroundColor: "$colorScheme6",
+            color: "$colorScheme12",
+          },
         }),
 
         ...activeStyle({
@@ -84,6 +100,10 @@ export const buttonStyles = css(alignByContent, {
 
         ...disabledStyle({
           backgroundColor: "$colorScheme3",
+
+          [`.${darkTheme} &`]: {
+            backgroundColor: "$colorScheme4",
+          },
         }),
       },
 
