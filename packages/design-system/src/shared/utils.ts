@@ -15,12 +15,20 @@ export const focusStyle = (value: StyleObject) => ({
   "&:focus-visible, &[data-focus='true']": value,
 });
 
+export const focusStyleWithin = (value: StyleObject) => ({
+  "&:focus-visible, &:focus-within, &[data-focus='true']": value,
+});
+
 export const hoverStyle = (value: StyleObject) => ({
   "&:hover": value,
 });
 
 export const intentStyle = (value: StyleObject) => ({
   "&:focus-visible, &[data-focus='true'], &:hover": value,
+});
+
+export const intentStyleWithin = (value: StyleObject) => ({
+  "&:focus-visible, &:focus-within, &[data-focus='true'], &:hover": value,
 });
 
 export const activeStyle = (value: StyleObject) => ({
