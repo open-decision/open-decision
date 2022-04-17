@@ -22,7 +22,7 @@ beforeEach(() => {
 test("addCondition should mutably add a provided Condition to the provided tree", () => {
   const newCondition = createCondition({
     inputId: "7adcfc07-cefd-45a8-ba42-c19860eb26c5",
-    answer: "Vielleicht",
+    answerId: "Vielleicht",
   });
   addCondition(currentTreeMock)(newCondition);
 
@@ -53,7 +53,7 @@ test("addCondition should mutably add a provided Condition to the provided tree"
 test("createAndAddInput should add a new Edge to the provided tree", () => {
   createAndAddCondition(currentTreeMock)({
     inputId: "50b7733c-c7ab-4035-b26f-801ea8eca9fe",
-    answer: "Ja",
+    answerId: "Ja",
   });
 
   expect(currentTreeMock.conditions).toMatchInlineSnapshot(`

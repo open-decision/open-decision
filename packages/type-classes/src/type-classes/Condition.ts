@@ -4,7 +4,7 @@ export const SelectCondition = z.object({
   type: z.enum(["select"]),
   id: z.string().uuid(),
   inputId: z.string().uuid(),
-  answer: z.string(),
+  answerId: z.string().uuid(),
 });
 
 export const Type = SelectCondition;

@@ -41,13 +41,13 @@ export const treeMock: Tree.TTree = {
     "9c07e4c3-a67f-4c76-8c14-9a0a302b5d99": {
       id: "9c07e4c3-a67f-4c76-8c14-9a0a302b5d99",
       inputId: "50b7733c-c7ab-4035-b26f-801ea8eca9fe",
-      answer: "1",
+      answerId: "1",
       type: "select",
     },
     "ff9accd5-a509-4071-a503-a2ae6e2d3d7c": {
       id: "9c07e4c3-a67f-4c76-8c14-9a0a302b5d99",
       inputId: "7adcfc07-cefd-45a8-ba42-c19860eb26c5",
-      answer: "dfec1b30-fc51-43a6-9e6f-db71933a8274",
+      answerId: "dfec1b30-fc51-43a6-9e6f-db71933a8274",
       type: "select",
     },
   },

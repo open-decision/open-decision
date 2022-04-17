@@ -3,7 +3,7 @@ import { v4 as uuid } from "uuid";
 
 export type NewConditionData = {
   inputId: string;
-  answer: string;
+  answerId: string;
 };
 
 export function createCondition(

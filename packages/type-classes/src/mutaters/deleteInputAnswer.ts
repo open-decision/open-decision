@@ -15,7 +15,7 @@ export const deleteInputAnswer =
     // When an Input is deleted all conditions using it need to be removed.
     deleteConditions(tree)(
       Object.values(tree.conditions ?? {})
-        .filter((condition) => condition.answer === answerId)
+        .filter((condition) => condition.answerId === answerId)
         .map((condition) => condition.id)
     );
   };

@@ -9,7 +9,15 @@ import {
   createInput,
   createNode,
 } from "../creators";
-import { getCondition, getEdge, getInput, getNode, getTree } from "../getters";
+import {
+  getCondition,
+  getConditions,
+  getEdge,
+  getInput,
+  getInputs,
+  getNode,
+  getTree,
+} from "../getters";
 import {
   addCondition,
   addEdge,
@@ -82,9 +90,11 @@ export function createTreeMethods(tree: TTree) {
     deleteNodes: deleteNodes(tree),
     getChildren: getChildren(tree),
     getCondition: getCondition(tree),
+    getConditions: getConditions(tree),
     getConnectableNodes: getConnectableNodes(tree),
     getEdge: getEdge(tree),
     getInput: getInput(tree),
+    getInputs: getInputs(tree),
     getNode: getNode(tree),
     getParents: getParents(tree),
     getPaths: getPaths(tree),
@@ -126,8 +136,10 @@ export {
   deleteInputs,
   deleteNodes,
   getCondition,
+  getConditions,
   getEdge,
   getInput,
+  getInputs,
   getNode,
   getTree,
   isValidEdge,

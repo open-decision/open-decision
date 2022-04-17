@@ -147,7 +147,7 @@ function Nodes() {
         addInputAnswer(firstInputId, newAnswer);
         const newCondition = createCondition({
           inputId: firstInputId,
-          answer: newAnswer.id,
+          answerId: newAnswer.id,
         });
         const possibleEdge = createAndAddEdge({
           source: nonSyncedStore.connectionSourceNodeId,

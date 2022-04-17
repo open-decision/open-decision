@@ -89,7 +89,7 @@ export function OptionTargetInputs({ nodeId, input }: SingleSelectProps) {
               if (!edge.conditionId || !conditions) return false;
               const condition = conditions[edge.conditionId];
 
-              return condition.answer === answer.id;
+              return condition.answerId === answer.id;
             });
 
             return (
@@ -251,7 +251,7 @@ export function OptionTargetInput({
               // Construct the Relationship
               const newCondition = createCondition({
                 inputId,
-                answer: answer.id,
+                answerId: answer.id,
               });
 
               const newEdge = createEdge({
@@ -282,7 +282,7 @@ export function OptionTargetInput({
               if (!edge?.target && newItem) {
                 const newCondition = createCondition({
                   inputId,
-                  answer: answer.id,
+                  answerId: answer.id,
                 });
 
                 addCondition(newCondition);
