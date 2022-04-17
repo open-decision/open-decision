@@ -6,6 +6,9 @@ import { Box, globalStyles, Tooltip } from "@open-decision/design-system";
 import { AuthProvider, useAuth } from "features/Auth/useAuth";
 import { useRouter } from "next/router";
 import { protectedRoutes } from "../config/protectedRoutes";
+import { ReactQueryDevtools } from "react-query/devtools";
+import { queryClient } from "features/Data/queryClient";
+import { QueryClientProvider } from "react-query";
 
 export default function App({ Component, pageProps }: AppProps): JSX.Element {
   globalStyles();
@@ -13,13 +16,16 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
 
   return (
     <AuthProvider router={router}>
-      <Tooltip.Provider delayDuration={50}>
-        <Layout>
-          <ProtectedRoute>
-            <Component {...pageProps} />
-          </ProtectedRoute>
-        </Layout>
-      </Tooltip.Provider>
+      <QueryClientProvider client={queryClient}>
+        <Tooltip.Provider delayDuration={50}>
+          <Layout>
+            <ProtectedRoute>
+              <Component {...pageProps} />
+            </ProtectedRoute>
+          </Layout>
+        </Tooltip.Provider>
+        <ReactQueryDevtools />
+      </QueryClientProvider>
     </AuthProvider>
   );
 }

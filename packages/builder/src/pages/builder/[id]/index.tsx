@@ -2,13 +2,10 @@ import * as React from "react";
 import { MainContent } from "components/Layout";
 import { NodeEditor } from "features/Builder/NodeEditor";
 import { EditorProvider } from "features/Builder/state/useEditor";
-import { sidebarWidth } from "features/Builder/utilities/constants";
 import { ReactFlowProvider } from "react-flow-renderer";
 import { EditorHeader } from "features/Builder/components/EditorHeader";
 import { ErrorBoundary } from "@sentry/nextjs";
 import { ErrorFallback } from "features/Error/ErrorFallback";
-import { QueryClientProvider } from "react-query";
-import { queryClient } from "features/Data/queryClient";
 import { GetServerSideProps } from "next";
 import { useYjsConnection } from "features/Builder/state/treeStore/useYjsConnection";
 import { TreeProvider } from "features/Builder/state/treeStore/TreeContext";
@@ -40,11 +37,9 @@ export default function BuilderPage({ id }): JSX.Element {
   return (
     <React.Suspense fallback={<Loading />}>
       <ErrorBoundary fallback={ErrorFallback}>
-        <QueryClientProvider client={queryClient}>
-          <TreeProvider id={id}>
-            {typeof window !== undefined ? <BuilderPageImpl id={id} /> : null}
-          </TreeProvider>
-        </QueryClientProvider>
+        <TreeProvider id={id}>
+          {typeof window !== undefined ? <BuilderPageImpl id={id} /> : null}
+        </TreeProvider>
       </ErrorBoundary>
     </React.Suspense>
   );

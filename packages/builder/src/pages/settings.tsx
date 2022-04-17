@@ -19,16 +19,6 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/router";
 import * as React from "react";
-import { QueryClientProvider } from "react-query";
-import { queryClient } from "features/Data/queryClient";
-
-export default function SettingsPage() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <SettingsPageImpl />
-    </QueryClientProvider>
-  );
-}
 
 const StyledMainContent = styled(MainContent, {
   display: "grid",
@@ -56,7 +46,7 @@ const SideMenuLink = styled("a", Label, {
 
 SideMenuLink.defaultProps = { size: "medium" };
 
-function SettingsPageImpl() {
+export default function SettingsPage() {
   const router = useRouter();
 
   const { mutate, isLoading } = useUserUpdateMutation();
