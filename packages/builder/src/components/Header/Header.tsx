@@ -36,15 +36,7 @@ export const BaseHeader = ({
     <Container css={css} className={darkTheme}>
       <Content>
         {LogoSlot}
-        <Box
-          css={{
-            display: "flex",
-            alignItems: "center",
-            width: "100%",
-          }}
-        >
-          {children}
-        </Box>
+        {children}
         <UserMenu />
       </Content>
     </Container>
