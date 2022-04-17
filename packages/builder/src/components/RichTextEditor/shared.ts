@@ -23,7 +23,7 @@ export const extensions = [
   }),
   Paragraph.configure({
     HTMLAttributes: {
-      class: textStyles(),
+      class: textStyles({ size: "large" }),
     },
   }),
   Text,
