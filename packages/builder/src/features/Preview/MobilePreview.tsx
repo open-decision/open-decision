@@ -5,15 +5,7 @@ import { AnswersForm } from "./components/AnswersForm";
 import { useNode } from "features/Builder/state/treeStore/hooks";
 
 export function MobilePreview() {
-  const [snapshot, interpreter] = useInterpreter();
-  const node = useNode(interpreter.currentNode);
-
-  if (!node)
-    throw new Error(`The Mobile Preview could not retrieve the currentNode.`);
-
-  const relation = React.useMemo(() => {
-    return snapshot.getAnswer(node.id);
-  }, [node.id, snapshot]);
+  const { snapshot, interpreter } = useInterpreter();
 
   return (
     <Box
@@ -45,13 +37,13 @@ export function MobilePreview() {
             overflow: "hidden",
           }}
         >
-          <AnswersForm
+          {/* <AnswersForm
             interpreter={interpreter}
             snapshot={snapshot}
             node={node}
             relation={relation}
             key={`form_${node.id}`}
-          />
+          /> */}
         </Box>
       </Box>
     </Box>

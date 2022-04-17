@@ -43,7 +43,7 @@ export default function VorschauPage({ id }: Props) {
     <React.Suspense fallback={<div>Loading...</div>}>
       <ErrorBoundary fallback={ErrorFallback}>
         <InterpreterProvider tree={tree}>
-          <Tabs.Root asChild defaultValue="desktop_preview">
+          <Tabs.Root asChild defaultValue="desktop">
             <MainContent
               css={{
                 display: "grid",
@@ -53,20 +53,30 @@ export default function VorschauPage({ id }: Props) {
             >
               <BaseHeader LogoSlot={<ProjectMenu />}>
                 <Row css={{ justifyContent: "center", flex: 1 }}>
-                  <ToggleGroup.Root type="single" defaultValue="desktop">
-                    <ToggleGroup.Item value="desktop">
-                      <Icon>
-                        <DesktopIcon />
-                      </Icon>
-                      Desktop
-                    </ToggleGroup.Item>
-                    <ToggleGroup.Item value="mobile">
-                      <Icon>
-                        <MobileIcon />
-                      </Icon>
-                      Mobil
-                    </ToggleGroup.Item>
-                  </ToggleGroup.Root>
+                  <Tabs.List>
+                    <ToggleGroup.Root type="single" defaultValue="desktop">
+                      <ToggleGroup.Item value="desktop" asChild>
+                        <Tabs.Trigger value="desktop" asChild>
+                          <ToggleGroup.Button>
+                            <Icon>
+                              <DesktopIcon />
+                            </Icon>
+                            Desktop
+                          </ToggleGroup.Button>
+                        </Tabs.Trigger>
+                      </ToggleGroup.Item>
+                      <ToggleGroup.Item value="mobile" asChild>
+                        <Tabs.Trigger value="mobile" asChild>
+                          <ToggleGroup.Button>
+                            <Icon>
+                              <MobileIcon />
+                            </Icon>
+                            Mobil
+                          </ToggleGroup.Button>
+                        </Tabs.Trigger>
+                      </ToggleGroup.Item>
+                    </ToggleGroup.Root>
+                  </Tabs.List>
                 </Row>
                 <Link passHref href={`/builder/${id}`}>
                   <SystemLink
@@ -88,11 +98,11 @@ export default function VorschauPage({ id }: Props) {
                   width: "100vw",
                 }}
               >
-                <Tabs.Content value="desktop_preview" css={{ height: "100%" }}>
+                <Tabs.Content value="desktop" css={{ height: "100%" }}>
                   <Preview tree={tree} />
                 </Tabs.Content>
                 <Tabs.Content
-                  value="mobile_preview"
+                  value="mobile"
                   css={{ backgroundColor: "$gray6", height: "100%" }}
                 >
                   <MobilePreview />

@@ -1,141 +1,37 @@
 import * as React from "react";
-import { BuilderNode, BuilderRelation } from "@open-decision/type-classes";
-import {
-  useForm,
-  RadioButtons,
-  useInputGroup,
-  Label,
-  Tooltip,
-  Text,
-  styled,
-  hoverStyle,
-} from "@open-decision/design-system";
-import { Interpreter } from "@open-decision/interpreter";
+import { StyleObject, useForm } from "@open-decision/design-system";
+import { useInterpreter } from "@open-decision/interpreter";
 import { Navigation } from "./Navigation";
+import { SelectAnswers } from "./Answers/SelectAnswers";
 
 type PreviewAnswerFormProps = {
-  interpreter: Interpreter;
-  snapshot: Interpreter;
-  node: BuilderNode.TNode;
-  relation?: BuilderRelation.TRelation;
+  inputIds: string[];
+  css?: StyleObject;
 };
 
-export function AnswersForm({
-  relation,
-  interpreter,
-  node,
-  snapshot,
-}: PreviewAnswerFormProps) {
-  const defaultValues = {
-    relationId: relation?.id ?? "",
-  };
+export function AnswersForm({ inputIds, css }: PreviewAnswerFormProps) {
+  const { interpreter, getInputs } = useInterpreter();
+  const inputs = getInputs(inputIds);
 
-  const [Form, { handleSubmit }] = useForm({
-    defaultValues,
-  });
-
-  const onSubmit = (data: typeof defaultValues) => {
-    const relation = interpreter.getRelationById(node.id, data.relationId);
-
-    return relation ? interpreter.evaluateUserInput(relation) : null;
-  };
+  const [Form] = useForm({});
+  if (!inputs) return null;
 
   return (
-    <Form onSubmit={onSubmit}>
-      <RadioButtons.Group
-        name="relationId"
-        css={{
-          marginBottom: "$8",
-          gap: "$2",
-          display: "grid",
-        }}
-        onChange={handleSubmit(onSubmit)}
-      >
-        {Object.values(node.relations).map((relation) => (
-          <AnswersRadioButtons relation={relation} key={relation.id} />
-        ))}
-      </RadioButtons.Group>
-      <Navigation interpreter={interpreter} snapshot={snapshot} />
+    <Form css={css}>
+      {Object.values(inputs).map((input) => {
+        return (
+          <SelectAnswers
+            input={input}
+            key={input.id}
+            onChange={(newValue) => {
+              interpreter.addUserAnswer(input.id, newValue);
+              interpreter.evaluateNodeConditions(
+                interpreter.getCurrentNode()?.data.conditions ?? []
+              );
+            }}
+          />
+        );
+      })}
     </Form>
-  );
-}
-
-const StyledTooltipTrigger = styled(Tooltip.Trigger, {
-  justifyContent: "start",
-  gap: "$3",
-  padding: "$3",
-  border: "1px solid $colors$gray6",
-  color: "$black",
-  borderRadius: "$md",
-  transition: "background-color 100ms ease-in",
-  backgroundColor: "$white",
-
-  variants: {
-    status: {
-      active: {
-        backgroundColor: "$primary9",
-        color: "$white",
-        fontWeight: "500 !important",
-      },
-      disabled: {
-        opacity: 0.5,
-        color: "$gray10",
-
-        "&[data-answer='true']": {
-          color: "$black",
-        },
-      },
-      default: {
-        ...hoverStyle({
-          backgroundColor: "$primary4",
-        }),
-      },
-    },
-  },
-
-  defaultVariants: {
-    status: "default",
-  },
-});
-
-type status = "disabled" | "active" | "default";
-
-type PreviewRadioButtonsProps = { relation: BuilderRelation.TRelation };
-
-function AnswersRadioButtons({ relation }: PreviewRadioButtonsProps) {
-  const [isTooltipOpen, setIsTooltipOpen] = React.useState(false);
-
-  const { getActive } = useInputGroup("radio");
-  const hasAnswer = relation?.answer != null;
-
-  let status: status = "default";
-
-  if (getActive?.(relation.id)) status = "active";
-  if (relation?.target == null) status = "disabled";
-
-  return (
-    <>
-      <Tooltip.Root
-        open={isTooltipOpen}
-        onOpenChange={(open) =>
-          setIsTooltipOpen(status !== "disabled" ? false : open)
-        }
-      >
-        <RadioButtons.Button
-          id={relation.id}
-          value={relation.id}
-          css={{ position: "absolute", width: 0, height: 0 }}
-          disabled={status === "disabled"}
-        />
-        <StyledTooltipTrigger asChild status={status} data-answer={hasAnswer}>
-          <Label htmlFor={relation.id} css={{ textStyle: "medium-text" }}>
-            {hasAnswer ? relation.answer : "Kein Antworttext"}
-          </Label>
-        </StyledTooltipTrigger>
-        <Tooltip.Content sideOffset={10} side="right">
-          <Text>Diese Antwort hat kein Ziel.</Text>
-        </Tooltip.Content>
-      </Tooltip.Root>
-    </>
   );
 }
