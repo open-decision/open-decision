@@ -5,16 +5,18 @@ export const labelStyles = css({
   colorFallback: "$colorScheme-text",
   alignItems: "center",
   gap: "$3",
+  fontWeight: 600,
 
   variants: {
     size: {
       small: {
         textStyle: "small-text",
-        fontWeight: 600,
       },
       medium: {
         textStyle: "medium-text",
-        fontWeight: 600,
+      },
+      large: {
+        textStyle: "large-text",
       },
     },
   },
