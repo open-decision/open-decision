@@ -6,6 +6,9 @@ import {
   ControlledInput,
   Stack,
   css,
+  ScrollArea,
+  Grid,
+  StyleObject,
 } from "@open-decision/design-system";
 import { OptionTargetInputs } from "features/Builder/components/OptionTargetInput/OptionTargetInput";
 import * as React from "react";
@@ -26,21 +29,9 @@ import { StartNodeLabel } from "../NodeLabels/StartNodeLabels";
 
 const styledMotionDiv = css({
   position: "relative",
-  backgroundColor: "$gray2",
-  gap: "$6",
-  paddingInlineEnd: "$5",
-  paddingInlineStart: "$5",
-  paddingBlock: "$5",
-
   gridRow: "1 / -1",
   gridColumn: "2",
-  groupColor: "$gray11",
-  layer: "1",
-  width: "100%",
-  display: "grid",
-  gridAutoRows: "max-content",
-  overflow: "auto",
-  height: "100%",
+  overflow: "hidden",
 });
 
 export function NodeEditingSidebar() {
@@ -67,18 +58,32 @@ export function NodeEditingSidebar() {
           }}
           className={styledMotionDiv()}
         >
-          <NodeEditingSidebarContent
-            node={{ id: selectedNode.id, data: selectedNode.data }}
-          />
+          <ScrollArea.Root
+            css={{
+              height: "100%",
+              layer: "1",
+              paddingInlineEnd: "$5",
+              paddingInlineStart: "$5",
+              paddingBlock: "$5",
+            }}
+          >
+            <ScrollArea.Viewport>
+              <NodeEditingSidebarContent
+                css={{ groupColor: "$gray11" }}
+                node={{ id: selectedNode.id, data: selectedNode.data }}
+              />
+            </ScrollArea.Viewport>
+            <ScrollArea.Scrollbar />
+          </ScrollArea.Root>
         </motion.div>
       ) : null}
     </AnimatePresence>
   );
 }
 
-type Props = { node: Pick<Node.TNode, "id" | "data"> };
+type Props = { node: Pick<Node.TNode, "id" | "data">; css?: StyleObject };
 
-export function NodeEditingSidebarContent({ node }: Props) {
+export function NodeEditingSidebarContent({ node, css }: Props) {
   const { updateNodeName } = useTreeContext();
   const parentNodes = useParents(node.id);
   const startNode = useStartNode();
@@ -93,7 +98,7 @@ export function NodeEditingSidebarContent({ node }: Props) {
   const isStartNode = node?.id === startNode?.id;
 
   return (
-    <>
+    <Grid css={{ gridAutoRows: "max-content", gap: "$6", ...css }}>
       <Box as="header" key={node.id ?? ""}>
         <Form css={{ gap: "$2", display: "flex", flexDirection: "column" }}>
           <Stack
@@ -161,6 +166,6 @@ export function NodeEditingSidebarContent({ node }: Props) {
           <OptionTargetInputs nodeId={node.id} input={input} key={input.id} />
         ))}
       </Box>
-    </>
+    </Grid>
   );
 }

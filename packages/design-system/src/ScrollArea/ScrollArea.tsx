@@ -19,9 +19,10 @@ export const StyledScrollbar = styled(ScrollAreaPrimitive.Scrollbar, {
   // disable browser handling of all panning and zooming gestures on touch devices
   touchAction: "none",
   padding: 2,
-  background: "$gray6",
+  background: "$gray5",
   transition: "background 160ms ease-out",
-  "&:hover": { background: "$gray8" },
+
+  "&:hover": { background: "$gray7" },
   '&[data-orientation="vertical"]': { width: 10 },
   '&[data-orientation="horizontal"]': {
     flexDirection: "column",
