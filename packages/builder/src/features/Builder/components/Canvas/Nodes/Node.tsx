@@ -1,15 +1,14 @@
-import { styled, Text, Icon, Stack } from "@open-decision/design-system";
+import { styled, Text, Stack } from "@open-decision/design-system";
 import React, { memo } from "react";
 import { NodeProps, Position } from "react-flow-renderer";
 import { nodeHeight, nodeWidth } from "../../../utilities/constants";
 import { useEditor } from "features/Builder/state/useEditor";
 import { SourcePort, TargetPort } from "./Port";
-import { NodeLabel } from "./NodeLabel";
 import { useStartNode } from "features/Builder/state/treeStore/hooks";
 import { useSnapshot } from "valtio";
 import { Node as NodeType } from "@open-decision/type-classes";
 import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
-import { RocketIcon } from "@radix-ui/react-icons";
+import { StartNodeLabel } from "../../NodeLabels/StartNodeLabels";
 
 const NodeContainer = styled(Stack, {
   layer: "1",
@@ -64,12 +63,9 @@ export const Node = memo(
         center
       >
         {isStartNode ? (
-          <NodeLabel css={{ colorScheme: "success" }}>
-            <Icon>
-              <RocketIcon />
-            </Icon>
-            Start
-          </NodeLabel>
+          <StartNodeLabel
+            css={{ position: "absolute", top: "-14px", left: "-14px" }}
+          />
         ) : null}
         <TargetPort
           type="target"

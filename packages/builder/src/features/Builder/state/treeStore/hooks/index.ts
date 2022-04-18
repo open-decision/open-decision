@@ -131,7 +131,9 @@ export function useTree() {
   return useSnapshot(tree);
 }
 
-export function useParents(nodeId: string) {
+export function useParents(
+  nodeId: string
+): Record<string, { id: string; name?: string }> | undefined {
   const { getParents, derivedNodeNames } = useTreeContext();
   const { nodeNames } = useSnapshot(derivedNodeNames);
 

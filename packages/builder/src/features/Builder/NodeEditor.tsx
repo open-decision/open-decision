@@ -1,6 +1,6 @@
 import { styled, StyleObject } from "@open-decision/design-system";
 import React from "react";
-import { NodeEditingSidebar } from "./components/NodeEditingSidebar";
+import { NodeEditingSidebar } from "./components/NodeEditingSidebar/NodeEditingSidebar";
 import { Canvas } from "./components/Canvas/Canvas";
 import { sidebarWidth } from "./utilities/constants";
 import { useTreeContext } from "./state/treeStore/TreeContext";
