@@ -3,15 +3,7 @@ import { styled } from "../stitches";
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 
 export const Root = styled(ScrollAreaPrimitive.Root, {
-  minHeight: "200px",
-  maxHeight: "500px",
-  padding: "$2",
-  layer: "2",
   overflow: "hidden",
-  border: "1px solid $gray7",
-  focusType: "inner-within",
-  borderBottomLeftRadius: "$md",
-  borderBottomRightRadius: "$md",
 });
 
 export const Viewport = styled(ScrollAreaPrimitive.Viewport, {

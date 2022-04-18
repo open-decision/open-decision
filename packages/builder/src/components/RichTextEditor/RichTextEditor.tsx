@@ -54,6 +54,15 @@ export const RichTextEditor = ({ id, content }: Props) => {
       />
       <ScrollArea.Root
         css={{
+          minHeight: "200px",
+          maxHeight: "500px",
+          padding: "$2",
+          layer: "2",
+          border: "1px solid $gray7",
+          focusType: "inner-within",
+          borderBottomLeftRadius: "$md",
+          borderBottomRightRadius: "$md",
+
           ...focusStyleWithin({
             "[data-scrollbar]": {
               margin: 1,
