@@ -1,20 +1,15 @@
-import { Box, styled } from "@open-decision/design-system";
+import {
+  Box,
+  focusStyleWithin,
+  ScrollArea,
+  styled,
+} from "@open-decision/design-system";
 import { EditorContent, Content, useEditor } from "@tiptap/react";
 import { Toolbar } from "./Toolbar";
 import { extensions } from "./shared";
 import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
 
 const StyledEditorContent = styled(EditorContent, {
-  focusType: "inner-within",
-  border: "1px solid $gray7",
-  overflow: "auto",
-  borderBottomLeftRadius: "$md",
-  borderBottomRightRadius: "$md",
-  minHeight: "200px",
-  maxHeight: "500px",
-  layer: "2",
-  padding: "$2",
-
   ".ProseMirror": {
     colorScheme: "primary",
     display: "flex",
@@ -57,7 +52,21 @@ export const RichTextEditor = ({ id, content }: Props) => {
           layer: "3",
         }}
       />
-      <StyledEditorContent editor={editor} />
+      <ScrollArea.Root
+        css={{
+          ...focusStyleWithin({
+            "[data-scrollbar]": {
+              margin: 1,
+              borderBottomRightRadius: "$sm",
+            },
+          }),
+        }}
+      >
+        <ScrollArea.Viewport>
+          <StyledEditorContent editor={editor} />
+        </ScrollArea.Viewport>
+        <ScrollArea.Scrollbar />
+      </ScrollArea.Root>
     </Box>
   );
 };
