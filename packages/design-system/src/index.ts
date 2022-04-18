@@ -18,6 +18,7 @@ export * from "./Overlays/Popover/Popover";
 export * from "./Overlays/HoverCard/HoverCard";
 export * from "./Tabs/Tabs";
 export * from "./LoadingSpinner/LoadingSpinner";
+export * as ScrollArea from "./ScrollArea/ScrollArea";
 
 // Styling solutions
 export * from "./stitches";
