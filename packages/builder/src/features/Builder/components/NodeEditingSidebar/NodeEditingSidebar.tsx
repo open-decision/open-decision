@@ -32,6 +32,9 @@ const styledMotionDiv = css({
   gridRow: "1 / -1",
   gridColumn: "2",
   overflow: "hidden",
+  zIndex: "$10",
+  boxShadow: "$1",
+  width: "100%",
 });
 
 export function NodeEditingSidebar() {
