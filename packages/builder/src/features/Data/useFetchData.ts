@@ -1,3 +1,4 @@
+import * as React from "react";
 import { useAuth } from "features/Auth/useAuth";
 
 export const useFetchData = <TData, TVariables>(
@@ -6,29 +7,40 @@ export const useFetchData = <TData, TVariables>(
 ): ((variables?: TVariables) => Promise<TData>) => {
   const [state] = useAuth();
 
-  return async (variables?: TVariables) => {
-    if (state.matches("undetermined")) return;
+  const fetcher = React.useCallback(
+    async (variables?: TVariables) => {
+      const token = state.context.auth?.access.token;
 
-    const res = await fetch("/graphql", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${state.context.user?.access.token}`,
-        ...(options ?? {}),
-      },
-      body: JSON.stringify({
-        query,
-        variables,
-      }),
-    });
+      if (
+        state.matches({ loggedIn: "refresh" }) ||
+        state.matches("undetermined")
+      )
+        throw new Error("Is not ready");
 
-    const json = await res.json();
+      const res = await fetch("/graphql", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+          ...(options ?? {}),
+        },
+        body: JSON.stringify({
+          query,
+          variables,
+        }),
+      });
 
-    if (json.errors) {
-      const { message } = json.errors[0] || "Error..";
-      throw new Error(message);
-    }
+      const json = await res.json();
 
-    return json.data;
-  };
+      if (json.errors) {
+        const { message } = json.errors[0] || "Error..";
+        throw new Error(message);
+      }
+
+      return json.data;
+    },
+    [options, query, state]
+  );
+
+  return fetcher;
 };

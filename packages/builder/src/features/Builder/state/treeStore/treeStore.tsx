@@ -9,16 +9,17 @@ declare module "valtio" {
   function useSnapshot<T extends object>(p: T): T;
 }
 
+export let resolve;
+
+export const nonSyncedStore = proxy({
+  connectionSourceNodeId: "",
+  validConnections: [] as string[],
+  synced: new Promise((r) => (resolve = r)),
+});
+
 export function createTreeStore(id: string) {
   const yDoc = new Y.Doc({ guid: id });
   const yMap = yDoc.getMap("tree");
-  let resolve;
-
-  const nonSyncedStore = proxy({
-    connectionSourceNodeId: "",
-    validConnections: [] as string[],
-    synced: new Promise((r) => (resolve = r)),
-  });
 
   const tree = proxy<Tree.TTree>({
     startNode: undefined as string | undefined,
@@ -66,7 +67,6 @@ export function createTreeStore(id: string) {
   }
 
   return {
-    resolve,
     tree,
     derivedNodeNames,
     yDoc,

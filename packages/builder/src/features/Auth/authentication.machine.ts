@@ -1,7 +1,9 @@
-import { isBefore } from "date-fns";
+import { websocketMachine } from "features/Data/websocket.machine";
 import { NextRouter } from "next/router";
 import { protectedRoutes } from "src/config/protectedRoutes";
 import { assign, createMachine, Interpreter } from "xstate";
+import { Doc } from "yjs";
+import { refreshMachine } from "./refresh.machine";
 import { login } from "./utils/login";
 import { logout } from "./utils/logout";
 import { refresh } from "./utils/refresh";
@@ -10,19 +12,20 @@ import { requestPasswordReset } from "./utils/requestPasswordReset";
 import { resetPassword } from "./utils/resetPassword";
 import { LoginResponse } from "./utils/shared";
 
-type LocationContext = { location?: string };
-
-type ErrorContext = { error?: string | undefined };
+type SharedContext = {
+  location?: string;
+  error?: string;
+  id?: string;
+  yDoc?: Doc;
+};
 
 type EmptyContext = {
-  user: undefined;
-} & LocationContext &
-  ErrorContext;
+  auth: undefined;
+} & SharedContext;
 
 type DefinedContext = {
-  user: LoginResponse;
-} & LocationContext &
-  ErrorContext;
+  auth: LoginResponse;
+} & SharedContext;
 
 export type Context = EmptyContext | DefinedContext;
 
@@ -62,7 +65,9 @@ export type Events =
   | { type: "FAILED_PASSWORD_RESET_REQUEST"; error: string }
   | { type: "REDIRECT" }
   | { type: "REFRESH" }
-  | { type: "TOKEN_VALID" };
+  | { type: "OPEN_WEBSOCKET"; id: string; yDoc: Doc }
+  | { type: "CLOSE_WEBSOCKET" }
+  | { type: "WEBSOCKET_CLOSED" };
 
 export type AuthService = Interpreter<Context, any, Events, State, any>;
 
@@ -72,9 +77,11 @@ export const createAuthenticationMachine = (router: NextRouter) =>
       id: "authentication",
       initial: "undetermined",
       context: {
-        user: undefined,
+        auth: undefined,
         location: undefined,
         error: undefined,
+        id: undefined,
+        yDoc: undefined,
       },
       states: {
         undetermined: {
@@ -100,52 +107,96 @@ export const createAuthenticationMachine = (router: NextRouter) =>
           },
         },
         loggedIn: {
-          initial: "redirectToLocation",
-          on: {
-            LOG_OUT: {
-              target: ".loggingOut",
-            },
-            REDIRECT: {
-              target: ".redirectToLocation",
-            },
-          },
+          type: "parallel",
           states: {
-            idle: {
-              after: {
-                1000: {
-                  target: "refresh",
-                },
-              },
+            authentication: {
+              initial: "redirectToLocation",
               on: {
-                REFRESH: {
-                  target: "#authentication.loggedIn.refresh",
+                LOG_OUT: ".loggingOut",
+                REDIRECT: ".redirectToLocation",
+              },
+              states: {
+                idle: {
+                  on: {
+                    REFRESH: "refresh",
+                  },
+                  invoke: {
+                    id: "refreshMachine",
+                    src: refreshMachine,
+                    data: {
+                      expires: (context: DefinedContext) =>
+                        context.auth.access.expires,
+                    },
+                    onDone: "refresh",
+                  },
+                },
+                redirectToLocation: {
+                  invoke: {
+                    src: "redirectToLocation",
+                    onDone: { target: "idle" },
+                  },
+                },
+                refresh: {
+                  invoke: {
+                    src: "checkIfLoggedIn",
+                    onError: {
+                      target: "#authentication.loggedOut",
+                    },
+                  },
+                  on: {
+                    REPORT_IS_LOGGED_IN: {
+                      target: "idle",
+                      actions: "assignUserToContext",
+                    },
+                    REPORT_IS_LOGGED_OUT: "#authentication.loggedOut",
+                  },
+                },
+                loggingOut: {
+                  invoke: {
+                    src: "logout",
+                    onDone: {
+                      target: "#authentication.loggedOut",
+                    },
+                  },
                 },
               },
             },
-            redirectToLocation: {
-              invoke: { src: "redirectToLocation", onDone: { target: "idle" } },
-            },
-            refresh: {
-              invoke: {
-                src: "refreshToken",
-                onError: {
-                  target: "#authentication.loggedOut",
+            websocket: {
+              initial: "unconnected",
+              states: {
+                unconnected: {
+                  on: {
+                    OPEN_WEBSOCKET: {
+                      target: "connect",
+                      actions: "assignWebsocketDataToContext",
+                    },
+                  },
                 },
-              },
-              on: {
-                REPORT_IS_LOGGED_IN: {
-                  target: "#authentication.loggedIn.idle",
-                  actions: "assignUserToContext",
+                connect: {
+                  invoke: {
+                    id: "websocket",
+                    src: websocketMachine,
+                    data: {
+                      id: (context) => context.id,
+                      yDoc: (context) => context.yDoc,
+                      token: (context) => context.auth.access.token,
+                    },
+                    onDone: "reconnect",
+                  },
+                  on: {
+                    CLOSE_WEBSOCKET: "unconnected",
+                  },
                 },
-                TOKEN_VALID: "#authentication.loggedIn.idle",
-                REPORT_IS_LOGGED_OUT: "#authentication.loggedOut",
-              },
-            },
-            loggingOut: {
-              invoke: {
-                src: "logout",
-                onDone: {
-                  target: "#authentication.loggedOut",
+                reconnect: {
+                  on: {
+                    REPORT_IS_LOGGED_IN: {
+                      target: "connect",
+                    },
+                    REPORT_IS_LOGGED_OUT: {
+                      target: "unconnected",
+                      actions: "clearWebsocketDataFromContext",
+                    },
+                  },
                 },
               },
             },
@@ -256,22 +307,6 @@ export const createAuthenticationMachine = (router: NextRouter) =>
             () => send({ type: "REPORT_IS_LOGGED_OUT" })
           );
         },
-        refreshToken: (context) => async (send) => {
-          const tokenHasExpired =
-            context.user?.access.expires &&
-            isBefore(new Date(context.user?.access.expires), new Date());
-
-          if (!tokenHasExpired) return send({ type: "TOKEN_VALID" });
-
-          await refresh(
-            (user) =>
-              send({
-                type: "REPORT_IS_LOGGED_IN",
-                user,
-              }),
-            () => send({ type: "REPORT_IS_LOGGED_OUT" })
-          );
-        },
         login: (_context, event) => async (send) => {
           if (event.type !== "LOG_IN") return;
           const { email, password } = event;
@@ -353,11 +388,11 @@ export const createAuthenticationMachine = (router: NextRouter) =>
 
           return {
             ...context,
-            user: event.user,
+            auth: event.user,
           };
         }),
         clearUserDetailsFromContext: assign({
-          user: (_context, _event) => undefined,
+          auth: (_context, _event) => undefined,
         }),
         assignLocationToContext: assign({
           location: (_context, _event) => {
@@ -383,6 +418,19 @@ export const createAuthenticationMachine = (router: NextRouter) =>
         }),
         removeErrorFromContext: assign({
           error: (_context, _event) => undefined,
+        }),
+        assignWebsocketDataToContext: assign((context, event) => {
+          if (event.type !== "OPEN_WEBSOCKET") return context;
+
+          return {
+            ...context,
+            id: event.id,
+            yDoc: event.yDoc,
+          };
+        }),
+        clearWebsocketDataFromContext: assign({
+          id: (_context, _event) => undefined,
+          yDoc: (_context, _event) => undefined,
         }),
       },
     }

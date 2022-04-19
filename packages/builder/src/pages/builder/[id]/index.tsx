@@ -7,7 +7,6 @@ import { EditorHeader } from "features/Builder/components/EditorHeader";
 import { ErrorBoundary } from "@sentry/nextjs";
 import { ErrorFallback } from "features/Error/ErrorFallback";
 import { GetServerSideProps } from "next";
-import { useYjsConnection } from "features/Builder/state/treeStore/useYjsConnection";
 import { TreeProvider } from "features/Builder/state/treeStore/TreeContext";
 import { Box, LoadingSpinner } from "@open-decision/design-system";
 import { SideMenu } from "features/Builder/SideMenu";
@@ -33,36 +32,28 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   };
 };
 
-export default function BuilderPage({ id }): JSX.Element {
+export default function BuilderPage({ id }) {
   return (
     <React.Suspense fallback={<Loading />}>
       <ErrorBoundary fallback={ErrorFallback}>
         <TreeProvider id={id}>
-          {typeof window !== undefined ? <BuilderPageImpl id={id} /> : null}
+          <MainContent
+            css={{
+              display: "grid",
+              gridTemplateColumns: `max-content 1fr`,
+              gridTemplateRows: "max-content 1fr",
+            }}
+          >
+            <ReactFlowProvider>
+              <EditorProvider>
+                <EditorHeader css={{ gridColumn: "1 / -1", gridRow: "1" }} />
+                <SideMenu css={{ gridRow: "2", gridColumn: "1" }} />
+                <NodeEditor css={{ gridColumn: "2 / 3", gridRow: "2" }} />
+              </EditorProvider>
+            </ReactFlowProvider>
+          </MainContent>
         </TreeProvider>
       </ErrorBoundary>
     </React.Suspense>
-  );
-}
-
-function BuilderPageImpl({ id }) {
-  useYjsConnection(id);
-
-  return (
-    <MainContent
-      css={{
-        display: "grid",
-        gridTemplateColumns: `max-content 1fr`,
-        gridTemplateRows: "max-content 1fr",
-      }}
-    >
-      <ReactFlowProvider>
-        <EditorProvider>
-          <EditorHeader css={{ gridColumn: "1 / -1", gridRow: "1" }} />
-          <SideMenu css={{ gridRow: "2", gridColumn: "1" }} />
-          <NodeEditor css={{ gridColumn: "2 / 3", gridRow: "2" }} />
-        </EditorProvider>
-      </ReactFlowProvider>
-    </MainContent>
   );
 }
