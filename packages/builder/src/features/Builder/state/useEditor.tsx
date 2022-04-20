@@ -4,6 +4,16 @@ import { calculateCenterOfNode } from "../utilities/calculateCenterOfNode";
 import { sidebarWidth } from "../utilities/constants";
 import { Node } from "@open-decision/type-classes";
 import shallow from "zustand/shallow";
+import {
+  removeSelectedNodes,
+  replaceSelectedNodes,
+  addSelectedNodes,
+  removeSelectedNode,
+  addSelectedEdges,
+  removeSelectedEdges,
+  replaceSelectedEdges,
+  removeSelectedEdge,
+} from "./treeStore/treeStore";
 
 type projectCoordinatesFn = (
   coordinates: Node.TCoordinates
@@ -16,8 +26,13 @@ type EditorState = {
   closeNodeEditingSidebar: () => void;
   zoomToNode: (node: Node.TNode) => void;
   addSelectedNodes: (nodeIds: string[]) => void;
-  removeSelectedElements: () => void;
+  replaceSelectedNodes: (nodeIds: string[]) => void;
+  removeSelectedNodes: () => void;
+  removeSelectedNode: (nodeId: string) => void;
   addSelectedEdges: (edgeIds: string[]) => void;
+  removeSelectedEdges: () => void;
+  replaceSelectedEdges: (edgeIds: string[]) => void;
+  removeSelectedEdge: (edgeId: string) => void;
   connectingNodeId: string | null;
   isConnecting: boolean;
 };
@@ -31,11 +46,8 @@ type TreeProviderProps = Omit<
 export function EditorProvider({ children }: TreeProviderProps) {
   const reactFlowWrapperRef = React.useRef<HTMLDivElement | null>(null);
   const reactFlowBounds = reactFlowWrapperRef.current?.getBoundingClientRect();
-  const selectionFunctions = useStore(
+  const connectionState = useStore(
     (state) => ({
-      addSelectedNodes: state.addSelectedNodes,
-      removeSelectedElements: state.unselectNodesAndEdges,
-      addSelectedEdges: state.addSelectedEdges,
       connectingNodeId: state.connectionNodeId,
       isConnecting: state.connectionNodeId != null ? true : false,
     }),
@@ -83,9 +95,17 @@ export function EditorProvider({ children }: TreeProviderProps) {
         projectCoordinates,
         getCenter,
         reactFlowWrapperRef,
-        closeNodeEditingSidebar: selectionFunctions.removeSelectedElements,
+        closeNodeEditingSidebar: () => removeSelectedNodes(),
+        addSelectedNodes,
+        removeSelectedNodes,
+        replaceSelectedNodes,
+        removeSelectedNode,
+        addSelectedEdges,
+        removeSelectedEdges,
+        replaceSelectedEdges,
+        removeSelectedEdge,
         zoomToNode,
-        ...selectionFunctions,
+        ...connectionState,
       }}
     >
       {children}

@@ -83,10 +83,14 @@ function Nodes() {
     [syncedEdges]
   );
 
-  const startNode = useStartNode();
-
-  const { closeNodeEditingSidebar, zoomToNode, removeSelectedElements } =
-    useEditor();
+  const {
+    closeNodeEditingSidebar,
+    removeSelectedNodes,
+    addSelectedNodes,
+    removeSelectedNode,
+    addSelectedEdges,
+    removeSelectedEdge,
+  } = useEditor();
   const { addNotification } = useNotificationStore();
 
   return (
@@ -120,16 +124,29 @@ function Nodes() {
                 : null;
               break;
             case "select": {
+
               if (nodeChange.selected) {
-                const node = getNode(nodeChange.id);
-                node && zoomToNode(node);
+                addSelectedNodes([nodeChange.id]);
+              } else {
+                removeSelectedNode(nodeChange.id);
               }
               break;
             }
           }
         });
       }}
-      onNodeDragStart={removeSelectedElements}
+      onEdgesChange={(edgeChanges) => {
+        edgeChanges.forEach((edgeChange) => {
+          switch (edgeChange.type) {
+            case "select":
+              if (edgeChange.selected) {
+                addSelectedEdges([edgeChange.id]);
+              } else {
+                removeSelectedEdge(edgeChange.id);
+              }
+          }
+        });
+      }}
       onConnectStart={(event) => {
         if (validConnectEvent(event.target) && event.target.dataset.nodeid) {
           startConnecting(event.target.dataset.nodeid);

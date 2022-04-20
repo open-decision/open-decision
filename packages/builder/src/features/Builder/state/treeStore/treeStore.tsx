@@ -11,17 +11,56 @@ declare module "valtio" {
 
 export let resolve;
 
-export const nonSyncedStore = proxy({
+const nonSyncedStore = proxy({
   connectionSourceNodeId: "",
   validConnections: [] as string[],
   synced: new Promise((r) => (resolve = r)),
+  selectedNodeIds: [] as string[],
+  selectedEdgeIds: [] as string[],
 });
+
+export function addSelectedNodes(nodeIds: string[]) {
+  nonSyncedStore.selectedNodeIds.push(...nodeIds);
+}
+
+export function replaceSelectedNodes(nodeIds: string[]) {
+  nonSyncedStore.selectedNodeIds = nodeIds;
+}
+
+export function removeSelectedNodes() {
+  nonSyncedStore.selectedNodeIds = [];
+}
+
+export function removeSelectedNode(nodeId: string) {
+  const nodeIndex = nonSyncedStore.selectedNodeIds.findIndex(
+    (id) => id === nodeId
+  );
+  nonSyncedStore.selectedNodeIds.splice(nodeIndex, 1);
+}
+export function addSelectedEdges(edgeIds: string[]) {
+  nonSyncedStore.selectedEdgeIds.push(...edgeIds);
+}
+
+export function replaceSelectedEdges(edgeIds: string[]) {
+  nonSyncedStore.selectedEdgeIds = edgeIds;
+}
+
+export function removeSelectedEdges() {
+  nonSyncedStore.selectedEdgeIds = [];
+}
+
+export function removeSelectedEdge(edgeId: string) {
+  const edgeIndex = nonSyncedStore.selectedEdgeIds.findIndex(
+    (id) => id === edgeId
+  );
+  nonSyncedStore.selectedEdgeIds.splice(edgeIndex, 1);
+}
 
 export function createTreeStore(id: string) {
   const yDoc = new Y.Doc({ guid: id });
   const yMap = yDoc.getMap("tree");
 
-  const tree = proxy<Tree.TTree>({
+  const syncedStore = proxy<Tree.TTree>({
     startNode: undefined as string | undefined,
     nodes: undefined as Node.TNodesRecord | undefined,
     edges: undefined as Edge.TEdgesRecord | undefined,
@@ -30,7 +69,7 @@ export function createTreeStore(id: string) {
 
   const derivedNodeNames = derive({
     nodeNames: (get) => {
-      const { nodes } = get(tree);
+      const { nodes } = get(syncedStore);
 
       return mapValues(nodes ?? {}, (node) => ({
         id: node.id,
@@ -39,9 +78,14 @@ export function createTreeStore(id: string) {
     },
   });
 
-  const methods = Tree.createTreeMethods(tree);
+  const tree = proxy({
+    syncedStore,
+    nonSyncedStore,
+  });
 
-  bindProxyAndYMap(tree, yMap, {
+  const methods = Tree.createTreeMethods(syncedStore);
+
+  bindProxyAndYMap(syncedStore, yMap, {
     transactionOrigin: `valtio for ${id}`,
   });
 
@@ -70,7 +114,6 @@ export function createTreeStore(id: string) {
     tree,
     derivedNodeNames,
     yDoc,
-    nonSyncedStore,
     abortConnecting,
     startConnecting,
     getTreeData: () => yMap.toJSON(),

@@ -1,25 +1,25 @@
-import * as React from "react";
 import { Condition, Edge, Node } from "@open-decision/type-classes";
+import { MarkerType } from "react-flow-renderer";
 import { pick } from "remeda";
 import { useSnapshot } from "valtio";
 import { useTreeContext } from "../TreeContext";
-import { useNodes as useRFNodes } from "react-flow-renderer";
 
 export function useSelectedNodes():
   | ["none", undefined]
   | ["single", Node.TNode]
-  | ["multi", Record<string, Node.TNode>] {
-  const rfNodes = useRFNodes();
+  | ["multi", Node.TNode[]] {
+  const { tree } = useTreeContext();
+  const {
+    nonSyncedStore: { selectedNodeIds },
+    syncedStore: { nodes },
+  } = useSnapshot(tree);
 
-  const selectedNodeIds = rfNodes
-    .filter((node) => node.selected)
-    .map((node) => node.id);
+  if (!nodes) return ["none", undefined];
 
-  const nodes = useNodes(selectedNodeIds);
+  const selectedNodes = Object.values(pick(nodes, selectedNodeIds));
 
-  if (selectedNodeIds.length === 1)
-    return ["single", nodes[selectedNodeIds[0]]];
-  if (selectedNodeIds.length > 1) return ["multi", nodes];
+  if (selectedNodeIds.length === 1) return ["single", selectedNodes[0]];
+  if (selectedNodeIds.length > 1) return ["multi", selectedNodes];
 
   return ["none", undefined];
 }
@@ -27,35 +27,85 @@ export function useSelectedNodes():
 export function useIsPreviewable() {
   const { tree } = useTreeContext();
 
-  const { startNode } = useSnapshot(tree);
+  const {
+    syncedStore: { startNode },
+  } = useSnapshot(tree);
 
   return Boolean(startNode);
 }
 
-export function useStartNode() {
+export function useStartNodeId() {
   const { tree } = useTreeContext();
 
-  const { startNode, nodes } = useSnapshot(tree);
+  const {
+    syncedStore: { startNode },
+  } = useSnapshot(tree);
 
-  return startNode ? nodes?.[startNode] : undefined;
+  return startNode;
+}
+
+export function useRFNodes() {
+  const { tree } = useTreeContext();
+
+  const {
+    nonSyncedStore: { selectedNodeIds },
+    syncedStore: { nodes },
+  } = useSnapshot(tree);
+
+  if (!nodes) return [];
+
+  return Object.values(nodes).map((node) => ({
+    ...node,
+    selected: selectedNodeIds.includes(node.id),
+  }));
+}
+
+const staticEdgeData = {
+  markerEnd: {
+    type: MarkerType.ArrowClosed,
+    color: "#3352C5",
+  },
+  markerStart: {
+    type: MarkerType.ArrowClosed,
+    color: "#c1c8cd",
+  },
+};
+
+export function useRFEdges() {
+  const { tree } = useTreeContext();
+
+  const {
+    nonSyncedStore: { selectedEdgeIds },
+    syncedStore: { edges },
+  } = useSnapshot(tree);
+
+  if (!edges) return [];
+
+  return Object.values(edges).map((edge) => ({
+    ...edge,
+    selected: selectedEdgeIds.includes(edge.id),
+    ...staticEdgeData,
+  }));
 }
 
 export function useNodes(ids?: string[]): Node.TNodesRecord {
   const { tree } = useTreeContext();
 
-  const { nodes } = useSnapshot(tree);
+  const {
+    syncedStore: { nodes },
+  } = useSnapshot(tree);
 
-  return React.useMemo(() => {
-    if (!nodes) return {};
-    if (ids) return pick(nodes, ids);
-    return nodes;
-  }, [ids, nodes]);
+  if (!nodes) return {};
+  if (ids) return pick(nodes, ids);
+  return nodes;
 }
 
 export function useEdges(ids?: string[]) {
   const { tree } = useTreeContext();
 
-  const { edges } = useSnapshot(tree);
+  const {
+    syncedStore: { edges },
+  } = useSnapshot(tree);
 
   if (!edges) return {};
   if (ids) return pick(edges, ids);
@@ -66,7 +116,9 @@ export function useEdges(ids?: string[]) {
 export function useEdge(id: string) {
   const { tree } = useTreeContext();
 
-  const { edges } = useSnapshot(tree);
+  const {
+    syncedStore: { edges },
+  } = useSnapshot(tree);
 
   return edges?.[id];
 }
@@ -74,21 +126,27 @@ export function useEdge(id: string) {
 export function useNode(id: string) {
   const { tree } = useTreeContext();
 
-  const { nodes } = useSnapshot(tree);
+  const {
+    syncedStore: { nodes },
+  } = useSnapshot(tree);
 
   return nodes?.[id];
 }
 
 export function useInput(id: string) {
   const { tree } = useTreeContext();
-  const { inputs } = useSnapshot(tree);
+  const {
+    syncedStore: { inputs },
+  } = useSnapshot(tree);
 
   return inputs?.[id];
 }
 
 export function useInputs(ids: string[]) {
   const { tree } = useTreeContext();
-  const { inputs } = useSnapshot(tree);
+  const {
+    syncedStore: { inputs },
+  } = useSnapshot(tree);
 
   if (!inputs) return {};
   if (ids) return pick(inputs, ids);
@@ -98,7 +156,9 @@ export function useInputs(ids: string[]) {
 
 export function useEdgesOfNode(nodeId: string) {
   const { tree } = useTreeContext();
-  const { edges } = useSnapshot(tree);
+  const {
+    syncedStore: { edges },
+  } = useSnapshot(tree);
 
   const nodesEdges: Edge.TEdgesRecord = {};
 
@@ -117,7 +177,9 @@ export function useConditionsOfNode(
   nodeId: string
 ): Condition.TRecord | undefined {
   const { tree } = useTreeContext();
-  const { conditions, nodes } = useSnapshot(tree);
+  const {
+    syncedStore: { conditions, nodes },
+  } = useSnapshot(tree);
   const node = nodes?.[nodeId];
 
   if (conditions && node) {
@@ -131,17 +193,13 @@ export function useTree() {
   return useSnapshot(tree);
 }
 
-export function useParents(
-  nodeId: string
-): Record<string, { id: string; name?: string }> | undefined {
+export function useParents(nodeId: string): { id: string; name?: string }[] {
   const { getParents, derivedNodeNames } = useTreeContext();
   const { nodeNames } = useSnapshot(derivedNodeNames);
 
-  if (!nodeNames) return;
-
   const parentIds = getParents(nodeId);
 
-  if (!(parentIds.length > 0)) return undefined;
-
-  return pick(nodeNames, parentIds);
+  return Object.values(nodeNames).filter((nodeName) =>
+    parentIds.includes(nodeName.id)
+  );
 }
