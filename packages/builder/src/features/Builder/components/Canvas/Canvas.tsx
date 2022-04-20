@@ -1,18 +1,18 @@
 import * as React from "react";
 import { useEditor } from "features/Builder/state/useEditor";
-import ReactFlow, { MarkerType } from "react-flow-renderer";
+import ReactFlow from "react-flow-renderer";
 import { styled, StyleObject } from "@open-decision/design-system";
 import { Node } from "./Nodes/Node";
 import {
-  useEdges,
-  useNodes,
-  useStartNode,
+  useRFEdges,
+  useRFNodes,
+  useStartNodeId,
 } from "features/Builder/state/treeStore/hooks";
 import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
 import { useNotificationStore } from "features/Notifications/NotificationState";
-import { clone } from "remeda";
 import { ConnectionLine } from "./Edges/ConnectionLine";
 import { CustomEdge } from "./Edges/CustomEdge";
+import { useSnapshot } from "valtio";
 
 const validConnectEvent = (
   target: MouseEvent["target"]
@@ -49,13 +49,12 @@ export function Canvas({ children, css, className }: Props) {
 }
 
 function Nodes() {
-  const syncedNodes = useNodes();
-  const syncedEdges = useEdges();
+  const nodes = useRFNodes();
+  const edges = useRFEdges();
   const {
     abortConnecting,
     createAndAddEdge,
     deleteNodes,
-    nonSyncedStore,
     startConnecting,
     updateNodePosition,
     getNode,
@@ -64,24 +63,14 @@ function Nodes() {
     relateConditionToNode,
     createCondition,
     addInputAnswer,
+    tree,
   } = useTreeContext();
 
-  const nodes = React.useMemo(() => Object.values(syncedNodes), [syncedNodes]);
-  const edges = React.useMemo(
-    () =>
-      Object.values(clone(syncedEdges)).map((edge) => ({
-        ...edge,
-        markerEnd: {
-          type: MarkerType.ArrowClosed,
-          color: "#3352C5",
-        },
-        markerStart: {
-          type: MarkerType.ArrowClosed,
-          color: "#c1c8cd",
-        },
-      })),
-    [syncedEdges]
-  );
+  const [dragging, setDragging] = React.useState(false);
+  const {
+    nonSyncedStore: { selectedNodeIds },
+  } = useSnapshot(tree);
+  const startNodeId = useStartNodeId();
 
   const {
     closeNodeEditingSidebar,
@@ -103,27 +92,32 @@ function Nodes() {
       zoomOnDoubleClick={false}
       panOnScroll={true}
       panOnScrollSpeed={1.1}
-      selectNodesOnDrag={false}
+      selectNodesOnDrag={selectedNodeIds.length > 0}
       fitView
       fitViewOptions={{ maxZoom: 1, minZoom: 0.5, padding: 0.2 }}
       onNodesChange={(nodeChanges) => {
         nodeChanges.forEach((nodeChange) => {
+          if (!("dragging" in nodeChange)) setDragging(false);
+
           switch (nodeChange.type) {
             case "remove":
-              if (nodeChange.id !== startNode?.id) {
+              if (nodeChange.id !== startNodeId) {
                 deleteNodes([nodeChange.id]);
-                removeSelectedElements();
+                removeSelectedNodes();
               }
               break;
-            case "position":
-              nodeChange.dragging
-                ? updateNodePosition(
-                    nodeChange.id,
-                    nodeChange.position ?? { x: 0, y: 0 }
-                  )
-                : null;
+            case "position": {
+              if (!nodeChange.dragging) return;
+
+              setDragging(true);
+              updateNodePosition(
+                nodeChange.id,
+                nodeChange.position ?? { x: 0, y: 0 }
+              );
               break;
+            }
             case "select": {
+              if (dragging && selectedNodeIds.length === 0) return;
 
               if (nodeChange.selected) {
                 addSelectedNodes([nodeChange.id]);
@@ -156,7 +150,7 @@ function Nodes() {
         if (!validConnectEvent(event.target) || !event.target.dataset.nodeid)
           return abortConnecting();
 
-        const sourceNode = getNode(nonSyncedStore.connectionSourceNodeId);
+        const sourceNode = getNode(tree.nonSyncedStore.connectionSourceNodeId);
         if (!sourceNode) return abortConnecting();
         const firstInputId = sourceNode?.data.inputs[0];
 
@@ -167,7 +161,7 @@ function Nodes() {
           answerId: newAnswer.id,
         });
         const possibleEdge = createAndAddEdge({
-          source: nonSyncedStore.connectionSourceNodeId,
+          source: tree.nonSyncedStore.connectionSourceNodeId,
           target: event.target.dataset.nodeid,
           conditionId: newCondition.id,
         });
@@ -181,7 +175,7 @@ function Nodes() {
 
         addCondition(newCondition);
         relateConditionToNode(
-          nonSyncedStore.connectionSourceNodeId,
+          tree.nonSyncedStore.connectionSourceNodeId,
           newCondition.id
         );
       }}
