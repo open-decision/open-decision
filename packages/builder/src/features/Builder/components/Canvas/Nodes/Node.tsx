@@ -4,7 +4,7 @@ import { NodeProps, Position } from "react-flow-renderer";
 import { nodeHeight, nodeWidth } from "../../../utilities/constants";
 import { useEditor } from "features/Builder/state/useEditor";
 import { SourcePort, TargetPort } from "./Port";
-import { useStartNode } from "features/Builder/state/treeStore/hooks";
+import { useStartNodeId } from "features/Builder/state/treeStore/hooks";
 import { useSnapshot } from "valtio";
 import { Node as NodeType } from "@open-decision/type-classes";
 import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
@@ -32,17 +32,17 @@ const NodeContainer = styled(Stack, {
 
 export const Node = memo(
   ({ id, data, selected: isSelected }: NodeProps<NodeType.TNodeData>) => {
-    const { nonSyncedStore } = useTreeContext();
+    const { tree } = useTreeContext();
     const { isConnecting, connectingNodeId } = useEditor();
-    const { validConnections } = useSnapshot(nonSyncedStore);
-    const startNode = useStartNode();
+    const { validConnections } = useSnapshot(tree.nonSyncedStore);
+    const startNodeId = useStartNodeId();
 
     const validConnectionTarget = React.useMemo(
       () => !isConnecting || (isConnecting && validConnections?.includes(id)),
       [isConnecting, validConnections, id]
     );
 
-    const isStartNode = startNode?.id === id;
+    const isStartNode = startNodeId === id;
     const isConnectingNode = connectingNodeId === id;
     const connectable = validConnectionTarget && !isConnectingNode;
 

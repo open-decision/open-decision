@@ -19,7 +19,7 @@ import {
   useInputs,
   useParents,
   useSelectedNodes,
-  useStartNode,
+  useStartNodeId,
 } from "../../state/treeStore/hooks";
 import { RichTextEditor } from "components/RichTextEditor/RichTextEditor";
 import { useTreeContext } from "../../state/treeStore/TreeContext";
@@ -72,6 +72,7 @@ export function NodeEditingSidebar() {
           >
             <ScrollArea.Viewport>
               <NodeEditingSidebarContent
+                key={selectedNode.id}
                 css={{ groupColor: "$gray11" }}
                 node={{ id: selectedNode.id, data: selectedNode.data }}
               />
@@ -89,8 +90,7 @@ type Props = { node: Pick<Node.TNode, "id" | "data">; css?: StyleObject };
 export function NodeEditingSidebarContent({ node, css }: Props) {
   const { updateNodeName } = useTreeContext();
   const parentNodes = useParents(node.id);
-  const startNode = useStartNode();
-
+  const startNodeId = useStartNodeId();
   const [Form] = useForm({
     defaultValues: { name: node?.data.name ?? "" },
     mode: "onChange",
@@ -98,11 +98,11 @@ export function NodeEditingSidebarContent({ node, css }: Props) {
 
   const inputs = useInputs(node.data.inputs);
 
-  const isStartNode = node?.id === startNode?.id;
+  const isStartNode = node?.id === startNodeId;
 
   return (
     <Grid css={{ gridAutoRows: "max-content", gap: "$6", ...css }}>
-      <Box as="header" key={node.id ?? ""}>
+      <Box as="header">
         <Form css={{ gap: "$2", display: "flex", flexDirection: "column" }}>
           <Stack
             css={{
@@ -115,8 +115,8 @@ export function NodeEditingSidebarContent({ node, css }: Props) {
             <Stack
               css={{ flexDirection: "row", gap: "$2", alignItems: "center" }}
             >
-              {parentNodes ? (
-                <ParentNodeSelector parentNodes={Object.values(parentNodes)} />
+              {parentNodes.length > 0 ? (
+                <ParentNodeSelector parentNodes={parentNodes} />
               ) : null}
               {isStartNode ? (
                 <StartNodeLabel css={{ colorScheme: "success" }} />
@@ -157,11 +157,7 @@ export function NodeEditingSidebarContent({ node, css }: Props) {
         >
           Inhalt
         </Label>
-        <RichTextEditor
-          id={node.id}
-          content={node.data.content}
-          key={node.id}
-        />
+        <RichTextEditor id={node.id} content={node.data.content} />
       </Box>
 
       <Box as="section">
