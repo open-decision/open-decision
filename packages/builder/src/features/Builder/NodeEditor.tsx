@@ -19,8 +19,10 @@ type NodeEditorProps = {
 };
 
 export const NodeEditor = ({ css }: NodeEditorProps) => {
-  const { nonSyncedStore } = useTreeContext();
-  const { synced } = useSnapshot(nonSyncedStore);
+  const { tree } = useTreeContext();
+  const {
+    nonSyncedStore: { synced: _synced },
+  } = useSnapshot(tree);
 
   return (
     <StyledCanvas css={css}>
