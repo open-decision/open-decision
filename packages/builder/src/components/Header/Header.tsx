@@ -1,11 +1,6 @@
 import React from "react";
 import { Logo } from "components";
-import {
-  StyleObject,
-  styled,
-  Box,
-  darkTheme,
-} from "@open-decision/design-system";
+import { StyleObject, styled, darkTheme } from "@open-decision/design-system";
 import { UserMenu } from "./UserMenu";
 
 const Container = styled("div", {

@@ -8,6 +8,7 @@ import {
   Stack,
   styled,
   Text,
+  Box,
 } from "@open-decision/design-system";
 import { formatRelative, parseISO } from "date-fns";
 import de from "date-fns/locale/de";
@@ -35,86 +36,59 @@ const Card = styled("a", Stack, {
 type Props = { tree: TreesQuery["decisionTrees"][0] };
 
 export function TreeCard({ tree }: Props) {
-  const [openDialog, setOpenDialog] = React.useState<"update" | "delete" | "">(
-    ""
-  );
-
   const dropdownTriggerRef = React.useRef<HTMLButtonElement | null>(null);
 
-  const Dialog = React.useCallback(
-    function Dialog() {
-      switch (openDialog) {
-        case "update":
-          return (
-            <UpdateTreeDialog
-              open={true}
-              setOpen={() => setOpenDialog("")}
-              treeId={tree.uuid}
-              focusOnClose={() => dropdownTriggerRef.current?.focus()}
-            />
-          );
-        case "delete":
-          return (
-            <DeleteTreeDialog
-              open={true}
-              setOpen={() => setOpenDialog("")}
-              tree={tree}
-              focusOnClose={() => dropdownTriggerRef.current?.focus()}
-            />
-          );
-        case "":
-          return null;
-      }
-    },
-    [openDialog, tree]
-  );
-
   return (
-    <>
-      <Dialog />
+    <Box css={{ position: "relative" }}>
       <Link href={`/builder/${tree.uuid}`} passHref>
-        <Card
-          css={{ cursor: "pointer" }}
-          title={`Öffne das Projekt ${tree.name}`}
-        >
+        <Card title={`Öffne das Projekt ${tree.name}`}>
           <Heading size="small" css={{ marginBottom: "$1" }}>
             {tree.name}
           </Heading>
-          <DropdownMenu.Root>
-            <DropdownMenu.Trigger asChild ref={dropdownTriggerRef}>
-              <Button
-                variant="ghost"
-                square
-                css={{ position: "absolute", right: 20, top: 12 }}
-              >
-                <Icon label={`Projektmenü ${tree.name}`}>
-                  <HamburgerMenuIcon />
-                </Icon>
-              </Button>
-            </DropdownMenu.Trigger>
-            <DropdownMenu.Content>
-              <DropdownMenu.Item
-                onClick={(event) => event.stopPropagation()}
-                onSelect={() => setOpenDialog("update")}
-              >
-                Projektname ändern
-              </DropdownMenu.Item>
-              <DropdownMenu.Item
-                onClick={(event) => event.stopPropagation()}
-                onSelect={() => setOpenDialog("delete")}
-              >
-                Projekt löschen
-              </DropdownMenu.Item>
-            </DropdownMenu.Content>
-          </DropdownMenu.Root>
+
           <Text css={{ color: "$gray11" }}>
             {formatRelative(parseISO(tree.updatedAt), new Date(), {
               locale: de,
             })}
           </Text>
-          {/* <TreeTags tags={tree.tags} /> */}
         </Card>
       </Link>
-    </>
+      <DropdownMenu.Root
+        dialogs={{
+          update: (
+            <UpdateTreeDialog
+              treeId={tree.uuid}
+              focusOnClose={() => dropdownTriggerRef.current?.focus()}
+            />
+          ),
+          delete: (
+            <DeleteTreeDialog
+              tree={tree}
+              focusOnClose={() => dropdownTriggerRef.current?.focus()}
+            />
+          ),
+        }}
+      >
+        <DropdownMenu.Trigger asChild ref={dropdownTriggerRef}>
+          <Button
+            variant="ghost"
+            square
+            css={{ position: "absolute", right: 20, top: 12 }}
+          >
+            <Icon label={`Projektmenü ${tree.name}`}>
+              <HamburgerMenuIcon />
+            </Icon>
+          </Button>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Content>
+          <DropdownMenu.DialogItem dialogKey="update">
+            Projektname ändern
+          </DropdownMenu.DialogItem>
+          <DropdownMenu.DialogItem dialogKey="delete">
+            Projekt löschen
+          </DropdownMenu.DialogItem>
+        </DropdownMenu.Content>
+      </DropdownMenu.Root>
+    </Box>
   );
 }

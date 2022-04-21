@@ -4,6 +4,11 @@ import { TriangleDownIcon } from "@radix-ui/react-icons";
 type Props = { label: React.ReactNode } & ButtonProps;
 
 function MenuButtonImpl({ label, css, ...props }: Props, ref) {
+  const Label =
+    typeof label === "string" && (label.length ?? "") > 60
+      ? label.slice(0, 60).concat("...")
+      : label;
+
   return (
     <Button
       variant="neutral"
@@ -18,7 +23,7 @@ function MenuButtonImpl({ label, css, ...props }: Props, ref) {
       ref={ref}
       {...props}
     >
-      {label}
+      {Label}
       <Icon
         className="rotate"
         css={{

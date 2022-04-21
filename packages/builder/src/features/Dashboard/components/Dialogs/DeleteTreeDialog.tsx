@@ -7,21 +7,23 @@ import {
   DialogTriggerProps,
   Text,
   styled,
+  StyleObject,
 } from "@open-decision/design-system";
-import {
-  TreesQuery,
-  useDeleteTreeMutation,
-} from "features/Data/generated/graphql";
+import { useDeleteTreeMutation } from "features/Data/generated/graphql";
 import { queryClient } from "features/Data/queryClient";
 import * as React from "react";
 
 const Bold = styled("span", { color: "$gray12" });
 
-type Props = DialogTriggerProps & {
-  tree: TreesQuery["decisionTrees"][0];
+type Props = {
+  tree: { name: string; uuid: string };
   open?: boolean;
   setOpen?: (open: boolean) => void;
   focusOnClose?: () => void;
+  className?: string;
+  children?: DialogTriggerProps["children"];
+  css?: StyleObject;
+  onDelete?: () => void;
 };
 
 export function DeleteTreeDialog({
@@ -30,6 +32,9 @@ export function DeleteTreeDialog({
   setOpen,
   focusOnClose,
   children,
+  className,
+  css,
+  onDelete,
 }: Props) {
   const [Form, { register }] = useForm({
     defaultValues: { treeName: "" },
@@ -39,13 +44,18 @@ export function DeleteTreeDialog({
     onSuccess: () => {
       queryClient.invalidateQueries("Trees");
       setOpen?.(false);
+      onDelete?.();
     },
   });
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       {children ? <Dialog.Trigger asChild>{children}</Dialog.Trigger> : null}
-      <Dialog.Content onCloseAutoFocus={focusOnClose}>
+      <Dialog.Content
+        onCloseAutoFocus={focusOnClose}
+        className={className}
+        css={css}
+      >
         <Dialog.Header css={{ marginBottom: "$2" }}>
           Projekt löschen
         </Dialog.Header>

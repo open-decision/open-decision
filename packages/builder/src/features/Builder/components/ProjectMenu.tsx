@@ -1,5 +1,6 @@
 import {
   darkTheme,
+  defaultTheme,
   DropdownMenu,
   Icon,
   Link,
@@ -12,25 +13,50 @@ import {
   TrashIcon,
 } from "@radix-ui/react-icons";
 import { MenuButton } from "components/Header/MenuButton";
+import { DeleteTreeDialog } from "features/Dashboard/components/Dialogs/DeleteTreeDialog";
 import { UpdateTreeDialog } from "features/Dashboard/components/Dialogs/UpdateTreeDialog";
 import { useGetTreeNameQuery } from "features/Data/generated/graphql";
 import { useTreeId } from "features/Data/useTreeId";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
+import { ExportDialog } from "./ExportDialog";
 
 type Props = { css?: StyleObject };
 
 export function ProjectMenu({ css }: Props) {
   const id = useTreeId();
+  const router = useRouter();
 
   const { data } = useGetTreeNameQuery({ uuid: id });
 
-  const name =
-    (data?.decisionTree?.name.length ?? "") > 60
-      ? data?.decisionTree?.name.slice(0, 60).concat("...")
-      : data?.decisionTree?.name;
+  const name = data?.decisionTree?.name ?? "Kein Name";
 
   return (
-    <DropdownMenu.Root>
+    <DropdownMenu.Root
+      dialogs={{
+        export: (
+          <ExportDialog
+            className={defaultTheme}
+            css={{ groupColor: "$black" }}
+          />
+        ),
+        update: (
+          <UpdateTreeDialog
+            className={defaultTheme}
+            treeId={id}
+            css={{ groupColor: "$black" }}
+          />
+        ),
+        delete: (
+          <DeleteTreeDialog
+            className={defaultTheme}
+            css={{ groupColor: "$black" }}
+            tree={{ uuid: id, name }}
+            onDelete={() => router.push("/")}
+          />
+        ),
+      }}
+    >
       <DropdownMenu.Trigger asChild>
         <MenuButton label={name} css={css} />
       </DropdownMenu.Trigger>
@@ -50,25 +76,28 @@ export function ProjectMenu({ css }: Props) {
         </DropdownMenu.Item>
         <DropdownMenu.Separator />
         <UpdateTreeDialog treeId={id}>
-          <DropdownMenu.Item>
+          <DropdownMenu.DialogItem dialogKey="update">
             <Icon>
               <Pencil2Icon />
             </Icon>
             Namen ändern
-          </DropdownMenu.Item>
+          </DropdownMenu.DialogItem>
         </UpdateTreeDialog>
-        <DropdownMenu.Item>
+        <DropdownMenu.DialogItem dialogKey="export">
           <Icon>
             <Share2Icon />
           </Icon>
           Exportieren
-        </DropdownMenu.Item>
-        <DropdownMenu.Item css={{ colorScheme: "danger" }}>
+        </DropdownMenu.DialogItem>
+        <DropdownMenu.DialogItem
+          dialogKey="delete"
+          css={{ colorScheme: "danger" }}
+        >
           <Icon>
             <TrashIcon />
           </Icon>
           Projekt löschen
-        </DropdownMenu.Item>
+        </DropdownMenu.DialogItem>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
   );

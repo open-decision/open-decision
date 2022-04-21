@@ -5,16 +5,20 @@ import {
   ValidationMessage,
   Dialog,
   DialogTriggerProps,
+  StyleObject,
 } from "@open-decision/design-system";
 import { useUpdateTreeMutation } from "features/Data/generated/graphql";
 import { queryClient } from "features/Data/queryClient";
 import * as React from "react";
 
-type Props = DialogTriggerProps & {
+type Props = {
   treeId: string;
   open?: boolean;
   setOpen?: (open: boolean) => void;
   focusOnClose?: () => void;
+  className?: string;
+  children?: DialogTriggerProps["children"];
+  css?: StyleObject;
 };
 
 export function UpdateTreeDialog({
@@ -23,12 +27,15 @@ export function UpdateTreeDialog({
   setOpen,
   focusOnClose,
   children,
+  className,
+  css,
 }: Props) {
   const [Form, { register }] = useForm({ defaultValues: { treeName: "" } });
 
   const { mutate: updateTree, isLoading } = useUpdateTreeMutation({
     onSuccess: () => {
       queryClient.invalidateQueries("Trees");
+      queryClient.invalidateQueries("getTreeName");
       setOpen?.(false);
     },
   });
@@ -36,7 +43,11 @@ export function UpdateTreeDialog({
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       {children ? <Dialog.Trigger asChild>{children}</Dialog.Trigger> : null}
-      <Dialog.Content onCloseAutoFocus={focusOnClose}>
+      <Dialog.Content
+        onCloseAutoFocus={focusOnClose}
+        className={className}
+        css={css}
+      >
         <Dialog.Header css={{ marginBottom: "$4" }}>
           Projektname ändern
         </Dialog.Header>
