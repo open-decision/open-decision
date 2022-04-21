@@ -66,14 +66,16 @@ export function ProjectMenu({ css }: Props) {
         className={darkTheme}
         css={{ groupColor: "$white" }}
       >
-        <DropdownMenu.Item>
-          <Icon>
-            <ArrowLeftIcon />
-          </Icon>
-          <NextLink href="/" passHref>
-            <Link>Zurück zum Dashboard</Link>
-          </NextLink>
-        </DropdownMenu.Item>
+        <NextLink href="/" passHref>
+          <DropdownMenu.Item asChild>
+            <Link>
+              <Icon>
+                <ArrowLeftIcon />
+              </Icon>
+              Zurück zum Dashboard
+            </Link>
+          </DropdownMenu.Item>
+        </NextLink>
         <DropdownMenu.Separator />
         <UpdateTreeDialog treeId={id}>
           <DropdownMenu.DialogItem dialogKey="update">
