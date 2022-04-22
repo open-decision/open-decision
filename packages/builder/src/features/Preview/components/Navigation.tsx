@@ -6,6 +6,7 @@ import {
   Row,
   ButtonProps,
 } from "@open-decision/design-system";
+import { useInterpreter } from "@open-decision/interpreter";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -35,6 +36,8 @@ const buttonProps: ButtonProps = {
 };
 
 export function Navigation() {
+  const { send } = useInterpreter();
+
   return (
     <Container>
       <StyledButton {...buttonProps}>
@@ -42,7 +45,7 @@ export function Navigation() {
           <DoubleArrowLeftIcon />
         </Icon>
       </StyledButton>
-      <StyledButton {...buttonProps}>
+      <StyledButton {...buttonProps} onClick={() => send("GO_BACK")}>
         <Icon label="Zurück">
           <ChevronLeftIcon />
         </Icon>

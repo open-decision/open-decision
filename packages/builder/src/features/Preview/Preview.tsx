@@ -3,18 +3,13 @@ import * as React from "react";
 import { useInterpreter } from "@open-decision/interpreter";
 import { AnswersForm } from "./components/AnswersForm";
 import { RichTextRenderer } from "components/RichTextEditor/RichTextRenderer";
-import { Tree } from "@open-decision/type-classes";
 import { Navigation } from "./components/Navigation";
 import { Separator } from "components/Separator";
 import { InfoBox } from "features/Notifications/InfoBox";
 
-type Props = { tree: Tree.TTree };
-
-export function Preview({ tree }: Props) {
-  const {
-    snapshot: { currentNode },
-  } = useInterpreter();
-  const node = Tree.getNode(tree)(currentNode);
+export function Preview() {
+  const { getCurrentNode } = useInterpreter();
+  const node = getCurrentNode();
 
   if (!node) throw new Error(`The Preview could not retrieve the currentNode.`);
 

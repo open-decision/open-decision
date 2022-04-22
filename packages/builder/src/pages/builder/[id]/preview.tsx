@@ -99,7 +99,7 @@ export default function VorschauPage({ id }: Props) {
                 }}
               >
                 <Tabs.Content value="desktop" css={{ height: "100%" }}>
-                  <Preview tree={tree} />
+                  <Preview />
                 </Tabs.Content>
                 <Tabs.Content
                   value="mobile"
