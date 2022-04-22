@@ -4,7 +4,6 @@ import {
   ODValidationErrorConstructorParameters,
   ODValidationError,
 } from "@open-decision/type-classes";
-import { splitAt } from "remeda";
 import { Required } from "utility-types";
 import { assign, createMachine, Interpreter, Sender } from "xstate";
 
@@ -45,14 +44,18 @@ export class NoTruthyCondition extends ODError {
   }
 }
 
-export function createInterpreter(json: Tree.TTree) {
+export function createInterpreter(
+  json: Tree.TTree,
+  interpreterOptions?: InterpreterOptions
+) {
   const decodedJSON = Tree.Type.safeParse(json);
 
   if (!decodedJSON.success) return new InvalidTreeError(decodedJSON.error);
   if (!decodedJSON.data.startNode) return new MissingStartNodeError();
 
   return createInterpreterMachine(
-    decodedJSON.data as Required<Tree.TTree, "startNode">
+    decodedJSON.data as Required<Tree.TTree, "startNode">,
+    interpreterOptions
   );
 }
 
@@ -66,16 +69,17 @@ type ResolverEvents =
   | { type: "INVALID_INTERPRETATION"; Error: ODError };
 
 const resolveConditions =
+  (tree: Tree.TTree) =>
   (context: InterpreterContext, event: ResolveEvents) =>
   (callback: Sender<ResolverEvents>) => {
-    const conditions = Tree.getConditions(context.tree)(event.conditionIds);
+    const conditions = Tree.getConditions(tree)(event.conditionIds);
 
     for (const conditionId in conditions) {
       const condition = conditions[conditionId];
-      const existingAnswerId = context.history.answers[condition.inputId];
+      const existingAnswerId = context.answers[condition.inputId];
 
       if (condition.answerId === existingAnswerId) {
-        const edge = Object.values(context.tree.edges ?? {}).find(
+        const edge = Object.values(tree.edges ?? {}).find(
           (edge) => edge.conditionId === condition.id
         );
 
@@ -98,10 +102,8 @@ const resolveConditions =
   };
 
 export type InterpreterContext = {
-  history: { nodes: string[]; answers: Record<string, string> };
-  currentNodeId: string;
-  hasHistory: boolean;
-  tree: Required<Tree.TTree, "startNode">;
+  history: { nodes: string[]; position: number };
+  answers: Record<string, string>;
   Error?: MissingEdgeForThruthyCondition | NoTruthyCondition;
 };
 
@@ -110,6 +112,8 @@ type Events =
   | { type: "EVALUATE_NODE_CONDITIONS"; conditionIds: string[] }
   | { type: "RESET" }
   | { type: "GO_BACK" }
+  | { type: "GO_FORWARD" }
+  | { type: "RECOVER" }
   | ResolverEvents
   | ResolveEvents;
 
@@ -121,8 +125,11 @@ export type InterpreterService = Interpreter<
   any
 >;
 
+export type InterpreterOptions = { isDebugMode?: boolean };
+
 export const createInterpreterMachine = (
-  tree: Required<Tree.TTree, "startNode">
+  tree: Required<Tree.TTree, "startNode">,
+  { isDebugMode = false }: InterpreterOptions = {}
 ) =>
   createMachine(
     {
@@ -132,10 +139,8 @@ export const createInterpreterMachine = (
         events: {} as Events,
       },
       context: {
-        history: { nodes: [], answers: {} },
-        currentNodeId: tree.startNode,
-        hasHistory: false,
-        tree,
+        history: { nodes: [tree.startNode], position: 0 },
+        answers: {},
         Error: undefined,
       },
       id: "interpreter",
@@ -156,8 +161,12 @@ export const createInterpreterMachine = (
               target: "interpreting",
             },
             GO_BACK: {
-              cond: "hasHistory",
+              cond: "canGoBack",
               actions: "goBack",
+            },
+            GO_FORWARD: {
+              cond: "canGoForward",
+              actions: "goForward",
             },
           },
         },
@@ -177,44 +186,65 @@ export const createInterpreterMachine = (
             },
           },
         },
-        error: {},
+        error: {
+          on: {
+            RECOVER: {
+              cond: "isDebugMode",
+              target: "idle",
+              actions: ["clearErrorFromContext", "goBack"],
+            },
+          },
+        },
       },
     },
     {
       actions: {
-        assignAnswerToContext: assign((context, event) => ({
+        assignAnswerToContext: assign((_context, event) => ({
+          answers: { [event.inputId]: event.answerId },
+        })),
+        resetToInitialContext: assign((_context, _event) => ({
+          history: { nodes: [tree.startNode], position: 0 },
+          answers: {},
+          Error: undefined,
+        })),
+        goBack: assign((context) => ({
           history: {
-            nodes: [...context.history.nodes, context.currentNodeId],
-            answers: { [event.inputId]: event.answerId },
+            position:
+              context.history.position + 1 > context.history.nodes.length
+                ? context.history.nodes.length
+                : context.history.position + 1,
+            nodes: context.history.nodes,
           },
-          hasHistory: true,
         })),
-        resetToInitialContext: assign((context) => ({
-          currentNodeId: context.tree.startNode,
-          history: { nodes: [], answers: {} },
-          hasHistory: false,
+        goForward: assign((context) => ({
+          history: {
+            position:
+              context.history.position - 1 < 0
+                ? 0
+                : context.history.position - 1,
+            nodes: context.history.nodes,
+          },
         })),
-        goBack: assign((context) => {
-          const [newNodes, [previousNode]] = splitAt(context.history.nodes, -1);
-
-          return {
-            currentNodeId: previousNode,
-            hasHistory: newNodes.length > 0,
-            history: { nodes: newNodes, answers: context.history.answers },
-          };
-        }),
         assignErrorToContext: assign({
           Error: (_context, event) => event.Error,
         }),
-        assignNewTarget: assign({
-          currentNodeId: (_context, event) => event.target,
-        }),
+        clearErrorFromContext: assign((_context, _event) => ({
+          Error: undefined,
+        })),
+        assignNewTarget: assign((context, event) => ({
+          history: {
+            position: context.history.position,
+            nodes: [event.target, ...context.history.nodes],
+          },
+        })),
       },
       services: {
-        resolveConditions,
+        resolveConditions: resolveConditions(tree),
       },
       guards: {
-        hasHistory: (context) => context.hasHistory,
+        canGoBack: (context) => context.history.nodes.length > 1,
+        canGoForward: (context) => context.history.position > 0,
+        isDebugMode: () => isDebugMode,
       },
     }
   );

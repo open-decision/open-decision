@@ -5,14 +5,17 @@ import { useActor, useInterpret } from "@xstate/react";
 import { createInterpreterMethods } from "../methods";
 
 function useInterpreterMachine(tree: Tree.TTree) {
-  const interpreterMachine = createInterpreter(tree);
+  const interpreterMachine = createInterpreter(tree, { isDebugMode: true });
 
   if (interpreterMachine instanceof ODError) throw interpreterMachine;
 
   return interpreterMachine;
 }
 
-const InterpreterContext = React.createContext<InterpreterService | null>(null);
+const InterpreterContext = React.createContext<{
+  service: InterpreterService;
+  tree: Tree.TTree;
+} | null>(null);
 
 export function InterpreterProvider({
   children,
@@ -28,7 +31,7 @@ export function InterpreterProvider({
   });
 
   return (
-    <InterpreterContext.Provider value={service}>
+    <InterpreterContext.Provider value={{ service, tree }}>
       {children}
     </InterpreterContext.Provider>
   );
@@ -48,13 +51,13 @@ export function useInterpreterService() {
 }
 
 export function useInterpreter() {
-  const service = useInterpreterService();
+  const { service, tree } = useInterpreterService();
 
   const [state, send] = useActor(service);
 
   const methods = React.useMemo(() => {
-    return createInterpreterMethods(state.context);
-  }, [state.context]);
+    return createInterpreterMethods(state.context, tree);
+  }, [state.context, tree]);
 
-  return { state, send, ...methods };
+  return { state, send, tree, ...methods };
 }
