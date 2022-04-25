@@ -12,7 +12,6 @@ import * as React from "react";
 import Link from "next/link";
 import { Preview } from "features/Preview/Preview";
 import { InterpreterProvider } from "@open-decision/interpreter";
-import { MobilePreview } from "features/Preview/MobilePreview";
 import { ErrorBoundary } from "@sentry/nextjs";
 import { ErrorFallback } from "features/Error/ErrorFallback";
 import { GetServerSideProps } from "next";
@@ -101,11 +100,17 @@ export default function VorschauPage({ id }: Props) {
                 <Tabs.Content value="desktop" css={{ height: "100%" }}>
                   <Preview />
                 </Tabs.Content>
-                <Tabs.Content
-                  value="mobile"
-                  css={{ backgroundColor: "$gray6", height: "100%" }}
-                >
-                  <MobilePreview />
+                <Tabs.Content value="mobile" css={{ height: "100%" }}>
+                  <Preview
+                    containerCss={{
+                      width: "400px",
+                      height: "700px",
+                      layer: "2",
+                      boxShadow: "$6",
+                      border: "2px solid $gray7",
+                    }}
+                    centered
+                  />
                 </Tabs.Content>
               </Box>
             </MainContent>

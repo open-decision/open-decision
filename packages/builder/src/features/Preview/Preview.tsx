@@ -1,4 +1,4 @@
-import { Box, Stack } from "@open-decision/design-system";
+import { Box, Stack, StyleObject } from "@open-decision/design-system";
 import * as React from "react";
 import { useInterpreter } from "@open-decision/interpreter";
 import { AnswersForm } from "./components/AnswersForm";
@@ -7,7 +7,12 @@ import { Navigation } from "./components/Navigation";
 import { Separator } from "components/Separator";
 import { InfoBox } from "features/Notifications/InfoBox";
 
-export function Preview() {
+type Props = {
+  containerCss?: StyleObject;
+  centered?: boolean;
+};
+
+export function Preview({ containerCss, centered }: Props) {
   const { getCurrentNode } = useInterpreter();
   const node = getCurrentNode();
 
@@ -19,11 +24,23 @@ export function Preview() {
         display: "grid",
         gridTemplateColumns: "1fr 1fr 1fr",
         height: "100%",
-        layer: "3",
+        layer: "4",
+
+        ...(centered ? { justifyItems: "center", alignItems: "center" } : {}),
       }}
     >
-      <Stack css={{ gridColumn: "2", marginBlock: "$10" }}>
-        <Stack css={{ flex: 1, gap: "$3" }}>
+      <Stack
+        css={{
+          gridColumn: "2",
+          marginBlock: "$10",
+          padding: "$8",
+          borderRadius: "$md",
+          width: "100%",
+          alignItems: "center",
+          ...containerCss,
+        }}
+      >
+        <Stack css={{ flex: 1, gap: "$3", maxWidth: "600px" }}>
           {node.data.content ? (
             <RichTextRenderer content={node.data.content} key={node.id} />
           ) : (
