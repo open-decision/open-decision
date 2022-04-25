@@ -10,6 +10,9 @@ import { extensions } from "./shared";
 import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
 
 const StyledEditorContent = styled(EditorContent, {
+  $$height: "calc(100% - $space$2)",
+  height: "$$height",
+
   ".ProseMirror": {
     colorScheme: "primary",
     display: "flex",
@@ -19,7 +22,7 @@ const StyledEditorContent = styled(EditorContent, {
     margin: "1px",
     borderBottomLeftRadius: "$sm",
     borderBottomRightRadius: "$sm",
-    height: "calc(100% - $space$2)",
+    height: "$$height",
   },
 });
 
@@ -71,7 +74,15 @@ export const RichTextEditor = ({ id, content }: Props) => {
           }),
         }}
       >
-        <ScrollArea.Viewport>
+        <ScrollArea.Viewport
+          // Without this the RichTextRenderer cannot take up 100% of the height and would therefore not be
+          // focusable by clicking somewhere else, but the extisting text.
+          css={{
+            "& > div": {
+              height: "100%",
+            },
+          }}
+        >
           <StyledEditorContent editor={editor} />
         </ScrollArea.Viewport>
         <ScrollArea.Scrollbar />
