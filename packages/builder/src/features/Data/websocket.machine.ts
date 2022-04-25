@@ -37,10 +37,6 @@ export const websocketMachine = createMachine<Context, Events>({
 
           websocket.on("sync", () => resolve());
 
-          // websocket.on("status", (status) => {
-          //   if (status === "connected") callback("CONNECTED");
-          // });
-
           websocket.on("connection-error", () => callback("CLOSE"));
 
           return () => websocket.destroy();
