@@ -1,11 +1,17 @@
-import { Box } from "@open-decision/design-system";
-import * as React from "react";
+import { Box, Stack } from "@open-decision/design-system";
 import { useInterpreter } from "@open-decision/interpreter";
+import { RichTextRenderer } from "components/RichTextEditor/RichTextRenderer";
+import { Separator } from "components/Separator";
+import { InfoBox } from "features/Notifications/InfoBox";
+import * as React from "react";
 import { AnswersForm } from "./components/AnswersForm";
-import { useNode } from "features/Builder/state/treeStore/hooks";
+import { Navigation } from "./components/Navigation";
 
 export function MobilePreview() {
-  const { snapshot, interpreter } = useInterpreter();
+  const { getCurrentNode } = useInterpreter();
+  const node = getCurrentNode();
+
+  if (!node) throw new Error(`The Preview could not retrieve the currentNode.`);
 
   return (
     <Box
@@ -28,23 +34,30 @@ export function MobilePreview() {
           gap: "$6",
         }}
       >
-        <Box
+        <Stack
           css={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "$2",
-            flex: "1",
-            overflow: "hidden",
+            gridColumn: "2",
+            height: "100%",
           }}
         >
-          {/* <AnswersForm
-            interpreter={interpreter}
-            snapshot={snapshot}
-            node={node}
-            relation={relation}
-            key={`form_${node.id}`}
-          /> */}
-        </Box>
+          <Stack css={{ flex: 1, gap: "$3" }}>
+            {node.data.content ? (
+              <RichTextRenderer content={node.data.content} key={node.id} />
+            ) : (
+              <InfoBox
+                content="Die Frage enthält keinen Text"
+                title="Fehlende Daten"
+                variant="warning"
+                css={{ boxShadow: "$1" }}
+              />
+            )}
+            <Separator />
+            <AnswersForm inputIds={node.data.inputs} key={`form_${node.id}`} />
+          </Stack>
+          <Stack css={{ alignItems: "center" }}>
+            <Navigation />
+          </Stack>
+        </Stack>
       </Box>
     </Box>
   );
