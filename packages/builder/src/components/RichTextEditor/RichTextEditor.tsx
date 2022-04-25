@@ -6,18 +6,14 @@ import {
 } from "@open-decision/design-system";
 import { EditorContent, Content, useEditor } from "@tiptap/react";
 import { Toolbar } from "./Toolbar";
-import { extensions } from "./shared";
+import { editorStyles, extensions } from "./shared";
 import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
 
-const StyledEditorContent = styled(EditorContent, {
+const StyledEditorContent = styled(EditorContent, editorStyles, {
   $$height: "calc(100% - $space$2)",
   height: "$$height",
 
   ".ProseMirror": {
-    colorScheme: "primary",
-    display: "flex",
-    gap: "10px",
-    flexDirection: "column",
     outline: "none",
     margin: "1px",
     borderBottomLeftRadius: "$sm",
