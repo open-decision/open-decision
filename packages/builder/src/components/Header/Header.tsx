@@ -22,11 +22,7 @@ type BaseHeaderProps = {
   LogoSlot?: React.ReactNode;
 };
 
-export const BaseHeader = ({
-  children,
-  css,
-  LogoSlot = <Logo css={{ width: "40px", height: "40px" }} />,
-}: BaseHeaderProps) => {
+export const BaseHeader = ({ children, css, LogoSlot }: BaseHeaderProps) => {
   return (
     <Container css={css} className={darkTheme}>
       <Content>
