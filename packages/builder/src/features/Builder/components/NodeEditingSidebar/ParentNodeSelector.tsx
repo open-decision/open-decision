@@ -5,7 +5,7 @@ import { useEditor } from "features/Builder/state/useEditor";
 type Props = { parentNodes: { id: string; name?: string }[] };
 
 export function ParentNodeSelector({ parentNodes }: Props) {
-  const { addSelectedNodes } = useEditor();
+  const { replaceSelectedNodes } = useEditor();
 
   return (
     <Box as="section">
@@ -18,7 +18,7 @@ export function ParentNodeSelector({ parentNodes }: Props) {
             return (
               <DropdownMenu.Item
                 key={parentNode.id}
-                onClick={() => addSelectedNodes([parentNode.id])}
+                onClick={() => replaceSelectedNodes([parentNode.id])}
                 css={{
                   ...hoverStyle({ textDecoration: "underline" }),
                 }}
