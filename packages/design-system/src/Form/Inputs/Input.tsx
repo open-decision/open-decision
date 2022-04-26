@@ -5,7 +5,7 @@ import { baseInputStyles, baseTextInputStyle } from "../shared/styles";
 import { Box } from "../../Box";
 import { useInputFocus } from "./useInputFocus";
 
-const StyledBox = styled(Box, baseTextInputStyle, baseInputStyles, {
+const StyledBox = styled(Box, baseInputStyles, baseTextInputStyle, {
   borderRadius: "$md",
   display: "flex",
   alignItems: "center",
@@ -49,6 +49,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       onBlur,
       onFocus,
       className,
+      variant,
       ...props
     },
     ref
@@ -75,6 +76,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         data-disabled={disabled}
         data-focus={hasFocus}
         size={size}
+        variant={variant}
         alignByContent={alignByContent}
       >
         {EnhancedIcon}

@@ -97,6 +97,7 @@ export const TreeListBody = () => {
           css={{ flexBasis: "400px", layer: "1" }}
         >
           <Input
+            variant="lowered"
             name="search"
             value={filter || ""}
             onChange={(event) => setFilter(event.target.value)}
