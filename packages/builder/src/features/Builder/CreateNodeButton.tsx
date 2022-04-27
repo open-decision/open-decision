@@ -51,7 +51,7 @@ export function CreateNodeButton({ css }: Props) {
           </Icon>
         </Button>
       </Tooltip.Trigger>
-      <Tooltip.Content side="right" sideOffset={2} align="start">
+      <Tooltip.Content side="right" sideOffset={15}>
         <Text>Neuen Knoten hinzufügen</Text>
       </Tooltip.Content>
     </Tooltip.Root>

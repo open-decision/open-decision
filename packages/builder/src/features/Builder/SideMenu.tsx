@@ -15,8 +15,8 @@ type Props = { css?: StyleObject };
 export function SideMenu({ css }: Props) {
   return (
     <Container css={css}>
-      <CreateNodeButton css={{ marginBottom: "$2" }} />
-      <Separator css={{ width: "80%" }} />
+      <CreateNodeButton />
+      <Separator css={{ width: "80%", marginTop: "$2" }} />
     </Container>
   );
 }
