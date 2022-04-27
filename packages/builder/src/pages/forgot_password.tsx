@@ -5,6 +5,7 @@ import {
   Icon,
   Input,
   Link,
+  Row,
   Stack,
   SubmitButton,
   Text,
@@ -43,7 +44,7 @@ export default function ForgotPassword(): JSX.Element {
         center
         css={{
           height: "100%",
-          maxWidth: "550px",
+          width: "clamp(400px, 30vw, 500px)",
         }}
       >
         <Stack
@@ -53,18 +54,26 @@ export default function ForgotPassword(): JSX.Element {
             boxShadow: "$7",
             borderRadius: "$md",
             layer: "1",
+            width: "100%",
           }}
         >
-          <Heading css={{ marginBottom: "$3" }}>Passwort zurücksetzen</Heading>
           {hasPasswordResetRequested ? (
             <>
-              <Text>
+              <Heading css={{ marginBottom: "$2" }}>
+                Passwort zurückgesetzt
+              </Heading>
+              <Text size="large" css={{ color: "$gray11" }}>
                 Eine E-Mail zum Zurücksetzen des Passworts wurde an die
                 angegebene E-Mail Adresse verschickt. Bitte prüfen Sie ihr
                 Postfach.
               </Text>
               <Link
-                css={{ maxWidth: "max-content", marginTop: "$4", gap: "$1" }}
+                css={{
+                  maxWidth: "max-content",
+                  marginTop: "$4",
+                  gap: "$1",
+                  textStyle: "large-text",
+                }}
                 href="/login"
               >
                 <Icon>
@@ -75,7 +84,10 @@ export default function ForgotPassword(): JSX.Element {
             </>
           ) : (
             <>
-              <Text css={{ color: "$gray11", marginBottom: "$8" }}>
+              <Heading css={{ marginBottom: "$3" }}>
+                Passwort zurücksetzen
+              </Heading>
+              <Text css={{ color: "$gray11", marginBottom: "$8" }} size="large">
                 Bitte geben Sie die E-Mail Adresse an, mit der Sie sich bei Open
                 Decision registriert haben.
               </Text>
@@ -94,11 +106,12 @@ export default function ForgotPassword(): JSX.Element {
                         message: "Eine E-Mail Addresse muss angegeben werden.",
                       },
                     })}
+                    type="email"
                     placeholder="beispiel@web.de"
                   />
                 </Field>
                 {state.context.error ? (
-                  <ErrorMessage css={{ marginTop: "$4" }}>
+                  <ErrorMessage css={{ marginTop: "$2" }}>
                     {state.context.error}
                   </ErrorMessage>
                 ) : null}

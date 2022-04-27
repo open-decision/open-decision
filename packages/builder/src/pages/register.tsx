@@ -40,11 +40,12 @@ export default function Login(): JSX.Element {
         center
         css={{
           height: "100%",
-          maxWidth: "550px",
+          width: "clamp(400px, 30vw, 500px)",
         }}
       >
         <Stack
           css={{
+            width: "100%",
             backgroundColor: "$gray1",
             padding: "$9",
             boxShadow: "$7",
@@ -52,10 +53,10 @@ export default function Login(): JSX.Element {
             layer: "1",
           }}
         >
-          <Heading size="large" css={{ marginBottom: "$3" }}>
+          <Heading size="large" css={{ marginBottom: "$2" }}>
             Registrieren
           </Heading>
-          <Text css={{ color: "$gray11", marginBottom: "$8" }}>
+          <Text css={{ color: "$gray11", marginBottom: "$8" }} size="large">
             Registrieren sie sich jetzt und erstellen sie ihr erstes Open
             Decision-Projekt.
           </Text>
@@ -105,13 +106,13 @@ export default function Login(): JSX.Element {
               />
             </Field>
             {state.context.error ? (
-              <ErrorMessage css={{ marginBlock: "$4" }}>
+              <ErrorMessage css={{ marginBlock: "$2" }}>
                 {state.context.error}
               </ErrorMessage>
             ) : null}
             <SubmitButton
               isLoading={state.matches("loggedOut.register")}
-              css={{ marginTop: "$8" }}
+              css={{ marginTop: "$6" }}
               type="submit"
             >
               Jetzt Registrieren
