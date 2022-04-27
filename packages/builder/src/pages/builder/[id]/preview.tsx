@@ -82,7 +82,6 @@ export default function VorschauPage({ id }: Props) {
                     className={buttonStyles({
                       variant: "secondary",
                     })}
-                    underline={false}
                   >
                     <Icon>
                       <Pencil1Icon />

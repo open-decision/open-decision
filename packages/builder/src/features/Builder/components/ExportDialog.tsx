@@ -117,7 +117,6 @@ export function ExportDialog({
                 })}
                 download={`${fileName}.json`}
                 href={URL.createObjectURL(file)}
-                underline={false}
                 onClick={() => {
                   reset();
                   setOpen?.(false);
