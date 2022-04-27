@@ -1,13 +1,13 @@
-import { DropdownMenu, Icon } from "@open-decision/design-system";
+import { ButtonProps, DropdownMenu, Icon } from "@open-decision/design-system";
 import { PlusIcon, RocketIcon } from "@radix-ui/react-icons";
 import { CreateTreeDialog } from "./components/Dialogs/CreateTreeDialog";
 import { TreeImport } from "./TreeImport";
 
-export function NewProjectDropdown() {
+export function NewProjectDropdown(props: ButtonProps) {
   return (
     <DropdownMenu.Root dialogs={{ create: <CreateTreeDialog /> }}>
       <DropdownMenu.Trigger asChild>
-        <DropdownMenu.Button>
+        <DropdownMenu.Button {...props}>
           <Icon css={{ marginTop: "2px" }}>
             <RocketIcon />
           </Icon>

@@ -4,7 +4,6 @@ import { BaseHeader, MainContent } from "components";
 import { TreeList } from "features/Dashboard/TreeList";
 import { ErrorFallback } from "features/Error/ErrorFallback";
 import * as React from "react";
-import { NewProjectDropdown } from "features/Dashboard/NewProjectDropdown";
 
 const DashboardGrid = styled(MainContent, {
   display: "grid",
@@ -22,21 +21,6 @@ export default function DashboardPage() {
         <BaseHeader css={{ gridColumn: "1 / -1" }}>
           <Box css={{ flex: 1 }} />
         </BaseHeader>
-        <Stack
-          css={{
-            gridColumn: 2,
-            flexDirection: "row",
-            marginBlock: "$9 $7",
-            justifyContent: "space-between",
-          }}
-        >
-          <Heading size="large">Meine Projekte</Heading>
-          <Stack
-            css={{ flexDirection: "row", gap: "$2", alignItems: "center" }}
-          >
-            <NewProjectDropdown />
-          </Stack>
-        </Stack>
         <TreeList />
       </DashboardGrid>
     </ErrorBoundary>

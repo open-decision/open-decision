@@ -15,10 +15,11 @@ import {
 } from "@open-decision/design-system";
 import { useTreesQuery } from "features/Data/generated/graphql";
 import { TreeCard } from "./TreeCard";
-import Image from "next/image";
 import { ErrorBoundary } from "@sentry/nextjs";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { useFilter } from "./Filter";
+import { Card } from "components/Card";
+import { NewProjectDropdown } from "./NewProjectDropdown";
 
 const sorts = {
   updatedAt: "Zuletzt bearbeitet",
@@ -43,13 +44,21 @@ export const TreeListBody = () => {
     useFilter(trees?.decisionTrees ?? [], sorts, "updatedAt", filters);
 
   return hasTrees ? (
-    <>
+    <Stack
+      css={{
+        gridColumn: "2",
+        gridRow: "2 / 4",
+      }}
+    >
+      <Row css={{ justifyContent: "space-between", marginBlock: "$9 $7" }}>
+        <Heading size="large">Meine Projekte</Heading>
+        <NewProjectDropdown />
+      </Row>
       <Form
         css={{
           display: "flex",
           gap: "$2",
           justifyContent: "space-between",
-          paddingInline: "$4",
         }}
       >
         <Field
@@ -80,7 +89,6 @@ export const TreeListBody = () => {
           gap: "$2",
           marginTop: "$1",
           paddingBlock: "$4",
-          paddingInline: "$4",
           overflow: "auto",
           height: "100%",
         }}
@@ -91,69 +99,58 @@ export const TreeListBody = () => {
           </motion.div>
         ))}
       </Stack>
-    </>
+    </Stack>
   ) : (
     <EmptyState />
   );
 };
 
 const EmptyState = () => (
-  <Box
+  <Stack
     css={{
-      transform: "scaleX(-1)",
-      height: "70%",
-      width: "100%",
-      position: "relative",
+      gridRow: "2 / 4",
+      gridColumn: "2",
+      justifyContent: "center",
+      alignItems: "center",
     }}
   >
-    <Image
-      src="/EmptyIllustration.png"
-      layout="fill"
-      objectFit="contain"
-      priority
-    />
-  </Box>
+    <Card css={{ alignItems: "center", padding: "$9", gap: "$2" }}>
+      <Heading>Sie haben noch kein Open-Decision-Projekt.</Heading>
+      <Text size="large" css={{ marginBottom: "$6" }}>
+        Erstellen oder importieren Sie jetzt ihr erstes Projekt.
+      </Text>
+      <NewProjectDropdown size="large" />
+    </Card>
+  </Stack>
 );
 
 export function TreeList() {
   return (
-    <Stack
-      css={{
-        justifyContent: "center",
-        overflow: "auto",
-        marginInline: "-$4",
-        gridColumn: 2,
-        height: "100%",
-      }}
+    <ErrorBoundary
+      fallback={
+        <Box
+          css={{
+            gridColumn: "1 / -1",
+            gridRow: "2",
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "column",
+          }}
+        >
+          <Heading>Beim laden ihrer Bäume ist ein Fehler aufgetreten.</Heading>
+          <Text size="large" css={{ marginTop: "$3" }}>
+            Bitte laden sie die Seite neu oder schreiben sie uns wenn der Fehler
+            weiterhin auftreten sollte.
+            <Link href="https://www.notion.so/openlegaltech/a8a6b8db7e2b485294b6e31c1b3ae9da?v=ae3429d3f8d04d3395126baaa8147fe5">
+              Feedback Formular
+            </Link>
+          </Text>
+        </Box>
+      }
     >
-      <ErrorBoundary
-        fallback={
-          <Box
-            css={{
-              gridColumn: "1 / -1",
-              gridRow: "2",
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "column",
-            }}
-          >
-            <Heading>
-              Beim laden ihrer Bäume ist ein Fehler aufgetreten.
-            </Heading>
-            <Text size="large" css={{ marginTop: "$3" }}>
-              Bitte laden sie die Seite neu oder schreiben sie uns wenn der
-              Fehler weiterhin auftreten sollte.
-              <Link href="https://www.notion.so/openlegaltech/a8a6b8db7e2b485294b6e31c1b3ae9da?v=ae3429d3f8d04d3395126baaa8147fe5">
-                Feedback Formular
-              </Link>
-            </Text>
-          </Box>
-        }
-      >
-        <React.Suspense fallback={<LoadingSpinner />}>
-          <TreeListBody />
-        </React.Suspense>
-      </ErrorBoundary>
-    </Stack>
+      <React.Suspense fallback={<LoadingSpinner />}>
+        <TreeListBody />
+      </React.Suspense>
+    </ErrorBoundary>
   );
 }
