@@ -4,7 +4,7 @@ export const labelStyles = css({
   display: "flex",
   colorFallback: "$colorScheme-text",
   alignItems: "center",
-  gap: "$3",
+  gap: "$2",
 
   variants: {
     size: {
