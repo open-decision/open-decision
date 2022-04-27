@@ -28,7 +28,6 @@ export const buttonStyles = css(alignByContent, {
   alignItems: "center",
   border: "$$borderWidth solid transparent",
   padding: "$$paddingBlock $$paddingInline",
-  focusType: "outer",
 
   variants: {
     size: {
@@ -63,6 +62,7 @@ export const buttonStyles = css(alignByContent, {
       primary: {
         backgroundColor: "$colorScheme9",
         color: "$white",
+        focusType: "outer",
 
         ...intentStyle({
           backgroundColor: "$colorScheme10",
