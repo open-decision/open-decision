@@ -116,6 +116,31 @@ export const CheckboxItem = ({
   );
 };
 
+type CheckboxGroupProps<TOptions extends Record<string, string>> = {
+  selected?: keyof TOptions;
+  options: TOptions;
+  toggleOption: (newOption: keyof TOptions) => void;
+};
+
+export function CheckboxGroup<TOptions extends Record<string, string>>({
+  selected,
+  options,
+  toggleOption,
+}: CheckboxGroupProps<TOptions>) {
+  return (
+    <>
+      {Object.entries(options).map(([key, optionText]) => (
+        <CheckboxItem
+          key={key}
+          checked={selected === key}
+          onSelect={() => toggleOption(key)}
+        >
+          {optionText}
+        </CheckboxItem>
+      ))}
+    </>
+  );
+}
 
 function DropdownButtonImpl({ children, css, ...props }: ButtonProps, ref) {
   return (
@@ -169,6 +194,9 @@ export const Content = styled(
   DropdownMenuPrimitives.Content,
   menuContainerStyles
 );
+
+Content.defaultProps = { sideOffset: 5 };
+
 export const Item = styled(DropdownMenuPrimitives.Item, menuItemStyles);
 export const Label = styled(DropdownMenuPrimitives.Label, menuLabelStyles);
 export const Trigger = DropdownMenuPrimitives.Trigger;
