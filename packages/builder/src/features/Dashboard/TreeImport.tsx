@@ -10,9 +10,9 @@ import { IndexeddbPersistence } from "y-indexeddb";
 import { proxy } from "valtio";
 import { bindProxyAndYMap } from "valtio-yjs";
 
-const TreeImport = Tree.Type.extend({ name: z.string() });
+const TreeImportType = Tree.Type.extend({ name: z.string() });
 
-export function FileImport() {
+export function TreeImport() {
   const [importedData, setImportedData] = React.useState<
     Tree.TTree | undefined
   >();
@@ -46,7 +46,7 @@ export function FileImport() {
 
           const parsedResult = JSON.parse(result);
 
-          const validatedResult = TreeImport.safeParse(parsedResult);
+          const validatedResult = TreeImportType.safeParse(parsedResult);
 
           if (!validatedResult.success) {
             return addNotification({
