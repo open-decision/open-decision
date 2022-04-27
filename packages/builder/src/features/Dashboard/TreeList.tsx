@@ -1,59 +1,37 @@
 import React from "react";
-import { fuzzySearch, sortByKey } from "./filter";
 import { motion } from "framer-motion";
-import { identity, pipe } from "remeda";
 import {
   Box,
-  Button,
-  DropdownMenu,
   Field,
   Heading,
   Icon,
   Input,
   Link,
   LoadingSpinner,
+  Row,
   Stack,
   Text,
   useForm,
 } from "@open-decision/design-system";
-import { TreesQuery, useTreesQuery } from "features/Data/generated/graphql";
+import { useTreesQuery } from "features/Data/generated/graphql";
 import { TreeCard } from "./TreeCard";
 import Image from "next/image";
 import { ErrorBoundary } from "@sentry/nextjs";
-import { MagnifyingGlassIcon, TriangleUpIcon } from "@radix-ui/react-icons";
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { useFilter } from "./Filter";
 
-const sortReadableNames = {
+const sorts = {
   updatedAt: "Zuletzt bearbeitet",
   createdAt: "Erstellungsdatum",
 };
 
-const sortDirectionReadableNames = {
-  descending: "Absteigend",
-  ascending: "Aufsteigend",
+const filters = {
+  archived: "Archiviert",
 };
-
-type sortState = { key: string; direction: "ascending" | "descending" };
-
-const sortData = (sort: sortState) => (data: any[]) =>
-  sort.direction === "descending"
-    ? sortByKey(data, sort.key)
-    : sortByKey(data, sort.key).reverse();
-
-const filterData = (filter: string) => (data: any[]) =>
-  fuzzySearch(data, filter);
 
 export const TreeListBody = () => {
   const { data: trees } = useTreesQuery();
   const hasTrees = trees && trees?.decisionTrees.length > 0;
-
-  const [filter, setFilter] = React.useState("");
-  const [filteredData, setFilteredData] = React.useState<
-    TreesQuery["decisionTrees"]
-  >([]);
-  const [sort, setSort] = React.useState<sortState>({
-    key: "updatedAt",
-    direction: "ascending",
-  });
 
   const [Form] = useForm({
     defaultValues: {
@@ -61,29 +39,12 @@ export const TreeListBody = () => {
     },
   });
 
-  const handleFilterChange = React.useCallback(
-    function handleFilterChange() {
-      if (!trees?.decisionTrees) return;
-
-      const modifiedData = pipe(
-        trees?.decisionTrees,
-        filter ? filterData(filter) : identity,
-        sort.key ? sortData(sort) : identity
-      );
-
-      setFilteredData(modifiedData);
-    },
-    [trees?.decisionTrees, filter, sort]
-  );
-
-  React.useEffect(() => {
-    handleFilterChange();
-  }, [handleFilterChange]);
+  const { search, setSearch, SortButton, FilterButton, filteredData } =
+    useFilter(trees?.decisionTrees ?? [], sorts, "updatedAt", filters);
 
   return hasTrees ? (
     <>
       <Form
-        onSubmit={handleFilterChange}
         css={{
           display: "flex",
           gap: "$2",
@@ -94,13 +55,13 @@ export const TreeListBody = () => {
         <Field
           label="Suche"
           isLabelVisible={false}
-          css={{ flexBasis: "400px", layer: "1" }}
+          css={{ flexBasis: "400px" }}
         >
           <Input
             variant="lowered"
             name="search"
-            value={filter || ""}
-            onChange={(event) => setFilter(event.target.value)}
+            value={search || ""}
+            onChange={(event) => setSearch(event.target.value)}
             Icon={
               <Icon>
                 <MagnifyingGlassIcon />
@@ -109,71 +70,14 @@ export const TreeListBody = () => {
             placeholder="Suche"
           />
         </Field>
-        <DropdownMenu.Root>
-          <Stack
-            css={{ flexDirection: "row", alignItems: "center", gap: "$2" }}
-          >
-            <DropdownMenu.Trigger asChild>
-              <Button
-                variant="neutral"
-                css={{
-                  gap: "$3",
-                }}
-              >
-                <span>{sortReadableNames[sort.key]}</span>
-              </Button>
-            </DropdownMenu.Trigger>
-            <Button
-              onClick={() =>
-                setSort({
-                  ...sort,
-                  direction:
-                    sort.direction === "descending"
-                      ? "ascending"
-                      : "descending",
-                })
-              }
-              data-direction={sort.direction}
-              variant="tertiary"
-              size="small"
-              css={{
-                svg: {
-                  transition: "transform 0.2s ease-in",
-                  transform: "rotate(0deg)",
-                },
-
-                "&[data-direction='descending']": {
-                  svg: {
-                    transform: "rotate(180deg)",
-                  },
-                },
-              }}
-            >
-              {sortDirectionReadableNames[sort.direction]}
-              <Icon>
-                <TriangleUpIcon />
-              </Icon>
-            </Button>
-          </Stack>
-          <DropdownMenu.Content align="start">
-            <DropdownMenu.CheckboxItem
-              checked={sort.key === "updatedAt"}
-              onSelect={() => setSort({ ...sort, key: "updatedAt" })}
-            >
-              {sortReadableNames.updatedAt}
-            </DropdownMenu.CheckboxItem>
-            <DropdownMenu.CheckboxItem
-              checked={sort.key === "createdAt"}
-              onSelect={() => setSort({ ...sort, key: "createdAt" })}
-            >
-              {sortReadableNames.createdAt}
-            </DropdownMenu.CheckboxItem>
-          </DropdownMenu.Content>
-        </DropdownMenu.Root>
+        <Row css={{ gap: "$2" }}>
+          <FilterButton />
+          <SortButton />
+        </Row>
       </Form>
       <Stack
         css={{
-          gap: "$3",
+          gap: "$2",
           marginTop: "$1",
           paddingBlock: "$4",
           paddingInline: "$4",
