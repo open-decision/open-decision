@@ -7,6 +7,7 @@ gql`
       name
       updatedAt
       createdAt
+      status
     }
   }
 `;

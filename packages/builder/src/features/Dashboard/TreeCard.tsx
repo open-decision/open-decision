@@ -2,13 +2,15 @@ import * as React from "react";
 import {
   Button,
   DropdownMenu,
-  focusStyle,
   Heading,
   Icon,
   Stack,
   styled,
   Text,
   Box,
+  Badge,
+  Row,
+  intentStyleWithin,
 } from "@open-decision/design-system";
 import { formatRelative, parseISO } from "date-fns";
 import de from "date-fns/locale/de";
@@ -16,21 +18,21 @@ import { TreesQuery } from "features/Data/generated/graphql";
 import { DeleteTreeDialog } from "./components/Dialogs/DeleteTreeDialog";
 import Link from "next/link";
 import { UpdateTreeDialog } from "./components/Dialogs/UpdateTreeDialog";
-import { HamburgerMenuIcon } from "@radix-ui/react-icons";
+import {
+  DotsHorizontalIcon,
+  Pencil2Icon,
+  TrashIcon,
+} from "@radix-ui/react-icons";
+import { Card as DefaultCard } from "components/Card";
 
-const Card = styled("a", Stack, {
+const readableStatus = {
+  ACTIVE: "AKTIV",
+  ARCHIVED: "Archiviert",
+};
+
+const Card = styled("a", Stack, DefaultCard, {
   position: "relative",
-  padding: "$5",
-  border: "1px solid $gray7",
-  borderRadius: "$md",
-  layer: "1",
-  transition: "all 0.2s ease-in-out",
   textDecoration: "none",
-
-  ...focusStyle({
-    transform: "scale(1.02)",
-    boxShadow: "$3",
-  }),
 });
 
 type Props = { tree: TreesQuery["decisionTrees"][0] };
@@ -39,14 +41,30 @@ export function TreeCard({ tree }: Props) {
   const dropdownTriggerRef = React.useRef<HTMLButtonElement | null>(null);
 
   return (
-    <Box css={{ position: "relative" }}>
+    <Box
+      css={{
+        position: "relative",
+        transition: "box-shadow 150ms ease-in",
+        ...intentStyleWithin({ boxShadow: "$3" }),
+      }}
+    >
       <Link href={`/builder/${tree.uuid}`} passHref>
         <Card title={`Öffne das Projekt ${tree.name}`}>
-          <Heading size="small" css={{ marginBottom: "$1" }}>
-            {tree.name}
-          </Heading>
+          <Row css={{ gap: "$2", alignItems: "center", marginBottom: "$1" }}>
+            <Heading size="small" css={{}}>
+              {tree.name}
+            </Heading>
+            {tree.status === "ACTIVE" ? (
+              <Badge size="small">{readableStatus[tree.status]}</Badge>
+            ) : null}
+            {tree.status === "ARCHIVED" ? (
+              <Badge css={{ colorScheme: "gray" }} size="small">
+                {readableStatus[tree.status]}
+              </Badge>
+            ) : null}
+          </Row>
 
-          <Text css={{ color: "$gray11" }}>
+          <Text css={{ color: "$gray11" }} size="small">
             {formatRelative(parseISO(tree.updatedAt), new Date(), {
               locale: de,
             })}
@@ -76,15 +94,24 @@ export function TreeCard({ tree }: Props) {
             css={{ position: "absolute", right: 20, top: 12 }}
           >
             <Icon label={`Projektmenü ${tree.name}`}>
-              <HamburgerMenuIcon />
+              <DotsHorizontalIcon />
             </Icon>
           </Button>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content>
           <DropdownMenu.DialogItem dialogKey="update">
-            Projektname ändern
+            <Icon>
+              <Pencil2Icon />
+            </Icon>
+            Name ändern
           </DropdownMenu.DialogItem>
-          <DropdownMenu.DialogItem dialogKey="delete">
+          <DropdownMenu.DialogItem
+            dialogKey="delete"
+            css={{ colorScheme: "danger" }}
+          >
+            <Icon css={{ marginTop: "2px" }}>
+              <TrashIcon />
+            </Icon>
             Projekt löschen
           </DropdownMenu.DialogItem>
         </DropdownMenu.Content>
