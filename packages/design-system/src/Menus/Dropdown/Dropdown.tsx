@@ -8,7 +8,8 @@ import {
   menuLabelStyles,
   menuSeparatorStyles,
 } from "../shared";
-import { CheckIcon } from "@radix-ui/react-icons";
+import { CheckIcon, TriangleDownIcon } from "@radix-ui/react-icons";
+import { Button as SystemButton, ButtonProps } from "../../Button";
 
 const DropdownContext = React.createContext<null | {
   setOpenDialog: React.Dispatch<React.SetStateAction<string>>;
@@ -114,6 +115,34 @@ export const CheckboxItem = ({
     </StyledCheckboxItem>
   );
 };
+
+
+function DropdownButtonImpl({ children, css, ...props }: ButtonProps, ref) {
+  return (
+    <SystemButton
+      css={{
+        "&[data-state='open'] .rotate": {
+          transform: "rotate(180deg)",
+        },
+        ...css,
+      }}
+      ref={ref}
+      {...props}
+    >
+      {children}
+      <Icon
+        className="rotate"
+        css={{
+          transition: "transform 200ms ease-in-out",
+        }}
+      >
+        <TriangleDownIcon />
+      </Icon>
+    </SystemButton>
+  );
+}
+
+export const Button = React.forwardRef(DropdownButtonImpl);
 
 export type DropdownMenuRootProps = DropdownMenuPrimitives.DropdownMenuProps & {
   dialogs?: Record<string, React.ReactNode>;
