@@ -69,6 +69,7 @@ export function NodeEditingSidebar() {
               paddingInlineEnd: "$5",
               paddingInlineStart: "$5",
               paddingBlock: "$5",
+              overflow: "hidden",
             }}
           >
             <ScrollArea.Viewport>
