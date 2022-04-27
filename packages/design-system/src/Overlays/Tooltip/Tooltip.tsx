@@ -5,12 +5,11 @@ import { overlayCss } from "../shared";
 import { Text } from "../../Text";
 import { Stack } from "../../Layout";
 
-const StyledContent = styled(
-  TooltipPrimitive.Content,
-  Stack,
-  { textAlign: "center", maxWidth: "200px", gap: "$1" },
-  overlayCss
-);
+const StyledContent = styled(TooltipPrimitive.Content, Stack, overlayCss, {
+  textAlign: "center",
+  maxWidth: "200px",
+  gap: "$1",
+});
 
 const Content = (props: TooltipContentProps) => (
   <StyledContent sideOffset={10} className={darkTheme} mode="dark" {...props}>
@@ -27,7 +26,9 @@ const StyledTrigger = styled(TooltipPrimitive.Trigger, {
   border: "none",
 });
 
-const Body = styled(Text, { color: "$gray11" });
+const Body = styled(Text, {
+  color: "$gray11",
+});
 
 export const Tooltip = {
   Root: TooltipPrimitive.Root,
