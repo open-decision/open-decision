@@ -35,6 +35,7 @@ const styledMotionDiv = css({
   zIndex: "$10",
   boxShadow: "$1",
   width: "100%",
+  borderLeft: "1px solid $gray5",
 });
 
 export function NodeEditingSidebar() {

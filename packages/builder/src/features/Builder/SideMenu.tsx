@@ -7,6 +7,7 @@ const Container = styled(Stack, {
   alignItems: "center",
   boxShadow: "$1",
   zIndex: "$10",
+  borderRight: "1px solid $gray5",
 });
 
 type Props = { css?: StyleObject };
