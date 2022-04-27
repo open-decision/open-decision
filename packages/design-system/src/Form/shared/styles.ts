@@ -22,7 +22,7 @@ export const baseInputStyles = css({
 export const baseTextInputStyle = css(alignByContent, {
   variants: {
     variant: {
-      raised: {},
+      raised: { layer: "2" },
       lowered: {
         layer: "4",
         borderColor: "transparent",

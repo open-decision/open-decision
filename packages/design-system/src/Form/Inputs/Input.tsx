@@ -5,7 +5,7 @@ import { baseInputStyles, baseTextInputStyle } from "../shared/styles";
 import { Box } from "../../Box";
 import { useInputFocus } from "./useInputFocus";
 
-const StyledBox = styled(Box, baseInputStyles, baseTextInputStyle, {
+const StyledBox = styled(Box, baseTextInputStyle, baseInputStyles, {
   borderRadius: "$md",
   display: "flex",
   alignItems: "center",
