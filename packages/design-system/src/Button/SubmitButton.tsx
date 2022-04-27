@@ -24,6 +24,10 @@ export const SubmitButton = ({
     }}
     {...props}
   >
-    {isLoading ? <LoadingSpinner colorScheme={colorScheme} /> : children}
+    {isLoading ? (
+      <LoadingSpinner colorScheme={colorScheme} size="1.4em" />
+    ) : (
+      children
+    )}
   </Button>
 );
