@@ -36,5 +36,5 @@ export const activeStyle = (value: StyleObject) => ({
 });
 
 export const disabledStyle = (value: StyleObject) => ({
-  "&:disabled, &[data-disabled='true']": value,
+  "&:disabled, &[data-disabled]": value,
 });

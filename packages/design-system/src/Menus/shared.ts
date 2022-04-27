@@ -27,7 +27,7 @@ export const menuItemStyles = css({
   all: "unset",
   colorScheme: "primary",
   textStyle: "medium-text",
-  focusType: "inner",
+  focusType: "inner-intent",
   userSelect: "none",
   display: "flex",
   gap: "$3",
@@ -60,7 +60,11 @@ export const menuItemStyles = css({
 
   ...disabledStyle({
     color: "$gray11",
-    pointerEvents: "none",
+    cursor: "not-allowed",
+
+    ...intentStyle({
+      backgroundColor: "$gray2",
+    }),
   }),
 });
 

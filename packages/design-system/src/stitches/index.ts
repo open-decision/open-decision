@@ -36,7 +36,14 @@ import {
   SystemColors,
 } from "../internal/utils";
 
-type focusTypes = "inner-within" | "outer-within" | "outer" | "inner" | "none";
+type focusTypes =
+  | "inner-within"
+  | "outer-within"
+  | "outer"
+  | "inner"
+  | "outer-intent"
+  | "inner-intent"
+  | "none";
 
 export const designSystem = createStitches({
   theme: {
@@ -220,33 +227,32 @@ export const designSystem = createStitches({
       }
     },
     focusType: (value: focusTypes) => {
+      const focusWithin = value.includes("within");
+      const focusOnIntent = value.includes("intent");
+
       switch (value) {
         case "none": {
           return { outline: "none" };
         }
         case "outer":
         case "outer-within": {
-          const focusWithin =
-            value === "outer-within" ? "&:focus-within" : undefined;
-
           return {
-            [`&:focus-visible, ${focusWithin}, &[data-focus='true']`]: {
-              boxShadow: `0 0 0 1px var(--layer), 0 0 0 3px var(--colors-focusColor, $colors$primary10)`,
-              outline: "none",
-            },
+            [`&:focus-visible, ${focusWithin}, ${focusOnIntent}, &[data-focus='true']`]:
+              {
+                boxShadow: `0 0 0 1px var(--layer), 0 0 0 3px var(--colors-focusColor, $colors$primary10)`,
+                outline: "none",
+              },
           };
         }
 
         default: {
-          const focusWithin =
-            value === "inner-within" ? "&:focus-within" : undefined;
-
           return {
-            [`&:focus-visible, ${focusWithin}, &[data-focus='true']`]: {
-              boxShadow: `inset 0 0 0 1px var(--colors-focusColor, $colors$primary10)`,
-              borderColor: `var(--colors-focusColor, $colors$primary10)`,
-              outline: "none",
-            },
+            [`&:focus-visible, ${focusWithin}, ${focusOnIntent}, &[data-focus='true']`]:
+              {
+                boxShadow: `inset 0 0 0 1px var(--colors-focusColor, $colors$primary10)`,
+                borderColor: `var(--colors-focusColor, $colors$primary10)`,
+                outline: "none",
+              },
           };
         }
       }
