@@ -1,5 +1,5 @@
 import { darkTheme, DropdownMenu, Icon } from "@open-decision/design-system";
-import { ExitIcon, GearIcon } from "@radix-ui/react-icons";
+import { ExitIcon, GearIcon, HomeIcon } from "@radix-ui/react-icons";
 import { useAuth } from "features/Auth/useAuth";
 import Link from "next/link";
 import { MenuButton } from "./MenuButton";
@@ -18,7 +18,15 @@ export function UserMenu() {
         className={darkTheme}
         css={{ groupColor: "$gray12" }}
       >
-        <Link href="/settings">
+        <Link href="/">
+          <DropdownMenu.Item>
+            <Icon>
+              <HomeIcon />
+            </Icon>
+            Dashboard
+          </DropdownMenu.Item>
+        </Link>
+        <Link href="/settings#account">
           <DropdownMenu.Item>
             <Icon>
               <GearIcon />
