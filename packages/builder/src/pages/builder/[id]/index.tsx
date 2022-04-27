@@ -46,9 +46,19 @@ export default function BuilderPage({ id }) {
           >
             <ReactFlowProvider>
               <EditorProvider>
-                <EditorHeader css={{ gridColumn: "1 / -1", gridRow: "1" }} />
-                <SideMenu css={{ gridRow: "2", gridColumn: "1" }} />
-                <NodeEditor css={{ gridColumn: "2 / 3", gridRow: "2" }} />
+                <EditorHeader
+                  css={{
+                    gridColumn: "1 / -1",
+                    gridRow: "1",
+                  }}
+                />
+                <SideMenu css={{ gridRow: "2", gridColumn: "1", layer: "1" }} />
+                <NodeEditor
+                  css={{
+                    gridColumn: "2 / 3",
+                    gridRow: "2",
+                  }}
+                />
               </EditorProvider>
             </ReactFlowProvider>
           </MainContent>
