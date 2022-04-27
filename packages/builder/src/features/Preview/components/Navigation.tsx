@@ -5,6 +5,7 @@ import {
   hoverStyle,
   Row,
   ButtonProps,
+  StyleObject,
 } from "@open-decision/design-system";
 import { useInterpreter } from "@open-decision/interpreter";
 import {
@@ -35,11 +36,13 @@ const buttonProps: ButtonProps = {
   css: { colorScheme: "primary" },
 };
 
-export function Navigation() {
+type Props = { css?: StyleObject };
+
+export function Navigation({ css }: Props) {
   const { send } = useInterpreter();
 
   return (
-    <Container>
+    <Container css={css}>
       <StyledButton {...buttonProps}>
         <Icon label="Zurück zum Start">
           <DoubleArrowLeftIcon />

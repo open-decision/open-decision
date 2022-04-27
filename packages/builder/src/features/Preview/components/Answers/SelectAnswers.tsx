@@ -42,7 +42,6 @@ export function SelectAnswers({ input, onChange, name }: Props) {
     <RadioButtons.Group
       name={name}
       css={{
-        marginBottom: "$8",
         gap: "$1",
         display: "grid",
       }}

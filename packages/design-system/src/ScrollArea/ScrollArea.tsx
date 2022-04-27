@@ -1,18 +1,14 @@
 import * as React from "react";
-import { styled } from "../stitches";
+import { styled, StyleObject } from "../stitches";
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 
-export const Root = styled(ScrollAreaPrimitive.Root, {
-  overflow: "hidden",
-});
+export const Root = styled(ScrollAreaPrimitive.Root, {});
 
 export const Viewport = styled(ScrollAreaPrimitive.Viewport, {
-  height: "100%",
-  width: "100%",
   borderRadius: "inherit",
 });
 
-export const StyledScrollbar = styled(ScrollAreaPrimitive.Scrollbar, {
+const StyledScrollbar = styled(ScrollAreaPrimitive.Scrollbar, {
   display: "flex",
   // ensures no selection
   userSelect: "none",
@@ -50,7 +46,7 @@ const Thumb = styled(ScrollAreaPrimitive.Thumb, {
   },
 });
 
-export const Scrollbar = (props: ScrollbarProps) => (
+export const Scrollbar = (props: ScrollbarProps & { css?: StyleObject }) => (
   <StyledScrollbar data-scrollbar {...props}>
     <Thumb />
   </StyledScrollbar>
