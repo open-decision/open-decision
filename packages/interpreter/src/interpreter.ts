@@ -6,6 +6,7 @@ import {
 } from "@open-decision/type-classes";
 import { Required } from "utility-types";
 import { assign, createMachine, Interpreter, Sender } from "xstate";
+import { canGoBack, canGoForward } from "./methods";
 
 export class MissingStartNodeError extends ODError {
   constructor() {
@@ -199,32 +200,38 @@ export const createInterpreterMachine = (
     },
     {
       actions: {
-        assignAnswerToContext: assign((_context, event) => ({
-          answers: { [event.inputId]: event.answerId },
+        assignAnswerToContext: assign((context, event) => ({
+          answers: { ...context.answers, [event.inputId]: event.answerId },
         })),
         resetToInitialContext: assign((_context, _event) => ({
           history: { nodes: [tree.startNode], position: 0 },
           answers: {},
           Error: undefined,
         })),
-        goBack: assign((context) => ({
-          history: {
-            position:
-              context.history.position + 1 > context.history.nodes.length
-                ? context.history.nodes.length
-                : context.history.position + 1,
-            nodes: context.history.nodes,
-          },
-        })),
-        goForward: assign((context) => ({
-          history: {
-            position:
-              context.history.position - 1 < 0
-                ? 0
-                : context.history.position - 1,
-            nodes: context.history.nodes,
-          },
-        })),
+        goBack: assign((context) => {
+          // When there is no history we should not go back.
+          if (context.history.nodes.length === 0) return context;
+          // When we have reached the end of the history array we should not go back further.
+          if (context.history.position === context.history.nodes.length - 1)
+            return context;
+
+          return {
+            history: {
+              position: context.history.position + 1,
+              nodes: context.history.nodes,
+            },
+          };
+        }),
+        goForward: assign((context) => {
+          if (context.history.position === 0) return context;
+
+          return {
+            history: {
+              position: context.history.position - 1,
+              nodes: context.history.nodes,
+            },
+          };
+        }),
         assignErrorToContext: assign({
           Error: (_context, event) => event.Error,
         }),
@@ -242,8 +249,8 @@ export const createInterpreterMachine = (
         resolveConditions: resolveConditions(tree),
       },
       guards: {
-        canGoBack: (context) => context.history.nodes.length > 1,
-        canGoForward: (context) => context.history.position > 0,
+        canGoBack,
+        canGoForward,
         isDebugMode: () => isDebugMode,
       },
     }
