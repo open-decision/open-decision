@@ -1,10 +1,10 @@
 import {
-  Button,
   ErrorMessage,
   Field,
   Heading,
   Input,
   Link,
+  Row,
   Stack,
   SubmitButton,
   Text,
@@ -19,7 +19,6 @@ export default function Login(): JSX.Element {
     defaultValues: {
       email: "",
       password: "",
-      password_confirmation: "",
     },
   });
 
@@ -54,21 +53,19 @@ export default function Login(): JSX.Element {
           }}
         >
           <Heading size="large" css={{ marginBottom: "$2" }}>
-            Registrieren
+            Anmelden
           </Heading>
           <Text css={{ color: "$gray11", marginBottom: "$8" }} size="large">
-            Registrieren sie sich jetzt und erstellen sie ihr erstes Open
-            Decision-Projekt.
+            Loggen Sie sich ein um mit Open Decision fortzufahren.
           </Text>
           <Form
             onSubmit={({ email, password }) =>
-              send({ type: "REGISTER", email, password })
+              send({ type: "LOG_IN", email, password })
             }
             css={{ display: "flex", flexDirection: "column" }}
           >
             <Field label="Mailadresse">
               <Input
-                css={{ layer: "2" }}
                 {...register("email", {
                   required: {
                     value: true,
@@ -78,9 +75,26 @@ export default function Login(): JSX.Element {
                 placeholder="beispiel@web.de"
               />
             </Field>
-            <Field label="Passwort" css={{ marginTop: "$4" }}>
+            <Field
+              label={
+                <Row
+                  css={{
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  Passwort
+                  <Link
+                    href="/auth/forgot_password"
+                    css={{ textStyle: "small-text" }}
+                  >
+                    Passwort vergessen?
+                  </Link>
+                </Row>
+              }
+              css={{ marginTop: "$4" }}
+            >
               <Input
-                css={{ layer: "2" }}
                 type="password"
                 {...register("password", {
                   required: {
@@ -91,36 +105,22 @@ export default function Login(): JSX.Element {
                 placeholder="*******"
               />
             </Field>
-            <Field label="Passwort wiederholen" css={{ marginTop: "$4" }}>
-              <Input
-                css={{ layer: "2" }}
-                type="password"
-                {...register("password_confirmation", {
-                  required: {
-                    value: true,
-                    message:
-                      "Sie müssen ihr Passwort erneut eingeben um Rechtschreibfehlern vorzubeugen.",
-                  },
-                })}
-                placeholder="*******"
-              />
-            </Field>
             {state.context.error ? (
-              <ErrorMessage css={{ marginBlock: "$2" }}>
+              <ErrorMessage css={{ marginTop: "$2" }}>
                 {state.context.error}
               </ErrorMessage>
             ) : null}
             <SubmitButton
-              isLoading={state.matches("loggedOut.register")}
-              css={{ marginTop: "$6" }}
+              isLoading={state.matches("loggedOut.loggingIn")}
               type="submit"
+              css={{ marginTop: "$6" }}
             >
-              Jetzt Registrieren
+              Jetzt Anmelden
             </SubmitButton>
           </Form>
-          <Text css={{ marginTop: "$6" }}>
-            Sie haben bereits ein Konto?{" "}
-            <Link href="/login">Dann melden Sie sich hier an.</Link>
+          <Text css={{ marginTop: "$6", color: "$gray11" }}>
+            Sie haben noch kein Konto?{" "}
+            <Link href="/auth/register">Dann registrieren Sie sich hier.</Link>
           </Text>
         </Stack>
       </Stack>

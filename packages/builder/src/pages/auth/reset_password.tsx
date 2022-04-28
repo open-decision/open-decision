@@ -117,7 +117,7 @@ export default function ResetPassword(): JSX.Element {
                   css={{
                     textStyle: "extra-small-heading",
                   }}
-                  href="/forgot_password"
+                  href="/auth/forgot_password"
                 >
                   Passwort erneut zurücksetzen
                 </Link>

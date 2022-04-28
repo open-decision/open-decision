@@ -5,7 +5,6 @@ import {
   Icon,
   Input,
   Link,
-  Row,
   Stack,
   SubmitButton,
   Text,
@@ -74,7 +73,7 @@ export default function ForgotPassword(): JSX.Element {
                   gap: "$1",
                   textStyle: "large-text",
                 }}
-                href="/login"
+                href="/auth/login"
               >
                 <Icon>
                   <ArrowLeftIcon />
