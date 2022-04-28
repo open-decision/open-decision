@@ -21,6 +21,8 @@ import UserHandler from "../../src/models/user.model";
 import { tokenHandler } from "../../src/models/token.model";
 import { TokenType } from "@prisma-client";
 import { hasRefreshCookie } from "../utils/refreshCookieHelpers";
+import { entryOne, insertEntry } from "../fixtures/whitelistEntry.fixture";
+import { emailIsWhitelisted } from "../../src/models/whitelistEntry.model";
 
 setupTestDB();
 
@@ -65,6 +67,79 @@ describe("Auth routes", () => {
       });
 
       expect(res.body).not.toHaveProperty("refresh");
+    });
+
+    test("should return 201 and successfully register user if whitelist is activated and email is whitelisted", async () => {
+      config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = true;
+      await insertUsers([admin]);
+      await insertEntry([{ ...entryOne, email: newUser.email }]);
+
+      const res = await request(app)
+        .post("/v1/auth/register")
+        .send(newUser)
+        .expect(httpStatus.CREATED)
+        .expect(hasRefreshCookie);
+
+      expect(res.body.user).toEqual({
+        uuid: expect.anything(),
+        name: null,
+        email: newUser.email,
+        role: "USER",
+        emailIsVerified: false,
+      });
+
+      expect(res.body.access).toEqual({
+        token: expect.anything(),
+        expires: expect.anything(),
+      });
+
+      const dbUser = await UserHandler.findByUuidOrId(res.body.user.uuid);
+      expect(dbUser).toBeDefined();
+      expect(dbUser!.password).not.toBe(newUser.password);
+      expect(dbUser).toMatchObject({
+        name: null,
+        email: newUser.email,
+        role: "USER",
+        emailIsVerified: false,
+      });
+
+      expect(res.body).not.toHaveProperty("refresh");
+
+      // The whitelist entry should be deleted after the successful registration
+      expect(await emailIsWhitelisted(newUser.email)).toBe(false);
+
+      config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = false;
+    });
+
+    test("should return 400 if whitelist is activated and email is not whitelisted", async () => {
+      config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = true;
+      await insertUsers([admin]);
+      await insertEntry([entryOne]);
+
+      await request(app)
+        .post("/v1/auth/register")
+        .send(newUser)
+        .expect(httpStatus.FORBIDDEN);
+
+      config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = false;
+    });
+
+    test("should not delete whitelist entry if account creation fails", async () => {
+      // This is not a realistic use-case, why would you whitelist an existing account
+      // However, this is the easiest way to ensure that the account creation fails to
+      // test if the whitelist entry is not deleted
+
+      config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = true;
+      await insertUsers([userOne, admin]);
+      await insertEntry([{ ...entryOne, email: userOne.email }]);
+
+      await request(app)
+        .post("/v1/auth/register")
+        .send({ email: userOne.email, password: userOne.password })
+        .expect(httpStatus.BAD_REQUEST);
+
+      expect(await emailIsWhitelisted(userOne.email)).toBe(true);
+      config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = false;
     });
 
     test("should return 400 error if email is invalid", async () => {

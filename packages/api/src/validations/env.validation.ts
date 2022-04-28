@@ -44,5 +44,9 @@ export const EnvVars = z
       .optional()
       .default("[]")
       .transform((str) => JSON.parse(str)),
+    RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS: z
+      .boolean()
+      .optional()
+      .default(false),
   })
   .merge(MailserverConfig.partial());

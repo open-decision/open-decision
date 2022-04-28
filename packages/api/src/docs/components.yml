@@ -22,6 +22,33 @@ components:
         role: USER
         emailIsVerified: false
 
+    WhitelistEntryArray:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: number
+          createdAt:
+            type: string
+            format: date-time
+          creatorUuid:
+            type: string
+          email:
+            type: string
+          sendInvite:
+            type: boolean
+          dateOfLastInvite:
+            type: string
+            format: date-time
+        example:
+          id: 11234
+          createdAt: 2020-05-12T16:18:04.793Z
+          creatorUuid: 2d36a831-5abb-4327-a5e5-235c43d5d54e
+          email: fake@example.com
+          sendInvite: true
+          dateOfLastInvite: 2020-05-12T16:18:04.793Z
+
     Token:
       type: object
       properties:

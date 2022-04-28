@@ -19,6 +19,21 @@ userRouter
 // );
 
 userRouter
+  .route("/whitelist")
+  // .get(auth("getWhitelist"), userController.getWhitelist)
+  .get(auth("getWhitelist"), userController.getWhitelist)
+  .post(
+    auth("manageWhitelist"),
+    validate(userValidation.whitelistUsersForRegistration),
+    userController.addToWhitelist
+  )
+  .delete(
+    auth("manageWhitelist"),
+    validate(userValidation.removeUsersFromWhitelist),
+    userController.removeFromWhitelist
+  );
+
+userRouter
   .route("/:userUuid")
   .get(
     auth("getUsers"),
@@ -203,4 +218,96 @@ export default userRouter;
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
+ */
+/**
+ * @openapi
+ * tags:
+ *   name: Whitelist
+ *   description: Management and retrieval for user whitelist
+ */
+/**
+ * @openapi
+ * /whitelist:
+ *   get:
+ *     summary: Get all whitelist entries
+ *     description: Only admins can get whitelist entries
+ *     tags: [Whitelist]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *              $ref: '#/components/schemas/WhitelistEntryArray'
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ *   post:
+ *     summary: Create many whitelist entries
+ *     description: Only admins can add mail addresses to the whitelist
+ *     tags: [Whitelist]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - emails
+ *             properties:
+ *               emails:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: email
+ *                   uniqueItems: true
+ *               sendInvite:
+ *                 type: boolean
+ *                 description: False by default, currently sending invites is not yet implemented
+ *             example:
+ *               emails: ["fake@example.com", "fake2@example.com"]
+ *               sendInvite: false
+ *     responses:
+ *       "201":
+ *         description: Created
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *   delete:
+ *     summary: Delete whitelist entires by email
+ *     description: Only admins can delete whitelist entries
+ *     tags: [Whitelist]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - emails
+ *             properties:
+ *               emails:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: email
+ *             example:
+ *               emails: ["fake@example.com", "fake2@example.com"]
+ *     responses:
+ *       "201":
+ *         description: Sucessfully deleted
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
  */

@@ -42,6 +42,17 @@ model User {
   DecisionTrees         DecisionTree[]
   Token                 Token[]
   UserTags              Tag[]
+  WhitelistEntries      WhitelistEntry[]
+}
+
+model WhitelistEntry {
+  id                    Int      @unique @default(autoincrement())
+  createdAt             DateTime @default(now())
+  createdBy             User     @relation(fields: [creatorUuid], references: [uuid])
+  creatorUuid           String   @db.Uuid
+  email                 String   @unique
+  sendInvite            Boolean  @default(false)
+  dateOfLastInvite      DateTime?
 }
 
 model Token {

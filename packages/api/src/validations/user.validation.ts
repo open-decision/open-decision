@@ -49,3 +49,16 @@ export const deleteUser = z.object({
     userUuid: z.string().uuid(),
   }),
 });
+
+export const whitelistUsersForRegistration = z.object({
+  body: z.object({
+    emails: z.array(z.string().email()),
+    sendInvite: z.boolean().optional(),
+  }),
+});
+
+export const removeUsersFromWhitelist = z.object({
+  body: z.object({
+    emails: z.array(z.string().email()),
+  }),
+});
