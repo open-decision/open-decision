@@ -35,6 +35,16 @@ export const admin: User = {
   emailIsVerified: false,
 };
 
+export const developer: User = {
+  id: faker.datatype.number(),
+  name: faker.name.findName(),
+  uuid: faker.datatype.uuid(),
+  email: faker.internet.email().toLowerCase(),
+  password,
+  role: "DEVELOPER",
+  emailIsVerified: false,
+};
+
 export const insertUsers = async (users: User[]) => {
   const mod = users.map((user) => ({ ...user, password: hashedPassword }));
 

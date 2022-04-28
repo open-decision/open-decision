@@ -12,7 +12,7 @@ components:
           type: string
         role:
           type: string
-          enum: [USER, ADMIN]
+          enum: [USER, ADMIN, DEVELOPER]
         emailIsVerified:
           type: boolean
       example:

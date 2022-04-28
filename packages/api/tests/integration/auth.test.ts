@@ -12,7 +12,12 @@ import { setupTestDB } from "../utils/setupTestDB";
 // import { User } from "../../src/models/user.model";
 // import { Token } from "../../src/models/token.model";
 import { roleRights, adminRights } from "../../src/config/roles";
-import { userOne, admin, insertUsers } from "../fixtures/user.fixture";
+import {
+  userOne,
+  admin,
+  insertUsers,
+  developer,
+} from "../fixtures/user.fixture";
 import {
   userOneAccessToken,
   adminAccessToken,
@@ -63,6 +68,79 @@ describe("Auth routes", () => {
         name: null,
         email: newUser.email,
         role: "USER",
+        emailIsVerified: false,
+      });
+
+      expect(res.body).not.toHaveProperty("refresh");
+    });
+
+    test("should return 201 and successfully register a developer account if email is on developer whitelist", async () => {
+      config.DEV_ACCOUNT_WHITELIST = [newUser.email];
+      const res = await request(app)
+        .post("/v1/auth/register")
+        .send(newUser)
+        .expect(httpStatus.CREATED)
+        .expect(hasRefreshCookie);
+
+      expect(res.body.user).toEqual({
+        uuid: expect.anything(),
+        name: null,
+        email: newUser.email,
+        role: "DEVELOPER",
+        emailIsVerified: false,
+      });
+
+      expect(res.body.access).toEqual({
+        token: expect.anything(),
+        expires: expect.anything(),
+      });
+
+      // The access token of developer accounts should be valid for roughly one year
+      expect(
+        dayjs(res.body.access.expires).isAfter(dayjs().add(364, "day"))
+      ).toBe(true);
+
+      const dbUser = await UserHandler.findByUuidOrId(res.body.user.uuid);
+      expect(dbUser).toBeDefined();
+      expect(dbUser!.password).not.toBe(newUser.password);
+      expect(dbUser).toMatchObject({
+        name: null,
+        email: newUser.email,
+        role: "DEVELOPER",
+        emailIsVerified: false,
+      });
+
+      expect(res.body).not.toHaveProperty("refresh");
+    });
+
+    test("should return 201 and successfully register an admin account if email is on admin whitelist", async () => {
+      config.ADMIN_ACCOUNT_WHITELIST = [newUser.email];
+      const res = await request(app)
+        .post("/v1/auth/register")
+        .send(newUser)
+        .expect(httpStatus.CREATED)
+        .expect(hasRefreshCookie);
+
+      expect(res.body.user).toEqual({
+        uuid: expect.anything(),
+        name: null,
+        email: newUser.email,
+        role: "ADMIN",
+        emailIsVerified: false,
+      });
+
+      expect(res.body.access).toEqual({
+        token: expect.anything(),
+        expires: expect.anything(),
+      });
+
+      const dbUser = await UserHandler.findByUuidOrId(res.body.user.uuid);
+      expect(dbUser).toBeDefined();
+      expect(dbUser!.password).not.toBe(newUser.password);
+      expect(dbUser).toMatchObject({
+        name: null,
+        email: newUser.email,
+        role: "ADMIN",
         emailIsVerified: false,
       });
 
@@ -211,6 +289,36 @@ describe("Auth routes", () => {
           uuid: expect.anything(),
         },
       });
+    });
+
+    test("should return 200 and login developer with long-runnning access token", async () => {
+      await insertUsers([developer]);
+      const loginCredentials = {
+        email: developer.email,
+        password: developer.password,
+      };
+
+      const res = await request(app)
+        .post("/v1/auth/login")
+        .send(loginCredentials)
+        .expect(httpStatus.OK)
+        .expect(hasRefreshCookie);
+
+      expect(res.body).toMatchObject({
+        access: { token: expect.anything(), expires: expect.anything() },
+        user: {
+          email: developer.email,
+          emailIsVerified: false,
+          name: developer.name,
+          role: "DEVELOPER",
+          uuid: expect.anything(),
+        },
+      });
+
+      // The access token of developer accounts should be valid for roughly one year
+      expect(
+        dayjs(res.body.access.expires).isAfter(dayjs().add(364, "day"))
+      ).toBe(true);
     });
 
     test("should return 401 error if there are no users with that email", async () => {

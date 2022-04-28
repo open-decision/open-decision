@@ -93,7 +93,7 @@ export default userRouter;
  *                 description: Must be sufficiently complex (score at zxcvbn-ts >= 3)
  *               role:
  *                  type: string
- *                  enum: [USER, ADMIN]
+ *                  enum: [USER, ADMIN, DEVELOPER]
  *             example:
  *               name: fake name
  *               email: fake@example.com

@@ -33,6 +33,15 @@ async function create(email: string, password: string) {
         },
       });
     }
+    if (config.ADMIN_ACCOUNT_WHITELIST.includes(email)) {
+      return prisma.user.create({
+        data: {
+          email,
+          password: await hashPassword(password),
+          role: "ADMIN",
+        },
+      });
+    }
     return prisma.user.create({
       data: { email, password: await hashPassword(password) },
     });
