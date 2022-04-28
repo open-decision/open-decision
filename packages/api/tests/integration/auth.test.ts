@@ -276,7 +276,7 @@ describe("Auth routes", () => {
         .expect(httpStatus.BAD_REQUEST);
     });
 
-    test("should return 404 error if refresh token is not found in the database", async () => {
+    test("should 204 even if the refresh token is not found in the database, the logout is pointless anyway", async () => {
       await insertUsers([userOne]);
       const refreshTokenExpires = dayjs().add(
         config.JWT_REFRESH_EXPIRATION_DAYS,
@@ -292,10 +292,10 @@ describe("Auth routes", () => {
         .post("/v1/auth/logout")
         .set("Cookie", [`refreshCookie=${refreshToken}`])
         .send()
-        .expect(httpStatus.NOT_FOUND);
+        .expect(httpStatus.NO_CONTENT);
     });
 
-    test("should return 404 error if refresh token is blacklisted", async () => {
+    test("should return 204 even if the refresh token is blacklisted, the logout is pointless anyway", async () => {
       await insertUsers([userOne]);
       const refreshTokenExpires = dayjs().add(
         config.JWT_REFRESH_EXPIRATION_DAYS,
@@ -319,7 +319,7 @@ describe("Auth routes", () => {
         .post("/v1/auth/logout")
         .set("Cookie", [`refreshCookie=${refreshToken}`])
         .send()
-        .expect(httpStatus.NOT_FOUND);
+        .expect(httpStatus.NO_CONTENT);
     });
   });
 
