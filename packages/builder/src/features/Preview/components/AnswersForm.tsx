@@ -1,7 +1,6 @@
 import * as React from "react";
 import { StyleObject, useForm } from "@open-decision/design-system";
 import { useInterpreter } from "@open-decision/interpreter";
-import { Navigation } from "./Navigation";
 import { SelectAnswers } from "./Answers/SelectAnswers";
 
 type PreviewAnswerFormProps = {
@@ -10,10 +9,18 @@ type PreviewAnswerFormProps = {
 };
 
 export function AnswersForm({ inputIds, css }: PreviewAnswerFormProps) {
-  const { interpreter, getInputs } = useInterpreter();
+  const { send, getInputs, getAnswer, getCurrentNode } = useInterpreter();
   const inputs = getInputs(inputIds);
 
-  const [Form] = useForm({});
+  const defaultValues = {};
+
+  Object.values(inputs ?? {}).forEach(
+    (input) => (defaultValues[input.id] = getAnswer(input.id))
+  );
+
+  const [Form] = useForm({
+    defaultValues,
+  });
   if (!inputs) return null;
 
   return (
@@ -21,13 +28,19 @@ export function AnswersForm({ inputIds, css }: PreviewAnswerFormProps) {
       {Object.values(inputs).map((input) => {
         return (
           <SelectAnswers
+            name={input.id}
             input={input}
             key={input.id}
             onChange={(newValue) => {
-              interpreter.addUserAnswer(input.id, newValue);
-              interpreter.evaluateNodeConditions(
-                interpreter.getCurrentNode()?.data.conditions ?? []
-              );
+              send({
+                type: "ADD_USER_ANSWER",
+                inputId: input.id,
+                answerId: newValue,
+              });
+              send({
+                type: "EVALUATE_NODE_CONDITIONS",
+                conditionIds: getCurrentNode()?.data.conditions ?? [],
+              });
             }}
           />
         );

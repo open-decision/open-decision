@@ -4,6 +4,7 @@ import {
   Heading,
   Input,
   Link,
+  Row,
   Stack,
   SubmitButton,
   Text,
@@ -38,11 +39,12 @@ export default function Login(): JSX.Element {
         center
         css={{
           height: "100%",
-          maxWidth: "550px",
+          width: "clamp(400px, 30vw, 500px)",
         }}
       >
         <Stack
           css={{
+            width: "100%",
             backgroundColor: "$gray1",
             padding: "$9",
             boxShadow: "$7",
@@ -50,10 +52,10 @@ export default function Login(): JSX.Element {
             layer: "1",
           }}
         >
-          <Heading size="large" css={{ marginBottom: "$3" }}>
+          <Heading size="large" css={{ marginBottom: "$2" }}>
             Anmelden
           </Heading>
-          <Text css={{ color: "$gray11", marginBottom: "$8" }}>
+          <Text css={{ color: "$gray11", marginBottom: "$8" }} size="large">
             Loggen Sie sich ein um mit Open Decision fortzufahren.
           </Text>
           <Form
@@ -64,7 +66,6 @@ export default function Login(): JSX.Element {
           >
             <Field label="Mailadresse">
               <Input
-                css={{ layer: "2" }}
                 {...register("email", {
                   required: {
                     value: true,
@@ -74,9 +75,26 @@ export default function Login(): JSX.Element {
                 placeholder="beispiel@web.de"
               />
             </Field>
-            <Field label="Passwort" css={{ marginTop: "$4" }}>
+            <Field
+              label={
+                <Row
+                  css={{
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  Passwort
+                  <Link
+                    href="/forgot_password"
+                    css={{ textStyle: "small-text" }}
+                  >
+                    Passwort vergessen?
+                  </Link>
+                </Row>
+              }
+              css={{ marginTop: "$4" }}
+            >
               <Input
-                css={{ layer: "2" }}
                 type="password"
                 {...register("password", {
                   required: {
@@ -87,18 +105,8 @@ export default function Login(): JSX.Element {
                 placeholder="*******"
               />
             </Field>
-            <Link
-              css={{
-                marginLeft: "auto",
-                marginTop: "$4",
-              }}
-              underline={false}
-              href="/forgot_password"
-            >
-              Passwort vergessen?
-            </Link>
             {state.context.error ? (
-              <ErrorMessage css={{ marginTop: "$4" }}>
+              <ErrorMessage css={{ marginTop: "$2" }}>
                 {state.context.error}
               </ErrorMessage>
             ) : null}
@@ -110,9 +118,9 @@ export default function Login(): JSX.Element {
               Jetzt Anmelden
             </SubmitButton>
           </Form>
-          <Text css={{ marginTop: "$6" }}>
+          <Text css={{ marginTop: "$6", color: "$gray11" }}>
             Sie haben noch kein Konto?{" "}
-            <Link href="/register">Dann registrieren Sie sich hier</Link>
+            <Link href="/register">Dann registrieren Sie sich hier.</Link>
           </Text>
         </Stack>
       </Stack>

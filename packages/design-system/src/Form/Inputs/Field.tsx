@@ -8,7 +8,6 @@ import { visuallyHidden } from "../../shared/utils";
 const FieldBox = styled("div", {
   display: "grid",
   gap: "$2",
-  overflow: "hidden",
 });
 
 export type FieldProps = {

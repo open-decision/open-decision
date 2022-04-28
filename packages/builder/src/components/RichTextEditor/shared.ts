@@ -12,7 +12,7 @@ import Gapcursor from "@tiptap/extension-gapcursor";
 import Link from "@tiptap/extension-link";
 import Text from "@tiptap/extension-text";
 import Document from "@tiptap/extension-document";
-import { headingStyles, textStyles } from "@open-decision/design-system";
+import { css, headingStyles, textStyles } from "@open-decision/design-system";
 
 export const extensions = [
   Document,
@@ -46,3 +46,12 @@ export const extensions = [
   Gapcursor,
   Link,
 ];
+
+export const editorStyles = css({
+  ".ProseMirror": {
+    colorScheme: "primary",
+    display: "flex",
+    gap: "10px",
+    flexDirection: "column",
+  },
+});

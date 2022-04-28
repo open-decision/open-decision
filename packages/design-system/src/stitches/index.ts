@@ -12,8 +12,8 @@ import {
   amberDarkA,
   redDark,
   redDarkA,
-  greenDark,
-  greenDarkA,
+  grassDark,
+  grassDarkA,
   blueDark,
   blueDarkA,
   slate,
@@ -24,8 +24,8 @@ import {
   amberA,
   red,
   redA,
-  green,
-  greenA,
+  grass,
+  grassA,
   blue,
   blueA,
 } from "@radix-ui/colors";
@@ -36,7 +36,14 @@ import {
   SystemColors,
 } from "../internal/utils";
 
-type focusTypes = "inner-within" | "outer-within" | "outer" | "inner" | "none";
+type focusTypes =
+  | "inner-within"
+  | "outer-within"
+  | "outer"
+  | "inner"
+  | "outer-intent"
+  | "inner-intent"
+  | "none";
 
 export const designSystem = createStitches({
   theme: {
@@ -49,8 +56,8 @@ export const designSystem = createStitches({
       ...aliasColor("accentA", amberA, true),
       ...aliasColor("danger", red),
       ...aliasColor("dangerA", redA),
-      ...aliasColor("success", green),
-      ...aliasColor("successA", greenA),
+      ...aliasColor("success", grass),
+      ...aliasColor("successA", grassA),
       ...aliasColor("warning", amber, true),
       ...aliasColor("warningA", amberA, true),
       ...aliasColor("info", blue),
@@ -220,33 +227,32 @@ export const designSystem = createStitches({
       }
     },
     focusType: (value: focusTypes) => {
+      const focusWithin = value.includes("within");
+      const focusOnIntent = value.includes("intent");
+
       switch (value) {
         case "none": {
           return { outline: "none" };
         }
         case "outer":
         case "outer-within": {
-          const focusWithin =
-            value === "outer-within" ? "&:focus-within" : undefined;
-
           return {
-            [`&:focus-visible, ${focusWithin}, &[data-focus='true']`]: {
-              boxShadow: `0 0 0 1px var(--layer), 0 0 0 3px var(--colors-focusColor, $colors$primary10)`,
-              outline: "none",
-            },
+            [`&:focus-visible, ${focusWithin}, ${focusOnIntent}, &[data-focus='true']`]:
+              {
+                boxShadow: `0 0 0 1px var(--layer), 0 0 0 3px var(--colors-focusColor, $colors$primary10)`,
+                outline: "none",
+              },
           };
         }
 
         default: {
-          const focusWithin =
-            value === "inner-within" ? "&:focus-within" : undefined;
-
           return {
-            [`&:focus-visible, ${focusWithin}, &[data-focus='true']`]: {
-              boxShadow: `inset 0 0 0 1px var(--colors-focusColor, $colors$primary10)`,
-              borderColor: `var(--colors-focusColor, $colors$primary10)`,
-              outline: "none",
-            },
+            [`&:focus-visible, ${focusWithin}, ${focusOnIntent}, &[data-focus='true']`]:
+              {
+                boxShadow: `inset 0 0 0 1px var(--colors-focusColor, $colors$primary10)`,
+                borderColor: `var(--colors-focusColor, $colors$primary10)`,
+                outline: "none",
+              },
           };
         }
       }
@@ -358,8 +364,8 @@ export const defaultTheme = createTheme("light", {
     ...aliasColor("accentA", amberA, true),
     ...aliasColor("danger", red),
     ...aliasColor("dangerA", redA),
-    ...aliasColor("success", green),
-    ...aliasColor("successA", greenA),
+    ...aliasColor("success", grass),
+    ...aliasColor("successA", grassA),
     ...aliasColor("warning", amber, true),
     ...aliasColor("warningA", amberA, true),
     ...aliasColor("info", blue),
@@ -387,8 +393,8 @@ export const darkTheme = createTheme("dark", {
     ...aliasColor("accentA", amberDarkA, true),
     ...aliasColor("danger", redDark),
     ...aliasColor("dangerA", redDarkA),
-    ...aliasColor("success", greenDark),
-    ...aliasColor("successA", greenDarkA),
+    ...aliasColor("success", grassDark),
+    ...aliasColor("successA", grassDarkA),
     ...aliasColor("warning", amberDark, true),
     ...aliasColor("warningA", amberDarkA, true),
     ...aliasColor("info", blueDark),

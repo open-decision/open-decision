@@ -5,11 +5,10 @@ import {
   RadioButtons,
   RadioGroupProps,
   styled,
-  Text,
+  useInputGroup,
 } from "@open-decision/design-system";
 import { Input } from "@open-decision/type-classes";
 import { InfoBox } from "features/Notifications/InfoBox";
-import { Notification } from "features/Notifications/Notification";
 import React from "react";
 
 const StyledLabel = styled(Label, {
@@ -30,16 +29,19 @@ const StyledLabel = styled(Label, {
   }),
 });
 
-type Props = { input: Input.TInput; onChange?: RadioGroupProps["onChange"] };
+type Props = {
+  input: Input.TInput;
+  onChange?: RadioGroupProps["onChange"];
+  name: string;
+};
 
-export function SelectAnswers({ input, onChange }: Props) {
+export function SelectAnswers({ input, onChange, name }: Props) {
   const hasAnswers = input.answers.length > 0;
 
   return (
     <RadioButtons.Group
-      name="relationId"
+      name={name}
       css={{
-        marginBottom: "$8",
         gap: "$1",
         display: "grid",
       }}
@@ -48,14 +50,7 @@ export function SelectAnswers({ input, onChange }: Props) {
     >
       {hasAnswers ? (
         input.answers.map((answer) => (
-          <StyledLabel htmlFor={answer.id} size="large" key={answer.id}>
-            <RadioButtons.Button
-              id={answer.id}
-              value={answer.id}
-              css={{ position: "absolute", width: 0, height: 0 }}
-            />
-            {answer.text ? answer.text : "Kein Antworttext"}
-          </StyledLabel>
+          <SelectElement answer={answer} key={answer.id} />
         ))
       ) : (
         <InfoBox
@@ -66,5 +61,31 @@ export function SelectAnswers({ input, onChange }: Props) {
         />
       )}
     </RadioButtons.Group>
+  );
+}
+
+type SelectElementProps = {
+  answer: {
+    text: string;
+    id: string;
+  };
+};
+
+function SelectElement({ answer }: SelectElementProps) {
+  const { getActive } = useInputGroup("radio");
+
+  return (
+    <StyledLabel
+      htmlFor={answer.id}
+      size="large"
+      data-active={getActive?.(answer.id)}
+    >
+      <RadioButtons.Button
+        id={answer.id}
+        value={answer.id}
+        css={{ position: "absolute", width: 0, height: 0 }}
+      />
+      {answer.text ? answer.text : "Kein Antworttext"}
+    </StyledLabel>
   );
 }

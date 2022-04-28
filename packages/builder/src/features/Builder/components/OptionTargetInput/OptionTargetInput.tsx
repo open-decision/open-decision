@@ -361,7 +361,7 @@ type NodeLinkProps = { target?: string } & Omit<ButtonProps, "label" | "Icon">;
 
 function NodeLink({ target, css, ...props }: NodeLinkProps) {
   const node = useNode(target ?? "");
-  const { addSelectedNodes } = useEditor();
+  const { replaceSelectedNodes } = useEditor();
 
   return (
     <Button
@@ -380,7 +380,7 @@ function NodeLink({ target, css, ...props }: NodeLinkProps) {
       variant="secondary"
       onClick={() => {
         if (target) {
-          addSelectedNodes([target]);
+          replaceSelectedNodes([target]);
         }
       }}
       type="button"

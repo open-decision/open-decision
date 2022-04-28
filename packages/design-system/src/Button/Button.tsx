@@ -28,7 +28,6 @@ export const buttonStyles = css(alignByContent, {
   alignItems: "center",
   border: "$$borderWidth solid transparent",
   padding: "$$paddingBlock $$paddingInline",
-  focusType: "outer",
 
   variants: {
     size: {
@@ -36,26 +35,26 @@ export const buttonStyles = css(alignByContent, {
         $$paddingInline: "$space$2",
         $$paddingBlock: "$space$1",
         textStyle: "small-text",
-        fontWeight: 600,
+        fontWeight: 500,
       },
       medium: {
         $$paddingInline: "$space$3",
         $$paddingBlock: "$space$2",
         textStyle: "medium-text",
-        fontWeight: 600,
+        fontWeight: 500,
       },
       large: {
         $$paddingInline: "$space$4",
         $$paddingBlock: "$space$3",
         textStyle: "large-text",
-        fontWeight: 600,
+        fontWeight: 500,
         $$gap: "$space$2",
       },
       xl: {
         $$paddingInline: "$space$5",
         $$paddingBlock: "$space$3",
         textStyle: "large-text",
-        fontWeight: 600,
+        fontWeight: 500,
         $$gap: "$space$2",
       },
     },
@@ -63,6 +62,7 @@ export const buttonStyles = css(alignByContent, {
       primary: {
         backgroundColor: "$colorScheme9",
         color: "$white",
+        focusType: "outer",
 
         ...intentStyle({
           backgroundColor: "$colorScheme10",

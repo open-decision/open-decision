@@ -8,7 +8,7 @@ export * from "./Header";
 export * from "./Heading";
 export * from "./Text";
 export * from "./Form";
-export * from "./Link";
+export * from "./Link/Link";
 export * from "./Menus";
 export * from "./Label/Label";
 export * from "./Icon/Icon";

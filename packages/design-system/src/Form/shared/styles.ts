@@ -21,6 +21,13 @@ export const baseInputStyles = css({
 
 export const baseTextInputStyle = css(alignByContent, {
   variants: {
+    variant: {
+      raised: { layer: "2" },
+      lowered: {
+        layer: "4",
+        borderColor: "transparent",
+      },
+    },
     size: {
       small: {
         $$paddingBlock: "$space$2",
@@ -42,6 +49,7 @@ export const baseTextInputStyle = css(alignByContent, {
 
   defaultVariants: {
     size: "medium",
+    variant: "raised",
   },
 });
 

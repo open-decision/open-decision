@@ -49,6 +49,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       onBlur,
       onFocus,
       className,
+      variant,
       ...props
     },
     ref
@@ -75,6 +76,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         data-disabled={disabled}
         data-focus={hasFocus}
         size={size}
+        variant={variant}
         alignByContent={alignByContent}
       >
         {EnhancedIcon}

@@ -68,7 +68,10 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
               </Icon>
               Zur Startnode machen
             </DropdownMenu.Item>
-            <DropdownMenu.Item onSelect={() => deleteNodes([nodeId])}>
+            <DropdownMenu.Item
+              onSelect={() => deleteNodes([nodeId])}
+              css={{ colorScheme: "danger" }}
+            >
               <Icon label="Löschen Icon" css={{ $$paddingInline: 0 }}>
                 <TrashIcon />
               </Icon>

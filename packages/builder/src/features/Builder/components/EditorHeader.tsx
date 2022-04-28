@@ -39,7 +39,6 @@ export const EditorHeader = ({ css }: HeaderProps) => {
         <Link passHref href={`/builder/${id}/preview`}>
           <SystemLink
             className={buttonStyles({ variant: "secondary" })}
-            underline={false}
             onClick={() => {
               const tree = getTreeData();
               return queryClient.setQueryData(

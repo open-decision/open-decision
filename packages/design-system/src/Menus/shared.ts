@@ -8,7 +8,7 @@ const scaleIn = keyframes({
 
 export const menuContainerStyles = css({
   layer: "1",
-  paddingBlock: "$1",
+  paddingBlock: "$2",
   boxShadow: "$7",
   borderRadius: "$md",
   overflow: "hidden",
@@ -17,6 +17,7 @@ export const menuContainerStyles = css({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
+  gap: "$1",
 
   transformOrigin: "var(--radix-dropdown-menu-content-transform-origin)",
   animation: `${scaleIn} 0.1s ease-out`,
@@ -26,30 +27,44 @@ export const menuItemStyles = css({
   all: "unset",
   colorScheme: "primary",
   textStyle: "medium-text",
-  focusType: "inner",
+  focusType: "inner-intent",
   userSelect: "none",
   display: "flex",
   gap: "$3",
-  paddingInline: "$4",
-  paddingBlock: "$2",
+  marginInline: "$2",
+  paddingInline: "$3",
+  paddingBlock: "6px",
+  borderRadius: "$md",
   minWidth: "200px",
   alignItems: "center",
   wordBreak: "break-word",
   hyphens: "auto",
   cursor: "pointer",
+  fontWeight: "500",
+  border: "1px solid transparent",
+  focusColor: "$colorScheme6",
 
-  "&[data-state='checked']": {
-    backgroundColor: "$colorScheme3",
+  [`.${darkTheme} &`]: {
+    focusColor: "$colorScheme8",
   },
 
   ...intentStyle({
-    backgroundColor: "$colorScheme5",
-    focusColor: "$colorScheme5",
+    backgroundColor: "$colorScheme2",
+    focusType: "inner",
+
+    [`.${darkTheme} &`]: {
+      backgroundColor: "$colorScheme4",
+      focusColor: "$colorScheme8",
+    },
   }),
 
   ...disabledStyle({
     color: "$gray11",
-    pointerEvents: "none",
+    cursor: "not-allowed",
+
+    ...intentStyle({
+      backgroundColor: "$gray2",
+    }),
   }),
 });
 

@@ -1,5 +1,5 @@
 import { z } from "zod";
-export const Answer = z.object({ id: z.string(), text: z.string() });
+export const Answer = z.object({ id: z.string().uuid(), text: z.string() });
 
 export const Type = z.object({
   id: z.string().uuid(),

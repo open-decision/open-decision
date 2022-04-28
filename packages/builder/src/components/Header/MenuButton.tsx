@@ -1,11 +1,15 @@
 import * as React from "react";
-import { Button, ButtonProps, Icon } from "@open-decision/design-system";
-import { TriangleDownIcon } from "@radix-ui/react-icons";
+import { ButtonProps, DropdownMenu } from "@open-decision/design-system";
 type Props = { label: React.ReactNode } & ButtonProps;
 
 function MenuButtonImpl({ label, css, ...props }: Props, ref) {
+  const Label =
+    typeof label === "string" && (label.length ?? "") > 60
+      ? label.slice(0, 60).concat("...")
+      : label;
+
   return (
-    <Button
+    <DropdownMenu.Button
       variant="neutral"
       css={{
         minWidth: "max-content",
@@ -18,18 +22,8 @@ function MenuButtonImpl({ label, css, ...props }: Props, ref) {
       ref={ref}
       {...props}
     >
-      {label}
-      <Icon
-        className="rotate"
-        css={{
-          "& svg": {
-            transition: "transform 200ms ease-in-out",
-          },
-        }}
-      >
-        <TriangleDownIcon />
-      </Icon>
-    </Button>
+      {Label}
+    </DropdownMenu.Button>
   );
 }
 

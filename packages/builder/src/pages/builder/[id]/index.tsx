@@ -1,5 +1,4 @@
 import * as React from "react";
-import { MainContent } from "components/Layout";
 import { NodeEditor } from "features/Builder/NodeEditor";
 import { EditorProvider } from "features/Builder/state/useEditor";
 import { ReactFlowProvider } from "react-flow-renderer";
@@ -10,6 +9,7 @@ import { GetServerSideProps } from "next";
 import { TreeProvider } from "features/Builder/state/treeStore/TreeContext";
 import { Box, LoadingSpinner } from "@open-decision/design-system";
 import { SideMenu } from "features/Builder/SideMenu";
+import { Layout } from "../../../components/Layout";
 
 function Loading() {
   return (
@@ -18,7 +18,8 @@ function Loading() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        width: "100%",
+        gridColumn: "1 / -1",
+        gridRow: "1 / -1",
       }}
     >
       <LoadingSpinner size="50px" />
@@ -34,26 +35,40 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 export default function BuilderPage({ id }) {
   return (
-    <React.Suspense fallback={<Loading />}>
-      <ErrorBoundary fallback={ErrorFallback}>
-        <TreeProvider id={id}>
-          <MainContent
+    <TreeProvider id={id}>
+      <ReactFlowProvider>
+        <EditorProvider>
+          <EditorHeader
             css={{
-              display: "grid",
-              gridTemplateColumns: `max-content 1fr`,
-              gridTemplateRows: "max-content 1fr",
+              gridColumn: "1 / -1",
+              gridRow: "1",
             }}
-          >
-            <ReactFlowProvider>
-              <EditorProvider>
-                <EditorHeader css={{ gridColumn: "1 / -1", gridRow: "1" }} />
-                <SideMenu css={{ gridRow: "2", gridColumn: "1" }} />
-                <NodeEditor css={{ gridColumn: "2 / 3", gridRow: "2" }} />
-              </EditorProvider>
-            </ReactFlowProvider>
-          </MainContent>
-        </TreeProvider>
-      </ErrorBoundary>
-    </React.Suspense>
+          />
+          <SideMenu css={{ gridRow: "2", gridColumn: "1", layer: "1" }} />
+          <NodeEditor
+            css={{
+              gridColumn: "2 / 3",
+              gridRow: "2",
+            }}
+          />
+        </EditorProvider>
+      </ReactFlowProvider>
+    </TreeProvider>
   );
 }
+
+BuilderPage.getLayout = function getLayout(page: React.ReactElement) {
+  return (
+    <ErrorBoundary fallback={ErrorFallback}>
+      <Layout
+        css={{
+          display: "grid",
+          gridTemplateColumns: `max-content 1fr`,
+          gridTemplateRows: "max-content 1fr",
+        }}
+      >
+        <React.Suspense fallback={<Loading />}>{page}</React.Suspense>
+      </Layout>
+    </ErrorBoundary>
+  );
+};

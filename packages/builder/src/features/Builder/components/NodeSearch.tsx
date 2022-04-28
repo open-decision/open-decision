@@ -111,7 +111,7 @@ export const NodeSearch = ({ css }: Props) => {
                   </Icon>
                 }
                 placeholder="Suche"
-                css={{ layer: "4", borderColor: "transparent" }}
+                variant="lowered"
               />
             )}
           </Combobox.Input>

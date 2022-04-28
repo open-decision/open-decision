@@ -1,6 +1,7 @@
 import { Tree } from "../type-classes";
+import { Required } from "utility-types";
 
-export const treeMock: Tree.TTree = {
+export const treeMock: Required<Tree.TTree, "startNode"> = {
   startNode: "e35ba071-6c5f-414f-98b1-a898305e038c",
   nodes: {
     "e35ba071-6c5f-414f-98b1-a898305e038c": {
@@ -22,7 +23,7 @@ export const treeMock: Tree.TTree = {
         inputs: ["50b7733c-c7ab-4035-b26f-801ea8eca9fe"],
         content: [],
         name: "Zweiter Knoten",
-        conditions: ["ff9accd5-a509-4071-a503-a2ae6e2d3d7c"],
+        conditions: ["9c07e4c3-a67f-4c76-8c14-9a0a302b5d99"],
       },
     },
     "72444c0f-8838-43f6-b395-bf3207386ac2": {
@@ -41,7 +42,7 @@ export const treeMock: Tree.TTree = {
     "9c07e4c3-a67f-4c76-8c14-9a0a302b5d99": {
       id: "9c07e4c3-a67f-4c76-8c14-9a0a302b5d99",
       inputId: "50b7733c-c7ab-4035-b26f-801ea8eca9fe",
-      answerId: "1",
+      answerId: "3b923bd4-f9f9-4309-bc04-9fafd5c1b2f4",
       type: "select",
     },
     "ff9accd5-a509-4071-a503-a2ae6e2d3d7c": {
@@ -55,7 +56,7 @@ export const treeMock: Tree.TTree = {
     "50b7733c-c7ab-4035-b26f-801ea8eca9fe": {
       id: "50b7733c-c7ab-4035-b26f-801ea8eca9fe",
       type: "select",
-      answers: [{ id: "1", text: "Ja" }],
+      answers: [{ id: "3b923bd4-f9f9-4309-bc04-9fafd5c1b2f4", text: "Ja" }],
     },
     "7adcfc07-cefd-45a8-ba42-c19860eb26c5": {
       id: "7adcfc07-cefd-45a8-ba42-c19860eb26c5",

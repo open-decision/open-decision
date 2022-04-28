@@ -1,11 +1,5 @@
 import React from "react";
-import { Logo } from "components";
-import {
-  StyleObject,
-  styled,
-  Box,
-  darkTheme,
-} from "@open-decision/design-system";
+import { StyleObject, styled, darkTheme } from "@open-decision/design-system";
 import { UserMenu } from "./UserMenu";
 
 const Container = styled("div", {
@@ -27,11 +21,7 @@ type BaseHeaderProps = {
   LogoSlot?: React.ReactNode;
 };
 
-export const BaseHeader = ({
-  children,
-  css,
-  LogoSlot = <Logo css={{ width: "40px", height: "40px" }} />,
-}: BaseHeaderProps) => {
+export const BaseHeader = ({ children, css, LogoSlot }: BaseHeaderProps) => {
   return (
     <Container css={css} className={darkTheme}>
       <Content>

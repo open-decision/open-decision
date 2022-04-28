@@ -43,11 +43,12 @@ export default function ResetPassword(): JSX.Element {
         center
         css={{
           height: "100%",
-          maxWidth: "550px",
+          width: "clamp(400px, 30vw, 500px)",
         }}
       >
         <Stack
           css={{
+            width: "100%",
             backgroundColor: "$gray1",
             padding: "$9",
             boxShadow: "$7",
@@ -56,10 +57,10 @@ export default function ResetPassword(): JSX.Element {
         >
           {token ? (
             <>
-              <Heading css={{ marginBottom: "$3" }}>
+              <Heading css={{ marginBottom: "$2" }}>
                 Passwort zurücksetzen
               </Heading>
-              <Text css={{ color: "$gray11", marginBottom: "$8" }}>
+              <Text css={{ color: "$gray11", marginBottom: "$8" }} size="large">
                 Bitte vergeben Sie ein neues Passwort.
               </Text>
               <Form
@@ -85,7 +86,7 @@ export default function ResetPassword(): JSX.Element {
                   />
                 </Field>
                 {state.context.error ? (
-                  <ErrorMessage css={{ marginTop: "$4" }}>
+                  <ErrorMessage css={{ marginTop: "$2" }}>
                     {state.context.error}
                   </ErrorMessage>
                 ) : null}

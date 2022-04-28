@@ -16,6 +16,7 @@ packages/*/lib
 .rollup*
 generated
 stats.html
+*.typegen*
 
 # misc
 .DS_Store

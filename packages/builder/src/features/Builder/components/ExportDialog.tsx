@@ -6,10 +6,11 @@ import {
   Input,
   Link,
   Text,
-  defaultTheme,
   useForm,
   SubmitButton,
   Stack,
+  DialogTriggerProps,
+  StyleObject,
 } from "@open-decision/design-system";
 import { readableDate } from "features/Dashboard/utils";
 import { useGetTreeNameQuery } from "features/Data/generated/graphql";
@@ -22,11 +23,26 @@ function createFile(data: object) {
   return new Blob([JSON.stringify(data)], { type: "application/json" });
 }
 
-export function ExportDialog({ children }) {
+type Props = {
+  open?: boolean;
+  setOpen?: (open: boolean) => void;
+  focusOnClose?: () => void;
+  className?: string;
+  children?: DialogTriggerProps["children"];
+  css?: StyleObject;
+};
+
+export function ExportDialog({
+  children,
+  open,
+  setOpen,
+  focusOnClose,
+  className,
+  css,
+}: Props) {
   const uuid = useTreeId();
   const { getTree } = useTreeContext();
   const { data } = useGetTreeNameQuery({ uuid });
-  const [open, setOpen] = React.useState(false);
 
   const [fileName, setFileName] = React.useState("");
   const {
@@ -48,21 +64,19 @@ export function ExportDialog({ children }) {
   const [Form, { register }] = useForm({
     defaultValues: {
       name: data?.decisionTree?.name
-        ? `${data?.decisionTree?.name}_${readableDate(new Date())}.json`
+        ? `${data?.decisionTree?.name}_${readableDate(new Date())}`
         : "",
     },
   });
 
   return (
-    <Dialog.Root
-      open={open}
-      onOpenChange={(open) => {
-        if (!open) reset();
-        return setOpen(open);
-      }}
-    >
-      <Dialog.Trigger asChild>{children}</Dialog.Trigger>
-      <Dialog.Content className={defaultTheme} css={{ groupColor: "$gray12" }}>
+    <Dialog.Root open={open} onOpenChange={setOpen}>
+      {children ? <Dialog.Trigger asChild>{children}</Dialog.Trigger> : null}
+      <Dialog.Content
+        className={className}
+        css={css}
+        onCloseAutoFocus={focusOnClose}
+      >
         <Dialog.Header>Projekt exportieren</Dialog.Header>
         <ErrorBoundary fallback={ExportErrorFallback}>
           {!file ? (
@@ -103,10 +117,9 @@ export function ExportDialog({ children }) {
                 })}
                 download={`${fileName}.json`}
                 href={URL.createObjectURL(file)}
-                underline={false}
                 onClick={() => {
                   reset();
-                  setOpen(false);
+                  setOpen?.(false);
                 }}
               >
                 Speichern

@@ -19,9 +19,7 @@ export function AuthProvider({ children, router }: AuthProviderProps) {
     [router]
   );
 
-  const service = useInterpret(authMachine, {
-    devTools: true,
-  });
+  const service = useInterpret(authMachine);
 
   return (
     <AuthContext.Provider value={service}>{children}</AuthContext.Provider>

@@ -19,7 +19,6 @@ export const createEdge =
       ...edge,
     };
 
-    if (newEdge instanceof Error) return newEdge;
     const isEdgeValid = isValidEdge(tree)(newEdge);
 
     if (isEdgeValid instanceof Error) return isEdgeValid;

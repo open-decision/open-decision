@@ -1,24 +1,25 @@
 import { Box, DropdownMenu, hoverStyle } from "@open-decision/design-system";
-import { MenuButton } from "components/Header/MenuButton";
 import { useEditor } from "features/Builder/state/useEditor";
 
 type Props = { parentNodes: { id: string; name?: string }[] };
 
 export function ParentNodeSelector({ parentNodes }: Props) {
-  const { addSelectedNodes } = useEditor();
+  const { replaceSelectedNodes } = useEditor();
 
   return (
     <Box as="section">
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
-          <MenuButton label="Elternknoten" variant="secondary" size="small" />
+          <DropdownMenu.Button variant="secondary" size="small">
+            Elternknoten
+          </DropdownMenu.Button>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content align="end">
           {parentNodes.map((parentNode) => {
             return (
               <DropdownMenu.Item
                 key={parentNode.id}
-                onClick={() => addSelectedNodes([parentNode.id])}
+                onClick={() => replaceSelectedNodes([parentNode.id])}
                 css={{
                   ...hoverStyle({ textDecoration: "underline" }),
                 }}

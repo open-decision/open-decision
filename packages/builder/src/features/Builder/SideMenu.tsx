@@ -7,6 +7,7 @@ const Container = styled(Stack, {
   alignItems: "center",
   boxShadow: "$1",
   zIndex: "$10",
+  borderRight: "1px solid $gray5",
 });
 
 type Props = { css?: StyleObject };
@@ -14,8 +15,8 @@ type Props = { css?: StyleObject };
 export function SideMenu({ css }: Props) {
   return (
     <Container css={css}>
-      <CreateNodeButton css={{ marginBottom: "$2" }} />
-      <Separator css={{ width: "80%" }} />
+      <CreateNodeButton />
+      <Separator css={{ width: "80%", marginTop: "$2" }} />
     </Container>
   );
 }

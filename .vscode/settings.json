@@ -21,5 +21,10 @@
     "SECURITY",
     "WARNING",
     "INFO"
-  ]
+  ],
+  "rest-client.environmentVariables": {
+    "$shared": {
+      "dev_email": "dev@open-decision.org"
+    }
+  }
 }

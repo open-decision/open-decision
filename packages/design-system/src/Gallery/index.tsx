@@ -74,7 +74,8 @@ function Container({ children, css, contentAlign = true, ...props }: Props) {
       <Box
         css={{
           display: "flex",
-          overflow: "auto",
+          overflowX: "auto",
+          overflowY: "hidden",
           gap: 50,
           gridColumn: "1 / -1",
           height: "100%",

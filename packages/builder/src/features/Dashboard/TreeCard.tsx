@@ -2,12 +2,15 @@ import * as React from "react";
 import {
   Button,
   DropdownMenu,
-  focusStyle,
   Heading,
   Icon,
   Stack,
   styled,
   Text,
+  Box,
+  Badge,
+  Row,
+  intentStyleWithin,
 } from "@open-decision/design-system";
 import { formatRelative, parseISO } from "date-fns";
 import de from "date-fns/locale/de";
@@ -15,106 +18,104 @@ import { TreesQuery } from "features/Data/generated/graphql";
 import { DeleteTreeDialog } from "./components/Dialogs/DeleteTreeDialog";
 import Link from "next/link";
 import { UpdateTreeDialog } from "./components/Dialogs/UpdateTreeDialog";
-import { HamburgerMenuIcon } from "@radix-ui/react-icons";
+import {
+  DotsHorizontalIcon,
+  Pencil2Icon,
+  TrashIcon,
+} from "@radix-ui/react-icons";
+import { Card as DefaultCard } from "components/Card";
 
-const Card = styled("a", Stack, {
+const readableStatus = {
+  ACTIVE: "AKTIV",
+  ARCHIVED: "Archiviert",
+};
+
+const Card = styled("a", Stack, DefaultCard, {
   position: "relative",
-  padding: "$5",
-  border: "1px solid $gray7",
-  borderRadius: "$md",
-  layer: "1",
-  transition: "all 0.2s ease-in-out",
   textDecoration: "none",
-
-  ...focusStyle({
-    transform: "scale(1.02)",
-    boxShadow: "$3",
-  }),
 });
 
 type Props = { tree: TreesQuery["decisionTrees"][0] };
 
 export function TreeCard({ tree }: Props) {
-  const [openDialog, setOpenDialog] = React.useState<"update" | "delete" | "">(
-    ""
-  );
-
   const dropdownTriggerRef = React.useRef<HTMLButtonElement | null>(null);
 
-  const Dialog = React.useCallback(
-    function Dialog() {
-      switch (openDialog) {
-        case "update":
-          return (
-            <UpdateTreeDialog
-              open={true}
-              setOpen={() => setOpenDialog("")}
-              treeId={tree.uuid}
-              focusOnClose={() => dropdownTriggerRef.current?.focus()}
-            />
-          );
-        case "delete":
-          return (
-            <DeleteTreeDialog
-              open={true}
-              setOpen={() => setOpenDialog("")}
-              tree={tree}
-              focusOnClose={() => dropdownTriggerRef.current?.focus()}
-            />
-          );
-        case "":
-          return null;
-      }
-    },
-    [openDialog, tree]
-  );
-
   return (
-    <>
-      <Dialog />
+    <Box
+      css={{
+        position: "relative",
+        transition: "box-shadow 150ms ease-in",
+        ...intentStyleWithin({ boxShadow: "$3" }),
+      }}
+    >
       <Link href={`/builder/${tree.uuid}`} passHref>
-        <Card
-          css={{ cursor: "pointer" }}
-          title={`Öffne das Projekt ${tree.name}`}
-        >
-          <Heading size="small" css={{ marginBottom: "$1" }}>
-            {tree.name}
-          </Heading>
-          <DropdownMenu.Root>
-            <DropdownMenu.Trigger asChild ref={dropdownTriggerRef}>
-              <Button
-                variant="ghost"
-                square
-                css={{ position: "absolute", right: 20, top: 12 }}
-              >
-                <Icon label={`Projektmenü ${tree.name}`}>
-                  <HamburgerMenuIcon />
-                </Icon>
-              </Button>
-            </DropdownMenu.Trigger>
-            <DropdownMenu.Content>
-              <DropdownMenu.Item
-                onClick={(event) => event.stopPropagation()}
-                onSelect={() => setOpenDialog("update")}
-              >
-                Projektname ändern
-              </DropdownMenu.Item>
-              <DropdownMenu.Item
-                onClick={(event) => event.stopPropagation()}
-                onSelect={() => setOpenDialog("delete")}
-              >
-                Projekt löschen
-              </DropdownMenu.Item>
-            </DropdownMenu.Content>
-          </DropdownMenu.Root>
-          <Text css={{ color: "$gray11" }}>
+        <Card title={`Öffne das Projekt ${tree.name}`}>
+          <Row css={{ gap: "$2", alignItems: "center", marginBottom: "$1" }}>
+            <Heading size="small" css={{}}>
+              {tree.name}
+            </Heading>
+            {tree.status === "ACTIVE" ? (
+              <Badge size="small">{readableStatus[tree.status]}</Badge>
+            ) : null}
+            {tree.status === "ARCHIVED" ? (
+              <Badge css={{ colorScheme: "gray" }} size="small">
+                {readableStatus[tree.status]}
+              </Badge>
+            ) : null}
+          </Row>
+
+          <Text css={{ color: "$gray11" }} size="small">
             {formatRelative(parseISO(tree.updatedAt), new Date(), {
               locale: de,
             })}
           </Text>
-          {/* <TreeTags tags={tree.tags} /> */}
         </Card>
       </Link>
-    </>
+      <DropdownMenu.Root
+        dialogs={{
+          update: (
+            <UpdateTreeDialog
+              treeId={tree.uuid}
+              focusOnClose={() => dropdownTriggerRef.current?.focus()}
+            />
+          ),
+          delete: (
+            <DeleteTreeDialog
+              tree={tree}
+              focusOnClose={() => dropdownTriggerRef.current?.focus()}
+            />
+          ),
+        }}
+      >
+        <DropdownMenu.Trigger asChild ref={dropdownTriggerRef}>
+          <Button
+            variant="ghost"
+            square
+            css={{ position: "absolute", right: 20, top: 12 }}
+          >
+            <Icon label={`Projektmenü ${tree.name}`}>
+              <DotsHorizontalIcon />
+            </Icon>
+          </Button>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Content>
+          <DropdownMenu.DialogItem dialogKey="update">
+            <Icon>
+              <Pencil2Icon />
+            </Icon>
+            Name ändern
+          </DropdownMenu.DialogItem>
+          <DropdownMenu.DialogItem
+            dialogKey="delete"
+            css={{ colorScheme: "danger" }}
+          >
+            <Icon css={{ marginTop: "2px" }}>
+              <TrashIcon />
+            </Icon>
+            Projekt löschen
+          </DropdownMenu.DialogItem>
+        </DropdownMenu.Content>
+      </DropdownMenu.Root>
+    </Box>
   );
 }

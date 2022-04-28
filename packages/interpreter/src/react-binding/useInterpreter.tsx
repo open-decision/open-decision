@@ -1,13 +1,21 @@
-import { Tree } from "@open-decision/type-classes";
+import { ODError, ODProgrammerError, Tree } from "@open-decision/type-classes";
 import * as React from "react";
-import { proxy, useSnapshot } from "valtio";
-import { Interpreter } from "../interpreter";
+import { createInterpreter, InterpreterService } from "../interpreter";
+import { useActor, useInterpret } from "@xstate/react";
+import { createInterpreterMethods } from "../methods";
 
-type Context = {
-  interpreter: Interpreter;
-} & ReturnType<typeof Tree.createTreeMethods>;
+function useInterpreterMachine(tree: Tree.TTree) {
+  const interpreterMachine = createInterpreter(tree, { isDebugMode: true });
 
-const InterpreterContext = React.createContext<Context | null>(null);
+  if (interpreterMachine instanceof ODError) throw interpreterMachine;
+
+  return interpreterMachine;
+}
+
+const InterpreterContext = React.createContext<{
+  service: InterpreterService;
+  tree: Tree.TTree;
+} | null>(null);
 
 export function InterpreterProvider({
   children,
@@ -16,25 +24,40 @@ export function InterpreterProvider({
   children: React.ReactNode;
   tree: Tree.TTree;
 }) {
-  const interpreter = React.useRef(proxy(new Interpreter(tree)));
-  const treeMethods = Tree.createTreeMethods(tree);
+  const interpreterMachine = useInterpreterMachine(tree);
+
+  const service = useInterpret(interpreterMachine, {
+    devTools: true,
+  });
 
   return (
-    <InterpreterContext.Provider
-      value={{ interpreter: interpreter.current, ...treeMethods }}
-    >
+    <InterpreterContext.Provider value={{ service, tree }}>
       {children}
     </InterpreterContext.Provider>
   );
 }
 
+export function useInterpreterService() {
+  const service = React.useContext(InterpreterContext);
+
+  if (!service)
+    throw new ODProgrammerError({
+      message:
+        "useInterpreter or useInterpreterService can only be used inside of an InterpreterProvider",
+      code: "MISSING_CONTEXT_PROVIDER",
+    });
+
+  return service;
+}
+
 export function useInterpreter() {
-  const context = React.useContext(InterpreterContext);
+  const { service, tree } = useInterpreterService();
 
-  if (!context)
-    throw new Error(
-      `useInterpreter can only be used inside of an InterpreterProvider`
-    );
+  const [state, send] = useActor(service);
 
-  return { snapshot: useSnapshot(context.interpreter), ...context };
+  const methods = React.useMemo(() => {
+    return createInterpreterMethods(state.context, tree);
+  }, [state.context, tree]);
+
+  return { state, send, tree, ...methods };
 }
