@@ -2,18 +2,12 @@ import {
   Icon,
   Button,
   styled,
-  hoverStyle,
   Row,
   ButtonProps,
   StyleObject,
 } from "@open-decision/design-system";
 import { useInterpreter } from "@open-decision/interpreter";
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  DoubleArrowLeftIcon,
-  DoubleArrowRightIcon,
-} from "@radix-ui/react-icons";
+import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 
 const Container = styled(Row, {
   layer: "1",
@@ -24,11 +18,7 @@ const Container = styled(Row, {
   borderRadius: "$md",
 });
 
-const StyledButton = styled(Button, {
-  ...hoverStyle({
-    backgroundColor: "$gray3",
-  }),
-});
+const StyledButton = styled(Button, {});
 
 const buttonProps: ButtonProps = {
   variant: "neutral",
@@ -39,28 +29,26 @@ const buttonProps: ButtonProps = {
 type Props = { css?: StyleObject };
 
 export function Navigation({ css }: Props) {
-  const { send } = useInterpreter();
+  const { send, canGoBack, canGoForward } = useInterpreter();
 
   return (
     <Container css={css}>
-      <StyledButton {...buttonProps}>
-        <Icon label="Zurück zum Start">
-          <DoubleArrowLeftIcon />
-        </Icon>
-      </StyledButton>
-      <StyledButton {...buttonProps} onClick={() => send("GO_BACK")}>
+      <StyledButton
+        {...buttonProps}
+        onClick={() => send("GO_BACK")}
+        disabled={!canGoBack}
+      >
         <Icon label="Zurück">
           <ChevronLeftIcon />
         </Icon>
       </StyledButton>
-      <StyledButton {...buttonProps}>
+      <StyledButton
+        {...buttonProps}
+        disabled={!canGoForward}
+        onClick={() => send("GO_FORWARD")}
+      >
         <Icon label="Weiter">
           <ChevronRightIcon />
-        </Icon>
-      </StyledButton>
-      <StyledButton {...buttonProps}>
-        <Icon label="Zum letzten Knoten">
-          <DoubleArrowRightIcon />
         </Icon>
       </StyledButton>
     </Container>
