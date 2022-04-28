@@ -1,4 +1,4 @@
-import prisma from "src/init-prisma-client";
+import prisma from "../init-prisma-client";
 
 export const hasPermissionsForTree = async (
   userUuidFromRequest: string,
