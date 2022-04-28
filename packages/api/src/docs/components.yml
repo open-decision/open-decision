@@ -22,6 +22,14 @@ components:
         role: USER
         emailIsVerified: false
 
+    PublishedTree:
+      type: object
+      example:
+        startNode: 2d36a831-5abb-4327-a5e5-235c43d5d54e
+        name: TestTree
+        nodes: { data: ... }
+        answers: { data: ... }
+
     WhitelistEntryArray:
       type: array
       items:

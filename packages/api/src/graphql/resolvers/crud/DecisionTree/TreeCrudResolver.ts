@@ -15,6 +15,9 @@ import {
 import { AffectedRowsOutput } from "../../outputs";
 import { getPrismaFromContext } from "../../../helpers";
 import ApiError from "../../../../utils/ApiError";
+import { PublishedTree } from "@type-graphql-prisma/models";
+import { publishDecisionTree } from "../../../../models/publishedTree.model";
+import { getTreeWithUpdatedTreeData } from "../../../../models/decisionTree.model";
 @TypeGraphQL.Resolver((_of) => DecisionTree)
 export class DecisionTreeCrudResolver {
   @TypeGraphQL.Query((_returns) => DecisionTree, {
@@ -25,12 +28,8 @@ export class DecisionTreeCrudResolver {
     @TypeGraphQL.Info() info: GraphQLResolveInfo,
     @TypeGraphQL.Args() args: FindUniqueDecisionTreeArgs
   ): Promise<DecisionTree | null> {
-    return getPrismaFromContext(ctx).decisionTree.findFirst({
-      where: {
-        ...args.where,
-        ownerUuid: ctx.user.uuid,
-      },
-    });
+    if (!args.where.uuid) return null;
+    return getTreeWithUpdatedTreeData(ctx.user.uuid, args.where.uuid);
   }
 
   @TypeGraphQL.Query((_returns) => [DecisionTree], {
@@ -156,5 +155,17 @@ export class DecisionTreeCrudResolver {
         ...args.data,
       },
     });
+  }
+
+  @TypeGraphQL.Mutation((_returns) => DecisionTree, {
+    nullable: false,
+  })
+  async publishDecisionTree(
+    @TypeGraphQL.Ctx() ctx: GqlContext,
+    @TypeGraphQL.Info() info: GraphQLResolveInfo,
+    @TypeGraphQL.Args() args: FindUniqueDecisionTreeArgs
+  ): Promise<PublishedTree | null> {
+    if (!args.where.uuid) return null;
+    return publishDecisionTree(ctx.user.uuid, args.where.uuid);
   }
 }
