@@ -369,7 +369,7 @@ export const createAuthenticationMachine = (router: NextRouter) =>
           protectedRoutes.some((routeRegEx) =>
             routeRegEx.test(window.location.pathname)
           )
-            ? router.push("/login")
+            ? router.push("/auth/login")
             : null;
         },
         redirectToLocation: (context) => async () => {

@@ -8,7 +8,7 @@ export const login = (
   onError: (error: string) => void
 ) =>
   safeFetch(
-    "/auth/login",
+    "/api/auth/login",
     { method: "POST", body: { email, password } },
     {
       throwingValidation: validateLoginResponse,

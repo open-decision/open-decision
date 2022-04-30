@@ -7,7 +7,7 @@ export const resetPassword = (
   onError: (error: string) => void
 ) =>
   safeFetch(
-    "/auth/reset-password",
+    "/api/auth/reset-password",
     { method: "POST", body: { password, token } },
     {
       onSuccess,
