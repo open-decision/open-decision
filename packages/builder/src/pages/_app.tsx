@@ -5,10 +5,16 @@ import { Box, globalStyles, Tooltip } from "@open-decision/design-system";
 import { AuthProvider, useAuth } from "features/Auth/useAuth";
 import { useRouter } from "next/router";
 import { protectedRoutes } from "../config/protectedRoutes";
-import { ReactQueryDevtools } from "react-query/devtools";
 import { queryClient } from "features/Data/queryClient";
 import { QueryClientProvider } from "react-query";
 import { NextPage } from "next";
+import { inspect } from "@xstate/inspect";
+
+if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
+  inspect({
+    iframe: false,
+  });
+}
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: React.ReactElement) => React.ReactNode;
