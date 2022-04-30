@@ -9,9 +9,8 @@ export const createTree = (name: string) => ({
       createdAt
       updatedAt
       name
-      tags
       treeData
-      language
+      status
     }
   }
   `,
@@ -55,11 +54,11 @@ export const updateSingleTree = (
   uuid: string
 ) => ({
   query: `#graphql
-  mutation ($data: DecisionTreeUpdateInput!, $uuid: Int!){
+  mutation ($data: DecisionTreeUpdateInput!, $uuid: String!){
     updateDecisionTree(data: $data, where: {uuid:$uuid }) {
       uuid
       name
-      treeData
+      status   
     }
   }
   `,

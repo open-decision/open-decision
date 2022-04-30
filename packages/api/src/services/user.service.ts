@@ -2,6 +2,13 @@ import { UserBody } from "../types/types";
 import UserHandler from "../models/user.model";
 import ApiError from "../utils/ApiError";
 import httpStatus from "http-status";
+import {
+  createManyWhitelistEntries,
+  deleteManyWhitelistEntries,
+  getAllWhitelistEntries,
+  emailIsWhitelisted,
+} from "../models/whitelistEntry.model";
+import config from "../config/config";
 /**
  * Create a user
  * @param {string} email
@@ -9,6 +16,20 @@ import httpStatus from "http-status";
  * @returns {Promise<User>}
  */
 const createUser = async (email: string, password: string) => {
+  if (config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS) {
+    const isWhitelisted = await emailIsWhitelisted(email);
+    if (!isWhitelisted) {
+      throw new ApiError({
+        statusCode: httpStatus.FORBIDDEN,
+        message: "The email is not whitelisted.",
+      });
+    } else {
+      // Continue with registration and delete if account creation was successfull
+      const user = await UserHandler.create(email, password);
+      removeWhitelistedUsersByMail([email]);
+      return user;
+    }
+  }
   return UserHandler.create(email, password);
 };
 
@@ -84,10 +105,57 @@ const deleteUserByUuidOrId = async (userIdOrUUID: string | number) => {
   }
 };
 
+/**
+ * Get all whitelist entries
+ * @returns {Array<WhitelistEntry>}
+ */
+const getWhitelist = async () => {
+  return getAllWhitelistEntries();
+};
+
+/**
+ * Whitelist users email
+ * @param {Array<string>} emails
+ * @param {string} creatorUuid
+ * @param {boolean} sendInvite
+ */
+const whitelistUsersByMail = async (
+  emails: Array<string>,
+  creatorUuid: string,
+  sendInvite: boolean
+) => {
+  try {
+    await createManyWhitelistEntries(emails, creatorUuid, sendInvite);
+  } catch {
+    throw new ApiError({
+      statusCode: httpStatus.BAD_REQUEST,
+      message: "Creation of whitelist entries failed.",
+    });
+  }
+};
+
+/**
+ * Remove entries from whitelist
+ * @param {Array<string>} emails
+ */
+const removeWhitelistedUsersByMail = async (emails: Array<string>) => {
+  try {
+    await deleteManyWhitelistEntries(emails);
+  } catch {
+    throw new ApiError({
+      statusCode: httpStatus.BAD_REQUEST,
+      message: "Deletion of whitelist entries failed.",
+    });
+  }
+};
+
 export const userService = {
   createUser,
   getUserByUuidOrId,
   getUserByEmail,
   updateUserByUuidOrId,
   deleteUserByUuidOrId,
+  getWhitelist,
+  whitelistUsersByMail,
+  removeWhitelistedUsersByMail,
 };

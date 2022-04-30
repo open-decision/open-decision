@@ -12,7 +12,12 @@ import { setupTestDB } from "../utils/setupTestDB";
 // import { User } from "../../src/models/user.model";
 // import { Token } from "../../src/models/token.model";
 import { roleRights, adminRights } from "../../src/config/roles";
-import { userOne, admin, insertUsers } from "../fixtures/user.fixture";
+import {
+  userOne,
+  admin,
+  insertUsers,
+  developer,
+} from "../fixtures/user.fixture";
 import {
   userOneAccessToken,
   adminAccessToken,
@@ -21,6 +26,8 @@ import UserHandler from "../../src/models/user.model";
 import { tokenHandler } from "../../src/models/token.model";
 import { TokenType } from "@prisma-client";
 import { hasRefreshCookie } from "../utils/refreshCookieHelpers";
+import { entryOne, insertEntry } from "../fixtures/whitelistEntry.fixture";
+import { emailIsWhitelisted } from "../../src/models/whitelistEntry.model";
 
 setupTestDB();
 
@@ -65,6 +72,152 @@ describe("Auth routes", () => {
       });
 
       expect(res.body).not.toHaveProperty("refresh");
+    });
+
+    test("should return 201 and successfully register a developer account if email is on developer whitelist", async () => {
+      config.DEV_ACCOUNT_WHITELIST = [newUser.email];
+      const res = await request(app)
+        .post("/v1/auth/register")
+        .send(newUser)
+        .expect(httpStatus.CREATED)
+        .expect(hasRefreshCookie);
+
+      expect(res.body.user).toEqual({
+        uuid: expect.anything(),
+        name: null,
+        email: newUser.email,
+        role: "DEVELOPER",
+        emailIsVerified: false,
+      });
+
+      expect(res.body.access).toEqual({
+        token: expect.anything(),
+        expires: expect.anything(),
+      });
+
+      // The access token of developer accounts should be valid for roughly one year
+      expect(
+        dayjs(res.body.access.expires).isAfter(dayjs().add(364, "day"))
+      ).toBe(true);
+
+      const dbUser = await UserHandler.findByUuidOrId(res.body.user.uuid);
+      expect(dbUser).toBeDefined();
+      expect(dbUser!.password).not.toBe(newUser.password);
+      expect(dbUser).toMatchObject({
+        name: null,
+        email: newUser.email,
+        role: "DEVELOPER",
+        emailIsVerified: false,
+      });
+
+      expect(res.body).not.toHaveProperty("refresh");
+    });
+
+    test("should return 201 and successfully register an admin account if email is on admin whitelist", async () => {
+      config.ADMIN_ACCOUNT_WHITELIST = [newUser.email];
+      const res = await request(app)
+        .post("/v1/auth/register")
+        .send(newUser)
+        .expect(httpStatus.CREATED)
+        .expect(hasRefreshCookie);
+
+      expect(res.body.user).toEqual({
+        uuid: expect.anything(),
+        name: null,
+        email: newUser.email,
+        role: "ADMIN",
+        emailIsVerified: false,
+      });
+
+      expect(res.body.access).toEqual({
+        token: expect.anything(),
+        expires: expect.anything(),
+      });
+
+      const dbUser = await UserHandler.findByUuidOrId(res.body.user.uuid);
+      expect(dbUser).toBeDefined();
+      expect(dbUser!.password).not.toBe(newUser.password);
+      expect(dbUser).toMatchObject({
+        name: null,
+        email: newUser.email,
+        role: "ADMIN",
+        emailIsVerified: false,
+      });
+
+      expect(res.body).not.toHaveProperty("refresh");
+    });
+
+    test("should return 201 and successfully register user if whitelist is activated and email is whitelisted", async () => {
+      config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = true;
+      await insertUsers([admin]);
+      await insertEntry([{ ...entryOne, email: newUser.email }]);
+
+      const res = await request(app)
+        .post("/v1/auth/register")
+        .send(newUser)
+        .expect(httpStatus.CREATED)
+        .expect(hasRefreshCookie);
+
+      expect(res.body.user).toEqual({
+        uuid: expect.anything(),
+        name: null,
+        email: newUser.email,
+        role: "USER",
+        emailIsVerified: false,
+      });
+
+      expect(res.body.access).toEqual({
+        token: expect.anything(),
+        expires: expect.anything(),
+      });
+
+      const dbUser = await UserHandler.findByUuidOrId(res.body.user.uuid);
+      expect(dbUser).toBeDefined();
+      expect(dbUser!.password).not.toBe(newUser.password);
+      expect(dbUser).toMatchObject({
+        name: null,
+        email: newUser.email,
+        role: "USER",
+        emailIsVerified: false,
+      });
+
+      expect(res.body).not.toHaveProperty("refresh");
+
+      // The whitelist entry should be deleted after the successful registration
+      expect(await emailIsWhitelisted(newUser.email)).toBe(false);
+
+      config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = false;
+    });
+
+    test("should return 400 if whitelist is activated and email is not whitelisted", async () => {
+      config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = true;
+      await insertUsers([admin]);
+      await insertEntry([entryOne]);
+
+      await request(app)
+        .post("/v1/auth/register")
+        .send(newUser)
+        .expect(httpStatus.FORBIDDEN);
+
+      config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = false;
+    });
+
+    test("should not delete whitelist entry if account creation fails", async () => {
+      // This is not a realistic use-case, why would you whitelist an existing account
+      // However, this is the easiest way to ensure that the account creation fails to
+      // test if the whitelist entry is not deleted
+
+      config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = true;
+      await insertUsers([userOne, admin]);
+      await insertEntry([{ ...entryOne, email: userOne.email }]);
+
+      await request(app)
+        .post("/v1/auth/register")
+        .send({ email: userOne.email, password: userOne.password })
+        .expect(httpStatus.BAD_REQUEST);
+
+      expect(await emailIsWhitelisted(userOne.email)).toBe(true);
+      config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = false;
     });
 
     test("should return 400 error if email is invalid", async () => {
@@ -138,6 +291,36 @@ describe("Auth routes", () => {
       });
     });
 
+    test("should return 200 and login developer with long-runnning access token", async () => {
+      await insertUsers([developer]);
+      const loginCredentials = {
+        email: developer.email,
+        password: developer.password,
+      };
+
+      const res = await request(app)
+        .post("/v1/auth/login")
+        .send(loginCredentials)
+        .expect(httpStatus.OK)
+        .expect(hasRefreshCookie);
+
+      expect(res.body).toMatchObject({
+        access: { token: expect.anything(), expires: expect.anything() },
+        user: {
+          email: developer.email,
+          emailIsVerified: false,
+          name: developer.name,
+          role: "DEVELOPER",
+          uuid: expect.anything(),
+        },
+      });
+
+      // The access token of developer accounts should be valid for roughly one year
+      expect(
+        dayjs(res.body.access.expires).isAfter(dayjs().add(364, "day"))
+      ).toBe(true);
+    });
+
     test("should return 401 error if there are no users with that email", async () => {
       const loginCredentials = {
         email: userOne.email,
@@ -201,7 +384,7 @@ describe("Auth routes", () => {
         .expect(httpStatus.BAD_REQUEST);
     });
 
-    test("should return 404 error if refresh token is not found in the database", async () => {
+    test("should 204 even if the refresh token is not found in the database, the logout is pointless anyway", async () => {
       await insertUsers([userOne]);
       const refreshTokenExpires = dayjs().add(
         config.JWT_REFRESH_EXPIRATION_DAYS,
@@ -217,10 +400,10 @@ describe("Auth routes", () => {
         .post("/v1/auth/logout")
         .set("Cookie", [`refreshCookie=${refreshToken}`])
         .send()
-        .expect(httpStatus.NOT_FOUND);
+        .expect(httpStatus.NO_CONTENT);
     });
 
-    test("should return 404 error if refresh token is blacklisted", async () => {
+    test("should return 204 even if the refresh token is blacklisted, the logout is pointless anyway", async () => {
       await insertUsers([userOne]);
       const refreshTokenExpires = dayjs().add(
         config.JWT_REFRESH_EXPIRATION_DAYS,
@@ -244,7 +427,7 @@ describe("Auth routes", () => {
         .post("/v1/auth/logout")
         .set("Cookie", [`refreshCookie=${refreshToken}`])
         .send()
-        .expect(httpStatus.NOT_FOUND);
+        .expect(httpStatus.NO_CONTENT);
     });
   });
 

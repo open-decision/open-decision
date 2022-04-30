@@ -1,6 +1,7 @@
 import express, { Router } from "express";
 import authRouter from "./auth.route";
 import userRouter from "./user.route";
+import publishedTreeRouter from "./publishedTree.route";
 import graphqlRouter from "./graphql.route";
 import docsRouter from "./docs.route";
 import config from "../../config/config";
@@ -14,6 +15,10 @@ const defaultRoutes = [
   {
     path: "/users",
     route: userRouter,
+  },
+  {
+    path: "/published",
+    route: publishedTreeRouter,
   },
   { path: "/graphql", route: graphqlRouter },
 ];

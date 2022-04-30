@@ -25,14 +25,6 @@ import {
 
 setupTestDB();
 
-//create
-//getSingle
-//getmany -> test filtering
-//delete
-//update
-//delete many
-//update many
-
 describe("GraphQL route", () => {
   describe("CREATE - POST /v1/graphql", () => {
     test("should create a valid tree", async () => {
@@ -54,9 +46,8 @@ describe("GraphQL route", () => {
             createdAt: expect.anything(),
             updatedAt: expect.anything(),
             name: treeName,
-            tags: null,
+            status: "ACTIVE",
             treeData: null,
-            language: "de_DE",
           },
         },
       });
@@ -137,7 +128,7 @@ describe("GraphQL route", () => {
         name: {
           set: "New Name",
         },
-        treeData: { Test: "Testdata" },
+        status: { set: "ARCHIVED" },
       };
 
       const res = await request(app)
@@ -152,7 +143,7 @@ describe("GraphQL route", () => {
           updateDecisionTree: {
             uuid: treeOne.uuid,
             name: updateData.name.set,
-            treeData: updateData.treeData,
+            status: updateData.status.set,
           },
         },
       });
@@ -165,7 +156,7 @@ describe("GraphQL route", () => {
 
       expect(treeFromDb).toMatchObject({
         name: updateData.name.set,
-        treeData: updateData.treeData,
+        status: updateData.status.set,
       });
     });
 
@@ -175,7 +166,7 @@ describe("GraphQL route", () => {
 
       const updateData: any = {
         uuid: {
-          set: 10,
+          set: "10",
         },
       };
 
@@ -204,8 +195,12 @@ describe("GraphQL route", () => {
         .post("/v1/graphql")
         .set("Authorization", `Bearer ${userOneAccessToken}`)
         .set("Accept", "application/json")
-        .send(updateSingleTree(updateData, "460"))
-        .expect(httpStatus.BAD_REQUEST);
+        .send(
+          updateSingleTree(updateData, "8d7bc4dc-591b-461c-9c38-1b4003b14009")
+        )
+        .expect(httpStatus.OK);
+
+      expect(res.body.errors[0]["message"]).toEqual("Not found.");
     });
 
     test("should update several trees matching the criteria", async () => {
@@ -222,7 +217,7 @@ describe("GraphQL route", () => {
         name: {
           set: "New Name",
         },
-        treeData: { Test: "Test" },
+        status: { set: "ARCHIVED" },
       };
 
       const res = await request(app)

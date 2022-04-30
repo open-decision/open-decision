@@ -27,8 +27,7 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
 // });
 
 const getUser = catchAsync(async (req: Request, res: Response) => {
-  // @ts-ignore
-  const user = await userService.getUserByUuidOrId(req.user!.userUuid);
+  const user = await userService.getUserByUuidOrId(res.locals.userUuid);
   if (!user) {
     throw new ApiError({
       statusCode: httpStatus.NOT_FOUND,
@@ -50,7 +49,30 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
 
 const deleteUser = catchAsync(async (req: Request, res: Response) => {
   // @ts-ignore
-  await userService.deleteUserByUuidOrId(req.user.uuid);
+  await userService.deleteUserByUuidOrId(res.locals.userUuid);
+  res.status(httpStatus.NO_CONTENT).send();
+});
+
+const getWhitelist = catchAsync(async (req: Request, res: Response) => {
+  const entries = await userService.getWhitelist();
+  res.send(entries);
+});
+
+const addToWhitelist = catchAsync(async (req: Request, res: Response) => {
+  // @ts-ignore
+  const creatorUuid = req.user.uuid;
+  await userService.whitelistUsersByMail(
+    res.locals.emails as Array<string>,
+    creatorUuid,
+    res.locals.sendInvite ?? false
+  );
+  res.status(httpStatus.NO_CONTENT).send();
+});
+
+const removeFromWhitelist = catchAsync(async (req: Request, res: Response) => {
+  await userService.removeWhitelistedUsersByMail(
+    res.locals.emails as Array<string>
+  );
   res.status(httpStatus.NO_CONTENT).send();
 });
 
@@ -59,4 +81,7 @@ export const userController = {
   getUser,
   updateUser,
   deleteUser,
+  getWhitelist,
+  addToWhitelist,
+  removeFromWhitelist,
 };

@@ -1,5 +1,10 @@
 const userRights: string[] = [];
-export const adminRights = ["getUsers", "manageUsers"];
+export const adminRights = [
+  "getUsers",
+  "manageUsers",
+  "getWhitelist",
+  "manageWhitelist",
+];
 
 const allRoles = {
   USER: userRights,

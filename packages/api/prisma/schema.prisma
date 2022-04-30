@@ -31,6 +31,17 @@ model DecisionTree {
   ownerUuid             String   @db.Uuid
 }
 
+model PublishedTree {
+  uuid                  String   @id @db.Uuid @default(uuid())
+  createdAt             DateTime @default(now())
+  name                  String
+  treeData              Json?     @db.JsonB
+  /// @TypeGraphQL.omit(output: true, input: true)
+  owner                 User     @relation(fields: [ownerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  ownerUuid             String   @db.Uuid
+}
+
 model User {
   id                    Int            @unique @default(autoincrement())
   uuid                  String         @id @db.Uuid @default(uuid())
@@ -40,8 +51,20 @@ model User {
   password              String
   emailIsVerified       Boolean       @default(false)
   DecisionTrees         DecisionTree[]
+  PublishedTrees        PublishedTree[]
   Token                 Token[]
   UserTags              Tag[]
+  WhitelistEntries      WhitelistEntry[]
+}
+
+model WhitelistEntry {
+  id                    Int      @unique @default(autoincrement())
+  createdAt             DateTime @default(now())
+  createdBy             User     @relation(fields: [creatorUuid], references: [uuid])
+  creatorUuid           String   @db.Uuid
+  email                 String   @unique
+  sendInvite            Boolean  @default(false)
+  dateOfLastInvite      DateTime?
 }
 
 model Token {

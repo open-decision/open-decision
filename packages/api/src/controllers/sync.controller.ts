@@ -3,13 +3,12 @@ import catchAsync from "../utils/catchAsync";
 import { wsAuth } from "./../middlewares/auth";
 import { setupWSConnection } from "y-websocket/bin/utils";
 import { setPersistence } from "y-websocket/bin/utils";
-import { hasPermissionsForTree } from "src/services/permission.service";
+import { hasPermissionsForTree } from "../services/permission.service";
 import * as http from "http";
 import * as net from "net";
 import * as Y from "yjs";
-import prisma from "src/init-prisma-client";
-import * as buffer from "lib0/buffer";
-
+import prisma from "../init-prisma-client";
+import buffer from "../utils/buffer";
 export const wss = new WebSocketServer({
   noServer: true,
 });
