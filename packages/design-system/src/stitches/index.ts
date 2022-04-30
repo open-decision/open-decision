@@ -227,8 +227,10 @@ export const designSystem = createStitches({
       }
     },
     focusType: (value: focusTypes) => {
-      const focusWithin = value.includes("within");
-      const focusOnIntent = value.includes("intent");
+      const focusWithin = value.includes("within")
+        ? "&:focus-within"
+        : undefined;
+      const focusOnIntent = value.includes("intent") ? "&:hover" : undefined;
 
       switch (value) {
         case "none": {
