@@ -309,7 +309,6 @@ export function OptionTargetInput({
                     borderRadius: 0,
                     borderBottomRightRadius: "$md",
                     marginLeft: "-1px",
-                    borderLeftColor: "transparent",
 
                     ...focusStyle({
                       borderLeftColor: "$primary9",
