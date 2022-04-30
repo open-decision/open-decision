@@ -23,20 +23,16 @@ export const CreateTreeDialog = ({
   setOpen,
 }: Props) => {
   const [Form, { register }] = useForm({ defaultValues: { treeName: "" } });
-  const [innerOpen, setInnerOpen] = React.useState(open);
 
   const { mutate: createTree, isLoading } = useCreateTreeMutation({
     onSuccess: () => {
+      setOpen?.(false);
       queryClient.invalidateQueries("Trees");
-      setOpen?.(false) ?? setInnerOpen(false);
     },
   });
 
   return (
-    <Dialog.Root
-      open={open ?? innerOpen}
-      onOpenChange={setOpen ?? setInnerOpen}
-    >
+    <Dialog.Root open={open} onOpenChange={setOpen}>
       {children ? <Dialog.Trigger asChild>{children}</Dialog.Trigger> : null}
       <Dialog.Content onCloseAutoFocus={focusOnClose}>
         <Dialog.Header css={{ marginBottom: "$4" }}>

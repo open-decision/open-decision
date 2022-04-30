@@ -34,9 +34,9 @@ export function UpdateTreeDialog({
 
   const { mutate: updateTree, isLoading } = useUpdateTreeMutation({
     onSuccess: () => {
+      setOpen?.(false);
       queryClient.invalidateQueries("Trees");
       queryClient.invalidateQueries("getTreeName");
-      setOpen?.(false);
     },
   });
 
