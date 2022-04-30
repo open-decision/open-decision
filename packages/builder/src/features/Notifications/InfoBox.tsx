@@ -32,7 +32,7 @@ const icons = {
   warning: ExclamationTriangleIcon,
 } as const;
 
-type Props = {
+export type InfoBoxProps = {
   children?: React.ReactNode;
   CloseButton?: React.ReactNode;
   css?: StyleObject;
@@ -45,7 +45,7 @@ export function InfoBox({
   variant,
   CloseButton,
   css,
-}: Props) {
+}: InfoBoxProps) {
   const IconSVG = icons[variant];
 
   return (
