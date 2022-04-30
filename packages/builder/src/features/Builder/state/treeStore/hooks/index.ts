@@ -24,7 +24,7 @@ export function useSelectedNodes():
   return ["none", undefined];
 }
 
-export function useIsPreviewable() {
+export function useHasStartNode() {
   const { tree } = useTreeContext();
 
   const {

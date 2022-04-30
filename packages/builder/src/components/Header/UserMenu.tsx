@@ -1,4 +1,9 @@
-import { darkTheme, DropdownMenu, Icon } from "@open-decision/design-system";
+import {
+  darkTheme,
+  DropdownMenu,
+  Icon,
+  Link as SystemLink,
+} from "@open-decision/design-system";
 import { ExitIcon, GearIcon, HomeIcon } from "@radix-ui/react-icons";
 import { useAuth } from "features/Auth/useAuth";
 import Link from "next/link";
@@ -18,21 +23,25 @@ export function UserMenu() {
         className={darkTheme}
         css={{ groupColor: "$gray12" }}
       >
-        <Link href="/">
-          <DropdownMenu.Item>
-            <Icon>
-              <HomeIcon />
-            </Icon>
-            Dashboard
-          </DropdownMenu.Item>
+        <Link href="/" passHref>
+          <SystemLink>
+            <DropdownMenu.Item>
+              <Icon>
+                <HomeIcon />
+              </Icon>
+              Dashboard
+            </DropdownMenu.Item>
+          </SystemLink>
         </Link>
-        <Link href="/settings#account">
-          <DropdownMenu.Item>
-            <Icon>
-              <GearIcon />
-            </Icon>
-            Einstellungen
-          </DropdownMenu.Item>
+        <Link href="/settings#account" passHref>
+          <SystemLink>
+            <DropdownMenu.Item>
+              <Icon>
+                <GearIcon />
+              </Icon>
+              Einstellungen
+            </DropdownMenu.Item>
+          </SystemLink>
         </Link>
         <DropdownMenu.Item onSelect={() => send({ type: "LOG_OUT" })}>
           <Icon>
