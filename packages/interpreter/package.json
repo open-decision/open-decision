@@ -19,7 +19,7 @@
   "description": "The foundational types classes shared by all parts of the open decision application.",
   "sideEffects": false,
   "scripts": {
-    "build": "pnpm build --filter @open-decision/interpreter^... && rm -rf lib && vite build && pnpm tsc -p tsconfig.build.json",
+    "build": "rm -rf lib && vite build && pnpm tsc -p tsconfig.build.json",
     "dev": "tsc --composite false --incremental false & vite build --watch",
     "prepublish": "pnpm build",
     "prettier": "prettier --check src/",

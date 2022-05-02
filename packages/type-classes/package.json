@@ -19,7 +19,7 @@
   "description": "The foundational types classes shared by all parts of the open decision application.",
   "sideEffects": false,
   "scripts": {
-    "build": "rm -rf lib && pnpm vite build",
+    "build": "rm -rf lib && pnpm vite build && pnpm tsc -p tsconfig.build.json",
     "dev": "tsc --composite false --incremental false & vite build --watch",
     "prepublish": "pnpm build",
     "lint": "eslint . --ext .ts,.tsx",
