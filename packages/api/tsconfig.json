@@ -13,6 +13,6 @@
     }
   },
   "references": [{ "path": "../type-classes" }],
-  "include": ["src", "prisma", "tests"],
-  "exclude": ["dist"]
+  "include": ["src", "prisma"],
+  "exclude": ["dist", "test"]
 }
