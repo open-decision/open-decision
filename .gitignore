@@ -17,6 +17,7 @@ packages/*/lib
 generated
 stats.html
 *.typegen*
+.vercel
 
 # misc
 .DS_Store
