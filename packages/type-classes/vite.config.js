@@ -10,6 +10,7 @@ export default defineConfig(
       lib: {
         entry: "./src/index.ts",
         name: "type-classes",
+        formats: ["es", "cjs"],
         fileName: (format) => `index.${format === "es" ? "mjs" : "cjs"}`,
       },
     },

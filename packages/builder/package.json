@@ -38,9 +38,9 @@
   },
   "dependencies": {
     "@fontsource/poppins": "^4.5.3",
-    "@open-decision/design-system": "workspace:^0.26.0",
-    "@open-decision/interpreter": "workspace:^0.0.1",
-    "@open-decision/type-classes": "workspace:^0.0.1",
+    "@open-decision/design-system": "workspace:^*",
+    "@open-decision/interpreter": "workspace:^*",
+    "@open-decision/type-classes": "workspace:^*",
     "@radix-ui/colors": "^0.1.8",
     "@radix-ui/react-avatar": "^0.1.4",
     "@radix-ui/react-collapsible": "^0.1.6",
