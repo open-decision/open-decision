@@ -26,7 +26,6 @@ import {
 } from "features/Builder/state/treeStore/hooks";
 import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
 import { useNotificationStore } from "features/Notifications/NotificationState";
-import { useEditor } from "features/Builder/state/useEditor";
 import { Crosshair2Icon, PlusIcon, TrashIcon } from "@radix-ui/react-icons";
 
 const StyledReorderGroup = styled(Reorder.Group, {
@@ -309,7 +308,6 @@ export function OptionTargetInput({
                     borderRadius: 0,
                     borderBottomRightRadius: "$md",
                     marginLeft: "-1px",
-                    borderLeftColor: "transparent",
 
                     ...focusStyle({
                       borderLeftColor: "$primary9",
@@ -361,7 +359,7 @@ type NodeLinkProps = { target?: string } & Omit<ButtonProps, "label" | "Icon">;
 
 function NodeLink({ target, css, ...props }: NodeLinkProps) {
   const node = useNode(target ?? "");
-  const { replaceSelectedNodes } = useEditor();
+  const { replaceSelectedNodes } = useTreeContext();
 
   return (
     <Button

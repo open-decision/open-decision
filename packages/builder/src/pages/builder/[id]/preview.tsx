@@ -1,5 +1,4 @@
 import {
-  Box,
   buttonStyles,
   Icon,
   Link as SystemLink,
@@ -8,28 +7,21 @@ import {
   Tabs,
   ToggleGroup,
 } from "@open-decision/design-system";
-import { BaseHeader, Layout, MainContent } from "components";
+import { BaseHeader, Layout } from "components";
 import * as React from "react";
 import Link from "next/link";
 import { Preview } from "features/Preview/Preview";
 import { InterpreterProvider } from "@open-decision/interpreter";
-import { ErrorBoundary } from "@sentry/nextjs";
-import { ErrorFallback } from "features/Error/ErrorFallback";
-import { GetServerSideProps } from "next";
 import { useGetTreeContentQuery } from "features/Data/generated/graphql";
 import { Tree } from "@open-decision/type-classes";
 import { DesktopIcon, MobileIcon, Pencil1Icon } from "@radix-ui/react-icons";
 import { ProjectMenu } from "features/Builder/components/ProjectMenu";
+import { useTreeId } from "features/Data/useTreeId";
+import { BuilderLayout } from "../../../features/Builder/components/BuilderLayout";
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  return {
-    props: { id: context.params?.id },
-  };
-};
+export default function VorschauPage() {
+  const id = useTreeId();
 
-type Props = { id: string };
-
-export default function VorschauPage({ id }: Props) {
   const { data } = useGetTreeContentQuery(
     { uuid: id },
     { staleTime: Infinity }
@@ -115,21 +107,19 @@ export default function VorschauPage({ id }: Props) {
 
 VorschauPage.getLayout = function getLayout(page: React.ReactElement) {
   return (
-    <React.Suspense fallback={<div>Loading...</div>}>
-      <ErrorBoundary fallback={ErrorFallback}>
-        <Tabs.Root defaultValue="desktop" asChild>
-          <Layout
-            css={{
-              layer: "3",
-              display: "grid",
-              gridTemplateColumns: "1fr 1.5fr 1fr",
-              gridTemplateRows: "max-content 1fr",
-            }}
-          >
-            {page}
-          </Layout>
-        </Tabs.Root>
-      </ErrorBoundary>
-    </React.Suspense>
+    <BuilderLayout>
+      <Tabs.Root defaultValue="desktop" asChild>
+        <Layout
+          css={{
+            layer: "3",
+            display: "grid",
+            gridTemplateColumns: "1fr 1.5fr 1fr",
+            gridTemplateRows: "max-content 1fr",
+          }}
+        >
+          {page}
+        </Layout>
+      </Tabs.Root>
+    </BuilderLayout>
   );
 };

@@ -1,5 +1,5 @@
 import { ZodError, ZodIssue } from "zod";
-import { ErrorCodes } from "./ErrorCodes";
+import { ErrorCodes, ProgrammerErrors } from "./ErrorCodes";
 
 export type ODErrorConstructorParameters = {
   code: ErrorCodes;
@@ -11,8 +11,8 @@ export class ODError extends Error {
   readonly timestamp?: number;
   readonly additionalData?: {};
 
-  constructor({ code, additionalData }: ODErrorConstructorParameters) {
-    super();
+  constructor({ code, additionalData, message }: ODErrorConstructorParameters) {
+    super(message);
 
     this.code = code;
     this.timestamp = Date.now();
@@ -21,10 +21,13 @@ export class ODError extends Error {
   }
 }
 
-export type ODProgrammerErrorConstructorParameters =
-  ODErrorConstructorParameters & {
-    link?: string;
-  };
+export type ODProgrammerErrorConstructorParameters = Omit<
+  ODErrorConstructorParameters,
+  "code"
+> & {
+  link?: string;
+  code: ProgrammerErrors;
+};
 
 export class ODProgrammerError extends ODError {
   link?: string;

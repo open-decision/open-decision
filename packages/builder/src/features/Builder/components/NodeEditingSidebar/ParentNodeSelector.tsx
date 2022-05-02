@@ -1,10 +1,10 @@
 import { Box, DropdownMenu, hoverStyle } from "@open-decision/design-system";
-import { useEditor } from "features/Builder/state/useEditor";
+import { useTreeContext } from "../../state/treeStore/TreeContext";
 
 type Props = { parentNodes: { id: string; name?: string }[] };
 
 export function ParentNodeSelector({ parentNodes }: Props) {
-  const { replaceSelectedNodes } = useEditor();
+  const { replaceSelectedNodes } = useTreeContext();
 
   return (
     <Box as="section">

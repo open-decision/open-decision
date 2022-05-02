@@ -65,7 +65,7 @@ export type Events =
   | { type: "FAILED_PASSWORD_RESET_REQUEST"; error: string }
   | { type: "REDIRECT" }
   | { type: "REFRESH" }
-  | { type: "OPEN_WEBSOCKET"; id: string; yDoc: Doc }
+  | { type: "OPEN_WEBSOCKET"; id: string; yDoc: Doc; onSync: () => void }
   | { type: "CLOSE_WEBSOCKET" }
   | { type: "WEBSOCKET_CLOSED" };
 
@@ -80,8 +80,6 @@ export const createAuthenticationMachine = (router: NextRouter) =>
         auth: undefined,
         location: undefined,
         error: undefined,
-        id: undefined,
-        yDoc: undefined,
       },
       states: {
         undetermined: {
@@ -166,10 +164,7 @@ export const createAuthenticationMachine = (router: NextRouter) =>
               states: {
                 unconnected: {
                   on: {
-                    OPEN_WEBSOCKET: {
-                      target: "connect",
-                      actions: "assignWebsocketDataToContext",
-                    },
+                    OPEN_WEBSOCKET: { target: "connect" },
                   },
                 },
                 connect: {
@@ -177,9 +172,10 @@ export const createAuthenticationMachine = (router: NextRouter) =>
                     id: "websocket",
                     src: websocketMachine,
                     data: {
-                      id: (context) => context.id,
-                      yDoc: (context) => context.yDoc,
                       token: (context) => context.auth.access.token,
+                      id: (_context, event) => event.id,
+                      yDoc: (_context, event) => event.yDoc,
+                      onSync: (_context, event) => event.onSync,
                     },
                     onDone: "reconnect",
                   },
@@ -369,7 +365,7 @@ export const createAuthenticationMachine = (router: NextRouter) =>
           protectedRoutes.some((routeRegEx) =>
             routeRegEx.test(window.location.pathname)
           )
-            ? router.push("/login")
+            ? router.push("/auth/login")
             : null;
         },
         redirectToLocation: (context) => async () => {
@@ -418,15 +414,6 @@ export const createAuthenticationMachine = (router: NextRouter) =>
         }),
         removeErrorFromContext: assign({
           error: (_context, _event) => undefined,
-        }),
-        assignWebsocketDataToContext: assign((context, event) => {
-          if (event.type !== "OPEN_WEBSOCKET") return context;
-
-          return {
-            ...context,
-            id: event.id,
-            yDoc: event.yDoc,
-          };
         }),
         clearWebsocketDataFromContext: assign({
           id: (_context, _event) => undefined,

@@ -6,7 +6,7 @@ export const refresh = (
   onError: (error: string) => void
 ) =>
   safeFetch(
-    "/auth/refresh-tokens",
+    "/api/auth/refresh-tokens",
     { method: "POST", credentials: "include" },
     {
       throwingValidation: validateLoginResponse,

@@ -1,2 +1,2 @@
 export * from "./ODError";
-export type { ErrorCodes } from "./ErrorCodes";
+export * from "./ErrorCodes";

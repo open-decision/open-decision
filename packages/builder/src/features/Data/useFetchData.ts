@@ -17,7 +17,7 @@ export const useFetchData = <TData, TVariables>(
       )
         throw new Error("Is not ready");
 
-      const res = await fetch("/graphql", {
+      const res = await fetch("/api/graphql", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -30,6 +30,7 @@
     "@types/react": "^17.0.43",
     "@types/react-dom": "^17.0.14",
     "@types/uuid": "^8.3.4",
+    "@xstate/inspect": "^0.6.5",
     "next": "12.1.4",
     "next-compose-plugins": "^2.2.1",
     "next-transpile-modules": "^9.0.0",

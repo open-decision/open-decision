@@ -9,62 +9,27 @@ declare module "valtio" {
   function useSnapshot<T extends object>(p: T): T;
 }
 
-export let resolve;
-
-const nonSyncedStore = proxy({
-  connectionSourceNodeId: "",
-  validConnections: [] as string[],
-  synced: new Promise((r) => (resolve = r)),
-  selectedNodeIds: [] as string[],
-  selectedEdgeIds: [] as string[],
-});
-
-export function addSelectedNodes(nodeIds: string[]) {
-  nonSyncedStore.selectedNodeIds.push(...nodeIds);
-}
-
-export function replaceSelectedNodes(nodeIds: string[]) {
-  nonSyncedStore.selectedNodeIds = nodeIds;
-}
-
-export function removeSelectedNodes() {
-  nonSyncedStore.selectedNodeIds = [];
-}
-
-export function removeSelectedNode(nodeId: string) {
-  const nodeIndex = nonSyncedStore.selectedNodeIds.findIndex(
-    (id) => id === nodeId
-  );
-  nonSyncedStore.selectedNodeIds.splice(nodeIndex, 1);
-}
-export function addSelectedEdges(edgeIds: string[]) {
-  nonSyncedStore.selectedEdgeIds.push(...edgeIds);
-}
-
-export function replaceSelectedEdges(edgeIds: string[]) {
-  nonSyncedStore.selectedEdgeIds = edgeIds;
-}
-
-export function removeSelectedEdges() {
-  nonSyncedStore.selectedEdgeIds = [];
-}
-
-export function removeSelectedEdge(edgeId: string) {
-  const edgeIndex = nonSyncedStore.selectedEdgeIds.findIndex(
-    (id) => id === edgeId
-  );
-  nonSyncedStore.selectedEdgeIds.splice(edgeIndex, 1);
-}
-
 export function createTreeStore(id: string) {
   const yDoc = new Y.Doc({ guid: id });
   const yMap = yDoc.getMap("tree");
+
+  console.log("recalled");
 
   const syncedStore = proxy<Tree.TTree>({
     startNode: undefined as string | undefined,
     nodes: undefined as Node.TNodesRecord | undefined,
     edges: undefined as Edge.TEdgesRecord | undefined,
     inputs: undefined as Input.TInputsRecord | undefined,
+  });
+
+  let onSync;
+
+  const nonSyncedStore = proxy({
+    connectionSourceNodeId: "",
+    validConnections: [] as string[],
+    synced: new Promise((r) => (onSync = r)),
+    selectedNodeIds: [] as string[],
+    selectedEdgeIds: [] as string[],
   });
 
   const derivedNodeNames = derive({
@@ -110,12 +75,58 @@ export function createTreeStore(id: string) {
     nonSyncedStore.validConnections = [];
   }
 
+  function addSelectedNodes(nodeIds: string[]) {
+    nonSyncedStore.selectedNodeIds.push(...nodeIds);
+  }
+
+  function replaceSelectedNodes(nodeIds: string[]) {
+    nonSyncedStore.selectedNodeIds = nodeIds;
+  }
+
+  function removeSelectedNodes() {
+    nonSyncedStore.selectedNodeIds = [];
+  }
+
+  function removeSelectedNode(nodeId: string) {
+    const nodeIndex = nonSyncedStore.selectedNodeIds.findIndex(
+      (id) => id === nodeId
+    );
+    nonSyncedStore.selectedNodeIds.splice(nodeIndex, 1);
+  }
+  function addSelectedEdges(edgeIds: string[]) {
+    nonSyncedStore.selectedEdgeIds.push(...edgeIds);
+  }
+
+  function replaceSelectedEdges(edgeIds: string[]) {
+    nonSyncedStore.selectedEdgeIds = edgeIds;
+  }
+
+  function removeSelectedEdges() {
+    nonSyncedStore.selectedEdgeIds = [];
+  }
+
+  function removeSelectedEdge(edgeId: string) {
+    const edgeIndex = nonSyncedStore.selectedEdgeIds.findIndex(
+      (id) => id === edgeId
+    );
+    nonSyncedStore.selectedEdgeIds.splice(edgeIndex, 1);
+  }
+
   return {
     tree,
     derivedNodeNames,
     yDoc,
+    onSync,
     abortConnecting,
     startConnecting,
+    addSelectedNodes,
+    replaceSelectedEdges,
+    replaceSelectedNodes,
+    removeSelectedEdge,
+    removeSelectedEdges,
+    removeSelectedNode,
+    removeSelectedNodes,
+    addSelectedEdges,
     getTreeData: () => yMap.toJSON(),
     ...methods,
   };

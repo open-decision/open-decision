@@ -21,7 +21,8 @@ export function CreateNodeButton({ css }: Props) {
     addInputAnswer,
   } = useTreeContext();
 
-  const { getCenter, replaceSelectedNodes, zoomToNode } = useEditor();
+  const { getCenter, zoomToNode } = useEditor();
+  const { replaceSelectedNodes } = useTreeContext();
 
   return (
     <Tooltip.Root>

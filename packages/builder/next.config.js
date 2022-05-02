@@ -18,15 +18,15 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: "/auth/:path",
+        source: "/api/auth/:path",
         destination: `${process.env.OD_API_ENDPOINT}/v1/auth/:path`,
       },
       {
-        source: "/graphql",
+        source: "/api/graphql",
         destination: `${process.env.OD_API_ENDPOINT}/v1/graphql`,
       },
       {
-        source: "/users/:uuid",
+        source: "/api/users/:uuid",
         destination: `${process.env.OD_API_ENDPOINT}/v1/users/:uuid`,
       },
     ];

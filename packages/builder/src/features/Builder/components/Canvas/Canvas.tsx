@@ -72,14 +72,14 @@ function Nodes() {
   } = useSnapshot(tree);
   const startNodeId = useStartNodeId();
 
+  const { closeNodeEditingSidebar } = useEditor();
   const {
-    closeNodeEditingSidebar,
     removeSelectedNodes,
     addSelectedNodes,
     removeSelectedNode,
     addSelectedEdges,
     removeSelectedEdge,
-  } = useEditor();
+  } = useTreeContext();
   const { addNotification } = useNotificationStore();
 
   return (

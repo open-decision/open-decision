@@ -23,14 +23,12 @@ const contentShow = keyframes({
   "100%": { opacity: 1, transform: "translate(-50%, -50%) scale(1)" },
 });
 
-const StyledContent = styled(DialogPrimitive.Content, {
+const StyledContent = styled(DialogPrimitive.Content, Stack, {
+  gap: "$2",
   boxShadow: "$6",
-  borderRadius: "$md",
-  layer: "1",
-  padding: "$5",
   minWidth: "350px",
-  zIndex: "$10",
   maxWidth: "500px",
+  zIndex: "$10",
 
   position: "fixed",
   top: "50%",
@@ -42,6 +40,12 @@ const StyledContent = styled(DialogPrimitive.Content, {
   "@media (prefers-reduced-motion: no-preference)": {
     animation: `${contentShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
   },
+});
+
+const DialogCard = styled(Stack, {
+  borderRadius: "$md",
+  layer: "1",
+  padding: "$6",
 });
 
 const overlayShow = keyframes({
@@ -60,8 +64,19 @@ const StyledOverlay = styled(DialogPrimitive.Overlay, {
   },
 });
 
-function DialogContent({ children, ...props }: DialogContentProps) {
-  return <StyledContent {...props}>{children}</StyledContent>;
+function DialogContent({
+  children,
+  Above,
+  Below,
+  ...props
+}: DialogContentProps) {
+  return (
+    <StyledContent {...props}>
+      {Above}
+      <DialogCard>{children}</DialogCard>
+      {Below}
+    </StyledContent>
+  );
 }
 
 function CloseButton(props: Partial<ButtonProps>) {
@@ -151,7 +166,10 @@ export const Dialog = {
 
 export type DialogRootProps = DialogPrimitive.DialogProps;
 export type DialogTriggerProps = DialogPrimitive.DialogTriggerProps;
-export type DialogContentProps = React.ComponentProps<typeof StyledContent>;
+export type DialogContentProps = React.ComponentProps<typeof StyledContent> & {
+  Above?: React.ReactNode;
+  Below?: React.ReactNode;
+};
 export type DialogTitleProps = DialogPrimitive.DialogTitleProps;
 export type DialogDescriptionProps = DialogPrimitive.DialogDescriptionProps;
 export type DialogCloseProps = DialogPrimitive.DialogCloseProps;

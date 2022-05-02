@@ -42,8 +42,8 @@ export function DeleteTreeDialog({
 
   const { mutate: deleteTree, isLoading } = useDeleteTreeMutation({
     onSuccess: () => {
-      queryClient.invalidateQueries("Trees");
       setOpen?.(false);
+      queryClient.invalidateQueries("Trees");
       onDelete?.();
     },
   });

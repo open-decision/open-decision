@@ -6,12 +6,14 @@ import {
   StyleObject,
 } from "@open-decision/design-system";
 import {
-  DotsVerticalIcon,
+  FileTextIcon,
   HamburgerMenuIcon,
   RocketIcon,
   TrashIcon,
 } from "@radix-ui/react-icons";
 import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
+import Link from "next/link";
+import { PreviewLink } from "../../PreviewLink";
 
 type Props = {
   isStartNode?: boolean;
@@ -40,7 +42,15 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
           </Icon>
         </Button>
       </DropdownMenu.Trigger>
-      <DropdownMenu.Content>
+      <DropdownMenu.Content css={{ groupColor: "$gray12" }}>
+        <PreviewLink initialNode={nodeId}>
+          <DropdownMenu.Item>
+            <Icon>
+              <FileTextIcon />
+            </Icon>
+            Vorschau
+          </DropdownMenu.Item>
+        </PreviewLink>
         {isStartNode ? (
           <Tooltip.Root>
             <Tooltip.Trigger style={{ all: "unset" }}>

@@ -1,4 +1,3 @@
-import { resolve } from "features/Builder/state/treeStore/treeStore";
 import { createMachine } from "xstate";
 import { WebsocketProvider } from "y-websocket";
 import { Doc } from "yjs";
@@ -7,6 +6,7 @@ type Context = {
   id?: string;
   yDoc?: Doc;
   token?: string;
+  onSync?: () => void;
 };
 
 type Events =
@@ -25,7 +25,7 @@ export const websocketMachine = createMachine<Context, Events>({
       invoke: {
         id: "openWebsocketConnection",
         src: (context) => (callback, _onReceive) => {
-          if (!context.id || !context.yDoc || !context.token) return;
+          if (!context.token || !context.id || !context.yDoc) return;
 
           const websocket = new WebsocketProvider(
             process.env.OD_WEBSOCKET_ENDPOINT ??
@@ -35,7 +35,7 @@ export const websocketMachine = createMachine<Context, Events>({
             { params: { auth: context.token } }
           );
 
-          websocket.on("sync", () => resolve());
+          websocket.on("sync", () => context.onSync?.());
 
           websocket.on("connection-error", () => callback("CLOSE"));
 
