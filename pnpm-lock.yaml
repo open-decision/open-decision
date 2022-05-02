@@ -589,6 +589,7 @@ importers:
       fp-ts: ^2.11.9
       ramda: ^0.28.0
       remeda: ^0.0.32
+      utility-types: ^3.10.0
       uuid: ^8.3.2
       vite: ^2.9.1
       vitest: ^0.9.2
@@ -598,6 +599,7 @@ importers:
       fp-ts: 2.11.9
       ramda: 0.28.0
       remeda: 0.0.32
+      utility-types: 3.10.0
       uuid: 8.3.2
       vite: 2.9.1
       zod: 3.14.4
@@ -8243,7 +8245,7 @@ packages:
   /axios/0.21.4_debug@4.3.4:
     resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
     dependencies:
-      follow-redirects: 1.14.9
+      follow-redirects: 1.14.9_debug@4.3.4
     transitivePeerDependencies:
       - debug
     dev: false
@@ -8251,7 +8253,7 @@ packages:
   /axios/0.25.0:
     resolution: {integrity: sha512-cD8FOb0tRH3uuEe6+evtAbgJtfxr7ly3fQjYcMcuPlgkwVS9xboaVIpcDV+cYQe+yGykgwZCs1pzjntcGa6l5g==}
     dependencies:
-      follow-redirects: 1.14.9
+      follow-redirects: 1.14.9_debug@4.3.4
     transitivePeerDependencies:
       - debug
     dev: true
@@ -11998,7 +12000,7 @@ packages:
     resolution: {integrity: sha512-GRnmB5gPyJpAhTQdSZTSp9uaPSvl09KoYcMQtsB9rQoOmzs9dH6ffeccH+Z+cv6P68Hu5bC6JjRh4Ah/mHSNRw==}
     dev: false
 
-  /follow-redirects/1.14.9:
+  /follow-redirects/1.14.9_debug@4.3.4:
     resolution: {integrity: sha512-MQDfihBQYMcyy5dhRDJUHcw7lb2Pv/TuE6xP1vyraLukNDHKbDxDNaOE3NbCAdKQApno+GPRyo1YAp89yCjK4w==}
     engines: {node: '>=4.0'}
     peerDependencies:
@@ -12006,6 +12008,8 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
+    dependencies:
+      debug: 4.3.4
 
   /for-in/1.0.2:
     resolution: {integrity: sha1-gQaNKVqBQuwKxybG4iAMMPttXoA=}
@@ -20414,7 +20418,6 @@ packages:
   /utility-types/3.10.0:
     resolution: {integrity: sha512-O11mqxmi7wMKCo6HKFt5AhO4BwY3VV68YU07tgxfz8zJTIxr4BpsezN49Ffwy9j3ZpwwJp4fkRwjRzq3uWE6Rg==}
     engines: {node: '>= 4'}
-    dev: true
 
   /utils-merge/1.0.1:
     resolution: {integrity: sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=}
