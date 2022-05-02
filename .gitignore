@@ -16,7 +16,6 @@ packages/*/lib
 .rollup*
 generated
 stats.html
-*.typegen*
 .vercel
 
 # misc
