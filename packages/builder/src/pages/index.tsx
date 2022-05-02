@@ -1,4 +1,4 @@
-import { Box, Heading, Stack, styled } from "@open-decision/design-system";
+import { Box, styled } from "@open-decision/design-system";
 import { ErrorBoundary } from "@sentry/nextjs";
 import { BaseHeader, MainContent } from "components";
 import { TreeList } from "features/Dashboard/TreeList";

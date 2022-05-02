@@ -4,7 +4,6 @@ import { useInterpreter } from "@open-decision/interpreter";
 import { AnswersForm } from "./components/AnswersForm";
 import { RichTextRenderer } from "components/RichTextEditor/RichTextRenderer";
 import { Navigation } from "./components/Navigation";
-import { Separator } from "components/Separator";
 import { InfoBox } from "features/Notifications/InfoBox";
 
 type Props = {

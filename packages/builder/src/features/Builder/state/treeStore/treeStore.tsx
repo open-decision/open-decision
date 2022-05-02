@@ -13,8 +13,6 @@ export function createTreeStore(id: string) {
   const yDoc = new Y.Doc({ guid: id });
   const yMap = yDoc.getMap("tree");
 
-  console.log("recalled");
-
   const syncedStore = proxy<Tree.TTree>({
     startNode: undefined as string | undefined,
     nodes: undefined as Node.TNodesRecord | undefined,
