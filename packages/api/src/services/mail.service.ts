@@ -12,21 +12,21 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// if (config.NODE_ENV !== "test") {
-//   transporter
-//     .verify()
-//     .then(() => {
-//       logger.info("Connected to email server");
-//       app.locals["mailConnection"] = true;
-//     })
+if (config.NODE_ENV !== "test") {
+  transporter
+    .verify()
+    .then(() => {
+      logger.info("Connected to email server");
+      app.locals["mailConnection"] = true;
+    })
 
-//     .catch(() => {
-//       logger.error(
-//         "Unable to connect to email server. Make sure you have configured the SMTP options in .env"
-//       );
-//       app.locals["mailConnection"] = false;
-//     });
-// }
+    .catch(() => {
+      logger.error(
+        "Unable to connect to email server. Make sure you have configured the SMTP options in .env"
+      );
+      app.locals["mailConnection"] = false;
+    });
+}
 
 /**
  * Send an email

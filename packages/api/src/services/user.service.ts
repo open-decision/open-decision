@@ -26,7 +26,7 @@ const createUser = async (email: string, password: string) => {
     } else {
       // Continue with registration and delete if account creation was successfull
       const user = await UserHandler.create(email, password);
-      removeWhitelistedUsersByMail([email]);
+      await removeWhitelistedUsersByMail([email]);
       return user;
     }
   }

@@ -29,7 +29,7 @@ export const getTreeWithUpdatedTreeData = async (
   if (docs.has(treeFromDb)) {
     return {
       ...treeFromDb,
-      treeData: docs.get(treeFromDb).getMap("tree").toJSON(),
+      treeData: docs.get(treeFromDb.uuid).getMap("tree").toJSON(),
     } as DecisionTree;
   } else {
     if (!treeFromDb.yDocument) return null;
