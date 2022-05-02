@@ -4,16 +4,7 @@ import { calculateCenterOfNode } from "../utilities/calculateCenterOfNode";
 import { sidebarWidth } from "../utilities/constants";
 import { Node } from "@open-decision/type-classes";
 import shallow from "zustand/shallow";
-import {
-  removeSelectedNodes,
-  replaceSelectedNodes,
-  addSelectedNodes,
-  removeSelectedNode,
-  addSelectedEdges,
-  removeSelectedEdges,
-  replaceSelectedEdges,
-  removeSelectedEdge,
-} from "./treeStore/treeStore";
+import { useTreeContext } from "./treeStore/TreeContext";
 
 type projectCoordinatesFn = (
   coordinates: Node.TCoordinates
@@ -25,14 +16,6 @@ type EditorState = {
   reactFlowWrapperRef: React.MutableRefObject<HTMLDivElement | null>;
   closeNodeEditingSidebar: () => void;
   zoomToNode: (node: Node.TNode) => void;
-  addSelectedNodes: (nodeIds: string[]) => void;
-  replaceSelectedNodes: (nodeIds: string[]) => void;
-  removeSelectedNodes: () => void;
-  removeSelectedNode: (nodeId: string) => void;
-  addSelectedEdges: (edgeIds: string[]) => void;
-  removeSelectedEdges: () => void;
-  replaceSelectedEdges: (edgeIds: string[]) => void;
-  removeSelectedEdge: (edgeId: string) => void;
   connectingNodeId: string | null;
   isConnecting: boolean;
 };
@@ -55,6 +38,7 @@ export function EditorProvider({ children }: TreeProviderProps) {
   );
   const userSelectionActive = useStore((state) => state.userSelectionActive);
   const multiSelectionActive = useStore((state) => state.multiSelectionActive);
+  const { removeSelectedNodes } = useTreeContext();
 
   const { project, setCenter, getZoom } = useReactFlow();
 
@@ -96,14 +80,6 @@ export function EditorProvider({ children }: TreeProviderProps) {
         getCenter,
         reactFlowWrapperRef,
         closeNodeEditingSidebar: () => removeSelectedNodes(),
-        addSelectedNodes,
-        removeSelectedNodes,
-        replaceSelectedNodes,
-        removeSelectedNode,
-        addSelectedEdges,
-        removeSelectedEdges,
-        replaceSelectedEdges,
-        removeSelectedEdge,
         zoomToNode,
         ...connectionState,
       }}

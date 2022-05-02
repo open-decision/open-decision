@@ -21,7 +21,8 @@ export const NodeSearch = ({ css }: Props) => {
   const { createNode, addNode, getNode, createInput, createAnswer, addInput } =
     useTreeContext();
 
-  const { getCenter, zoomToNode, addSelectedNodes } = useEditor();
+  const { getCenter, zoomToNode } = useEditor();
+  const { addSelectedNodes } = useTreeContext();
   const [Form] = useForm({
     defaultValues: {
       selectedNodeId: "",
