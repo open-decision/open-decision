@@ -1,6 +1,7 @@
 import winston from "winston";
 import config from "./config";
 import SentryTransport from "winston-transport-sentry-node";
+const { timestamp, prettyPrint, colorize, errors } = winston.format;
 
 const enumerateErrorFormat = winston.format((info) => {
   if (info instanceof Error) {
@@ -34,6 +35,12 @@ if (config.SENTRY_DSN) {
         dsn: config.SENTRY_DSN,
         serverName: config.INSTANCE_NAME,
       },
+      format: winston.format.combine(
+        errors({ stack: true }),
+        colorize(),
+        timestamp(),
+        prettyPrint()
+      ),
     })
   );
 }
