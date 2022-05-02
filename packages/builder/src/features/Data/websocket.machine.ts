@@ -1,3 +1,4 @@
+import { ODProgrammerError } from "@open-decision/type-classes";
 import { createMachine } from "xstate";
 import { WebsocketProvider } from "y-websocket";
 import { Doc } from "yjs";
@@ -27,9 +28,15 @@ export const websocketMachine = createMachine<Context, Events>({
         src: (context) => (callback, _onReceive) => {
           if (!context.token || !context.id || !context.yDoc) return;
 
+          if (!process.env.NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT)
+            throw new ODProgrammerError({
+              code: "MISSING_ENV_VARIABLE",
+              message:
+                "To run the builder the NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT needs to be set to a valid websocket endpoint.",
+            });
+
           const websocket = new WebsocketProvider(
-            process.env.OD_WEBSOCKET_ENDPOINT ??
-              "ws://localhost:4000/v1/builder-sync",
+            process.env.NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT,
             context.id,
             context.yDoc,
             { params: { auth: context.token } }

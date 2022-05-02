@@ -2,7 +2,8 @@ export type CommonErrors = "GENERIC_ERROR";
 
 export type ProgrammerErrors =
   | "MISSING_CONTEXT_PROVIDER"
-  | "TRIED_VERIFY_UNAUTHENTICATED_USER_LOGIN";
+  | "TRIED_VERIFY_UNAUTHENTICATED_USER_LOGIN"
+  | "MISSING_ENV_VARIABLE";
 
 export type InterpreterErrors =
   | "GENERIC_ERROR"
