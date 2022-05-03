@@ -8,7 +8,7 @@ import {
   Box,
   Icon,
   Button,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 import { Users } from "react-feather";
 
 export default {

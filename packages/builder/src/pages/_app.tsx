@@ -1,25 +1,61 @@
-import { Layout } from "components/Layout";
-import { QueryClient, QueryClientProvider } from "react-query";
+import * as React from "react";
 import type { AppProps } from "next/app";
 import "../design/index.css";
-import { IdProvider } from "@radix-ui/react-id";
-import { globalStyles } from "@open-legal-tech/design-system";
-import { TreeProvider } from "features/Builder/state/useTree";
+import { Box, globalStyles, Tooltip } from "@open-decision/design-system";
+import { AuthProvider, useAuth } from "features/Auth/useAuth";
+import { useRouter } from "next/router";
+import { protectedRoutes } from "../config/protectedRoutes";
+import { queryClient } from "features/Data/queryClient";
+import { QueryClientProvider } from "react-query";
+import { NextPage } from "next";
+import { inspect } from "@xstate/inspect";
 
-const queryClient = new QueryClient();
+if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
+  inspect({
+    iframe: false,
+  });
+}
 
-export default function App({ Component, pageProps }: AppProps): JSX.Element {
+type NextPageWithLayout = NextPage & {
+  getLayout?: (page: React.ReactElement) => React.ReactNode;
+};
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+export default function App({
+  Component,
+  pageProps,
+}: AppPropsWithLayout): JSX.Element {
   globalStyles();
+  const router = useRouter();
+
+  const getLayout = Component.getLayout || ((page) => page);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <IdProvider>
-        <TreeProvider>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </TreeProvider>
-      </IdProvider>
-    </QueryClientProvider>
+    <AuthProvider router={router}>
+      <QueryClientProvider client={queryClient}>
+        <Tooltip.Provider delayDuration={50}>
+          <ProtectedRoute>
+            {getLayout(<Component {...pageProps} />)}
+          </ProtectedRoute>
+        </Tooltip.Provider>
+      </QueryClientProvider>
+    </AuthProvider>
   );
+}
+
+function ProtectedRoute({ children }) {
+  const [state] = useAuth();
+  const { pathname } = useRouter();
+
+  if (
+    (!state.matches("loggedIn") &&
+      protectedRoutes.some((routeRegEx) => routeRegEx.test(pathname))) ||
+    state.matches("undetermined")
+  )
+    return <Box />;
+
+  return children;
 }

@@ -3,7 +3,7 @@ export { useForm } from "./useForm";
 export type { FormProps } from "./useForm";
 export * from "./RadioButtons";
 export * from "./Checkboxes";
-export * from "./Combobox";
+export * as Combobox from "./Combobox";
 export * from "./ValidationMessage";
 export { useFormContext, useWatch } from "react-hook-form";
 export * from "./utils/validation";

@@ -6,7 +6,7 @@ import {
   DialogRootProps,
   Heading,
   Text,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 
 import { Meta, Story } from "@storybook/react";
 
@@ -43,7 +43,7 @@ export const Dialog: Story<DialogRootProps> = (props) => (
           <Button
             size="small"
             variant="secondary"
-            css={{ colorScheme: "error" }}
+            css={{ colorScheme: "danger" }}
           >
             Löschen
           </Button>

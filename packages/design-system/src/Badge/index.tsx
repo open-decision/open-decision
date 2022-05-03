@@ -1,59 +1,44 @@
 import * as React from "react";
-import { styled } from "../stitches";
+import { styled, css } from "../stitches";
 
-export const StyledBadge = styled("span", {
+export const badeStyles = css({
   colorScheme: "primary",
-  borderRadius: "$full",
-  border: "1px solid transparent",
+  borderRadius: "$md",
   textAlign: "center",
   maxWidth: "max-content",
+  backgroundColor: "$colorScheme2",
+  border: "1px solid $colorScheme6",
+  color: "$colorScheme11",
+  display: "flex",
+  alignItems: "center",
 
   variants: {
-    level: {
-      primary: { backgroundColor: "$colorScheme9", color: "$colorScheme1" },
-      secondary: { color: "$colorScheme11", borderColor: "currentcolor" },
-    },
     size: {
       small: {
-        paddingBlock: "$1",
         paddingInline: "$2",
         textStyle: "extra-small-text",
-        letterSpacing: "0.0625em",
-        fontWeight: 500,
-        lineHeight: "1.25em",
+        fontWeight: "500",
       },
       medium: {
-        paddingBlock: "$2",
-        paddingInline: "$4",
+        paddingBlock: "$1",
+        paddingInline: "$3",
         textStyle: "small-text",
-        letterSpacing: "0.0625em",
-        fontWeight: 500,
-        lineHeight: "1.25em",
+        fontWeight: "500",
       },
       large: {
-        paddingBlock: "$2",
-        paddingInline: "$6",
-        textStyle: "small-text",
-        letterSpacing: "0.0625em",
-        fontWeight: 500,
-        lineHeight: "1.25em",
+        paddingBlock: "$1",
+        paddingInline: "$4",
+        textStyle: "medium-text",
+        fontWeight: "500",
       },
     },
   },
 
   defaultVariants: {
-    level: "primary",
     size: "medium",
   },
 });
 
-export type BadgeProps = React.ComponentProps<typeof StyledBadge>;
+export const Badge = styled("span", badeStyles);
 
-export const BadgeComponent = (
-  props: BadgeProps,
-  ref: React.Ref<HTMLSpanElement>
-) => <StyledBadge ref={ref} {...props} />;
-
-export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
-  BadgeComponent
-);
+export type BadgeProps = React.ComponentProps<typeof Badge>;

@@ -1,8 +1,13 @@
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Button, Icon, ButtonProps } from "../../index";
-import { X } from "../../icons";
-import { styled, keyframes } from "../../stitches";
+import { styled, keyframes, StyleObject } from "../../stitches";
+import { Heading } from "../../Heading";
+import { Box } from "../../Box";
+import { ColorKeys } from "../../internal/utils";
+import { Stack } from "../../Layout/Stack";
+import { SubmitButton, SubmitButtonProps } from "../../Button/SubmitButton";
+import { Cross2Icon } from "@radix-ui/react-icons";
 
 function DialogRoot({ children, ...props }: DialogRootProps) {
   return (
@@ -18,12 +23,12 @@ const contentShow = keyframes({
   "100%": { opacity: 1, transform: "translate(-50%, -50%) scale(1)" },
 });
 
-const StyledContent = styled(DialogPrimitive.Content, {
+const StyledContent = styled(DialogPrimitive.Content, Stack, {
+  gap: "$2",
   boxShadow: "$6",
-  borderRadius: "$md",
-  backgroundColor: "$gray1",
-  padding: "$5",
-  minWidth: "200px",
+  minWidth: "350px",
+  maxWidth: "500px",
+  zIndex: "$10",
 
   position: "fixed",
   top: "50%",
@@ -37,6 +42,12 @@ const StyledContent = styled(DialogPrimitive.Content, {
   },
 });
 
+const DialogCard = styled(Stack, {
+  borderRadius: "$md",
+  layer: "1",
+  padding: "$6",
+});
+
 const overlayShow = keyframes({
   "0%": { opacity: 0 },
   "100%": { opacity: 1 },
@@ -46,14 +57,26 @@ const StyledOverlay = styled(DialogPrimitive.Overlay, {
   backgroundColor: "$grayA7",
   position: "fixed",
   inset: 0,
+  zIndex: "$10",
 
   "@media (prefers-reduced-motion: no-preference)": {
     animation: `${overlayShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
   },
 });
 
-function DialogContent({ children, ...props }: DialogContentProps) {
-  return <StyledContent {...props}>{children}</StyledContent>;
+function DialogContent({
+  children,
+  Above,
+  Below,
+  ...props
+}: DialogContentProps) {
+  return (
+    <StyledContent {...props}>
+      {Above}
+      <DialogCard>{children}</DialogCard>
+      {Below}
+    </StyledContent>
+  );
 }
 
 function CloseButton(props: Partial<ButtonProps>) {
@@ -61,28 +84,94 @@ function CloseButton(props: Partial<ButtonProps>) {
     <DialogPrimitive.Close asChild>
       <Button variant="ghost" square alignByContent="right" {...props}>
         <Icon label="Schließe den Dialog">
-          <X />
+          <Cross2Icon />
         </Icon>
       </Button>
     </DialogPrimitive.Close>
   );
 }
 
+function Header({ children, css }: HeaderProps) {
+  return (
+    <Box
+      as="header"
+      css={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "baseline",
+        ...css,
+      }}
+    >
+      <Dialog.Title asChild>
+        <Heading size="extra-small">{children}</Heading>
+      </Dialog.Title>
+    </Box>
+  );
+}
+
+type ActionButtonProps = { colorScheme?: ColorKeys } & ButtonProps;
+
+const ActionButton = React.forwardRef<HTMLButtonElement, ActionButtonProps>(
+  function ActionButton(
+    { colorScheme = "primary", children, css, ...props },
+    ref
+  ) {
+    return (
+      <Button
+        variant="secondary"
+        css={{
+          colorScheme,
+          ...css,
+        }}
+        type="submit"
+        ref={ref}
+        {...props}
+      >
+        {children}
+      </Button>
+    );
+  }
+);
+
+const ButtonRow = (props: SubmitButtonProps) => (
+  <Stack
+    css={{
+      flexDirection: "row",
+      gap: "$3",
+      justifyContent: "flex-end",
+      marginTop: "$5",
+    }}
+  >
+    <Dialog.Close asChild>
+      <Dialog.ActionButton variant="neutral" colorScheme="gray">
+        Abbrechen
+      </Dialog.ActionButton>
+    </Dialog.Close>
+    <SubmitButton {...props} />
+  </Stack>
+);
+
 export const Dialog = {
   Root: DialogRoot,
   Trigger: DialogPrimitive.Trigger,
   Content: DialogContent,
   Title: DialogPrimitive.Title,
-  Description: DialogPrimitive.Description,
+  Description: styled(DialogPrimitive.Description, { color: "$gray11" }),
   Close: DialogPrimitive.Close,
   CloseButton,
+  Header,
+  ActionButton,
+  ButtonRow,
 };
 
 export type DialogRootProps = DialogPrimitive.DialogProps;
-
 export type DialogTriggerProps = DialogPrimitive.DialogTriggerProps;
-export type DialogContentProps = React.ComponentProps<typeof StyledContent>;
+export type DialogContentProps = React.ComponentProps<typeof StyledContent> & {
+  Above?: React.ReactNode;
+  Below?: React.ReactNode;
+};
 export type DialogTitleProps = DialogPrimitive.DialogTitleProps;
 export type DialogDescriptionProps = DialogPrimitive.DialogDescriptionProps;
 export type DialogCloseProps = DialogPrimitive.DialogCloseProps;
 export type DialogCloseButtonProps = Partial<ButtonProps>;
+export type HeaderProps = { children: React.ReactNode; css?: StyleObject };

@@ -1,18 +1,12 @@
 import * as React from "react";
 import { Box } from "../../Box";
 import { Text } from "../../Text";
-import { X } from "../../icons";
 import { StyleObject } from "../../stitches";
 import { useCombobox } from "./useCombobox";
-import { Button } from "../..";
-import { Icon } from "../../Icon/Icon";
 import { ValidationMessage } from "..";
-import {
-  useController,
-  UseControllerProps,
-  useFormContext,
-} from "react-hook-form";
+import { useController, UseControllerProps } from "react-hook-form";
 import { mergeRefs } from "../../internal/utils/composeRef";
+import { menuContainerStyles, menuItemStyles } from "../../Menus/shared";
 
 export type ComboboxInputProps = {
   children: (field) => JSX.Element;
@@ -29,11 +23,9 @@ export function Input({
   ...rules
 }: ComboboxInputProps) {
   const {
-    inputValue,
     isOpen,
     highlightedIndex,
     inputItems,
-    reset,
     propGetters: {
       getInputProps,
       getComboboxProps,
@@ -41,8 +33,6 @@ export function Input({
       getItemProps,
     },
   } = useCombobox();
-
-  const { clearErrors } = useFormContext();
 
   const {
     field: { onChange, onBlur: controllerOnBlur, ref: controllerRef },
@@ -56,27 +46,6 @@ export function Input({
   const field = {
     ...inputProps,
     ref: mergeRefs([inputRef, controllerRef]),
-    Buttons: (
-      <Button
-        size="small"
-        variant="ghost"
-        type="button"
-        disabled={!inputValue}
-        square
-        css={{
-          focusStyle: "inner",
-          opacity: inputValue ? 1 : "0 !important",
-        }}
-        onClick={() => {
-          clearErrors(name);
-          return reset();
-        }}
-      >
-        <Icon label="Entferne die momentan ausgewählte Option">
-          <X />
-        </Icon>
-      </Button>
-    ),
   };
 
   const openState = isOpen ? "open" : "closed";
@@ -92,22 +61,19 @@ export function Input({
       <Box
         data-state={openState}
         {...getMenuProps()}
+        className={menuContainerStyles({
+          css: {
+            width: "100%",
+            padding: 0,
+            paddingBlock: isOpen ? "$2" : undefined,
+            listStyle: "none",
+            position: "absolute",
+            marginTop: "$1",
+            display: inputItems.length > 0 ? "grid" : "none",
+            ...menuCss,
+          },
+        })}
         as="ul"
-        css={{
-          width: "100%",
-          padding: 0,
-          listStyle: "none",
-          position: "absolute",
-          backgroundColor: "$gray2",
-          marginTop: "$1",
-          borderRadius: "$md",
-          gap: "$1",
-          overflowY: "auto",
-          zIndex: 1,
-          boxShadow: "$2",
-          display: inputItems.length > 0 ? "grid" : "none",
-          ...menuCss,
-        }}
       >
         {isOpen &&
           inputItems.map((item, index) => {
@@ -115,21 +81,15 @@ export function Input({
               <Text
                 data-state={openState}
                 as="li"
-                css={{
-                  backgroundColor:
-                    highlightedIndex === index ? "$primary9" : null,
-                  color: highlightedIndex === index ? "$primary1" : null,
-                  padding: "$1 $2",
-                  wordBreak: "break-word",
-                  hyphens: "auto",
-                  "&:not(:last-child)": {
-                    borderBottom: "1px solid $colors$gray4",
-                  },
-                }}
+                data-focus={highlightedIndex === index}
+                className={menuItemStyles({
+                  css: { justifyContent: "space-between" },
+                })}
                 key={`${item?.id}${index}`}
                 {...getItemProps({ item, index })}
               >
                 {item?.label}
+                {item?.labelIcon}
               </Text>
             );
           })}

@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { Meta, Story } from "@storybook/react";
-import { Link, LinkProps } from "@open-legal-tech/design-system";
+import { Link, LinkProps } from "@open-decision/design-system";
 
 export default {
   component: Link,

@@ -98,7 +98,7 @@ export type RadioGroupProps = {
   name: string;
   css?: StyleObject;
   children: React.ReactNode;
-  onChange?: (...event: any[]) => void;
+  onChange?: (newValue: string) => void;
 };
 
 function Group({

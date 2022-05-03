@@ -9,21 +9,24 @@ import {
   Label,
   styled,
   useForm,
-} from "@open-legal-tech/design-system";
+  focusStyle,
+  Row,
+} from "@open-decision/design-system";
 import * as React from "react";
-import {
-  BuilderTree,
-  BuilderNode,
-  BuilderRelation,
-} from "@open-decision/type-classes";
-import { pipe } from "fp-ts/lib/function";
-import { Plus, Trash, Crosshair } from "react-feather";
-import { useNode } from "features/Builder/state/useNode";
+import { Edge, Input as InputType } from "@open-decision/type-classes";
+import { filter, pipe, values } from "remeda";
 import { DragHandle } from "./DragHandle";
-import { useTree } from "features/Builder/state/useTree";
-import { useUnmount } from "react-use";
 import { Reorder, useDragControls } from "framer-motion";
-import { map, values } from "remeda";
+import { map } from "remeda";
+import {
+  useConditionsOfNode,
+  useEdgesOfNode,
+  useNode,
+  useNodes,
+} from "features/Builder/state/treeStore/hooks";
+import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
+import { useNotificationStore } from "features/Notifications/NotificationState";
+import { Crosshair2Icon, PlusIcon, TrashIcon } from "@radix-ui/react-icons";
 
 const StyledReorderGroup = styled(Reorder.Group, {
   listStyle: "none",
@@ -31,171 +34,180 @@ const StyledReorderGroup = styled(Reorder.Group, {
   display: "grid",
   gap: "$4",
 });
-type SingleSelectProps = { node: BuilderNode.TNode };
 
-export function OptionTargetInputs({ node }: SingleSelectProps) {
-  const [, send] = useTree();
+type SingleSelectProps = {
+  nodeId: string;
+  input: InputType.TInput;
+};
 
-  const relations = Object.values(node.relations);
+export function OptionTargetInputs({ nodeId, input }: SingleSelectProps) {
+  const { addInputAnswer, createAnswer, updateInputAnswerOrder } =
+    useTreeContext();
   const ref = React.useRef<HTMLDivElement | null>(null);
+  const edges = useEdgesOfNode(nodeId);
+  const conditions = useConditionsOfNode(nodeId);
 
   return (
     <>
       <Box
         css={{
           display: "flex",
-          justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: "$4",
+          justifyContent: "space-between",
+          gap: "$2",
+          marginBottom: "$3",
         }}
       >
-        <Label
-          size="small"
-          as="h2"
-          css={{ margin: 0, display: "block", color: "$gray11" }}
-        >
+        <Label as="h2" css={{ margin: 0, display: "block" }}>
           Pfade
         </Label>
         <Button
-          variant="ghost"
-          onClick={() => send({ type: "addRelation", nodeId: node.id })}
-          square
-          css={{
-            "&:hover": {
-              backgroundColor: "$gray4",
-            },
-
-            "&:active, &[data-active='true'], &[data-state=on]": {
-              color: "$gray12 !important",
-              backgroundColor: "$gray6 !important",
-            },
+          size="small"
+          variant="secondary"
+          onClick={() => {
+            const newAnswer = createAnswer({ text: "" });
+            addInputAnswer(input.id, newAnswer);
           }}
         >
           <Icon label="Neue Antwortmöglichkeit hinzufügen">
-            <Plus />
+            <PlusIcon />
           </Icon>
+          Hinzufügen
         </Button>
       </Box>
-      <StyledReorderGroup
-        ref={ref}
-        axis="y"
-        values={relations}
-        onReorder={(newOrder: BuilderRelation.TRelation[]) =>
-          send({
-            type: "updateNode",
-            id: node.id,
-            node: {
-              relations: Object.fromEntries(
-                newOrder.map((relation) => [relation.id, relation])
-              ),
-            },
-          })
-        }
-      >
-        {relations.map((relation) => (
-          <OptionTargetInput
-            groupRef={ref}
-            key={`${relation.id}_${relation.target}`}
-            input={relation}
-            onChange={(newData) =>
-              send({
-                type: "updateRelation",
-                nodeId: node.id,
-                relationId: relation.id,
-                relation: newData,
-              })
-            }
-            onDelete={() =>
-              send({
-                type: "deleteRelation",
-                nodeId: node.id,
-                relationIds: [relation.id],
-              })
-            }
-            nodeId={node.id}
-          />
-        ))}
-      </StyledReorderGroup>
+      {input?.answers ? (
+        <StyledReorderGroup
+          ref={ref}
+          axis="y"
+          values={input?.answers}
+          layoutScroll
+          onReorder={(newOrder) => updateInputAnswerOrder(input.id, newOrder)}
+        >
+          {input.answers.map((answer) => {
+            const edge = Object.values(edges).find((edge) => {
+              if (!edge.conditionId || !conditions) return false;
+              const condition = conditions[edge.conditionId];
+
+              return condition.answerId === answer.id;
+            });
+
+            return (
+              <OptionTargetInput
+                nodeId={nodeId}
+                answer={answer}
+                edge={edge}
+                inputId={input.id}
+                key={answer.id}
+                groupRef={ref}
+              />
+            );
+          })}
+        </StyledReorderGroup>
+      ) : null}
     </>
   );
 }
 type SingleSelectInputProps = {
-  input: BuilderRelation.TRelation;
+  answer: InputType.TAnswer;
+  edge?: Edge.TEdge;
   nodeId: string;
-  onChange: (relation: Omit<BuilderRelation.TRelation, "id">) => void;
-  onDelete: (id: string) => void;
+  inputId: string;
   groupRef: React.MutableRefObject<HTMLDivElement | null>;
 };
 
 export function OptionTargetInput({
-  input,
+  answer,
+  edge,
+  inputId,
   nodeId,
-  onChange,
-  onDelete,
   groupRef,
-}: SingleSelectInputProps): JSX.Element {
-  const [tree, send] = useTree();
+}: SingleSelectInputProps) {
+  const nodes = useNodes();
   const node = useNode(nodeId);
-  const allOptions = pipe(
-    tree.context.nodes,
+  const {
+    deleteInputAnswer,
+    updateInputAnswer,
+    getConnectableNodes,
+    createAndAddEdge,
+    relateConditionToNode,
+    updateEdgeTarget,
+    addNode,
+    addCondition,
+    createInput,
+    addEdge,
+    createChildNode,
+    createCondition,
+    createEdge,
+    addInput,
+  } = useTreeContext();
+  const { addNotification } = useNotificationStore();
+
+  const allOptions: Combobox.Item[] = pipe(
+    nodes,
     values,
-    map((node) => ({ id: node.id, label: node.name }))
+    filter((node) => Boolean(node.data.name)),
+    map((node) => ({
+      id: node.id,
+      label: node.data.name,
+      labelIcon: (
+        <Row
+          css={{
+            fontWeight: "500",
+            alignItems: "center",
+            color: "$primary11",
+            gap: "$1",
+            minWidth: "max-content",
+          }}
+        >
+          Verbinden
+        </Row>
+      ),
+    }))
   );
-  const nodeOptions = node
-    ? pipe(
-        BuilderTree.getConnectableNodes(node)(tree.context),
-        values,
-        map((node) => ({ id: node.id, label: node.name }))
-      )
-    : [];
+
+  const nodeOptions = node ? getConnectableNodes(node.id) : [];
 
   const controls = useDragControls();
 
   const ref = React.useRef<HTMLDivElement | null>(null);
 
-  const deselectRelation = () => send({ type: "selectRelation", id: "" });
-  useUnmount(deselectRelation);
-
   const [Form] = useForm({
     defaultValues: {
-      answer: input.answer ?? "",
-      target: input.target ?? "",
+      answer: answer.text ?? "",
+      target: edge?.target ?? "",
     },
   });
 
   return node ? (
-    // FIXME Open issue -> https://github.com/framer/motion/issues/1313
-    // The Reorder.Item creates a stacking context which makes it impossible to have the Combobox overlap other Reorder.Items
     <Reorder.Item
-      value={input}
+      value={answer}
       dragListener={false}
       dragControls={controls}
       dragConstraints={groupRef}
     >
       <Form
-        onSubmit={(data) =>
-          onChange({ answer: data.answer, target: data.target })
-        }
         css={{
           display: "flex",
           position: "relative",
+          gap: "$1",
+          groupColor: "$colorScheme-text",
         }}
       >
         <Box
-          onClick={() => send({ type: "selectRelation", id: input.id })}
           ref={ref}
           css={{
             flex: 1,
             display: "grid",
             gridTemplateColumns: "max-content 1fr",
-            border: "1px solid $gray8",
             borderRadius: "$md",
-            backgroundColor: "$gray1",
+            layer: "2",
           }}
         >
           <ControlledInput
             name="answer"
-            onChange={(event) => onChange({ answer: event.target.value })}
+            onChange={(event) =>
+              updateInputAnswer(inputId, answer.id, event.target.value)
+            }
           >
             {({ onBlur, ...field }) => (
               <Input
@@ -204,62 +216,104 @@ export function OptionTargetInput({
                   borderTopLeftRadius: "inherit",
                   borderTopRightRadius: "inherit",
                   gridColumn: "1 / -1",
-                  borderBottom: "inherit",
-                  margin: "-1px",
-                  marginBottom: 0,
+                  marginBottom: "-1px",
+                  borderBottomColor: "transparent",
+
+                  ...focusStyle({
+                    borderBottomColor: "$primary9",
+                    zIndex: "2",
+                  }),
                 }}
                 placeholder="Antwort"
-                onBlur={() => {
-                  deselectRelation();
-                  onBlur?.();
-                }}
+                onBlur={onBlur}
                 {...field}
               />
             )}
           </ControlledInput>
-          <NodeLink target={input.target} />
+          <NodeLink target={edge?.target} />
           <Combobox.Root
+            missingLabelPlaceholder="Ziel hat keinen Namen"
             name="target"
             onCreate={(name) => {
-              const newNode = BuilderNode.createNewAssociatedNode(node, {
-                name,
+              // Construct the childNode
+              const newInput = createInput();
+              const childNode = createChildNode(nodeId, {
+                data: {
+                  inputs: [newInput.id],
+                  name,
+                  conditions: [],
+                },
               });
 
-              send([
-                {
-                  type: "addNode",
-                  value: newNode,
-                },
-                {
-                  type: "updateRelation",
-                  nodeId: node.id,
-                  relationId: input.id,
-                  relation: {
-                    target: newNode.id,
-                  },
-                },
-              ]);
+              if (childNode instanceof Error) return childNode;
 
-              return { id: newNode.id, label: newNode.name };
+              // Construct the Relationship
+              const newCondition = createCondition({
+                inputId,
+                answerId: answer.id,
+              });
+
+              const newEdge = createEdge({
+                source: nodeId,
+                target: childNode.id,
+                conditionId: newCondition.id,
+              });
+
+              if (newEdge instanceof Error) {
+                addNotification({
+                  title: "Es konnte keine verbundender Knoten erstellt werden.",
+                  content: newEdge.message,
+                  variant: "danger",
+                });
+
+                return newEdge;
+              }
+
+              addCondition(newCondition);
+              relateConditionToNode(nodeId, newCondition.id);
+              addInput(newInput);
+              addNode(childNode);
+              addEdge(newEdge);
+
+              return { id: childNode.id, label: childNode.data.name };
             }}
-            onSelectedItemChange={(newItem) =>
-              onChange({ target: newItem?.id ?? "" })
-            }
+            onSelectedItemChange={(newItem) => {
+              if (!edge?.target && newItem) {
+                const newCondition = createCondition({
+                  inputId,
+                  answerId: answer.id,
+                });
+
+                addCondition(newCondition);
+                relateConditionToNode(nodeId, newCondition.id);
+
+                createAndAddEdge({
+                  source: nodeId,
+                  target: newItem.id,
+                  conditionId: newCondition.id,
+                });
+              }
+
+              if (edge?.target && newItem)
+                updateEdgeTarget(edge.id, newItem.id);
+            }}
             items={allOptions}
             subsetOfItems={nodeOptions}
           >
-            <Combobox.Input
-              menuCss={{
-                backgroundColor: "$gray1",
-                "&[data-state='open']": { border: "1px solid $gray8" },
-              }}
-              onBlur={deselectRelation}
-              name="target"
-            >
-              {(field) => (
+            <Combobox.Input name="target">
+              {({ css, ...field }) => (
                 <Input
                   placeholder="Zielknoten auswählen"
-                  css={{ border: 0, borderRadius: 0 }}
+                  css={{
+                    borderRadius: 0,
+                    borderBottomRightRadius: "$md",
+                    marginLeft: "-1px",
+
+                    ...focusStyle({
+                      borderLeftColor: "$primary9",
+                    }),
+                    ...css,
+                  }}
                   {...field}
                 />
               )}
@@ -274,9 +328,9 @@ export function OptionTargetInput({
           }}
         >
           <Button
-            variant="ghost"
-            size="small"
+            variant="neutral"
             type="button"
+            square
             onPointerDown={(event) => controls.start(event)}
           >
             <Icon label="Verschiebe den Input">
@@ -284,14 +338,13 @@ export function OptionTargetInput({
             </Icon>
           </Button>
           <Button
-            css={{ colorScheme: "error" }}
-            variant="ghost"
-            size="small"
+            variant="neutral"
             type="button"
-            onClick={() => onDelete(input.id)}
+            square
+            onClick={() => deleteInputAnswer(inputId, answer.id)}
           >
             <Icon label="Entferne den Input">
-              <Trash />
+              <TrashIcon />
             </Icon>
           </Button>
         </Box>
@@ -304,9 +357,9 @@ export function OptionTargetInput({
 
 type NodeLinkProps = { target?: string } & Omit<ButtonProps, "label" | "Icon">;
 
-function NodeLink({ target, ...props }: NodeLinkProps) {
+function NodeLink({ target, css, ...props }: NodeLinkProps) {
   const node = useNode(target ?? "");
-  const [, send] = useTree();
+  const { replaceSelectedNodes } = useTreeContext();
 
   return (
     <Button
@@ -314,30 +367,30 @@ function NodeLink({ target, ...props }: NodeLinkProps) {
         boxShadow: "none",
         borderRadius: "0",
         borderBottomLeftRadius: "inherit",
-        border: "none",
-        borderRight: "inherit",
-        focusStyle: "inner",
-        width: "40px",
-        maxWidth: "100%",
+        focusType: "inner",
         colorScheme: target ? "primary" : "gray",
+        border: "1px solid $colors$gray7",
+        width: "40px",
+        ...css,
       }}
       pressable={false}
       size="small"
       variant="secondary"
       onClick={() => {
         if (target) {
-          send({ type: "selectNode", nodeId: target });
+          replaceSelectedNodes([target]);
         }
       }}
-      square
       type="button"
       disabled={!target}
       {...props}
     >
       <Icon
-        label={node ? `Gehe zu Node: ${node.name}` : "Keine Node verbunden"}
+        label={
+          node ? `Gehe zu Node: ${node.data.name}` : "Keine Node verbunden"
+        }
       >
-        <Crosshair />
+        <Crosshair2Icon />
       </Icon>
     </Button>
   );

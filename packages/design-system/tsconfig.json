@@ -5,5 +5,5 @@
     "outDir": "lib",
     "composite": true
   },
-  "exclude": ["lib"]
+  "include": ["src"]
 }

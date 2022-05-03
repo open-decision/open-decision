@@ -3,10 +3,11 @@
   "compilerOptions": {
     "baseUrl": ".",
     "outDir": "lib",
-    "rootDir": ".",
+    "rootDir": "src",
     "declarationMap": true,
     "declaration": true,
     "composite": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  "references": [{ "path": "../type-classes/tsconfig.json" }]
 }

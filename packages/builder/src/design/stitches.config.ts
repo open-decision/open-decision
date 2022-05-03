@@ -1,4 +1,4 @@
-import { createTheme } from "@open-legal-tech/design-system";
+import { createTheme } from "@open-decision/design-system";
 
 export const defaultTheme = createTheme({
   fonts: {

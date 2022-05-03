@@ -10,7 +10,7 @@ type MenuTriggerProps = ButtonProps & { Icon?: React.ReactNode };
 const MenuTrigger = ({ Icon, ...props }: MenuTriggerProps) => {
   return (
     <Collapsible.Trigger asChild>
-      <Button variant="ghost" css={{ colorScheme: "gray" }} {...props}>
+      <Button variant="ghost" {...props}>
         <IconComp label="Öffne das Menü">{Icon}</IconComp>
         {props.children}
       </Button>

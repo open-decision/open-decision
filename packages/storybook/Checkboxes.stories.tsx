@@ -5,7 +5,7 @@ import {
   Checkbox,
   Form,
   CheckboxFieldProps,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 export default {
   component: Checkbox.Field,
   title: "Components/Checkbox",

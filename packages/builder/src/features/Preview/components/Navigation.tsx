@@ -1,59 +1,56 @@
 import {
-  Box,
-  useWatch,
   Icon,
   Button,
   styled,
-} from "@open-legal-tech/design-system";
-import { ArrowLeft, ArrowRight } from "react-feather";
-import { Interpreter } from "@open-decision/interpreter";
-import { Separator } from "@radix-ui/react-separator";
+  Row,
+  ButtonProps,
+  StyleObject,
+} from "@open-decision/design-system";
+import { useInterpreter } from "@open-decision/interpreter";
+import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 
-const StyledButton = styled(Button, {
-  "&:hover": {
-    backgroundColor: "$gray3",
-  },
+const Container = styled(Row, {
+  layer: "1",
+  padding: "$2",
+  boxShadow: "$1",
+  maxWidth: "max-content",
+  gap: "$2",
+  borderRadius: "$md",
 });
 
-const StyledSeparator = styled(Separator, {
-  width: "1px",
-  background: "$gray7",
-  marginInline: "$1",
-});
+const StyledButton = styled(Button, {});
 
-type PreviewNavigationProps = {
-  interpreter: Interpreter;
-  snapshot: Interpreter;
+const buttonProps: ButtonProps = {
+  variant: "neutral",
+  size: "large",
+  css: { colorScheme: "primary" },
 };
 
-export function Navigation({ interpreter, snapshot }: PreviewNavigationProps) {
-  const answer = useWatch({ name: "relationId" });
+type Props = { css?: StyleObject };
+
+export function Navigation({ css }: Props) {
+  const { send, canGoBack, canGoForward } = useInterpreter();
 
   return (
-    <Box css={{ display: "flex", justifyContent: "center" }}>
+    <Container css={css}>
       <StyledButton
-        variant="ghost"
-        onClick={() => interpreter.goBack()}
-        disabled={!snapshot.hasHistory}
-        css={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
+        {...buttonProps}
+        onClick={() => send("GO_BACK")}
+        disabled={!canGoBack}
       >
         <Icon label="Zurück">
-          <ArrowLeft />
+          <ChevronLeftIcon />
         </Icon>
-        Zurück
       </StyledButton>
-      <StyledSeparator orientation="vertical" />
       <StyledButton
-        variant="ghost"
-        css={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-        type="submit"
-        disabled={!answer}
+        {...buttonProps}
+        disabled={!canGoForward}
+        onClick={() => send("GO_FORWARD")}
       >
-        Weiter
         <Icon label="Weiter">
-          <ArrowRight />
+          <ChevronRightIcon />
         </Icon>
       </StyledButton>
-    </Box>
+    </Container>
   );
 }

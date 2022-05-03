@@ -1,22 +1,18 @@
-import path from "path";
 import { defineConfig } from "vite";
+import pluginReact from "@vitejs/plugin-react";
 
-module.exports = defineConfig({
+export default defineConfig({
+  plugins: [pluginReact({ jsxRuntime: "classic" })],
   build: {
     outDir: "lib",
     lib: {
-      entry: path.resolve(__dirname, "./src/index.ts"),
+      entry: "./src/index.ts",
       name: "design-system",
+      formats: ["es", "cjs"],
       fileName: (format) => `index.${format === "es" ? "mjs" : "cjs"}`,
     },
     rollupOptions: {
-      external: ["react", "react-dom"],
-      output: {
-        globals: {
-          react: "React",
-          "react-dom": "ReactDom",
-        },
-      },
+      external: ["@fontsource/poppins", "react", "react-dom"],
     },
   },
 });

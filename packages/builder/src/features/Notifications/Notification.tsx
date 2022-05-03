@@ -1,77 +1,47 @@
 import React, { useEffect } from "react";
+import { styled, Icon, Button } from "@open-decision/design-system";
 import {
-  styled,
-  Box,
-  Text,
-  Heading,
-  Icon,
-  Button,
-} from "@open-legal-tech/design-system";
-import { notification, useNotificationStore } from "./NotificationState";
+  Notification as NotificationType,
+  useNotificationStore,
+} from "./NotificationState";
 import * as Progress from "@radix-ui/react-progress";
 import { motion, useAnimation } from "framer-motion";
-import { useGesture } from "react-use-gesture";
-import { Info, XCircle, CheckCircle, HelpCircle, X } from "react-feather";
-
-const icons = {
-  error: XCircle,
-  info: HelpCircle,
-  success: CheckCircle,
-  warning: Info,
-} as const;
+import { Cross2Icon } from "@radix-ui/react-icons";
+import { InfoBox } from "./InfoBox";
 
 type NotificationProps = {
-  notification: notification;
+  notification: NotificationType;
   id: string;
 };
 
-const Container = styled(motion.div, {
-  $color: "$colors$colorScheme11",
-  boxShadow: "$5",
-  borderRadius: "$md",
-  backgroundColor: "$colorScheme3",
-  color: "var(--color)",
-
-  defaultVariants: {
-    variant: "neutral",
-  },
-});
-
-const Header = styled("header", {
-  display: "flex",
-  alignItems: "center",
-  gap: "$3",
-});
-
 const ProgressBar = styled(Progress.Root, {
   height: 3,
+  margin: "0px 4px 4px 4px",
 });
 
 const ProgressIndicator = styled(Progress.Indicator, {
   height: "100%",
-  backgroundColor: "currentColor",
-  borderTopLeftRadius: "$md",
+  backgroundColor: "$$accentColor",
+  borderRadius: "$md",
 });
 
 export const Notification = ({ notification, id }: NotificationProps) => {
   const animation = useAnimation();
 
-  useEffect(() => {
-    animation.start("empty");
-  }, []);
+  const duration =
+    notification.duration === "persistent" ? 5 : notification.duration;
 
-  const IconSVG = icons[notification.variant];
+  useEffect(() => {
+    if (notification.duration === "persistent") {
+      return animation.stop();
+    }
+
+    animation.start("empty");
+  }, [notification.duration]);
+
   const removeNotification = useNotificationStore(
     (state) => state.removeNotification
   );
-
-  const gestures = useGesture({
-    onPointerEnter: () => animation.stop(),
-    onPointerLeave: () => animation.start("empty"),
-    onClick: () => animation.set("full"),
-    onFocus: () => animation.stop(),
-    onBlur: () => animation.start("empty"),
-  });
 
   const progress = {
     full: { width: "100%" },
@@ -85,45 +55,44 @@ export const Notification = ({ notification, id }: NotificationProps) => {
   };
 
   return (
-    <Container
+    <motion.div
       variants={container}
       initial="hidden"
       animate="visible"
       exit="exit"
-      css={{ colorScheme: notification.variant }}
-      role="alert"
-      {...gestures()}
+      layout
+      onPointerEnter={() => animation.stop()}
+      onPointerLeave={() => animation.start("empty")}
+      onClick={() => animation.set("full")}
+      onFocus={() => animation.stop()}
+      onBlur={() => animation.start("empty")}
     >
-      <ProgressBar>
-        <ProgressIndicator
-          as={motion.div}
-          variants={progress}
-          transition={{ duration: notification.duration }}
-          initial="full"
-          animate={animation}
-          onAnimationComplete={() => removeNotification(id)}
-        />
-      </ProgressBar>
-      <Box css={{ padding: "$5" }}>
-        <Header>
-          <Icon css={{ marginBottom: "-2px" }}>
-            <IconSVG />
-          </Icon>
-          <Heading size="small" css={{ flex: 1 }}>
-            {notification.title}
-          </Heading>
+      <InfoBox
+        CloseButton={
           <Button
-            alignByContent="right"
-            variant="ghost"
+            square
+            variant="neutral"
             onClick={() => removeNotification(id)}
           >
             <Icon label="Benachrichtigung schließen">
-              <X />
+              <Cross2Icon />
             </Icon>
           </Button>
-        </Header>
-        <Text css={{ marginTop: "$2" }}>{notification.content}</Text>
-      </Box>
-    </Container>
+        }
+        css={{ boxShadow: "$6" }}
+        {...notification}
+      >
+        <ProgressBar>
+          <ProgressIndicator
+            as={motion.div}
+            variants={progress}
+            transition={{ duration }}
+            initial="full"
+            animate={animation}
+            onAnimationComplete={() => removeNotification(id)}
+          />
+        </ProgressBar>
+      </InfoBox>
+    </motion.div>
   );
 };

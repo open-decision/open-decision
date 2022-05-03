@@ -6,7 +6,7 @@ import {
   InlineInput,
   Input,
   ComboboxInputProps,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 
 export default {
   component: Combobox.Root,

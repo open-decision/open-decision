@@ -4,152 +4,141 @@ import {
   styled,
   ToggleButton,
   Button,
-} from "@open-legal-tech/design-system";
-import { Type } from "react-feather";
+  hoverStyle,
+} from "@open-decision/design-system";
 import * as React from "react";
-import * as Separator from "@radix-ui/react-separator";
-import { useSlate } from "slate-react";
 import {
-  isBooleanMarkActive,
-  isElement,
-  toggleBooleanMark,
-  toggleElement,
-  toggleList,
-} from "./formatting";
-import { Bold, Italic, Link, List, Underline } from "react-feather";
-import { HeadingIcon, QuestionMarkIcon } from "@radix-ui/react-icons";
-import { toggleLink } from "./contentTypes/link";
-
-const StyledSeparator = styled(Separator.Root, {
-  backgroundColor: "$gray8",
-  "&[data-orientation=horizontal]": { height: 1 },
-  "&[data-orientation=vertical]": { width: 1 },
-});
+  FontBoldIcon,
+  FontItalicIcon,
+  HeadingIcon,
+  Link2Icon,
+  ListBulletIcon,
+  TextIcon,
+  UnderlineIcon,
+} from "@radix-ui/react-icons";
+import { Editor } from "@tiptap/react";
+import { NumberedList } from "./NumberedListIcon";
+import { Separator } from "components/Separator";
 
 const StyledToolbar = styled(Box, {
   display: "flex",
   alignItems: "center",
-  backgroundColor: "$gray2",
   padding: "$2 $1",
   boxShadow: "$1",
   gap: "$1",
 });
 
-const ToolbarButton = styled(ToggleButton, {
-  "&:hover": {
-    backgroundColor: "$gray4",
-  },
+type Props = { editor: Editor | null } & React.ComponentProps<
+  typeof StyledToolbar
+>;
 
-  "&:active, &[data-active='true'], &[data-state=on]": {
-    color: "$gray12 !important",
-    backgroundColor: "$gray6 !important",
-  },
-});
-
-export function Toolbar({
-  css,
-  ...props
-}: React.ComponentProps<typeof StyledToolbar>): JSX.Element {
-  const editor = useSlate();
-  const toggleEditorMark = toggleBooleanMark(editor);
-  const toggleEditorElement = toggleElement(editor);
-  const toggleListElement = toggleList(editor);
-
-  const isMarkActive = isBooleanMarkActive(editor);
-  const isHeading = isElement(editor)("heading");
-  const isNumberedList = isElement(editor)("ordered_list");
-  const isList = isElement(editor)("unordered_list");
-  const isLink = isElement(editor)("link");
+export function Toolbar({ css, editor, ...props }: Props) {
+  if (!editor) {
+    return null;
+  }
 
   return (
     <StyledToolbar css={css} {...props}>
       <Button
-        size="small"
-        variant="ghost"
+        size="medium"
+        variant="neutral"
         square
-        onClick={() =>
-          isHeading
-            ? toggleEditorElement("paragraph")
-            : toggleEditorElement("heading")
-        }
+        onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
         css={{
-          "&:hover": {
+          ...hoverStyle({
             backgroundColor: "$gray4",
-          },
+          }),
         }}
       >
         <Icon label="Konvertiere den ausgewählten Text in eine Überschrift">
-          {isHeading ? <Type /> : <HeadingIcon />}
+          {editor.isActive("heading", { level: 1 }) ? (
+            <TextIcon />
+          ) : (
+            <HeadingIcon />
+          )}
         </Icon>
       </Button>
-      <StyledSeparator
+      <Separator
         orientation="vertical"
         decorative
         css={{ alignSelf: "stretch" }}
       />
-      <ToolbarButton
+      <ToggleButton
+        size="medium"
         square
-        pressed={isMarkActive("bold")}
-        onClick={() => toggleEditorMark("bold")}
+        pressed={editor.isActive("bold")}
+        onClick={() => editor.chain().focus().toggleBold().run()}
       >
-        <Icon size="small" label="Markiere den ausgewählten Text fett">
-          <Bold />
+        <Icon label="Markiere den ausgewählten Text fett">
+          <FontBoldIcon />
         </Icon>
-      </ToolbarButton>
-      <ToolbarButton
+      </ToggleButton>
+      <ToggleButton
+        size="medium"
         square
-        pressed={isMarkActive("italic")}
-        onClick={() => toggleEditorMark("italic")}
+        pressed={editor.isActive("italic")}
+        onClick={() => editor.chain().focus().toggleItalic().run()}
       >
-        <Icon size="small" label="Markiere den ausgewählten Text kursiv">
-          <Italic />
+        <Icon label="Markiere den ausgewählten Text kursiv">
+          <FontItalicIcon />
         </Icon>
-      </ToolbarButton>
-      <ToolbarButton
+      </ToggleButton>
+      <ToggleButton
+        size="medium"
         square
-        pressed={isMarkActive("underline")}
-        onClick={() => toggleEditorMark("underline")}
+        pressed={editor.isActive("underline")}
+        onClick={() => editor.chain().focus().toggleUnderline().run()}
       >
-        <Icon size="small" label="Unterstreiche den ausgewählten Text">
-          <Underline />
+        <Icon label="Unterstreiche den ausgewählten Text">
+          <UnderlineIcon />
         </Icon>
-      </ToolbarButton>
-      <ToolbarButton
+      </ToggleButton>
+      <Separator
+        orientation="vertical"
+        decorative
+        css={{ alignSelf: "stretch" }}
+      />
+      <ToggleButton
+        size="medium"
         square
-        pressed={isList}
-        onClick={() => toggleListElement("unordered_list")}
+        pressed={editor.isActive("bulletList")}
+        onClick={() => editor.chain().focus().toggleBulletList().run()}
       >
-        <Icon size="small" label="Erstelle eine unnumerierte Liste">
-          <List />
+        <Icon label="Erstelle eine unnumerierte Liste">
+          <ListBulletIcon />
         </Icon>
-      </ToolbarButton>
+      </ToggleButton>
 
-      <ToolbarButton
+      <ToggleButton
+        size="medium"
         square
-        pressed={isNumberedList}
-        onClick={() => toggleListElement("ordered_list")}
+        pressed={editor.isActive("orderedList")}
+        onClick={() => editor.chain().focus().toggleOrderedList().run()}
       >
-        <Icon size="small" label="Erstelle eine numerierte Liste">
-          <QuestionMarkIcon />
+        <Icon
+          label="Erstelle eine numerierte Liste"
+          css={{ width: "0.8em", height: "0.8em" }}
+        >
+          <NumberedList />
         </Icon>
-      </ToolbarButton>
-      <StyledSeparator
+      </ToggleButton>
+      <Separator
         orientation="vertical"
         decorative
         css={{ alignSelf: "stretch" }}
       />
-      <ToolbarButton
+      <ToggleButton
+        size="medium"
         square
-        pressed={isLink}
-        onMouseDown={(event) => {
-          event.preventDefault();
-          return toggleLink(editor);
-        }}
+        pressed={editor.isActive("link")}
+        onClick={() =>
+          editor.chain().focus().toggleLink({ href: "www.google.com" }).run()
+        }
       >
-        <Icon size="small" label="Erstelle eine numerierte Liste">
-          <Link />
+        <Icon label="Erstelle einen Link">
+          <Link2Icon />
         </Icon>
-      </ToolbarButton>
+      </ToggleButton>
     </StyledToolbar>
   );
 }

@@ -27,13 +27,13 @@ const Content = styled("header", {
 });
 
 const Link = styled("a", {
-  color: "var(--color, $colorScheme-text)",
-
   borderRadius: "$md",
   fontFamily: "$sans",
   fontWeight: "$semibold",
   paddingBlock: "$2",
   textDecoration: "none",
+  textStyle: "medium-text",
+  colorFallback: "$colorScheme-text",
 
   [`${ListMenu} & `]: {
     textStyle: "small-text",

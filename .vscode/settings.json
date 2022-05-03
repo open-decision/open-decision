@@ -7,7 +7,24 @@
     "builder",
     "type-classes",
     "design-system",
-    "interpreter"
+    "interpreter",
+    "api"
   ],
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "todo-tree.general.tags": [
+    "BUG",
+    "HACK",
+    "FIXME",
+    "TODO",
+    "XXX",
+    "INSECURE",
+    "SECURITY",
+    "WARNING",
+    "INFO"
+  ],
+  "rest-client.environmentVariables": {
+    "$shared": {
+      "dev_email": "dev@open-decision.org"
+    }
+  }
 }

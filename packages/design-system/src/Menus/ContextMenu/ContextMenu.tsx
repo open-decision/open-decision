@@ -7,14 +7,14 @@ import {
   menuLabelStyles,
   menuSeparatorStyles,
 } from "../shared";
-import { Check } from "../../icons";
 import { Icon } from "../../Icon/Icon";
+import { CheckIcon } from "@radix-ui/react-icons";
 
 const ItemIndicator = () => {
   return (
     <Icon label="Checked" css={{ padding: 0 }}>
       <ContextMenuPrimitives.ItemIndicator asChild>
-        <Check />
+        <CheckIcon />
       </ContextMenuPrimitives.ItemIndicator>
     </Icon>
   );

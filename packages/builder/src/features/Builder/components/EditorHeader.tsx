@@ -1,13 +1,14 @@
 import {
-  Box,
-  buttonStyles,
   StyleObject,
-  Link as SystemLink,
-} from "@open-legal-tech/design-system";
+  Row,
+  buttonStyles,
+  Icon,
+} from "@open-decision/design-system";
 import { BaseHeader } from "components";
-import { TreeNameInput } from "./TreeNameInput";
-import Link from "next/link";
-import { ExportButton } from "./ExportButton";
+import { ProjectMenu } from "./ProjectMenu";
+import { NodeSearch } from "./NodeSearch";
+import { PreviewLink } from "./PreviewLink";
+import { FileTextIcon } from "@radix-ui/react-icons";
 
 type HeaderProps = {
   css?: StyleObject;
@@ -15,19 +16,16 @@ type HeaderProps = {
 
 export const EditorHeader = ({ css }: HeaderProps) => {
   return (
-    <BaseHeader css={css}>
-      <TreeNameInput />
-      <Box css={{ display: "flex", gap: "$2", marginLeft: "auto" }}>
-        <Link passHref href="/vorschau">
-          <SystemLink
-            className={buttonStyles({ variant: "tertiary", size: "small" })}
-            underline={false}
-          >
-            Vorschau
-          </SystemLink>
-        </Link>
-        <ExportButton />
-      </Box>
+    <BaseHeader css={css} LogoSlot={<ProjectMenu />}>
+      <Row css={{ gap: "$3", alignItems: "center", width: "100%" }}>
+        <NodeSearch />
+      </Row>
+      <PreviewLink className={buttonStyles({ variant: "secondary" })}>
+        <Icon>
+          <FileTextIcon />
+        </Icon>
+        Vorschau
+      </PreviewLink>
     </BaseHeader>
   );
 };

@@ -1,73 +1,70 @@
-import { Box } from "@open-legal-tech/design-system";
+import { ScrollArea, Stack, StyleObject } from "@open-decision/design-system";
 import * as React from "react";
-import { RichTextEditor } from "components";
-import { useTree } from "features/Builder/state/useTree";
 import { useInterpreter } from "@open-decision/interpreter";
-import { renderElement } from "./shared";
 import { AnswersForm } from "./components/AnswersForm";
+import { RichTextRenderer } from "components/RichTextEditor/RichTextRenderer";
+import { Navigation } from "./components/Navigation";
+import { InfoBox } from "features/Notifications/InfoBox";
 
-export function Preview() {
-  const [snapshot, interpreter] = useInterpreter();
-  const [node, send] = useTree((state) => state.nodes[interpreter.currentNode]);
-  const relation = React.useMemo(
-    () => snapshot.getAnswer(node?.id),
-    [node?.id, snapshot]
-  );
+type Props = {
+  css?: StyleObject;
+};
+
+function PreviewImpl({ css }: Props, ref: React.Ref<HTMLDivElement>) {
+  const { getCurrentNode } = useInterpreter();
+  const node = getCurrentNode();
+
+  if (!node) throw new Error(`The Preview could not retrieve the currentNode.`);
 
   return (
-    <Box
+    <Stack
       css={{
-        display: "grid",
-        gridTemplateColumns: "1fr 2fr 1fr",
-        height: "100%",
-        backgroundColor: "$gray2",
-      }}
-    >
-      <Box css={{ gridColumn: "2" }}>
-        <RichTextEditor.Root
-          key={snapshot.currentNode}
-          value={node.content}
-          setValue={(newValue) =>
-            send({
-              type: "updateNode",
-              id: snapshot.currentNode,
-              node: { content: newValue },
-            })
-          }
-        >
-          <PreviewRichTextEditor />
-        </RichTextEditor.Root>
-        <AnswersForm
-          relation={relation}
-          node={node}
-          interpreter={interpreter}
-          snapshot={snapshot}
-          key={`form_${node.id}`}
-        />
-      </Box>
-    </Box>
-  );
-}
-
-function PreviewRichTextEditor() {
-  return (
-    <Box
-      css={{
-        marginBlock: "$8",
+        borderRadius: "$md",
         overflow: "hidden",
-        maxHeight: "800px",
+        height: "100%",
+        ...css,
       }}
     >
-      <RichTextEditor.Editable
-        css={{
-          gridRow: "2",
-          paddingInlineEnd: "$8",
-          minHeight: 0,
-        }}
-        readOnly
-        renderElement={renderElement}
-        placeholder="Dieser Knoten hat keinen Inhalt"
-      />
-    </Box>
+      <Stack css={{ flex: 1, overflow: "hidden", marginBottom: "$5" }}>
+        <ScrollArea.Root
+          css={{
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+            padding: "$$padding",
+            paddingBottom: "0",
+          }}
+          ref={ref}
+        >
+          <ScrollArea.Viewport
+            css={{
+              minHeight: 0,
+            }}
+          >
+            {node.data.content ? (
+              <>
+                <RichTextRenderer content={node.data.content} key={node.id} />
+                <ScrollArea.Scrollbar />
+              </>
+            ) : (
+              <InfoBox
+                content="Die Frage enthält keinen Text"
+                title="Fehlende Daten"
+                variant="warning"
+                css={{ boxShadow: "$1", marginBottom: "$3" }}
+              />
+            )}
+          </ScrollArea.Viewport>
+        </ScrollArea.Root>
+        <AnswersForm
+          inputIds={node.data.inputs}
+          key={`form_${node.id}`}
+          css={{ paddingInline: "$$padding", marginTop: "$4" }}
+        />
+      </Stack>
+      <Navigation css={{ alignSelf: "center", marginBottom: "$$padding" }} />
+    </Stack>
   );
 }
+
+export const Preview = React.forwardRef(PreviewImpl);

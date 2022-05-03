@@ -1,9 +1,9 @@
 import * as React from "react";
 import { Label } from "../../Label/Label";
 import { styled, StyleObject } from "../../stitches";
-import { Box } from "../../Box";
 
 import { ValidationMessage } from "../ValidationMessage";
+import { visuallyHidden } from "../../shared/utils";
 
 const FieldBox = styled("div", {
   display: "grid",
@@ -12,12 +12,19 @@ const FieldBox = styled("div", {
 
 export type FieldProps = {
   label: React.ReactNode;
+  isLabelVisible?: boolean;
   children: JSX.Element;
   css?: StyleObject;
   name?: string;
 };
 
-export function Field({ label, children, css, name }: FieldProps) {
+export function Field({
+  label,
+  children,
+  css,
+  name,
+  isLabelVisible = true,
+}: FieldProps) {
   if (!React.Children.only(children)) {
     throw new Error(
       "The Field component can only ever wrap one Input as a child."
@@ -32,14 +39,21 @@ export function Field({ label, children, css, name }: FieldProps) {
     );
   }
 
+  const EnhancedInput = React.cloneElement(children, {
+    id: inputName,
+  });
+
   return (
     <FieldBox css={css}>
-      <Label size="small" css={{ flexDirection: "column" }}>
-        <Box css={{ marginBottom: "$2", display: "block" }} as="span">
-          {label}
-        </Box>
-        {children}
+      <Label
+        size="small"
+        css={{ display: "block" }}
+        className={isLabelVisible ? "" : visuallyHidden()}
+        htmlFor={inputName}
+      >
+        {label}
       </Label>
+      {EnhancedInput}
       <ValidationMessage name={inputName} css={{ gridColumn: "1/ -1" }} />
     </FieldBox>
   );

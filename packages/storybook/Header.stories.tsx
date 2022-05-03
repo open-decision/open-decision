@@ -5,7 +5,7 @@ import {
   HeaderContainerProps,
   Heading,
   styled,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 import { Menu, X } from "react-feather";
 
 const MenuItems = () => (

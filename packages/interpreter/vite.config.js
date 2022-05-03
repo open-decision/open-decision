@@ -1,13 +1,16 @@
-import path from "path";
 import { defineConfig } from "vite";
 
-module.exports = defineConfig({
+export default defineConfig({
   build: {
     outDir: "lib",
     lib: {
-      entry: path.resolve(__dirname, "./index.ts"),
+      entry: "./src/index.ts",
       name: "interpreter",
+      formats: ["es", "cjs"],
       fileName: (format) => `index.${format === "es" ? "mjs" : "cjs"}`,
+    },
+    rollupOptions: {
+      external: ["@open-decision/type-classes", "react"],
     },
   },
 });

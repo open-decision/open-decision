@@ -1,4 +1,5 @@
-import { css, keyframes } from "../stitches";
+import { disabledStyle, intentStyle } from "../shared/utils";
+import { css, darkTheme, keyframes } from "../stitches";
 
 const scaleIn = keyframes({
   "0%": { opacity: 0, transform: "scale(0)" },
@@ -6,12 +7,17 @@ const scaleIn = keyframes({
 });
 
 export const menuContainerStyles = css({
-  backgroundColor: "$gray2",
+  layer: "1",
   paddingBlock: "$2",
-  border: "1px solid $colors$gray8",
-  boxShadow: "$4",
+  boxShadow: "$7",
   borderRadius: "$md",
   overflow: "hidden",
+  zIndex: "$10",
+  overflowY: "auto",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: "$1",
 
   transformOrigin: "var(--radix-dropdown-menu-content-transform-origin)",
   animation: `${scaleIn} 0.1s ease-out`,
@@ -20,25 +26,46 @@ export const menuContainerStyles = css({
 export const menuItemStyles = css({
   all: "unset",
   colorScheme: "primary",
-  textStyle: "small-text",
-  focusStyle: "inner",
+  textStyle: "medium-text",
+  focusType: "inner-intent",
   userSelect: "none",
-  display: "grid",
-  gridTemplateColumns: "max-content 1fr",
-  paddingInline: "$4",
-  paddingBlock: "$2",
+  display: "flex",
   gap: "$3",
+  marginInline: "$2",
+  paddingInline: "$3",
+  paddingBlock: "6px",
+  borderRadius: "$md",
   minWidth: "200px",
+  alignItems: "center",
+  wordBreak: "break-word",
+  hyphens: "auto",
+  cursor: "pointer",
+  fontWeight: "500",
+  border: "1px solid transparent",
+  focusColor: "$colorScheme6",
 
-  "&:focus": {
-    backgroundColor: "$primary9",
-    color: "$primary1",
+  [`.${darkTheme} &`]: {
+    focusColor: "$colorScheme8",
   },
 
-  "&[data-disabled]": {
+  ...intentStyle({
+    backgroundColor: "$colorScheme2",
+    focusType: "inner",
+
+    [`.${darkTheme} &`]: {
+      backgroundColor: "$colorScheme4",
+      focusColor: "$colorScheme8",
+    },
+  }),
+
+  ...disabledStyle({
     color: "$gray11",
-    pointerEvents: "none",
-  },
+    cursor: "not-allowed",
+
+    ...intentStyle({
+      backgroundColor: "$gray2",
+    }),
+  }),
 });
 
 export const menuLabelStyles = css({
@@ -59,5 +86,13 @@ export const menuLabelStyles = css({
 });
 
 export const menuSeparatorStyles = css({
-  fill: "$gray8",
+  backgroundColor: "$gray4",
+  width: "95%",
+  height: "1px",
+  marginBlock: "$1",
+  borderRadius: "$full",
+
+  [`.${darkTheme} &`]: {
+    backgroundColor: "$gray8",
+  },
 });

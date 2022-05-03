@@ -1,167 +1,156 @@
 import React from "react";
-import { parseISO, format } from "date-fns";
-import de from "date-fns/locale/de";
-import { fuzzySearch, Search, sortByKey } from "./Filter";
 import { motion } from "framer-motion";
-import { InlinedValidTreeNode, TreeState } from "./types";
-import { identity, pipe } from "remeda";
-import { TreeTags } from "./TreeTags";
 import {
   Box,
-  Button,
+  Field,
   Heading,
-  HeadingGroup,
   Icon,
+  Input,
+  Link,
+  LoadingSpinner,
+  Row,
+  Stack,
   Text,
-} from "@open-legal-tech/design-system";
-import Link from "next/link";
-import { mapObjToArr } from "./utils";
-import { useTreeStore } from "./hooks/useTrees";
-import { ChevronDown, Trash } from "react-feather";
+  useForm,
+} from "@open-decision/design-system";
+import { useTreesQuery } from "features/Data/generated/graphql";
+import { TreeCard } from "./TreeCard";
+import { ErrorBoundary } from "@sentry/nextjs";
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { useFilter } from "./Filter";
+import { Card } from "components/Card";
+import { NewProjectDropdown } from "./NewProjectDropdown";
 
-type TreeCard = { tree: InlinedValidTreeNode };
-
-const TreeCard: React.FC<TreeCard> = ({ tree }) => {
-  const deleteTree = useTreeStore(
-    React.useCallback((state) => state.deleteTree, [])
-  );
-
-  return (
-    <Box
-      css={{ padding: "$4" }}
-      className="bg-gray1 rounded-md shadow-md space-y-2 hover:shadow-lg focus-within:shadow-lg transition-all duration-100 border-l-4 border-primary9"
-    >
-      <TreeTags tree={tree} />
-
-      <div className="flex items-baseline">
-        <HeadingGroup.Container className="flex-grow">
-          <Heading as="h3" size="small">
-            {tree.name}
-          </Heading>
-          <HeadingGroup.SubHeading>
-            Erstellt am: {format(parseISO(tree.createdAt), "P", { locale: de })}
-          </HeadingGroup.SubHeading>
-        </HeadingGroup.Container>
-        <div className="self-end space-x-4 flex">
-          <Button
-            variant="secondary"
-            onClick={() => deleteTree(tree.id)}
-            css={{ colorScheme: "error" }}
-          >
-            <Icon label="Baum löschen">
-              <Trash />
-            </Icon>
-          </Button>
-          <Link href={`/builder/${tree.id}`}>
-            <Button variant="secondary">Öffnen</Button>
-          </Link>
-        </div>
-      </div>
-    </Box>
-  );
+const sorts = {
+  updatedAt: "Zuletzt bearbeitet",
+  createdAt: "Erstellungsdatum",
 };
 
-type SortButton = {
-  sort: { key: string; descending: boolean };
-  setSort: React.Dispatch<
-    React.SetStateAction<{
-      key: string;
-      descending: boolean;
-    }>
-  >;
-  name: string;
-  label: string;
+const filters = {
+  archived: "Archiviert",
 };
 
-const SortButton: React.FunctionComponent<SortButton> = ({
-  sort,
-  setSort,
-  name,
-  label,
-}) => {
-  const variants = {
-    up: { rotate: 180 },
-    down: { rotate: 0 },
-    neutral: { rotate: 90 },
-  };
+export const TreeListBody = () => {
+  const { data: trees } = useTreesQuery();
+  const hasTrees = trees && trees?.decisionTrees.length > 0;
 
-  return (
-    <Button
-      variant="ghost"
-      onClick={() =>
-        setSort({
-          key: name,
-          descending: sort.key === name ? !sort.descending : sort.descending,
-        })
-      }
-    >
-      {label}
-      <motion.span
-        variants={variants}
-        animate={
-          sort.key === name ? (sort.descending ? "up" : "down") : "neutral"
-        }
-      >
-        <ChevronDown className="w-6" />
-      </motion.span>
-    </Button>
-  );
-};
-
-type TreeList = { data: TreeState };
-type sortState = { key: string; descending: boolean };
-
-const sortData = (sort: sortState) => (data: InlinedValidTreeNode[]) =>
-  sort.descending
-    ? sortByKey(data, sort.key)
-    : sortByKey(data, sort.key).reverse();
-
-const filterData = (filter: string) => (data: InlinedValidTreeNode[]) =>
-  fuzzySearch(data, filter);
-
-export const TreeList: React.FC<TreeList> = ({ data }) => {
-  const [filter, setFilter] = React.useState("");
-  const [filteredData, setFilteredData] = React.useState(mapObjToArr(data));
-  const [sort, setSort] = React.useState<sortState>({
-    key: "",
-    descending: true,
+  const [Form] = useForm({
+    defaultValues: {
+      search: "",
+    },
   });
 
-  React.useEffect(() => {
-    const arrayData = mapObjToArr(data);
+  const { search, setSearch, SortButton, FilterButton, filteredData } =
+    useFilter(trees?.decisionTrees ?? [], sorts, "updatedAt", filters);
 
-    const modifiedData = pipe(
-      arrayData,
-      filter ? filterData(filter) : identity,
-      sort.key ? sortData(sort) : identity
-    );
-
-    setFilteredData(modifiedData);
-  }, [data, filter, sort]);
-
-  return (
-    <div className="space-y-8 my-12">
-      <Heading className="text-xl font-bold">Ihre Anwendungen</Heading>
-      <Search setValue={setFilter} value={filter} />
-      <div>
-        <Text className="flex items-center">
-          Sortieren nach:{" "}
-          <SortButton sort={sort} setSort={setSort} name="name" label="Name" />
-          <SortButton
-            sort={sort}
-            setSort={setSort}
-            name="createdAt"
-            label="Datum"
+  return hasTrees ? (
+    <Stack
+      css={{
+        gridColumn: "2",
+        gridRow: "2 / 4",
+      }}
+    >
+      <Row css={{ justifyContent: "space-between", marginBlock: "$9 $7" }}>
+        <Heading size="large">Meine Projekte</Heading>
+        <NewProjectDropdown />
+      </Row>
+      <Form
+        css={{
+          display: "flex",
+          gap: "$2",
+          justifyContent: "space-between",
+        }}
+      >
+        <Field
+          label="Suche"
+          isLabelVisible={false}
+          css={{ flexBasis: "400px" }}
+        >
+          <Input
+            variant="lowered"
+            name="search"
+            value={search || ""}
+            onChange={(event) => setSearch(event.target.value)}
+            Icon={
+              <Icon>
+                <MagnifyingGlassIcon />
+              </Icon>
+            }
+            placeholder="Suche"
           />
-        </Text>
-        <div className="space-y-6 mt-2">
-          {filteredData.map((tree) => (
-            <motion.div key={tree.id} layout>
-              <TreeCard tree={tree} />
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </div>
+        </Field>
+        <Row css={{ gap: "$2" }}>
+          <FilterButton />
+          <SortButton />
+        </Row>
+      </Form>
+      <Stack
+        css={{
+          gap: "$2",
+          marginTop: "$1",
+          paddingBlock: "$4",
+          overflow: "auto",
+          height: "100%",
+        }}
+      >
+        {filteredData.map((tree) => (
+          <motion.div key={tree.uuid} layout transition={{ duration: 0.5 }}>
+            <TreeCard tree={tree} />
+          </motion.div>
+        ))}
+      </Stack>
+    </Stack>
+  ) : (
+    <EmptyState />
   );
 };
+
+const EmptyState = () => (
+  <Stack
+    css={{
+      gridRow: "2 / 4",
+      gridColumn: "2",
+      justifyContent: "center",
+      alignItems: "center",
+    }}
+  >
+    <Card css={{ alignItems: "center", padding: "$9", gap: "$2" }}>
+      <Heading>Sie haben noch kein Open-Decision-Projekt.</Heading>
+      <Text size="large" css={{ marginBottom: "$6" }}>
+        Erstellen oder importieren Sie jetzt ihr erstes Projekt.
+      </Text>
+      <NewProjectDropdown size="large" />
+    </Card>
+  </Stack>
+);
+
+export function TreeList() {
+  return (
+    <ErrorBoundary
+      fallback={
+        <Box
+          css={{
+            gridColumn: "1 / -1",
+            gridRow: "2",
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "column",
+          }}
+        >
+          <Heading>Beim laden ihrer Bäume ist ein Fehler aufgetreten.</Heading>
+          <Text size="large" css={{ marginTop: "$3" }}>
+            Bitte laden sie die Seite neu oder schreiben sie uns wenn der Fehler
+            weiterhin auftreten sollte.
+            <Link href="https://www.notion.so/openlegaltech/a8a6b8db7e2b485294b6e31c1b3ae9da?v=ae3429d3f8d04d3395126baaa8147fe5">
+              Feedback Formular
+            </Link>
+          </Text>
+        </Box>
+      }
+    >
+      <React.Suspense fallback={<LoadingSpinner />}>
+        <TreeListBody />
+      </React.Suspense>
+    </ErrorBoundary>
+  );
+}

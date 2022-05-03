@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { Meta, Story } from "@storybook/react";
-import { RadioButtons, Form } from "@open-legal-tech/design-system";
+import { RadioButtons, Form } from "@open-decision/design-system";
 
 export default {
   component: RadioButtons.Field,

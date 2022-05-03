@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { Meta, Story } from "@storybook/react";
 import { Settings } from "react-feather";
-import { Box, ContextMenu, Icon } from "@open-legal-tech/design-system";
+import { Box, ContextMenu, Icon } from "@open-decision/design-system";
 
 export default {
   component: ContextMenu.Root,

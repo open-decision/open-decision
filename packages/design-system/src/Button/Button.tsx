@@ -1,11 +1,13 @@
-import { alignByContent } from "../stitches/utils";
-import { styled, css } from "../stitches";
+import { activeStyle, disabledStyle, intentStyle } from "../shared/utils";
+import { alignByContent } from "../shared/variants";
+import { styled, css, darkTheme } from "../stitches";
 
 export const buttonStyles = css(alignByContent, {
   $$borderWidth: "1px",
-  $$paddingInline: "$space$6",
-  $$paddingBlock: "$space$3",
   $$YTranslation: "0px",
+  $$gap: "$space$2",
+  gap: "$$gap",
+  cursor: "pointer",
 
   //Mini reset
   appearance: "none",
@@ -17,160 +19,145 @@ export const buttonStyles = css(alignByContent, {
   transitionDuration: "0.1s",
   transform: "translate($$XTranslation, $$YTranslation)",
 
-  "&:disabled": {
-    opacity: 0.4,
-    pointerEvents: "none",
-  },
+  ...disabledStyle({
+    cursor: "not-allowed",
+  }),
 
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  gap: "$2",
   border: "$$borderWidth solid transparent",
   padding: "$$paddingBlock $$paddingInline",
-  focusStyle: "outer",
 
   variants: {
     size: {
-      "extra-small": {
-        $$paddingInline: "$space$1",
-        $$paddingBlock: "$space$2",
-        "--iconSize": "16px",
-
-        "&  svg": {
-          width: "var(--iconSize)",
-          height: "var(--iconSize)",
-        },
-      },
       small: {
-        $$paddingInline: "$space$4",
-        $$paddingBlock: "$space$2",
+        $$paddingInline: "$space$2",
+        $$paddingBlock: "$space$1",
         textStyle: "small-text",
-        fontWeight: 600,
-        letterSpacing: "0.025em",
-        "--iconSize": "18px",
-
-        "&  svg": {
-          width: "var(--iconSize)",
-          height: "var(--iconSize)",
-        },
+        fontWeight: 500,
       },
       medium: {
+        $$paddingInline: "$space$3",
+        $$paddingBlock: "$space$2",
         textStyle: "medium-text",
-        fontWeight: 600,
-        letterSpacing: "0.025em",
-        "--iconSize": "22px",
-
-        "&  svg": {
-          width: "var(--iconSize)",
-          height: "var(--iconSize)",
-        },
+        fontWeight: 500,
       },
       large: {
-        $$paddingInline: "$space$8",
-        $$paddingBlock: "$space$4",
+        $$paddingInline: "$space$4",
+        $$paddingBlock: "$space$3",
         textStyle: "large-text",
-        fontWeight: 600,
-        letterSpacing: "0.025em",
-        "--iconSize": "24px",
-
-        "&  svg": {
-          width: "var(--iconSize)",
-          height: "var(--iconSize)",
-        },
+        fontWeight: 500,
+        $$gap: "$space$2",
+      },
+      xl: {
+        $$paddingInline: "$space$5",
+        $$paddingBlock: "$space$3",
+        textStyle: "large-text",
+        fontWeight: 500,
+        $$gap: "$space$2",
       },
     },
     variant: {
       primary: {
         backgroundColor: "$colorScheme9",
-        color: "$colorScheme-text !important",
+        color: "$white",
+        focusType: "outer",
 
-        "&:hover, &:focus-visible": {
+        ...intentStyle({
           backgroundColor: "$colorScheme10",
-        },
+        }),
 
-        "&:active, &[data-active='true']": {
+        ...activeStyle({
           backgroundColor: "$colorScheme11",
-        },
+        }),
 
-        "&[data-state=on]": {
-          backgroundColor: "$colorScheme11",
-        },
-
-        "&:disabled": {
+        ...disabledStyle({
           backgroundColor: "$colorScheme9",
-        },
+        }),
       },
 
       secondary: {
         backgroundColor: "$colorScheme3",
-        color: "$colorScheme11 !important",
+        color: "$colorScheme11",
 
-        "&:hover, &:focus-visible": {
-          backgroundColor: "$colorScheme5",
+        [`.${darkTheme} &`]: {
+          backgroundColor: "$colorScheme4",
         },
 
-        "&:active, &[data-active='true']": {
+        ...intentStyle({
+          backgroundColor: "$colorScheme5",
+
+          [`.${darkTheme} &`]: {
+            backgroundColor: "$colorScheme6",
+            color: "$colorScheme12",
+          },
+        }),
+
+        ...activeStyle({
           backgroundColor: "$colorScheme7",
-        },
+        }),
 
-        "&[data-state=on]": {
-          backgroundColor: "$colorScheme5",
-        },
-
-        "&:disabled": {
+        ...disabledStyle({
           backgroundColor: "$colorScheme3",
-        },
+
+          [`.${darkTheme} &`]: {
+            backgroundColor: "$colorScheme4",
+          },
+        }),
       },
 
       tertiary: {
         backgroundColor: "transparent",
-        color: "$colorScheme11 !important",
+        color: "$colorScheme11",
         borderColor: "currentcolor",
 
-        "&:hover, &:focus-visible": {
+        ...intentStyle({
           backgroundColor: "$colorScheme3",
-        },
+        }),
 
-        "&:active, &[data-active='true']": {
+        ...activeStyle({
           backgroundColor: "$colorScheme5",
-        },
+        }),
 
-        "&[data-state=on]": {
-          backgroundColor: "$colorScheme5",
-        },
-
-        "&:disabled": {
+        ...disabledStyle({
           backgroundColor: "$colorScheme1",
-        },
+        }),
       },
 
       ghost: {
-        colorScheme: "gray",
-        color: "$gray11",
         backgroundColor: "unset",
-        focusStyle: "inner",
+        focusType: "inner",
+        colorFallback: "$colorScheme-text",
+      },
 
-        "&:hover, &:focus-visible, &[data-active='true']": {
+      neutral: {
+        colorScheme: "gray",
+        color: "$colorScheme11",
+        backgroundColor: "unset",
+        focusType: "inner",
+
+        ...intentStyle({
+          backgroundColor: "$colorScheme3",
           color: "$colorScheme12",
-        },
+        }),
 
-        "&[data-state=on]": {
-          color: "$primary11",
-          backgroundColor: "$colorScheme2",
-        },
+        ...activeStyle({
+          color: "$colorScheme12",
+          backgroundColor: "$colorScheme5",
+        }),
 
-        "&:disabled": {
+        ...disabledStyle({
           backgroundColor: "unset",
-        },
+        }),
       },
     },
 
     pressable: {
       true: {
-        "&:active": {
+        ...activeStyle({
           $$YTranslation: "1px",
-        },
+        }),
       },
     },
 
@@ -182,33 +169,11 @@ export const buttonStyles = css(alignByContent, {
 
     square: {
       true: {
-        padding: "$$paddingInline",
+        $$paddingInline: "$$paddingBlock",
+        aspectRatio: "1 / 1",
       },
     },
   },
-
-  compoundVariants: [
-    {
-      size: "extra-small",
-      square: true,
-      css: { $$paddingInline: "$space$1" },
-    },
-    {
-      size: "small",
-      square: true,
-      css: { $$paddingInline: "$space$2" },
-    },
-    {
-      size: "medium",
-      square: true,
-      css: { $$paddingInline: "$space$3" },
-    },
-    {
-      size: "large",
-      square: true,
-      css: { $$paddingInline: "$space$4" },
-    },
-  ],
 
   defaultVariants: {
     variant: "primary",

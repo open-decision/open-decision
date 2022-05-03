@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Box } from "@open-legal-tech/design-system";
+import { Box } from "@open-decision/design-system";
 import { Notification } from "./Notification";
 import { useNotificationStore } from "./NotificationState";
 import { AnimatePresence } from "framer-motion";
@@ -12,11 +12,11 @@ export const Notifications = () => {
       css={{
         position: "absolute",
         zIndex: "9999",
-        right: "25px",
-        bottom: "25px",
+        left: "$8",
+        bottom: "$8",
         display: "grid",
         gap: "$4",
-        width: "350px",
+        width: "500px",
       }}
     >
       <AnimatePresence>

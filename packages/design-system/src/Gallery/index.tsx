@@ -3,8 +3,8 @@ import { Box } from "../Box";
 import { Button } from "../Button/Button";
 import { merge } from "remeda";
 import { styled } from "../stitches";
-import { ChevronLeft, ChevronRight } from "react-feather";
 import { Icon } from "../Icon/Icon";
+import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 
 const StyledOuterBox = styled(Box, {
   $$arrowWidth: "50px",
@@ -58,7 +58,7 @@ function Container({ children, css, contentAlign = true, ...props }: Props) {
       {...props}
     >
       <ArrowButton
-        variant="ghost"
+        variant="neutral"
         css={{ order: 1, "@smallTablet": { order: "revert" } }}
         onClick={() =>
           ref.current?.scrollBy({
@@ -68,13 +68,14 @@ function Container({ children, css, contentAlign = true, ...props }: Props) {
         }
       >
         <Icon label="scroll back">
-          <ChevronLeft width={30} height={30} />
+          <ChevronLeftIcon width={30} height={30} />
         </Icon>
       </ArrowButton>
       <Box
         css={{
           display: "flex",
-          overflow: "auto",
+          overflowX: "auto",
+          overflowY: "hidden",
           gap: 50,
           gridColumn: "1 / -1",
           height: "100%",
@@ -88,7 +89,7 @@ function Container({ children, css, contentAlign = true, ...props }: Props) {
         {children}
       </Box>
       <ArrowButton
-        variant="ghost"
+        variant="neutral"
         css={{ order: 2, "@smallTablet": { order: "revert" } }}
         onClick={() =>
           ref.current?.scrollBy({
@@ -98,7 +99,7 @@ function Container({ children, css, contentAlign = true, ...props }: Props) {
         }
       >
         <Icon label="scroll forwards">
-          <ChevronRight width={30} height={30} />
+          <ChevronRightIcon width={30} height={30} />
         </Icon>
       </ArrowButton>
     </StyledOuterBox>

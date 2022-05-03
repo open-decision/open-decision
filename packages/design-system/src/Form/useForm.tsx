@@ -14,14 +14,14 @@ import {
 
 const StyledForm = styled("form", {});
 
-export type FormProps<TFieldValues> = Omit<
+export type FormProps<TFieldValues extends object> = Omit<
   React.ComponentProps<typeof StyledForm>,
   "onSubmit"
 > & {
   children:
     | React.ReactNode
     | ((methods: UseFormReturn<TFieldValues>) => JSX.Element);
-  onSubmit: SubmitHandler<TFieldValues>;
+  onSubmit?: SubmitHandler<TFieldValues>;
   onSubmitError?: SubmitErrorHandler<TFieldValues>;
 };
 
@@ -36,7 +36,7 @@ export function useForm<TFieldValues extends FieldValues>(
   const Form = React.useCallback(
     function Form({
       children,
-      onSubmit,
+      onSubmit = () => null,
       onSubmitError,
       ...props
     }: FormProps<TFieldValues>) {
@@ -59,8 +59,8 @@ export function useForm<TFieldValues extends FieldValues>(
     {
       ...methods,
       handleSubmit:
-        <TSubmitFieldValues extends FieldValues = TFieldValues>(
-          onSubmit: SubmitHandler<TSubmitFieldValues>,
+        (
+          onSubmit: SubmitHandler<TFieldValues>,
           onSubmitError?: SubmitErrorHandler<TFieldValues>
         ) =>
         (event?: React.BaseSyntheticEvent) =>

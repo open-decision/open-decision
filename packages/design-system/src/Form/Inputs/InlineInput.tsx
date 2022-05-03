@@ -7,15 +7,16 @@ import { useMeasure } from "react-use";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useInputFocus } from "./useInputFocus";
 import { useEditing } from "./useEditing";
+import { focusStyle } from "../../shared/utils";
 
 const StyledBox = styled(Box, baseInputStyles, {
   border: 0,
   display: "flex",
   alignItems: "center",
 
-  "&:focus-within": {
+  ...focusStyle({
     boxShadow: "none",
-  },
+  }),
 });
 
 const StyledInput = styled("input", baseTextInputStyle, {
@@ -33,7 +34,7 @@ const StyledInput = styled("input", baseTextInputStyle, {
   boxSizing: "content-box",
   textStyle: "inherit",
 
-  "&:focus-visible": {
+  focusStyle: {
     boxShadow: "none",
     outline: "none",
   },

@@ -4,7 +4,7 @@ import {
   InlineInput,
   InlineInputProps,
   useForm,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 
 export default {
   component: InlineInput,

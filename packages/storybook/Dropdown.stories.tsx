@@ -7,7 +7,7 @@ import {
   DropdownMenu,
   DropdownMenuRootProps,
   Button,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
 
 export default {
   component: DropdownMenu.Root,

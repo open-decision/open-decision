@@ -1,32 +1,63 @@
+import { ODError, ODProgrammerError, Tree } from "@open-decision/type-classes";
 import * as React from "react";
-import { proxy, useSnapshot } from "valtio";
-import { Interpreter } from "../interpreter";
+import { createInterpreter, InterpreterService } from "../interpreter";
+import { useActor, useInterpret } from "@xstate/react";
+import { createInterpreterMethods } from "../methods";
 
-const InterpreterContext = React.createContext<Interpreter | null>(null);
+function useInterpreterMachine(tree: Tree.TTree) {
+  const interpreterMachine = createInterpreter(tree, { isDebugMode: true });
+
+  if (interpreterMachine instanceof ODError) throw interpreterMachine;
+
+  return interpreterMachine;
+}
+
+const InterpreterContext = React.createContext<{
+  service: InterpreterService;
+  tree: Tree.TTree;
+} | null>(null);
 
 export function InterpreterProvider({
   children,
   tree,
 }: {
   children: React.ReactNode;
-  tree: any;
+  tree: Tree.TTree;
 }) {
-  const interpreter = React.useRef(proxy(new Interpreter(tree)));
+  const interpreterMachine = useInterpreterMachine(tree);
+
+  const service = useInterpret(interpreterMachine, {
+    devTools: true,
+  });
 
   return (
-    <InterpreterContext.Provider value={interpreter.current}>
+    <InterpreterContext.Provider value={{ service, tree }}>
       {children}
     </InterpreterContext.Provider>
   );
 }
 
+export function useInterpreterService() {
+  const service = React.useContext(InterpreterContext);
+
+  if (!service)
+    throw new ODProgrammerError({
+      message:
+        "useInterpreter or useInterpreterService can only be used inside of an InterpreterProvider",
+      code: "MISSING_CONTEXT_PROVIDER",
+    });
+
+  return service;
+}
+
 export function useInterpreter() {
-  const interpreter = React.useContext(InterpreterContext);
+  const { service, tree } = useInterpreterService();
 
-  if (!interpreter)
-    throw new Error(
-      `useInterpreter can only be used inside of an InterpreterProvider`
-    );
+  const [state, send] = useActor(service);
 
-  return [useSnapshot(interpreter), interpreter];
+  const methods = React.useMemo(() => {
+    return createInterpreterMethods(state.context, tree);
+  }, [state.context, tree]);
+
+  return { state, send, tree, ...methods };
 }

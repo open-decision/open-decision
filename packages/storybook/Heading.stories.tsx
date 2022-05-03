@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { Meta, Story } from "@storybook/react";
-import { Heading, HeadingProps, Box } from "@open-legal-tech/design-system";
+import { Heading, HeadingProps, Box } from "@open-decision/design-system";
 
 export default {
   component: Heading,

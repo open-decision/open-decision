@@ -1,14 +1,12 @@
 import {
-  buttonStyles,
+  Icon,
   Label,
+  LabelProps,
   styled,
   StyleObject,
-} from "@open-legal-tech/design-system";
+} from "@open-decision/design-system";
+import { DownloadIcon } from "@radix-ui/react-icons";
 import React, { ForwardedRef } from "react";
-
-const StyledLabel = styled(Label, buttonStyles, {
-  focusStyle: "outer-within",
-});
 
 const HiddenInput = styled("input", {
   border: "0",
@@ -26,7 +24,7 @@ export type FileInputProps = {
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
   children: React.ReactNode;
   className?: string;
-};
+} & LabelProps;
 
 /**
  * A custom Form element wrapping the native file input type.
@@ -36,10 +34,13 @@ const FileInputImpl = (
   ref: ForwardedRef<HTMLLabelElement>
 ) => {
   return (
-    <StyledLabel variant="secondary" css={css} ref={ref} square {...props}>
+    <Label css={css} ref={ref} {...props}>
+      <Icon css={{ marginTop: "2px" }}>
+        <DownloadIcon />
+      </Icon>
       {children}
       <HiddenInput type="file" onChange={onChange} />
-    </StyledLabel>
+    </Label>
   );
 };
 

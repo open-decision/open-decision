@@ -1,19 +1,24 @@
-import { styled } from "../stitches";
+import { styled, css } from "../stitches";
 
-export type LabelProps = React.ComponentProps<typeof Label>;
-export const Label = styled("label", {
-  color: "var(--color, $colorScheme-text)",
+export const labelStyles = css({
   display: "flex",
+  colorFallback: "$colorScheme-text",
+  alignItems: "center",
+  gap: "$2",
 
   variants: {
     size: {
       small: {
         textStyle: "small-text",
-        fontWeight: 600,
+        fontWeight: 500,
       },
       medium: {
         textStyle: "medium-text",
-        fontWeight: 600,
+        fontWeight: 500,
+      },
+      large: {
+        textStyle: "large-text",
+        fontWeight: 500,
       },
     },
   },
@@ -22,3 +27,6 @@ export const Label = styled("label", {
     size: "medium",
   },
 });
+
+export type LabelProps = React.ComponentProps<typeof Label>;
+export const Label = styled("label", labelStyles);

@@ -1,144 +1,257 @@
 import {
-  BuilderNode,
-  BuilderRelation,
-  BuilderTree,
+  Tree,
+  ODError,
+  ODValidationErrorConstructorParameters,
+  ODValidationError,
 } from "@open-decision/type-classes";
+import { Required } from "utility-types";
+import { assign, createMachine, Interpreter, Sender } from "xstate";
+import { canGoBack, canGoForward } from "./methods";
 
-export class Interpreter {
-  history: { nodes: string[]; answers: Record<string, string> };
-  state: "initialized" | "idle" | "error" | "interpreting";
-  currentNode: string;
-  hasHistory: boolean;
-  tree: BuilderTree.TTree;
-
-  constructor(json: any) {
-    /**
-     * The log of visited nodes and given answers.
-     */
-    this.history = { nodes: [], answers: {} };
-    /**
-     * Represents the current state of the interpretation.
-     */
-    this.state = "initialized";
-    this.currentNode = "";
-    this.hasHistory = this.history.nodes.length > 0;
-
-    const decodedJSON = BuilderTree.Type.safeParse(json);
-
-    if (!decodedJSON.success)
-      throw new Error(`The provided tree is not in the correct format`);
-
-    this.tree = decodedJSON.data;
-    this.currentNode = this.tree.startNode;
-  }
-
-  updateTree(json: any) {
-    const decodedJSON = BuilderTree.Type.safeParse(json);
-
-    if (!decodedJSON.success)
-      throw new Error(`The provided tree is not in the correct format`);
-
-    this.tree = decodedJSON.data;
-    this.currentNode = this.tree.startNode;
-  }
-
-  /**
-   * Used to receive the necessary data to render the `currentNode`.
-   * @returns JSON String of the `currentNodes` `renderData`
-   */
-  getCurrentNode() {
-    return this.tree.nodes[this.currentNode];
-  }
-
-  /**
-   * Interprets the answer received from the user to determine the next node.
-   */
-  evaluateUserInput(relation: BuilderRelation.TRelation) {
-    this.state = "interpreting";
-
-    if (!relation.target) {
-      this.state = "error";
-      return new Error(`The relation provided does not have a target.`);
-    }
-
-    this._addToHistory(relation.id);
-    this.currentNode = relation.target;
-
-    return this.getCurrentNode();
-  }
-
-  //Helper functions
-  get treeName() {
-    return this.tree.treeName;
-  }
-
-  /**
-   * Allows to revert the last selection.
-   */
-  goBack() {
-    const previousNode = this.history.nodes.pop();
-
-    if (previousNode) {
-      this.currentNode = previousNode;
-      this.hasHistory = this.history.nodes.length > 0;
-    } else {
-      this.hasHistory = this.history.nodes.length > 0;
-      return this.reset();
-    }
-
-    return this.getCurrentNode();
-  }
-
-  /**
-   * Restart the Interpretation.
-   */
-  reset() {
-    this.currentNode = this.tree.startNode;
-    this.history = { nodes: [], answers: {} };
-    return this.getCurrentNode();
-  }
-
-  getInterpretationState() {
-    // Save log and current node
-    return {
-      history: this.history,
-      currentNode: this.currentNode,
-    };
-  }
-
-  //Load the JSON file storing the progress
-  setInterpretationState(
-    savedState: ReturnType<Interpreter["getInterpretationState"]>
-  ) {
-    this.currentNode = savedState.currentNode;
-    this.history = savedState.history;
-    return this.getCurrentNode();
-  }
-
-  getNode(nodeId: string): BuilderNode.TNode | undefined {
-    return this.tree.nodes[nodeId];
-  }
-
-  getRelationById(nodeId: string, relationId: string) {
-    const relation = this.getNode(nodeId)?.relations[relationId];
-
-    if (!relation) return undefined;
-
-    return relation;
-  }
-
-  getAnswer(nodeId: string) {
-    const maybeAnswer = this.history.answers[nodeId];
-    const relation = this.getRelationById(nodeId, maybeAnswer);
-
-    if (!relation) return undefined;
-
-    return relation;
-  }
-
-  _addToHistory(answerId: string) {
-    this.history["nodes"].push(this.currentNode);
-    this.history["answers"][this.currentNode] = answerId;
-    this.hasHistory = this.history.nodes.length > 0;
+export class MissingStartNodeError extends ODError {
+  constructor() {
+    super({
+      message: "The provided tree does not have a startNode",
+      code: "INTERPRETER_MISSING_STARTNODE",
+    });
   }
 }
+
+export class InvalidTreeError extends ODValidationError {
+  constructor(zodError: ODValidationErrorConstructorParameters["zodError"]) {
+    super({
+      message: `The provided tree is not in the correct format`,
+      code: "INTERPRETER_INVALID_TREE",
+      zodError,
+    });
+  }
+}
+
+export class MissingEdgeForThruthyCondition extends ODError {
+  constructor() {
+    super({
+      message: "There is no Edge for this condition.",
+      code: "INTERPRETER_NO_EDGE_FOR_THRUTHY_CONDITION",
+    });
+  }
+}
+
+export class NoTruthyCondition extends ODError {
+  constructor() {
+    super({
+      message: "No thruthy condition has been found.",
+      code: "INTERPRETER_NO_TRUTHY_CONDITION",
+    });
+  }
+}
+
+export function createInterpreter(
+  json: Tree.TTree,
+  interpreterOptions?: InterpreterOptions
+) {
+  const decodedJSON = Tree.Type.safeParse(json);
+
+  if (!decodedJSON.success) return new InvalidTreeError(decodedJSON.error);
+  if (!decodedJSON.data.startNode) return new MissingStartNodeError();
+
+  return createInterpreterMachine(
+    decodedJSON.data as Required<Tree.TTree, "startNode">,
+    interpreterOptions
+  );
+}
+
+type ResolveEvents = {
+  type: "EVALUATE_NODE_CONDITIONS";
+  conditionIds: string[];
+};
+
+type ResolverEvents =
+  | { type: "VALID_INTERPRETATION"; target: string }
+  | { type: "INVALID_INTERPRETATION"; Error: ODError };
+
+const resolveConditions =
+  (tree: Tree.TTree) =>
+  (context: InterpreterContext, event: ResolveEvents) =>
+  (callback: Sender<ResolverEvents>) => {
+    const conditions = Tree.getConditions(tree)(event.conditionIds);
+
+    for (const conditionId in conditions) {
+      const condition = conditions[conditionId];
+      const existingAnswerId = context.answers[condition.inputId];
+
+      if (condition.answerId === existingAnswerId) {
+        const edge = Object.values(tree.edges ?? {}).find(
+          (edge) => edge.conditionId === condition.id
+        );
+
+        if (!edge)
+          return callback({
+            type: "INVALID_INTERPRETATION",
+            Error: new MissingEdgeForThruthyCondition(),
+          });
+
+        return callback({
+          type: "VALID_INTERPRETATION",
+          target: edge.target,
+        });
+      }
+    }
+    callback({
+      type: "INVALID_INTERPRETATION",
+      Error: new NoTruthyCondition(),
+    });
+  };
+
+export type InterpreterContext = {
+  history: { nodes: string[]; position: number };
+  answers: Record<string, string>;
+  Error?: MissingEdgeForThruthyCondition | NoTruthyCondition;
+};
+
+type Events =
+  | { type: "ADD_USER_ANSWER"; inputId: string; answerId: string }
+  | { type: "EVALUATE_NODE_CONDITIONS"; conditionIds: string[] }
+  | { type: "RESET" }
+  | { type: "GO_BACK" }
+  | { type: "GO_FORWARD" }
+  | { type: "RECOVER" }
+  | ResolverEvents
+  | ResolveEvents;
+
+export type InterpreterService = Interpreter<
+  InterpreterContext,
+  any,
+  Events,
+  any,
+  any
+>;
+
+export type InterpreterOptions = { isDebugMode?: boolean };
+
+export const createInterpreterMachine = (
+  tree: Required<Tree.TTree, "startNode">,
+  { isDebugMode = false }: InterpreterOptions = {}
+) =>
+  createMachine(
+    {
+      tsTypes: {} as import("./interpreter.typegen").Typegen0,
+      schema: {
+        context: {} as InterpreterContext,
+        events: {} as Events,
+      },
+      context: {
+        history: { nodes: [tree.startNode], position: 0 },
+        answers: {},
+        Error: undefined,
+      },
+      id: "interpreter",
+      initial: "idle",
+      on: {
+        RESET: {
+          target: "#interpreter.idle",
+          actions: "resetToInitialContext",
+        },
+      },
+      states: {
+        idle: {
+          on: {
+            ADD_USER_ANSWER: {
+              actions: "assignAnswerToContext",
+            },
+            EVALUATE_NODE_CONDITIONS: {
+              target: "interpreting",
+            },
+            GO_BACK: {
+              cond: "canGoBack",
+              actions: "goBack",
+            },
+            GO_FORWARD: {
+              cond: "canGoForward",
+              actions: "goForward",
+            },
+          },
+        },
+        interpreting: {
+          invoke: {
+            id: "interpret_select_answer",
+            src: "resolveConditions",
+          },
+          on: {
+            VALID_INTERPRETATION: {
+              target: "idle",
+              actions: "assignNewTarget",
+            },
+            INVALID_INTERPRETATION: {
+              target: "error",
+              actions: "assignErrorToContext",
+            },
+          },
+        },
+        error: {
+          on: {
+            RECOVER: {
+              cond: "isDebugMode",
+              target: "idle",
+              actions: ["clearErrorFromContext", "goBack"],
+            },
+          },
+        },
+      },
+    },
+    {
+      actions: {
+        assignAnswerToContext: assign((context, event) => ({
+          answers: { ...context.answers, [event.inputId]: event.answerId },
+        })),
+        resetToInitialContext: assign((_context, _event) => ({
+          history: { nodes: [tree.startNode], position: 0 },
+          answers: {},
+          Error: undefined,
+        })),
+        goBack: assign((context) => {
+          // When there is no history we should not go back.
+          if (context.history.nodes.length === 0) return context;
+          // When we have reached the end of the history array we should not go back further.
+          if (context.history.position === context.history.nodes.length - 1)
+            return context;
+
+          return {
+            history: {
+              position: context.history.position + 1,
+              nodes: context.history.nodes,
+            },
+          };
+        }),
+        goForward: assign((context) => {
+          if (context.history.position === 0) return context;
+
+          return {
+            history: {
+              position: context.history.position - 1,
+              nodes: context.history.nodes,
+            },
+          };
+        }),
+        assignErrorToContext: assign({
+          Error: (_context, event) => event.Error,
+        }),
+        clearErrorFromContext: assign((_context, _event) => ({
+          Error: undefined,
+        })),
+        assignNewTarget: assign((context, event) => ({
+          history: {
+            position: context.history.position,
+            nodes: [event.target, ...context.history.nodes],
+          },
+        })),
+      },
+      services: {
+        resolveConditions: resolveConditions(tree),
+      },
+      guards: {
+        canGoBack,
+        canGoForward,
+        isDebugMode: () => isDebugMode,
+      },
+    }
+  );

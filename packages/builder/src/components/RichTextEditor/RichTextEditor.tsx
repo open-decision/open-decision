@@ -1,91 +1,78 @@
-import React from "react";
-import { styled } from "@open-legal-tech/design-system";
-import {
-  Editable as SlateEditable,
-  RenderElementProps,
-  RenderLeafProps,
-  Slate,
-  useSlate,
-  withReact,
-} from "slate-react";
-import { createEditor, Descendant, Editor } from "slate";
-import { renderElement as defaultRenderElement } from "./Elements";
-import { renderLeaf as defaultRenderLeaf } from "./Leaf";
+import { Box, ScrollArea, styled } from "@open-decision/design-system";
+import { EditorContent, Content, useEditor } from "@tiptap/react";
 import { Toolbar } from "./Toolbar";
-import { onKeyDownHandler } from "./keyboardShortcuts";
-import { withInlines } from "./editorConfig";
+import { editorStyles, extensions } from "./shared";
+import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
 
-const initialValues: Descendant[] = [
-  {
-    type: "paragraph",
-    children: [
-      {
-        text: "",
-      },
-    ],
+const StyledEditorContent = styled(EditorContent, editorStyles, {
+  $$height: "100%",
+  height: "$$height",
+
+  ".ProseMirror": {
+    padding: "$2",
+    outline: "none",
+    height: "$$height",
   },
-];
-
-type RichTextEditorProps = {
-  value: Descendant[];
-  setValue: (newValue: Descendant[]) => void;
-  children: React.ReactNode;
-};
-
-function Root({ value, setValue, children }: RichTextEditorProps): JSX.Element {
-  const editorRef = React.useRef<Editor>();
-  if (!editorRef.current)
-    editorRef.current = withInlines(withReact(createEditor()));
-  const editor = editorRef.current;
-
-  // Slate does not accept an empty array. Since an empty array does not count as undefined we
-  // cannot use the default value in the props destructuring.
-  if (value.length <= 0) value = initialValues;
-  editor.children = value;
-
-  return (
-    <Slate
-      editor={editor}
-      value={value}
-      onChange={(newValue) => setValue(newValue)}
-    >
-      {children}
-    </Slate>
-  );
-}
-
-const StyledEditable = styled(SlateEditable, {
-  minHeight: "200px",
-  gap: "10px",
-  display: "flex",
-  flexDirection: "column",
-  overflow: "auto",
-  maxHeight: "100%",
-  borderRadius: "$md",
 });
 
-type EditableProps = {
-  renderElement?: (props: RenderElementProps) => JSX.Element;
-  renderLeaf?: (props: RenderLeafProps) => JSX.Element;
-} & React.ComponentProps<typeof StyledEditable>;
+type Props = { id: string; content: Content };
 
-function Editable({
-  renderElement = defaultRenderElement,
-  renderLeaf = defaultRenderLeaf,
-  css,
-  ...props
-}: EditableProps) {
-  const editor = useSlate();
+export const RichTextEditor = ({ id, content }: Props) => {
+  const { updateNodeContent } = useTreeContext();
+
+  const editor = useEditor({
+    extensions,
+    content,
+    onUpdate: ({ editor }) => updateNodeContent(id, editor.getJSON()),
+  });
 
   return (
-    <StyledEditable
-      renderElement={renderElement}
-      renderLeaf={renderLeaf}
-      onKeyDown={onKeyDownHandler(editor)}
-      css={css}
-      {...props}
-    />
-  );
-}
+    <Box
+      css={{
+        display: "grid",
+        gridTemplateRows: "50px max-content",
+        groupColor: "$colorScheme-text",
+      }}
+    >
+      <Toolbar
+        editor={editor}
+        css={{
+          border: "1px solid $gray7",
+          borderBottom: "0",
+          borderTopLeftRadius: "$md",
+          borderTopRightRadius: "$md",
+          layer: "3",
+        }}
+      />
+      <ScrollArea.Root
+        css={{
+          minHeight: "200px",
+          maxHeight: "500px",
+          layer: "2",
+          border: "1px solid $gray7",
+          borderBottomLeftRadius: "$md",
+          borderBottomRightRadius: "$md",
+          focusType: "inner-within",
+          overflow: "hidden",
+        }}
+        data-focus={editor?.isFocused}
+      >
+        <ScrollArea.Viewport
+          // Without this the RichTextRenderer cannot take up 100% of the height and would therefore not be
+          // focusable by clicking somewhere else, but the extisting text.
+          css={{
+            height: "100%",
 
-export const RichTextEditor = { Root, Editable, Toolbar };
+            "& > div": {
+              height: "100%",
+              display: "block !important",
+            },
+          }}
+        >
+          <StyledEditorContent editor={editor} />
+        </ScrollArea.Viewport>
+        <ScrollArea.Scrollbar />
+      </ScrollArea.Root>
+    </Box>
+  );
+};
