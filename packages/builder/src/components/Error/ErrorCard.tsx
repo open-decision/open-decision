@@ -34,7 +34,7 @@ export function ErrorCard({
         </>
       }
       variant="danger"
-      css={{ maxWidth: "700px", boxShadow: "$1", ...css }}
+      css={{ boxShadow: "$1", ...css }}
     />
   );
 }
