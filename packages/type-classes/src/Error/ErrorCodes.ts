@@ -12,7 +12,9 @@ export type InterpreterErrors =
   | "NO_EDGE_FOR_THRUTHY_CONDITION"
   | "NO_TRUTHY_CONDITION";
 
-export type BuilderErrors = "AUTH_VALIDATION_FAILED";
+export type BuilderErrors =
+  | "AUTH_VALIDATION_FAILED"
+  | "WEBSOCKET_CONNECTION_FAILED";
 
 export type ErrorCodes =
   | CommonErrors

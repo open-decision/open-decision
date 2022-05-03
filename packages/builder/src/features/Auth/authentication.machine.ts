@@ -65,9 +65,15 @@ export type Events =
   | { type: "FAILED_PASSWORD_RESET_REQUEST"; error: string }
   | { type: "REDIRECT" }
   | { type: "REFRESH" }
-  | { type: "OPEN_WEBSOCKET"; id: string; yDoc: Doc; onSync: () => void }
-  | { type: "CLOSE_WEBSOCKET" }
-  | { type: "WEBSOCKET_CLOSED" };
+  | {
+      type: "OPEN_WEBSOCKET";
+      id: string;
+      yDoc: Doc;
+      onSync: () => void;
+    }
+  | { type: "WEBSOCKET_CONNECTION_FAILED" }
+  | { type: "WEBSOCKET_CLOSED" }
+  | { type: "CLOSE_WEBSOCKET" };
 
 export type AuthService = Interpreter<Context, any, Events, State, any>;
 
@@ -167,6 +173,13 @@ export const createAuthenticationMachine = (router: NextRouter) =>
                 unconnected: {
                   on: {
                     OPEN_WEBSOCKET: { target: "connect" },
+                    REPORT_IS_LOGGED_IN: {
+                      target: "connect",
+                    },
+                    REPORT_IS_LOGGED_OUT: {
+                      target: "unconnected",
+                      actions: "clearWebsocketDataFromContext",
+                    },
                   },
                 },
                 connect: {
@@ -178,23 +191,18 @@ export const createAuthenticationMachine = (router: NextRouter) =>
                       id: (_context, event) => event.id,
                       yDoc: (_context, event) => event.yDoc,
                       onSync: (_context, event) => event.onSync,
+                      retryLimit: 3,
+                      retries: 0,
                     },
-                    onDone: "reconnect",
                   },
                   on: {
+                    WEBSOCKET_CONNECTION_FAILED: "connect_failed",
+                    WEBSOCKET_CLOSED: "unconnected",
                     CLOSE_WEBSOCKET: "unconnected",
                   },
                 },
-                reconnect: {
-                  on: {
-                    REPORT_IS_LOGGED_IN: {
-                      target: "connect",
-                    },
-                    REPORT_IS_LOGGED_OUT: {
-                      target: "unconnected",
-                      actions: "clearWebsocketDataFromContext",
-                    },
-                  },
+                connect_failed: {
+                  type: "final",
                 },
               },
             },
