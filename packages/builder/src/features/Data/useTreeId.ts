@@ -1,3 +1,4 @@
+import { ODProgrammerError } from "@open-decision/type-classes";
 import { useRouter } from "next/router";
 
 export function useTreeId() {
@@ -6,7 +7,10 @@ export function useTreeId() {
   } = useRouter();
 
   if (!id || typeof id !== "string") {
-    throw new Error(`The url does not contain a valid tree id`);
+    throw new ODProgrammerError({
+      code: "MISSING_URL_PARTS",
+      message: `The url does not contain a valid tree id`,
+    });
   }
 
   return id;
