@@ -98,9 +98,11 @@ export const createAuthenticationMachine = (router: NextRouter) =>
             ],
             REPORT_IS_LOGGED_OUT: [
               {
-                target: "loggedOut",
+                target: "loggedOut.redirectToLogin",
                 actions: "assignLocationToContext",
+                cond: "isProtectedRoute",
               },
+              { target: "loggedOut" },
             ],
           },
         },
@@ -153,7 +155,7 @@ export const createAuthenticationMachine = (router: NextRouter) =>
                   invoke: {
                     src: "logout",
                     onDone: {
-                      target: "#authentication.loggedOut",
+                      target: "#authentication.loggedOut.redirectToLogin",
                     },
                   },
                 },
@@ -200,7 +202,7 @@ export const createAuthenticationMachine = (router: NextRouter) =>
         },
         loggedOut: {
           entry: "clearUserDetailsFromContext",
-          initial: "redirectToLogin",
+          initial: "idle",
           on: {
             LOG_IN: {
               target: ".loggingIn",
@@ -240,7 +242,7 @@ export const createAuthenticationMachine = (router: NextRouter) =>
               },
               on: {
                 SUCCESSFULL_PASSWORD_RESET: {
-                  target: "#authentication.loggedOut",
+                  target: "#authentication.loggedOut.redirectToLogin",
                 },
                 FAILED_PASSWORD_RESET: {
                   target: "#authentication.loggedOut",
@@ -362,11 +364,7 @@ export const createAuthenticationMachine = (router: NextRouter) =>
           );
         },
         redirectToLogin: (_context, _event) => async (_send) => {
-          protectedRoutes.some((routeRegEx) =>
-            routeRegEx.test(window.location.pathname)
-          )
-            ? router.push("/auth/login")
-            : null;
+          router.push("/auth/login");
         },
         redirectToLocation: (context) => async () => {
           router.push(context?.location ?? "/");
@@ -419,6 +417,12 @@ export const createAuthenticationMachine = (router: NextRouter) =>
           id: (_context, _event) => undefined,
           yDoc: (_context, _event) => undefined,
         }),
+      },
+      guards: {
+        isProtectedRoute: () =>
+          protectedRoutes.some((routeRegEx) =>
+            routeRegEx.test(window.location.pathname)
+          ),
       },
     }
   );
