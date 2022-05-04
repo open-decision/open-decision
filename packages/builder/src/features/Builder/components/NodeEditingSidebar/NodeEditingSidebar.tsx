@@ -72,7 +72,7 @@ export function NodeEditingSidebar() {
               overflow: "hidden",
             }}
           >
-            <ScrollArea.Viewport>
+            <ScrollArea.Viewport css={{ height: "100%" }}>
               <NodeEditingSidebarContent
                 key={selectedNode.id}
                 css={{ groupColor: "$gray11" }}
