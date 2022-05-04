@@ -122,7 +122,7 @@ export function Toolbar({ css, editor, ...props }: Props) {
           <NumberedList />
         </Icon>
       </ToggleButton>
-      <Separator
+      {/* <Separator
         orientation="vertical"
         decorative
         css={{ alignSelf: "stretch" }}
@@ -138,7 +138,7 @@ export function Toolbar({ css, editor, ...props }: Props) {
         <Icon label="Erstelle einen Link">
           <Link2Icon />
         </Icon>
-      </ToggleButton>
+      </ToggleButton> */}
     </StyledToolbar>
   );
 }
