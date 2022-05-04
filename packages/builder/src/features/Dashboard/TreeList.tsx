@@ -102,7 +102,9 @@ export const TreeList = () => {
 const EmptyState = () => (
   <Stack center css={{ flex: 1 }}>
     <Card css={{ alignItems: "center", padding: "$9", gap: "$2" }}>
-      <Heading>Sie haben noch kein Open-Decision-Projekt.</Heading>
+      <Heading size="medium">
+        Sie haben noch kein Open-Decision-Projekt.
+      </Heading>
       <Text size="large" css={{ marginBottom: "$6" }}>
         Erstellen oder importieren Sie jetzt ihr erstes Projekt.
       </Text>
