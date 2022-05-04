@@ -6,7 +6,7 @@ export function FeedbackLink() {
     <Link
       css={{ color: "$primary11" }}
       target="_blank"
-      href="https://openlegaltech.notion.site/2d499521722841caa9b5425f07fc72b4?v=6648850f80c5469688f94cc805f2e9b3"
+      href="https://www.notion.so/openlegaltech/User-Section-b28aadaf6cdd49a58eea90db8ad22f08"
     >
       Feedback Formular
       <Icon>
