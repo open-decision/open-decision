@@ -12,7 +12,7 @@ import { bindProxyAndYMap } from "valtio-yjs";
 
 const TreeImportType = Tree.Type.extend({ name: z.string() });
 
-export function TreeImport() {
+export function TreeImport(props: FileInputProps) {
   const [importedData, setImportedData] = React.useState<
     Tree.TTree | undefined
   >();
@@ -69,6 +69,7 @@ export function TreeImport() {
         fileReader.readAsText(event.currentTarget.files?.[0]);
         event.target.value = "";
       }}
+      {...props}
     >
       Projekt importieren
     </FileInput>
