@@ -3,7 +3,6 @@ import { Notifications } from "features/Notifications/Notifications";
 import {
   Badge,
   Box,
-  Grid,
   LoadingSpinner,
   Popover,
   Row,
@@ -87,7 +86,6 @@ export const LayoutImpl = (
     <>
       <ErrorBoundary
         fallback={({ error }) => {
-          console.log(error);
           return (
             <ErrorFallback
               title="Es ist ein Fehler aufgetreten."
