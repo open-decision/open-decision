@@ -335,7 +335,6 @@ export const globalStyles = globalCss({
   },
   "html, body": {
     height: "100%",
-    color: "$black",
   },
   body: {
     lineHeight: "1.5",

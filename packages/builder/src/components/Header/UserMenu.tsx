@@ -24,24 +24,24 @@ export function UserMenu() {
         css={{ groupColor: "$gray12" }}
       >
         <Link href="/" passHref>
-          <SystemLink>
-            <DropdownMenu.Item>
+          <DropdownMenu.Item asChild>
+            <SystemLink>
               <Icon>
                 <HomeIcon />
               </Icon>
               Dashboard
-            </DropdownMenu.Item>
-          </SystemLink>
+            </SystemLink>
+          </DropdownMenu.Item>
         </Link>
         <Link href="/settings#account" passHref>
-          <SystemLink>
-            <DropdownMenu.Item>
+          <DropdownMenu.Item asChild>
+            <SystemLink>
               <Icon>
                 <GearIcon />
               </Icon>
               Einstellungen
-            </DropdownMenu.Item>
-          </SystemLink>
+            </SystemLink>
+          </DropdownMenu.Item>
         </Link>
         <DropdownMenu.Item onSelect={() => send({ type: "LOG_OUT" })}>
           <Icon>

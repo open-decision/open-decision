@@ -24,7 +24,7 @@ export const overlayCss = css({
   $bgColor: "$colors$gray1",
   backgroundColor: "var(--bgColor)",
   borderRadius: "$md",
-  boxShadow: "$2",
+  boxShadow: "$7",
   padding: "$2",
 
   "@media (prefers-reduced-motion: no-preference)": {

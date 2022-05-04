@@ -9,10 +9,11 @@ import * as Y from "yjs";
 import { IndexeddbPersistence } from "y-indexeddb";
 import { proxy } from "valtio";
 import { bindProxyAndYMap } from "valtio-yjs";
+import { FileInputProps } from "components/FileInput";
 
 const TreeImportType = Tree.Type.extend({ name: z.string() });
 
-export function TreeImport() {
+export function TreeImport(props: Omit<FileInputProps, "children">) {
   const [importedData, setImportedData] = React.useState<
     Tree.TTree | undefined
   >();
@@ -69,6 +70,7 @@ export function TreeImport() {
         fileReader.readAsText(event.currentTarget.files?.[0]);
         event.target.value = "";
       }}
+      {...props}
     >
       Projekt importieren
     </FileInput>

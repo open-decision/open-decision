@@ -7,10 +7,10 @@ import {
   Stack,
   styled,
   Text,
-  Box,
   Badge,
   Row,
   intentStyleWithin,
+  Box,
 } from "@open-decision/design-system";
 import { formatRelative, parseISO } from "date-fns";
 import de from "date-fns/locale/de";
@@ -45,6 +45,7 @@ export function TreeCard({ tree }: Props) {
       css={{
         position: "relative",
         transition: "box-shadow 150ms ease-in",
+        borderRadius: "$md",
         ...intentStyleWithin({ boxShadow: "$3" }),
       }}
     >

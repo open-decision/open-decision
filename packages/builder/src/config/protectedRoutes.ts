@@ -1,1 +1,7 @@
-export const protectedRoutes = [/^\/$/, /preview/, /builder\/\d*/, /settings/];
+export const protectedRoutes = [
+  /^\/$/,
+  /preview/,
+  /builder\/\d*/,
+  /settings/,
+  /trigger-error/,
+];

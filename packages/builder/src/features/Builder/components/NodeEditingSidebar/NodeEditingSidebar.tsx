@@ -9,6 +9,7 @@ import {
   ScrollArea,
   Grid,
   StyleObject,
+  Row,
 } from "@open-decision/design-system";
 import { OptionTargetInputs } from "features/Builder/components/OptionTargetInput/OptionTargetInput";
 import * as React from "react";
@@ -72,7 +73,7 @@ export function NodeEditingSidebar() {
               overflow: "hidden",
             }}
           >
-            <ScrollArea.Viewport>
+            <ScrollArea.Viewport css={{ height: "100%" }}>
               <NodeEditingSidebarContent
                 key={selectedNode.id}
                 css={{ groupColor: "$gray11" }}
@@ -106,17 +107,14 @@ export function NodeEditingSidebarContent({ node, css }: Props) {
     <Grid css={{ gridAutoRows: "max-content", gap: "$6", ...css }}>
       <Box as="header">
         <Form css={{ gap: "$2", display: "flex", flexDirection: "column" }}>
-          <Stack
+          <Row
             css={{
-              flexDirection: "row",
               justifyContent: "space-between",
               alignItems: "center",
             }}
           >
             <Label>Knoten</Label>
-            <Stack
-              css={{ flexDirection: "row", gap: "$2", alignItems: "center" }}
-            >
+            <Row css={{ gap: "$2" }} center>
               {parentNodes.length > 0 ? (
                 <ParentNodeSelector parentNodes={parentNodes} />
               ) : null}
@@ -128,8 +126,8 @@ export function NodeEditingSidebarContent({ node, css }: Props) {
                 nodeId={node.id}
                 isStartNode={isStartNode}
               />
-            </Stack>
-          </Stack>
+            </Row>
+          </Row>
           <ControlledInput
             name="name"
             maxLength={nodeNameMaxLength}

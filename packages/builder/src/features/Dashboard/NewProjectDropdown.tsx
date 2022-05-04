@@ -24,7 +24,7 @@ export function NewProjectDropdown(props: ButtonProps) {
           </Icon>
           Neues Projekt erstellen
         </DropdownMenu.DialogItem>
-        <DropdownMenu.Item>
+        <DropdownMenu.Item asChild>
           <TreeImport />
         </DropdownMenu.Item>
       </DropdownMenu.Content>

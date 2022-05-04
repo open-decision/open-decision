@@ -12,7 +12,6 @@ import {
   TrashIcon,
 } from "@radix-ui/react-icons";
 import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
-import Link from "next/link";
 import { PreviewLink } from "../../PreviewLink";
 
 type Props = {
@@ -23,7 +22,8 @@ type Props = {
 };
 
 export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
-  const { deleteNodes, updateStartNode } = useTreeContext();
+  const { deleteNodes, updateStartNode, removeSelectedNodes } =
+    useTreeContext();
 
   return (
     <DropdownMenu.Root>
@@ -43,14 +43,14 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
         </Button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content css={{ groupColor: "$gray12" }}>
-        <PreviewLink initialNode={nodeId}>
-          <DropdownMenu.Item>
+        <DropdownMenu.Item asChild>
+          <PreviewLink initialNode={nodeId}>
             <Icon>
               <FileTextIcon />
             </Icon>
             Vorschau
-          </DropdownMenu.Item>
-        </PreviewLink>
+          </PreviewLink>
+        </DropdownMenu.Item>
         {isStartNode ? (
           <Tooltip.Root>
             <Tooltip.Trigger style={{ all: "unset" }}>
@@ -79,7 +79,10 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
               Zur Startnode machen
             </DropdownMenu.Item>
             <DropdownMenu.Item
-              onSelect={() => deleteNodes([nodeId])}
+              onSelect={() => {
+                deleteNodes([nodeId]);
+                removeSelectedNodes();
+              }}
               css={{ colorScheme: "danger" }}
             >
               <Icon label="Löschen Icon" css={{ $$paddingInline: 0 }}>

@@ -18,11 +18,17 @@ type Props = { css?: StyleObject };
 
 export const NodeSearch = ({ css }: Props) => {
   const nodes = useNodes();
-  const { createNode, addNode, getNode, createInput, createAnswer, addInput } =
-    useTreeContext();
+  const {
+    createNode,
+    addNode,
+    getNode,
+    createInput,
+    createAnswer,
+    addInput,
+    replaceSelectedNodes,
+  } = useTreeContext();
 
   const { getCenter, zoomToNode } = useEditor();
-  const { addSelectedNodes } = useTreeContext();
   const [Form] = useForm({
     defaultValues: {
       selectedNodeId: "",
@@ -70,14 +76,14 @@ export const NodeSearch = ({ css }: Props) => {
 
     addNode(newNode);
     addInput(newInput);
-    addSelectedNodes([newNode.id]);
+    replaceSelectedNodes([newNode.id]);
     zoomToNode(newNode);
 
     return { id: newNode.id, label: newNode.data.name };
   }
 
   function changeHandler(newSelectedItemId: string) {
-    addSelectedNodes([newSelectedItemId]);
+    replaceSelectedNodes([newSelectedItemId]);
     const node = getNode(newSelectedItemId);
 
     if (!node) return;

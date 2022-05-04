@@ -11,6 +11,8 @@ import { register } from "./utils/register";
 import { requestPasswordReset } from "./utils/requestPasswordReset";
 import { resetPassword } from "./utils/resetPassword";
 import { LoginResponse } from "./utils/shared";
+import * as Sentry from "@sentry/nextjs";
+import LogRocket from "logrocket";
 
 type SharedContext = {
   location?: string;
@@ -65,9 +67,15 @@ export type Events =
   | { type: "FAILED_PASSWORD_RESET_REQUEST"; error: string }
   | { type: "REDIRECT" }
   | { type: "REFRESH" }
-  | { type: "OPEN_WEBSOCKET"; id: string; yDoc: Doc; onSync: () => void }
-  | { type: "CLOSE_WEBSOCKET" }
-  | { type: "WEBSOCKET_CLOSED" };
+  | {
+      type: "OPEN_WEBSOCKET";
+      id: string;
+      yDoc: Doc;
+      onSync: () => void;
+    }
+  | { type: "WEBSOCKET_CONNECTION_FAILED" }
+  | { type: "WEBSOCKET_CLOSED" }
+  | { type: "CLOSE_WEBSOCKET" };
 
 export type AuthService = Interpreter<Context, any, Events, State, any>;
 
@@ -93,14 +101,20 @@ export const createAuthenticationMachine = (router: NextRouter) =>
             REPORT_IS_LOGGED_IN: [
               {
                 target: "loggedIn",
-                actions: ["assignUserToContext", "assignLocationToContext"],
+                actions: [
+                  "assignUserToContext",
+                  "assignLocationToContext",
+                  "setTrackingUser",
+                ],
               },
             ],
             REPORT_IS_LOGGED_OUT: [
               {
-                target: "loggedOut",
+                target: "loggedOut.redirectToLogin",
                 actions: "assignLocationToContext",
+                cond: "isProtectedRoute",
               },
+              { target: "loggedOut" },
             ],
           },
         },
@@ -153,7 +167,7 @@ export const createAuthenticationMachine = (router: NextRouter) =>
                   invoke: {
                     src: "logout",
                     onDone: {
-                      target: "#authentication.loggedOut",
+                      target: "#authentication.loggedOut.redirectToLogin",
                     },
                   },
                 },
@@ -165,6 +179,13 @@ export const createAuthenticationMachine = (router: NextRouter) =>
                 unconnected: {
                   on: {
                     OPEN_WEBSOCKET: { target: "connect" },
+                    REPORT_IS_LOGGED_IN: {
+                      target: "connect",
+                    },
+                    REPORT_IS_LOGGED_OUT: {
+                      target: "unconnected",
+                      actions: "clearWebsocketDataFromContext",
+                    },
                   },
                 },
                 connect: {
@@ -176,23 +197,18 @@ export const createAuthenticationMachine = (router: NextRouter) =>
                       id: (_context, event) => event.id,
                       yDoc: (_context, event) => event.yDoc,
                       onSync: (_context, event) => event.onSync,
+                      retryLimit: 3,
+                      retries: 0,
                     },
-                    onDone: "reconnect",
                   },
                   on: {
+                    WEBSOCKET_CONNECTION_FAILED: "connect_failed",
+                    WEBSOCKET_CLOSED: "unconnected",
                     CLOSE_WEBSOCKET: "unconnected",
                   },
                 },
-                reconnect: {
-                  on: {
-                    REPORT_IS_LOGGED_IN: {
-                      target: "connect",
-                    },
-                    REPORT_IS_LOGGED_OUT: {
-                      target: "unconnected",
-                      actions: "clearWebsocketDataFromContext",
-                    },
-                  },
+                connect_failed: {
+                  type: "final",
                 },
               },
             },
@@ -200,7 +216,7 @@ export const createAuthenticationMachine = (router: NextRouter) =>
         },
         loggedOut: {
           entry: "clearUserDetailsFromContext",
-          initial: "redirectToLogin",
+          initial: "idle",
           on: {
             LOG_IN: {
               target: ".loggingIn",
@@ -240,7 +256,7 @@ export const createAuthenticationMachine = (router: NextRouter) =>
               },
               on: {
                 SUCCESSFULL_PASSWORD_RESET: {
-                  target: "#authentication.loggedOut",
+                  target: "#authentication.loggedOut.redirectToLogin",
                 },
                 FAILED_PASSWORD_RESET: {
                   target: "#authentication.loggedOut",
@@ -362,17 +378,24 @@ export const createAuthenticationMachine = (router: NextRouter) =>
           );
         },
         redirectToLogin: (_context, _event) => async (_send) => {
-          protectedRoutes.some((routeRegEx) =>
-            routeRegEx.test(window.location.pathname)
-          )
-            ? router.push("/auth/login")
-            : null;
+          router.push("/auth/login");
         },
         redirectToLocation: (context) => async () => {
           router.push(context?.location ?? "/");
         },
       },
       actions: {
+        setTrackingUser: (context, _event) => {
+          if (!context.auth) return;
+
+          Sentry.setUser({
+            email: context.auth?.user.email,
+            id: context.auth.user.uuid,
+          });
+          LogRocket.identify(context.auth?.user.uuid, {
+            email: context.auth?.user.email,
+          });
+        },
         assignUserToContext: assign((context, event) => {
           if (
             event.type !== "REPORT_IS_LOGGED_IN" &&
@@ -419,6 +442,12 @@ export const createAuthenticationMachine = (router: NextRouter) =>
           id: (_context, _event) => undefined,
           yDoc: (_context, _event) => undefined,
         }),
+      },
+      guards: {
+        isProtectedRoute: () =>
+          protectedRoutes.some((routeRegEx) =>
+            routeRegEx.test(window.location.pathname)
+          ),
       },
     }
   );

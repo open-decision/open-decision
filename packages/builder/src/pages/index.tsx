@@ -1,28 +1,42 @@
-import { Box, styled } from "@open-decision/design-system";
+import { LoadingSpinner, Stack } from "@open-decision/design-system";
 import { ErrorBoundary } from "@sentry/nextjs";
-import { BaseHeader, MainContent } from "components";
+import { BaseHeader } from "components";
 import { TreeList } from "features/Dashboard/TreeList";
-import { ErrorFallback } from "features/Error/ErrorFallback";
 import * as React from "react";
-
-const DashboardGrid = styled(MainContent, {
-  display: "grid",
-  height: "100vh",
-  overflow: "hidden",
-  gridTemplateRows: "max-content max-content 1fr",
-  gridTemplateColumns: `1fr minmax(800px, 1fr) 1fr`,
-  layer: "2",
-});
+import { ErrorCard } from "../components/Error/ErrorCard";
+import { getDashboardLayout } from "../features/Dashboard/DashboardLayout";
 
 export default function DashboardPage() {
   return (
-    <ErrorBoundary fallback={<ErrorFallback />}>
-      <DashboardGrid>
-        <BaseHeader css={{ gridColumn: "1 / -1" }}>
-          <Box css={{ flex: 1 }} />
-        </BaseHeader>
-        <TreeList />
-      </DashboardGrid>
-    </ErrorBoundary>
+    <>
+      <BaseHeader css={{ gridColumn: "1 / -1" }} />
+      <ErrorBoundary
+        fallback={
+          <Stack center css={{ gridColumn: "2 / 4", gridRow: "2 / 4" }}>
+            <ErrorCard title="Beim laden ihrer Bäume ist ein Fehler aufgetreten." />
+          </Stack>
+        }
+      >
+        <Stack
+          css={{
+            gridColumn: "2 / 4",
+            gridRow: "2 / 4",
+          }}
+        >
+          <React.Suspense
+            fallback={
+              <LoadingSpinner
+                size="50px"
+                css={{ flex: 1, alignSelf: "center" }}
+              />
+            }
+          >
+            <TreeList />
+          </React.Suspense>
+        </Stack>
+      </ErrorBoundary>
+    </>
   );
 }
+
+DashboardPage.getLayout = getDashboardLayout;

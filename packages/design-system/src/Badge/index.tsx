@@ -5,12 +5,12 @@ export const badeStyles = css({
   colorScheme: "primary",
   borderRadius: "$md",
   textAlign: "center",
-  maxWidth: "max-content",
   backgroundColor: "$colorScheme2",
   border: "1px solid $colorScheme6",
   color: "$colorScheme11",
   display: "flex",
   alignItems: "center",
+  gap: "$1",
 
   variants: {
     size: {

@@ -1,3 +1,4 @@
+import { ODProgrammerError } from "@open-decision/type-classes";
 import { useActor, useInterpret } from "@xstate/react";
 import { NextRouter } from "next/router";
 import * as React from "react";
@@ -30,7 +31,10 @@ export function useAuthService() {
   const authService = React.useContext(AuthContext);
 
   if (!authService) {
-    throw new Error("useAuth can only be used inside of an AuthProvider");
+    throw new ODProgrammerError({
+      code: "MISSING_CONTEXT_PROVIDER",
+      message: "useAuth can only be used inside of an AuthProvider",
+    });
   }
 
   return authService;

@@ -6,8 +6,8 @@ export type notificationVariants = "success" | "danger" | "info" | "warning";
 
 export type Notification = {
   variant: notificationVariants;
-  title: string;
-  content: string;
+  title: React.ReactNode;
+  content: React.ReactNode;
   duration?: number | "persistent";
 };
 
