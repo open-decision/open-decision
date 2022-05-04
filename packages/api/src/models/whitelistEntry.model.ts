@@ -1,18 +1,53 @@
+import {
+  WhitelistEntry,
+  WhitelistingType,
+} from "../../prisma/generated/prisma-client";
 import prisma from "../init-prisma-client";
-
+import validator from "validator";
 /**
  * Get all whitelist entries
  * @param {string} email
  * @returns {boolean}
  */
 export const emailIsWhitelisted = async (email: string) => {
-  const entry = await prisma.whitelistEntry.findUnique({
+  const domain = email.split("@").pop();
+  const baseDomain = (domain) => {
+    let temp = domain.split(".");
+    return `${temp[temp.length - 2]}.${temp[temp.length - 1]}`;
+  };
+  let entry: WhitelistEntry | null = null;
+  console.log(baseDomain(domain));
+  //exact domain
+  entry = await prisma.whitelistEntry.findFirst({
     where: {
-      email,
+      OR: [
+        {
+          emailOrDomain: {
+            equals: domain,
+          },
+          type: "DOMAIN",
+        },
+        {
+          emailOrDomain: {
+            equals: baseDomain(domain),
+          },
+          type: "DOMAIN",
+        },
+      ],
     },
   });
 
-  return entry ? true : false;
+  if (entry) return { result: true, byDomain: true };
+
+  entry = await prisma.whitelistEntry.findUnique({
+    where: {
+      emailOrDomain: email,
+    },
+  });
+
+  return entry
+    ? { result: true, byDomain: false }
+    : { result: false, byDomain: false };
 };
 
 /**
@@ -25,19 +60,22 @@ export const getAllWhitelistEntries = async () => {
 
 /**
  * Create many whitelist entries
- * @param {Array<string>} emails
+ * @param {Array<string>} entries
  * @param {string} creatorUuid
  * @param {boolean} sendInvite
  */
 export const createManyWhitelistEntries = async (
-  emails: Array<string>,
+  entries: Array<string>,
   creatorUuid: string,
   sendInvite: boolean
 ) => {
   return prisma.whitelistEntry.createMany({
-    data: emails.map((email) => {
+    data: entries.map((entry) => {
       return {
-        email,
+        emailOrDomain: entry,
+        type: validator.isFQDN(entry)
+          ? WhitelistingType.DOMAIN
+          : WhitelistingType.INDIVIDUAL,
         sendInvite,
         creatorUuid,
       };
@@ -47,16 +85,14 @@ export const createManyWhitelistEntries = async (
 };
 
 /**
- * Create many whitelist entries
- * @param {Array<string>} emails
- * @param {string} creatorUuid
- * @param {boolean} sendInvite
+ * Delete many whitelist entries
+ * @param {Array<string>} entries
  */
-export const deleteManyWhitelistEntries = async (emails: Array<string>) => {
+export const deleteManyWhitelistEntries = async (entries: Array<string>) => {
   return prisma.whitelistEntry.deleteMany({
     where: {
-      email: {
-        in: emails,
+      emailOrDomain: {
+        in: entries,
       },
     },
   });

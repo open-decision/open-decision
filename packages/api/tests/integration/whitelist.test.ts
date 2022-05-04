@@ -10,9 +10,11 @@ import {
 } from "../fixtures/token.fixture";
 import prisma from "../../src/init-prisma-client";
 import {
+  entrySubdomainOne,
   entryOne,
   entryTwo,
   insertEntry,
+  entryBaseDomainTwo,
 } from "../fixtures/whitelistEntry.fixture";
 setupTestDB();
 
@@ -25,7 +27,7 @@ describe("Whitelist user routes", () => {
         emails: [
           faker.internet.email().toLowerCase(),
           faker.internet.email().toLowerCase(),
-          faker.internet.email().toLowerCase(),
+          entrySubdomainOne.emailOrDomain,
         ],
         sendInvite: true,
       };
@@ -51,7 +53,11 @@ describe("Whitelist user routes", () => {
       await insertEntry([entryOne]);
 
       const bodyWithDuplicates = {
-        emails: ["fake@example.com", "fake@example.com", entryOne.email],
+        emails: [
+          "fake@example.com",
+          "fake@example.com",
+          entryOne.emailOrDomain,
+        ],
       };
 
       await request(app)
@@ -83,7 +89,7 @@ describe("Whitelist user routes", () => {
 
     test("should return 400 error if email is invalid", async () => {
       await insertUsers([admin]);
-      body.emails[1] = "invalidMail.com";
+      body.emails[1] = "invalidMailcom";
 
       await request(app)
         .post("/v1/users/whitelist")
@@ -96,14 +102,14 @@ describe("Whitelist user routes", () => {
   describe("GET /v1/users/whitelist", () => {
     test("should return all whitelist entries", async () => {
       await insertUsers([admin]);
-      await insertEntry([entryOne, entryTwo]);
+      await insertEntry([entryOne, entryTwo, entrySubdomainOne]);
 
       const res = await request(app)
         .get("/v1/users/whitelist")
         .set("Authorization", `Bearer ${adminAccessToken}`)
         .expect(httpStatus.OK);
 
-      expect(res.body.length).toBe(2);
+      expect(res.body.length).toBe(3);
     });
 
     test("should return 401 error if access token is missing", async () => {
@@ -125,10 +131,10 @@ describe("Whitelist user routes", () => {
   describe("DELETE /v1/users/whitelist", () => {
     test("should return 204 if deletion is successful", async () => {
       await insertUsers([admin]);
-      await insertEntry([entryOne, entryTwo]);
+      await insertEntry([entryOne, entryTwo, entrySubdomainOne]);
 
       const deleteBody = {
-        emails: [entryOne.email],
+        emails: [entryOne.emailOrDomain, entrySubdomainOne.emailOrDomain],
       };
 
       await request(app)
@@ -139,7 +145,7 @@ describe("Whitelist user routes", () => {
 
       const entriesFromDb = await prisma.whitelistEntry.findMany();
       expect(entriesFromDb.length).toBe(1);
-      expect(entriesFromDb[0].email).toBe(entryTwo.email);
+      expect(entriesFromDb[0].emailOrDomain).toBe(entryTwo.emailOrDomain);
     });
 
     test("should skip non-existing and double mail addresses", async () => {
@@ -147,7 +153,11 @@ describe("Whitelist user routes", () => {
       await insertEntry([entryOne, entryTwo]);
 
       const deleteBodyWithDuplicates = {
-        emails: ["fake@example.com", entryOne.email, entryOne.email],
+        emails: [
+          "fake@example.com",
+          entryOne.emailOrDomain,
+          entryOne.emailOrDomain,
+        ],
       };
 
       await request(app)
@@ -164,7 +174,7 @@ describe("Whitelist user routes", () => {
       await insertUsers([admin]);
       await insertEntry([entryOne, entryTwo]);
       const deleteBody = {
-        emails: [entryOne.email],
+        emails: [entryOne.emailOrDomain],
       };
       await request(app)
         .delete("/v1/users/whitelist")
@@ -176,7 +186,7 @@ describe("Whitelist user routes", () => {
       await insertUsers([admin, userOne]);
       await insertEntry([entryOne, entryTwo]);
       const deleteBody = {
-        emails: [entryOne.email],
+        emails: [entryOne.emailOrDomain],
       };
       await request(app)
         .post("/v1/users/whitelist")
@@ -188,7 +198,7 @@ describe("Whitelist user routes", () => {
     test("should return 400 error if email is invalid", async () => {
       await insertUsers([admin]);
       const deleteBody = {
-        emails: ["invalidMail.com"],
+        emails: ["invalidMailcom"],
       };
 
       await request(app)
@@ -196,6 +206,93 @@ describe("Whitelist user routes", () => {
         .set("Authorization", `Bearer ${adminAccessToken}`)
         .send(deleteBody)
         .expect(httpStatus.BAD_REQUEST);
+    });
+
+    test("should return 400 error if domain is invalid", async () => {
+      await insertUsers([admin]);
+      const deleteBody = {
+        emails: ["https://invalidDomain.com"],
+      };
+
+      await request(app)
+        .post("/v1/users/whitelist")
+        .set("Authorization", `Bearer ${adminAccessToken}`)
+        .send(deleteBody)
+        .expect(httpStatus.BAD_REQUEST);
+    });
+  });
+
+  describe("POST /v1/users/is-whitelisted", () => {
+    test("should return true if an email is whitelisted", async () => {
+      await insertUsers([admin]);
+      await insertEntry([entryOne]);
+
+      const res = await request(app)
+        .post("/v1/users/is-whitelisted")
+        .send({ email: entryOne.emailOrDomain })
+        .expect(httpStatus.OK);
+
+      expect(res.body.isWhitelisted).toBe(true);
+    });
+
+    test("should return true if an email is whitelisted by domain", async () => {
+      await insertUsers([admin]);
+      await insertEntry([entryBaseDomainTwo]);
+
+      const res = await request(app)
+        .post("/v1/users/is-whitelisted")
+        .send({ email: "test@open-decision.org" })
+        .expect(httpStatus.OK);
+
+      expect(res.body.isWhitelisted).toBe(true);
+    });
+
+    test("should return true if an email is whitelisted by subdomain", async () => {
+      await insertUsers([admin]);
+      await insertEntry([entrySubdomainOne]);
+
+      const res = await request(app)
+        .post("/v1/users/is-whitelisted")
+        .send({ email: `test@${entrySubdomainOne.emailOrDomain}` })
+        .expect(httpStatus.OK);
+
+      expect(res.body.isWhitelisted).toBe(true);
+    });
+
+    test("should return true if an email is whitelisted by base domain", async () => {
+      await insertUsers([admin]);
+      await insertEntry([entryBaseDomainTwo]);
+
+      const res = await request(app)
+        .post("/v1/users/is-whitelisted")
+        .send({ email: `test@${entrySubdomainOne.emailOrDomain}` })
+        .expect(httpStatus.OK);
+
+      expect(res.body.isWhitelisted).toBe(true);
+    });
+
+    test("should return false if an only a subdomain is whitelisted", async () => {
+      await insertUsers([admin]);
+      await insertEntry([entrySubdomainOne]);
+
+      const res = await request(app)
+        .post("/v1/users/is-whitelisted")
+        .send({ email: `test@open-decision.org` })
+        .expect(httpStatus.OK);
+
+      expect(res.body.isWhitelisted).toBe(false);
+    });
+
+    test("should return false if an email is not whitelisted ", async () => {
+      await insertUsers([admin]);
+      await insertEntry([entryOne]);
+
+      const res = await request(app)
+        .post("/v1/users/is-whitelisted")
+        .send({ email: faker.internet.email().toLowerCase() })
+        .expect(httpStatus.OK);
+
+      expect(res.body.isWhitelisted).toBe(false);
     });
   });
 });

@@ -18,7 +18,7 @@ import config from "../config/config";
 const createUser = async (email: string, password: string) => {
   if (config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS) {
     const isWhitelisted = await emailIsWhitelisted(email);
-    if (!isWhitelisted) {
+    if (!isWhitelisted.result) {
       throw new ApiError({
         statusCode: httpStatus.FORBIDDEN,
         message: "The email is not whitelisted.",
@@ -26,7 +26,7 @@ const createUser = async (email: string, password: string) => {
     } else {
       // Continue with registration and delete if account creation was successfull
       const user = await UserHandler.create(email, password);
-      await removeWhitelistedUsersByMail([email]);
+      if (!isWhitelisted.byDomain) await removeWhitelistedUsersByMail([email]);
       return user;
     }
   }
@@ -114,6 +114,17 @@ const getWhitelist = async () => {
 };
 
 /**
+ * Check if one email is whitelisted
+ * @param {string} email
+ * @returns {Array<WhitelistEntry>}
+ */
+const isWhitelisted = async (email: string) => {
+  return await (
+    await emailIsWhitelisted(email)
+  ).result;
+};
+
+/**
  * Whitelist users email
  * @param {Array<string>} emails
  * @param {string} creatorUuid
@@ -136,11 +147,11 @@ const whitelistUsersByMail = async (
 
 /**
  * Remove entries from whitelist
- * @param {Array<string>} emails
+ * @param {Array<string>} emailsOrDomains
  */
-const removeWhitelistedUsersByMail = async (emails: Array<string>) => {
+const removeWhitelistedUsersByMail = async (emailsOrDomains: Array<string>) => {
   try {
-    await deleteManyWhitelistEntries(emails);
+    await deleteManyWhitelistEntries(emailsOrDomains);
   } catch {
     throw new ApiError({
       statusCode: httpStatus.BAD_REQUEST,
@@ -158,4 +169,5 @@ export const userService = {
   getWhitelist,
   whitelistUsersByMail,
   removeWhitelistedUsersByMail,
+  isWhitelisted,
 };

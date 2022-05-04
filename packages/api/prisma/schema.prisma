@@ -62,9 +62,10 @@ model WhitelistEntry {
   createdAt             DateTime @default(now())
   createdBy             User     @relation(fields: [creatorUuid], references: [uuid])
   creatorUuid           String   @db.Uuid
-  email                 String   @unique
+  emailOrDomain         String   @unique
   sendInvite            Boolean  @default(false)
   dateOfLastInvite      DateTime?
+  type                  WhitelistingType @default(INDIVIDUAL)
 }
 
 model Token {
@@ -104,4 +105,9 @@ enum TokenType {
 enum TreeStatus {
   ACTIVE
   ARCHIVED
+}
+
+enum WhitelistingType {
+  INDIVIDUAL
+  DOMAIN
 }

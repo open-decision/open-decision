@@ -20,7 +20,6 @@ userRouter
 
 userRouter
   .route("/whitelist")
-  // .get(auth("getWhitelist"), userController.getWhitelist)
   .get(auth("getWhitelist"), userController.getWhitelist)
   .post(
     auth("manageWhitelist"),
@@ -32,6 +31,12 @@ userRouter
     validate(userValidation.removeUsersFromWhitelist),
     userController.removeFromWhitelist
   );
+
+userRouter.post(
+  "/is-whitelisted",
+  validate(userValidation.isWhitelisted),
+  userController.isWhitelisted
+);
 
 userRouter
   .route("/:userUuid")
