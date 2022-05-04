@@ -9,6 +9,7 @@ import {
   ScrollArea,
   Grid,
   StyleObject,
+  Row,
 } from "@open-decision/design-system";
 import { OptionTargetInputs } from "features/Builder/components/OptionTargetInput/OptionTargetInput";
 import * as React from "react";
@@ -106,9 +107,8 @@ export function NodeEditingSidebarContent({ node, css }: Props) {
     <Grid css={{ gridAutoRows: "max-content", gap: "$6", ...css }}>
       <Box as="header">
         <Form css={{ gap: "$2", display: "flex", flexDirection: "column" }}>
-          <Stack
+          <Row
             css={{
-              flexDirection: "row",
               justifyContent: "space-between",
               alignItems: "center",
             }}
@@ -129,7 +129,7 @@ export function NodeEditingSidebarContent({ node, css }: Props) {
                 isStartNode={isStartNode}
               />
             </Stack>
-          </Stack>
+          </Row>
           <ControlledInput
             name="name"
             maxLength={nodeNameMaxLength}
