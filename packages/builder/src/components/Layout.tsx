@@ -43,7 +43,10 @@ const AlphaBanner = () => {
   return (
     <Popover.Root>
       <Popover.Trigger asChild>
-        <Row css={{ layer: "3", padding: "$2", gap: "$4" }} center>
+        <Row
+          css={{ layer: "3", padding: "$2", gap: "$4", cursor: "pointer" }}
+          center
+        >
           <Badge css={{ colorScheme: "warning" }}>Alpha</Badge>
           <Text>Klicke für mehr Informationen.</Text>
         </Row>
@@ -53,12 +56,11 @@ const AlphaBanner = () => {
         asChild
         sideOffset={10}
       >
-        <Stack>
+        <Stack css={{ gap: "$4" }}>
           <Text>
             Open-Decision befindet sich noch in einer frühen Entwicklungsstufe.
             Daher kann es kann zu Bugs und Ausfällen kommen.
           </Text>
-          <br />
           <Text>
             Sollte ein Problem auftreten dann schreibe uns: <FeedbackLink />
           </Text>
