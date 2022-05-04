@@ -27,7 +27,7 @@ const useIsOnWhiteListQuery = (
 
       if (!result.data.isWhiteListed) throw new Error();
 
-      return true;
+      return result;
     },
     { ...options }
   );
