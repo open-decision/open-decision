@@ -12,6 +12,7 @@ import { requestPasswordReset } from "./utils/requestPasswordReset";
 import { resetPassword } from "./utils/resetPassword";
 import { LoginResponse } from "./utils/shared";
 import * as Sentry from "@sentry/nextjs";
+import LogRocket from "logrocket";
 
 type SharedContext = {
   location?: string;
@@ -103,7 +104,7 @@ export const createAuthenticationMachine = (router: NextRouter) =>
                 actions: [
                   "assignUserToContext",
                   "assignLocationToContext",
-                  "setSentryUser",
+                  "setTrackingUser",
                 ],
               },
             ],
@@ -384,8 +385,17 @@ export const createAuthenticationMachine = (router: NextRouter) =>
         },
       },
       actions: {
-        setSentryUser: (context, _event) =>
-          Sentry.setUser({ email: context.auth?.user.email }),
+        setTrackingUser: (context, _event) => {
+          if (!context.auth) return;
+
+          Sentry.setUser({
+            email: context.auth?.user.email,
+            id: context.auth.user.uuid,
+          });
+          LogRocket.identify(context.auth?.user.uuid, {
+            email: context.auth?.user.email,
+          });
+        },
         assignUserToContext: assign((context, event) => {
           if (
             event.type !== "REPORT_IS_LOGGED_IN" &&

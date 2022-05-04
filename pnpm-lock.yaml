@@ -285,6 +285,8 @@ importers:
       graphql-request: ^4.2.0
       immer: ^9.0.12
       localforage: ^1.10.0
+      logrocket: ^3.0.0
+      logrocket-react: ^5.0.1
       match-sorter: ^6.3.1
       next: 12.1.4
       next-compose-plugins: ^2.2.1
@@ -359,6 +361,8 @@ importers:
       graphql-request: 4.2.0_graphql@16.3.0
       immer: 9.0.12
       localforage: 1.10.0
+      logrocket: 3.0.0
+      logrocket-react: 5.0.1_81b1130db174a7ecd788d913cb3371b0
       match-sorter: 6.3.1
       prosemirror-model: 1.16.1
       prosemirror-view: 1.23.12
@@ -15113,6 +15117,22 @@ packages:
       ms: 2.1.3
       safe-stable-stringify: 2.3.1
       triple-beam: 1.3.0
+    dev: false
+
+  /logrocket-react/5.0.1_81b1130db174a7ecd788d913cb3371b0:
+    resolution: {integrity: sha512-d5RAi1giur9Yv7/lDK/c2S1hviopN5K1XMMpfpSFRDG3Rr/j5RmGuvNHdXNTJUwGuxTVrpnKUOB43ceQMJfO1Q==}
+    peerDependencies:
+      logrocket: '>=2.0'
+      react: '>=17.0'
+      react-dom: '>=17.0'
+    dependencies:
+      logrocket: 3.0.0
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+    dev: false
+
+  /logrocket/3.0.0:
+    resolution: {integrity: sha512-RDbF28Np+XsBIb6egJiPPQmRupdrmXURESPpxUo4awH3h7Mk0s9iZVF+AMy64GixznlWevgm01+uuAq8NYfvMw==}
     dev: false
 
   /long-timeout/0.1.1:
