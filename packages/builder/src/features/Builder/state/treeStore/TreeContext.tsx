@@ -4,6 +4,7 @@ import { createTreeStore } from "./treeStore";
 import { useEffectOnce } from "react-use";
 import { IndexeddbPersistence } from "y-indexeddb";
 import { useTreeId } from "../../../Data/useTreeId";
+import { ODError } from "@open-decision/type-classes";
 
 const TreeContext = React.createContext<null | ReturnType<
   typeof createTreeStore
@@ -12,8 +13,20 @@ const TreeContext = React.createContext<null | ReturnType<
 type Props = { children: React.ReactNode };
 export const TreeProvider = ({ children }: Props) => {
   const id = useTreeId();
-  const [, send] = useAuth();
+  const [state, send] = useAuth();
   const treeStore = React.useMemo(() => createTreeStore(id), [id]);
+
+  if (
+    state.matches({
+      loggedIn: {
+        websocket: "connect_failed",
+      },
+    })
+  )
+    throw new ODError({
+      code: "BUILDER_WEBSOCKET_CONNECTION_FAILED",
+      message: "Es konnte keine Websocket Verbindung hergestellt werden.",
+    });
 
   useEffectOnce(() => {
     new IndexeddbPersistence(id, treeStore.yDoc);

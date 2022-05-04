@@ -12,6 +12,7 @@ export const baseLinkStyles = css({
   colorFallback: "$primary11",
   borderRadius: "$sm",
   focusType: "outer",
+  gap: "$1",
 
   ...intentStyle({ textDecoration: "underline" }),
 });

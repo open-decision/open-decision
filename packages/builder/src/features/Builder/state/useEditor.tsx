@@ -2,7 +2,7 @@ import * as React from "react";
 import { useReactFlow, useStore } from "react-flow-renderer";
 import { calculateCenterOfNode } from "../utilities/calculateCenterOfNode";
 import { sidebarWidth } from "../utilities/constants";
-import { Node } from "@open-decision/type-classes";
+import { Node, ODProgrammerError } from "@open-decision/type-classes";
 import shallow from "zustand/shallow";
 import { useTreeContext } from "./treeStore/TreeContext";
 
@@ -93,7 +93,10 @@ export function useEditor() {
   const editorContext = React.useContext(EditorContext);
 
   if (!editorContext) {
-    throw new Error("useEditor can only be used inside of an EditorProvider");
+    throw new ODProgrammerError({
+      code: "MISSING_CONTEXT_PROVIDER",
+      message: "useEditor can only be used inside of an EditorProvider",
+    });
   }
 
   return editorContext;

@@ -16,7 +16,6 @@ export const menuContainerStyles = css({
   overflowY: "auto",
   display: "flex",
   flexDirection: "column",
-  alignItems: "center",
   gap: "$1",
 
   transformOrigin: "var(--radix-dropdown-menu-content-transform-origin)",
@@ -43,6 +42,7 @@ export const menuItemStyles = css({
   fontWeight: "500",
   border: "1px solid transparent",
   focusColor: "$colorScheme6",
+  textDecoration: "none !important",
 
   [`.${darkTheme} &`]: {
     focusColor: "$colorScheme8",

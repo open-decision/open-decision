@@ -70,6 +70,7 @@ export function Input({
             position: "absolute",
             marginTop: "$1",
             display: inputItems.length > 0 ? "grid" : "none",
+            maxHeight: "500px",
             ...menuCss,
           },
         })}

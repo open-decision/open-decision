@@ -1,6 +1,5 @@
 import {
   activeStyle,
-  Box,
   Heading,
   Icon,
   intentStyle,
@@ -9,22 +8,14 @@ import {
   styled,
 } from "@open-decision/design-system";
 import { AvatarIcon } from "@radix-ui/react-icons";
-import { BaseHeader, MainContent } from "components";
+import { BaseHeader } from "components";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import * as React from "react";
+import { getDashboardLayout } from "../features/Dashboard/DashboardLayout";
 import { ChangeEmail } from "../features/Settings/ChangeEmail";
 import { ChangePassword } from "../features/Settings/ChangePassword";
 import { DeleteAccount } from "../features/Settings/DeleteAccount";
-
-const StyledMainContent = styled(MainContent, {
-  display: "grid",
-  gridTemplateColumns: "1fr 200px minmax(600px, 1fr) 1fr",
-  gridTemplateRows: "max-content max-content 1fr",
-  layer: "2",
-  height: "100vh",
-  columnGap: "$7",
-});
 
 const SideMenuLink = styled("a", Label, {
   position: "relative",
@@ -51,10 +42,8 @@ export default function SettingsPage() {
   const router = useRouter();
 
   return (
-    <StyledMainContent>
-      <BaseHeader css={{ gridColumn: "1 / -1" }}>
-        <Box css={{ flex: 1 }} />
-      </BaseHeader>
+    <>
+      <BaseHeader css={{ gridColumn: "1 / -1" }} />
       <Heading
         size="large"
         as="h1"
@@ -83,6 +72,8 @@ export default function SettingsPage() {
           <DeleteAccount />
         </Stack>
       </Stack>
-    </StyledMainContent>
+    </>
   );
 }
+
+SettingsPage.getLayout = getDashboardLayout;

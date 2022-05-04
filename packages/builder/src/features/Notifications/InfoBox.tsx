@@ -55,7 +55,7 @@ export function InfoBox({
           padding: "$5",
           flexDirection: "row",
           gap: "$5",
-          alignItems: "center",
+          alignItems: "start",
         }}
       >
         <Icon
@@ -72,8 +72,8 @@ export function InfoBox({
           <IconSVG />
         </Icon>
         <Stack css={{ gap: "$1", flex: 1 }}>
-          <Heading size="extra-small">{title}</Heading>
-          <Text>{content}</Text>
+          <Heading size="small">{title}</Heading>
+          {typeof content === "string" ? <Text>{content}</Text> : content}
         </Stack>
         {CloseButton}
       </Stack>

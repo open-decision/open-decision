@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useAuth } from "features/Auth/useAuth";
+import { APIError, ODProgrammerError } from "@open-decision/type-classes";
 
 export const useFetchData = <TData, TVariables>(
   query: string,
@@ -13,9 +14,13 @@ export const useFetchData = <TData, TVariables>(
 
       if (
         state.matches({ loggedIn: "refresh" }) ||
-        state.matches("undetermined")
+        state.matches("undetermined") ||
+        !token
       )
-        throw new Error("Is not ready");
+        throw new ODProgrammerError({
+          code: "UNAUTHENTICATED_API_CALL",
+          message: "Tried to make an unauthenticated request to graphql api.",
+        });
 
       const res = await fetch("/api/graphql", {
         method: "POST",
@@ -34,7 +39,7 @@ export const useFetchData = <TData, TVariables>(
 
       if (json.errors) {
         const { message } = json.errors[0] || "Error..";
-        throw new Error(message);
+        throw new APIError({ code: "TREE_NOT_FOUND", message });
       }
 
       return json.data;

@@ -4,7 +4,6 @@ export const center = css({
   variants: {
     center: {
       true: {
-        flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
       },

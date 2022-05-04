@@ -25,7 +25,6 @@ export function ZoomInOut({ css }: Props) {
       <Button
         onClick={() => zoomIn({ duration: 200 })}
         variant="neutral"
-        css={{ colorScheme: "primary" }}
         square
       >
         <Icon>
@@ -35,7 +34,6 @@ export function ZoomInOut({ css }: Props) {
       <Button
         onClick={() => zoomOut({ duration: 200 })}
         variant="neutral"
-        css={{ colorScheme: "primary" }}
         square
       >
         <Icon>
