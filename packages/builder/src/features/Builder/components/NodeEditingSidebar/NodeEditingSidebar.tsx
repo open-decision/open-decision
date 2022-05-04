@@ -114,9 +114,7 @@ export function NodeEditingSidebarContent({ node, css }: Props) {
             }}
           >
             <Label>Knoten</Label>
-            <Stack
-              css={{ flexDirection: "row", gap: "$2", alignItems: "center" }}
-            >
+            <Row css={{ gap: "$2" }} center>
               {parentNodes.length > 0 ? (
                 <ParentNodeSelector parentNodes={parentNodes} />
               ) : null}
@@ -128,7 +126,7 @@ export function NodeEditingSidebarContent({ node, css }: Props) {
                 nodeId={node.id}
                 isStartNode={isStartNode}
               />
-            </Stack>
+            </Row>
           </Row>
           <ControlledInput
             name="name"
