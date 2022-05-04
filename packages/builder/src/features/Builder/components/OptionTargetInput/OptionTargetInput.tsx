@@ -139,6 +139,7 @@ export function OptionTargetInput({
     createCondition,
     createEdge,
     addInput,
+    deleteEdges,
   } = useTreeContext();
   const { addNotification } = useNotificationStore();
 
@@ -247,33 +248,39 @@ export function OptionTargetInput({
 
               if (childNode instanceof Error) return childNode;
 
-              // Construct the Relationship
-              const newCondition = createCondition({
-                inputId,
-                answerId: answer.id,
-              });
-
-              const newEdge = createEdge({
-                source: nodeId,
-                target: childNode.id,
-                conditionId: newCondition.id,
-              });
-
-              if (newEdge instanceof Error) {
-                addNotification({
-                  title: "Es konnte keine verbundender Knoten erstellt werden.",
-                  content: newEdge.message,
-                  variant: "danger",
+              if (edge?.target) {
+                updateEdgeTarget(edge.id, childNode.id);
+              } else {
+                // Construct the Relationship
+                const newCondition = createCondition({
+                  inputId,
+                  answerId: answer.id,
                 });
 
-                return newEdge;
+                const newEdge = createEdge({
+                  source: nodeId,
+                  target: childNode.id,
+                  conditionId: newCondition.id,
+                });
+
+                if (newEdge instanceof Error) {
+                  addNotification({
+                    title:
+                      "Es konnte keine verbundender Knoten erstellt werden.",
+                    content: newEdge.message,
+                    variant: "danger",
+                  });
+
+                  return newEdge;
+                }
+
+                addCondition(newCondition);
+                relateConditionToNode(nodeId, newCondition.id);
+                addEdge(newEdge);
               }
 
-              addCondition(newCondition);
-              relateConditionToNode(nodeId, newCondition.id);
               addInput(newInput);
               addNode(childNode);
-              addEdge(newEdge);
 
               return { id: childNode.id, label: childNode.data.name };
             }}
