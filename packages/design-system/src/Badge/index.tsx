@@ -11,6 +11,7 @@ export const badeStyles = css({
   color: "$colorScheme11",
   display: "flex",
   alignItems: "center",
+  gap: "$1",
 
   variants: {
     size: {
