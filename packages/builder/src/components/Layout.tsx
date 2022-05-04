@@ -3,6 +3,7 @@ import { Notifications } from "features/Notifications/Notifications";
 import {
   Badge,
   Box,
+  Grid,
   LoadingSpinner,
   Popover,
   Row,
@@ -12,6 +13,7 @@ import {
 } from "@open-decision/design-system";
 import { ErrorBoundary } from "@sentry/nextjs";
 import { ErrorFallback } from "./Error/FullPageErrorFallback";
+import { ErrorReportLink } from "./Error/ErrorReportLink";
 import { FeedbackLink } from "./Error/FeedbackLink";
 
 const AppContainer = styled("main", {
@@ -52,18 +54,25 @@ const AlphaBanner = () => {
         </Row>
       </Popover.Trigger>
       <Popover.Content
-        css={{ maxWidth: "400px", focusType: "none" }}
+        css={{ maxWidth: "400px", focusType: "none", padding: "$4" }}
         asChild
         sideOffset={10}
       >
         <Stack css={{ gap: "$4" }}>
           <Text>
             Open-Decision befindet sich noch in einer frühen Entwicklungsstufe.
-            Daher kann es kann zu Bugs und Ausfällen kommen.
+            Feedback durch unsere Nutzer*innen hilft uns dabei die Nutzbarkeit
+            unserer Software dauerhaft zu gewährleisten.
           </Text>
           <Text>
-            Sollte ein Problem auftreten dann schreibe uns: <FeedbackLink />
+            Sollten Programmfehler auftreten, dann beschreibe sie uns bitte
+            hier: <ErrorReportLink />
           </Text>
+          <Text>
+            Solltest du Ideen zur Verbesserung der Software haben, dann
+            beschreibe sie uns bitte hier: <FeedbackLink />
+          </Text>
+          <Text size="large">Vielen Dank!</Text>
         </Stack>
       </Popover.Content>
     </Popover.Root>

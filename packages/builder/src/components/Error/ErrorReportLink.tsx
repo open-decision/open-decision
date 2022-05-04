@@ -1,14 +1,14 @@
 import { Link, Icon } from "@open-decision/design-system";
 import { ExternalLinkIcon } from "@radix-ui/react-icons";
 
-export function FeedbackLink() {
+export function ErrorReportLink() {
   return (
     <Link
       css={{ color: "$primary11" }}
       target="_blank"
-      href="https://www.notion.so/openlegaltech/Feedback-c0047d9166974b49a99e0a43b5d06044"
+      href="https://www.notion.so/openlegaltech/Bug-Reports-69f5eb094eb645f599ae9e61ae363408"
     >
-      Features
+      Bug Reports
       <Icon>
         <ExternalLinkIcon />
       </Icon>

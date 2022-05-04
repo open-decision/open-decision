@@ -1,7 +1,6 @@
-import { Icon, Link, StyleObject, Text } from "@open-decision/design-system";
-import { ExternalLinkIcon } from "@radix-ui/react-icons";
+import { StyleObject, Text } from "@open-decision/design-system";
 import { InfoBox } from "../../features/Notifications/InfoBox";
-import { FeedbackLink } from "./FeedbackLink";
+import { ErrorReportLink } from "./ErrorReportLink";
 
 export type ErrorCardProps = {
   title?: string;
@@ -24,7 +23,7 @@ export function ErrorCard({
           </Text>
           <Text>
             Sollte der Fehler weiterhin auftreten dann erstelle bitte einen
-            Bugreport hier: <FeedbackLink />
+            Bugreport hier: <ErrorReportLink />
           </Text>
         </>
       }
