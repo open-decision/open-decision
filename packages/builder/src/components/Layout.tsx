@@ -15,7 +15,7 @@ import { ErrorFallback } from "./Error/FullPageErrorFallback";
 import { FeedbackLink } from "./Error/FeedbackLink";
 
 const AppContainer = styled("main", {
-  height: "100vh",
+  height: "100%",
   width: "100vw",
   overflow: "hidden",
   display: "flex",
@@ -74,7 +74,6 @@ export const LayoutImpl = (
 ): JSX.Element => {
   return (
     <>
-      <AlphaBanner />
       <ErrorBoundary
         fallback={({ error }) => {
           console.log(error);
@@ -88,10 +87,19 @@ export const LayoutImpl = (
         }}
       >
         <React.Suspense fallback={<Loading {...props} />}>
-          <AppContainer {...props} ref={ref}>
-            <Notifications />
-            {children}
-          </AppContainer>
+          <Box
+            css={{
+              height: "100vh",
+              display: "grid",
+              gridTemplateRows: "max-content 1fr",
+            }}
+          >
+            <AlphaBanner />
+            <AppContainer {...props} ref={ref}>
+              <Notifications />
+              {children}
+            </AppContainer>
+          </Box>
         </React.Suspense>
       </ErrorBoundary>
     </>
