@@ -16,7 +16,6 @@ export const emailIsWhitelisted = async (email: string) => {
     return `${temp[temp.length - 2]}.${temp[temp.length - 1]}`;
   };
   let entry: WhitelistEntry | null = null;
-  console.log(baseDomain(domain));
   //exact domain
   entry = await prisma.whitelistEntry.findFirst({
     where: {

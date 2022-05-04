@@ -10,6 +10,7 @@ import {
 } from "../services/index";
 import httpStatus from "http-status";
 import { User } from "@prisma-client";
+import ApiError from "../utils/ApiError";
 namespace Express {
   export interface Request {
     user: User;
@@ -21,6 +22,10 @@ const register = catchAsync(async (req: Request, res: Response) => {
     res.locals.email,
     res.locals.password
   );
+
+  if (config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS) {
+    res.status(httpStatus.CREATED).send({ user: pickSafeUserProperties(user) });
+  }
 
   const { refresh, access } = await tokenService.generateAuthTokens(user);
 
@@ -44,6 +49,15 @@ const register = catchAsync(async (req: Request, res: Response) => {
 const login = catchAsync(async (req: Request, res: Response) => {
   const { email, password } = res.locals;
   const user = await authService.loginUserWithEmailAndPassword(email, password);
+  if (
+    config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS &&
+    !user.emailIsVerified
+  ) {
+    throw new ApiError({
+      statusCode: httpStatus.UNAUTHORIZED,
+      message: "Please confirm your email",
+    });
+  }
   const { refresh, access } = await tokenService.generateAuthTokens(user);
   res.cookie("refreshCookie", refresh.token, {
     maxAge: config.JWT_REFRESH_EXPIRATION_DAYS * 86400 * 1000,
