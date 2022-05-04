@@ -1,5 +1,4 @@
-import { Icon, Link, StyleObject, Text } from "@open-decision/design-system";
-import { ExternalLinkIcon } from "@radix-ui/react-icons";
+import { StyleObject, Text } from "@open-decision/design-system";
 import { InfoBox } from "../../features/Notifications/InfoBox";
 import { FeedbackLink } from "./FeedbackLink";
 

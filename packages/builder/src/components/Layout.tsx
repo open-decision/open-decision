@@ -73,28 +73,26 @@ export const LayoutImpl = (
   ref: React.Ref<HTMLElement>
 ): JSX.Element => {
   return (
-    <>
+    <ErrorBoundary
+      fallback={({ error }) => {
+        console.log(error);
+        return (
+          <ErrorFallback
+            title="Es ist ein Fehler aufgetreten."
+            description={`${error.message} Bitte laden Sie die Seite neu.`}
+            {...props}
+          />
+        );
+      }}
+    >
       <AlphaBanner />
-      <ErrorBoundary
-        fallback={({ error }) => {
-          console.log(error);
-          return (
-            <ErrorFallback
-              title="Es ist ein Fehler aufgetreten."
-              description={`${error.message} Bitte laden Sie die Seite neu.`}
-              {...props}
-            />
-          );
-        }}
-      >
-        <React.Suspense fallback={<Loading {...props} />}>
-          <AppContainer {...props} ref={ref}>
-            <Notifications />
-            {children}
-          </AppContainer>
-        </React.Suspense>
-      </ErrorBoundary>
-    </>
+      <React.Suspense fallback={<Loading {...props} />}>
+        <AppContainer {...props} ref={ref}>
+          <Notifications />
+          {children}
+        </AppContainer>
+      </React.Suspense>
+    </ErrorBoundary>
   );
 };
 
