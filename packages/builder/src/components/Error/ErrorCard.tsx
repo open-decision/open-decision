@@ -1,6 +1,7 @@
 import { Icon, Link, StyleObject, Text } from "@open-decision/design-system";
 import { ExternalLinkIcon } from "@radix-ui/react-icons";
 import { InfoBox } from "../../features/Notifications/InfoBox";
+import { FeedbackLink } from "./FeedbackLink";
 
 export type ErrorCardProps = {
   title?: string;
@@ -23,13 +24,7 @@ export function ErrorCard({
           </Text>
           <Text>
             Sollte der Fehler weiterhin auftreten dann erstelle bitte einen
-            Bugreport hier:{" "}
-            <Link href="https://www.notion.so/openlegaltech/a8a6b8db7e2b485294b6e31c1b3ae9da?v=ae3429d3f8d04d3395126baaa8147fe5">
-              Feedback Formular
-              <Icon>
-                <ExternalLinkIcon />
-              </Icon>
-            </Link>
+            Bugreport hier: <FeedbackLink />
           </Text>
         </>
       }
