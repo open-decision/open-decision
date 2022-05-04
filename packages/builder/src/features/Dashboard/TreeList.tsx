@@ -80,8 +80,11 @@ export const TreeList = () => {
           gap: "$2",
           marginTop: "$1",
           paddingBlock: "$4",
-          overflow: "auto",
           height: "100%",
+          width: "calc(100% + $space$4)",
+          paddingInline: "$2",
+          overflowY: "auto",
+          alignSelf: "center",
         }}
       >
         {filteredData.map((tree) => (
