@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { isPasswordStrongEnough } from "./password.validation";
+import validator from "validator";
+
 export const createUser = z.object({
   body: z.object({
     email: z.string().email(),
@@ -52,13 +54,29 @@ export const deleteUser = z.object({
 
 export const whitelistUsersForRegistration = z.object({
   body: z.object({
-    emails: z.array(z.string().email()),
+    emails: z.array(
+      z.union([
+        z.string().email(),
+        z.string().refine((string) => validator.isFQDN(string)),
+      ])
+    ),
     sendInvite: z.boolean().optional(),
   }),
 });
 
 export const removeUsersFromWhitelist = z.object({
   body: z.object({
-    emails: z.array(z.string().email()),
+    emails: z.array(
+      z.union([
+        z.string().email(),
+        z.string().refine((string) => validator.isFQDN(string)),
+      ])
+    ),
+  }),
+});
+
+export const isWhitelisted = z.object({
+  body: z.object({
+    email: z.string().email(),
   }),
 });
