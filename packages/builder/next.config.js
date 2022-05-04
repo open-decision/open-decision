@@ -30,7 +30,7 @@ const nextConfig = {
         destination: `${process.env.OD_API_ENDPOINT}/v1/users/:uuid`,
       },
       {
-        source: "api/users/is-whitelisted",
+        source: "/api/users/is-whitelisted",
         destination: `${process.env.OD_API_ENDPOINT}/v1/users/is-whitelisted`,
       },
     ];
