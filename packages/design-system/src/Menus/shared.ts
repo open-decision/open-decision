@@ -42,6 +42,7 @@ export const menuItemStyles = css({
   fontWeight: "500",
   border: "1px solid transparent",
   focusColor: "$colorScheme6",
+  textDecoration: "none !important",
 
   [`.${darkTheme} &`]: {
     focusColor: "$colorScheme8",
