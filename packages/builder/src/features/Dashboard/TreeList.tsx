@@ -97,14 +97,7 @@ export const TreeList = () => {
 };
 
 const EmptyState = () => (
-  <Stack
-    css={{
-      gridRow: "2 / 4",
-      gridColumn: "2 / 4",
-      justifyContent: "center",
-      alignItems: "center",
-    }}
-  >
+  <Stack center css={{ flex: 1 }}>
     <Card css={{ alignItems: "center", padding: "$9", gap: "$2" }}>
       <Heading>Sie haben noch kein Open-Decision-Projekt.</Heading>
       <Text size="large" css={{ marginBottom: "$6" }}>
