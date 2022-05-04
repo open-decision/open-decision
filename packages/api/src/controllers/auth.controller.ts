@@ -23,7 +23,10 @@ const register = catchAsync(async (req: Request, res: Response) => {
     res.locals.password
   );
 
-  if (config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS) {
+  if (
+    config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS &&
+    user.role == "USER"
+  ) {
     res.status(httpStatus.CREATED).send({ user: pickSafeUserProperties(user) });
   }
 
@@ -51,7 +54,8 @@ const login = catchAsync(async (req: Request, res: Response) => {
   const user = await authService.loginUserWithEmailAndPassword(email, password);
   if (
     config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS &&
-    !user.emailIsVerified
+    user.emailIsVerified &&
+    user.role == "USER"
   ) {
     throw new ApiError({
       statusCode: httpStatus.UNAUTHORIZED,
