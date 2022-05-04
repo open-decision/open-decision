@@ -139,7 +139,6 @@ export function OptionTargetInput({
     createCondition,
     createEdge,
     addInput,
-    deleteEdges,
   } = useTreeContext();
   const { addNotification } = useNotificationStore();
 
