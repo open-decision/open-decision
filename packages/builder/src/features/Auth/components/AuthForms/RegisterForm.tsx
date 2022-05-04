@@ -25,9 +25,9 @@ const useIsOnWhiteListQuery = (
         method: "POST",
       });
 
-      if (!result.data.isWhiteListed) throw new Error();
+      if (!result.data.isWhitelisted) throw new Error();
 
-      return result;
+      return result.data;
     },
     { ...options }
   );
@@ -42,6 +42,8 @@ export function RegisterForm() {
   const [state, send] = useAuth();
   const { mutate, isSuccess, isError, isLoading, variables } =
     useIsOnWhiteListQuery();
+
+  console.log(isSuccess);
 
   const [RegisterForm, { register }] = useForm({
     defaultValues: {
