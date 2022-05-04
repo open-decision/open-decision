@@ -53,10 +53,7 @@ export const Node = memo(
         data-connectable={connectable}
         css={{
           boxShadow: isSelected ? "$4" : "$3",
-          border:
-            isSelected && !isConnecting
-              ? "2px solid $primary9"
-              : "1px solid $gray8",
+          border: isSelected ? "2px solid $primary9" : "1px solid $gray8",
           padding: isSelected ? "calc($5 - 1px)" : "$5",
           opacity: validConnectionTarget ? 1 : 0.5,
         }}
