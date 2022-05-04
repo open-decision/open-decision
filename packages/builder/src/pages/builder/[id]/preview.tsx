@@ -21,6 +21,7 @@ import { BuilderLayout } from "../../../features/Builder/components/BuilderLayou
 
 export default function VorschauPage() {
   const id = useTreeId();
+  const [selectedTab, setSelectedTab] = React.useState("desktop");
 
   const { data } = useGetTreeContentQuery(
     { uuid: id },
@@ -39,7 +40,13 @@ export default function VorschauPage() {
       >
         <Row css={{ justifyContent: "center", flex: 1 }}>
           <Tabs.List>
-            <ToggleGroup.Root type="single" defaultValue="desktop">
+            <ToggleGroup.Root
+              type="single"
+              value={selectedTab}
+              onValueChange={(value) => {
+                if (value) setSelectedTab(value);
+              }}
+            >
               <ToggleGroup.Item value="desktop" asChild>
                 <Tabs.Trigger value="desktop" asChild>
                   <ToggleGroup.Button>
