@@ -11,6 +11,7 @@ import { register } from "./utils/register";
 import { requestPasswordReset } from "./utils/requestPasswordReset";
 import { resetPassword } from "./utils/resetPassword";
 import { LoginResponse } from "./utils/shared";
+import * as Sentry from "@sentry/nextjs";
 
 type SharedContext = {
   location?: string;
@@ -99,7 +100,11 @@ export const createAuthenticationMachine = (router: NextRouter) =>
             REPORT_IS_LOGGED_IN: [
               {
                 target: "loggedIn",
-                actions: ["assignUserToContext", "assignLocationToContext"],
+                actions: [
+                  "assignUserToContext",
+                  "assignLocationToContext",
+                  "setSentryUser",
+                ],
               },
             ],
             REPORT_IS_LOGGED_OUT: [
@@ -379,6 +384,8 @@ export const createAuthenticationMachine = (router: NextRouter) =>
         },
       },
       actions: {
+        setSentryUser: (context, _event) =>
+          Sentry.setUser({ email: context.auth?.user.email }),
         assignUserToContext: assign((context, event) => {
           if (
             event.type !== "REPORT_IS_LOGGED_IN" &&
