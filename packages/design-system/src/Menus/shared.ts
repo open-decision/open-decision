@@ -16,7 +16,6 @@ export const menuContainerStyles = css({
   overflowY: "auto",
   display: "flex",
   flexDirection: "column",
-  alignItems: "center",
   gap: "$1",
 
   transformOrigin: "var(--radix-dropdown-menu-content-transform-origin)",
