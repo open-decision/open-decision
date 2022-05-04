@@ -75,6 +75,7 @@
     "tslib": "^2.3.1",
     "type-graphql": "^1.1.1",
     "typegraphql-prisma": "^0.19.1",
+    "typescript": "^4.6.3",
     "validator": "^13.7.0",
     "winston": "^3.3.3",
     "winston-transport-sentry-node": "^2.0.0",
@@ -82,8 +83,7 @@
     "y-protocols": "^1.0.5",
     "y-websocket": "^1.3.18",
     "yjs": "^13.5.34",
-    "zod": "^3.11.6",
-    "typescript": "^4.6.3"
+    "zod": "^3.11.6"
   },
   "devDependencies": {
     "@types/compression": "^1.7.2",

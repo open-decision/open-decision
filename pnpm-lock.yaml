@@ -276,6 +276,7 @@ importers:
       '@xstate/immer': ^0.3.1
       '@xstate/inspect': ^0.6.5
       '@xstate/react': ^3.0.0
+      axios: ^0.27.2
       dagre: ^0.8.5
       date-fns: ^2.28.0
       fast-deep-equal: ^3.1.3
@@ -352,6 +353,7 @@ importers:
       '@tiptap/starter-kit': 2.0.0-beta.183
       '@xstate/immer': 0.3.1_immer@9.0.12+xstate@4.31.0
       '@xstate/react': 3.0.0_ac6153722f1c614f3bcd3f2c47dc0e51
+      axios: 0.27.2
       dagre: 0.8.5
       date-fns: 2.28.0
       fast-deep-equal: 3.1.3
@@ -8306,6 +8308,15 @@ packages:
       - debug
     dev: true
 
+  /axios/0.27.2:
+    resolution: {integrity: sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==}
+    dependencies:
+      follow-redirects: 1.14.9
+      form-data: 4.0.0
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
   /axobject-query/2.2.0:
     resolution: {integrity: sha512-Td525n+iPOOyUQIeBfcASuG6uJsDOITl7Mds5gFyerkWiX7qhUTdYUBlSgNMyVqtSJqwpt1kXGLdUt6SykLMRA==}
     dev: true
@@ -12056,7 +12067,6 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
-    dev: true
 
   /follow-redirects/1.14.9_debug@4.3.4:
     resolution: {integrity: sha512-MQDfihBQYMcyy5dhRDJUHcw7lb2Pv/TuE6xP1vyraLukNDHKbDxDNaOE3NbCAdKQApno+GPRyo1YAp89yCjK4w==}
@@ -12147,7 +12157,6 @@ packages:
       asynckit: 0.4.0
       combined-stream: 1.0.8
       mime-types: 2.1.35
-    dev: true
 
   /format/0.2.2:
     resolution: {integrity: sha1-1hcBB+nv3E7TDJ3DkBbflCtctYs=}

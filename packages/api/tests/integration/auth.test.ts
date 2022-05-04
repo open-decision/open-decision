@@ -14,6 +14,7 @@ import { setupTestDB } from "../utils/setupTestDB";
 import { roleRights, adminRights } from "../../src/config/roles";
 import {
   userOne,
+  userTwo,
   admin,
   insertUsers,
   developer,
@@ -25,8 +26,16 @@ import {
 import UserHandler from "../../src/models/user.model";
 import { tokenHandler } from "../../src/models/token.model";
 import { TokenType } from "@prisma-client";
-import { hasRefreshCookie } from "../utils/refreshCookieHelpers";
-import { entryOne, insertEntry } from "../fixtures/whitelistEntry.fixture";
+import {
+  hasNoRefreshCookie,
+  hasRefreshCookie,
+} from "../utils/refreshCookieHelpers";
+import {
+  entryOne,
+  insertEntry,
+  entrySubdomainOne,
+  entryBaseDomainTwo,
+} from "../fixtures/whitelistEntry.fixture";
 import { emailIsWhitelisted } from "../../src/models/whitelistEntry.model";
 
 setupTestDB();
@@ -147,45 +156,55 @@ describe("Auth routes", () => {
       expect(res.body).not.toHaveProperty("refresh");
     });
 
-    test("should return 201 and successfully register user if whitelist is activated and email is whitelisted", async () => {
+    test("should return 201 and successfully register user if whitelist is activated and email is indivudally whitelisted", async () => {
       config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = true;
       await insertUsers([admin]);
-      await insertEntry([{ ...entryOne, email: newUser.email }]);
+      await insertEntry([{ ...entryOne, emailOrDomain: newUser.email }]);
 
       const res = await request(app)
         .post("/v1/auth/register")
         .send(newUser)
         .expect(httpStatus.CREATED)
-        .expect(hasRefreshCookie);
+        .expect(hasNoRefreshCookie);
 
-      expect(res.body.user).toEqual({
-        uuid: expect.anything(),
-        name: null,
-        email: newUser.email,
-        role: "USER",
-        emailIsVerified: false,
-      });
-
-      expect(res.body.access).toEqual({
-        token: expect.anything(),
-        expires: expect.anything(),
-      });
-
-      const dbUser = await UserHandler.findByUuidOrId(res.body.user.uuid);
-      expect(dbUser).toBeDefined();
-      expect(dbUser!.password).not.toBe(newUser.password);
-      expect(dbUser).toMatchObject({
-        name: null,
-        email: newUser.email,
-        role: "USER",
-        emailIsVerified: false,
-      });
-
-      expect(res.body).not.toHaveProperty("refresh");
+      expect(res.body.access).toBeUndefined();
 
       // The whitelist entry should be deleted after the successful registration
-      expect(await emailIsWhitelisted(newUser.email)).toBe(false);
+      expect(await (await emailIsWhitelisted(newUser.email)).result).toBe(
+        false
+      );
 
+      config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = false;
+    });
+
+    test("should return 201 and successfully register user if whitelist is activated and email is domain whitelisted", async () => {
+      config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = true;
+      await insertUsers([admin]);
+      await insertEntry([entryBaseDomainTwo]);
+
+      const res = await request(app)
+        .post("/v1/auth/register")
+        .send({ email: userTwo.email, password: userTwo.password })
+        .expect(httpStatus.CREATED)
+        .expect(hasNoRefreshCookie);
+
+      expect(res.body.access).toBeUndefined();
+
+      config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = false;
+    });
+
+    test("should return 201 and successfully register user if whitelist is activated and email is whitelisted by base domain", async () => {
+      config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = true;
+      await insertUsers([admin]);
+      await insertEntry([entryBaseDomainTwo]);
+
+      const res = await request(app)
+        .post("/v1/auth/register")
+        .send({ email: userTwo.email, password: userTwo.password })
+        .expect(httpStatus.CREATED)
+        .expect(hasNoRefreshCookie);
+
+      expect(res.body.access).toBeUndefined();
       config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = false;
     });
 
@@ -202,6 +221,38 @@ describe("Auth routes", () => {
       config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = false;
     });
 
+    test("should return 400 if whitelist is activated and email is not on the right subdomain", async () => {
+      config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = true;
+      await insertUsers([admin]);
+      await insertEntry([entrySubdomainOne]);
+
+      await request(app)
+        .post("/v1/auth/register")
+        .send({
+          email: "test@wrongsubdomain.open-decision.org",
+          password: newUser.password,
+        })
+        .expect(httpStatus.FORBIDDEN);
+
+      config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = false;
+    });
+
+    test("should return 400 if whitelist is activated, subdomain is whitelisted but  email is on basedomain", async () => {
+      config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = true;
+      await insertUsers([admin]);
+      await insertEntry([entrySubdomainOne]);
+
+      await request(app)
+        .post("/v1/auth/register")
+        .send({
+          email: "test@open-decision.org",
+          password: newUser.password,
+        })
+        .expect(httpStatus.FORBIDDEN);
+
+      config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = false;
+    });
+
     test("should not delete whitelist entry if account creation fails", async () => {
       // This is not a realistic use-case, why would you whitelist an existing account
       // However, this is the easiest way to ensure that the account creation fails to
@@ -209,14 +260,33 @@ describe("Auth routes", () => {
 
       config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = true;
       await insertUsers([userOne, admin]);
-      await insertEntry([{ ...entryOne, email: userOne.email }]);
+      await insertEntry([{ ...entryOne, emailOrDomain: userOne.email }]);
 
       await request(app)
         .post("/v1/auth/register")
         .send({ email: userOne.email, password: userOne.password })
         .expect(httpStatus.BAD_REQUEST);
 
-      expect(await emailIsWhitelisted(userOne.email)).toBe(true);
+      expect(await (await emailIsWhitelisted(userOne.email)).result).toBe(true);
+      config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = false;
+    });
+
+    test("should not delete whitelist entry if whitelisting is done by domain", async () => {
+      config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = true;
+      await insertUsers([admin]);
+      await insertEntry([entryBaseDomainTwo]);
+
+      const res = await request(app)
+        .post("/v1/auth/register")
+        .send({ email: userTwo.email, password: userTwo.password })
+        .expect(httpStatus.CREATED);
+
+      console.log(res.body);
+      expect(
+        await (
+          await emailIsWhitelisted(`hallo@${entryBaseDomainTwo.emailOrDomain}`)
+        ).result
+      ).toBe(true);
       config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = false;
     });
 
@@ -319,6 +389,56 @@ describe("Auth routes", () => {
       expect(
         dayjs(res.body.access.expires).isAfter(dayjs().add(364, "day"))
       ).toBe(true);
+    });
+
+    test("should return 200 and login user if email and password match, whitelist is activated & mail is verified", async () => {
+      await insertUsers([{ ...userOne, emailIsVerified: true }]);
+      config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = true;
+      const loginCredentials = {
+        email: userOne.email,
+        password: userOne.password,
+      };
+
+      const res = await request(app)
+        .post("/v1/auth/login")
+        .send(loginCredentials)
+        .expect(httpStatus.OK)
+        .expect(hasRefreshCookie);
+
+      expect(res.body).toMatchObject({
+        access: { token: expect.anything(), expires: expect.anything() },
+        user: {
+          email: userOne.email,
+          emailIsVerified: true,
+          name: userOne.name,
+          role: "USER",
+          uuid: expect.anything(),
+        },
+      });
+
+      config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = false;
+    });
+
+    test("should return 401 error if whitelist is activated and email is not confirmed", async () => {
+      await insertUsers([{ ...userOne, emailIsVerified: false }]);
+      config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = true;
+
+      const loginCredentials = {
+        email: userOne.email,
+        password: userOne.password,
+      };
+
+      const res = await request(app)
+        .post("/v1/auth/login")
+        .send(loginCredentials)
+        .expect(httpStatus.UNAUTHORIZED);
+
+      expect(res.body).toEqual({
+        code: httpStatus.UNAUTHORIZED,
+        message: "Please confirm your email",
+      });
+
+      config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS = true;
     });
 
     test("should return 401 error if there are no users with that email", async () => {

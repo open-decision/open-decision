@@ -34,7 +34,7 @@ export function PreviewLink({
     <Link passHref href={`/builder/${id}/preview`}>
       <SystemLink
         className={className}
-        css={css}
+        css={{ textDecoration: "none !important", ...css }}
         onClick={() => {
           const tree = getTreeData();
           return queryClient.setQueryData(["getTreeContent", { uuid: id }], {

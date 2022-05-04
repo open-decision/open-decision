@@ -58,6 +58,11 @@ const getWhitelist = catchAsync(async (req: Request, res: Response) => {
   res.send(entries);
 });
 
+const isWhitelisted = catchAsync(async (req: Request, res: Response) => {
+  const result = await userService.isWhitelisted(res.locals.email);
+  res.send({ isWhitelisted: result });
+});
+
 const addToWhitelist = catchAsync(async (req: Request, res: Response) => {
   // @ts-ignore
   const creatorUuid = req.user.uuid;
@@ -84,4 +89,5 @@ export const userController = {
   getWhitelist,
   addToWhitelist,
   removeFromWhitelist,
+  isWhitelisted,
 };

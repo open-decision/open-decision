@@ -84,6 +84,7 @@ export default function VorschauPage() {
               <SystemLink
                 className={buttonStyles({
                   variant: "secondary",
+                  css: { textDecoration: "none !important" },
                 })}
               >
                 <Icon>

@@ -19,7 +19,7 @@ export const userTwo: User = {
   id: faker.datatype.number(),
   name: faker.name.findName(),
   uuid: faker.datatype.uuid(),
-  email: faker.internet.email().toLowerCase(),
+  email: "test@open-decision.org",
   password,
   role: "USER",
   emailIsVerified: false,
