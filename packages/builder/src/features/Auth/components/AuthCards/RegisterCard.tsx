@@ -1,6 +1,6 @@
 import { Link, Text } from "@open-decision/design-system";
 import * as React from "react";
-import { RegisterForm } from "../AuthForms/RegisterForm";
+import { CombinedRegisterForm } from "../AuthForms/RegisterForm";
 import { AuthCard } from "./";
 
 export function RegisterCard() {
@@ -14,7 +14,7 @@ export function RegisterCard() {
         </AuthCard.Description>
       </AuthCard.Header>
       <AuthCard.Body>
-        <RegisterForm />
+        <CombinedRegisterForm />
       </AuthCard.Body>
       <AuthCard.Footer>
         <Text>

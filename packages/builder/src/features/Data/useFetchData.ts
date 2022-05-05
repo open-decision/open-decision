@@ -22,7 +22,7 @@ export const useFetchData = <TData, TVariables>(
           message: "Tried to make an unauthenticated request to graphql api.",
         });
 
-      const res = await fetch("/api/graphql", {
+      const res = await fetch("/external-api/graphql", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

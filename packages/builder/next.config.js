@@ -18,19 +18,19 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: "/api/auth/:path",
+        source: "/external-api/auth/:path",
         destination: `${process.env.OD_API_ENDPOINT}/v1/auth/:path`,
       },
       {
-        source: "/api/graphql",
+        source: "/external-api/graphql",
         destination: `${process.env.OD_API_ENDPOINT}/v1/graphql`,
       },
       {
-        source: "/api/users/:uuid",
+        source: "/external-api/users/:uuid",
         destination: `${process.env.OD_API_ENDPOINT}/v1/users/:uuid`,
       },
       {
-        source: "/api/users/is-whitelisted",
+        source: "/external-api/users/is-whitelisted",
         destination: `${process.env.OD_API_ENDPOINT}/v1/users/is-whitelisted`,
       },
     ];

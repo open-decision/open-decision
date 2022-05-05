@@ -23,12 +23,13 @@ const register = catchAsync(async (req: Request, res: Response) => {
     res.locals.password
   );
 
-  if (
-    config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS &&
-    user.role == "USER"
-  ) {
-    res.status(httpStatus.CREATED).send({ user: pickSafeUserProperties(user) });
-  }
+  // For now this is not necessary, we don't force the user to verify its email before the login is possible
+  // if (
+  //   config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS &&
+  //   user.role == "USER"
+  // ) {
+  //   res.status(httpStatus.CREATED).send({ user: pickSafeUserProperties(user) });
+  // }
 
   const { refresh, access } = await tokenService.generateAuthTokens(user);
 
@@ -52,16 +53,19 @@ const register = catchAsync(async (req: Request, res: Response) => {
 const login = catchAsync(async (req: Request, res: Response) => {
   const { email, password } = res.locals;
   const user = await authService.loginUserWithEmailAndPassword(email, password);
-  if (
-    config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS &&
-    user.emailIsVerified &&
-    user.role == "USER"
-  ) {
-    throw new ApiError({
-      statusCode: httpStatus.UNAUTHORIZED,
-      message: "Please confirm your email",
-    });
-  }
+
+  // For now this is not necessary, we don't force the user to verify its email before the login is possible
+
+  // if (
+  //   config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS &&
+  //   user.emailIsVerified &&
+  //   user.role == "USER"
+  // ) {
+  //   throw new ApiError({
+  //     statusCode: httpStatus.UNAUTHORIZED,
+  //     message: "Please confirm your email",
+  //   });
+  // }
   const { refresh, access } = await tokenService.generateAuthTokens(user);
   res.cookie("refreshCookie", refresh.token, {
     maxAge: config.JWT_REFRESH_EXPIRATION_DAYS * 86400 * 1000,

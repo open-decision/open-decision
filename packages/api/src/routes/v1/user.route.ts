@@ -232,7 +232,7 @@ export default userRouter;
  */
 /**
  * @openapi
- * /whitelist:
+ * /users/whitelist:
  *   get:
  *     summary: Get all whitelist entries
  *     description: Only admins can get whitelist entries
@@ -315,4 +315,38 @@ export default userRouter;
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
  *         $ref: '#/components/responses/Forbidden'
+ */
+/**
+ * @openapi
+ * /users/is-whitelisted:
+ *   post:
+ *     summary: Check if an email ist whitelisted
+ *     description: No authentication is required.
+ *     tags: [Whitelist]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *             properties:
+ *               email:
+ *                 type: string
+ *             example:
+ *               email: "fake@example.com"
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 isWhitelisted:
+ *                   type: boolean
+ *               example:
+ *                 isWhitelisted: false
+ *
  */
