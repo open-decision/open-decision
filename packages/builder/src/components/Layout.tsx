@@ -45,7 +45,13 @@ const AlphaBanner = () => {
     <Popover.Root>
       <Popover.Trigger asChild>
         <Row
-          css={{ layer: "3", padding: "$2", gap: "$2", cursor: "pointer" }}
+          css={{
+            layer: "3",
+            padding: "$2",
+            gap: "$2",
+            cursor: "pointer",
+            boxShadow: "$1",
+          }}
           center
         >
           <Badge css={{ colorScheme: "warning" }}>Alpha</Badge>
@@ -53,7 +59,12 @@ const AlphaBanner = () => {
         </Row>
       </Popover.Trigger>
       <Popover.Content
-        css={{ maxWidth: "400px", focusType: "none", padding: "$4" }}
+        css={{
+          maxWidth: "400px",
+          focusType: "none",
+          padding: "$4",
+          layer: "1",
+        }}
         asChild
         sideOffset={10}
       >
