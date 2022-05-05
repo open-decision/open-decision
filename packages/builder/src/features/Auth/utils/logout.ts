@@ -5,7 +5,7 @@ export const logout = (
   onError: (error: string) => void
 ) =>
   safeFetch(
-    "/api/auth/logout",
+    "/external-api/auth/logout",
     { method: "POST", credentials: "include" },
     {
       onSuccess,

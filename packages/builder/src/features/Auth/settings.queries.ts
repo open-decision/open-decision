@@ -11,7 +11,7 @@ export const useUserUpdateMutation = (
   return useMutation(
     "updateUser",
     (data: Data) => {
-      return fetch(`/api/users/${context.auth?.user.uuid}`, {
+      return fetch(`/external-api/users/${context.auth?.user.uuid}`, {
         body: JSON.stringify(data),
         method: "PATCH",
         headers: {
@@ -30,7 +30,7 @@ export const useDeleteUserMutation = (options?: UseMutationOptions) => {
   return useMutation(
     "deleteUser",
     () => {
-      return fetch(`/api/users/${context.auth?.user.uuid}`, {
+      return fetch(`/external-api/users/${context.auth?.user.uuid}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${context.auth?.access.token}`,

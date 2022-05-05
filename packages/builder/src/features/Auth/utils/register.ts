@@ -8,7 +8,7 @@ export const register = (
   onError: (error: string) => void
 ) =>
   safeFetch(
-    "/api/auth/register",
+    "/external-api/auth/register",
     { method: "POST", body: { email, password } },
     {
       throwingValidation: validateLoginResponse,
