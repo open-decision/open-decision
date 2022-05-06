@@ -3,9 +3,8 @@ import React from "react";
 import { NodeEditingSidebar } from "./components/NodeEditingSidebar/NodeEditingSidebar";
 import { Canvas } from "./components/Canvas/Canvas";
 import { sidebarWidth } from "./utilities/constants";
-import { useTreeContext } from "./state/treeStore/TreeContext";
-import { useSnapshot } from "valtio";
 import { ZoomInOut } from "./components/Canvas/ZoomInOut";
+import { useTreeSuspension } from "./state/treeStore/hooks/useTreeSuspension";
 
 const StyledCanvas = styled(Canvas, {
   display: "grid",
@@ -19,11 +18,6 @@ type NodeEditorProps = {
 };
 
 export const NodeEditor = ({ css }: NodeEditorProps) => {
-  const { tree } = useTreeContext();
-  const {
-    nonSyncedStore: { synced: _synced },
-  } = useSnapshot(tree);
-
   return (
     <StyledCanvas css={css}>
       <ZoomInOut css={{ position: "absolute", bottom: 10, left: 10 }} />

@@ -5,6 +5,7 @@ import { useEffectOnce } from "react-use";
 import { IndexeddbPersistence } from "y-indexeddb";
 import { useTreeId } from "../../../Data/useTreeId";
 import { ODError } from "@open-decision/type-classes";
+import { useTreeSuspension } from "./hooks/useTreeSuspension";
 
 const TreeContext = React.createContext<null | ReturnType<
   typeof createTreeStore
@@ -49,6 +50,7 @@ export const TreeProvider = ({ children }: Props) => {
 
 export const useTreeContext = () => {
   const context = React.useContext(TreeContext);
+  useTreeSuspension(context?.tree);
 
   if (!context)
     throw new Error(

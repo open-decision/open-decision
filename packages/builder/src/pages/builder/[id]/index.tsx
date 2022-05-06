@@ -6,8 +6,7 @@ import { EditorHeader } from "features/Builder/components/EditorHeader";
 import { SideMenu } from "features/Builder/SideMenu";
 import { BuilderLayout } from "../../../features/Builder/components/BuilderLayout";
 import { Layout } from "../../../components";
-import { LoadingSpinner, Stack, Text } from "@open-decision/design-system";
-import { Card } from "../../../components/Card";
+import { LoadingSpinner, Stack } from "@open-decision/design-system";
 
 export default function BuilderPage() {
   return (
@@ -30,10 +29,7 @@ export default function BuilderPage() {
           <React.Suspense
             fallback={
               <Stack center>
-                <Card center>
-                  <LoadingSpinner size="50px" />
-                  <Text size="large">Ihr Projekt wird geladen</Text>
-                </Card>
+                <LoadingSpinner size="50px" />
               </Stack>
             }
           >

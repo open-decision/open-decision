@@ -19,12 +19,10 @@ type PreviewLinkProps = {
   className?: string;
 };
 
-export function PreviewLink({
-  children,
-  initialNode,
-  className,
-  css,
-}: PreviewLinkProps) {
+function PreviewLinkImpl(
+  { children, initialNode, className, css }: PreviewLinkProps,
+  ref: React.Ref<HTMLAnchorElement>
+) {
   const { getTreeData } = useTreeContext();
   const hasStartNode = useHasStartNode();
   const { addNotification } = useNotificationStore();
@@ -43,6 +41,7 @@ export function PreviewLink({
             },
           });
         }}
+        ref={ref}
       >
         {children}
       </SystemLink>
@@ -60,6 +59,7 @@ export function PreviewLink({
             "Die Vorschau kann nur aufgerufen werden wenn es mindestens einen Startknoten gibt",
         })
       }
+      ref={ref}
     >
       <Icon>
         <FileTextIcon />
@@ -68,3 +68,5 @@ export function PreviewLink({
     </SystemLink>
   );
 }
+
+export const PreviewLink = React.forwardRef(PreviewLinkImpl);
