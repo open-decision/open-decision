@@ -20,7 +20,7 @@
   "sideEffects": false,
   "scripts": {
     "build": "rm -rf lib && vite build && pnpm tsc -p tsconfig.build.json",
-    "dev": "tsc --composite false --incremental false & vite build --watch",
+    "dev": "pnpm tsc -p tsconfig.build.json & vite build --watch",
     "prepublish": "pnpm build",
     "prettier": "prettier --check src/",
     "prettier:fix": "prettier --write src/",

@@ -33,7 +33,7 @@
   "scripts": {
     "build:icons": "svgr ./src/icons/svgs -d ./src/icons/ --replace-attr-values '#2329D6=currentcolor' --typescript --no-dimensions --svg-props 'width=1.1em','height=1.1em' --ignore-existing",
     "build": "rm -rf lib && vite build && pnpm tsc -p tsconfig.build.json",
-    "dev": "tsc --composite false --incremental false -p tsconfig.build.json & vite build --watch",
+    "dev": "pnpm tsc -p tsconfig.build.json & vite build --watch",
     "typecheck": "tsc -w -noEmit",
     "prepublishOnly": "pnpm build",
     "prettier": "prettier --check src/",
