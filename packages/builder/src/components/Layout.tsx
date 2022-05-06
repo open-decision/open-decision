@@ -11,7 +11,7 @@ import {
   Text,
 } from "@open-decision/design-system";
 import { ErrorBoundary } from "@sentry/nextjs";
-import { ErrorFallback } from "./Error/FullPageErrorFallback";
+import { FullPageErrorFallback } from "./Error/FullPageErrorFallback";
 import { ErrorReportLink } from "./Error/ErrorReportLink";
 import { FeedbackLink } from "./Error/FeedbackLink";
 
@@ -98,10 +98,9 @@ export const LayoutImpl = (
       <ErrorBoundary
         fallback={({ error }) => {
           return (
-            <ErrorFallback
+            <FullPageErrorFallback
               title="Es ist ein Fehler aufgetreten."
               description={`${error.message} Bitte laden Sie die Seite neu.`}
-              {...props}
             />
           );
         }}

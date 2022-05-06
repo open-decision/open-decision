@@ -1,11 +1,15 @@
 import { ODError, ODProgrammerError, Tree } from "@open-decision/type-classes";
 import * as React from "react";
-import { createInterpreter, InterpreterService } from "../interpreter";
+import {
+  createInterpreter,
+  InterpreterOptions,
+  InterpreterService,
+} from "../interpreter";
 import { useActor, useInterpret } from "@xstate/react";
 import { createInterpreterMethods } from "../methods";
 
-function useInterpreterMachine(tree: Tree.TTree) {
-  const interpreterMachine = createInterpreter(tree, { isDebugMode: true });
+function useInterpreterMachine(tree: Tree.TTree, options?: InterpreterOptions) {
+  const interpreterMachine = createInterpreter(tree, options);
 
   if (interpreterMachine instanceof ODError) throw interpreterMachine;
 
@@ -20,11 +24,12 @@ const InterpreterContext = React.createContext<{
 export function InterpreterProvider({
   children,
   tree,
+  ...options
 }: {
   children: React.ReactNode;
   tree: Tree.TTree;
-}) {
-  const interpreterMachine = useInterpreterMachine(tree);
+} & InterpreterOptions) {
+  const interpreterMachine = useInterpreterMachine(tree, options);
 
   const service = useInterpret(interpreterMachine, {
     devTools: true,

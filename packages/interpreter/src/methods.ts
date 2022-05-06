@@ -1,5 +1,6 @@
 import { Tree } from "@open-decision/type-classes";
 import { pick } from "remeda";
+import { NoCurrentNodeError } from "./errors";
 import { InterpreterContext } from "./interpreter";
 
 export const canGoBack = (interpreterContext: InterpreterContext) =>
@@ -20,10 +21,11 @@ export function createInterpreterMethods(
     getCurrentNode: () =>
       treeMethods.getNode(
         interpreterContext.history.nodes[interpreterContext.history.position]
-      ),
+      ) ?? new NoCurrentNodeError(),
     getAnswer: (inputId: string) => {
       const maybeAnswer = interpreterContext.answers[inputId];
       if (!maybeAnswer) return undefined;
+
       return maybeAnswer;
     },
     canGoBack: canGoBack(interpreterContext),

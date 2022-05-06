@@ -14,8 +14,7 @@ function PreviewImpl({ css }: Props, ref: React.Ref<HTMLDivElement>) {
   const { getCurrentNode } = useInterpreter();
   const node = getCurrentNode();
 
-  //FIXME Use better Error
-  if (!node) throw new Error(`The Preview could not retrieve the currentNode.`);
+  if (node instanceof Error) throw node;
 
   return (
     <Stack

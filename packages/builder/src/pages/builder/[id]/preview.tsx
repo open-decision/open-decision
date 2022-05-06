@@ -18,10 +18,12 @@ import { DesktopIcon, MobileIcon, Pencil1Icon } from "@radix-ui/react-icons";
 import { ProjectMenu } from "features/Builder/components/ProjectMenu";
 import { useTreeId } from "features/Data/useTreeId";
 import { BuilderLayout } from "../../../features/Builder/components/BuilderLayout";
+import { useNotificationStore } from "../../../features/Notifications/NotificationState";
 
 export default function VorschauPage() {
   const id = useTreeId();
   const [selectedTab, setSelectedTab] = React.useState("desktop");
+  const { addNotification } = useNotificationStore();
 
   const { data } = useGetTreeContentQuery(
     { uuid: id },
@@ -42,7 +44,16 @@ export default function VorschauPage() {
           gridTemplateRows: "max-content 1fr",
         }}
       >
-        <InterpreterProvider tree={tree}>
+        <InterpreterProvider
+          tree={tree}
+          onException={(error) =>
+            addNotification({
+              title: error.code,
+              content: error.message,
+              variant: "danger",
+            })
+          }
+        >
           <BaseHeader
             css={{ gridColumn: "1 / -1", gridRow: "1" }}
             LogoSlot={<ProjectMenu />}

@@ -5,11 +5,10 @@ export interface Typegen0 {
   eventsCausingActions: {
     resetToInitialContext: "RESET";
     assignAnswerToContext: "ADD_USER_ANSWER";
-    goBack: "GO_BACK" | "RECOVER";
+    goBack: "GO_BACK";
     goForward: "GO_FORWARD";
     assignNewTarget: "VALID_INTERPRETATION";
-    assignErrorToContext: "INVALID_INTERPRETATION";
-    clearErrorFromContext: "RECOVER";
+    callOnException: "INVALID_INTERPRETATION";
   };
   internalEvents: {
     "xstate.init": { type: "xstate.init" };
@@ -38,9 +37,8 @@ export interface Typegen0 {
   eventsCausingGuards: {
     canGoBack: "GO_BACK";
     canGoForward: "GO_FORWARD";
-    isDebugMode: "RECOVER";
   };
   eventsCausingDelays: {};
-  matchesStates: "idle" | "interpreting" | "error";
+  matchesStates: "idle" | "interpreting";
   tags: never;
 }

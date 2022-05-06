@@ -1,3 +1,4 @@
 export * from "./ODError";
 export * from "./ErrorCodes";
-export * from "./APIErrors";
+export * from "./APIError";
+export * from "./InterpreterError";

@@ -3,7 +3,7 @@ import { BaseHeader } from "components";
 import { Layout } from "../Layout";
 import { ErrorCard, ErrorCardProps } from "./ErrorCard";
 
-export function ErrorFallback(props: ErrorCardProps) {
+export function FullPageErrorFallback(props: ErrorCardProps) {
   return (
     <Layout>
       <BaseHeader />
