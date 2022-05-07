@@ -32,8 +32,8 @@
   "sideEffects": false,
   "scripts": {
     "build:icons": "svgr ./src/icons/svgs -d ./src/icons/ --replace-attr-values '#2329D6=currentcolor' --typescript --no-dimensions --svg-props 'width=1.1em','height=1.1em' --ignore-existing",
-    "build": "rm -rf lib && vite build && pnpm tsc -p tsconfig.build.json",
-    "dev": "pnpm tsc -p tsconfig.build.json & vite build --watch",
+    "build": "rm -rf lib && vite build",
+    "dev": "vite build --watch",
     "typecheck": "tsc -w -noEmit",
     "prepublishOnly": "pnpm build",
     "prettier": "prettier --check src/",
@@ -62,10 +62,11 @@
     "@radix-ui/react-toggle": "^0.1.4",
     "@radix-ui/react-toggle-group": "^0.1.5",
     "@radix-ui/react-tooltip": "^0.1.7",
-    "@stitches/react": "^1.2.7",
+    "@stitches/react": "^1.2.8",
     "downshift": "^6.1.7",
     "match-sorter": "^6.3.1",
     "react-hook-form": "^7.28.0",
+    "react-split-props": "^0.4.0",
     "react-use": "^17.3.1",
     "remeda": "^0.0.32",
     "spinners-react": "^1.0.6",
@@ -88,6 +89,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "tsup": "^5.12.1",
-    "vite": "^2.8.6"
+    "vite": "^2.8.6",
+    "vite-plugin-dts": "^1.1.1"
   }
 }
