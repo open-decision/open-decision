@@ -6,7 +6,9 @@ import { Plus } from "react-feather";
 
 export default {
   component: IconImpl,
-  title: "Components/Icon",
+  parameters: {
+    layout: "centered",
+  },
 } as Meta;
 
 const IconTemplate: Story<IconProps> = (props) => (

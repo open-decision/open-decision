@@ -12,13 +12,15 @@ import { Meta, Story } from "@storybook/react";
 
 export default {
   component: DialogPrimitive.Root,
-  title: "Components/Dialog",
+  parameters: {
+    layout: "centered",
+  },
 } as Meta;
 
 export const Dialog: Story<DialogRootProps> = (props) => (
   <DialogPrimitive.Root {...props}>
     <DialogPrimitive.Trigger asChild>
-      <Button>Open DialogPrimitive</Button>
+      <Button>Open Dialog</Button>
     </DialogPrimitive.Trigger>
     <DialogPrimitive.Content>
       <DialogPrimitive.Title asChild>
@@ -34,20 +36,12 @@ export const Dialog: Story<DialogRootProps> = (props) => (
         </Text>
       </DialogPrimitive.Description>
       <Box css={{ display: "flex", gap: "$4", justifyContent: "end" }}>
-        <DialogPrimitive.Close asChild>
-          <Button size="small" variant="secondary">
-            Abbrechen
-          </Button>
-        </DialogPrimitive.Close>
-        <DialogPrimitive.Close asChild>
-          <Button
-            size="small"
-            variant="secondary"
-            css={{ colorScheme: "danger" }}
-          >
-            Löschen
-          </Button>
-        </DialogPrimitive.Close>
+        <DialogPrimitive.ButtonRow
+          isLoading={false}
+          css={{ colorScheme: "danger" }}
+        >
+          Löschen
+        </DialogPrimitive.ButtonRow>
       </Box>
     </DialogPrimitive.Content>
   </DialogPrimitive.Root>

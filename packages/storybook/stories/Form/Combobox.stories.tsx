@@ -1,20 +1,12 @@
 import * as React from "react";
 import { Meta, Story } from "@storybook/react";
-import {
-  Combobox,
-  Form,
-  InlineInput,
-  Input,
-  ComboboxInputProps,
-} from "@open-decision/design-system";
+import { Combobox, Input } from "@open-decision/design-system";
 
 export default {
   component: Combobox.Root,
-  title: "Components/Inputs/Combobox",
 } as Meta;
 
-const Template: Story<ComboboxInputProps> = ({ children }) => {
-  const [selectedItem, setSelectedItem] = React.useState("123");
+const Template: Story<Combobox.ComboboxInputProps> = ({ children }) => {
   const [items, setItems] = React.useState([
     { id: "123", label: "test" },
     { id: "1234", label: "another one" },
@@ -32,25 +24,13 @@ const Template: Story<ComboboxInputProps> = ({ children }) => {
   };
 
   return (
-    <Form onSubmit={(data) => setSelectedItem(data.combobox.id)}>
-      <Combobox.Root
-        name="combobox"
-        onCreate={handleItemCreate}
-        resetOnBlur
-        items={items}
-      >
-        <Combobox.Input>{children}</Combobox.Input>
-      </Combobox.Root>
-    </Form>
+    <Combobox.Root name="combobox" onCreate={handleItemCreate} items={items}>
+      <Combobox.Input>{children}</Combobox.Input>
+    </Combobox.Root>
   );
 };
 
 export const Default = Template.bind({});
 Default.args = {
   children: <Input name="combobox" />,
-};
-
-export const Inline = Template.bind({});
-Inline.args = {
-  children: <InlineInput name="combobox" />,
 };

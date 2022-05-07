@@ -10,7 +10,9 @@ import { Meta, Story } from "@storybook/react";
 
 export default {
   component: SystemTooltip.Root,
-  title: "Components/Tooltip",
+  parameters: {
+    layout: "centered",
+  },
 } as Meta;
 
 export const Tooltip: Story<TooltipRootProps> = (props) => (

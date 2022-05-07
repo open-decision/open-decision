@@ -2,20 +2,16 @@ import * as React from "react";
 
 import { Meta, Story } from "@storybook/react";
 import { Menu, Settings } from "react-feather";
-import {
-  Icon,
-  DropdownMenu,
-  DropdownMenuRootProps,
-  Button,
-} from "@open-decision/design-system";
+import { Icon, DropdownMenu, Button } from "@open-decision/design-system";
 
 export default {
   component: DropdownMenu.Root,
-  title: "Components/DropdownMenu",
-  decorators: [(Component) => <Component />],
+  parameters: {
+    layout: "centered",
+  },
 } as Meta;
 
-const Template: Story<DropdownMenuRootProps> = (props) => {
+const Template: Story<DropdownMenu.DropdownMenuRootProps> = (props) => {
   const [bookmarksChecked, setBookmarksChecked] = React.useState(false);
 
   return (
@@ -60,13 +56,14 @@ const Template: Story<DropdownMenuRootProps> = (props) => {
             </Icon>
             Last Test Option
           </DropdownMenu.TriggerItem>
-          <DropdownMenu.Content alignOffset={-10}>
+          <DropdownMenu.Content>
             <DropdownMenu.Item>
               <Icon label="Settings" css={{ padding: 0 }}>
                 <Settings />
               </Icon>
               Another One
             </DropdownMenu.Item>
+            <DropdownMenu.Item>Another One</DropdownMenu.Item>
           </DropdownMenu.Content>
         </DropdownMenu.Root>
       </DropdownMenu.Content>

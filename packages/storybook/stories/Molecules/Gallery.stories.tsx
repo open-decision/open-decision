@@ -9,7 +9,9 @@ import {
 
 export default {
   component: GalleryComponent.Container,
-  title: "Components/Gallery",
+  parameters: {
+    layout: "centered",
+  },
 } as Meta;
 
 const Image = styled("img", {

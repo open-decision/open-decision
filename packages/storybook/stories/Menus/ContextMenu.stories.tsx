@@ -6,8 +6,9 @@ import { Box, ContextMenu, Icon } from "@open-decision/design-system";
 
 export default {
   component: ContextMenu.Root,
-  title: "Components/ContextMenu",
-  decorators: [(Component) => <Component />],
+  parameters: {
+    layout: "centered",
+  },
 } as Meta;
 
 const Template: Story<React.ComponentProps<typeof ContextMenu.Root>> = (
@@ -65,7 +66,7 @@ const Template: Story<React.ComponentProps<typeof ContextMenu.Root>> = (
             </Icon>
             Last Test Option
           </ContextMenu.TriggerItem>
-          <ContextMenu.Content alignOffset={-10}>
+          <ContextMenu.Content>
             <ContextMenu.Item>
               <Icon label="Settings" css={{ padding: 0 }}>
                 <Settings />
