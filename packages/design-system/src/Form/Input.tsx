@@ -1,18 +1,18 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import * as React from "react";
-import { styled } from "../../stitches";
-import { baseInputStyles, baseTextInputStyle } from "../shared/styles";
-import { Box } from "../../Box";
-import { useInputFocus } from "./useInputFocus";
+import { styled } from "../stitches";
+import { baseInputStyles, baseTextInputStyle } from "./shared/styles";
+import { Box } from "../Box";
+import { useInputFocus } from "./shared/useInputFocus";
+import { alignByContent } from "../shared/variants";
 
-const StyledBox = styled(Box, baseTextInputStyle, baseInputStyles, {
-  borderRadius: "$md",
-  display: "flex",
-  alignItems: "center",
-  focusType: "inner-within",
-  overflow: "hidden",
-  colorScheme: "primary",
-});
+const StyledBox = styled(
+  Box,
+  alignByContent,
+  baseInputStyles,
+  baseTextInputStyle,
+  { overflow: "hidden" }
+);
 
 const StyledInput = styled("input", {
   paddingBlock: "$$paddingBlock",
@@ -20,7 +20,6 @@ const StyledInput = styled("input", {
   border: "none",
   width: "100%",
   minWidth: 0,
-  transform: "translateX($$XTranslation)",
   outline: "none",
   backgroundColor: "transparent",
   textStyle: "inherit",
@@ -28,13 +27,9 @@ const StyledInput = styled("input", {
 });
 
 export type InputProps = {
-  name: string;
   Buttons?: JSX.Element | JSX.Element[];
-
   Icon?: React.ReactNode;
   disabled?: boolean;
-  autoFocus?: boolean;
-  placeholder?: string;
 } & React.ComponentProps<typeof StyledBox> &
   Omit<React.ComponentProps<typeof StyledInput>, "size">;
 

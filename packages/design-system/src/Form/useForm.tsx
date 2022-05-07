@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import * as React from "react";
 import { styled } from "../stitches";
 
@@ -10,6 +9,7 @@ import {
   UseFormProps,
   UseFormReturn,
   FieldValues,
+  FieldPath,
 } from "react-hook-form";
 
 const StyledForm = styled("form", {});
@@ -27,11 +27,10 @@ export type FormProps<TFieldValues extends object> = Omit<
 
 export function useForm<TFieldValues extends FieldValues>(
   parameters?: UseFormProps<TFieldValues>
-): [
-  Form: (props: FormProps<TFieldValues>) => JSX.Element,
-  methods: UseFormReturn<TFieldValues, object>
-] {
-  const methods = useReactHookForm<TFieldValues>(parameters);
+) {
+  const methods = useReactHookForm<TFieldValues, FieldPath<TFieldValues>>(
+    parameters
+  );
 
   const Form = React.useCallback(
     function Form({
@@ -66,5 +65,5 @@ export function useForm<TFieldValues extends FieldValues>(
         (event?: React.BaseSyntheticEvent) =>
           methods.handleSubmit(onSubmit, onSubmitError)(event),
     },
-  ];
+  ] as const;
 }

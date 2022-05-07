@@ -36,6 +36,7 @@ export function Input({
 
   const {
     field: { onChange, onBlur: controllerOnBlur, ref: controllerRef },
+    fieldState: { error },
   } = useController({ name, rules });
 
   const { ref: inputRef, ...inputProps } = getInputProps({
@@ -57,7 +58,12 @@ export function Input({
       {...getComboboxProps()}
     >
       {children(field)}
-      <ValidationMessage name={name} css={{ marginTop: "$1" }} />
+      {error?.message ? (
+        <ValidationMessage
+          errors={[error?.message]}
+          css={{ marginTop: "$1" }}
+        />
+      ) : null}
       <Box
         data-state={openState}
         {...getMenuProps()}

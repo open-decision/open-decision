@@ -1,8 +1,8 @@
 import * as React from "react";
-import { styled, StyleObject } from "../../stitches";
-import { Box } from "../../Box";
+import { styled, StyleObject } from "../stitches";
+import { Box } from "../Box";
 import { Input as SystemInput } from "./Input";
-import { Button as SystemButton } from "../../Button/Button";
+import { Button as SystemButton } from "../Button/Button";
 
 const StyledBox = styled(Box, {
   display: "flex",
@@ -37,7 +37,7 @@ export const InputWithButton = ({
           borderBottomRightRadius: 0,
 
           "@largePhone": {
-            flex: "1 1 70%",
+            flex: "1",
             borderTopRightRadius: 0,
             borderBottomRightRadius: 0,
             borderBottomLeftRadius: radius,
@@ -48,7 +48,6 @@ export const InputWithButton = ({
       {React.cloneElement(Button, {
         css: {
           ...Button.props?.css,
-          boxShadow: "$none",
           flex: "1 0 100%",
           borderRadius: "$none",
           borderTopRightRadius: 0,
@@ -56,10 +55,10 @@ export const InputWithButton = ({
           borderBottomRightRadius: radius,
           borderBottomLeftRadius: radius,
           maxWidth: "unset",
+          focusType: "outer",
 
           "@largePhone": {
-            flex: "1 0",
-            maxWidth: "max-content",
+            flex: "0 0 max-content",
             borderBottomLeftRadius: 0,
             borderTopLeftRadius: 0,
             borderTopRightRadius: radius,

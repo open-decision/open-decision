@@ -1,5 +1,4 @@
 import * as React from "react";
-import { ChangeEvent } from "react";
 import {
   ControllerRenderProps,
   useController,
@@ -25,7 +24,7 @@ export function ControlledInput({
   } = useController({ name, defaultValue, rules });
 
   const mergedOnChange = async <T extends HTMLInputElement>(
-    event: ChangeEvent<T>
+    event: React.ChangeEvent<T>
   ) => {
     fieldOnChange(event);
     const isValid = await trigger();

@@ -1,6 +1,4 @@
-import { ErrorMessage as FormErrorMessage } from "@hookform/error-message";
 import * as React from "react";
-import { useFormContext } from "react-hook-form";
 import { styled, StyleObject } from "../stitches";
 import { textStyles } from "../Text";
 
@@ -24,27 +22,23 @@ export const ErrorMessage = styled("li", textStyles, {
 });
 
 export type ValidationMessageProps = {
-  name: string;
   css?: StyleObject;
   className?: string;
+  errors?: string[];
 };
 
-export function ValidationMessage({ name, css }: ValidationMessageProps) {
-  const {
-    formState: { errors },
-  } = useFormContext();
-
-  return (
-    <FormErrorMessage
-      name={name}
-      errors={errors}
-      render={({ message }) => (
-        <ErrorList css={css}>
-          <ErrorMessage size="extra-small" key={message}>
-            {message}
-          </ErrorMessage>
-        </ErrorList>
-      )}
-    />
-  );
+export function ValidationMessage({
+  errors,
+  css,
+  className,
+}: ValidationMessageProps) {
+  return errors ? (
+    <ErrorList css={css} className={className}>
+      {errors.map((error) => (
+        <ErrorMessage size="extra-small" key={error}>
+          {error}
+        </ErrorMessage>
+      ))}
+    </ErrorList>
+  ) : null;
 }

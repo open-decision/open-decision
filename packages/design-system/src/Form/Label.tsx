@@ -1,10 +1,13 @@
+import { disabledStyle } from "../shared/utils";
 import { styled, css } from "../stitches";
 
 export const labelStyles = css({
-  display: "flex",
+  display: "inline-flex",
   colorFallback: "$colorScheme-text",
   alignItems: "center",
   gap: "$2",
+
+  ...disabledStyle({ color: "$gray11" }),
 
   variants: {
     size: {
