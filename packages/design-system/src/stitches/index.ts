@@ -241,7 +241,7 @@ export const designSystem = createStitches({
           return {
             [`&:focus-visible, ${focusWithin}, ${focusOnIntent}, &[data-focus='true']`]:
               {
-                boxShadow: `0 0 0 1px var(--layer), 0 0 0 3px var(--colors-focusColor, $colors$primary10)`,
+                boxShadow: `0 0 0 1px var(--layer, $colors$layer1), 0 0 0 3px var(--colors-focusColor, $colors$primary10)`,
                 outline: "none",
               },
           };
