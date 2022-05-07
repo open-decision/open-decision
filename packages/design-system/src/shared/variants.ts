@@ -44,10 +44,10 @@ export const alignByContent = css({
   variants: {
     alignByContent: {
       left: {
-        $$XTranslation: "calc(($$borderWidth + $$$paddingInline) * -1)",
+        $$XTranslation: "calc(($$borderWidth + $$paddingInline) * -1)",
       },
       right: {
-        $$XTranslation: "calc($$borderWidth + $$$paddingInline)",
+        $$XTranslation: "calc($$borderWidth + $$paddingInline)",
       },
       center: {
         $$XTranslation: "0px",

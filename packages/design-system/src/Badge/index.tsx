@@ -1,7 +1,7 @@
 import * as React from "react";
 import { styled, css } from "../stitches";
 
-export const badeStyles = css({
+export const badgeStyles = css({
   colorScheme: "primary",
   borderRadius: "$md",
   textAlign: "center",
@@ -10,6 +10,7 @@ export const badeStyles = css({
   color: "$colorScheme11",
   display: "flex",
   alignItems: "center",
+  justifyContent: "center",
   gap: "$1",
 
   variants: {
@@ -39,6 +40,6 @@ export const badeStyles = css({
   },
 });
 
-export const Badge = styled("span", badeStyles);
+export const Badge = styled("span", badgeStyles);
 
 export type BadgeProps = React.ComponentProps<typeof Badge>;

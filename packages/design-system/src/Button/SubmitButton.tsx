@@ -4,12 +4,12 @@ import { LoadingSpinner } from "../LoadingSpinner/LoadingSpinner";
 import { Button, ButtonProps } from "./Button";
 
 export type SubmitButtonProps = ButtonProps & {
-  isLoading: boolean;
+  isLoading?: boolean;
   colorScheme?: ColorKeys;
 };
 
 export const SubmitButton = ({
-  isLoading,
+  isLoading = false,
   children,
   colorScheme = "primary",
   css,

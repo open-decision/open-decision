@@ -10,7 +10,6 @@ export * from "./Text";
 export * from "./Form";
 export * from "./Link/Link";
 export * from "./Menus";
-export * from "./Label/Label";
 export * from "./Icon/Icon";
 export * from "./Overlays/Dialog/Dialog";
 export * from "./Overlays/Tooltip/Tooltip";
