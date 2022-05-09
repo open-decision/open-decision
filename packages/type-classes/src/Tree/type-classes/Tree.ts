@@ -17,6 +17,7 @@ import {
   getInputs,
   getNode,
   getTree,
+  getNodeNames,
 } from "../getters";
 import {
   addCondition,
@@ -96,6 +97,7 @@ export function createTreeMethods(tree: TTree) {
     getInput: getInput(tree),
     getInputs: getInputs(tree),
     getNode: getNode(tree),
+    getNodeNames: getNodeNames(tree),
     getParents: getParents(tree),
     getPaths: getPaths(tree),
     getTree: getTree(tree),
@@ -141,6 +143,7 @@ export {
   getInput,
   getInputs,
   getNode,
+  getNodeNames,
   getTree,
   isValidEdge,
   relateConditionToNode,
