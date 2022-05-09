@@ -9,8 +9,8 @@ import {
   Text,
   Badge,
   Row,
-  intentStyleWithin,
   Box,
+  intentWithinSelector,
 } from "@open-decision/design-system";
 import { formatRelative, parseISO } from "date-fns";
 import de from "date-fns/locale/de";
@@ -46,7 +46,7 @@ export function TreeCard({ tree }: Props) {
         position: "relative",
         transition: "box-shadow 150ms ease-in",
         borderRadius: "$md",
-        ...intentStyleWithin({ boxShadow: "$3" }),
+        [`${intentWithinSelector}`]: { boxShadow: "$3" },
       }}
     >
       <Link href={`/builder/${tree.uuid}`} passHref>

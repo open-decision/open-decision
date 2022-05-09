@@ -1,11 +1,11 @@
 import {
-  activeStyle,
   Heading,
   Icon,
-  intentStyle,
   Label,
   Stack,
   styled,
+  activeSelector,
+  intentSelector,
 } from "@open-decision/design-system";
 import { AvatarIcon } from "@radix-ui/react-icons";
 import { BaseHeader } from "components";
@@ -25,15 +25,15 @@ const SideMenuLink = styled("a", Label, {
   colorScheme: "primary",
   border: "2px solid transparent",
 
-  ...activeStyle({
+  [`${activeSelector}`]: {
     backgroundColor: "$colorScheme2",
     borderColor: "$colorScheme6",
-  }),
+  },
 
-  ...intentStyle({
+  [`${intentSelector}`]: {
     backgroundColor: "$colorScheme3",
     focusColor: "$colorScheme7",
-  }),
+  },
 });
 
 SideMenuLink.defaultProps = { size: "medium" };

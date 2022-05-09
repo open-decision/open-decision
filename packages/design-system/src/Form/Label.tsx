@@ -1,5 +1,5 @@
-import { disabledStyle } from "../shared/utils";
 import { styled, css } from "../stitches";
+import { disabledSelector } from "../stitches/stateSelectors";
 
 export const labelStyles = css({
   display: "inline-flex",
@@ -7,7 +7,7 @@ export const labelStyles = css({
   alignItems: "center",
   gap: "$2",
 
-  ...disabledStyle({ color: "$gray11" }),
+  [`${disabledSelector}`]: { color: "$gray11" },
 
   variants: {
     size: {

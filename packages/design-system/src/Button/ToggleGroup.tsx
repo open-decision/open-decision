@@ -1,8 +1,8 @@
 import * as React from "react";
-import { activeStyle } from "../shared/utils";
 import { styled, darkTheme } from "../stitches";
 import { Button as SystemButton, ButtonProps } from "./Button";
 import * as ToggleGroupPrimitives from "@radix-ui/react-toggle-group";
+import { activeSelector } from "../stitches/stateSelectors";
 
 export const Root = styled(ToggleGroupPrimitives.Root, {
   display: "inline-flex",
@@ -44,10 +44,10 @@ const ButtonImpl = (
       colorScheme: "primary",
       focusType: "outer",
 
-      ...activeStyle({
+      [`${activeSelector}`]: {
         color: "$white",
         backgroundColor: "$colorScheme9",
-      }),
+      },
       ...css,
     }}
     {...props}

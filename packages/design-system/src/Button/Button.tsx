@@ -1,6 +1,10 @@
-import { activeStyle, disabledStyle, intentStyle } from "../shared/utils";
 import { alignByContent } from "../shared/variants";
 import { styled, css, darkTheme } from "../stitches";
+import {
+  activeSelector,
+  disabledSelector,
+  intentSelector,
+} from "../stitches/stateSelectors";
 
 export const buttonStyles = css(alignByContent, {
   $$borderWidth: "1px",
@@ -19,9 +23,9 @@ export const buttonStyles = css(alignByContent, {
   transitionDuration: "0.1s",
   transform: "translate($$XTranslation, $$YTranslation)",
 
-  ...disabledStyle({
+  [`${disabledSelector}`]: {
     cursor: "not-allowed",
-  }),
+  },
 
   display: "flex",
   justifyContent: "center",
@@ -64,17 +68,17 @@ export const buttonStyles = css(alignByContent, {
         color: "$white",
         focusType: "outer",
 
-        ...intentStyle({
+        [`${intentSelector}`]: {
           backgroundColor: "$colorScheme10",
-        }),
+        },
 
-        ...activeStyle({
+        [`${activeSelector}`]: {
           backgroundColor: "$colorScheme11",
-        }),
+        },
 
-        ...disabledStyle({
+        [`${disabledSelector}`]: {
           backgroundColor: "$colorScheme9",
-        }),
+        },
       },
 
       secondary: {
@@ -85,26 +89,26 @@ export const buttonStyles = css(alignByContent, {
           backgroundColor: "$colorScheme4",
         },
 
-        ...intentStyle({
+        [`${intentSelector}`]: {
           backgroundColor: "$colorScheme5",
 
           [`.${darkTheme} &`]: {
             backgroundColor: "$colorScheme6",
             color: "$colorScheme12",
           },
-        }),
+        },
 
-        ...activeStyle({
+        [`${activeSelector}`]: {
           backgroundColor: "$colorScheme7",
-        }),
+        },
 
-        ...disabledStyle({
+        [`${disabledSelector}`]: {
           backgroundColor: "$colorScheme3",
 
           [`.${darkTheme} &`]: {
             backgroundColor: "$colorScheme4",
           },
-        }),
+        },
       },
 
       tertiary: {
@@ -112,17 +116,17 @@ export const buttonStyles = css(alignByContent, {
         color: "$colorScheme11",
         borderColor: "currentcolor",
 
-        ...intentStyle({
+        [`${intentSelector}`]: {
           backgroundColor: "$colorScheme3",
-        }),
+        },
 
-        ...activeStyle({
+        [`${activeSelector}`]: {
           backgroundColor: "$colorScheme5",
-        }),
+        },
 
-        ...disabledStyle({
+        [`${disabledSelector}`]: {
           backgroundColor: "$colorScheme1",
-        }),
+        },
       },
 
       ghost: {
@@ -137,27 +141,27 @@ export const buttonStyles = css(alignByContent, {
         backgroundColor: "unset",
         focusType: "inner",
 
-        ...intentStyle({
+        [`${intentSelector}`]: {
           backgroundColor: "$colorScheme3",
           color: "$colorScheme12",
-        }),
+        },
 
-        ...activeStyle({
+        [`${activeSelector}`]: {
           color: "$colorScheme12",
           backgroundColor: "$colorScheme5",
-        }),
+        },
 
-        ...disabledStyle({
+        [`${disabledSelector}`]: {
           backgroundColor: "unset",
-        }),
+        },
       },
     },
 
     pressable: {
       true: {
-        ...activeStyle({
+        [`${activeSelector}`]: {
           $$YTranslation: "1px",
-        }),
+        },
       },
     },
 

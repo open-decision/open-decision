@@ -4,7 +4,6 @@ import {
   Input,
   Label,
   ControlledInput,
-  Stack,
   css,
   ScrollArea,
   Grid,
@@ -96,7 +95,6 @@ export function NodeEditingSidebarContent({ node, css }: Props) {
   const startNodeId = useStartNodeId();
   const [Form] = useForm({
     defaultValues: { name: node?.data.name ?? "" },
-    mode: "onChange",
   });
 
   const inputs = useInputs(node.data.inputs);

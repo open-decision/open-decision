@@ -1,4 +1,4 @@
-import { Box, DropdownMenu, hoverStyle } from "@open-decision/design-system";
+import { Box, DropdownMenu, hoverSelector } from "@open-decision/design-system";
 import { useTreeContext } from "../../state/treeStore/TreeContext";
 
 type Props = { parentNodes: { id: string; name?: string }[] };
@@ -21,7 +21,7 @@ export function ParentNodeSelector({ parentNodes }: Props) {
                 key={parentNode.id}
                 onClick={() => replaceSelectedNodes([parentNode.id])}
                 css={{
-                  ...hoverStyle({ textDecoration: "underline" }),
+                  [`${hoverSelector}`]: { textDecoration: "underline" },
                 }}
               >
                 {parentNode.name ?? <i>Elternknoten ohne Namen</i>}

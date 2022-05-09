@@ -4,14 +4,13 @@ import {
   styled,
   ToggleButton,
   Button,
-  hoverStyle,
+  hoverSelector,
 } from "@open-decision/design-system";
 import * as React from "react";
 import {
   FontBoldIcon,
   FontItalicIcon,
   HeadingIcon,
-  Link2Icon,
   ListBulletIcon,
   TextIcon,
   UnderlineIcon,
@@ -45,9 +44,9 @@ export function Toolbar({ css, editor, ...props }: Props) {
         square
         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
         css={{
-          ...hoverStyle({
+          [`${hoverSelector}`]: {
             backgroundColor: "$gray4",
-          }),
+          },
         }}
       >
         <Icon label="Konvertiere den ausgewählten Text in eine Überschrift">
