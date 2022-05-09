@@ -2,22 +2,15 @@ import React from "react";
 import {
   Combobox,
   StyleObject,
-  Input,
-  Box,
-  Icon,
-  useForm,
   Row,
+  Badge,
 } from "@open-decision/design-system";
 import { useEditor } from "../state/useEditor";
-import { nodeNameMaxLength } from "../utilities/constants";
-import { useNodes } from "../state/treeStore/hooks";
 import { useTreeContext } from "../state/treeStore/TreeContext";
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 
 type Props = { css?: StyleObject };
 
 export const NodeSearch = ({ css }: Props) => {
-  const nodes = useNodes();
   const {
     createNode,
     addNode,
@@ -26,40 +19,17 @@ export const NodeSearch = ({ css }: Props) => {
     createAnswer,
     addInput,
     replaceSelectedNodes,
+    getNodeNames,
   } = useTreeContext();
 
-  const { getCenter, zoomToNode } = useEditor();
-  const [Form] = useForm({
-    defaultValues: {
-      selectedNodeId: "",
-      search: "",
-    },
-    mode: "onChange",
-  });
+  const nodeNames = getNodeNames();
 
-  const items: Combobox.Item[] = React.useMemo(
-    () =>
-      Object.values(nodes)
-        .filter((node) => node.data.name)
-        .map((node) => ({
-          id: node.id,
-          label: node.data.name,
-          labelIcon: (
-            <Row
-              css={{
-                fontWeight: "500",
-                alignItems: "center",
-                color: "$primary11",
-                gap: "$1",
-                minWidth: "max-content",
-              }}
-            >
-              Auswählen
-            </Row>
-          ),
-        })),
-    [nodes]
-  );
+  const { getCenter, zoomToNode } = useEditor();
+  const combobox = Combobox.useComboboxState({
+    gutter: 8,
+    sameWidth: true,
+    list: nodeNames.map((nodeName) => nodeName.name),
+  });
 
   function createHandler(label: string) {
     const newAnswer = createAnswer({ text: "" });
@@ -91,39 +61,48 @@ export const NodeSearch = ({ css }: Props) => {
   }
 
   return (
-    <Form
-      css={css}
-      onSubmit={(data) => changeHandler(data.selectedNodeId ?? "")}
-    >
-      <Combobox.Root
-        css={{ display: "flex", alignItems: "center", gap: "$2" }}
-        name="selectedNodeId"
-        items={items}
-        onCreate={createHandler}
-        key={items.length}
-        onSelectedItemChange={(newItem) => changeHandler(newItem?.id ?? "")}
-      >
-        <Box css={{ width: "300px" }}>
-          <Combobox.Input
-            css={{ zIndex: "5" }}
-            name="search"
-            maxLength={nodeNameMaxLength}
+    <>
+      <Combobox.Input
+        state={combobox}
+        placeholder="Suche"
+        css={{ width: "400px", ...css }}
+      />
+      <Combobox.Popover state={combobox}>
+        {combobox.matches.length ? (
+          combobox.matches.map((item) => {
+            const id = nodeNames.find((nodeName) => nodeName.name === item)?.id;
+            return id ? (
+              <Combobox.Item
+                value={item}
+                key={item}
+                onClick={() => changeHandler(id)}
+              >
+                {item}
+                <Badge size="small">Auswählen</Badge>
+              </Combobox.Item>
+            ) : null;
+          })
+        ) : (
+          <Combobox.Item
+            onClick={() => createHandler(combobox.value)}
+            value={combobox.value}
           >
-            {(field) => (
-              <Input
-                {...field}
-                Icon={
-                  <Icon>
-                    <MagnifyingGlassIcon />
-                  </Icon>
-                }
-                placeholder="Suche"
-                variant="lowered"
-              />
-            )}
-          </Combobox.Input>
-        </Box>
-      </Combobox.Root>
-    </Form>
+            {combobox.value}
+            <Row
+              css={{
+                colorScheme: "success",
+                fontWeight: "500",
+                alignItems: "center",
+                color: "$success11",
+                gap: "$1",
+                minWidth: "max-content",
+              }}
+            >
+              Erstellen
+            </Row>
+          </Combobox.Item>
+        )}
+      </Combobox.Popover>
+    </>
   );
 };

@@ -2,27 +2,25 @@ import {
   Box,
   Button,
   ButtonProps,
-  Combobox,
   ControlledInput,
   Icon,
   Input,
   Label,
   styled,
   useForm,
-  focusStyle,
-  Row,
+  Select,
+  Combobox,
+  SelectWithCombobox,
+  focusSelector,
 } from "@open-decision/design-system";
 import * as React from "react";
 import { Edge, Input as InputType } from "@open-decision/type-classes";
-import { filter, pipe, values } from "remeda";
 import { DragHandle } from "./DragHandle";
 import { Reorder, useDragControls } from "framer-motion";
-import { map } from "remeda";
 import {
   useConditionsOfNode,
   useEdgesOfNode,
   useNode,
-  useNodes,
 } from "features/Builder/state/treeStore/hooks";
 import { useTreeContext } from "features/Builder/state/treeStore/TreeContext";
 import { useNotificationStore } from "features/Notifications/NotificationState";
@@ -122,7 +120,6 @@ export function OptionTargetInput({
   nodeId,
   groupRef,
 }: SingleSelectInputProps) {
-  const nodes = useNodes();
   const node = useNode(nodeId);
   const {
     deleteInputAnswer,
@@ -139,33 +136,17 @@ export function OptionTargetInput({
     createCondition,
     createEdge,
     addInput,
+    getNodeNames,
   } = useTreeContext();
   const { addNotification } = useNotificationStore();
 
-  const allOptions: Combobox.Item[] = pipe(
-    nodes,
-    values,
-    filter((node) => Boolean(node.data.name)),
-    map((node) => ({
-      id: node.id,
-      label: node.data.name,
-      labelIcon: (
-        <Row
-          css={{
-            fontWeight: "500",
-            alignItems: "center",
-            color: "$primary11",
-            gap: "$1",
-            minWidth: "max-content",
-          }}
-        >
-          Verbinden
-        </Row>
-      ),
-    }))
-  );
+  const nodeOptions = node
+    ? edge?.target
+      ? [...getConnectableNodes(node.id), edge.target]
+      : getConnectableNodes(node.id)
+    : [];
 
-  const nodeOptions = node ? getConnectableNodes(node.id) : [];
+  const nodeNames = getNodeNames(nodeOptions);
 
   const controls = useDragControls();
 
@@ -177,6 +158,98 @@ export function OptionTargetInput({
       target: edge?.target ?? "",
     },
   });
+
+  const handleCreate = (name: string) => {
+    // Construct the childNode
+    const newInput = createInput();
+    const childNode = createChildNode(nodeId, {
+      data: {
+        inputs: [newInput.id],
+        name,
+        conditions: [],
+      },
+    });
+
+    if (childNode instanceof Error) return childNode;
+
+    if (edge?.target) {
+      updateEdgeTarget(edge.id, childNode.id);
+    } else {
+      // Construct the Relationship
+      const newCondition = createCondition({
+        inputId,
+        answerId: answer.id,
+      });
+
+      const newEdge = createEdge({
+        source: nodeId,
+        target: childNode.id,
+        conditionId: newCondition.id,
+      });
+
+      if (newEdge instanceof Error) {
+        addNotification({
+          title: "Es konnte keine verbundender Knoten erstellt werden.",
+          content: newEdge.message,
+          variant: "danger",
+        });
+
+        return newEdge;
+      }
+
+      addCondition(newCondition);
+      relateConditionToNode(nodeId, newCondition.id);
+      addEdge(newEdge);
+    }
+
+    addInput(newInput);
+    addNode(childNode);
+
+    return { id: childNode.id, label: childNode.data.name };
+  };
+
+  const handleSelect = (newItem: string) => {
+    if (!edge?.target && newItem) {
+      const newCondition = createCondition({
+        inputId,
+        answerId: answer.id,
+      });
+
+      addCondition(newCondition);
+      relateConditionToNode(nodeId, newCondition.id);
+
+      createAndAddEdge({
+        source: nodeId,
+        target: newItem,
+        conditionId: newCondition.id,
+      });
+    }
+
+    if (edge?.target && newItem) updateEdgeTarget(edge.id, newItem);
+  };
+
+  const combobox = Combobox.useComboboxState({
+    list: nodeNames.map((node) => node.name),
+    gutter: 4,
+    sameWidth: true,
+  });
+  // value and setValue shouldn't be passed to the select state because the
+  // select value and the combobox value are different things.
+  const {
+    value: _comboboxValue,
+    setValue: _setComboboxValue,
+    ...selectProps
+  } = combobox;
+  const select = Select.useSelectState({
+    ...selectProps,
+    defaultValue:
+      nodeNames.find((nodeName) => nodeName.id === edge?.target)?.name ?? "",
+  });
+
+  // Resets combobox value when popover is collapsed
+  if (!select.mounted && combobox.value) {
+    combobox.setValue("");
+  }
 
   return node ? (
     <Reorder.Item
@@ -217,12 +290,10 @@ export function OptionTargetInput({
                   borderTopRightRadius: "inherit",
                   gridColumn: "1 / -1",
                   marginBottom: "-1px",
-                  borderBottomColor: "transparent",
 
-                  ...focusStyle({
-                    borderBottomColor: "$primary9",
-                    zIndex: "2",
-                  }),
+                  [`${focusSelector}`]: {
+                    zIndex: "$10",
+                  },
                 }}
                 placeholder="Antwort"
                 onBlur={onBlur}
@@ -230,101 +301,27 @@ export function OptionTargetInput({
               />
             )}
           </ControlledInput>
-          <NodeLink target={edge?.target} />
-          <Combobox.Root
-            missingLabelPlaceholder="Ziel hat keinen Namen"
-            name="target"
-            onCreate={(name) => {
-              // Construct the childNode
-              const newInput = createInput();
-              const childNode = createChildNode(nodeId, {
-                data: {
-                  inputs: [newInput.id],
-                  name,
-                  conditions: [],
-                },
-              });
-
-              if (childNode instanceof Error) return childNode;
-
-              if (edge?.target) {
-                updateEdgeTarget(edge.id, childNode.id);
-              } else {
-                // Construct the Relationship
-                const newCondition = createCondition({
-                  inputId,
-                  answerId: answer.id,
-                });
-
-                const newEdge = createEdge({
-                  source: nodeId,
-                  target: childNode.id,
-                  conditionId: newCondition.id,
-                });
-
-                if (newEdge instanceof Error) {
-                  addNotification({
-                    title:
-                      "Es konnte keine verbundender Knoten erstellt werden.",
-                    content: newEdge.message,
-                    variant: "danger",
-                  });
-
-                  return newEdge;
-                }
-
-                addCondition(newCondition);
-                relateConditionToNode(nodeId, newCondition.id);
-                addEdge(newEdge);
-              }
-
-              addInput(newInput);
-              addNode(childNode);
-
-              return { id: childNode.id, label: childNode.data.name };
+          <NodeLink
+            target={edge?.target}
+            css={{
+              [`${focusSelector}`]: {
+                zIndex: "$10",
+              },
             }}
-            onSelectedItemChange={(newItem) => {
-              if (!edge?.target && newItem) {
-                const newCondition = createCondition({
-                  inputId,
-                  answerId: answer.id,
-                });
-
-                addCondition(newCondition);
-                relateConditionToNode(nodeId, newCondition.id);
-
-                createAndAddEdge({
-                  source: nodeId,
-                  target: newItem.id,
-                  conditionId: newCondition.id,
-                });
-              }
-
-              if (edge?.target && newItem)
-                updateEdgeTarget(edge.id, newItem.id);
-            }}
-            items={allOptions}
-            subsetOfItems={nodeOptions}
-          >
-            <Combobox.Input name="target">
-              {({ css, ...field }) => (
-                <Input
-                  placeholder="Zielknoten auswählen"
-                  css={{
-                    borderRadius: 0,
-                    borderBottomRightRadius: "$md",
-                    marginLeft: "-1px",
-
-                    ...focusStyle({
-                      borderLeftColor: "$primary9",
-                    }),
-                    ...css,
-                  }}
-                  {...field}
-                />
-              )}
-            </Combobox.Input>
-          </Combobox.Root>
+          />
+          <SelectWithCombobox
+            comboboxState={combobox}
+            selectState={select}
+            onCreate={handleCreate}
+            onSelect={handleSelect}
+            selectOptions={nodeNames}
+            comboboxPlaceholder={
+              nodeOptions.length
+                ? "Knoten suchen..."
+                : "Neuen Knoten erstellen..."
+            }
+            selectPlaceholder="Zielknoten auswählen..."
+          />
         </Box>
         <Box
           css={{
