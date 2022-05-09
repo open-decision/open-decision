@@ -12,6 +12,7 @@ export const badgeStyles = css({
   alignItems: "center",
   justifyContent: "center",
   gap: "$1",
+  wordBreak: "keep-all",
 
   variants: {
     size: {
