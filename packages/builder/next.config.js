@@ -4,7 +4,11 @@ const { withSentryConfig } = require("@sentry/nextjs");
 // Yjs is transpiled, because otherwise a change in nextjs 12 results in it being imported twice. My guess is that TipTap Collaboration
 // is importing the cjs version of yjs and nextjs since version 12 imports the esm version. This results in multiple versions being imported
 // breaking the app.
-const withTM = require("next-transpile-modules")(["yjs", "y-websocket"]);
+const withTM = require("next-transpile-modules")([
+  "yjs",
+  "y-websocket",
+  "@open-decision/design-system",
+]);
 
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
@@ -38,6 +42,6 @@ const nextConfig = {
 };
 
 module.exports = withPlugins(
-  [withTM, withSentryConfig({}, { silent: true }), withBundleAnalyzer],
+  [withSentryConfig({}, { silent: true }), withBundleAnalyzer, withTM],
   nextConfig
 );

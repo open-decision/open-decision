@@ -1,9 +1,14 @@
 import { defineConfig } from "vite";
 import pluginReact from "@vitejs/plugin-react";
 import dts from "vite-plugin-dts";
+import { visualizer } from "rollup-plugin-visualizer";
 
 export default defineConfig({
-  plugins: [pluginReact({ jsxRuntime: "classic" }), dts()],
+  plugins: [
+    pluginReact({ jsxRuntime: "classic" }),
+    dts(),
+    // visualizer({ open: true }),
+  ],
   build: {
     outDir: "lib",
     lib: {
