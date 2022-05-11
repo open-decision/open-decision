@@ -7,7 +7,6 @@ import { VisuallyHidden } from "ariakit";
 
 const FieldBox = styled(Box, {
   display: "grid",
-  // gap: "$2",
   gridTemplateAreas: `"label" "input" "error"`,
 
   "&[data-layout='inline-left']": {

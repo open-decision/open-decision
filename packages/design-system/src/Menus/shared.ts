@@ -54,7 +54,7 @@ export const menuItemStyles = css({
     focusColor: "$colorScheme8",
   },
 
-  [`${intentSelector} ${activeSelector}`]: {
+  [`${intentSelector}, ${activeSelector}`]: {
     backgroundColor: "$colorScheme2",
     ...innerFocusStyle,
 
