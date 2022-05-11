@@ -21,9 +21,11 @@ export function ChangeEmail() {
   const { mutate, isLoading } = useUserUpdateMutation();
   const [open, setOpen] = React.useState(false);
 
+  const handleVerify = React.useCallback(() => mutate({ email: newEmail }), []);
+
   return (
     <VerifiedSettingsChange
-      onVerify={() => mutate({ email: newEmail })}
+      onVerify={handleVerify}
       open={open}
       setOpen={setOpen}
     >

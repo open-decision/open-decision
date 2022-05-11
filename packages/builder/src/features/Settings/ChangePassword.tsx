@@ -23,9 +23,14 @@ export function ChangePassword() {
   const { mutate, isLoading } = useUserUpdateMutation();
   const [open, setOpen] = React.useState(false);
 
+  const handleVerify = React.useCallback(
+    () => mutate({ password: newPassword }),
+    []
+  );
+
   return (
     <VerifiedSettingsChange
-      onVerify={() => mutate({ password: newPassword })}
+      onVerify={handleVerify}
       open={open}
       setOpen={setOpen}
     >

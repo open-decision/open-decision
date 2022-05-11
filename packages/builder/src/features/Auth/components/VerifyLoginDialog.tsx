@@ -9,13 +9,15 @@ import {
 import { useVerifyLogin } from "../verifyLogin/useVerifyLogin";
 import { InfoBox, InfoBoxProps } from "../../Notifications/InfoBox";
 import { ColorKeys } from "@open-decision/design-system/src/internal/utils";
+import { onVerify, onVerifyFailure } from "../verifyLogin/verifyLogin.machine";
 
 export type VerfiyLoginDialogProps = DialogTriggerProps & {
   open?: boolean;
   setOpen?: (open: boolean) => void;
   focusOnClose?: () => void;
   description?: React.ReactNode;
-  onVerify: (verified: boolean) => void;
+  onVerify: onVerify;
+  onVerifyFailure?: onVerifyFailure;
   onClose?: () => void;
   colorScheme?: ColorKeys;
   additionalMessage?: InfoBoxProps;
@@ -27,12 +29,13 @@ export function VerifyLoginDialog({
   setOpen,
   focusOnClose,
   onVerify,
+  onVerifyFailure,
   onClose,
   colorScheme = "success",
   description = "Bitte bestätigen Sie ihre Identität.",
   additionalMessage,
 }: VerfiyLoginDialogProps) {
-  const [email, state, send] = useVerifyLogin(onVerify);
+  const [email, state, send] = useVerifyLogin(onVerify, onVerifyFailure);
 
   const formState = Form.useFormState({
     defaultValues: {

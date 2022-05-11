@@ -1,9 +1,17 @@
+import * as React from "react";
 import { ODProgrammerError } from "@open-decision/type-classes";
 import { useActor, useInterpret } from "@xstate/react";
 import { useAuth } from "../useAuth";
-import { createVerifyLoginMachine } from "./verifyLogin.machine";
+import {
+  createVerifyLoginMachine,
+  onVerify,
+  onVerifyFailure,
+} from "./verifyLogin.machine";
 
-export function useVerifyLogin(onVerify: (isVerified: boolean) => void) {
+export function useVerifyLogin(
+  onVerify: onVerify,
+  onVerifyFailure?: onVerifyFailure
+) {
   const [
     {
       context: { auth },
@@ -16,9 +24,11 @@ export function useVerifyLogin(onVerify: (isVerified: boolean) => void) {
       message: "Tried to verify login for unauthenticated user.",
     });
 
-  const verifyLoginMachine = createVerifyLoginMachine(
-    auth.user.email,
-    onVerify
+  const email = auth.user.email;
+
+  const verifyLoginMachine = React.useMemo(
+    () => createVerifyLoginMachine(email, onVerify, onVerifyFailure),
+    [email, onVerify]
   );
 
   const service = useInterpret(verifyLoginMachine);

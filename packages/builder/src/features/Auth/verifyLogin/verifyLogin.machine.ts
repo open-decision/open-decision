@@ -11,9 +11,14 @@ type Events =
 
 type Context = { Error?: Errors };
 
-export type onVerify = (isVerified: boolean) => void;
+export type onVerify = () => void;
+export type onVerifyFailure = () => void;
 
-export const createVerifyLoginMachine = (email: string, onVerify: onVerify) =>
+export const createVerifyLoginMachine = (
+  email: string,
+  onVerify: onVerify,
+  onVerifyFailure?: onVerifyFailure
+) =>
   createMachine(
     {
       tsTypes: {} as import("./verifyLogin.machine.typegen").Typegen0,
@@ -41,8 +46,8 @@ export const createVerifyLoginMachine = (email: string, onVerify: onVerify) =>
             },
           },
         },
-        verified: { type: "final", entry: () => onVerify(true) },
-        verification_failed: { entry: () => onVerify(false) },
+        verified: { type: "final", entry: () => onVerify() },
+        verification_failed: { entry: () => onVerifyFailure?.() },
       },
     },
     {

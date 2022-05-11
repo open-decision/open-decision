@@ -4,6 +4,7 @@ import { Card } from "../../components/Card";
 import { useDeleteUserMutation } from "../Auth/settings.queries";
 import { VerifiedSettingsChange } from "./VerifiedSettingsChange";
 import { useAuth } from "../Auth/useAuth";
+import { onVerify } from "../Auth/verifyLogin/verifyLogin.machine";
 
 export function DeleteAccount() {
   const [, send] = useAuth();
@@ -15,9 +16,11 @@ export function DeleteAccount() {
 
   const [open, setOpen] = React.useState(false);
 
+  const handleVerify = React.useCallback<onVerify>(() => mutate(), []);
+
   return (
     <VerifiedSettingsChange
-      onVerify={(isVerified) => isVerified && mutate()}
+      onVerify={handleVerify}
       open={open}
       setOpen={setOpen}
       description="Bitte verifizieren Sie sich um Ihren Account zu löschen."
