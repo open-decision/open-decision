@@ -41,12 +41,3 @@ export class NoTruthyConditionException extends InterpreterException {
     });
   }
 }
-
-export class NoCurrentNodeError extends InterpreterError {
-  constructor() {
-    super({
-      code: "NO_CURRENT_NODE",
-      message: "The current Node could not be retrieved.",
-    });
-  }
-}

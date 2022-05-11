@@ -11,10 +11,11 @@ type Props = {
 };
 
 function PreviewImpl({ css }: Props, ref: React.Ref<HTMLDivElement>) {
-  const { getCurrentNode } = useInterpreter();
+  const { getCurrentNode, getInputs } = useInterpreter();
   const node = getCurrentNode();
 
-  if (node instanceof Error) throw node;
+  if (!node) throw node;
+  const inputs = getInputs(node.data.inputs);
 
   return (
     <Stack
@@ -56,11 +57,13 @@ function PreviewImpl({ css }: Props, ref: React.Ref<HTMLDivElement>) {
             )}
           </ScrollArea.Viewport>
         </ScrollArea.Root>
-        <AnswersForm
-          inputIds={node.data.inputs}
-          key={`form_${node.id}`}
-          css={{ paddingInline: "$$padding", marginTop: "$4" }}
-        />
+        {inputs ? (
+          <AnswersForm
+            inputs={inputs}
+            key={`form_${node.id}`}
+            css={{ paddingInline: "$$padding", marginTop: "$4" }}
+          />
+        ) : null}
       </Stack>
       <Navigation css={{ alignSelf: "center", marginBottom: "$$padding" }} />
     </Stack>

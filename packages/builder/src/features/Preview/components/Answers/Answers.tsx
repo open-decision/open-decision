@@ -1,11 +1,11 @@
 import {
-  activeStyle,
-  intentStyleWithin,
   Label,
-  RadioButtons,
-  RadioGroupProps,
   styled,
-  useInputGroup,
+  RadioButton,
+  activeSelector,
+  intentWithinSelector,
+  Form,
+  VisuallyHidden,
 } from "@open-decision/design-system";
 import { Input } from "@open-decision/type-classes";
 import { InfoBox } from "features/Notifications/InfoBox";
@@ -19,38 +19,38 @@ const StyledLabel = styled(Label, {
   focusType: "inner-within",
   cursor: "pointer",
 
-  ...intentStyleWithin({
+  [`${intentWithinSelector}`]: {
     backgroundColor: "$primary3",
-  }),
+  },
 
-  ...activeStyle({
+  [`${activeSelector}`]: {
     backgroundColor: "$primary9",
     color: "$white",
-  }),
+  },
 });
 
 type Props = {
   input: Input.TInput;
-  onChange?: RadioGroupProps["onChange"];
   name: string;
+  activeValue: string;
 };
 
-export function SelectAnswers({ input, onChange, name }: Props) {
+export const Answers = React.forwardRef<HTMLDivElement, Props>(function Answers(
+  { input, name, activeValue },
+  ref
+) {
   const hasAnswers = input.answers.length > 0;
 
   return (
-    <RadioButtons.Group
-      name={name}
-      css={{
-        gap: "$1",
-        display: "grid",
-      }}
-      onChange={onChange}
-      key={input.id}
-    >
+    <Form.RadioGroup ref={ref} css={{ gap: "$1" }}>
       {hasAnswers ? (
         input.answers.map((answer) => (
-          <SelectElement answer={answer} key={answer.id} />
+          <RadioElement
+            answer={answer}
+            key={answer.id}
+            name={name}
+            activeValue={activeValue}
+          />
         ))
       ) : (
         <InfoBox
@@ -60,31 +60,25 @@ export function SelectAnswers({ input, onChange, name }: Props) {
           css={{ boxShadow: "$1" }}
         />
       )}
-    </RadioButtons.Group>
+    </Form.RadioGroup>
   );
-}
+});
 
 type SelectElementProps = {
   answer: {
     text: string;
     id: string;
   };
+  name: string;
+  activeValue: string;
 };
 
-function SelectElement({ answer }: SelectElementProps) {
-  const { getActive } = useInputGroup("radio");
-
+function RadioElement({ answer, name, activeValue }: SelectElementProps) {
   return (
-    <StyledLabel
-      htmlFor={answer.id}
-      size="large"
-      data-active={getActive?.(answer.id)}
-    >
-      <RadioButtons.Button
-        id={answer.id}
-        value={answer.id}
-        css={{ position: "absolute", width: 0, height: 0 }}
-      />
+    <StyledLabel size="large" data-active={activeValue === answer.id}>
+      <VisuallyHidden>
+        <Form.RadioButton required value={answer.id} name={name} />
+      </VisuallyHidden>
       {answer.text ? answer.text : "Kein Antworttext"}
     </StyledLabel>
   );
