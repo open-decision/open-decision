@@ -1,43 +1,35 @@
-import {
-  useForm,
-  Field,
-  Input,
-  ErrorMessage,
-  SubmitButton,
-} from "@open-decision/design-system";
+import { ErrorMessage, SubmitButton, Form } from "@open-decision/design-system";
 import { useAuth } from "../../useAuth";
 
 export function ForgotPasswordForm() {
-  const [Form, { register }] = useForm({
+  const formState = Form.useFormState({
     defaultValues: {
       email: "",
     },
   });
 
+  formState.useSubmit(() => {
+    send({ type: "REQUEST_PASSWORD_RESET", email: formState.values.email });
+  });
+
   const [state, send] = useAuth();
 
   return (
-    <Form
-      onSubmit={({ email }) => send({ type: "REQUEST_PASSWORD_RESET", email })}
+    <Form.Root
+      state={formState}
       css={{ display: "flex", flexDirection: "column" }}
     >
-      <Field label="Mailadresse">
-        <Input
+      <Form.Field label="Mailadresse" state={formState}>
+        <Form.Input
           css={{ layer: "2" }}
-          {...register("email", {
-            required: {
-              value: true,
-              message: "Eine E-Mail Addresse muss angegeben werden.",
-            },
-          })}
+          required
+          name={formState.names.email}
           type="email"
           placeholder="beispiel@web.de"
         />
-      </Field>
+      </Form.Field>
       {state.context.error ? (
-        <ErrorMessage css={{ marginTop: "$2" }}>
-          {state.context.error}
-        </ErrorMessage>
+        <ErrorMessage>{state.context.error}</ErrorMessage>
       ) : null}
       <SubmitButton
         isLoading={state.matches("loggedOut.requestPasswordReset")}
@@ -46,6 +38,6 @@ export function ForgotPasswordForm() {
       >
         Passwort zurücksetzen
       </SubmitButton>
-    </Form>
+    </Form.Root>
   );
 }

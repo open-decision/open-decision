@@ -1,20 +1,19 @@
 import * as React from "react";
-import {
-  Heading,
-  Field,
-  Input,
-  SubmitButton,
-  useForm,
-} from "@open-decision/design-system";
+import { Heading, Form } from "@open-decision/design-system";
 import { Card } from "../../components/Card";
 import { useUserUpdateMutation } from "../Auth/settings.queries";
 import { VerifiedSettingsChange } from "./VerifiedSettingsChange";
 
 export function ChangeEmail() {
-  const [PasswordForm, { register: registerPasswordForm }] = useForm({
+  const formState = Form.useFormState({
     defaultValues: {
       newEmail: "",
     },
+  });
+
+  formState.useSubmit(() => {
+    setNewEmail(formState.values.newEmail);
+    setOpen(true);
   });
 
   const [newEmail, setNewEmail] = React.useState<string | undefined>(undefined);
@@ -32,32 +31,23 @@ export function ChangeEmail() {
         <Heading as="h3" size="small">
           E-Mail ändern
         </Heading>
-        <PasswordForm
-          onSubmit={({ newEmail }) => {
-            setNewEmail(newEmail);
-            setOpen(true);
-          }}
-        >
-          <Field label="Neue E-Mail Adresse">
-            <Input
-              {...registerPasswordForm("newEmail", {
-                required: {
-                  value: true,
-                  message: "Eine E-Mail-Adresse muss angegeben werden.",
-                },
-              })}
+        <Form.Root state={formState}>
+          <Form.Field state={formState} label="Neue E-Mail Adresse">
+            <Form.Input
+              name={formState.names.newEmail}
+              required
               type="email"
               placeholder="max.mustermann@gmx.de"
             />
-          </Field>
-          <SubmitButton
+          </Form.Field>
+          <Form.Submit
             isLoading={isLoading}
             variant="secondary"
             css={{ marginLeft: "auto", marginTop: "$3" }}
           >
             E-Mail ändern
-          </SubmitButton>
-        </PasswordForm>
+          </Form.Submit>
+        </Form.Root>
       </Card>
     </VerifiedSettingsChange>
   );

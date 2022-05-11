@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleObject, useForm } from "@open-decision/design-system";
+import { StyleObject, Form } from "@open-decision/design-system";
 import { useInterpreter } from "@open-decision/interpreter";
 import { SelectAnswers } from "./Answers/SelectAnswers";
 
@@ -18,25 +18,27 @@ export function AnswersForm({ inputIds, css }: PreviewAnswerFormProps) {
     (input) => (defaultValues[input.id] = getAnswer(input.id))
   );
 
-  const [Form] = useForm({
+  const formState = Form.useFormState({
     defaultValues,
   });
   if (!inputs) return null;
 
   return (
-    <Form css={css}>
+    <Form.Root state={formState} css={css}>
       {Object.values(inputs).map((input) => {
         return (
-          <SelectAnswers
+          <Form.CustomControl
+            as={SelectAnswers}
             name={input.id}
             input={input}
             key={input.id}
-            onChange={(newValue) => {
+            onChange={(value) => {
               send({
                 type: "ADD_USER_ANSWER",
                 inputId: input.id,
-                answerId: newValue,
+                answerId: value,
               });
+
               send({
                 type: "EVALUATE_NODE_CONDITIONS",
                 conditionIds: getCurrentNode()?.data.conditions ?? [],
@@ -45,6 +47,6 @@ export function AnswersForm({ inputIds, css }: PreviewAnswerFormProps) {
           />
         );
       })}
-    </Form>
+    </Form.Root>
   );
 }

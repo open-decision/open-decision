@@ -1,8 +1,5 @@
 import {
-  useForm,
-  Label,
-  Input,
-  ValidationMessage,
+  Form,
   Dialog,
   DialogTriggerProps,
   StyleObject,
@@ -30,7 +27,14 @@ export function UpdateTreeDialog({
   className,
   css,
 }: Props) {
-  const [Form, { register }] = useForm({ defaultValues: { treeName: "" } });
+  const formState = Form.useFormState({ defaultValues: { treeName: "" } });
+
+  formState.useSubmit(() => {
+    updateTree({
+      data: { name: { set: formState.values.treeName } },
+      uuid: treeId,
+    });
+  });
 
   const { mutate: updateTree, isLoading } = useUpdateTreeMutation({
     onSuccess: () => {
@@ -51,36 +55,24 @@ export function UpdateTreeDialog({
         <Dialog.Header css={{ marginBottom: "$4" }}>
           Projektname ändern
         </Dialog.Header>
-        <Form
+        <Form.Root
+          state={formState}
           css={{ display: "flex", flexDirection: "column" }}
-          onSubmit={({ treeName }) =>
-            updateTree({ data: { name: { set: treeName } }, uuid: treeId })
-          }
         >
-          <Dialog.Description asChild>
-            <Label size="small" htmlFor="treeName" css={{ color: "$gray12" }}>
-              Projektname
-            </Label>
-          </Dialog.Description>
-          <Input
-            autoFocus
-            {...register("treeName", {
-              required: {
-                value: true,
-                message: "Es muss ein Name vergeben werden.",
-              },
-            })}
-            placeholder="Mein Projektname"
-            name="treeName"
-            id="treeName"
-            css={{ marginBlock: "$2", layer: "2" }}
-            required
-          />
-          <ValidationMessage name="treeName" />
+          <Form.Field
+            state={formState}
+            label={<Dialog.Description> Projektname</Dialog.Description>}
+          >
+            <Form.Input
+              name={formState.names.treeName}
+              placeholder="Mein Projektname"
+              required
+            />
+          </Form.Field>
           <Dialog.ButtonRow isLoading={isLoading} colorScheme="success">
             Erstellen
           </Dialog.ButtonRow>
-        </Form>
+        </Form.Root>
       </Dialog.Content>
     </Dialog.Root>
   );

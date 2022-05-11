@@ -2,16 +2,12 @@ import {
   Box,
   Button,
   ButtonProps,
-  ControlledInput,
   Icon,
-  Input,
-  Label,
   styled,
-  useForm,
-  Select,
-  Combobox,
   SelectWithCombobox,
   focusSelector,
+  Form,
+  Label,
 } from "@open-decision/design-system";
 import * as React from "react";
 import { Edge, Input as InputType } from "@open-decision/type-classes";
@@ -78,7 +74,7 @@ export function OptionTargetInputs({ nodeId, input }: SingleSelectProps) {
           ref={ref}
           axis="y"
           values={input?.answers}
-          layoutScroll
+          initial={false}
           onReorder={(newOrder) => updateInputAnswerOrder(input.id, newOrder)}
         >
           {input.answers.map((answer) => {
@@ -152,7 +148,7 @@ export function OptionTargetInput({
 
   const ref = React.useRef<HTMLDivElement | null>(null);
 
-  const [Form] = useForm({
+  const formState = Form.useFormState({
     defaultValues: {
       answer: answer.text ?? "",
       target: edge?.target ?? "",
@@ -228,29 +224,6 @@ export function OptionTargetInput({
     if (edge?.target && newItem) updateEdgeTarget(edge.id, newItem);
   };
 
-  const combobox = Combobox.useComboboxState({
-    list: nodeNames.map((node) => node.name),
-    gutter: 4,
-    sameWidth: true,
-  });
-  // value and setValue shouldn't be passed to the select state because the
-  // select value and the combobox value are different things.
-  const {
-    value: _comboboxValue,
-    setValue: _setComboboxValue,
-    ...selectProps
-  } = combobox;
-  const select = Select.useSelectState({
-    ...selectProps,
-    defaultValue:
-      nodeNames.find((nodeName) => nodeName.id === edge?.target)?.name ?? "",
-  });
-
-  // Resets combobox value when popover is collapsed
-  if (!select.mounted && combobox.value) {
-    combobox.setValue("");
-  }
-
   return node ? (
     <Reorder.Item
       value={answer}
@@ -258,9 +231,10 @@ export function OptionTargetInput({
       dragControls={controls}
       dragConstraints={groupRef}
     >
-      <Form
+      <Form.Root
+        state={formState}
         css={{
-          display: "flex",
+          flexDirection: "row",
           position: "relative",
           gap: "$1",
           groupColor: "$colorScheme-text",
@@ -276,31 +250,24 @@ export function OptionTargetInput({
             layer: "2",
           }}
         >
-          <ControlledInput
-            name="answer"
+          <Form.Input
+            name={formState.names.answer}
             onChange={(event) =>
               updateInputAnswer(inputId, answer.id, event.target.value)
             }
-          >
-            {({ onBlur, ...field }) => (
-              <Input
-                css={{
-                  borderRadius: "0",
-                  borderTopLeftRadius: "inherit",
-                  borderTopRightRadius: "inherit",
-                  gridColumn: "1 / -1",
-                  marginBottom: "-1px",
+            placeholder="Antwort"
+            css={{
+              borderRadius: "0",
+              borderTopLeftRadius: "inherit",
+              borderTopRightRadius: "inherit",
+              gridColumn: "1 / -1",
+              marginBottom: "-1px",
 
-                  [`${focusSelector}`]: {
-                    zIndex: "$10",
-                  },
-                }}
-                placeholder="Antwort"
-                onBlur={onBlur}
-                {...field}
-              />
-            )}
-          </ControlledInput>
+              [`${focusSelector}`]: {
+                zIndex: "$10",
+              },
+            }}
+          />
           <NodeLink
             target={edge?.target}
             css={{
@@ -309,9 +276,16 @@ export function OptionTargetInput({
               },
             }}
           />
-          <SelectWithCombobox
-            comboboxState={combobox}
-            selectState={select}
+          <Form.CustomControl
+            name={formState.names.target}
+            as={SelectWithCombobox}
+            value={
+              nodeNames.find((nodeName) => nodeName.id === edge?.target)
+                ?.name ?? ""
+            }
+            setValue={(newValue) =>
+              formState.setValue(formState.names.target, newValue)
+            }
             onCreate={handleCreate}
             onSelect={handleSelect}
             selectOptions={nodeNames}
@@ -351,7 +325,7 @@ export function OptionTargetInput({
             </Icon>
           </Button>
         </Box>
-      </Form>
+      </Form.Root>
     </Reorder.Item>
   ) : (
     <Box>Kein Knoten ausgewählt</Box>

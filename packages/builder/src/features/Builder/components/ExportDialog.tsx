@@ -2,12 +2,9 @@ import * as React from "react";
 import {
   buttonStyles,
   Dialog,
-  Field,
-  Input,
   Link,
   Text,
-  useForm,
-  SubmitButton,
+  Form,
   Stack,
   DialogTriggerProps,
   StyleObject,
@@ -61,12 +58,17 @@ export function ExportDialog({
     });
   });
 
-  const [Form, { register }] = useForm({
+  const formState = Form.useFormState({
     defaultValues: {
       name: data?.decisionTree?.name
         ? `${data?.decisionTree?.name}_${readableDate(new Date())}`
         : "",
     },
+  });
+
+  formState.useSubmit(() => {
+    setFileName(formState.values.name);
+    mutate();
   });
 
   return (
@@ -86,23 +88,17 @@ export function ExportDialog({
                   Nehmen Sie Anpassungen am Export vor.
                 </Text>
               </Dialog.Description>
-              <Form
-                onSubmit={({ name }) => {
-                  setFileName(name);
-                  mutate();
-                }}
-                css={{ marginTop: "$4" }}
-              >
-                <Field label="Dateiname">
-                  <Input {...register("name")} />
-                </Field>
-                <SubmitButton
+              <Form.Root state={formState} css={{ marginTop: "$4" }}>
+                <Form.Field state={formState} label="Dateiname">
+                  <Form.Input name={formState.names.name} />
+                </Form.Field>
+                <Form.Submit
                   isLoading={isLoading}
                   css={{ marginTop: "$2", marginLeft: "auto" }}
                 >
                   Weiter
-                </SubmitButton>
-              </Form>
+                </Form.Submit>
+              </Form.Root>
             </>
           ) : (
             <Stack>

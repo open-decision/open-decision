@@ -1,47 +1,36 @@
-import {
-  useForm,
-  Field,
-  Input,
-  ErrorMessage,
-  Button,
-} from "@open-decision/design-system";
+import { Form, ErrorMessage, Button } from "@open-decision/design-system";
 import * as React from "react";
 import { useAuth } from "../../useAuth";
 
 type Props = { token: string };
 
 export function ResetPasswordForm({ token }: Props) {
-  const [Form, { register }] = useForm({
+  const formState = Form.useFormState({
     defaultValues: {
       newPassword: "",
     },
   });
 
+  formState.useSubmit(() => {
+    send({
+      type: "RESET_PASSWORD",
+      password: formState.values.newPassword,
+      token,
+    });
+  });
+
   const [state, send] = useAuth();
 
   return (
-    <Form
-      onSubmit={({ newPassword }) =>
-        send({
-          type: "RESET_PASSWORD",
-          password: newPassword,
-          token,
-        })
-      }
-      css={{ display: "flex", flexDirection: "column" }}
-    >
-      <Field label="Neues Passwort">
-        <Input
-          {...register("newPassword", {
-            required: {
-              value: true,
-              message: "Bitte vergeben Sie ein neues Passwort.",
-            },
-          })}
+    <Form.Root state={formState}>
+      <Form.Field state={formState} label="Neues Passwort">
+        <Form.Input
+          name={formState.names.newPassword}
+          required
           type="password"
           placeholder="*******"
         />
-      </Field>
+      </Form.Field>
       {state.context.error ? (
         <ErrorMessage css={{ marginTop: "$2" }}>
           {state.context.error}
@@ -50,6 +39,6 @@ export function ResetPasswordForm({ token }: Props) {
       <Button type="submit" css={{ marginTop: "$6" }}>
         Passwort zurücksetzen
       </Button>
-    </Form>
+    </Form.Root>
   );
 }

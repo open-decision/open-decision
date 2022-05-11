@@ -1,84 +1,80 @@
 import {
   ErrorMessage,
-  Field,
-  Input,
+  Form,
   Link,
   Row,
+  Stack,
   SubmitButton,
-  useForm,
 } from "@open-decision/design-system";
 import { useAuth } from "../../useAuth";
 
 export function LoginForm() {
-  const [Form, { register }] = useForm({
+  const formState = Form.useFormState({
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
+  formState.useSubmit(() => {
+    send({
+      type: "LOG_IN",
+      email: formState.values.email,
+      password: formState.values.password,
+    });
+  });
+
   const [state, send] = useAuth();
 
   return (
-    <Form
-      onSubmit={({ email, password }) =>
-        send({ type: "LOG_IN", email, password })
-      }
-      css={{ display: "flex", flexDirection: "column" }}
-    >
-      <Field label="Mailadresse">
-        <Input
-          {...register("email", {
-            required: {
-              value: true,
-              message: "Eine E-Mail Addresse muss angegeben werden.",
-            },
-          })}
-          placeholder="beispiel@web.de"
-        />
-      </Field>
-      <Field
-        label={
-          <Row
-            css={{
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            Passwort
-            <Link
-              href="/auth/forgot_password"
-              css={{ textStyle: "small-text" }}
+    <Form.Root state={formState} css={{ gap: "$6" }}>
+      <Stack>
+        <Form.Field state={formState} label="Mailadresse">
+          <Form.Input
+            required
+            name={formState.names.email}
+            placeholder="beispiel@web.de"
+            type="email"
+          />
+        </Form.Field>
+        <Form.Field
+          state={formState}
+          label={
+            <Row
+              css={{
+                justifyContent: "space-between",
+                alignItems: "center",
+                width: "100%",
+              }}
             >
-              Passwort vergessen?
-            </Link>
-          </Row>
-        }
-        css={{ marginTop: "$4" }}
-      >
-        <Input
-          type="password"
-          {...register("password", {
-            required: {
-              value: true,
-              message: "Ein Passwort muss angegeben werden.",
-            },
-          })}
-          placeholder="*******"
-        />
-      </Field>
+              Passwort
+              <Link
+                href="/auth/forgot_password"
+                css={{ textStyle: "small-text" }}
+              >
+                Passwort vergessen?
+              </Link>
+            </Row>
+          }
+          css={{ marginTop: "$4" }}
+        >
+          <Form.Input
+            type="password"
+            required
+            name={formState.names.password}
+            placeholder="*******"
+          />
+        </Form.Field>
+      </Stack>
       {state.context.error ? (
-        <ErrorMessage css={{ marginTop: "$2" }}>
-          {state.context.error}
-        </ErrorMessage>
+        <ErrorMessage>{state.context.error}</ErrorMessage>
       ) : null}
       <SubmitButton
         isLoading={state.matches("loggedOut.loggingIn")}
         type="submit"
-        css={{ marginTop: "$6" }}
       >
         Jetzt Anmelden
       </SubmitButton>
-    </Form>
+    </Form.Root>
   );
 }

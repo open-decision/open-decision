@@ -1,12 +1,5 @@
 import * as React from "react";
-import {
-  Label,
-  Input,
-  useForm,
-  ValidationMessage,
-  Dialog,
-  DialogTriggerProps,
-} from "@open-decision/design-system";
+import { Form, Dialog, DialogTriggerProps } from "@open-decision/design-system";
 import { useCreateTreeMutation } from "features/Data/generated/graphql";
 import { queryClient } from "features/Data/queryClient";
 
@@ -22,7 +15,11 @@ export const CreateTreeDialog = ({
   open,
   setOpen,
 }: Props) => {
-  const [Form, { register }] = useForm({ defaultValues: { treeName: "" } });
+  const formState = Form.useFormState({ defaultValues: { treeName: "" } });
+
+  formState.useSubmit(() => {
+    createTree({ data: { name: formState.values.treeName } });
+  });
 
   const { mutate: createTree, isLoading } = useCreateTreeMutation({
     onSuccess: () => {
@@ -38,33 +35,20 @@ export const CreateTreeDialog = ({
         <Dialog.Header css={{ marginBottom: "$4" }}>
           Neues Projekt erstellen
         </Dialog.Header>
-        <Form
+        <Form.Root
+          state={formState}
           css={{ display: "flex", flexDirection: "column" }}
-          onSubmit={({ treeName }) => createTree({ data: { name: treeName } })}
         >
-          <Dialog.Description asChild>
-            <Label size="small" htmlFor="treeName" css={{ color: "$gray12" }}>
-              Projektname
-            </Label>
-          </Dialog.Description>
-          <Input
-            autoFocus
-            {...register("treeName", {
-              required: {
-                value: true,
-                message: "Es muss ein Name vergeben werden.",
-              },
-            })}
-            name="treeName"
-            id="treeName"
-            css={{ marginBlock: "$2", layer: "2" }}
-            required
-          />
-          <ValidationMessage name="treeName" />
+          <Form.Field
+            state={formState}
+            label={<Dialog.Description>Projektname</Dialog.Description>}
+          >
+            <Form.Input name={formState.names.treeName} required autoFocus />
+          </Form.Field>
           <Dialog.ButtonRow isLoading={isLoading} colorScheme="success">
             Erstellen
           </Dialog.ButtonRow>
-        </Form>
+        </Form.Root>
       </Dialog.Content>
     </Dialog.Root>
   );

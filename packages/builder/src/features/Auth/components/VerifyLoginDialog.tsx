@@ -2,9 +2,7 @@ import * as React from "react";
 import {
   Dialog,
   DialogTriggerProps,
-  Field,
-  Input,
-  useForm,
+  Form,
   Text,
   ErrorMessage,
 } from "@open-decision/design-system";
@@ -36,11 +34,15 @@ export function VerifyLoginDialog({
 }: VerfiyLoginDialogProps) {
   const [email, state, send] = useVerifyLogin(onVerify);
 
-  const [Form, { register }] = useForm({
+  const formState = Form.useFormState({
     defaultValues: {
       email,
       password: "",
     },
+  });
+
+  formState.useSubmit(() => {
+    send({ type: "VERIFY_LOGIN", password: formState.values.password });
   });
 
   return (
@@ -68,34 +70,24 @@ export function VerifyLoginDialog({
             description
           )}
         </Dialog.Description>
-        <Form
+        <Form.Root
+          state={formState}
           css={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "$2",
             marginTop: "$4",
           }}
-          onSubmit={({ password }) => send({ type: "VERIFY_LOGIN", password })}
         >
-          <Field label="E-Mail">
-            <Input
-              {...register("email", {
-                disabled: true,
-              })}
-            />
-          </Field>
-          <Field label="Passwort">
-            <Input
+          <Form.Field state={formState} label="E-Mail">
+            <Form.Input disabled name={formState.names.email} type="email" />
+          </Form.Field>
+          <Form.Field state={formState} label="Passwort">
+            <Form.Input
               autoFocus
-              {...register("password", {
-                required: {
-                  value: true,
-                  message: "Ein Passwort muss angegeben werden.",
-                },
-              })}
+              name={formState.names.password}
+              required
+              placeholder="*****"
               type="password"
             />
-          </Field>
+          </Form.Field>
           {state.context.Error ? (
             <ErrorMessage css={{ marginTop: "$2" }}>
               {state.context.Error.message}
@@ -107,7 +99,7 @@ export function VerifyLoginDialog({
           >
             Bestätigen
           </Dialog.ButtonRow>
-        </Form>
+        </Form.Root>
       </Dialog.Content>
     </Dialog.Root>
   );

@@ -1,10 +1,4 @@
-import {
-  useForm,
-  Field,
-  Input,
-  ErrorMessage,
-  SubmitButton,
-} from "@open-decision/design-system";
+import { Form, ErrorMessage } from "@open-decision/design-system";
 import { useAuth } from "../../useAuth";
 import { useMutation, UseMutationOptions } from "react-query";
 import axios from "axios";
@@ -32,10 +26,14 @@ const useIsOnWhiteListQuery = (
   );
 
 export function CombinedRegisterForm() {
-  const [EmailForm, { register: registerEmailForm }] = useForm({
+  const formState = Form.useFormState({
     defaultValues: {
       email: "",
     },
+  });
+
+  formState.useSubmit(() => {
+    mutate({ email: formState.values.email });
   });
 
   const { mutate, isSuccess, isError, isLoading, variables } =
@@ -56,34 +54,28 @@ export function CombinedRegisterForm() {
   }
 
   return (
-    <EmailForm
-      onSubmit={({ email }) => mutate({ email })}
+    <Form.Root
+      state={formState}
       css={{ display: "flex", flexDirection: "column" }}
     >
-      <Field label="Mailadresse">
-        <Input
+      <Form.Field label="Mailadresse" state={formState}>
+        <Form.Input
           css={{ layer: "2" }}
-          {...registerEmailForm("email", {
-            required: {
-              value: true,
-              message: "Eine E-Mail Addresse muss angegeben werden.",
-            },
-          })}
+          type="email"
+          required
+          name={formState.names.email}
           placeholder="beispiel@web.de"
         />
-      </Field>
-      <SubmitButton
-        isLoading={isLoading}
-        css={{ marginTop: "$6" }}
-        type="submit"
-      >
+      </Form.Field>
+      <Form.Submit isLoading={isLoading} css={{ marginTop: "$6" }}>
         Jetzt Registrieren
-      </SubmitButton>
-    </EmailForm>
+      </Form.Submit>
+    </Form.Root>
   );
 }
-function RegisterForm({ email }) {
-  const [RegisterForm, { register }] = useForm({
+
+function RegisterForm({ email }: { email: string }) {
+  const formState = Form.useFormState({
     defaultValues: {
       email,
       password: "",
@@ -91,62 +83,68 @@ function RegisterForm({ email }) {
     },
   });
 
+  formState.useSubmit(() => {
+    send({
+      type: "REGISTER",
+      email: formState.values.email,
+      password: formState.values.password,
+    });
+  });
+
+  formState.useValidate(() => {
+    if (formState.values.password !== formState.values.passwordConfirmation)
+      formState.setError(
+        formState.names.passwordConfirmation,
+        "Die Passwörter stimmen nicht überein."
+      );
+  });
+
   const [state, send] = useAuth();
 
   return (
-    <RegisterForm
-      css={{ display: "flex", flexDirection: "column" }}
-      onSubmit={({ password }) => send({ type: "REGISTER", email, password })}
-    >
-      <Field label="Mailadresse">
-        <Input
+    <Form.Root state={formState}>
+      <Form.Field label="Mailadresse" state={formState}>
+        <Form.Input
           css={{ layer: "2" }}
-          {...register("email", {
-            disabled: true,
-          })}
+          name={formState.names.email}
+          type="email"
+          disabled
           placeholder="beispiel@web.de"
         />
-      </Field>
-      <Field label="Passwort" css={{ marginTop: "$4" }}>
-        <Input
+      </Form.Field>
+      <Form.Field label="Passwort" state={formState} css={{ marginTop: "$4" }}>
+        <Form.Input
           css={{ layer: "2" }}
           type="password"
-          {...register("password", {
-            required: {
-              value: true,
-              message: "Ein Passwort muss angegeben werden.",
-            },
-          })}
+          name={formState.names.password}
           placeholder="*******"
         />
-      </Field>
-      <Field label="Passwort wiederholen" css={{ marginTop: "$4" }}>
-        <Input
+      </Form.Field>
+      <Form.Field
+        state={formState}
+        label="Passwort wiederholen"
+        css={{ marginTop: "$4" }}
+      >
+        <Form.Input
           css={{ layer: "2" }}
           type="password"
-          {...register("passwordConfirmation", {
-            required: {
-              value: true,
-              message:
-                "Sie müssen ihr Passwort erneut eingeben um Rechtschreibfehlern vorzubeugen.",
-            },
-            deps: "password",
-          })}
+          name={formState.names.passwordConfirmation}
+          required
           placeholder="*******"
         />
-      </Field>
+      </Form.Field>
       {state.context.error ? (
         <ErrorMessage css={{ marginBlock: "$2" }}>
           {state.context.error}
         </ErrorMessage>
       ) : null}
-      <SubmitButton
+      <Form.Submit
         isLoading={state.matches("loggedOut.register")}
         css={{ marginTop: "$6" }}
         type="submit"
       >
         Jetzt Registrieren
-      </SubmitButton>
-    </RegisterForm>
+      </Form.Submit>
+    </Form.Root>
   );
 }

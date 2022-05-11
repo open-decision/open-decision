@@ -1,14 +1,12 @@
 import React from "react";
 import { motion } from "framer-motion";
 import {
-  Field,
   Heading,
   Icon,
-  Input,
   Row,
   Stack,
   Text,
-  useForm,
+  Form,
 } from "@open-decision/design-system";
 import { useTreesQuery } from "features/Data/generated/graphql";
 import { TreeCard } from "./TreeCard";
@@ -30,14 +28,13 @@ export const TreeList = () => {
   const { data: trees } = useTreesQuery();
   const hasTrees = trees && trees?.decisionTrees.length > 0;
 
-  const [Form] = useForm({
-    defaultValues: {
-      search: "",
-    },
-  });
-
   const { search, setSearch, SortButton, FilterButton, filteredData } =
     useFilter(trees?.decisionTrees ?? [], sorts, "updatedAt", filters);
+
+  const formState = Form.useFormState({
+    defaultValues: { search },
+    setValues: ({ search }) => setSearch(search),
+  });
 
   return hasTrees ? (
     <>
@@ -45,23 +42,23 @@ export const TreeList = () => {
         <Heading size="large">Meine Projekte</Heading>
         <NewProjectDropdown />
       </Row>
-      <Form
+      <Form.Root
+        state={formState}
         css={{
-          display: "flex",
           gap: "$2",
           justifyContent: "space-between",
+          flexDirection: "row",
         }}
       >
-        <Field
+        <Form.Field
+          state={formState}
           label="Suche"
-          isLabelVisible={false}
+          layout="no-label"
           css={{ flexBasis: "400px" }}
         >
-          <Input
+          <Form.Input
             variant="lowered"
-            name="search"
-            value={search || ""}
-            onChange={(event) => setSearch(event.target.value)}
+            name={formState.names.search}
             Icon={
               <Icon>
                 <MagnifyingGlassIcon />
@@ -69,12 +66,12 @@ export const TreeList = () => {
             }
             placeholder="Suche"
           />
-        </Field>
+        </Form.Field>
         <Row css={{ gap: "$2" }}>
           <FilterButton />
           <SortButton />
         </Row>
-      </Form>
+      </Form.Root>
       <Stack
         css={{
           gap: "$2",

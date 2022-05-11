@@ -1,8 +1,5 @@
 import {
-  useForm,
-  Label,
-  Input,
-  ValidationMessage,
+  Form,
   Dialog,
   DialogTriggerProps,
   Text,
@@ -36,8 +33,21 @@ export function DeleteTreeDialog({
   css,
   onDelete,
 }: Props) {
-  const [Form, { register }] = useForm({
+  const formState = Form.useFormState({
     defaultValues: { treeName: "" },
+  });
+
+  formState.useSubmit(() => {
+    deleteTree({ uuid: tree.uuid });
+  });
+
+  formState.useValidate(() => {
+    tree.name !== formState.values.treeName
+      ? formState.setError(
+          formState.names.treeName,
+          "Der Projektname ist nicht korrekt"
+        )
+      : null;
   });
 
   const { mutate: deleteTree, isLoading } = useDeleteTreeMutation({
@@ -65,33 +75,18 @@ export function DeleteTreeDialog({
             Bestätigung der Löschung ein.
           </Text>
         </Dialog.Description>
-        <Form
-          css={{ display: "flex", flexDirection: "column" }}
-          onSubmit={() => deleteTree({ uuid: tree.uuid })}
-        >
-          <Label size="small" htmlFor="treeName">
-            Projektname
-          </Label>
-          <Input
-            {...register("treeName", {
-              required: {
-                value: true,
-                message: "Es muss ein Name vergeben werden.",
-              },
-              validate: (val) =>
-                val === tree.name ? true : "Die Namen stimmen nicht überein.",
-            })}
-            placeholder={tree.name}
-            name="treeName"
-            id="treeName"
-            css={{ marginBlock: "$2", layer: "2" }}
-            required
-          />
-          <ValidationMessage name="treeName" />
+        <Form.Root state={formState}>
+          <Form.Field state={formState} label="Projektname">
+            <Form.Input
+              name={formState.names.treeName}
+              required
+              placeholder={tree.name}
+            />
+          </Form.Field>
           <Dialog.ButtonRow isLoading={isLoading} colorScheme="danger">
             Löschen
           </Dialog.ButtonRow>
-        </Form>
+        </Form.Root>
       </Dialog.Content>
     </Dialog.Root>
   );
