@@ -7,21 +7,53 @@ export type SelectWithComboboxProps = {
   onSelect: (id: string) => void;
   onCreate: (value: string) => void;
   selectOptions: { id: string; name: string }[];
-  comboboxState: Combobox.State;
-  selectState: Select.State;
   selectPlaceholder?: string;
   comboboxPlaceholder?: string;
+  value?: string;
+  setValue?: (newValue: string) => void;
+  defaultValue?: string;
 };
 
-export function SelectWithCombobox({
-  onSelect,
-  onCreate,
-  selectOptions,
-  comboboxState,
-  selectState,
-  selectPlaceholder,
-  comboboxPlaceholder,
-}: SelectWithComboboxProps) {
+export const SelectWithCombobox = React.forwardRef<
+  HTMLButtonElement,
+  SelectWithComboboxProps
+>(function SelectWithCombobox(
+  {
+    onSelect,
+    onCreate,
+    selectOptions,
+    value,
+    setValue,
+    defaultValue,
+    selectPlaceholder,
+    comboboxPlaceholder,
+  },
+  ref
+) {
+  const comboboxState = Combobox.useComboboxState({
+    list: selectOptions.map((node) => node.name),
+    gutter: 4,
+    sameWidth: true,
+  });
+  // value and setValue shouldn't be passed to the select state because the
+  // select value and the combobox value are different things.
+  const {
+    value: _comboboxValue,
+    setValue: _setComboboxValue,
+    ...selectProps
+  } = comboboxState;
+  const selectState = Select.useSelectState({
+    ...selectProps,
+    value,
+    setValue,
+    defaultValue,
+  });
+
+  // Resets combobox value when popover is collapsed
+  if (!selectState.mounted && comboboxState.value) {
+    comboboxState.setValue("");
+  }
+
   return (
     <>
       <Select.Input
@@ -37,6 +69,7 @@ export function SelectWithCombobox({
             zIndex: "$10",
           },
         }}
+        ref={ref}
       >
         {selectState.value.length ? selectState.value : selectPlaceholder}
         <Select.Arrow />
@@ -95,4 +128,4 @@ export function SelectWithCombobox({
       </Select.Popover>
     </>
   );
-}
+});

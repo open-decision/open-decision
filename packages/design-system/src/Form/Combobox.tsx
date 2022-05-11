@@ -10,7 +10,8 @@ import { styled } from "../stitches";
 import { InputProps as SystemInputProps } from "./Input";
 import { Input as SystemInput } from "./Input";
 
-export type InputProps = Combobox.ComboboxProps & SystemInputProps;
+export type InputProps = Combobox.ComboboxProps &
+  Omit<SystemInputProps, "name">;
 export const Input = (props: InputProps) => (
   <Combobox.Combobox as={SystemInput} {...props} />
 );

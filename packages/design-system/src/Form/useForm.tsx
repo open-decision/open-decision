@@ -12,7 +12,11 @@ import {
   FieldPath,
 } from "react-hook-form";
 
-const StyledForm = styled("form", {});
+const StyledForm = styled("form", {
+  gap: "$2",
+  display: "flex",
+  flexDirection: "column",
+});
 
 export type FormProps<TFieldValues extends object> = Omit<
   React.ComponentProps<typeof StyledForm>,
@@ -23,7 +27,7 @@ export type FormProps<TFieldValues extends object> = Omit<
     | ((methods: UseFormReturn<TFieldValues>) => JSX.Element);
   onSubmit?: SubmitHandler<TFieldValues>;
   onSubmitError?: SubmitErrorHandler<TFieldValues>;
-};
+} & { config?: UseFormProps<TFieldValues> };
 
 export function useForm<TFieldValues extends FieldValues>(
   parameters?: UseFormProps<TFieldValues>
