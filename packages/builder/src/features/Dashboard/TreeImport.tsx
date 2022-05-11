@@ -13,7 +13,10 @@ import { FileInputProps } from "components/FileInput";
 
 const TreeImportType = Tree.Type.extend({ name: z.string() });
 
-export function TreeImport(props: Omit<FileInputProps, "children">) {
+export const TreeImport = React.forwardRef<
+  HTMLLabelElement,
+  Omit<FileInputProps, "children">
+>(function TreeImport(props, ref) {
   const [importedData, setImportedData] = React.useState<
     Tree.TTree | undefined
   >();
@@ -37,6 +40,7 @@ export function TreeImport(props: Omit<FileInputProps, "children">) {
 
   return (
     <FileInput
+      ref={ref}
       onChange={(event) => {
         if (!event.currentTarget.files?.[0]) return;
 
@@ -75,4 +79,4 @@ export function TreeImport(props: Omit<FileInputProps, "children">) {
       Projekt importieren
     </FileInput>
   );
-}
+});
