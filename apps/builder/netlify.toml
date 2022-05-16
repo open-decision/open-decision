@@ -1,0 +1,12 @@
+[build.environment]
+  NPM_FLAGS = "--version"
+  NODE_VERSION = "14"
+
+[[plugins]]
+  package = "../../plugins/pnpm-preinstaller"
+
+[[plugins]]
+  package = "@sentry/netlify-build-plugin"
+  [plugins.inputs]
+    sentryOrg = "open-legal-tech-ev"
+    sentryProject = "builder"
