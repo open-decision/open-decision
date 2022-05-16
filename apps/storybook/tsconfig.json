@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      // This is a workaround to make storybook work with stitches. https://github.com/modulz/stitches/issues/248
+      "@emotion/core": ["./emotion-core-stub.ts"]
+    },
+    "composite": false,
+    "declaration": false
+  },
+  "include": ["stories"],
+  "references": [{ "path": "../design-system" }]
+}

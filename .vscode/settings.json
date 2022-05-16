@@ -8,7 +8,8 @@
     "type-classes",
     "design-system",
     "interpreter",
-    "api"
+    "api",
+    "storybook"
   ],
   "typescript.tsdk": "node_modules/typescript/lib",
   "todo-tree.general.tags": [
