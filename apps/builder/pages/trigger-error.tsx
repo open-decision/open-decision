@@ -1,6 +1,6 @@
 import { Button, Heading, Stack } from "@open-decision/design-system";
 import { Card } from "../components/Card";
-import { getDashboardLayout } from "../src/features/Dashboard/DashboardLayout";
+import { getDashboardLayout } from "../features/Dashboard/DashboardLayout";
 
 export default function TriggerError() {
   return (

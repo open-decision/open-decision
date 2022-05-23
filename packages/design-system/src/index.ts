@@ -24,6 +24,7 @@ export * from "./Separator";
 // Styling solutions
 export * from "./stitches";
 export { aliasColor } from "./internal/utils";
+export type { ColorKeys } from "./internal/utils";
 export type { SystemColors } from "./internal/utils";
 export * from "./shared/utils";
 export * from "./shared/variants";

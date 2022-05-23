@@ -45,6 +45,13 @@ type State =
       context: EmptyContext;
     };
 
+type OPEN_WEBSOCKET_EVENT = {
+  type: "OPEN_WEBSOCKET";
+  id: string;
+  yDoc: Doc;
+  onSync: (value: unknown) => void;
+};
+
 export type Events =
   | { type: "REPORT_IS_LOGGED_IN"; user: LoginResponse }
   | { type: "REPORT_IS_LOGGED_OUT" }
@@ -67,12 +74,7 @@ export type Events =
   | { type: "FAILED_PASSWORD_RESET_REQUEST"; error: string }
   | { type: "REDIRECT" }
   | { type: "REFRESH" }
-  | {
-      type: "OPEN_WEBSOCKET";
-      id: string;
-      yDoc: Doc;
-      onSync: () => void;
-    }
+  | OPEN_WEBSOCKET_EVENT
   | { type: "WEBSOCKET_CONNECTION_FAILED" }
   | { type: "WEBSOCKET_CLOSED" }
   | { type: "CLOSE_WEBSOCKET" };
@@ -192,14 +194,14 @@ export const createAuthenticationMachine = (router: NextRouter) =>
                   invoke: {
                     id: "websocket",
                     src: websocketMachine,
-                    data: {
-                      token: (context) => context.auth.access.token,
-                      id: (_context, event) => event.id,
-                      yDoc: (_context, event) => event.yDoc,
-                      onSync: (_context, event) => event.onSync,
+                    data: (context, event: OPEN_WEBSOCKET_EVENT) => ({
+                      token: context.auth?.access.token,
+                      id: event.id,
+                      yDoc: event.yDoc,
+                      onSync: event.onSync,
                       retryLimit: 3,
                       retries: 0,
-                    },
+                    }),
                   },
                   on: {
                     WEBSOCKET_CONNECTION_FAILED: "connect_failed",

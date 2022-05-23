@@ -8,14 +8,14 @@ import {
   intentSelector,
 } from "@open-decision/design-system";
 import { AvatarIcon } from "@radix-ui/react-icons";
-import { BaseHeader } from "components";
+import { BaseHeader } from "../components";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import * as React from "react";
-import { getDashboardLayout } from "../src/features/Dashboard/DashboardLayout";
-import { ChangeEmail } from "../src/features/Settings/ChangeEmail";
-import { ChangePassword } from "../src/features/Settings/ChangePassword";
-import { DeleteAccount } from "../src/features/Settings/DeleteAccount";
+import { getDashboardLayout } from "../features/Dashboard/DashboardLayout";
+import { ChangeEmail } from "../features/Settings/ChangeEmail";
+import { ChangePassword } from "../features/Settings/ChangePassword";
+import { DeleteAccount } from "../features/Settings/DeleteAccount";
 
 const SideMenuLink = styled("a", Label, {
   position: "relative",

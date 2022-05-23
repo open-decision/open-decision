@@ -283,7 +283,7 @@ export function OptionTargetInput({
               nodeNames.find((nodeName) => nodeName.id === edge?.target)
                 ?.name ?? ""
             }
-            setValue={(newValue) =>
+            setValue={(newValue: string) =>
               formState.setValue(formState.names.target, newValue)
             }
             onCreate={handleCreate}

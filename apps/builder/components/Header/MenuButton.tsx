@@ -2,7 +2,10 @@ import * as React from "react";
 import { ButtonProps, DropdownMenu } from "@open-decision/design-system";
 type Props = { label: React.ReactNode } & ButtonProps;
 
-function MenuButtonImpl({ label, css, ...props }: Props, ref) {
+function MenuButtonImpl(
+  { label, css, ...props }: Props,
+  ref: React.Ref<HTMLButtonElement>
+) {
   const Label =
     typeof label === "string" && (label.length ?? "") > 60
       ? label.slice(0, 60).concat("...")

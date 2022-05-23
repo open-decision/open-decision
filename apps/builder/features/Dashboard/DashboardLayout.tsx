@@ -1,7 +1,8 @@
+import { NextPage } from "next";
 import * as React from "react";
 import { Layout } from "../../components";
 
-export function getDashboardLayout(page) {
+export function getDashboardLayout(page: NextPage) {
   return (
     <Layout
       css={{

@@ -4,7 +4,6 @@ import { NodeEditingSidebar } from "./components/NodeEditingSidebar/NodeEditingS
 import { Canvas } from "./components/Canvas/Canvas";
 import { sidebarWidth } from "./utilities/constants";
 import { ZoomInOut } from "./components/Canvas/ZoomInOut";
-import { useTreeSuspension } from "./state/treeStore/hooks/useTreeSuspension";
 
 const StyledCanvas = styled(Canvas, {
   display: "grid",

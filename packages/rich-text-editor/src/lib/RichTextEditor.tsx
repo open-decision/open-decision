@@ -15,7 +15,7 @@ const StyledEditorContent = styled(EditorContent, editorStyles, {
 });
 
 type Props = {
-  content: Content;
+  content?: Content;
   onUpdate: (props: EditorEvents["update"]) => void;
 };
 

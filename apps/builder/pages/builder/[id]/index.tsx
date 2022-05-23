@@ -6,7 +6,7 @@ import { EditorHeader } from "../../../features/Builder/components/EditorHeader"
 import { SideMenu } from "../../../features/Builder/SideMenu";
 import { Layout } from "../../../components";
 import { LoadingSpinner, Stack } from "@open-decision/design-system";
-import { BuilderLayout } from "apps/builder/features/Builder/components/BuilderLayout";
+import { BuilderLayout } from "../../../features/Builder/components/BuilderLayout";
 
 export default function BuilderPage() {
   return (

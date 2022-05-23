@@ -7,9 +7,9 @@ import { useTreeId } from "../../../Data/useTreeId";
 import { ODError } from "@open-decision/type-classes";
 import { useTreeSuspension } from "./hooks/useTreeSuspension";
 
-const TreeContext = React.createContext<null | ReturnType<
-  typeof createTreeStore
->>(null);
+export type TTreeContext = ReturnType<typeof createTreeStore>;
+
+const TreeContext = React.createContext<TTreeContext | null>(null);
 
 type Props = { children: React.ReactNode };
 export const TreeProvider = ({ children }: Props) => {
@@ -50,7 +50,7 @@ export const TreeProvider = ({ children }: Props) => {
 
 export const useTreeContext = () => {
   const context = React.useContext(TreeContext);
-  useTreeSuspension(context?.tree);
+  useTreeSuspension(context?.tree as TTreeContext["tree"]);
 
   if (!context)
     throw new Error(

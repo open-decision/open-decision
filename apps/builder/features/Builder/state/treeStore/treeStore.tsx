@@ -1,4 +1,4 @@
-import { Tree, Node, Edge, Input } from "@open-decision/type-classes";
+import { Tree } from "@open-decision/type-classes";
 import { proxy } from "valtio";
 import { derive } from "valtio/utils";
 import { bindProxyAndYMap } from "valtio-yjs";
@@ -14,13 +14,15 @@ export function createTreeStore(id: string) {
   const yMap = yDoc.getMap("tree");
 
   const syncedStore = proxy<Tree.TTree>({
-    startNode: undefined as string | undefined,
-    nodes: undefined as Node.TNodesRecord | undefined,
-    edges: undefined as Edge.TEdgesRecord | undefined,
-    inputs: undefined as Input.TInputsRecord | undefined,
+    startNode: undefined,
+    nodes: undefined,
+    edges: undefined,
+    inputs: undefined,
   });
 
-  let onSync;
+  let onSync = (_value: unknown) => {
+    return;
+  };
 
   const nonSyncedStore = proxy({
     connectionSourceNodeId: "",

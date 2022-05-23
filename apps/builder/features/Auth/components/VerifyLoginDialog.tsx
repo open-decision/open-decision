@@ -8,7 +8,7 @@ import {
 } from "@open-decision/design-system";
 import { useVerifyLogin } from "../verifyLogin/useVerifyLogin";
 import { InfoBox, InfoBoxProps } from "../../Notifications/InfoBox";
-import { ColorKeys } from "@open-decision/design-system/src/internal/utils";
+import { ColorKeys } from "@open-decision/design-system";
 import { onVerify, onVerifyFailure } from "../verifyLogin/verifyLogin.machine";
 
 export type VerfiyLoginDialogProps = DialogTriggerProps & {

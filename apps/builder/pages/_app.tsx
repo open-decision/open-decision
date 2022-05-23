@@ -53,7 +53,9 @@ export default function App({
   );
 }
 
-function ProtectedRoute({ children }) {
+type ProtectedRouteProps = { children: React.ReactNode };
+
+function ProtectedRoute({ children }: ProtectedRouteProps): JSX.Element {
   const [state] = useAuth();
   const { pathname } = useRouter();
 
@@ -64,5 +66,5 @@ function ProtectedRoute({ children }) {
   )
     return <Box />;
 
-  return children;
+  return <>{children}</>;
 }
