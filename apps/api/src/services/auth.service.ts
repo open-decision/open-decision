@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
 import { tokenService, userService } from ".";
 import ApiError from "../utils/ApiError";
-import { TokenType } from "@prisma-client";
+import { TokenType } from "@open-decision/models/prisma-client";
 import UserHandler from "../models/user.model";
 import { tokenHandler } from "../models/token.model";
 /**

@@ -2,7 +2,7 @@ import prisma from "../init-prisma-client";
 import { docs } from "y-websocket/bin/utils";
 import buffer from "../utils/buffer";
 import * as Y from "yjs";
-import { DecisionTree } from "@prisma-client";
+import { DecisionTree } from "@open-decision/models/prisma-client";
 
 /**
  * Get the tree with updated treeData as JSON

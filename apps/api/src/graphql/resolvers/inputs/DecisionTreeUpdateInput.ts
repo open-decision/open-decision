@@ -1,6 +1,4 @@
 import * as TypeGraphQL from "type-graphql";
-import * as GraphQLScalars from "graphql-scalars";
-import { Prisma } from "@prisma-client";
 import { StringFieldUpdateOperationsInput } from "./StringFieldUpdateOperationsInput";
 import { EnumTreeStatusFieldUpdateOperationsInput } from "./EnumTreeStatusFieldUpdateOperationsInput";
 // import { TagUpdateManyWithoutDecisionTreesInput } from "./TagUpdateManyWithoutDecisionTreesInput";

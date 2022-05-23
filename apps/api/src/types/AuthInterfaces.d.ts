@@ -1,4 +1,4 @@
-import { PrismaClient, User, TokenType } from "@prisma-client";
+import { User, TokenType } from "@open-decision/models/prisma-client";
 
 export interface TokenInterface {
   userUuid: string;

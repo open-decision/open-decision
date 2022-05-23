@@ -1,7 +1,7 @@
 import {
   WhitelistEntry,
   WhitelistingType,
-} from "../../prisma/generated/prisma-client";
+} from "@open-decision/models/prisma-client";
 import prisma from "../init-prisma-client";
 import validator from "validator";
 /**
@@ -11,8 +11,8 @@ import validator from "validator";
  */
 export const emailIsWhitelisted = async (email: string) => {
   const domain = email.split("@").pop();
-  const baseDomain = (domain) => {
-    let temp = domain.split(".");
+  const baseDomain = (domain: any) => {
+    const temp = domain.split(".");
     return `${temp[temp.length - 2]}.${temp[temp.length - 1]}`;
   };
   let entry: WhitelistEntry | null = null;

@@ -50,7 +50,7 @@ export const Remove = styled(Form.FormRemove, Button);
 export type RemoveProps = React.ComponentProps<typeof Remove>;
 
 export type SubmitProps = Form.FormSubmitProps & SubmitButtonProps;
-export const Submit = (props) => (
+export const Submit = (props: SubmitProps) => (
   <Form.FormSubmit as={SubmitButton} {...props} />
 );
 

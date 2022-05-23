@@ -8,6 +8,7 @@ import {
 } from "../Menus";
 import { styled } from "../stitches";
 import { baseInputStyles, baseTextInputStyle } from "./shared/styles";
+import "ariakit-utils";
 
 export const Input = styled(
   Select.Select,

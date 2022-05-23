@@ -3,7 +3,7 @@ import faker from "faker";
 import httpStatus from "http-status";
 import { app } from "../../src/app";
 import { setupTestDB } from "../utils/setupTestDB";
-import { userOne, userTwo, admin, insertUsers } from "../fixtures/user.fixture";
+import { userOne, admin, insertUsers } from "../fixtures/user.fixture";
 import {
   userOneAccessToken,
   adminAccessToken,

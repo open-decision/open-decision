@@ -5,7 +5,7 @@ import ApiError from "../utils/ApiError";
 import catchAsync from "../utils/catchAsync";
 import pickSafeUserProperties from "../utils/pickSafeUserProperties";
 import { userService } from "../services";
-import { User } from "@prisma-client";
+import { User } from "@open-decision/models/prisma-client";
 namespace Express {
   export interface Request {
     user?: User;

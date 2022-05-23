@@ -1,0 +1,11 @@
+{
+  "name": "@open-decision/prisma-client",
+  "version": "0.0.1",
+  "type": "commonjs",
+  "dependencies": {
+    "@prisma/client": "~3.14.0",
+    "prisma": "~3.14.0",
+    "type-graphql": "^1.1.1",
+    "typegraphql-prisma": "^0.20.3"
+  }
+}

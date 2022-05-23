@@ -1,5 +1,5 @@
 import * as TypeGraphQL from "type-graphql";
-import { TreeStatus } from "../../enums";
+import { TreeStatus } from "@open-decision/models/type-graphql";
 
 @TypeGraphQL.InputType("EnumTreeStatusFieldUpdateOperationsInput", {
   isAbstract: true,

@@ -1,4 +1,4 @@
-import { Tree } from "@open-decision/type-classes";
+import { Edge, Tree } from "@open-decision/type-classes";
 import { Required } from "utility-types";
 import { assign, createMachine, Interpreter, Sender } from "xstate";
 import {
@@ -44,7 +44,7 @@ const resolveConditions =
       const existingAnswerId = context.answers[condition.inputId];
 
       if (condition.answerId === existingAnswerId) {
-        const edge = Object.values(tree.edges ?? {}).find(
+        const edge = Object.values<Edge.TEdge>(tree.edges ?? {}).find(
           (edge) => edge.conditionId === condition.id
         );
 
@@ -75,7 +75,7 @@ export type InterpreterContext = {
   answers: Record<string, string>;
 };
 
-type Events =
+export type InterpreterEvents =
   | { type: "ADD_USER_ANSWER"; inputId: string; answerId: string }
   | { type: "EVALUATE_NODE_CONDITIONS"; conditionIds: string[] }
   | { type: "RESET" }
@@ -88,25 +88,26 @@ type Events =
 export type InterpreterService = Interpreter<
   InterpreterContext,
   any,
-  Events,
+  InterpreterEvents,
   any,
   any
 >;
 
 export type InterpreterOptions = {
   onException?: (exception: InterpreterExceptions) => void;
+  onNodeTransition?: (nextNode: string) => void;
 };
 
 export const createInterpreterMachine = (
   tree: Required<Tree.TTree, "startNode">,
-  { onException }: InterpreterOptions = {}
+  { onException, onNodeTransition }: InterpreterOptions = {}
 ) =>
   createMachine(
     {
       tsTypes: {} as import("./interpreter.typegen").Typegen0,
       schema: {
         context: {} as InterpreterContext,
-        events: {} as Events,
+        events: {} as InterpreterEvents,
       },
       context: {
         history: { nodes: [tree.startNode], position: 0 },
@@ -147,7 +148,7 @@ export const createInterpreterMachine = (
           on: {
             VALID_INTERPRETATION: {
               target: "idle",
-              actions: "assignNewTarget",
+              actions: ["assignNewTarget", "callOnNodeTransition"],
             },
             INVALID_INTERPRETATION: {
               target: "idle",
@@ -192,6 +193,8 @@ export const createInterpreterMachine = (
           };
         }),
         callOnException: (_context, event) => onException?.(event.exception),
+        callOnNodeTransition: (context, _event) =>
+          onNodeTransition?.(context.history.nodes[0]),
         assignNewTarget: assign((context, event) => ({
           history: {
             position: context.history.position,

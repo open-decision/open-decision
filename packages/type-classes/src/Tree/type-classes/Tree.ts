@@ -1,5 +1,8 @@
 import { z } from "zod";
-import { Condition, Edge, Input, Node } from "./";
+import * as Condition from "./Condition";
+import * as Edge from "./Edge";
+import * as Input from "./Input";
+import * as Node from "./Node";
 
 import {
   createAnswer,

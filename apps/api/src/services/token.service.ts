@@ -5,7 +5,7 @@ import { userService } from "./index";
 import { tokenHandler } from "../models/token.model";
 import ApiError from "../utils/ApiError";
 import { UUID } from "../types/uuid-class";
-import { TokenType, User } from "@prisma-client";
+import { TokenType, User } from "@open-decision/models/prisma-client";
 import httpStatus from "http-status";
 import { TokenInterface } from "../types/AuthInterfaces";
 /**

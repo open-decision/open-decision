@@ -1,0 +1,19 @@
+{
+  "name": "@open-decision/renderer",
+  "version": "0.0.1",
+  "main": "./src/index.ts",
+  "dependencies": {
+    "@radix-ui/react-icons": "^1.1.1",
+    "remeda": "^0.0.32",
+    "@open-decision/rich-text-editor": "workspace:*",
+    "@open-decision/interpreter-react": "workspace:*",
+    "@open-decision/type-classes": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "scripts": {
+    "typecheck": "tsc -p ./tsconfig.lib.json"
+  }
+}

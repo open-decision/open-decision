@@ -1,8 +1,7 @@
-import { DecisionTree } from "@prisma-client";
-import { query } from "express";
+import { DecisionTree } from "@open-decision/models/prisma-client";
 
 export const createTree = (name: string) => ({
-  query: `#graphql 
+  query: `#graphql
   mutation ($name: String!) {
     createDecisionTree(data: { name: $name }) {
       uuid
@@ -58,7 +57,7 @@ export const updateSingleTree = (
     updateDecisionTree(data: $data, where: {uuid:$uuid }) {
       uuid
       name
-      status   
+      status
     }
   }
   `,
@@ -86,7 +85,7 @@ export const deleteSingleTree = (uuid: string) => ({
   query: `#graphql
   mutation ($uuid: String!){
     deleteDecisionTree(where: {uuid: $uuid}) {
-      uuid 
+      uuid
       name
     }
   }

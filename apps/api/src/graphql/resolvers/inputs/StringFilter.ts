@@ -1,9 +1,6 @@
+import { QueryMode } from "@open-decision/models/type-graphql";
 import * as TypeGraphQL from "type-graphql";
-import * as GraphQLScalars from "graphql-scalars";
-import { Prisma } from "@prisma-client";
-import { DecimalJSScalar } from "../../scalars";
 import { NestedStringFilter } from "./NestedStringFilter";
-import { QueryMode } from "../../enums";
 
 @TypeGraphQL.InputType("StringFilter", {
   isAbstract: true,

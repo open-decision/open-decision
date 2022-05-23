@@ -146,7 +146,10 @@ export function CheckboxGroup<TOptions extends Record<string, string>>({
   );
 }
 
-function DropdownButtonImpl({ children, css, ...props }: ButtonProps, ref) {
+function DropdownButtonImpl(
+  { children, css, ...props }: ButtonProps,
+  ref: React.Ref<HTMLButtonElement>
+) {
   return (
     <SystemButton
       css={{

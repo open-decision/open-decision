@@ -1,6 +1,5 @@
-import { DecisionTree } from "@prisma-client";
+import { DecisionTree } from "@open-decision/models/prisma-client";
 import prisma from "../../src/init-prisma-client";
-import faker from "faker";
 import { userOne, userTwo } from "./user.fixture";
 import { treeDataOne, yDocumentOne } from "./yDocument.fixture";
 

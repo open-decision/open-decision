@@ -1,6 +1,6 @@
+import { QueryMode } from "@open-decision/models/type-graphql";
 import * as TypeGraphQL from "type-graphql";
 import { NestedStringNullableFilter } from "../inputs/NestedStringNullableFilter";
-import { QueryMode } from "../../enums";
 
 @TypeGraphQL.InputType("StringNullableFilter", {
   isAbstract: true,

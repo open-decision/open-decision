@@ -1,5 +1,3 @@
-import { VisuallyHidden } from "ariakit";
-
 export * from "./Badge";
 export * from "./Box";
 export * from "./Layout";
@@ -21,6 +19,7 @@ export * from "./Tabs/Tabs";
 export * from "./LoadingSpinner/LoadingSpinner";
 export * as ScrollArea from "./ScrollArea/ScrollArea";
 export * from "./VisuallyHidden/VisuallyHidden";
+export * from "./Separator";
 
 // Styling solutions
 export * from "./stitches";

@@ -9,8 +9,7 @@ import {
   authService,
 } from "../services/index";
 import httpStatus from "http-status";
-import { User } from "@prisma-client";
-import ApiError from "../utils/ApiError";
+import { User } from "@open-decision/models/prisma-client";
 namespace Express {
   export interface Request {
     user: User;

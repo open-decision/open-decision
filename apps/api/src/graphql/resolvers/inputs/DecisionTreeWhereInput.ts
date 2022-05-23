@@ -1,7 +1,5 @@
 import * as TypeGraphQL from "type-graphql";
 import { DateTimeFilter } from "./DateTimeFilter";
-import { IntFilter } from "./IntFilter";
-import { JsonNullableFilter } from "./JsonNullableFilter";
 import { StringFilter } from "./StringFilter";
 import { EnumTreeStatusFilter } from "./EnumTreeStatusFilter";
 // import { TagListRelationFilter } from "./TagListRelationFilter";

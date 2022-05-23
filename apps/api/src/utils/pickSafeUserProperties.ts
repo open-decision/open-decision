@@ -1,4 +1,4 @@
-import { User } from "@prisma-client";
+import { User } from "@open-decision/models/prisma-client";
 import * as R from "remeda";
 
 const pickSafeUserProperties = (user: User) => {

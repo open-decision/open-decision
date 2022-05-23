@@ -2,8 +2,9 @@ import { clone } from "remeda";
 import { treeMock } from "../mocks/tree.mock";
 import { deleteEdges } from "./deleteEdges";
 import { beforeEach, expect, test } from "vitest";
+import { Tree } from "../type-classes";
 
-let currentTreeMock;
+let currentTreeMock: Tree.TTree;
 beforeEach(() => {
   currentTreeMock = clone(treeMock);
 });

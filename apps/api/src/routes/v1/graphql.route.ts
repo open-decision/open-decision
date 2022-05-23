@@ -9,6 +9,7 @@ const graphqlRouter = express.Router();
 
 const schema = buildSchemaSync({
   resolvers: [DecisionTreeCrudResolver],
+  emitSchemaFile: true,
 });
 
 graphqlRouter.post(

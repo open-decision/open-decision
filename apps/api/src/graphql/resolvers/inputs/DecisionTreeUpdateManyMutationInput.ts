@@ -1,5 +1,4 @@
 import * as TypeGraphQL from "type-graphql";
-import * as GraphQLScalars from "graphql-scalars";
 import { StringFieldUpdateOperationsInput } from "./StringFieldUpdateOperationsInput";
 import { EnumTreeStatusFieldUpdateOperationsInput } from "./EnumTreeStatusFieldUpdateOperationsInput";
 @TypeGraphQL.InputType("DecisionTreeUpdateManyMutationInput", {

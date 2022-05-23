@@ -1,4 +1,3 @@
-import config from "../../src/config/config";
 import prisma from "../../src/init-prisma-client";
 export const setupTestDB = () => {
   beforeEach(async () => {

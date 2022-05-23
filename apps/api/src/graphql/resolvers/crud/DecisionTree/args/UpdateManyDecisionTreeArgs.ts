@@ -1,5 +1,4 @@
 import * as TypeGraphQL from "type-graphql";
-import * as GraphQLScalars from "graphql-scalars";
 import { DecisionTreeUpdateManyMutationInput } from "../../../inputs/DecisionTreeUpdateManyMutationInput";
 import { DecisionTreeWhereInput } from "../../../inputs/DecisionTreeWhereInput";
 

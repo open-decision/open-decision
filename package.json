@@ -1,41 +1,63 @@
 {
   "name": "open-decision",
   "repository": "https://github.com/open-legal-tech/open-decision",
+  "scripts": {
+    "serve:builder": "nx run-many --target=serve --projects=builder,api",
+    "serve:renderer": "nx run-many --target=serve --projects='renderer-app,api'",
+    "remove:node_modules": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' + ",
+    "remove:dist": "rm -rf dist"
+  },
+  "license": "MIT",
   "devDependencies": {
+    "@nrwl/devkit": "14.1.7",
+    "@nrwl/eslint-plugin-nx": "^14.1.7",
+    "@nrwl/jest": "14.1.6",
+    "@nrwl/js": "^14.1.6",
+    "@nrwl/linter": "^14.1.7",
+    "@nrwl/node": "^14.1.6",
+    "@nrwl/nx-cloud": "latest",
+    "@nrwl/workspace": "^14.1.6",
+    "@swc/cli": "~0.1.55",
+    "@swc/core": "~1.2.143",
+    "@swc/helpers": "~0.3.3",
+    "@swc/jest": "0.2.20",
+    "@types/jest": "27.4.1",
     "@types/node": "^17.0.31",
+    "@types/react": "^17.0.45",
+    "@types/react-dom": "^17.0.17",
     "@typescript-eslint/eslint-plugin": "^5.22.0",
     "@typescript-eslint/parser": "^5.22.0",
+    "c8": "^7.11.0",
     "eslint": "^8.15.0",
     "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "2.26.0",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.5.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
     "eslint-plugin-valtio": "^0.4.4",
     "husky": "^7.0.4",
-    "npm-run-all": "^4.1.5",
-    "pnpm": "^6.32.12",
+    "jest": "27.5.1",
+    "nx": "14.1.6",
     "prettier": "2.6.2",
-    "typescript": "^4.7.0-dev.20220506",
+    "ts-jest": "27.1.4",
+    "ts-node": "9.1.1",
+    "typescript": "^4.7.1-rc",
     "utility-types": "^3.10.0",
+    "vitest": "^0.9.3",
     "wait-on": "^6.0.1"
-  },
-  "scripts": {
-    "prepublish": "pnpm build",
-    "verify": "pnpm run verify --stream --recursive ",
-    "prettier": "pnpm run prettier --recursive",
-    "build": "pnpm run build --recursive"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pnpm prettier",
-      "pre-push": "pnpm verify"
-    }
   },
   "private": true,
   "version": "0.0.1",
   "workspaces": [
-    "packages/*"
-  ]
+    "packages/**",
+    "apps/**"
+  ],
+  "dependencies": {
+    "core-js": "^3.6.5",
+    "regenerator-runtime": "0.13.7",
+    "tslib": "^2.3.0"
+  }
 }

@@ -7,7 +7,7 @@ import {
   PrismaClientKnownRequestError,
   PrismaClientUnknownRequestError,
   PrismaClientValidationError,
-} from "@prisma/client/runtime";
+} from "@open-decision/models/prisma-client";
 import http from "http";
 
 export const errorConverter = (

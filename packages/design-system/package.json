@@ -1,29 +1,8 @@
 {
   "name": "@open-decision/design-system",
   "version": "0.26.0",
+  "type": "commonjs",
   "main": "./src/index.ts",
-  "module": "./src/index.ts",
-  "types": "./src/index.ts",
-  "type": "module",
-  "exports": {
-    ".": {
-      "import": "./src/index.ts",
-      "require": "./src/index.ts",
-      "types": "./src/index.ts"
-    }
-  },
-  "publishConfig": {
-    "main": "./lib/index.cjs",
-    "module": "./lib/index.mjs",
-    "types": "./lib/index.d.ts",
-    "exports": {
-      ".": {
-        "import": "./lib/index.mjs",
-        "require": "./lib/index.cjs",
-        "types": "./lib/index.d.ts"
-      }
-    }
-  },
   "files": [
     "/lib",
     "/src"
@@ -56,6 +35,7 @@
     "@radix-ui/react-popover": "^0.1.6",
     "@radix-ui/react-radio-group": "^0.1.5",
     "@radix-ui/react-scroll-area": "^0.1.4",
+    "@radix-ui/react-separator": "^0.1.4",
     "@radix-ui/react-slot": "^0.1.1",
     "@radix-ui/react-tabs": "^0.1.5",
     "@radix-ui/react-toggle": "^0.1.4",
@@ -63,6 +43,7 @@
     "@radix-ui/react-tooltip": "^0.1.7",
     "@stitches/react": "^1.2.8",
     "ariakit": "^2.0.0-next.25",
+    "ariakit-utils": "0.17.0-next.18",
     "react-hook-form": "^7.28.0",
     "react-use": "^17.3.1",
     "remeda": "^0.0.32",
@@ -80,15 +61,7 @@
     "@svgr/cli": "^6.2.1",
     "@types/react": "^17.0.40",
     "@types/react-dom": "^17.0.13",
-    "@vitejs/plugin-react": "^1.2.0",
-    "ariakit-utils": "^0.17.0-next.18",
     "cross-env": "^7.0.3",
-    "glob": "^7.2.0",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "rollup-plugin-visualizer": "^5.6.0",
-    "tsup": "^5.12.1",
-    "vite": "^2.8.6",
-    "vite-plugin-dts": "^1.1.1"
+    "glob": "^7.2.0"
   }
 }

@@ -1,6 +1,6 @@
 import * as TypeGraphQL from "type-graphql";
 import { NestedEnumTreeStatusFilter } from "../inputs/NestedEnumTreeStatusFilter";
-import { TreeStatus } from "../../enums";
+import { TreeStatus } from "@open-decision/models/type-graphql";
 
 @TypeGraphQL.InputType("EnumTreeStatusFilter", {
   isAbstract: true,

@@ -6,9 +6,7 @@ import config from "../../../src/config/config";
 import { logger } from "../../../src/config/logger";
 import {
   PrismaClientKnownRequestError,
-  PrismaClientUnknownRequestError,
-  PrismaClientValidationError,
-} from "@prisma/client/runtime";
+} from "@open-decision/models/prisma-client";
 
 describe("Error middlewares", () => {
   describe("Error converter", () => {

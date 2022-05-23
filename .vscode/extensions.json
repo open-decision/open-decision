@@ -5,6 +5,7 @@
     "ms-vsliveshare.vsliveshare-pack",
     "eamodio.gitlens",
     "GraphQL.vscode-graphql",
-    "vivaxy.vscode-conventional-commits"
+    "vivaxy.vscode-conventional-commits",
+    "firsttris.vscode-jest-runner"
   ]
 }

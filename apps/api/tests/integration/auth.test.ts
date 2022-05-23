@@ -11,7 +11,7 @@ import ApiError from "../../src/utils/ApiError";
 import { setupTestDB } from "../utils/setupTestDB";
 // import { User } from "../../src/models/user.model";
 // import { Token } from "../../src/models/token.model";
-import { roleRights, adminRights } from "../../src/config/roles";
+import { adminRights } from "../../src/config/roles";
 import {
   userOne,
   userTwo,
@@ -25,7 +25,7 @@ import {
 } from "../fixtures/token.fixture";
 import UserHandler from "../../src/models/user.model";
 import { tokenHandler } from "../../src/models/token.model";
-import { TokenType } from "@prisma-client";
+import { TokenType } from "@open-decision/models/prisma-client";
 import {
   hasNoRefreshCookie,
   hasRefreshCookie,

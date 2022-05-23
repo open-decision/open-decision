@@ -1,8 +1,5 @@
 import * as TypeGraphQL from "type-graphql";
-import * as GraphQLScalars from "graphql-scalars";
-import { Prisma } from "@prisma-client";
-import { DecimalJSScalar } from "../../scalars";
-import { Role } from "@type-graphql-prisma/enums";
+import { Role } from "@open-decision/models/type-graphql";
 
 @TypeGraphQL.InputType("NestedEnumRoleFilter", {
   isAbstract: true,

@@ -1,4 +1,4 @@
-import express, { Router } from "express";
+import express from "express";
 import authRouter from "./auth.route";
 import userRouter from "./user.route";
 import publishedTreeRouter from "./publishedTree.route";

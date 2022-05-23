@@ -1,0 +1,17 @@
+{
+  "name": "@open-decision/interpreter-react",
+  "version": "0.0.1",
+  "type": "commonjs",
+  "main": "./src/index.ts",
+  "dependencies": {
+    "@xstate/react": "^3.0.0",
+    "xstate": "^4.31.0",
+    "@open-decision/interpreter": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^17.0.2"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.lib.json"
+  }
+}

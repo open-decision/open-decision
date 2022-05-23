@@ -30,6 +30,7 @@ package-lock.json
 yarn.lock
 .next
 .sentryclirc
+test.log
 
 npm-debug.log*
 yarn-debug.log*

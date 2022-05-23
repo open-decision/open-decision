@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import * as http from "http";
 import passport from "passport";
 import { Permissions, roleRights } from "../config/roles";
-import { User } from "@prisma-client";
+import { User } from "@open-decision/models/prisma-client";
 import ApiError from "../utils/ApiError";
 import httpStatus from "http-status";
 import { jwtStrategy, jwtWebsocketStrategy } from "../config/passport";

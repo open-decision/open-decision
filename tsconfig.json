@@ -1,29 +1,39 @@
 {
+  "compileOnSave": false,
   "compilerOptions": {
-    "noImplicitAny": false,
-    "removeComments": true,
-    "noLib": false,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
     "target": "ES2018",
     "sourceMap": true,
     "module": "ESNEXT",
-    "jsx": "preserve",
-    "strict": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "lib": ["dom", "dom.iterable", "esnext", "webworker"],
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "lib": ["es2017", "dom"],
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
-    "downlevelIteration": true,
-    "composite": true,
-    "baseUrl": "."
+    "skipDefaultLibCheck": true,
+    "declaration": false,
+    "rootDir": ".",
+    "baseUrl": ".",
+    "paths": {
+      "@open-decision/design-system": ["packages/design-system/src/index.ts"],
+      "@open-decision/interpreter": ["packages/interpreter/src/index.ts"],
+      "@open-decision/interpreter-react": [
+        "packages/interpreter-react/src/index.ts"
+      ],
+      "@open-decision/models/prisma-client": ["packages/models/src/index.ts"],
+      "@open-decision/models/type-graphql": [
+        "packages/models/src/generated/type-graphql"
+      ],
+      "@open-decision/renderer": ["packages/renderer/src/index.ts"],
+      "@open-decision/rich-text-editor": [
+        "packages/rich-text-editor/src/index.ts"
+      ],
+      "@open-decision/type-classes": ["packages/type-classes/src/index.ts"]
+    }
   },
-  "exclude": ["node_modules", "plugins"],
-  "references": [
-    { "path": "./packages/design-system" },
-    { "path": "./packages/type-classes" },
-    { "path": "./packages/interpreter" }
-  ]
+  "exclude": ["node_modules", "tmp"]
 }

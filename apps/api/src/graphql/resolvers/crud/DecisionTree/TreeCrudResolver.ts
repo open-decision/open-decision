@@ -1,7 +1,6 @@
 import * as TypeGraphQL from "type-graphql";
-import graphqlFields from "graphql-fields";
 import { GraphQLResolveInfo } from "graphql";
-import { DecisionTree } from "@type-graphql-prisma/models/DecisionTree";
+import { DecisionTree } from "@open-decision/models/type-graphql";
 import { GqlContext } from "../../../types";
 import {
   CreateDecisionTreeArgs,
@@ -15,7 +14,7 @@ import {
 import { AffectedRowsOutput } from "../../outputs";
 import { getPrismaFromContext } from "../../../helpers";
 import ApiError from "../../../../utils/ApiError";
-import { PublishedTree } from "@type-graphql-prisma/models";
+import { PublishedTree } from "@open-decision/models/type-graphql";
 import { publishDecisionTree } from "../../../../models/publishedTree.model";
 import { getTreeWithUpdatedTreeData } from "../../../../models/decisionTree.model";
 @TypeGraphQL.Resolver((_of) => DecisionTree)
