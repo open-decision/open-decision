@@ -2,16 +2,20 @@ import { ODError, ODProgrammerError, Tree } from "@open-decision/type-classes";
 import * as React from "react";
 import {
   createInterpreter,
-  InterpreterOptions,
   InterpreterService,
   createInterpreterMethods,
   InterpreterContext,
   InterpreterEvents,
+  InterpreterOptions,
 } from "@open-decision/interpreter";
 import { useActor, useInterpret } from "@xstate/react";
-import { StateConfig } from "xstate";
+import {
+  InterpreterOptions as XStateInterpreteOptions,
+  StateConfig,
+} from "xstate";
+import { UseMachineOptions } from "@xstate/react/lib/types";
 
-function useInterpreterMachine(tree: Tree.TTree, options?: InterpreterOptions) {
+function useInterpreterMachine(tree: Tree.TTree, options: InterpreterOptions) {
   const interpreterMachine = createInterpreter(tree, options);
 
   if (interpreterMachine instanceof ODError) throw interpreterMachine;
@@ -27,18 +31,23 @@ const InterpreterContext = React.createContext<{
 export type InterpreterProviderProps = {
   children: React.ReactNode;
   tree: Tree.TTree;
-  state?: StateConfig<InterpreterContext, InterpreterEvents>;
+  config?: XStateInterpreteOptions &
+    UseMachineOptions<InterpreterContext, InterpreterEvents>;
+  onChange?: (
+    state: StateConfig<InterpreterContext, InterpreterEvents>
+  ) => void;
 } & InterpreterOptions;
 
 export function InterpreterProvider({
   children,
   tree,
-  state,
+  config,
+  onChange,
   ...options
 }: InterpreterProviderProps) {
   const interpreterMachine = useInterpreterMachine(tree, options);
 
-  const service = useInterpret(interpreterMachine, { state });
+  const service = useInterpret(interpreterMachine, config, onChange);
 
   return (
     <InterpreterContext.Provider value={{ service, tree }}>
