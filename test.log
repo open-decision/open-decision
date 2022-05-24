@@ -354,3 +354,6 @@
 [32minfo[39m: Listening to port 4000
 [32minfo[39m: Connected to database
 [31merror[39m: Unable to connect to email server. Make sure you have configured the SMTP options in .env
+[32minfo[39m: Listening to port 4000
+[32minfo[39m: Connected to database
+[31merror[39m: Unable to connect to email server. Make sure you have configured the SMTP options in .env
