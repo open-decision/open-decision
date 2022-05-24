@@ -37,6 +37,7 @@ export function createInterpreterMethods(
       "getEdge",
       "getInput",
       "getInputs",
+      "getInputsWithAnswers",
       "getNode",
     ]),
   };

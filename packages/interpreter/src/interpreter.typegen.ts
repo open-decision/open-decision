@@ -8,7 +8,6 @@ export interface Typegen0 {
     goBack: "GO_BACK";
     goForward: "GO_FORWARD";
     assignNewTarget: "VALID_INTERPRETATION";
-    callOnNodeTransition: "VALID_INTERPRETATION";
     callOnException: "INVALID_INTERPRETATION";
   };
   internalEvents: {

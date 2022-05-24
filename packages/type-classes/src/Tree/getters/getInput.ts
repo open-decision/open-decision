@@ -15,3 +15,24 @@ export const getInputs =
 
     return inputs;
   };
+
+export const getInputsWithAnswers =
+  (tree: Tree.TTree) =>
+  (inputIds: string[]): Input.TInputsRecord | undefined => {
+    const inputs = getInputs(tree)(inputIds);
+
+    if (!inputs) return undefined;
+
+    const filteredInputs = Object.values(inputs).reduce(
+      function filterInputsWithoutAnswer(previousValue, input) {
+        if (input.answers?.length > 0) previousValue[input.id] = input;
+
+        return previousValue;
+      },
+      {} as Input.TInputsRecord
+    );
+
+    if (Object.values(filteredInputs).length === 0) return undefined;
+
+    return filteredInputs;
+  };

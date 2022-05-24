@@ -95,12 +95,11 @@ export type InterpreterService = Interpreter<
 
 export type InterpreterOptions = {
   onException?: (exception: InterpreterExceptions) => void;
-  onNodeTransition?: (nextNode: string) => void;
 };
 
 export const createInterpreterMachine = (
   tree: Required<Tree.TTree, "startNode">,
-  { onException, onNodeTransition }: InterpreterOptions = {}
+  { onException }: InterpreterOptions = {}
 ) =>
   createMachine(
     {
@@ -148,7 +147,7 @@ export const createInterpreterMachine = (
           on: {
             VALID_INTERPRETATION: {
               target: "idle",
-              actions: ["assignNewTarget", "callOnNodeTransition"],
+              actions: "assignNewTarget",
             },
             INVALID_INTERPRETATION: {
               target: "idle",
@@ -193,8 +192,6 @@ export const createInterpreterMachine = (
           };
         }),
         callOnException: (_context, event) => onException?.(event.exception),
-        callOnNodeTransition: (context, _event) =>
-          onNodeTransition?.(context.history.nodes[0]),
         assignNewTarget: assign((context, event) => ({
           history: {
             position: context.history.position,
