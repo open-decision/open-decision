@@ -26,7 +26,7 @@
       ],
       "@open-decision/models/prisma-client": ["packages/models/src/index.ts"],
       "@open-decision/models/type-graphql": [
-        "packages/models/src/generated/type-graphql"
+        "packages/models/src/generated/type-graphql/index.ts"
       ],
       "@open-decision/renderer": ["packages/renderer/src/index.ts"],
       "@open-decision/rich-text-editor": [
