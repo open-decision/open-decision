@@ -12,7 +12,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 const Container = styled(Row, {
   layer: "1",
   padding: "$2",
-  boxShadow: "$1",
+  boxShadow: "$3",
   maxWidth: "max-content",
   gap: "$2",
   borderRadius: "$md",
@@ -22,7 +22,7 @@ const StyledButton = styled(Button, {});
 
 const buttonProps: ButtonProps = {
   variant: "neutral",
-  size: "large",
+  size: { "@desktop": "large" },
   css: { colorScheme: "primary" },
 };
 

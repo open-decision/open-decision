@@ -4,17 +4,22 @@ import { mietminderungTreeMock } from "@open-decision/type-classes";
 
 export default function Index() {
   return (
-    <Stack center css={{ layer: "2", height: "100%" }}>
-      <Renderer.Root tree={mietminderungTreeMock}>
+    <Renderer.Root tree={mietminderungTreeMock}>
+      <Stack center css={{ layer: "2", height: "100%" }}>
         <Renderer.View
           css={{
-            width: "500px",
-            marginBlock: "$8",
-            paddingBlock: "$1",
+            marginBlock: "$2",
+            paddingInline: "$4",
+            paddingBlock: "$4",
             height: "100%",
+            maxWidth: "500px",
+
+            "@desktop": {
+              marginBlock: "$4",
+            },
           }}
         />
-      </Renderer.Root>
-    </Stack>
+      </Stack>
+    </Renderer.Root>
   );
 }

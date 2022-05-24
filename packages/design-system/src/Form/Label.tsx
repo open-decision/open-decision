@@ -6,6 +6,7 @@ export const labelStyles = css({
   colorFallback: "$colorScheme-text",
   alignItems: "center",
   gap: "$2",
+  fontWeight: "500",
 
   [`${disabledSelector}`]: { color: "$gray11" },
 
@@ -13,15 +14,12 @@ export const labelStyles = css({
     size: {
       small: {
         textStyle: "small-text",
-        fontWeight: 500,
       },
       medium: {
         textStyle: "medium-text",
-        fontWeight: 500,
       },
       large: {
         textStyle: "large-text",
-        fontWeight: 500,
       },
     },
   },

@@ -406,3 +406,5 @@ export const darkTheme = createTheme("dark", {
     layer5: "$gray6",
   },
 });
+
+export { innerFocusStyle, outerFocusStyle };

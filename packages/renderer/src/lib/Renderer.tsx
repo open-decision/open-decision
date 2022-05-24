@@ -1,4 +1,9 @@
-import { ScrollArea, Stack, StyleObject } from "@open-decision/design-system";
+import {
+  ScrollArea,
+  Stack,
+  StackProps,
+  StyleObject,
+} from "@open-decision/design-system";
 import * as React from "react";
 import {
   InterpreterProvider,
@@ -12,27 +17,36 @@ import { Navigation } from "./components/Navigation";
 export type RendererProps = {
   css?: StyleObject;
   nodeId?: string;
-};
+} & StackProps;
 
 function RendererImpl(
-  { css, nodeId }: RendererProps,
+  { css, nodeId, ...props }: RendererProps,
   ref: React.Ref<HTMLDivElement>
 ) {
-  const { getCurrentNode, getInputs, getNode } = useInterpreter();
+  const { getCurrentNode, getInputsWithAnswers, getNode } = useInterpreter();
   const node = nodeId ? getNode(nodeId) : getCurrentNode();
 
   if (!node) throw node;
-  const inputs = getInputs(node.data.inputs);
+  const inputs = getInputsWithAnswers(node.data.inputs);
 
   return (
     <Stack
       css={{
         borderRadius: "$md",
         overflow: "hidden",
+        width: "100%",
         ...css,
       }}
+      {...props}
     >
-      <Stack css={{ flex: 1, overflow: "hidden", marginBottom: "$5" }}>
+      <Stack
+        css={{
+          flex: 1,
+          overflow: "hidden",
+          marginBottom: "$5",
+          paddingInline: "$1",
+        }}
+      >
         <ScrollArea.Root
           css={{
             display: "flex",
@@ -43,11 +57,7 @@ function RendererImpl(
           }}
           ref={ref}
         >
-          <ScrollArea.Viewport
-            css={{
-              minHeight: 0,
-            }}
-          >
+          <ScrollArea.Viewport css={{ minHeight: 0 }}>
             {node.data.content ? (
               <>
                 <RichTextRenderer content={node.data.content} key={node.id} />

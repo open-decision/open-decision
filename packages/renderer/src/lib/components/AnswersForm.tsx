@@ -17,41 +17,50 @@ export function AnswersForm({ inputs, css }: PreviewAnswerFormProps) {
 
   const formState = Form.useFormState({
     defaultValues,
-    setValues(values: Record<string, string>) {
-      for (const inputId in values) {
-        const answer = values[inputId];
-
-        send({
-          type: "ADD_USER_ANSWER",
-          inputId,
-          answerId: answer,
-        });
-      }
-    },
   });
 
   formState.useSubmit(() => {
+    for (const inputId in formState.values) {
+      const answer = formState.values[inputId];
+
+      send({
+        type: "ADD_USER_ANSWER",
+        inputId,
+        answerId: answer,
+      });
+    }
+
     send({
       type: "EVALUATE_NODE_CONDITIONS",
       conditionIds: getCurrentNode()?.data.conditions ?? [],
     });
   });
 
-  if (!inputs) return null;
+  const options = Object.keys(defaultValues);
 
   return (
     <Form.Root state={formState} css={css}>
-      {Object.keys(defaultValues).map((inputId) => (
-        <Answers
-          name={inputId}
-          input={inputs[inputId]}
-          key={inputId}
-          activeValue={formState.values[inputId]}
-        />
-      ))}
-      <Form.Submit css={{ alignSelf: "end", marginTop: "$2" }}>
-        Weiter
-      </Form.Submit>
+      {inputs ? (
+        <>
+          {options.map((inputId) => (
+            <Answers
+              name={inputId}
+              input={inputs[inputId]}
+              key={inputId}
+              activeValue={formState.values[inputId]}
+            />
+          ))}
+          <Form.Submit
+            css={{
+              alignSelf: "end",
+              marginTop: "$2",
+              fontWeight: "$large-text",
+            }}
+          >
+            Weiter
+          </Form.Submit>
+        </>
+      ) : null}
     </Form.Root>
   );
 }

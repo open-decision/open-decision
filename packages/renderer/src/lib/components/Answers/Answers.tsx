@@ -2,9 +2,9 @@ import {
   Label,
   styled,
   activeSelector,
-  intentWithinSelector,
   Form,
   VisuallyHidden,
+  innerFocusStyle,
 } from "@open-decision/design-system";
 import { Input } from "@open-decision/type-classes";
 import * as React from "react";
@@ -16,14 +16,13 @@ const StyledLabel = styled(Label, {
   padding: "$3 $4",
   focusType: "inner-within",
   cursor: "pointer",
-
-  [`${intentWithinSelector}`]: {
-    backgroundColor: "$primary3",
-  },
+  fontWeight: "$medium-text",
+  boxShadow: "$1",
+  focusColor: "$primary5",
 
   [`${activeSelector}`]: {
-    backgroundColor: "$primary9",
-    color: "$white",
+    backgroundColor: "$primary3",
+    ...innerFocusStyle,
   },
 });
 
@@ -66,11 +65,18 @@ type SelectElementProps = {
 
 function RadioElement({ answer, name, activeValue }: SelectElementProps) {
   return (
-    <StyledLabel size="large" data-active={activeValue === answer.id}>
+    <StyledLabel
+      size={{ "@desktop": "large" }}
+      data-active={activeValue === answer.id}
+    >
       <VisuallyHidden>
         <Form.RadioButton required value={answer.id} name={name} />
       </VisuallyHidden>
-      {answer.text ? answer.text : "Kein Antworttext"}
+      {answer.text ? (
+        answer.text
+      ) : (
+        <span style={{ fontStyle: "italic" }}>Kein Antworttext</span>
+      )}
     </StyledLabel>
   );
 }
