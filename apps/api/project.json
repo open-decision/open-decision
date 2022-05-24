@@ -27,7 +27,10 @@
       ]
     },
     "start": {
-      "executor": "@nrwl/node:node"
+      "executor": "@nrwl/node:node",
+      "options": {
+        "buildTarget": "api:build:production"
+      }
     },
     "serve": {
       "executor": "@nrwl/node:node",
