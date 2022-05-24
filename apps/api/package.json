@@ -4,7 +4,7 @@
   "description": "",
   "main": "./src/index.js",
   "scripts": {
-    "start": "TS_NODE_BASEURL=dist node -r tsconfig-paths/register -r dotenv/config dist/src/index.js",
+    "start": "node -r dotenv/config ../../dist/apps/api/main.js",
     "build": "pnpm prisma generate && mkdir -p dist/prisma/generated && cp -r prisma/generated/prisma-client dist/prisma/generated/ && pnpm tsc && pnpm migrate:deploy",
     "build:live": "nodemon --watch 'src/**/*.ts' --exec \"ts-node -r tsconfig-paths/register\" src/index.ts",
     "build:deploy": "pnpm install --dev && pnpm install && pnpm build --filter @open-decision/api...",

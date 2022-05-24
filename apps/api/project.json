@@ -11,6 +11,7 @@
         "main": "apps/api/src/index.ts",
         "tsConfig": "apps/api/tsconfig.app.json"
       },
+      "defaultConfiguration": "production",
       "configurations": {
         "production": {
           "optimization": true,
