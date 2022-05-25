@@ -107,8 +107,6 @@ function Nodes() {
               }
               break;
             case "position": {
-              if (!nodeChange.dragging) return;
-
               setDragging(true);
               updateNodePosition(
                 nodeChange.id,

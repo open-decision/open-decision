@@ -10,13 +10,7 @@
     "default": {
       "runner": "@nrwl/nx-cloud",
       "options": {
-        "cacheableOperations": [
-          "build",
-          "test",
-          "lint",
-          "package",
-          "prepare"
-        ],
+        "cacheableOperations": ["build", "test", "lint", "package", "prepare"],
         "accessToken": "NjI2YTNmNTktOGJhMS00NmMxLWE0MzUtZDNhOGFkOTY5ZmIxfHJlYWQtd3JpdGU="
       }
     }
@@ -50,14 +44,7 @@
   "affected": {
     "defaultBase": "main"
   },
-  "generators": {
-    "@nrwl/react": {
-      "application": {
-        "babel": true
-      }
-    }
-  },
   "cli": {
-    "defaultCollection": "@nrwl/react"
+    "defaultCollection": "@nrwl/js"
   }
 }

@@ -357,3 +357,26 @@
 [32minfo[39m: Listening to port 4000
 [32minfo[39m: Connected to database
 [31merror[39m: Unable to connect to email server. Make sure you have configured the SMTP options in .env
+[32minfo[39m: Listening to port 4000
+[32minfo[39m: Connected to database
+[31merror[39m: Unable to connect to email server. Make sure you have configured the SMTP options in .env
+[32minfo[39m: POST /v1/auth/refresh-tokens 200 - 438.637 ms
+[32minfo[39m: POST /v1/graphql 200 - 91.787 ms
+[32minfo[39m: Listening to port 4000
+[32minfo[39m: Connected to database
+[31merror[39m: Unable to connect to email server. Make sure you have configured the SMTP options in .env
+[32minfo[39m: Listening to port 4000
+[32minfo[39m: Connected to database
+[31merror[39m: Unable to connect to email server. Make sure you have configured the SMTP options in .env
+[32minfo[39m: Listening to port 4000
+[32minfo[39m: Connected to database
+[31merror[39m: Unable to connect to email server. Make sure you have configured the SMTP options in .env
+[32minfo[39m: Listening to port 4000
+[32minfo[39m: Connected to database
+[31merror[39m: Unable to connect to email server. Make sure you have configured the SMTP options in .env
+[32minfo[39m: POST /v1/auth/refresh-tokens 200 - 466.952 ms
+[32minfo[39m: POST /v1/graphql 200 - 81.895 ms
+[32minfo[39m: POST /v1/graphql 200 - 14.539 ms
+[32minfo[39m: Listening to port 4000
+[32minfo[39m: Connected to database
+[31merror[39m: Unable to connect to email server. Make sure you have configured the SMTP options in .env

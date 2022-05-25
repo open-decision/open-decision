@@ -19,6 +19,7 @@
     "remix": "^1.5.1"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.18.2",
     "@remix-run/dev": "^1.5.1",
     "@remix-run/eslint-config": "^1.5.1",
     "@remix-run/serve": "^1.5.1",
