@@ -2,17 +2,6 @@ import { z } from "zod";
 import isJWT from "validator/lib/isJWT";
 import { isPasswordStrongEnough } from "./password.validation";
 
-export const register = z.object({
-  body: z.object({
-    email: z.string().email(),
-    password: z
-      .string()
-      .min(8)
-      .max(300)
-      .refine(async (val) => isPasswordStrongEnough(val)),
-  }),
-});
-
 export const login = z.object({
   body: z.object({
     email: z.string().email(),

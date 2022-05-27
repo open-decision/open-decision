@@ -1,5 +1,5 @@
 import express from "express";
-import validate from "../../middlewares/validate";
+import validateRequest from "../../validations/validateRequest";
 import { publishedTreeValidation } from "../../validations";
 import { publishController } from "../../controllers";
 const publishedTreeRouter = express.Router();
@@ -7,7 +7,7 @@ const publishedTreeRouter = express.Router();
 publishedTreeRouter
   .route("/:publishedTreeUuid")
   .get(
-    validate(publishedTreeValidation.getPublishedTree),
+    validateRequest(publishedTreeValidation.getPublishedTree),
     publishController.getPublishedTree
   );
 export default publishedTreeRouter;

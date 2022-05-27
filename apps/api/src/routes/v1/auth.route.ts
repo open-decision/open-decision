@@ -1,47 +1,21 @@
 import express from "express";
-import validate from "../../middlewares/validate";
-import { authValidation } from "../../validations";
 import { authController } from "../../controllers";
 import { auth } from "../../middlewares/auth";
 
 const authRouter = express.Router();
 
-authRouter.post(
-  "/register",
-  validate(authValidation.register),
-  authController.register
-);
-authRouter.post("/login", validate(authValidation.login), authController.login);
-authRouter.post(
-  "/logout",
-  validate(authValidation.logout),
-  authController.logout
-);
-authRouter.post(
-  "/refresh-tokens",
-  validate(authValidation.refreshTokens),
-  authController.refreshTokens
-);
-authRouter.post(
-  "/forgot-password",
-  validate(authValidation.forgotPassword),
-  authController.forgotPassword
-);
-authRouter.post(
-  "/reset-password",
-  validate(authValidation.resetPassword),
-  authController.resetPassword
-);
+authRouter.post("/register", authController.register);
+authRouter.post("/login", authController.login);
+authRouter.post("/logout", authController.logout);
+authRouter.post("/refresh-tokens", authController.refreshTokens);
+authRouter.post("/forgot-password", authController.forgotPassword);
+authRouter.post("/reset-password", authController.resetPassword);
 authRouter.post(
   "/send-verification-email",
   auth(),
   authController.sendVerificationEmail
 );
-authRouter.post(
-  "/verify-email",
-  validate(authValidation.verifyEmail),
-  authController.verifyEmail
-);
+authRouter.post("/verify-email", authController.verifyEmail);
 
 export default authRouter;
 /**

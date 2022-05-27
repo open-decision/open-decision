@@ -6,15 +6,19 @@ import catchAsync from "../utils/catchAsync";
 import pickSafeUserProperties from "../utils/pickSafeUserProperties";
 import { userService } from "../services";
 import { User } from "@open-decision/models/prisma-client";
+import { userValidation } from "../validations";
+import validateRequest from "../validations/validateRequest";
 namespace Express {
   export interface Request {
     user?: User;
   }
 }
 const createUser = catchAsync(async (req: Request, res: Response) => {
+  const reqData = await validateRequest(userValidation.createUser)(req);
+
   const user = await userService.createUser(
-    res.locals.email,
-    res.locals.password
+    reqData.body.email,
+    reqData.body.password
   );
   res.status(httpStatus.CREATED).send(user);
 });
@@ -27,7 +31,9 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
 // });
 
 const getUser = catchAsync(async (req: Request, res: Response) => {
-  const user = await userService.getUserByUuidOrId(res.locals.userUuid);
+  const reqData = await validateRequest(userValidation.getUser)(req);
+
+  const user = await userService.getUserByUuidOrId(reqData.params.userUuid);
   if (!user) {
     throw new ApiError({
       statusCode: httpStatus.NOT_FOUND,
@@ -38,18 +44,20 @@ const getUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateUser = catchAsync(async (req: Request, res: Response) => {
+  const reqData = await validateRequest(userValidation.updateUser)(req);
+
   //These are the only values an user is allowed to change, check how to allow editing by admins
-  const updateData = R.pick(req.body, ["name", "email", "password"]);
+  const updateData = R.pick(reqData.body, ["name", "email", "password"]);
   const user = await userService.updateUserByUuidOrId(
-    res.locals.userUuid,
+    reqData.params.userUuid,
     updateData
   );
   res.send(pickSafeUserProperties(user));
 });
 
 const deleteUser = catchAsync(async (req: Request, res: Response) => {
-  // @ts-ignore
-  await userService.deleteUserByUuidOrId(res.locals.userUuid);
+  const reqData = await validateRequest(userValidation.deleteUser)(req);
+  await userService.deleteUserByUuidOrId(reqData.params.userUuid);
   res.status(httpStatus.NO_CONTENT).send();
 });
 
@@ -59,25 +67,31 @@ const getWhitelist = catchAsync(async (req: Request, res: Response) => {
 });
 
 const isWhitelisted = catchAsync(async (req: Request, res: Response) => {
-  const result = await userService.isWhitelisted(res.locals.email);
+  const reqData = await validateRequest(userValidation.isWhitelisted)(req);
+  const result = await userService.isWhitelisted(reqData.body.email);
   res.send({ isWhitelisted: result });
 });
 
 const addToWhitelist = catchAsync(async (req: Request, res: Response) => {
+  const reqData = await validateRequest(
+    userValidation.whitelistUsersForRegistration
+  )(req);
+
   // @ts-ignore
   const creatorUuid = req.user.uuid;
   await userService.whitelistUsersByMail(
-    res.locals.emails as Array<string>,
+    reqData.body.emails,
     creatorUuid,
-    res.locals.sendInvite ?? false
+    reqData.body.sendInvite ?? false
   );
   res.status(httpStatus.NO_CONTENT).send();
 });
 
 const removeFromWhitelist = catchAsync(async (req: Request, res: Response) => {
-  await userService.removeWhitelistedUsersByMail(
-    res.locals.emails as Array<string>
-  );
+  const reqData = await validateRequest(
+    userValidation.removeUsersFromWhitelist
+  )(req);
+  await userService.removeWhitelistedUsersByMail(reqData.body.emails);
   res.status(httpStatus.NO_CONTENT).send();
 });
 

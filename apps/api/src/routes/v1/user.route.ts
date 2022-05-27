@@ -1,60 +1,27 @@
 import express from "express";
 import { auth } from "../../middlewares/auth";
-import validate from "../../middlewares/validate";
-import { userValidation } from "../../validations";
 import { userController } from "../../controllers";
 const userRouter = express.Router();
 
-userRouter
-  .route("/")
-  .post(
-    auth("manageUsers"),
-    validate(userValidation.createUser),
-    userController.createUser
-  );
+userRouter.route("/").post(auth("manageUsers"), userController.createUser);
 // .get(
 //   auth("getUsers"),
-//   validate(userValidation.getUsers),
 //   userController.getUsers
 // );
 
 userRouter
   .route("/whitelist")
   .get(auth("getWhitelist"), userController.getWhitelist)
-  .post(
-    auth("manageWhitelist"),
-    validate(userValidation.whitelistUsersForRegistration),
-    userController.addToWhitelist
-  )
-  .delete(
-    auth("manageWhitelist"),
-    validate(userValidation.removeUsersFromWhitelist),
-    userController.removeFromWhitelist
-  );
+  .post(auth("manageWhitelist"), userController.addToWhitelist)
+  .delete(auth("manageWhitelist"), userController.removeFromWhitelist);
 
-userRouter.post(
-  "/is-whitelisted",
-  validate(userValidation.isWhitelisted),
-  userController.isWhitelisted
-);
+userRouter.post("/is-whitelisted", userController.isWhitelisted);
 
 userRouter
   .route("/:userUuid")
-  .get(
-    auth("getUsers"),
-    validate(userValidation.getUser),
-    userController.getUser
-  )
-  .patch(
-    auth("manageUsers"),
-    validate(userValidation.updateUser),
-    userController.updateUser
-  )
-  .delete(
-    auth("manageUsers"),
-    validate(userValidation.deleteUser),
-    userController.deleteUser
-  );
+  .get(auth("getUsers"), userController.getUser)
+  .patch(auth("manageUsers"), userController.updateUser)
+  .delete(auth("manageUsers"), userController.deleteUser);
 
 export default userRouter;
 /**

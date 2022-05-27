@@ -134,7 +134,7 @@ const generateAccessToken = (userUuid: string, isDevAccount = false) => {
   );
   return {
     token: accessToken,
-    expires: accessTokenExpires.toDate(),
+    expires: accessTokenExpires.toString(),
   };
 };
 

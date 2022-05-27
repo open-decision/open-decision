@@ -3,9 +3,15 @@ import catchAsync from "../utils/catchAsync";
 import { getPublishedTreeFromDb } from "../models/publishedTree.model";
 import ApiError from "../utils/ApiError";
 import httpStatus from "http-status";
+import validateRequest from "../validations/validateRequest";
+import { publishedTreeValidation } from "../validations";
 
 const getPublishedTree = catchAsync(async (req: Request, res: Response) => {
-  const { publishedTreeUuid } = res.locals;
+  const reqData = await validateRequest(
+    publishedTreeValidation.getPublishedTree
+  )(req);
+
+  const { publishedTreeUuid } = reqData.params;
   const publishedTree = await getPublishedTreeFromDb(publishedTreeUuid);
 
   if (!publishedTree)
