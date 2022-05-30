@@ -163,7 +163,7 @@ export class DecisionTreeCrudResolver {
     @TypeGraphQL.Ctx() ctx: GqlContext,
     @TypeGraphQL.Info() info: GraphQLResolveInfo,
     @TypeGraphQL.Args() args: FindUniqueDecisionTreeArgs
-  ): Promise<PublishedTree | null> {
+  ): Promise<PublishedTree | DecisionTree | null> {
     if (!args.where.uuid) return null;
     return publishDecisionTree(ctx.user.uuid, args.where.uuid);
   }

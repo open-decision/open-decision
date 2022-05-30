@@ -6,11 +6,6 @@ import { User } from "@open-decision/models/prisma-client";
 import ApiError from "../utils/ApiError";
 import httpStatus from "http-status";
 import { jwtStrategy, jwtWebsocketStrategy } from "../config/passport";
-namespace Express {
-  export interface Request {
-    user?: User;
-  }
-}
 
 const verifyCallback =
   (
@@ -80,7 +75,7 @@ export const wsAuth = async (req: http.IncomingMessage, next: Function) => {
         verifyCallback(req, resolve, reject, [])
       )(req, next);
     })
-      //@ts-ignore
+      //@ts-ignore - whatever
       .then(() => next(false, req!.user))
       .catch((err) => next(err))
   );

@@ -7,7 +7,7 @@
       "executor": "@nrwl/node:webpack",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/apps/api",
+        "outputPath": "dist/apps/api-server",
         "main": "apps/api/src/index.ts",
         "tsConfig": "apps/api/tsconfig.app.json"
       },

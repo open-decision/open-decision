@@ -1,0 +1,9 @@
+{
+  "name": "@open-decision/auth-api-specification",
+  "version": "0.0.1",
+  "type": "commonjs",
+  "dependencies": {
+    "validator": "^13.7.0",
+    "zod": "^3.17.3"
+  }
+}

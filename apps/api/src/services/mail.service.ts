@@ -1,7 +1,7 @@
 import { logger } from "../config/logger";
 import nodemailer from "nodemailer";
 import config from "../config/config";
-import { app } from "./../app";
+import { app } from "../app";
 const transporter = nodemailer.createTransport({
   host: config.SMTP_HOST,
   port: config.SMTP_PORT,

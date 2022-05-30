@@ -23,6 +23,7 @@ export const publishDecisionTree = async (
       name: treeWithUpdatedTreeData.name,
       treeData: treeWithUpdatedTreeData.treeData,
       owner: { connect: { uuid: userUuid } },
+      originTree: { connect: { uuid: treeToPublish } },
     },
   });
 };

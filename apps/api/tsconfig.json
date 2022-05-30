@@ -5,7 +5,7 @@
     "esModuleInterop": true,
     "noImplicitAny": false
   },
-  "files": [],
+  "files": ["src/types/express.d.ts"],
   "include": [],
   "references": [
     {

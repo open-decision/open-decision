@@ -9,20 +9,19 @@ import {
   authService,
 } from "../services/index";
 import httpStatus from "http-status";
-import { User } from "@open-decision/models/prisma-client";
-// import type { TRegisterOutput } from "../validations/register";
 import validateRequest from "../validations/validateRequest";
-import * as authValidation from "../validations/auth.validation";
-import * as registerValidation from "../validations/register";
-
-namespace Express {
-  export interface Request {
-    user: User;
-  }
-}
+import {
+  registerInput,
+  loginInput,
+  logoutInput,
+  refreshTokenInput,
+  forgotPasswordInput,
+  resetPasswordInput,
+  verifyEmailInput,
+} from "@open-decision/auth-api-specification";
 
 const register = catchAsync(async (req: Request, res: Response) => {
-  const reqData = await validateRequest(registerValidation.register.input)(req);
+  const reqData = await validateRequest(registerInput)(req);
 
   const user = await userService.createUser(
     reqData.body.email,
@@ -58,7 +57,7 @@ const register = catchAsync(async (req: Request, res: Response) => {
 });
 
 const login = catchAsync(async (req: Request, res: Response) => {
-  const reqData = await validateRequest(authValidation.login)(req);
+  const reqData = await validateRequest(loginInput)(req);
 
   const { email, password } = reqData.body;
   const user = await authService.loginUserWithEmailAndPassword(email, password);
@@ -86,7 +85,7 @@ const login = catchAsync(async (req: Request, res: Response) => {
 });
 
 const logout = catchAsync(async (req: Request, res: Response) => {
-  await validateRequest(authValidation.logout)(req);
+  await validateRequest(logoutInput)(req);
 
   await authService.logout(res.locals.refreshCookie);
   res.clearCookie("refreshCookie", {
@@ -98,7 +97,7 @@ const logout = catchAsync(async (req: Request, res: Response) => {
 });
 
 const refreshTokens = catchAsync(async (req: Request, res: Response) => {
-  const reqData = await validateRequest(authValidation.refreshTokens)(req);
+  const reqData = await validateRequest(refreshTokenInput)(req);
 
   const refreshedTokens = await authService.refreshAuth(
     reqData.cookies.refreshCookie
@@ -118,7 +117,7 @@ const refreshTokens = catchAsync(async (req: Request, res: Response) => {
 });
 
 const forgotPassword = catchAsync(async (req: Request, res: Response) => {
-  const reqData = await validateRequest(authValidation.forgotPassword)(req);
+  const reqData = await validateRequest(forgotPasswordInput)(req);
 
   const resetPasswordToken = await tokenService.generateResetPasswordToken(
     reqData.body.email
@@ -128,24 +127,24 @@ const forgotPassword = catchAsync(async (req: Request, res: Response) => {
 });
 
 const resetPassword = catchAsync(async (req: Request, res: Response) => {
-  const reqData = await validateRequest(authValidation.resetPassword)(req);
+  const reqData = await validateRequest(resetPasswordInput)(req);
 
   await authService.resetPassword(reqData.body.token, reqData.body.password);
   res.status(httpStatus.NO_CONTENT).send();
 });
 
 const sendVerificationEmail = catchAsync(
-  async (req: Express.Request, res: Response) => {
+  async (req: Request, res: Response) => {
     const verifyEmailToken = await tokenService.generateVerifyEmailToken(
-      req.user!
+      req.user
     );
-    emailService.sendVerificationEmail(req.user!.email, verifyEmailToken);
+    emailService.sendVerificationEmail(req.user.email, verifyEmailToken);
     res.status(httpStatus.NO_CONTENT).send();
   }
 );
 
 const verifyEmail = catchAsync(async (req: Request, res: Response) => {
-  const reqData = await validateRequest(authValidation.verifyEmail)(req);
+  const reqData = await validateRequest(verifyEmailInput)(req);
 
   await authService.verifyEmail(reqData.body.token);
   res.status(httpStatus.NO_CONTENT).send();

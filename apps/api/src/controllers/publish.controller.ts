@@ -4,12 +4,10 @@ import { getPublishedTreeFromDb } from "../models/publishedTree.model";
 import ApiError from "../utils/ApiError";
 import httpStatus from "http-status";
 import validateRequest from "../validations/validateRequest";
-import { publishedTreeValidation } from "../validations";
+import { getPublishedTreeInput } from "@open-decision/tree-api-specification";
 
 const getPublishedTree = catchAsync(async (req: Request, res: Response) => {
-  const reqData = await validateRequest(
-    publishedTreeValidation.getPublishedTree
-  )(req);
+  const reqData = await validateRequest(getPublishedTreeInput)(req);
 
   const { publishedTreeUuid } = reqData.params;
   const publishedTree = await getPublishedTreeFromDb(publishedTreeUuid);

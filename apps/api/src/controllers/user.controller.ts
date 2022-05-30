@@ -5,14 +5,9 @@ import ApiError from "../utils/ApiError";
 import catchAsync from "../utils/catchAsync";
 import pickSafeUserProperties from "../utils/pickSafeUserProperties";
 import { userService } from "../services";
-import { User } from "@open-decision/models/prisma-client";
 import { userValidation } from "../validations";
 import validateRequest from "../validations/validateRequest";
-namespace Express {
-  export interface Request {
-    user?: User;
-  }
-}
+
 const createUser = catchAsync(async (req: Request, res: Response) => {
   const reqData = await validateRequest(userValidation.createUser)(req);
 
@@ -77,7 +72,6 @@ const addToWhitelist = catchAsync(async (req: Request, res: Response) => {
     userValidation.whitelistUsersForRegistration
   )(req);
 
-  // @ts-ignore
   const creatorUuid = req.user.uuid;
   await userService.whitelistUsersByMail(
     reqData.body.emails,

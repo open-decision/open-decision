@@ -1,6 +1,6 @@
 import * as TypeGraphQL from "type-graphql";
-import { NestedFloatFilter } from "../inputs/NestedFloatFilter";
-import { NestedIntFilter } from "../inputs/NestedIntFilter";
+import { NestedFloatFilter } from "./NestedFloatFilter";
+import { NestedIntFilter } from "./NestedIntFilter";
 
 @TypeGraphQL.InputType("NestedIntWithAggregatesFilter", {
   isAbstract: true,

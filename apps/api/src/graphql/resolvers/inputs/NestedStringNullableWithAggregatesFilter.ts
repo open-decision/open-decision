@@ -1,6 +1,6 @@
 import * as TypeGraphQL from "type-graphql";
-import { NestedIntNullableFilter } from "../inputs/NestedIntNullableFilter";
-import { NestedStringNullableFilter } from "../inputs/NestedStringNullableFilter";
+import { NestedIntNullableFilter } from "./NestedIntNullableFilter";
+import { NestedStringNullableFilter } from "./NestedStringNullableFilter";
 
 @TypeGraphQL.InputType("NestedStringNullableWithAggregatesFilter", {
   isAbstract: true,

@@ -1,6 +1,6 @@
 import * as TypeGraphQL from "type-graphql";
-import { NestedEnumRoleFilter } from "../inputs/NestedEnumRoleFilter";
-import { NestedIntFilter } from "../inputs/NestedIntFilter";
+import { NestedEnumRoleFilter } from "./NestedEnumRoleFilter";
+import { NestedIntFilter } from "./NestedIntFilter";
 import { Role } from "@open-decision/models/type-graphql";
 
 @TypeGraphQL.InputType("NestedEnumRoleWithAggregatesFilter", {

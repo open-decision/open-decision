@@ -1,6 +1,6 @@
 import { WebSocketServer } from "ws";
 import catchAsync from "../utils/catchAsync";
-import { wsAuth } from "./../middlewares/auth";
+import { wsAuth } from "../middlewares/auth";
 import { setupWSConnection } from "y-websocket/bin/utils";
 import { setPersistence } from "y-websocket/bin/utils";
 import { hasPermissionsForTree } from "../services/permission.service";
