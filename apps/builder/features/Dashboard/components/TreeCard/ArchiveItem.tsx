@@ -6,9 +6,11 @@ import {
   useTreesQuery,
   useUnArchiveTreeMutation,
 } from "../../../../features/Data/generated/graphql";
-import { TreeStatus } from "@open-decision/models/prisma-client";
 
-export type PublishItemProps = { treeId: string; status: TreeStatus };
+export type PublishItemProps = {
+  treeId: string;
+  status: "ARCHIVED" | "ACTIVE";
+};
 
 export function ArchiveItem({ treeId, status }: PublishItemProps) {
   const { mutate: archive } = useArchiveTreeMutation({
