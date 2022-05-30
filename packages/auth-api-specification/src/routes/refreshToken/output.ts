@@ -1,10 +1,6 @@
 import { z } from "zod";
+import { authOuput } from "../shared";
 
-export const refreshTokenOutput = z.object({
-  access: z.object({
-    token: z.string(),
-    expires: z.string(),
-  }),
-});
+export const refreshTokenOutput = authOuput;
 
 export type TRefreshTokenOutput = z.infer<typeof refreshTokenOutput>;

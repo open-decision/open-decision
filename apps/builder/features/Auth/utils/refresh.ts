@@ -1,15 +1,18 @@
+import {
+  refreshTokenOutput,
+  TRefreshTokenOutput,
+} from "@open-decision/auth-api-specification";
 import { safeFetch } from "./safeFetch";
-import { LoginResponse, validateLoginResponse } from "./shared";
 
 export const refresh = (
-  onSuccess: (data: LoginResponse) => void,
+  onSuccess: (data: TRefreshTokenOutput) => void,
   onError: (error: string) => void
 ) =>
   safeFetch(
     "/external-api/auth/refresh-tokens",
     { method: "POST", credentials: "include" },
     {
-      throwingValidation: validateLoginResponse,
+      throwingValidation: refreshTokenOutput.parse,
       onSuccess,
       onError,
     }

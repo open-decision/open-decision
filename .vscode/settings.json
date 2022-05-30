@@ -9,7 +9,8 @@
     "storybook",
     "renderer-app",
     "rich-text-editor",
-    "interpreter-react"
+    "interpreter-react",
+    "models"
   ],
   "typescript.tsdk": "node_modules/typescript/lib",
   "todo-tree.general.tags": [

@@ -50,7 +50,7 @@ export const ToggleButton = React.forwardRef<
   SystemToggleGroup.ToggleButtonProps & ToggleItemProps
 >(function ToggleButton({ children, ...props }, ref) {
   return (
-    <ToggleItem asChild>
+    <ToggleItem asChild {...props}>
       <SystemButton ref={ref} {...buttonProps} {...props}>
         {children}
       </SystemButton>

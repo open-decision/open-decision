@@ -4,7 +4,7 @@ import { Button as SystemButton, ButtonProps } from "./Button";
 import * as ToggleGroupPrimitives from "@radix-ui/react-toggle-group";
 import { activeSelector } from "../stitches/stateSelectors";
 
-const StyledRoot = styled(ToggleGroupPrimitives.Root, {
+export const Root = styled(ToggleGroupPrimitives.Root, {
   display: "inline-flex",
   borderRadius: "$md",
   layer: "3",
@@ -29,16 +29,7 @@ const StyledRoot = styled(ToggleGroupPrimitives.Root, {
   },
 });
 
-export type RootProps = React.ComponentProps<typeof StyledRoot>;
-
-export const Root = ({
-  children,
-  value,
-  onValueChange,
-  ...props
-}: RootProps) => {
-  return <StyledRoot {...props}>{children}</StyledRoot>;
-};
+export type RootProps = React.ComponentProps<typeof Root>;
 
 export type ToggleItemProps = ToggleGroupPrimitives.ToggleGroupItemProps;
 export type ToggleRootProps = React.ComponentProps<typeof Root>;

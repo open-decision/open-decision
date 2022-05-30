@@ -8,11 +8,15 @@ import { refresh } from "./utils/refresh";
 import { register } from "./utils/register";
 import { requestPasswordReset } from "./utils/requestPasswordReset";
 import { resetPassword } from "./utils/resetPassword";
-import { LoginResponse } from "./utils/shared";
 import * as Sentry from "@sentry/nextjs";
 import LogRocket from "logrocket";
 import { protectedRoutes } from "../../config/protectedRoutes";
 import { websocketMachine } from "../Data/websocket.machine";
+import {
+  TLoginOutput,
+  TRefreshTokenOutput,
+  TRegisterOutput,
+} from "@open-decision/auth-api-specification";
 
 type SharedContext = {
   location?: string;
@@ -26,7 +30,7 @@ type EmptyContext = {
 } & SharedContext;
 
 type DefinedContext = {
-  auth: LoginResponse;
+  auth: TLoginOutput;
 } & SharedContext;
 
 export type Context = EmptyContext | DefinedContext;
@@ -53,15 +57,15 @@ type OPEN_WEBSOCKET_EVENT = {
 };
 
 export type Events =
-  | { type: "REPORT_IS_LOGGED_IN"; user: LoginResponse }
+  | { type: "REPORT_IS_LOGGED_IN"; user: TRefreshTokenOutput }
   | { type: "REPORT_IS_LOGGED_OUT" }
   | { type: "LOG_OUT" }
   | { type: "LOG_IN"; email: string; password: string }
-  | { type: "SUCCESSFULL_LOGIN"; user: LoginResponse }
+  | { type: "SUCCESSFULL_LOGIN"; user: TLoginOutput }
   | { type: "FAILED_LOGIN"; error: string }
-  | { type: "SAFE_USER"; user: LoginResponse }
+  | { type: "SAFE_USER"; user: TLoginOutput }
   | { type: "REGISTER"; email: string; password: string }
-  | { type: "SUCCESSFULL_REGISTER"; user: LoginResponse }
+  | { type: "SUCCESSFULL_REGISTER"; user: TRegisterOutput }
   | { type: "FAILED_REGISTER"; error: string }
   | { type: "SUCCESSFULL_REDIRECT" }
   | { type: "SUCCESSFULL_LOGOUT" }

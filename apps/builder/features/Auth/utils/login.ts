@@ -1,17 +1,20 @@
-import { LoginResponse, validateLoginResponse } from "./shared";
 import { safeFetch } from "./safeFetch";
+import {
+  loginOutput,
+  TLoginOutput,
+} from "@open-decision/auth-api-specification";
 
 export const login = (
   email: string,
   password: string,
-  onSuccess: (data: LoginResponse) => void,
+  onSuccess: (data: TLoginOutput) => void,
   onError: (error: string) => void
 ) =>
   safeFetch(
     "/external-api/auth/login",
     { method: "POST", body: { email, password } },
     {
-      throwingValidation: validateLoginResponse,
+      throwingValidation: loginOutput.parse,
       onSuccess,
       onError,
     }
