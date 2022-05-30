@@ -2,6 +2,7 @@
   "name": "@open-decision/prisma-client",
   "version": "0.0.1",
   "type": "commonjs",
+  "sideEffects": false,
   "scripts": {
     "migrate:dev": "dotenv -e ../../.env pnpm prisma migrate dev",
     "migrate:deploy": "pnpm prisma migrate deploy"

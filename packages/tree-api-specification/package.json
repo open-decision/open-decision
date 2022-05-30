@@ -2,6 +2,7 @@
   "name": "@open-decision/tree-api-specification",
   "version": "0.0.1",
   "type": "commonjs",
+  "sideEffects": false,
   "dependencies": {
     "zod": "^3.17.3"
   }

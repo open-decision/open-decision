@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "type": "commonjs",
   "main": "./src/index.ts",
+  "sideEffects": false,
   "dependencies": {
     "@xstate/react": "^3.0.0",
     "xstate": "^4.31.0",
