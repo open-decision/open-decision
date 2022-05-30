@@ -13,17 +13,9 @@ gql`
 `;
 
 gql`
-  query getTreeName($uuid: String!) {
+  query Tree($uuid: String!) {
     decisionTree(where: { uuid: $uuid }) {
       name
-    }
-  }
-`;
-
-gql`
-  query getTreeContent($uuid: String!) {
-    decisionTree(where: { uuid: $uuid }) {
-      treeData
     }
   }
 `;

@@ -72,7 +72,7 @@ export function InfoBox({
           <IconSVG />
         </Icon>
         <Stack css={{ gap: "$1", flex: 1 }}>
-          <Heading size="small">{title}</Heading>
+          <Heading size="extra-small">{title}</Heading>
           {typeof content === "string" ? <Text>{content}</Text> : content}
         </Stack>
         {CloseButton}

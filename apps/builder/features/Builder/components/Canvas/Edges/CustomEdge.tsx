@@ -37,7 +37,7 @@ export const CustomEdge = memo(
           markerEnd={"url(#color=#c1c8cd&type=arrowclosed)"}
           css={{
             stroke: "$colors$gray8",
-            strokeWidth: 2,
+            strokeWidth: 1,
             ...style,
           }}
         />

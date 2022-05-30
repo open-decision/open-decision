@@ -15,7 +15,7 @@ import {
 import { MenuButton } from "../../../components/Header/MenuButton";
 import { DeleteTreeDialog } from "../../../features/Dashboard/components/Dialogs/DeleteTreeDialog";
 import { UpdateTreeDialog } from "../../../features/Dashboard/components/Dialogs/UpdateTreeDialog";
-import { useGetTreeNameQuery } from "../../../features/Data/generated/graphql";
+import { useTreeQuery } from "../../../features/Data/generated/graphql";
 import { useTreeId } from "../../../features/Data/useTreeId";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
@@ -27,7 +27,7 @@ export function ProjectMenu({ css }: Props) {
   const id = useTreeId();
   const router = useRouter();
 
-  const { data } = useGetTreeNameQuery({ uuid: id });
+  const { data } = useTreeQuery({ uuid: id });
 
   const name = data?.decisionTree?.name ?? "Kein Name";
 

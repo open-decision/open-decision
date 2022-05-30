@@ -4,7 +4,7 @@ export const user = z.object({
   uuid: z.string(),
   email: z.string().email(),
   name: z.string().nullable(),
-  role: z.enum(["USER", "ADMIN"]),
+  role: z.enum(["USER", "ADMIN", "DEVELOPER"]),
   emailIsVerified: z.boolean(),
 });
 

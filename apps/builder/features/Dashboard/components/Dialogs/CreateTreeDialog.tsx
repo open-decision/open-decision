@@ -1,6 +1,9 @@
 import * as React from "react";
 import { Form, Dialog, DialogTriggerProps } from "@open-decision/design-system";
-import { useCreateTreeMutation } from "../../../../features/Data/generated/graphql";
+import {
+  useCreateTreeMutation,
+  useTreesQuery,
+} from "../../../../features/Data/generated/graphql";
 import { queryClient } from "../../../../features/Data/queryClient";
 
 type Props = DialogTriggerProps & {
@@ -24,7 +27,7 @@ export const CreateTreeDialog = ({
   const { mutate: createTree, isLoading } = useCreateTreeMutation({
     onSuccess: () => {
       setOpen?.(false);
-      queryClient.invalidateQueries("Trees");
+      queryClient.invalidateQueries(useTreesQuery.getKey());
     },
   });
 

@@ -7,13 +7,21 @@ import {
   Stack,
   Text,
   Form,
+  styled,
 } from "@open-decision/design-system";
-import { useTreesQuery } from "../../features/Data/generated/graphql";
-import { TreeCard } from "./TreeCard";
+import { TreeCard } from "./components/TreeCard/TreeCard";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { useFilter } from "./Filter";
 import { Card } from "../../components/Card";
 import { NewProjectDropdown } from "./NewProjectDropdown";
+import { useQuery } from "react-query";
+import {
+  getTreesOutput,
+  getTreesUrl,
+} from "@open-decision/tree-api-specification";
+import { useAuth } from "../Auth/useAuth";
+
+const NoProjects = styled("span", Heading);
 
 const sorts = {
   updatedAt: "Zuletzt bearbeitet",
@@ -22,14 +30,44 @@ const sorts = {
 
 const filters = {
   archived: "Archiviert",
+  published: "Veröffentlicht",
 };
 
 export const TreeList = () => {
-  const { data: trees } = useTreesQuery();
-  const hasTrees = trees && trees?.decisionTrees.length > 0;
+  const [
+    {
+      context: { auth },
+    },
+  ] = useAuth();
+
+  const { data: trees } = useQuery(
+    "Trees",
+    async () => {
+      const response = await fetch(`/external-api${getTreesUrl}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${auth?.access.token}`,
+        },
+      });
+
+      return response.json();
+    },
+    {
+      select(data) {
+        const parsedData = getTreesOutput.parse(data);
+
+        return parsedData.map((tree) => ({
+          ...tree,
+          status: tree.publishedTrees.length > 0 ? "PUBLISHED" : tree.status,
+        }));
+      },
+    }
+  );
+
+  const hasTrees = trees && trees.length > 0;
 
   const { search, setSearch, SortButton, FilterButton, filteredData } =
-    useFilter(trees?.decisionTrees ?? [], sorts, "updatedAt", filters);
+    useFilter(trees ?? [], sorts, "updatedAt", filters);
 
   const formState = Form.useFormState({
     defaultValues: { search },
@@ -84,11 +122,17 @@ export const TreeList = () => {
           alignSelf: "center",
         }}
       >
-        {filteredData.map((tree) => (
-          <motion.div key={tree.uuid} layout transition={{ duration: 0.5 }}>
-            <TreeCard tree={tree} />
-          </motion.div>
-        ))}
+        {filteredData.length > 0 ? (
+          filteredData.map((tree) => (
+            <motion.div key={tree.uuid} layout transition={{ duration: 0.5 }}>
+              <TreeCard tree={tree} />
+            </motion.div>
+          ))
+        ) : (
+          <Stack center css={{ height: "100%" }}>
+            <NoProjects>Keine Projekte</NoProjects>
+          </Stack>
+        )}
       </Stack>
     </>
   ) : (

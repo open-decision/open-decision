@@ -27,7 +27,7 @@ export function useFilter<
   filterOptions: TFilterOptions
 ) {
   const [search, setSearch] = React.useState("");
-  const [filter, setFilter] = React.useState<keyof TFilterOptions>();
+  const [filter, setFilter] = React.useState<keyof TFilterOptions>("");
   const [sort, setSort] = React.useState<keyof TSortOptions>(initialSortOption);
   const [direction, setDirection] = React.useState<SortDirections>("ascending");
 
@@ -69,9 +69,9 @@ export function useFilter<
       <GenericFilterButton
         options={filterOptions}
         setFilter={(newFilter) =>
-          newFilter === filter ? setFilter(undefined) : setFilter(newFilter)
+          newFilter === filter ? setFilter("") : setFilter(newFilter)
         }
-        filter={filter}
+        filter={filter as string}
       />
     ),
     [filter, filterOptions]

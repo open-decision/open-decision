@@ -10,7 +10,7 @@ import {
   StyleObject,
 } from "@open-decision/design-system";
 import { readableDate } from "../../../features/Dashboard/utils";
-import { useGetTreeNameQuery } from "../../../features/Data/generated/graphql";
+import { useTreeQuery } from "../../../features/Data/generated/graphql";
 import { useTreeId } from "../../../features/Data/useTreeId";
 import { ErrorBoundary } from "@sentry/nextjs";
 import { useMutation } from "react-query";
@@ -39,7 +39,7 @@ export function ExportDialog({
 }: Props) {
   const uuid = useTreeId();
   const { getTree } = useTreeContext();
-  const { data } = useGetTreeNameQuery({ uuid });
+  const { data } = useTreeQuery({ uuid });
 
   const [fileName, setFileName] = React.useState("");
   const {

@@ -22,7 +22,9 @@ export function FilterButton<TOptions extends Record<string, string>>({
               colorScheme: filter ? "primary" : "gray",
             }}
           >
-            <span>Filter{filter ? `: ${options[filter]}` : ``}</span>
+            <span>
+              Filter{filter && options[filter] ? `: ${options[filter]}` : ""}
+            </span>
           </Button>
         </DropdownMenu.Trigger>
       </Stack>

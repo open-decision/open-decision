@@ -34,6 +34,10 @@ const nextConfig = {
         source: "/external-api/users/is-whitelisted",
         destination: `${process.env.OD_API_ENDPOINT}/v1/users/is-whitelisted`,
       },
+      {
+        source: "/external-api/tree/:path",
+        destination: `${process.env.OD_API_ENDPOINT}/v1/tree/:path`,
+      },
     ];
   },
 };

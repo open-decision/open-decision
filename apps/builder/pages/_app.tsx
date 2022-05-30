@@ -11,6 +11,7 @@ import { NextPage } from "next";
 import { inspect } from "@xstate/inspect";
 import LogRocket from "logrocket";
 import setupLogRocketReact from "logrocket-react";
+import { ReactQueryDevtools } from "react-query/devtools";
 
 if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
   inspect({
@@ -48,6 +49,7 @@ export default function App({
             {getLayout(<Component {...pageProps} />)}
           </ProtectedRoute>
         </Tooltip.Provider>
+        <ReactQueryDevtools />
       </QueryClientProvider>
     </AuthProvider>
   );

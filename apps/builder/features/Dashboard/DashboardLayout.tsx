@@ -7,7 +7,6 @@ export function getDashboardLayout(page: NextPage) {
     <Layout
       css={{
         display: "grid",
-        height: "100vh",
         overflow: "hidden",
         gridTemplateRows: "max-content max-content 1fr",
         gridTemplateColumns: "1fr 200px minmax(600px, 1fr) 1fr",
