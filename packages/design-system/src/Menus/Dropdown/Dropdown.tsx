@@ -133,15 +133,17 @@ export function CheckboxGroup<TOptions extends Record<string, string>>({
 }: CheckboxGroupProps<TOptions>) {
   return (
     <>
-      {Object.entries(options).map(([key, optionText]) => (
-        <CheckboxItem
-          key={key}
-          checked={selected === key}
-          onSelect={() => toggleOption(key)}
-        >
-          {optionText}
-        </CheckboxItem>
-      ))}
+      {Object.entries(options).map(([key, optionText]) => {
+        return optionText ? (
+          <CheckboxItem
+            key={key}
+            checked={selected === key}
+            onSelect={() => toggleOption(key)}
+          >
+            {optionText}
+          </CheckboxItem>
+        ) : null;
+      })}
     </>
   );
 }

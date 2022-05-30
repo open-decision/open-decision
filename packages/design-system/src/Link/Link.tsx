@@ -4,7 +4,7 @@ import { intentSelector } from "../stitches/stateSelectors";
 
 export type LinkProps = React.ComponentProps<typeof Link>;
 
-export const baseLinkStyles = css({
+export const linkStyles = css({
   display: "inline-flex",
   alignItems: "center",
   textDecoration: "none",
@@ -16,4 +16,4 @@ export const baseLinkStyles = css({
   [`${intentSelector}`]: { textDecoration: "underline" },
 });
 
-export const Link = styled("a", baseLinkStyles);
+export const Link = styled("a", linkStyles);

@@ -1,11 +1,7 @@
 import {
-  Box,
   Icon,
   styled,
-  ToggleButton,
-  Button,
-  hoverSelector,
-  Separator,
+  Toolbar as SystemToolbar,
 } from "@open-decision/design-system";
 import * as React from "react";
 import {
@@ -19,7 +15,7 @@ import {
 import { Editor } from "@tiptap/react";
 import { NumberedList } from "./NumberedListIcon";
 
-const StyledToolbar = styled(Box, {
+const StyledToolbar = styled(SystemToolbar.Root, {
   display: "flex",
   alignItems: "center",
   padding: "$2 $1",
@@ -36,18 +32,32 @@ export function Toolbar({ css, editor, ...props }: Props) {
     return null;
   }
 
+  const textMarks = ["Bold", "Italic", "Underline"] as const;
+
+  const textMarksState = [
+    editor.isActive("bold") && "Bold",
+    editor.isActive("italic") && "Italic",
+    editor.isActive("underline") && "Underline",
+  ].filter((element): element is typeof textMarks[number] => element != null);
+
+  const validTextMark = (value: any): value is typeof textMarks[number] =>
+    textMarks.includes(value);
+
+  const listMarks = ["OrderedList", "BulletList"] as const;
+
+  const listMarksState = editor.isActive("bulletList")
+    ? "BulletList"
+    : editor.isActive("orderedList")
+    ? "OrderedList"
+    : undefined;
+
+  const validListMark = (value: any): value is typeof listMarks[number] =>
+    listMarks.includes(value);
+
   return (
     <StyledToolbar css={css} {...props}>
-      <Button
-        size="medium"
-        variant="neutral"
-        square
+      <SystemToolbar.Button
         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-        css={{
-          [`${hoverSelector}`]: {
-            backgroundColor: "$gray4",
-          },
-        }}
       >
         <Icon label="Konvertiere den ausgewählten Text in eine Überschrift">
           {editor.isActive("heading", { level: 1 }) ? (
@@ -56,71 +66,64 @@ export function Toolbar({ css, editor, ...props }: Props) {
             <HeadingIcon />
           )}
         </Icon>
-      </Button>
-      <Separator
+      </SystemToolbar.Button>
+      <SystemToolbar.Separator
         orientation="vertical"
         decorative
         css={{ alignSelf: "stretch" }}
       />
-      <ToggleButton
-        size="medium"
-        square
-        pressed={editor.isActive("bold")}
-        onClick={() => editor.chain().focus().toggleBold().run()}
-      >
-        <Icon label="Markiere den ausgewählten Text fett">
-          <FontBoldIcon />
-        </Icon>
-      </ToggleButton>
-      <ToggleButton
-        size="medium"
-        square
-        pressed={editor.isActive("italic")}
-        onClick={() => editor.chain().focus().toggleItalic().run()}
-      >
-        <Icon label="Markiere den ausgewählten Text kursiv">
-          <FontItalicIcon />
-        </Icon>
-      </ToggleButton>
-      <ToggleButton
-        size="medium"
-        square
-        pressed={editor.isActive("underline")}
-        onClick={() => editor.chain().focus().toggleUnderline().run()}
-      >
-        <Icon label="Unterstreiche den ausgewählten Text">
-          <UnderlineIcon />
-        </Icon>
-      </ToggleButton>
-      <Separator
-        orientation="vertical"
-        decorative
-        css={{ alignSelf: "stretch" }}
-      />
-      <ToggleButton
-        size="medium"
-        square
-        pressed={editor.isActive("bulletList")}
-        onClick={() => editor.chain().focus().toggleBulletList().run()}
-      >
-        <Icon label="Erstelle eine unnumerierte Liste">
-          <ListBulletIcon />
-        </Icon>
-      </ToggleButton>
+      <SystemToolbar.ToggleGroup
+        type="multiple"
+        value={textMarksState}
+        onValueChange={(values) =>
+          values.forEach((value) => {
+            if (!validTextMark(value)) return;
 
-      <ToggleButton
-        size="medium"
-        square
-        pressed={editor.isActive("orderedList")}
-        onClick={() => editor.chain().focus().toggleOrderedList().run()}
+            return editor.chain().focus()[`toggle${value}`]?.().run();
+          })
+        }
       >
-        <Icon
-          label="Erstelle eine numerierte Liste"
-          css={{ width: "0.8em", height: "0.8em" }}
-        >
-          <NumberedList />
-        </Icon>
-      </ToggleButton>
+        <SystemToolbar.ToggleButton value="Bold">
+          <Icon label="Markiere den ausgewählten Text fett">
+            <FontBoldIcon />
+          </Icon>
+        </SystemToolbar.ToggleButton>
+        <SystemToolbar.ToggleButton value="Italic">
+          <Icon label="Markiere den ausgewählten Text kursiv">
+            <FontItalicIcon />
+          </Icon>
+        </SystemToolbar.ToggleButton>
+        <SystemToolbar.ToggleButton value="Underline">
+          <Icon label="Unterstreiche den ausgewählten Text">
+            <UnderlineIcon />
+          </Icon>
+        </SystemToolbar.ToggleButton>
+      </SystemToolbar.ToggleGroup>
+      <SystemToolbar.Separator
+        orientation="vertical"
+        decorative
+        css={{ alignSelf: "stretch" }}
+      />
+      <SystemToolbar.ToggleGroup
+        type="single"
+        value={listMarksState}
+        onValueChange={(value) => {
+          if (!validListMark(value)) return;
+
+          return editor.chain().focus()[`toggle${value}`]?.().run();
+        }}
+      >
+        <SystemToolbar.ToggleButton value="BulletList">
+          <Icon label="Erstelle eine unnumerierte Liste">
+            <ListBulletIcon />
+          </Icon>
+        </SystemToolbar.ToggleButton>
+        <SystemToolbar.ToggleButton value="OrderedList">
+          <Icon label="Erstelle eine numerierte Liste" css={{}}>
+            <NumberedList />
+          </Icon>
+        </SystemToolbar.ToggleButton>
+      </SystemToolbar.ToggleGroup>
       {/* <Separator
         orientation="vertical"
         decorative

@@ -20,6 +20,7 @@ export * from "./LoadingSpinner/LoadingSpinner";
 export * as ScrollArea from "./ScrollArea/ScrollArea";
 export * from "./VisuallyHidden/VisuallyHidden";
 export * from "./Separator";
+export * as Toolbar from "./Toolbar/Toolbar";
 
 // Styling solutions
 export * from "./stitches";
