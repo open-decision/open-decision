@@ -5,7 +5,7 @@
   "description": "",
   "author": "Philipp Garbowsky <phil.garbowsky@philtech.dev>",
   "scripts": {
-    "codegen": "graphql-codegen --config ./.graphqlrc -w",
+    "codegen": "graphql-codegen --config ./.graphqlrc",
     "lint": "eslint . --ext .ts,.tsx",
     "dev:deps": "pnpm --filter @open-decision/builder... dev",
     "dev": "pnpm codegen && next dev",
