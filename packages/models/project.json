@@ -3,6 +3,13 @@
   "sourceRoot": "packages/models/src",
   "projectType": "library",
   "targets": {
+    "serve": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "pnpm prisma studio",
+        "cwd": "packages/models"
+      }
+    },
     "build": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
