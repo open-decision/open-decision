@@ -24,6 +24,7 @@ input DateTimeFilter {
 }
 
 type DecisionTree {
+  _count: DecisionTreeCount
   createdAt: DateTime!
   name: String!
   status: TreeStatus!
@@ -31,6 +32,11 @@ type DecisionTree {
   updatedAt: DateTime!
   uuid: String!
   yDocument: String
+}
+
+type DecisionTreeCount {
+  Tags: Int!
+  publishedTrees: Int!
 }
 
 input DecisionTreeCreateInput {

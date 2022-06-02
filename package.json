@@ -8,7 +8,24 @@
     "remove:dist": "rm -rf dist"
   },
   "license": "MIT",
-  "devDependencies": {
+  "private": true,
+  "version": "0.0.1",
+  "workspaces": [
+    "packages/**",
+    "apps/**"
+  ],
+  "dependencies": {
+    "@types/react": "^17.0.45",
+    "@types/react-dom": "^17.0.17",
+    "@typescript-eslint/eslint-plugin": "^5.26.0",
+    "@typescript-eslint/parser": "^5.26.0",
+    "@types/jest": "27.5.1",
+    "@types/node": "^17.0.35",
+    "@swc/helpers": "~0.3.3",
+    "core-js": "^3.22.7",
+    "regenerator-runtime": "0.13.9",
+    "tslib": "^2.4.0",
+    "nx": "14.1.9",
     "@babel/core": "^7.17.10",
     "@babel/preset-env": "^7.18.2",
     "@nrwl/devkit": "14.1.9",
@@ -25,12 +42,6 @@
     "@swc/core": "~1.2.192",
     "@swc/helpers": "~0.3.15",
     "@swc/jest": "0.2.21",
-    "@types/jest": "27.5.1",
-    "@types/node": "^17.0.35",
-    "@types/react": "^17.0.45",
-    "@types/react-dom": "^17.0.17",
-    "@typescript-eslint/eslint-plugin": "^5.26.0",
-    "@typescript-eslint/parser": "^5.26.0",
     "babel-loader": "^8.2.5",
     "c8": "^7.11.3",
     "dotenv": "^16.0.1",
@@ -47,7 +58,6 @@
     "husky": "^8.0.1",
     "jest": "28.1.0",
     "next": "12.1.4",
-    "nx": "14.1.9",
     "prettier": "2.6.2",
     "rxjs": "^7.5.5",
     "ts-jest": "28.0.3",
@@ -57,17 +67,5 @@
     "vitest": "^0.12.9",
     "wait-on": "^6.0.1",
     "webpack": "^5.72.1"
-  },
-  "private": true,
-  "version": "0.0.1",
-  "workspaces": [
-    "packages/**",
-    "apps/**"
-  ],
-  "dependencies": {
-    "@swc/helpers": "~0.3.3",
-    "core-js": "^3.22.7",
-    "regenerator-runtime": "0.13.9",
-    "tslib": "^2.4.0"
   }
 }

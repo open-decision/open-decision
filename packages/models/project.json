@@ -13,7 +13,14 @@
     "build": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
-        "command": "prisma migrate dev --schema=./src/schema.prisma",
+        "command": "prisma generate --schema=./src/schema.prisma",
+        "cwd": "packages/models"
+      }
+    },
+    "migrate:deploy": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "prisma migrate deploy --schema=./src/schema.prisma",
         "cwd": "packages/models"
       }
     },

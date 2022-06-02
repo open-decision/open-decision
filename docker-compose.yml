@@ -1,0 +1,27 @@
+# Set the version of docker compose to use
+version: "3.9"
+
+# The containers that compose the project
+services:
+  db:
+    image: postgres:13
+    restart: always
+    container_name: postgres-prisma
+    environment:
+      POSTGRES_USER: prisma
+      POSTGRES_PASSWORD: prisma
+      POSTGRES_DB: db
+  api:
+    environment:
+      - DATABASE_URL=postgresql://prisma:prisma@db:5432/db?connect_timeout=300
+      - NODE_ENV=development
+      - PORT=4000
+      - ACCESS_TOKEN_SECRET=SUPER_INSECURE_SECRET
+      - REFRESH_TOKEN_SECRET=EVEN_WORSE_INSECURE_SECRET
+    build:
+      context: .
+      dockerfile: ./apps/api/Dockerfile
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db

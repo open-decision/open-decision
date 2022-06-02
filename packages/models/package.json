@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@prisma/client": "~3.14.0",
+    "encoding": "^0.1.13",
     "prisma": "~3.14.0",
     "type-graphql": "^1.1.1",
     "typegraphql-prisma": "^0.20.3"

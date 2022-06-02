@@ -13,7 +13,7 @@ async function asyncPreparation() {
     await prisma.$connect();
     logger.info("Connected to database");
   } catch (e) {
-    logger.error("Connection to database failed.");
+    logger.error("Connection to database failed.", e);
     app.locals["dbConnection"] = false;
   }
 }
