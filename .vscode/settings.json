@@ -10,7 +10,8 @@
     "renderer-app",
     "rich-text-editor",
     "interpreter-react",
-    "models"
+    "models",
+    "api-specification"
   ],
   "typescript.tsdk": "node_modules/typescript/lib",
   "todo-tree.general.tags": [

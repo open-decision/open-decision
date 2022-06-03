@@ -4,7 +4,7 @@ import { isPasswordStrongEnough } from "../../utils/password.validation";
 
 export const resetPasswordInput = z.object({
   body: z.object({
-    token: z.string().refine((val) => isJWT(val), {
+    token: z.string().refine(isJWT, {
       message: "Token is not a valid JWT.",
     }),
     password: z

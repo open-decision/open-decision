@@ -5,7 +5,7 @@ export const authOuput = z.object({
   user: z.object({
     uuid: z.string().uuid(),
     email: z.string().email(),
-    name: z.string().optional(),
+    name: z.string().nullable(),
     emailIsVerified: z.boolean(),
     role: z.enum(["ADMIN", "USER", "DEVELOPER"]),
   }),

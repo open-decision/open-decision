@@ -27,9 +27,14 @@ type DecisionTree {
   _count: DecisionTreeCount
   createdAt: DateTime!
   name: String!
+
+  """@zod.uuid()"""
+  ownerUuid: String!
   status: TreeStatus!
   treeData: JSON
   updatedAt: DateTime!
+
+  """@zod.uuid()"""
   uuid: String!
   yDocument: String
 }
