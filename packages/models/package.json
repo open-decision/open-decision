@@ -12,7 +12,8 @@
     "encoding": "^0.1.13",
     "prisma": "~3.14.0",
     "type-graphql": "^1.1.1",
-    "typegraphql-prisma": "^0.20.3"
+    "typegraphql-prisma": "^0.20.3",
+    "zod-prisma": "^0.5.4"
   },
   "prisma": {
     "schema": "src/schema.prisma"

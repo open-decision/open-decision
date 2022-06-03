@@ -7,7 +7,7 @@ datasource db {
 generator client {
   provider      = "prisma-client-js"
   output        = "./generated/prisma-client"
-  binaryTargets = ["linux-arm64-openssl-1.1.x"]
+  binaryTargets = ["native", "linux-arm64-openssl-1.1.x"]
 }
 
 generator typegraphql {
@@ -15,7 +15,14 @@ generator typegraphql {
   output   = "./generated/type-graphql"
 }
 
+generator zod {
+  provider              = "node_modules/zod-prisma/bin/cli.js"
+  output                = "./generated/zod"
+  prismaJsonNullability = false
+}
+
 model DecisionTree {
+  /// @zod.uuid()
   uuid           String          @id @default(uuid()) @db.Uuid
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
@@ -27,7 +34,7 @@ model DecisionTree {
   yDocument      String?
   /// @TypeGraphQL.omit(output: true, input: true)
   owner          User            @relation(fields: [ownerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  /// @TypeGraphQL.omit(output: true, input: true)
+  /// @zod.uuid()
   ownerUuid      String          @db.Uuid
   publishedTrees PublishedTree[]
 }
