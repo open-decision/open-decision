@@ -3,4 +3,4 @@ import { TreeOutput } from "../shared";
 
 export const getTreeOutput = TreeOutput;
 
-export type TGetTreeOutput = z.infer<typeof getTreeOutput>;
+export type TGetTreeOutput = z.infer<typeof TreeOutput>;

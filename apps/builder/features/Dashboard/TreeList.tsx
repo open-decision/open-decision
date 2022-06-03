@@ -15,10 +15,7 @@ import { useFilter } from "./Filter";
 import { Card } from "../../components/Card";
 import { NewProjectDropdown } from "./NewProjectDropdown";
 import { useQuery } from "react-query";
-import {
-  getTreesOutput,
-  getTreesUrl,
-} from "@open-decision/tree-api-specification";
+import { getTrees } from "@open-decision/tree-api-specification";
 import { useAuth } from "../Auth/useAuth";
 
 const NoProjects = styled("span", Heading);
@@ -43,20 +40,13 @@ export const TreeList = () => {
   const { data: trees } = useQuery(
     "Trees",
     async () => {
-      const response = await fetch(`/external-api${getTreesUrl}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${auth?.access.token}`,
-        },
+      return await getTrees("/external-api", {
+        headers: { authorization: `Bearer ${auth?.access.token}` },
       });
-
-      return response.json();
     },
     {
       select(data) {
-        const parsedData = getTreesOutput.parse(data);
-
-        return parsedData.map((tree) => ({
+        return data.map((tree) => ({
           ...tree,
           status: tree.publishedTrees.length > 0 ? "PUBLISHED" : tree.status,
         }));

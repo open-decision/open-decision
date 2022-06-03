@@ -4,6 +4,7 @@
   "type": "commonjs",
   "sideEffects": false,
   "dependencies": {
+    "validator": "^13.7.0",
     "zod": "^3.17.3"
   }
 }
