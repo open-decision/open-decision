@@ -5,8 +5,9 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "./generated/prisma-client"
+  provider      = "prisma-client-js"
+  output        = "./generated/prisma-client"
+  binaryTargets = ["linux-arm64-openssl-1.1.x"]
 }
 
 generator typegraphql {
