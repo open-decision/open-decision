@@ -5,38 +5,27 @@
   "targets": {
     "build": {
       "executor": "@nrwl/js:swc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/tree-api-specification",
         "main": "packages/tree-api-specification/src/index.ts",
         "tsConfig": "packages/tree-api-specification/tsconfig.lib.json",
-        "assets": [
-          "packages/tree-api-specification/*.md"
-        ]
+        "assets": ["packages/tree-api-specification/*.md"]
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
+      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "packages/tree-api-specification/**/*.ts"
-        ]
+        "lintFilePatterns": ["packages/tree-api-specification/**/*.ts"]
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
-      "outputs": [
-        "coverage/packages/tree-api-specification"
-      ],
+      "executor": "@nxext/vitest:vitest",
       "options": {
-        "jestConfig": "packages/tree-api-specification/jest.config.ts",
-        "passWithNoTests": true
-      }
+        "command": "run"
+      },
+      "dependsOn": [{ "target": "build", "projects": "dependencies" }]
     }
   },
   "tags": []

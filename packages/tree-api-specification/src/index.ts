@@ -1,3 +1,5 @@
-export * from "./routes/getPublishedTree";
-export * from "./routes/getTree";
-export * from "./routes/getTrees";
+export * from "./routes/trees";
+export * from "./routes/publishedTrees";
+
+export { client } from "./client";
+export * from "./urls";

@@ -4,7 +4,12 @@
   "type": "commonjs",
   "sideEffects": false,
   "dependencies": {
+    "@open-decision/api-helpers": "workspace:*",
+    "@open-decision/models": "workspace:^*",
     "validator": "^13.7.0",
     "zod": "^3.17.3"
+  },
+  "devDependencies": {
+    "vitest": "^0.9.2"
   }
 }

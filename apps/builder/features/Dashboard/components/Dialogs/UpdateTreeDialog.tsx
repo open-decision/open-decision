@@ -4,9 +4,10 @@ import {
   DialogTriggerProps,
   StyleObject,
 } from "@open-decision/design-system";
-import { useUpdateTreeMutation } from "../../../../features/Data/generated/graphql";
 import { queryClient } from "../../../../features/Data/queryClient";
 import * as React from "react";
+import { useMutation } from "react-query";
+import { useOD } from "../../../../features/Data/odClient";
 
 type Props = {
   treeId: string;
@@ -30,19 +31,25 @@ export function UpdateTreeDialog({
   const formState = Form.useFormState({ defaultValues: { treeName: "" } });
 
   formState.useSubmit(() => {
-    updateTree({
-      data: { name: { set: formState.values.treeName } },
-      uuid: treeId,
-    });
+    updateTree();
   });
 
-  const { mutate: updateTree, isLoading } = useUpdateTreeMutation({
-    onSuccess: () => {
-      setOpen?.(false);
-      queryClient.invalidateQueries("Trees");
-      queryClient.invalidateQueries("getTreeName");
-    },
-  });
+  const OD = useOD();
+
+  const { mutate: updateTree, isLoading } = useMutation(
+    () =>
+      OD.trees.update({
+        body: { name: formState.values.treeName },
+        params: { uuid: treeId },
+      }),
+    {
+      onSuccess: () => {
+        setOpen?.(false);
+        queryClient.invalidateQueries("Trees");
+        queryClient.invalidateQueries("getTreeName");
+      },
+    }
+  );
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>

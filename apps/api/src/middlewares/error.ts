@@ -3,11 +3,7 @@ import config from "../config/config";
 import { logger } from "../config/logger";
 import ApiError from "../utils/ApiError";
 import { NextFunction, Request, Response } from "express";
-import {
-  PrismaClientKnownRequestError,
-  PrismaClientUnknownRequestError,
-  PrismaClientValidationError,
-} from "@open-decision/models/prisma-client";
+import { Prisma } from "@open-decision/models/prisma-client";
 import http from "http";
 
 export const errorConverter = (
@@ -21,9 +17,9 @@ export const errorConverter = (
     let statusCode = httpStatus.INTERNAL_SERVER_ERROR;
     if (
       error.statusCode ||
-      error instanceof PrismaClientKnownRequestError ||
-      error instanceof PrismaClientUnknownRequestError ||
-      error instanceof PrismaClientValidationError
+      error instanceof Prisma.PrismaClientKnownRequestError ||
+      error instanceof Prisma.PrismaClientUnknownRequestError ||
+      error instanceof Prisma.PrismaClientValidationError
     ) {
       statusCode = httpStatus.BAD_REQUEST;
     }

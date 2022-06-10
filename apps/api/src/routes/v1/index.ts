@@ -1,19 +1,15 @@
 import express from "express";
 import authRouter from "./auth.route";
 import userRouter from "./user.route";
-import publishedTreeRouter from "./publishedTree.route";
-import graphqlRouter from "./graphql.route";
 import docsRouter from "./docs.route";
 import config from "../../config/config";
 import treeRouter from "./tree.route";
+import publishedTreeRouter from "./publishedTree.route";
 const router = express.Router();
 
 const defaultRoutes = [
   { path: "/auth", route: authRouter },
   { path: "/users", route: userRouter },
-  { path: "/published", route: publishedTreeRouter },
-  { path: "/graphql", route: graphqlRouter },
-  { path: "/tree", route: treeRouter },
 ];
 
 const devRoutes = [
@@ -27,6 +23,9 @@ const devRoutes = [
 defaultRoutes.forEach((route) => {
   router.use(route.path, route.route);
 });
+
+router.use(treeRouter);
+router.use(publishedTreeRouter);
 
 /* istanbul ignore next */
 if (config.NODE_ENV === "development") {

@@ -6,9 +6,11 @@ import {
   styled,
   StyleObject,
 } from "@open-decision/design-system";
-import { useDeleteTreeMutation } from "../../../../features/Data/generated/graphql";
 import { queryClient } from "../../../../features/Data/queryClient";
 import * as React from "react";
+import { useOD } from "../../../../features/Data/odClient";
+import { useMutation } from "react-query";
+import { useTreesQueryKey } from "../../../Data/useTreesQuery";
 
 const Bold = styled("span", { color: "$gray12" });
 
@@ -38,25 +40,29 @@ export function DeleteTreeDialog({
   });
 
   formState.useSubmit(() => {
-    deleteTree({ uuid: tree.uuid });
+    deleteTree();
   });
 
   formState.useValidate(() => {
-    tree.name !== formState.values.treeName
-      ? formState.setError(
-          formState.names.treeName,
-          "Der Projektname ist nicht korrekt"
-        )
-      : null;
+    if (tree.name !== formState.values.treeName)
+      formState.setError(
+        formState.names.treeName,
+        "Der Projektname ist nicht korrekt"
+      );
   });
 
-  const { mutate: deleteTree, isLoading } = useDeleteTreeMutation({
-    onSuccess: () => {
-      setOpen?.(false);
-      queryClient.invalidateQueries("Trees");
-      onDelete?.();
-    },
-  });
+  const OD = useOD();
+
+  const { mutate: deleteTree, isLoading } = useMutation(
+    () => OD.trees.delete({ params: { uuid: tree.uuid } }),
+    {
+      onSuccess: () => {
+        setOpen?.(false);
+        queryClient.invalidateQueries(useTreesQueryKey);
+        onDelete?.();
+      },
+    }
+  );
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>

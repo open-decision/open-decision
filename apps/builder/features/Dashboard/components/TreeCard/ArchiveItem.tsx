@@ -1,11 +1,9 @@
 import { DropdownMenu, Icon } from "@open-decision/design-system";
 import { ArchiveIcon } from "@radix-ui/react-icons";
 import { queryClient } from "../../../../features/Data/queryClient";
-import {
-  useArchiveTreeMutation,
-  useTreesQuery,
-  useUnArchiveTreeMutation,
-} from "../../../../features/Data/generated/graphql";
+import { useMutation } from "react-query";
+import { useOD } from "../../../../../builder/features/Data/odClient";
+import { useTreesQueryKey } from "../../../Data/useTreesQuery";
 
 export type PublishItemProps = {
   treeId: string;
@@ -13,25 +11,37 @@ export type PublishItemProps = {
 };
 
 export function ArchiveItem({ treeId, status }: PublishItemProps) {
-  const { mutate: archive } = useArchiveTreeMutation({
-    onSuccess: () => {
-      queryClient.invalidateQueries(useTreesQuery.getKey());
-    },
-  });
+  const OD = useOD();
 
-  const { mutate: unarchive } = useUnArchiveTreeMutation({
-    onSuccess: () => {
-      queryClient.invalidateQueries(useTreesQuery.getKey());
-    },
-  });
+  const { mutate: archive } = useMutation(
+    () =>
+      OD.trees.update({
+        body: { status: "ARCHIVED" },
+        params: { uuid: treeId },
+      }),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(useTreesQueryKey);
+      },
+    }
+  );
+
+  const { mutate: unarchive } = useMutation(
+    () =>
+      OD.trees.update({
+        body: { status: "ACTIVE" },
+        params: { uuid: treeId },
+      }),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(useTreesQueryKey);
+      },
+    }
+  );
 
   return (
     <DropdownMenu.Item
-      onSelect={() =>
-        status === "ARCHIVED"
-          ? unarchive({ uuid: treeId })
-          : archive({ uuid: treeId })
-      }
+      onSelect={() => (status === "ARCHIVED" ? unarchive() : archive())}
     >
       <Icon css={{ marginTop: "2px" }}>
         <ArchiveIcon />

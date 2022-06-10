@@ -19,24 +19,8 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: "/external-api/auth/:path",
-        destination: `${process.env.OD_API_ENDPOINT}/v1/auth/:path`,
-      },
-      {
-        source: "/external-api/graphql",
-        destination: `${process.env.OD_API_ENDPOINT}/v1/graphql`,
-      },
-      {
-        source: "/external-api/users/:uuid",
-        destination: `${process.env.OD_API_ENDPOINT}/v1/users/:uuid`,
-      },
-      {
-        source: "/external-api/users/is-whitelisted",
-        destination: `${process.env.OD_API_ENDPOINT}/v1/users/is-whitelisted`,
-      },
-      {
-        source: "/external-api/tree/:path",
-        destination: `${process.env.OD_API_ENDPOINT}/v1/tree/:path`,
+        source: "/external-api/:path*",
+        destination: `${process.env.OD_API_ENDPOINT}/v1/:path*`,
       },
     ];
   },

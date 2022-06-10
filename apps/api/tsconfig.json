@@ -6,13 +6,5 @@
     "noImplicitAny": false
   },
   "files": ["src/types/express.d.ts"],
-  "include": [],
-  "references": [
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.spec.json"
-    }
-  ]
+  "include": []
 }

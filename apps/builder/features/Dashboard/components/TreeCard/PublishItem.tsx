@@ -1,37 +1,50 @@
 import { DropdownMenu, Icon } from "@open-decision/design-system";
 import { Share2Icon } from "@radix-ui/react-icons";
 import { queryClient } from "../../../../features/Data/queryClient";
-import {
-  usePublishTreeMutation,
-  useTreesQuery,
-  useUnPublishTreeMutation,
-} from "../../../../features/Data/generated/graphql";
+import { useMutation } from "react-query";
+import { useOD } from "../../../../../builder/features/Data/odClient";
+import { useTreesQueryKey } from "../../../Data/useTreesQuery";
 
-export type PublishItemProps = { treeId: string; published: boolean };
+export type PublishItemProps = { treeId: string; publishedTreeId?: string };
 
-export function PublishItem({ treeId, published }: PublishItemProps) {
-  const { mutate: publish } = usePublishTreeMutation({
-    onSuccess: () => {
-      queryClient.invalidateQueries(useTreesQuery.getKey());
+export function PublishItem({ treeId, publishedTreeId }: PublishItemProps) {
+  const OD = useOD();
+
+  const { mutate: publish } = useMutation(
+    () =>
+      OD.trees.publishedTrees.create({
+        params: { treeUuid: treeId },
+        body: { name: "test" },
+      }),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(useTreesQueryKey);
+      },
+    }
+  );
+
+  const { mutate: unPublish } = useMutation(
+    () => {
+      if (publishedTreeId)
+        return OD.publishedTrees.delete({
+          params: { uuid: publishedTreeId },
+        });
     },
-  });
-
-  const { mutate: unPublish } = useUnPublishTreeMutation({
-    onSuccess: () => {
-      queryClient.invalidateQueries(useTreesQuery.getKey());
-    },
-  });
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(useTreesQueryKey);
+      },
+    }
+  );
 
   return (
     <DropdownMenu.Item
-      onSelect={() =>
-        published ? unPublish({ uuid: treeId }) : publish({ uuid: treeId })
-      }
+      onSelect={() => (publishedTreeId ? unPublish() : publish())}
     >
       <Icon css={{ marginTop: "2px" }}>
         <Share2Icon />
       </Icon>
-      {published ? "Unveröffentlichen" : "Veröffentlichen"}
+      {publishedTreeId ? "Unveröffentlichen" : "Veröffentlichen"}
     </DropdownMenu.Item>
   );
 }

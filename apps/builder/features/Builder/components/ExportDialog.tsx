@@ -10,11 +10,11 @@ import {
   StyleObject,
 } from "@open-decision/design-system";
 import { readableDate } from "../../../features/Dashboard/utils";
-import { useTreeQuery } from "../../../features/Data/generated/graphql";
 import { useTreeId } from "../../../features/Data/useTreeId";
 import { ErrorBoundary } from "@sentry/nextjs";
 import { useMutation } from "react-query";
 import { useTreeContext } from "../state/treeStore/TreeContext";
+import { useTreeQuery } from "../../Data/useTreeQuery";
 
 function createFile(data: object) {
   return new Blob([JSON.stringify(data)], { type: "application/json" });
@@ -39,7 +39,7 @@ export function ExportDialog({
 }: Props) {
   const uuid = useTreeId();
   const { getTree } = useTreeContext();
-  const { data } = useTreeQuery({ uuid });
+  const { data } = useTreeQuery(uuid);
 
   const [fileName, setFileName] = React.useState("");
   const {
@@ -52,7 +52,7 @@ export function ExportDialog({
       const tree = getTree();
 
       return setTimeout(
-        () => resolve(createFile({ name: data?.decisionTree?.name, ...tree })),
+        () => resolve(createFile({ name: data?.name, ...tree })),
         2000
       );
     });
@@ -60,9 +60,7 @@ export function ExportDialog({
 
   const formState = Form.useFormState({
     defaultValues: {
-      name: data?.decisionTree?.name
-        ? `${data?.decisionTree?.name}_${readableDate(new Date())}`
-        : "",
+      name: data?.name ? `${data?.name}_${readableDate(new Date())}` : "",
     },
   });
 

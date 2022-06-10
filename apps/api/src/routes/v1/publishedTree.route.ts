@@ -1,10 +1,20 @@
+import {
+  publishedTreesCollection,
+  publishedTreesSingle,
+} from "@open-decision/tree-api-specification";
 import express from "express";
-import { publishController } from "../../controllers";
+import { publishController } from "../../controllers/publish.controller";
+import { auth } from "../../middlewares/auth";
 const publishedTreeRouter = express.Router();
 
 publishedTreeRouter
-  .route("/:publishedTreeUuid")
-  .get(publishController.getPublishedTree);
+  .route(publishedTreesCollection)
+  .get(publishController.getPublishedTrees);
+
+publishedTreeRouter
+  .route(publishedTreesSingle(":uuid"))
+  .delete(auth(), publishController.deletePublishedTree);
+
 export default publishedTreeRouter;
 
 /**

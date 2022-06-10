@@ -56,7 +56,7 @@ export function TreeCardMenu({ tree }: TreeCardMenuProps) {
         {/* FIXME published needs to be set properly when the tree supports it */}
         <PublishItem
           treeId={tree.uuid}
-          published={tree.publishedTrees.length > 0}
+          publishedTreeId={tree.publishedTrees[0]?.uuid}
         />
         <ArchiveItem treeId={tree.uuid} status={tree.status} />
         <DropdownMenu.DialogItem

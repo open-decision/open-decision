@@ -6,7 +6,6 @@ module.exports = {
   restoreMocks: true,
   moduleNameMapper: {
     "^@prisma-client": "<rootDir>/prisma/generated/prisma-client/index",
-    "@type-graphql-prisma": "<rootDir>/prisma/generated/type-graphql/",
   },
   roots: ["<rootDir>"],
   // setupFilesAfterEnv: ["<rootDir>/tests/utils/singleton.ts"],

@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Tree } from "@open-decision/type-classes";
 import { FileInput } from "../../components";
-import { useCreateTreeMutation } from "../../features/Data/generated/graphql";
 import { queryClient } from "../../features/Data/queryClient";
 import { useNotificationStore } from "../../features/Notifications/NotificationState";
 import { z } from "zod";
@@ -10,6 +9,8 @@ import { IndexeddbPersistence } from "y-indexeddb";
 import { proxy } from "valtio";
 import { bindProxyAndYMap } from "valtio-yjs";
 import { FileInputProps } from "../../components/FileInput";
+import { useOD } from "../Data/odClient";
+import { useMutation } from "react-query";
 
 const TreeImportType = Tree.Type.extend({ name: z.string() });
 
@@ -24,7 +25,9 @@ export const TreeImport = React.forwardRef<
     (state) => state.addNotification
   );
 
-  const { mutate: createTree } = useCreateTreeMutation({
+  const OD = useOD();
+
+  const { mutate: createTree } = useMutation(() => OD.trees.create(), {
     onSuccess: ({ createDecisionTree: { uuid } }) => {
       if (!importedData) return;
 
@@ -66,9 +69,7 @@ export const TreeImport = React.forwardRef<
 
           setImportedData(data);
 
-          return createTree({
-            data: { name },
-          });
+          return createTree();
         };
 
         fileReader.readAsText(event.currentTarget.files?.[0]);

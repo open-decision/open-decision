@@ -14,9 +14,7 @@ import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { useFilter } from "./Filter";
 import { Card } from "../../components/Card";
 import { NewProjectDropdown } from "./NewProjectDropdown";
-import { useQuery } from "react-query";
-import { getTrees } from "@open-decision/tree-api-specification";
-import { useAuth } from "../Auth/useAuth";
+import { useTreesQuery } from "../Data/useTreesQuery";
 
 const NoProjects = styled("span", Heading);
 
@@ -31,28 +29,7 @@ const filters = {
 };
 
 export const TreeList = () => {
-  const [
-    {
-      context: { auth },
-    },
-  ] = useAuth();
-
-  const { data: trees } = useQuery(
-    "Trees",
-    async () => {
-      return await getTrees("/external-api", {
-        headers: { authorization: `Bearer ${auth?.access.token}` },
-      });
-    },
-    {
-      select(data) {
-        return data.map((tree) => ({
-          ...tree,
-          status: tree.publishedTrees.length > 0 ? "PUBLISHED" : tree.status,
-        }));
-      },
-    }
-  );
+  const { data: trees } = useTreesQuery();
 
   const hasTrees = trees && trees.length > 0;
 

@@ -1,12 +1,9 @@
 import { matchSorter } from "match-sorter";
 import { readableDate } from "../utils";
 import { parseISO } from "date-fns";
-import { TreesQuery } from "../../../features/Data/generated/graphql";
+import { TGetTreesOutput } from "@open-decision/tree-api-specification";
 
-export const fuzzySearch = (
-  data: TreesQuery["decisionTrees"],
-  search: string
-): any[] => {
+export const fuzzySearch = (data: TGetTreesOutput, search: string): any[] => {
   return matchSorter(data, search, {
     keys: ["name", (data) => readableDate(parseISO(data.updatedAt))],
   });
