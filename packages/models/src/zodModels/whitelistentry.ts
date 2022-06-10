@@ -1,6 +1,6 @@
 import * as z from "zod";
 import { WhitelistingType } from "../enums";
-import { CompleteUser, RelatedUserModel } from "./index";
+import { CompleteUser, RelatedUserModel } from ".";
 
 export const WhitelistEntryModel = z.object({
   id: z.number().int(),

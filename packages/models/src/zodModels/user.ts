@@ -11,7 +11,7 @@ import {
   RelatedTagModel,
   CompleteWhitelistEntry,
   RelatedWhitelistEntryModel,
-} from "./index";
+} from ".";
 
 export const UserModel = z.object({
   id: z.number().int(),

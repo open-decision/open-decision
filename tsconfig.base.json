@@ -19,6 +19,7 @@
     "rootDir": ".",
     "baseUrl": ".",
     "paths": {
+      "@open-decision/api-helpers": ["packages/api-helpers/src/index.ts"],
       "@open-decision/auth-api-specification": [
         "packages/auth-api-specification/src/index.ts"
       ],
@@ -27,11 +28,10 @@
       "@open-decision/interpreter-react": [
         "packages/interpreter-react/src/index.ts"
       ],
-      "@open-decision/models/prisma-client": ["packages/models/src/index.ts"],
-      "@open-decision/models/type-graphql": [
-        "packages/models/src/generated/type-graphql/index.ts"
+      "@open-decision/models/prisma-client": [
+        "dist/packages/models/src/generated/prisma-client"
       ],
-      "@open-decision/models/zod": ["packages/models/src/zodModels/index.ts"],
+      "@open-decision/models": ["packages/models/src/index.ts"],
       "@open-decision/renderer": ["packages/renderer/src/index.ts"],
       "@open-decision/rich-text-editor": [
         "packages/rich-text-editor/src/index.ts"

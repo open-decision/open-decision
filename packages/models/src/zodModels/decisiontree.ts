@@ -7,15 +7,7 @@ import {
   RelatedUserModel,
   CompletePublishedTree,
   RelatedPublishedTreeModel,
-} from "./index";
-
-// Helper schema for JSON fields
-type Literal = boolean | number | string;
-type Json = Literal | { [key: string]: Json } | Json[];
-const literalSchema = z.union([z.string(), z.number(), z.boolean()]);
-const jsonSchema: z.ZodSchema<Json> = z.lazy(() =>
-  z.union([literalSchema, z.array(jsonSchema), z.record(jsonSchema)])
-);
+} from ".";
 
 export const DecisionTreeModel = z.object({
   uuid: z.string().uuid(),
@@ -23,7 +15,6 @@ export const DecisionTreeModel = z.object({
   updatedAt: z.date(),
   status: z.enum(TreeStatus),
   name: z.string(),
-  treeData: jsonSchema,
   yDocument: z.string().nullish(),
   ownerUuid: z.string().uuid(),
 });
@@ -43,13 +34,7 @@ export interface CompleteDecisionTree
 export const RelatedDecisionTreeModel: z.ZodSchema<CompleteDecisionTree> =
   z.lazy(() =>
     DecisionTreeModel.extend({
-      /**
-       * @TypeGraphQL.omit(output: true, input: true)
-       */
       Tags: RelatedTagModel.array(),
-      /**
-       * @TypeGraphQL.omit(output: true, input: true)
-       */
       owner: RelatedUserModel,
       publishedTrees: RelatedPublishedTreeModel.array(),
     })
