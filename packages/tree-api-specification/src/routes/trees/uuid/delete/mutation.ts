@@ -1,5 +1,5 @@
 import { ClientConfig, Delete, safeFetch } from "@open-decision/api-helpers";
-import { treesSingle } from "../../../urls";
+import { treesSingle } from "../../../../urls";
 import { TDeleteTreeInput } from "./input";
 
 export const deleteTree =
