@@ -17,7 +17,7 @@ export type BuilderErrors =
   | "WEBSOCKET_CONNECTION_FAILED";
 
 export enum APIErrors {
-  TREE_NOT_FOUND = 404,
+  NOT_FOUND = 404,
 }
 
 export type ErrorCodes =

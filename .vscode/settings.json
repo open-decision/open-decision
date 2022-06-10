@@ -11,7 +11,8 @@
     "rich-text-editor",
     "interpreter-react",
     "models",
-    "api-specification"
+    "api-specification",
+    "tree-api-specification"
   ],
   "typescript.tsdk": "node_modules/typescript/lib",
   "todo-tree.general.tags": [
