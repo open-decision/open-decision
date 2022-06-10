@@ -24,11 +24,10 @@ export function PublishItem({ treeId, publishedTreeId }: PublishItemProps) {
   );
 
   const { mutate: unPublish } = useMutation(
-    () => {
-      if (publishedTreeId)
-        return OD.publishedTrees.delete({
-          params: { uuid: publishedTreeId },
-        });
+    (publishedTreeId: string) => {
+      return OD.publishedTrees.delete({
+        params: { uuid: publishedTreeId },
+      });
     },
     {
       onSuccess: () => {
@@ -39,7 +38,9 @@ export function PublishItem({ treeId, publishedTreeId }: PublishItemProps) {
 
   return (
     <DropdownMenu.Item
-      onSelect={() => (publishedTreeId ? unPublish() : publish())}
+      onSelect={() =>
+        publishedTreeId ? unPublish(publishedTreeId) : publish()
+      }
     >
       <Icon css={{ marginTop: "2px" }}>
         <Share2Icon />

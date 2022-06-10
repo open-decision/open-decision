@@ -27,19 +27,22 @@ export const TreeImport = React.forwardRef<
 
   const OD = useOD();
 
-  const { mutate: createTree } = useMutation(() => OD.trees.create(), {
-    onSuccess: ({ createDecisionTree: { uuid } }) => {
-      if (!importedData) return;
+  const { mutate: createTree } = useMutation(
+    (name: string) => OD.trees.create({ body: { name } }),
+    {
+      onSuccess: ({ uuid }) => {
+        if (!importedData) return;
 
-      const yDoc = new Y.Doc();
-      const yMap = yDoc.getMap("tree");
-      new IndexeddbPersistence(uuid, yDoc);
-      const importStore = proxy(importedData);
-      bindProxyAndYMap(importStore, yMap);
+        const yDoc = new Y.Doc();
+        const yMap = yDoc.getMap("tree");
+        new IndexeddbPersistence(uuid, yDoc);
+        const importStore = proxy(importedData);
+        bindProxyAndYMap(importStore, yMap);
 
-      return queryClient.invalidateQueries("Trees");
-    },
-  });
+        return queryClient.invalidateQueries("Trees");
+      },
+    }
+  );
 
   return (
     <FileInput
@@ -69,7 +72,7 @@ export const TreeImport = React.forwardRef<
 
           setImportedData(data);
 
-          return createTree();
+          return createTree(name);
         };
 
         fileReader.readAsText(event.currentTarget.files?.[0]);
