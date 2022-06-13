@@ -8,7 +8,7 @@
     "test": "dotenv -e .env.test pnpm docker:up && pnpm migrate:test &&  jest -i --colors --verbose --coverage && pnpm docker:down",
     "test:watch": "dotenv -e .env.test pnpm docker:up && pnpm migrate:test &&  jest -i --watchAll && pnpm docker:down",
     "tsc": "tsc -p .",
-    "typecheck": "tsc -w --noEmit",
+    "typecheck": "tsc -p ./tsconfig.app.json --noEmit",
     "coverage": "jest -i --coverage",
     "coverage:coveralls": "jest -i --coverage --coverageReporters=text-lcov | coveralls",
     "lint": "eslint .",

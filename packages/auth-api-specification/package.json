@@ -2,6 +2,9 @@
   "name": "@open-decision/auth-api-specification",
   "version": "0.0.1",
   "type": "commonjs",
+  "scripts": {
+    "typecheck": "tsc -p ./tsconfig.lib.json --noEmit"
+  },
   "sideEffects": false,
   "dependencies": {
     "validator": "^13.7.0",

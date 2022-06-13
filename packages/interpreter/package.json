@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "type": "commonjs",
   "main": "./src/index.ts",
-  "sideEffects": false,
   "files": [
     "/lib",
     "/src"
@@ -21,7 +20,8 @@
     "verify": "run-p prettier lint",
     "verify:fix": "yarn prettier:fix && yarn lint:fix",
     "test": "vitest",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage",
+    "typecheck": "tsc -p ./tsconfig.lib.json --noEmit"
   },
   "dependencies": {
     "remeda": "^0.0.32",

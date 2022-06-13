@@ -10,7 +10,8 @@
   "scripts": {
     "migrate:dev": "dotenv -e ../../.env pnpm prisma migrate dev",
     "migrate:deploy": "pnpm prisma migrate deploy",
-    "generate": "prisma generate --schema=./src/schema.prisma"
+    "generate": "prisma generate --schema=./src/schema.prisma",
+    "typecheck": "tsc -p ./tsconfig.lib.json --noEmit"
   },
   "dependencies": {
     "@prisma/client": "~3.14.0",

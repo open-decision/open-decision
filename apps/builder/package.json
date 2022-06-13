@@ -15,7 +15,7 @@
     "lint:fix": "yarn lint --fix",
     "verify": "run-p prettier lint",
     "verify:fix": "yarn prettier:fix && yarn lint:fix",
-    "typecheck": "tsc -w"
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^12.1.4",

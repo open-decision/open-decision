@@ -13,7 +13,7 @@
     "build:icons": "svgr ./src/icons/svgs -d ./src/icons/ --replace-attr-values '#2329D6=currentcolor' --typescript --no-dimensions --svg-props 'width=1.1em','height=1.1em' --ignore-existing",
     "build": "rm -rf lib && vite build",
     "dev": "vite build --watch",
-    "typecheck": "tsc -w -noEmit",
+    "typecheck": "tsc -p tsconfig.lib.json",
     "prepublishOnly": "pnpm build",
     "prettier": "prettier --check src/",
     "prettier:fix": "prettier --write src/",
