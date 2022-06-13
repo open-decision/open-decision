@@ -287,7 +287,6 @@ importers:
       '@trpc/next': ^9.23.6
       '@trpc/react': ^9.23.6
       '@types/dagre': ^0.7.47
-      '@types/logrocket-react': ^3.0.0
       '@types/ramda': ^0.28.8
       '@types/react': ^17.0.43
       '@types/react-dom': ^17.0.14
@@ -302,8 +301,6 @@ importers:
       framer-motion: ^6.2.9
       immer: ^9.0.12
       localforage: ^1.10.0
-      logrocket: ^3.0.0
-      logrocket-react: ^5.0.1
       match-sorter: ^6.3.1
       next: 12.1.4
       next-compose-plugins: ^2.2.1
@@ -348,8 +345,6 @@ importers:
       framer-motion: 6.3.6_sfoxds7t5ydpegc3knd667wn6m
       immer: 9.0.14
       localforage: 1.10.0
-      logrocket: 3.0.0
-      logrocket-react: 5.0.1_qgyrgdnrost6zv4i3ej4wm3rwa
       match-sorter: 6.3.1
       prosemirror-model: 1.17.0
       prosemirror-view: 1.25.0
@@ -374,7 +369,6 @@ importers:
     devDependencies:
       '@next/bundle-analyzer': 12.1.6
       '@types/dagre': 0.7.47
-      '@types/logrocket-react': 3.0.0
       '@types/ramda': 0.28.13
       '@types/react': 17.0.45
       '@types/react-dom': 17.0.17
@@ -388,7 +382,6 @@ importers:
   apps/renderer-app:
     specifiers:
       '@babel/preset-env': ^7.18.2
-      '@netlify/functions': ^1.0.0
       '@open-decision/design-system': workspace:*
       '@open-decision/interpreter': workspace:*
       '@open-decision/interpreter-react': workspace:*
@@ -397,31 +390,32 @@ importers:
       '@open-decision/type-classes': workspace:*
       '@remix-run/dev': ^1.5.1
       '@remix-run/eslint-config': ^1.5.1
-      '@remix-run/netlify': ^1.5.1
       '@remix-run/node': ^1.5.1
       '@remix-run/react': ^1.5.1
       '@remix-run/serve': ^1.5.1
+      '@remix-run/vercel': ^1.5.1
       '@types/react': ^17.0.45
       '@types/react-dom': ^17.0.17
-      cross-env: ^7.0.3
+      '@vercel/node': ^1.15.2
       eslint: ^8.15.0
       react: ^17.0.2
       react-dom: ^17.0.2
+      remix: ^1.5.1
       typescript: ^4.6.4
     dependencies:
-      '@netlify/functions': 1.0.0
       '@open-decision/design-system': link:../../packages/design-system
       '@open-decision/interpreter': link:../../packages/interpreter
       '@open-decision/interpreter-react': link:../../packages/interpreter-react
       '@open-decision/renderer': link:../../packages/renderer
       '@open-decision/rich-text-editor': link:../../packages/rich-text-editor
       '@open-decision/type-classes': link:../../packages/type-classes
-      '@remix-run/netlify': 1.5.1_suusgcsxtevevf53efhfcetshq
       '@remix-run/node': 1.5.1_sfoxds7t5ydpegc3knd667wn6m
       '@remix-run/react': 1.5.1_sfoxds7t5ydpegc3knd667wn6m
-      cross-env: 7.0.3
+      '@remix-run/vercel': 1.5.1_mj6nxm5uwa7yzrgoslaab2f544
+      '@vercel/node': 1.15.4
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
+      remix: 1.5.1
     devDependencies:
       '@babel/preset-env': 7.18.2
       '@remix-run/dev': 1.5.1_52uijxcusadoynlo2ghf3cliju
@@ -3926,13 +3920,6 @@ packages:
       glob-to-regexp: 0.3.0
     dev: true
 
-  /@netlify/functions/1.0.0:
-    resolution: {integrity: sha512-7fnJv3vr8uyyyOYPChwoec6MjzsCw1CoRUO2DhQ1BD6bOyJRlD4DUaOOGlMILB2LCT8P24p5LexEGx8AJb7xdA==}
-    engines: {node: '>=8.3.0'}
-    dependencies:
-      is-promise: 4.0.0
-    dev: false
-
   /@next/bundle-analyzer/12.1.6:
     resolution: {integrity: sha512-WLydwytAeHoC/neXsiIgK+a6Me12PuSpwopnsZgX5JFNwXQ9MlwPeMGS3aTZkYsv8QmSm0Ns9Yh9FkgLKYaUuQ==}
     dependencies:
@@ -5917,18 +5904,6 @@ packages:
       - react-dom
     dev: true
 
-  /@remix-run/netlify/1.5.1_suusgcsxtevevf53efhfcetshq:
-    resolution: {integrity: sha512-Zc/2PhTXP6SXtZXRGP1WhXXz9IpDM64SIWJ5jCEjB0HFXi21plxR6jbgLEzmIj9PDwq5tf+LwTa1qfc8cr82oA==}
-    peerDependencies:
-      '@netlify/functions': ^0.10.0 || ^1.0.0
-    dependencies:
-      '@netlify/functions': 1.0.0
-      '@remix-run/node': 1.5.1_sfoxds7t5ydpegc3knd667wn6m
-    transitivePeerDependencies:
-      - react
-      - react-dom
-    dev: false
-
   /@remix-run/node/1.5.1_sfoxds7t5ydpegc3knd667wn6m:
     resolution: {integrity: sha512-yl4bd1nl7MiJp4tI3+4ygObeMU3txM4Uo09IdHLRa4NMdBQnacUJ47kqCahny01MerC2JL2d9NPjdVPwRCRZvQ==}
     dependencies:
@@ -5986,6 +5961,18 @@ packages:
       react-router-dom: 6.3.0_sfoxds7t5ydpegc3knd667wn6m
       set-cookie-parser: 2.4.8
       source-map: 0.7.3
+
+  /@remix-run/vercel/1.5.1_mj6nxm5uwa7yzrgoslaab2f544:
+    resolution: {integrity: sha512-g8+dTGeeUtt7CclH6/bdB6BRETfo8yIPz2wQUzzerFFUJj82D571rWiGNhOiEydmMUfg9Gjd7PwIbjF1I5FezA==}
+    peerDependencies:
+      '@vercel/node': ^1.8.3
+    dependencies:
+      '@remix-run/node': 1.5.1_sfoxds7t5ydpegc3knd667wn6m
+      '@vercel/node': 1.15.4
+    transitivePeerDependencies:
+      - react
+      - react-dom
+    dev: false
 
   /@remix-run/web-blob/3.0.4:
     resolution: {integrity: sha512-AfegzZvSSDc+LwnXV+SwROTrDtoLiPxeFW+jxgvtDAnkuCX1rrzmVJ6CzqZ1Ai0bVfmJadkG5GxtAfYclpPmgw==}
@@ -8656,12 +8643,6 @@ packages:
     resolution: {integrity: sha512-/THyiqyQAP9AfARo4pF+aCGcyiQ94tX/Is2I7HofNRqoYLgN1PBoOWu2/zTA5zMxzP5EFutMtWtGAFRKUe961Q==}
     dev: true
 
-  /@types/logrocket-react/3.0.0:
-    resolution: {integrity: sha512-bQ7LUwqwt2RNpRoco3vt8QBHy78nOQFF+KfFRol1PgKq8S1nIiLYA6Y0ZUAzqGw1viA0lyjAHlPQeTI+wl4wnw==}
-    dependencies:
-      logrocket: 1.0.1
-    dev: true
-
   /@types/mdast/3.0.10:
     resolution: {integrity: sha512-W864tg/Osz1+9f4lrGTZpCSO5/z4608eUp19tbozkq2HJK6i3z1kT0H9tlADXuYIb1YYOBByU4Jsqkk75q48qA==}
     dependencies:
@@ -9279,6 +9260,19 @@ packages:
     dependencies:
       '@typescript-eslint/types': 5.27.0
       eslint-visitor-keys: 3.3.0
+
+  /@vercel/node-bridge/2.2.2:
+    resolution: {integrity: sha512-haGBC8noyA5BfjCRXRH+VIkHCDVW5iD5UX24P2nOdilwUxI4qWsattS/co8QBGq64XsNLRAMdM5pQUE3zxkF9Q==}
+    dev: false
+
+  /@vercel/node/1.15.4:
+    resolution: {integrity: sha512-45fV7qVVw1cWCD6tWBXH0i4pSfYck4yF2qNKlJb1gmbO9JHWRqMYm0uxNWISD6E6Z69Pl1KDvfa+l48w/qEkaw==}
+    dependencies:
+      '@types/node': 17.0.38
+      '@vercel/node-bridge': 2.2.2
+      ts-node: 8.9.1_typescript@4.3.4
+      typescript: 4.3.4
+    dev: false
 
   /@web3-storage/multipart-parser/1.0.0:
     resolution: {integrity: sha512-BEO6al7BYqcnfX15W2cnGR+Q566ACXAT9UQykORCWW80lmkpWsnEob6zJS1ZVBKsSJC8+7vJkHwlp+lXG1UCdw==}
@@ -16313,10 +16307,6 @@ packages:
   /is-potential-custom-element-name/1.0.1:
     resolution: {integrity: sha512-bCYeRA2rVibKZd+s2625gGnGF/t7DSqDs4dP7CrLA1m7jKWz6pps0LpYLJN8Q64HtmPKJ1hrN3nzPNKFEKOUiQ==}
 
-  /is-promise/4.0.0:
-    resolution: {integrity: sha512-hvpoI6korhJMnej285dSg6nu1+e6uxs7zG3BYAm5byqDsgJNWwxzM6z6iZiAgQR4TJ30JmBTOwqZUw3WlyH3AQ==}
-    dev: false
-
   /is-reference/1.2.1:
     resolution: {integrity: sha512-U82MsXXiFIrjCK4otLT+o2NA2Cd2g5MLoOVXUZjIOhLurrRxpEXzI8O0KZHr3IjLvlAH1kTPYSuqer5T9ZVBKQ==}
     dependencies:
@@ -18158,26 +18148,6 @@ packages:
       ms: 2.1.3
       safe-stable-stringify: 2.3.1
       triple-beam: 1.3.0
-    dev: false
-
-  /logrocket-react/5.0.1_qgyrgdnrost6zv4i3ej4wm3rwa:
-    resolution: {integrity: sha512-d5RAi1giur9Yv7/lDK/c2S1hviopN5K1XMMpfpSFRDG3Rr/j5RmGuvNHdXNTJUwGuxTVrpnKUOB43ceQMJfO1Q==}
-    peerDependencies:
-      logrocket: '>=2.0'
-      react: '>=17.0'
-      react-dom: '>=17.0'
-    dependencies:
-      logrocket: 3.0.0
-      react: 17.0.2
-      react-dom: 17.0.2_react@17.0.2
-    dev: false
-
-  /logrocket/1.0.1:
-    resolution: {integrity: sha512-oPA0c5GzMKsWp/6p19OaujZQMzttluqVOI+989uHeciPAljPZvGEpZRbNO3Rr+jC/8jVLJdlMP9IHuyhKsASGA==}
-    dev: true
-
-  /logrocket/3.0.0:
-    resolution: {integrity: sha512-RDbF28Np+XsBIb6egJiPPQmRupdrmXURESPpxUo4awH3h7Mk0s9iZVF+AMy64GixznlWevgm01+uuAq8NYfvMw==}
     dev: false
 
   /long-timeout/0.1.1:
@@ -22037,6 +22007,10 @@ packages:
     resolution: {integrity: sha512-FEdl8ONpqY7AvvMHG5WYdomc0mGf2khHPUDu6QvNkOq4Wjkw5BvzWM4QyksAQ/US1sFIIRG8TVBn6iJx6HbRrA==}
     dev: false
 
+  /remix/1.5.1:
+    resolution: {integrity: sha512-95+4LlrUUJuIVOjSTjHMnvEDJcYNEhb60zd4tT1bRSDW11jXDAiYGimCoDAFPWv4DbpVcmtnujjQ+ym/YlP2nA==}
+    dev: false
+
   /remove-accents/0.4.2:
     resolution: {integrity: sha1-CkPTqq4egNuRngeuJUsoXZ4ce7U=}
     dev: false
@@ -24154,6 +24128,21 @@ packages:
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
 
+  /ts-node/8.9.1_typescript@4.3.4:
+    resolution: {integrity: sha512-yrq6ODsxEFTLz0R3BX2myf0WBCSQh9A+py8PBo1dCzWIOcvisbyH6akNKqDHMgXePF2kir5mm5JXJTH3OUJYOQ==}
+    engines: {node: '>=6.0.0'}
+    hasBin: true
+    peerDependencies:
+      typescript: '>=2.7'
+    dependencies:
+      arg: 4.1.3
+      diff: 4.0.2
+      make-error: 1.3.6
+      source-map-support: 0.5.21
+      typescript: 4.3.4
+      yn: 3.1.1
+    dev: false
+
   /ts-node/9.1.1_typescript@4.7.2:
     resolution: {integrity: sha512-hPlt7ZACERQGf03M253ytLY3dHbGNGrAq9qIHWUY9XHYl1z7wYngSr3OQ5xmui8o2AaxsONxIzjafLUiWBo1Fg==}
     engines: {node: '>=10.0.0'}
@@ -24323,6 +24312,12 @@ packages:
   /typedarray/0.0.6:
     resolution: {integrity: sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=}
     dev: true
+
+  /typescript/4.3.4:
+    resolution: {integrity: sha512-uauPG7XZn9F/mo+7MrsRjyvbxFpzemRjKEZXS4AK83oP2KKOJPvb+9cO/gmnv8arWZvhnjVOXz7B49m1l0e9Ew==}
+    engines: {node: '>=4.2.0'}
+    hasBin: true
+    dev: false
 
   /typescript/4.7.2:
     resolution: {integrity: sha512-Mamb1iX2FDUpcTRzltPxgWMKy3fhg0TN378ylbktPGPK/99KbDtMQ4W1hwgsbPAsG3a0xKa1vmw4VKZQbkvz5A==}
