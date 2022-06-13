@@ -17,4 +17,6 @@ export const relateInputToCondition =
       );
 
     condition.inputId = inputId;
+
+    return true;
   };

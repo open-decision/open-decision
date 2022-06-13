@@ -17,4 +17,6 @@ export const relateConditionToNode =
       );
 
     node.data.conditions.push(conditionId);
+
+    return true;
   };
