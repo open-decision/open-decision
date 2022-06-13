@@ -12,7 +12,7 @@ export const register = (
   onError: (error: string) => void
 ) =>
   safeFetch(
-    registerUrl,
+    `/external-api${registerUrl}`,
     { method: "POST", body: { email, password } },
     {
       throwingValidation: registerOutput.parse,
