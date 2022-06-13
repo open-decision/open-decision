@@ -8,6 +8,7 @@ import {
   focusSelector,
   Form,
   Label,
+  focusSelectorWithin,
 } from "@open-decision/design-system";
 import * as React from "react";
 import { Edge, Input as InputType } from "@open-decision/type-classes";
@@ -69,35 +70,34 @@ export function OptionTargetInputs({ nodeId, input }: SingleSelectProps) {
           Hinzufügen
         </Button>
       </Box>
-      {input?.answers ? (
-        <StyledReorderGroup
-          ref={ref}
-          axis="y"
-          values={input?.answers}
-          initial={false}
-          onReorder={(newOrder) => updateInputAnswerOrder(input.id, newOrder)}
-        >
-          {input.answers.map((answer) => {
-            const edge = Object.values(edges).find((edge) => {
-              if (!edge.conditionId || !conditions) return false;
-              const condition = conditions[edge.conditionId];
+      <StyledReorderGroup
+        ref={ref}
+        axis="y"
+        values={input?.answers}
+        onReorder={(newOrder) => {
+          return updateInputAnswerOrder(input.id, newOrder);
+        }}
+      >
+        {input.answers.map((answer) => {
+          const edge = Object.values(edges).find((edge) => {
+            if (!edge.conditionId || !conditions) return false;
+            const condition = conditions[edge.conditionId];
 
-              return condition.answerId === answer.id;
-            });
+            return condition.answerId === answer.id;
+          });
 
-            return (
-              <OptionTargetInput
-                nodeId={nodeId}
-                answer={answer}
-                edge={edge}
-                inputId={input.id}
-                key={answer.id}
-                groupRef={ref}
-              />
-            );
-          })}
-        </StyledReorderGroup>
-      ) : null}
+          return (
+            <OptionTargetInput
+              nodeId={nodeId}
+              answer={answer}
+              edge={edge}
+              inputId={input.id}
+              key={answer.id}
+              groupRef={ref}
+            />
+          );
+        })}
+      </StyledReorderGroup>
     </>
   );
 }
@@ -224,7 +224,7 @@ export function OptionTargetInput({
     if (edge?.target && newItem) updateEdgeTarget(edge.id, newItem);
   };
 
-  return node ? (
+  return (
     <Reorder.Item
       value={answer}
       dragListener={false}
@@ -263,7 +263,7 @@ export function OptionTargetInput({
               gridColumn: "1 / -1",
               marginBottom: "-1px",
 
-              [`${focusSelector}`]: {
+              [`${focusSelectorWithin}`]: {
                 zIndex: "$10",
               },
             }}
@@ -327,8 +327,6 @@ export function OptionTargetInput({
         </Box>
       </Form.Root>
     </Reorder.Item>
-  ) : (
-    <Box>Kein Knoten ausgewählt</Box>
   );
 }
 

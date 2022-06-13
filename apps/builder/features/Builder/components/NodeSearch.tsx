@@ -67,42 +67,46 @@ export const NodeSearch = ({ css }: Props) => {
         placeholder="Suche"
         css={{ width: "400px", ...css }}
       />
-      <Combobox.Popover state={combobox}>
-        {combobox.matches.length ? (
-          combobox.matches.map((item) => {
-            const id = nodeNames.find((nodeName) => nodeName.name === item)?.id;
-            return id ? (
-              <Combobox.Item
-                value={item}
-                key={item}
-                onClick={() => changeHandler(id)}
-              >
-                {item}
-                <Badge size="small">Auswählen</Badge>
-              </Combobox.Item>
-            ) : null;
-          })
-        ) : (
-          <Combobox.Item
-            onClick={() => createHandler(combobox.value)}
-            value={combobox.value}
-          >
-            {combobox.value}
-            <Row
-              css={{
-                colorScheme: "success",
-                fontWeight: "500",
-                alignItems: "center",
-                color: "$success11",
-                gap: "$1",
-                minWidth: "max-content",
-              }}
+      {combobox.value ? (
+        <Combobox.Popover state={combobox}>
+          {combobox.matches.length ? (
+            combobox.matches.map((item) => {
+              const id = nodeNames.find(
+                (nodeName) => nodeName.name === item
+              )?.id;
+              return id ? (
+                <Combobox.Item
+                  value={item}
+                  key={item}
+                  onClick={() => changeHandler(id)}
+                >
+                  {item}
+                  <Badge size="small">Auswählen</Badge>
+                </Combobox.Item>
+              ) : null;
+            })
+          ) : (
+            <Combobox.Item
+              onClick={() => createHandler(combobox.value)}
+              value={combobox.value}
             >
-              Erstellen
-            </Row>
-          </Combobox.Item>
-        )}
-      </Combobox.Popover>
+              {combobox.value}
+              <Row
+                css={{
+                  colorScheme: "success",
+                  fontWeight: "500",
+                  alignItems: "center",
+                  color: "$success11",
+                  gap: "$1",
+                  minWidth: "max-content",
+                }}
+              >
+                Erstellen
+              </Row>
+            </Combobox.Item>
+          )}
+        </Combobox.Popover>
+      ) : null}
     </>
   );
 };

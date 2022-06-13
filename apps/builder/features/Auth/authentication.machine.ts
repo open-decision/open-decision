@@ -9,7 +9,6 @@ import { register } from "./utils/register";
 import { requestPasswordReset } from "./utils/requestPasswordReset";
 import { resetPassword } from "./utils/resetPassword";
 import * as Sentry from "@sentry/nextjs";
-import LogRocket from "logrocket";
 import { protectedRoutes } from "../../config/protectedRoutes";
 import { websocketMachine } from "../Data/websocket.machine";
 import {
@@ -397,9 +396,6 @@ export const createAuthenticationMachine = (router: NextRouter) =>
           Sentry.setUser({
             email: context.auth?.user.email,
             id: context.auth.user.uuid,
-          });
-          LogRocket.identify(context.auth?.user.uuid, {
-            email: context.auth?.user.email,
           });
         },
         assignUserToContext: assign((context, event) => {
