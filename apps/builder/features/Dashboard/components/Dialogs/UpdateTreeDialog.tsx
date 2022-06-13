@@ -67,7 +67,6 @@ export function UpdateTreeDialog({
           css={{ display: "flex", flexDirection: "column" }}
         >
           <Form.Field
-            state={formState}
             label={<Dialog.Description> Projektname</Dialog.Description>}
           >
             <Form.Input

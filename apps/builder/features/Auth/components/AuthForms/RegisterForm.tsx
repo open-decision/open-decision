@@ -58,7 +58,7 @@ export function CombinedRegisterForm() {
       state={formState}
       css={{ display: "flex", flexDirection: "column" }}
     >
-      <Form.Field label="Mailadresse" state={formState}>
+      <Form.Field label="Mailadresse">
         <Form.Input
           css={{ layer: "2" }}
           type="email"
@@ -103,7 +103,7 @@ function RegisterForm({ email }: { email: string }) {
 
   return (
     <Form.Root state={formState}>
-      <Form.Field label="Mailadresse" state={formState}>
+      <Form.Field label="Mailadresse">
         <Form.Input
           css={{ layer: "2" }}
           name={formState.names.email}
@@ -112,7 +112,7 @@ function RegisterForm({ email }: { email: string }) {
           placeholder="beispiel@web.de"
         />
       </Form.Field>
-      <Form.Field label="Passwort" state={formState} css={{ marginTop: "$4" }}>
+      <Form.Field label="Passwort" css={{ marginTop: "$4" }}>
         <Form.Input
           css={{ layer: "2" }}
           type="password"
@@ -120,11 +120,7 @@ function RegisterForm({ email }: { email: string }) {
           placeholder="*******"
         />
       </Form.Field>
-      <Form.Field
-        state={formState}
-        label="Passwort wiederholen"
-        css={{ marginTop: "$4" }}
-      >
+      <Form.Field label="Passwort wiederholen" css={{ marginTop: "$4" }}>
         <Form.Input
           css={{ layer: "2" }}
           type="password"

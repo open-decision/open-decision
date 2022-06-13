@@ -39,7 +39,7 @@ export function ChangePassword() {
           Passwort ändern
         </Heading>
         <Form.Root state={formState}>
-          <Form.Field state={formState} label="Neues Passwort">
+          <Form.Field label="Neues Passwort">
             <Form.Input
               name={formState.names.newPassword}
               required

@@ -82,7 +82,7 @@ export function DeleteTreeDialog({
           </Text>
         </Dialog.Description>
         <Form.Root state={formState}>
-          <Form.Field state={formState} label="Projektname">
+          <Form.Field label="Projektname">
             <Form.Input
               name={formState.names.treeName}
               required
