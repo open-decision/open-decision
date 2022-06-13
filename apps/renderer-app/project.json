@@ -7,14 +7,13 @@
     "build": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
-        "command": "pnpm remix build",
-        "cwd": "apps/renderer-app"
+        "command": "pnpm remix build apps/renderer-app"
       }
     },
     "serve": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
-        "command": "pnpm remix dev",
+        "command": "cross-env NODE_ENV=development netlify dev",
         "cwd": "apps/renderer-app"
       },
       "dependsOn": [
@@ -23,6 +22,13 @@
           "target": "build"
         }
       ]
+    },
+    "deploy": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "fly deploy --config apps/renderer-app/fly.toml --dockerfile apps/renderer-app/Dockerfile"
+      },
+      "dependsOn": [{ "projects": "self", "target": "build" }]
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
