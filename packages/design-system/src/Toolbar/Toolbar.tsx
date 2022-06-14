@@ -1,7 +1,11 @@
 import * as React from "react";
 import * as RadixToolbar from "@radix-ui/react-toolbar";
 import { styled } from "../stitches";
-import { Button as SystemButton } from "../Button";
+import {
+  Button as SystemButton,
+  ToggleButton as SystemToggleButton,
+  ToggleButtonProps,
+} from "../Button";
 import { hoverSelector } from "../stitches/stateSelectors";
 import { Separator as SystemSeparator } from "../Separator";
 import { linkStyles } from "../Link/Link";
@@ -39,21 +43,30 @@ ToggleGroup.defaultProps = { variant: "lowered" };
 
 export type ToggleGroupProps = RadixToolbar.ToggleGroupProps;
 
-export const ToggleItem = styled(
-  RadixToolbar.ToggleItem,
-  SystemToggleGroup.Item
-);
+export const ToggleItem = React.forwardRef<
+  HTMLButtonElement,
+  ToggleButtonProps & RadixToolbar.ToggleGroupItemProps
+>(function ToggleItem({ children, ...props }, ref) {
+  return (
+    <RadixToolbar.ToggleItem asChild {...props}>
+      <SystemToggleButton ref={ref} {...buttonProps} {...props}>
+        {children}
+      </SystemToggleButton>
+    </RadixToolbar.ToggleItem>
+  );
+});
 
 export type ToggleItemProps = RadixToolbar.ToggleGroupItemProps;
+
 export const ToggleButton = React.forwardRef<
   HTMLButtonElement,
-  SystemToggleGroup.ToggleButtonProps & ToggleItemProps
+  ToggleButtonProps & RadixToolbar.ToolbarButtonProps
 >(function ToggleButton({ children, ...props }, ref) {
   return (
-    <ToggleItem asChild {...props}>
-      <SystemButton ref={ref} {...buttonProps} {...props}>
+    <RadixToolbar.Button asChild>
+      <SystemToggleButton ref={ref} {...buttonProps} {...props}>
         {children}
-      </SystemButton>
-    </ToggleItem>
+      </SystemToggleButton>
+    </RadixToolbar.Button>
   );
 });

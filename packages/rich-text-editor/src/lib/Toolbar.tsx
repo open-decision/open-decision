@@ -32,17 +32,6 @@ export function Toolbar({ css, editor, ...props }: Props) {
     return null;
   }
 
-  const textMarks = ["Bold", "Italic", "Underline"] as const;
-
-  const textMarksState = [
-    editor.isActive("bold") && "Bold",
-    editor.isActive("italic") && "Italic",
-    editor.isActive("underline") && "Underline",
-  ].filter((element): element is typeof textMarks[number] => element != null);
-
-  const validTextMark = (value: any): value is typeof textMarks[number] =>
-    textMarks.includes(value);
-
   const listMarks = ["OrderedList", "BulletList"] as const;
 
   const listMarksState = editor.isActive("bulletList")
@@ -72,33 +61,30 @@ export function Toolbar({ css, editor, ...props }: Props) {
         decorative
         css={{ alignSelf: "stretch" }}
       />
-      <SystemToolbar.ToggleGroup
-        type="multiple"
-        value={textMarksState}
-        onValueChange={(values) =>
-          values.forEach((value) => {
-            if (!validTextMark(value)) return;
-
-            return editor.chain().focus()[`toggle${value}`]?.().run();
-          })
-        }
+      <SystemToolbar.ToggleButton
+        onPressedChange={() => editor.chain().focus().toggleBold().run()}
+        pressed={editor.isActive("bold")}
       >
-        <SystemToolbar.ToggleButton value="Bold">
-          <Icon label="Markiere den ausgewählten Text fett">
-            <FontBoldIcon />
-          </Icon>
-        </SystemToolbar.ToggleButton>
-        <SystemToolbar.ToggleButton value="Italic">
-          <Icon label="Markiere den ausgewählten Text kursiv">
-            <FontItalicIcon />
-          </Icon>
-        </SystemToolbar.ToggleButton>
-        <SystemToolbar.ToggleButton value="Underline">
-          <Icon label="Unterstreiche den ausgewählten Text">
-            <UnderlineIcon />
-          </Icon>
-        </SystemToolbar.ToggleButton>
-      </SystemToolbar.ToggleGroup>
+        <Icon label="Markiere den ausgewählten Text fett">
+          <FontBoldIcon />
+        </Icon>
+      </SystemToolbar.ToggleButton>
+      <SystemToolbar.ToggleButton
+        onPressedChange={() => editor.chain().focus().toggleItalic().run()}
+        pressed={editor.isActive("italic")}
+      >
+        <Icon label="Markiere den ausgewählten Text kursiv">
+          <FontItalicIcon />
+        </Icon>
+      </SystemToolbar.ToggleButton>
+      <SystemToolbar.ToggleButton
+        onPressedChange={() => editor.chain().focus().toggleUnderline().run()}
+        pressed={editor.isActive("underline")}
+      >
+        <Icon label="Unterstreiche den ausgewählten Text">
+          <UnderlineIcon />
+        </Icon>
+      </SystemToolbar.ToggleButton>
       <SystemToolbar.Separator
         orientation="vertical"
         decorative
@@ -106,23 +92,30 @@ export function Toolbar({ css, editor, ...props }: Props) {
       />
       <SystemToolbar.ToggleGroup
         type="single"
-        value={listMarksState}
+        defaultValue={listMarksState}
         onValueChange={(value) => {
-          if (!validListMark(value)) return;
+          if (!validListMark(value)) {
+            if (editor.isActive("orderedList"))
+              return editor.chain().focus().toggleOrderedList().run();
+            if (editor.isActive("bulletList"))
+              return editor.chain().focus().toggleBulletList().run();
+
+            return;
+          }
 
           return editor.chain().focus()[`toggle${value}`]?.().run();
         }}
       >
-        <SystemToolbar.ToggleButton value="BulletList">
+        <SystemToolbar.ToggleItem value="BulletList">
           <Icon label="Erstelle eine unnumerierte Liste">
             <ListBulletIcon />
           </Icon>
-        </SystemToolbar.ToggleButton>
-        <SystemToolbar.ToggleButton value="OrderedList">
-          <Icon label="Erstelle eine numerierte Liste" css={{}}>
+        </SystemToolbar.ToggleItem>
+        <SystemToolbar.ToggleItem value="OrderedList">
+          <Icon label="Erstelle eine numerierte Liste">
             <NumberedList />
           </Icon>
-        </SystemToolbar.ToggleButton>
+        </SystemToolbar.ToggleItem>
       </SystemToolbar.ToggleGroup>
       {/* <Separator
         orientation="vertical"
