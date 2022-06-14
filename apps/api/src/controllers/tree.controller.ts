@@ -9,13 +9,13 @@ import {
   getPublishedTreeInput,
   getTreeInput,
   getTreesInput,
-  TCreatePublishedTreeOutput,
-  TGetPublishedTreeOutput,
+  TGetPublishedTreesOfTreeOutput,
   TGetTreeOutput,
   updateTreeInput,
 } from "@open-decision/tree-api-specification";
 import prisma from "../init-prisma-client";
 import { APIError } from "@open-decision/type-classes";
+import { publishDecisionTree } from "../models/publishedTree.model";
 
 const prismaSelectionForTree = {
   publishedTrees: { select: { uuid: true } },
@@ -57,26 +57,21 @@ const getDecisionTree = catchAsync(async (req: Request, res: Response) => {
 
   type PrismaReturn = Omit<TGetTreeOutput, "createdAt" | "updatedAt">;
 
-  const trees: PrismaReturn[] | PrismaReturn | null = reqData.params?.uuid
-    ? await prisma.decisionTree.findFirst({
-        where: {
-          ownerUuid: req.user.uuid,
-          uuid: reqData.params.uuid,
-        },
-        select: prismaSelectionForTree,
-      })
-    : await prisma.decisionTree.findMany({
-        where: { ownerUuid: req.user.uuid },
-        select: prismaSelectionForTree,
-      });
+  const tree: PrismaReturn | null = await prisma.decisionTree.findFirst({
+    where: {
+      ownerUuid: req.user.uuid,
+      uuid: reqData.params.uuid,
+    },
+    select: prismaSelectionForTree,
+  });
 
-  if (!trees)
+  if (!tree)
     throw new APIError({
       message: "Trees not found.",
       code: "NOT_FOUND",
     });
 
-  res.send(trees);
+  res.send(tree);
 });
 
 const createDecisionTree = catchAsync(async (req: Request, res: Response) => {
@@ -132,12 +127,16 @@ const updateDecisionTree = catchAsync(async (req: Request, res: Response) => {
 const getPublishedTrees = catchAsync(async (req: Request, res: Response) => {
   const reqData = await validateRequest(getPublishedTreeInput)(req);
 
-  const publishedTree: TGetPublishedTreeOutput =
-    await prisma.publishedTree.findMany({
-      where: {
-        originTreeUuid: reqData.params.treeUuid,
-      },
-    });
+  type PrismaReturn = Omit<
+    TGetPublishedTreesOfTreeOutput[number],
+    "createdAt" | "updatedAt"
+  >;
+
+  const publishedTree: PrismaReturn[] = await prisma.publishedTree.findMany({
+    where: {
+      originTreeUuid: reqData.params.uuid,
+    },
+  });
 
   if (!publishedTree)
     throw new APIError({
@@ -151,14 +150,10 @@ const getPublishedTrees = catchAsync(async (req: Request, res: Response) => {
 const createPublishedTree = catchAsync(async (req: Request, res: Response) => {
   const reqData = await validateRequest(createPublishedTreeInput)(req);
 
-  const publishedTree: TCreatePublishedTreeOutput =
-    await prisma.publishedTree.create({
-      data: {
-        originTree: { connect: { uuid: reqData.params.treeUuid } },
-        name: reqData.body.name,
-        owner: { connect: { uuid: req.user.uuid } },
-      },
-    });
+  const publishedTree = await publishDecisionTree(
+    req.user.uuid,
+    reqData.params.treeUuid
+  );
 
   res.status(httpStatus.CREATED).send(publishedTree);
 });

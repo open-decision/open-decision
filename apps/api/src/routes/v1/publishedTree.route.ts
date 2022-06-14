@@ -13,6 +13,7 @@ publishedTreeRouter
 
 publishedTreeRouter
   .route(publishedTreesSingle(":uuid"))
+  .get(publishController.getPublishedTree)
   .delete(auth(), publishController.deletePublishedTree);
 
 export default publishedTreeRouter;

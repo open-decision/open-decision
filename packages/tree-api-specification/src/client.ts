@@ -1,10 +1,14 @@
 import { ClientConfig } from "@open-decision/api-helpers";
-import { deletePublishedTree } from "./routes/publishedTrees/delete";
 import {
-  createPublishedTree,
+  deletePublishedTree,
+  getPublishedTree,
+  getPublishedTrees,
+} from "./routes/publishedTrees";
+import {
+  createPublishedTreeOfTree,
   createTree,
   deleteTree,
-  getPublishedTrees,
+  getPublishedTreesOfTree,
   getTree,
   getTrees,
   updateTree,
@@ -18,12 +22,13 @@ export const client = (context: ClientConfig) => ({
     delete: deleteTree(context),
     update: updateTree(context),
     publishedTrees: {
-      get: getPublishedTrees(context),
-      create: createPublishedTree(context),
+      get: getPublishedTreesOfTree(context),
+      create: createPublishedTreeOfTree(context),
     },
   },
   publishedTrees: {
-    get: getPublishedTrees(context),
+    getCollection: getPublishedTrees(context),
+    getSingle: getPublishedTree(context),
     delete: deletePublishedTree(context),
   },
 });

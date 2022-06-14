@@ -1,6 +1,8 @@
-import { PublishedTreeModel } from "@open-decision/models";
 import { z } from "zod";
+import { PublishedTreeOutput } from "../../../../shared";
 
-export const getPublishedTreeOutput = z.array(PublishedTreeModel);
+export const getPublishedTreesOfTreeOutput = z.array(PublishedTreeOutput);
 
-export type TGetPublishedTreeOutput = z.infer<typeof getPublishedTreeOutput>;
+export type TGetPublishedTreesOfTreeOutput = z.infer<
+  typeof getPublishedTreesOfTreeOutput
+>;
