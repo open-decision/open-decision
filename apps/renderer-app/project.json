@@ -13,7 +13,7 @@
     "serve": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
-        "command": "cross-env NODE_ENV=development netlify dev",
+        "command": "PORT=4100 remix dev",
         "cwd": "apps/renderer-app"
       },
       "dependsOn": [
@@ -28,7 +28,16 @@
       "options": {
         "command": "fly deploy --config apps/renderer-app/fly.toml --dockerfile apps/renderer-app/Dockerfile"
       },
-      "dependsOn": [{ "projects": "self", "target": "build" }]
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": "self"
+        },
+        {
+          "target": "build",
+          "projects": "dependencies"
+        }
+      ]
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
