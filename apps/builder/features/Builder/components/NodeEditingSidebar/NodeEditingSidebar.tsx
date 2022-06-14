@@ -39,10 +39,11 @@ export function NodeEditingSidebar() {
   const [selectionType, selectedNode] = useSelectedNodes();
 
   return (
-    <AnimatePresence exitBeforeEnter>
+    <AnimatePresence>
       {selectionType === "single" ? (
         <motion.div
-          key="sidebar"
+          layout
+          key={selectionType}
           initial={{ x: "100%" }}
           animate={{
             x: 0,
@@ -71,6 +72,7 @@ export function NodeEditingSidebar() {
           >
             <ScrollArea.Viewport css={{ height: "100%" }}>
               <NodeEditingSidebarContent
+                key={selectedNode.id}
                 css={{ groupColor: "$gray11" }}
                 node={{ id: selectedNode.id, data: selectedNode.data }}
               />
@@ -91,7 +93,7 @@ export function NodeEditingSidebarContent({ node, css }: Props) {
 
   return (
     <Grid css={{ gridAutoRows: "max-content", gap: "$6", ...css }}>
-      <Header node={node} key={node.id} />
+      <Header node={node} />
       <Box as="section">
         <Form.Label
           as="h2"

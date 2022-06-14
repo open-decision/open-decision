@@ -155,7 +155,7 @@ export const Dialog = {
   Trigger: DialogPrimitive.Trigger,
   Content: DialogContent,
   Title: DialogPrimitive.Title,
-  Description: styled(DialogPrimitive.Description, { color: "$gray11" }),
+  Description: styled(DialogPrimitive.Description),
   Close: DialogPrimitive.Close,
   CloseButton,
   Header,

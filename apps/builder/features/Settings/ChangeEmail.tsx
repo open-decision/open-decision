@@ -34,7 +34,7 @@ export function ChangeEmail() {
           E-Mail ändern
         </Heading>
         <Form.Root state={formState}>
-          <Form.Field state={formState} label="Neue E-Mail Adresse">
+          <Form.Field label="Neue E-Mail Adresse">
             <Form.Input
               name={formState.names.newEmail}
               required

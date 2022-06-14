@@ -9,19 +9,12 @@ import { queryClient } from "../features/Data/queryClient";
 import { QueryClientProvider } from "react-query";
 import { NextPage } from "next";
 import { inspect } from "@xstate/inspect";
-import LogRocket from "logrocket";
-import setupLogRocketReact from "logrocket-react";
 import { ReactQueryDevtools } from "react-query/devtools";
 
 if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
   inspect({
     iframe: false,
   });
-}
-
-if (typeof window !== "undefined" && process.env.NODE_ENV === "production") {
-  LogRocket.init("open-decision/open-decision", {});
-  setupLogRocketReact(LogRocket);
 }
 
 type NextPageWithLayout = NextPage & {

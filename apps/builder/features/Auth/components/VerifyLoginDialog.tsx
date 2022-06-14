@@ -79,10 +79,10 @@ export function VerifyLoginDialog({
             marginTop: "$4",
           }}
         >
-          <Form.Field state={formState} label="E-Mail">
+          <Form.Field label="E-Mail">
             <Form.Input disabled name={formState.names.email} type="email" />
           </Form.Field>
-          <Form.Field state={formState} label="Passwort">
+          <Form.Field label="Passwort">
             <Form.Input
               autoFocus
               name={formState.names.password}

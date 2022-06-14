@@ -19,7 +19,7 @@ export function ForgotPasswordForm() {
       state={formState}
       css={{ display: "flex", flexDirection: "column" }}
     >
-      <Form.Field label="Mailadresse" state={formState}>
+      <Form.Field label="Mailadresse">
         <Form.Input
           css={{ layer: "2" }}
           required

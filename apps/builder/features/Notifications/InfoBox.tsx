@@ -55,7 +55,7 @@ export function InfoBox({
           padding: "$5",
           flexDirection: "row",
           gap: "$5",
-          alignItems: "start",
+          alignItems: "center",
         }}
       >
         <Icon

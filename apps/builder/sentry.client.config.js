@@ -3,7 +3,6 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from "@sentry/nextjs";
-import LogRocket from "logrocket";
 import { BrowserTracing } from "@sentry/tracing";
 
 const SENTRY_DSN =
@@ -16,8 +15,4 @@ Sentry.init({
   integrations: [new BrowserTracing()],
   dsn: SENTRY_DSN,
   tracesSampleRate: 1.0,
-});
-
-Sentry.configureScope((scope) => {
-  scope.setExtra("sessionURL", LogRocket.sessionURL);
 });

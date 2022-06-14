@@ -107,11 +107,13 @@ function Nodes() {
               }
               break;
             case "position": {
-              setDragging(true);
-              updateNodePosition(
-                nodeChange.id,
-                nodeChange.position ?? { x: 0, y: 0 }
-              );
+              if (nodeChange.dragging) {
+                setDragging(true);
+                updateNodePosition(
+                  nodeChange.id,
+                  nodeChange.position ?? { x: 0, y: 0 }
+                );
+              }
               break;
             }
             case "select": {

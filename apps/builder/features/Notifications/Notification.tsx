@@ -82,16 +82,13 @@ export const Notification = ({ notification, id }: NotificationProps) => {
         css={{ boxShadow: "$6" }}
         {...notification}
       >
-        <ProgressBar>
-          <ProgressIndicator
-            as={motion.div}
-            variants={progress}
-            transition={{ duration }}
-            initial="full"
-            animate={animation}
-            onAnimationComplete={() => removeNotification(id)}
-          />
-        </ProgressBar>
+        <motion.div
+          variants={progress}
+          transition={{ duration }}
+          initial="full"
+          animate={animation}
+          onAnimationComplete={() => removeNotification(id)}
+        />
       </InfoBox>
     </motion.div>
   );

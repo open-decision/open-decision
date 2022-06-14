@@ -11,13 +11,14 @@ import { bindProxyAndYMap } from "valtio-yjs";
 import { FileInputProps } from "../../components/FileInput";
 import { useOD } from "../Data/odClient";
 import { useMutation } from "react-query";
+import { useTreesQueryKey } from "../Data/useTreesQuery";
 
 const TreeImportType = Tree.Type.extend({ name: z.string() });
 
 export const TreeImport = React.forwardRef<
   HTMLLabelElement,
-  Omit<FileInputProps, "children">
->(function TreeImport(props, ref) {
+  Omit<FileInputProps, "children"> & { onDone?: () => void }
+>(function TreeImport({ onDone, ...props }, ref) {
   const [importedData, setImportedData] = React.useState<
     Tree.TTree | undefined
   >();
@@ -39,7 +40,8 @@ export const TreeImport = React.forwardRef<
         const importStore = proxy(importedData);
         bindProxyAndYMap(importStore, yMap);
 
-        return queryClient.invalidateQueries("Trees");
+        queryClient.invalidateQueries(useTreesQueryKey);
+        return onDone?.();
       },
     }
   );

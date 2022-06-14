@@ -28,16 +28,9 @@ export type FieldProps = {
   css?: StyleObject;
   name?: string;
   layout?: "block" | "inine-left" | "inline-right" | "no-label";
-  state: Form.FormState;
 };
 
-export function Field({
-  label,
-  children,
-  css,
-  layout = "block",
-  state,
-}: FieldProps) {
+export function Field({ label, children, css, layout = "block" }: FieldProps) {
   if (!React.Children.only(children)) {
     throw new Error(
       "The Field component can only ever wrap one Input as a child."

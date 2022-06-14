@@ -8,6 +8,7 @@ import { queryClient } from "../../../../features/Data/queryClient";
 import * as React from "react";
 import { useMutation } from "react-query";
 import { useOD } from "../../../../features/Data/odClient";
+import { useTreeQueryKey } from "../../../Data/useTreeQuery";
 
 type Props = {
   treeId: string;
@@ -45,8 +46,7 @@ export function UpdateTreeDialog({
     {
       onSuccess: () => {
         setOpen?.(false);
-        queryClient.invalidateQueries("Trees");
-        queryClient.invalidateQueries("getTreeName");
+        queryClient.invalidateQueries(useTreeQueryKey);
       },
     }
   );
@@ -67,7 +67,6 @@ export function UpdateTreeDialog({
           css={{ display: "flex", flexDirection: "column" }}
         >
           <Form.Field
-            state={formState}
             label={<Dialog.Description> Projektname</Dialog.Description>}
           >
             <Form.Input
@@ -77,7 +76,7 @@ export function UpdateTreeDialog({
             />
           </Form.Field>
           <Dialog.ButtonRow isLoading={isLoading} colorScheme="success">
-            Erstellen
+            Ändern
           </Dialog.ButtonRow>
         </Form.Root>
       </Dialog.Content>

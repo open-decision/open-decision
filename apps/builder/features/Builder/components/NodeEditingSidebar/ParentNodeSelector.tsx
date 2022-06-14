@@ -24,7 +24,7 @@ export function ParentNodeSelector({ parentNodes }: Props) {
                   [`${hoverSelector}`]: { textDecoration: "underline" },
                 }}
               >
-                {parentNode.name ?? <i>Elternknoten ohne Namen</i>}
+                {parentNode.name || <i>Elternknoten ohne Namen</i>}
               </DropdownMenu.Item>
             );
           })}

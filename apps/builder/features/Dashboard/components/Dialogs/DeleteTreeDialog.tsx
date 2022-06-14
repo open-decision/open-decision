@@ -76,13 +76,13 @@ export function DeleteTreeDialog({
           Projekt löschen
         </Dialog.Header>
         <Dialog.Description asChild>
-          <Text css={{ marginBottom: "$4" }}>
+          <Text css={{ marginBottom: "$4", color: "$gray11" }}>
             Bitte geben Sie den Namen des Projekts: <Bold>{tree.name}</Bold> zur
             Bestätigung der Löschung ein.
           </Text>
         </Dialog.Description>
         <Form.Root state={formState}>
-          <Form.Field state={formState} label="Projektname">
+          <Form.Field label="Projektname">
             <Form.Input
               name={formState.names.treeName}
               required
