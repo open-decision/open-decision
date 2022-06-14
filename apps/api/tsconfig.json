@@ -3,8 +3,10 @@
   "compilerOptions": {
     "module": "commonjs",
     "esModuleInterop": true,
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "types": ["jest", "node"]
   },
   "files": ["src/types/express.d.ts"],
-  "include": []
+  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "next-env.d.ts"],
+  "exclude": ["node_modules", "jest.config.ts"]
 }
