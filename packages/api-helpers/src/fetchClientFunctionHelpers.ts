@@ -15,7 +15,7 @@ export const AuthHeader = z.object({
 });
 
 export const ClientConfig = z.object({
-  headers: AuthHeader,
+  headers: AuthHeader.optional(),
   urlPrefix: z.string().optional(),
 });
 

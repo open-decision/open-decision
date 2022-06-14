@@ -6,7 +6,7 @@ import {
   createPublishedTreeOutput,
 } from "./output";
 
-export const createPublishedTree =
+export const createPublishedTreeOfTree =
   (
     context: ClientConfig
   ): Post<TCreatePublishedTreeInput, TCreatePublishedTreeOutput> =>

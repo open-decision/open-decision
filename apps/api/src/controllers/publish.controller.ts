@@ -6,7 +6,7 @@ import validateRequest from "../validations/validateRequest";
 import {
   deletePublishedTreeInput,
   getPublishedTreeInput,
-  TGetPublishedTreesOutput,
+  TGetPublishedTreeOutput,
 } from "@open-decision/tree-api-specification";
 import prisma from "../init-prisma-client";
 import { APIError } from "@open-decision/type-classes";
@@ -14,10 +14,12 @@ import { APIError } from "@open-decision/type-classes";
 const getPublishedTrees = catchAsync(async (req: Request, res: Response) => {
   const reqData = await validateRequest(getPublishedTreeInput)(req);
 
-  const publishedTree: TGetPublishedTreesOutput =
+  type PrismaReturn = Omit<TGetPublishedTreeOutput, "createdAt" | "updatedAt">;
+
+  const publishedTree: PrismaReturn[] | PrismaReturn | null =
     await prisma.publishedTree.findMany({
       where: {
-        uuid: reqData.params?.treeUuid,
+        uuid: reqData.params?.uuid,
       },
     });
 
@@ -25,6 +27,27 @@ const getPublishedTrees = catchAsync(async (req: Request, res: Response) => {
     throw new ApiError({
       message: "Published tree not found.",
       statusCode: httpStatus.NOT_FOUND,
+    });
+
+  res.send(publishedTree);
+});
+
+const getPublishedTree = catchAsync(async (req: Request, res: Response) => {
+  const reqData = await validateRequest(getPublishedTreeInput)(req);
+
+  type PrismaReturn = Omit<TGetPublishedTreeOutput, "createdAt" | "updatedAt">;
+
+  const publishedTree: PrismaReturn | null =
+    await prisma.publishedTree.findFirst({
+      where: {
+        uuid: reqData.params.uuid,
+      },
+    });
+
+  if (!publishedTree)
+    throw new APIError({
+      message: "Published Trees not found.",
+      code: "NOT_FOUND",
     });
 
   res.send(publishedTree);
@@ -48,5 +71,6 @@ const deletePublishedTree = catchAsync(async (req: Request, res: Response) => {
 
 export const publishController = {
   getPublishedTrees,
+  getPublishedTree,
   deletePublishedTree,
 };

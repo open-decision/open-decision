@@ -1,12 +1,15 @@
 import { ClientConfig, Get, safeFetch } from "@open-decision/api-helpers";
 import { publishedTreesOfTreesCollection } from "../../../../../urls";
-import { TGetPublishedTreeInput } from "./input";
-import { TGetPublishedTreeOutput, getPublishedTreeOutput } from "./output";
+import { TGetPublishedTreeOfTreeInput } from "./input";
+import {
+  TGetPublishedTreesOfTreeOutput,
+  getPublishedTreesOfTreeOutput,
+} from "./output";
 
-export const getPublishedTrees =
+export const getPublishedTreesOfTree =
   (
     context: ClientConfig
-  ): Get<TGetPublishedTreeInput, TGetPublishedTreeOutput> =>
+  ): Get<TGetPublishedTreeOfTreeInput, TGetPublishedTreesOfTreeOutput> =>
   async (inputs, config) => {
     let combinedUrl = publishedTreesOfTreesCollection(inputs.params?.treeUuid);
     const prefix = config?.urlPrefix ?? context.urlPrefix;
@@ -16,6 +19,6 @@ export const getPublishedTrees =
     return await safeFetch(
       combinedUrl,
       { headers: context.headers },
-      { validation: getPublishedTreeOutput }
+      { validation: getPublishedTreesOfTreeOutput }
     );
   };

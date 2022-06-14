@@ -10,7 +10,7 @@ import {
   getTreeInput,
   getTreesInput,
   TCreatePublishedTreeOutput,
-  TGetPublishedTreeOutput,
+  TGetPublishedTreesOfTreeOutput,
   TGetTreeOutput,
   updateTreeInput,
 } from "@open-decision/tree-api-specification";
@@ -57,26 +57,21 @@ const getDecisionTree = catchAsync(async (req: Request, res: Response) => {
 
   type PrismaReturn = Omit<TGetTreeOutput, "createdAt" | "updatedAt">;
 
-  const trees: PrismaReturn[] | PrismaReturn | null = reqData.params?.uuid
-    ? await prisma.decisionTree.findFirst({
-        where: {
-          ownerUuid: req.user.uuid,
-          uuid: reqData.params.uuid,
-        },
-        select: prismaSelectionForTree,
-      })
-    : await prisma.decisionTree.findMany({
-        where: { ownerUuid: req.user.uuid },
-        select: prismaSelectionForTree,
-      });
+  const tree: PrismaReturn | null = await prisma.decisionTree.findFirst({
+    where: {
+      ownerUuid: req.user.uuid,
+      uuid: reqData.params.uuid,
+    },
+    select: prismaSelectionForTree,
+  });
 
-  if (!trees)
+  if (!tree)
     throw new APIError({
       message: "Trees not found.",
       code: "NOT_FOUND",
     });
 
-  res.send(trees);
+  res.send(tree);
 });
 
 const createDecisionTree = catchAsync(async (req: Request, res: Response) => {
@@ -132,12 +127,16 @@ const updateDecisionTree = catchAsync(async (req: Request, res: Response) => {
 const getPublishedTrees = catchAsync(async (req: Request, res: Response) => {
   const reqData = await validateRequest(getPublishedTreeInput)(req);
 
-  const publishedTree: TGetPublishedTreeOutput =
-    await prisma.publishedTree.findMany({
-      where: {
-        originTreeUuid: reqData.params.treeUuid,
-      },
-    });
+  type PrismaReturn = Omit<
+    TGetPublishedTreesOfTreeOutput[number],
+    "createdAt" | "updatedAt"
+  >;
+
+  const publishedTree: PrismaReturn[] = await prisma.publishedTree.findMany({
+    where: {
+      originTreeUuid: reqData.params.uuid,
+    },
+  });
 
   if (!publishedTree)
     throw new APIError({

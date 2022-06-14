@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { DecisionTreeModel } from "@open-decision/models";
+import { DecisionTreeModel, PublishedTreeModel } from "@open-decision/models";
 
 export const TreeOutput = DecisionTreeModel.omit({
   treeData: true,
@@ -8,4 +8,8 @@ export const TreeOutput = DecisionTreeModel.omit({
   publishedTrees: z.array(z.object({ uuid: z.string().uuid() })),
   createdAt: z.string(),
   updatedAt: z.string(),
+});
+
+export const PublishedTreeOutput = PublishedTreeModel.extend({
+  createdAt: z.string(),
 });
