@@ -43,7 +43,7 @@ export function CombinedRegisterForm() {
   // whitelist feature is deactivated
   if (
     (isSuccess && variables?.email) ||
-    !process.env.NEXT_PUBLIC_FEATURE_WHITELIST
+    !!process.env.NEXT_PUBLIC_FEATURE_WHITELIST
   )
     return <RegisterForm email={variables?.email} />;
 
