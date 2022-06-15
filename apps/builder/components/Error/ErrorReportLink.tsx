@@ -1,15 +1,17 @@
 import { Link, Icon } from "@open-decision/design-system";
 import { ExternalLinkIcon } from "@radix-ui/react-icons";
 
-export function ErrorReportLink() {
+type Props = { children?: React.ReactNode };
+
+export function ErrorReportLink({ children }: Props) {
   return (
     <Link
-      css={{ color: "$primary11" }}
+      css={{ color: "$primary11", fontWeight: 500 }}
       target="_blank"
-      href="https://www.notion.so/openlegaltech/Bug-Reports-69f5eb094eb645f599ae9e61ae363408"
+      href="https://open-decision.org#contact"
     >
-      Bug Reports
-      <Icon>
+      {children ?? "Bug Reports"}
+      <Icon css={{ marginLeft: "$1" }}>
         <ExternalLinkIcon />
       </Icon>
     </Link>
