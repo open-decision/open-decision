@@ -1,44 +1,22 @@
 {
   "name": "@open-decision/type-classes",
   "version": "0.0.1",
-  "main": "./lib/index.cjs",
-  "module": "./lib/index.mjs",
-  "types": "./lib/index.d.ts",
-  "type": "module",
-  "exports": {
-    ".": {
-      "import": "./lib/index.mjs",
-      "require": "./lib/index.cjs",
-      "types": "./lib/index.d.ts"
-    }
-  },
-  "files": [
-    "/lib",
-    "/src"
-  ],
+  "type": "commonjs",
+  "main": "./src/index.ts",
   "description": "The foundational types classes shared by all parts of the open decision application.",
   "sideEffects": false,
-  "scripts": {
-    "build": "rm -rf lib && pnpm vite build && pnpm tsc -p tsconfig.build.json",
-    "dev": "tsc --composite false --incremental false & vite build --watch",
-    "prepublish": "pnpm build",
-    "lint": "eslint . --ext .ts,.tsx",
-    "lint:fix": "pnpm lint --fix",
-    "test": "vitest",
-    "coverage": "vitest run --coverage",
-    "typecheck": "tsc -w --noEmit"
-  },
   "dependencies": {
-    "fp-ts": "^2.11.9",
+    "@types/ramda": "^0.28.7",
+    "@types/uuid": "^8.3.4",
     "ramda": "^0.28.0",
     "remeda": "^0.0.32",
-    "uuid": "^8.3.2",
-    "vite": "^2.9.1",
-    "@types/ramda": "^0.28.7",
     "utility-types": "^3.10.0",
-    "zod": "^3.14.4"
+    "uuid": "^8.3.2",
+    "zod": "^3.17.3"
   },
   "devDependencies": {
+    "@tiptap/core": "^2.0.0-beta.176",
+    "tslib": "^2.3.1",
     "vitest": "^0.9.2"
   }
 }

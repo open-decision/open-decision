@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import * as React from "react";
 import { styled } from "../stitches";
 
@@ -10,9 +9,14 @@ import {
   UseFormProps,
   UseFormReturn,
   FieldValues,
+  FieldPath,
 } from "react-hook-form";
 
-const StyledForm = styled("form", {});
+const StyledForm = styled("form", {
+  gap: "$2",
+  display: "flex",
+  flexDirection: "column",
+});
 
 export type FormProps<TFieldValues extends object> = Omit<
   React.ComponentProps<typeof StyledForm>,
@@ -23,15 +27,14 @@ export type FormProps<TFieldValues extends object> = Omit<
     | ((methods: UseFormReturn<TFieldValues>) => JSX.Element);
   onSubmit?: SubmitHandler<TFieldValues>;
   onSubmitError?: SubmitErrorHandler<TFieldValues>;
-};
+} & { config?: UseFormProps<TFieldValues> };
 
 export function useForm<TFieldValues extends FieldValues>(
   parameters?: UseFormProps<TFieldValues>
-): [
-  Form: (props: FormProps<TFieldValues>) => JSX.Element,
-  methods: UseFormReturn<TFieldValues, object>
-] {
-  const methods = useReactHookForm<TFieldValues>(parameters);
+) {
+  const methods = useReactHookForm<TFieldValues, FieldPath<TFieldValues>>(
+    parameters
+  );
 
   const Form = React.useCallback(
     function Form({
@@ -66,5 +69,5 @@ export function useForm<TFieldValues extends FieldValues>(
         (event?: React.BaseSyntheticEvent) =>
           methods.handleSubmit(onSubmit, onSubmitError)(event),
     },
-  ];
+  ] as const;
 }

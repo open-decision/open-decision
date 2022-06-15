@@ -8,4 +8,6 @@ export const updateStartNode = (tree: Tree.TTree) => (startNode: string) => {
     return new Error(`The new startNode does not exist on the tree.`);
 
   tree.startNode = startNode;
+
+  return true;
 };

@@ -1,0 +1,17 @@
+import { ClientConfig, Delete, safeFetch } from "@open-decision/api-helpers";
+import { publishedTreesSingle } from "../../../urls";
+import { TDeletePublishedTreeInput } from "./input";
+
+export const deletePublishedTree =
+  (context: ClientConfig): Delete<TDeletePublishedTreeInput> =>
+  async (inputs, config) => {
+    let combinedUrl = publishedTreesSingle(inputs.params.uuid);
+    const prefix = config?.urlPrefix ?? context.urlPrefix;
+
+    if (prefix) combinedUrl = prefix + combinedUrl;
+
+    return await safeFetch(combinedUrl, {
+      headers: context.headers,
+      method: "DELETE",
+    });
+  };

@@ -1,13 +1,12 @@
 import * as React from "react";
-import { activeStyle } from "../shared/utils";
 import { styled, darkTheme } from "../stitches";
 import { Button as SystemButton, ButtonProps } from "./Button";
 import * as ToggleGroupPrimitives from "@radix-ui/react-toggle-group";
+import { activeSelector } from "../stitches/stateSelectors";
 
 export const Root = styled(ToggleGroupPrimitives.Root, {
   display: "inline-flex",
   borderRadius: "$md",
-  boxShadow: "$1",
   layer: "3",
   padding: "$1",
   gap: "$1",
@@ -15,7 +14,22 @@ export const Root = styled(ToggleGroupPrimitives.Root, {
   [`.${darkTheme} &`]: {
     layer: "4",
   },
+
+  variants: {
+    variant: {
+      raised: {
+        boxShadow: "$1",
+      },
+      lowered: {},
+    },
+  },
+
+  defaultVariants: {
+    variant: "raised",
+  },
 });
+
+export type RootProps = React.ComponentProps<typeof Root>;
 
 export type ToggleItemProps = ToggleGroupPrimitives.ToggleGroupItemProps;
 export type ToggleRootProps = React.ComponentProps<typeof Root>;
@@ -30,7 +44,7 @@ export const Item = ({ children, ...props }: ToggleItemProps) => {
 };
 
 const ButtonImpl = (
-  { children, css, ...props }: ButtonProps,
+  { children, css, ...props }: ToggleButtonProps,
   ref: React.Ref<HTMLButtonElement>
 ) => (
   <SystemButton
@@ -44,10 +58,10 @@ const ButtonImpl = (
       colorScheme: "primary",
       focusType: "outer",
 
-      ...activeStyle({
+      [`${activeSelector}`]: {
         color: "$white",
         backgroundColor: "$colorScheme9",
-      }),
+      },
       ...css,
     }}
     {...props}

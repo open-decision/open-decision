@@ -1,0 +1,25 @@
+{
+  "name": "@open-decision/models",
+  "version": "0.0.1",
+  "type": "commonjs",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.js",
+    "./prisma-client": "./src/generated/prisma-client/index.js"
+  },
+  "scripts": {
+    "migrate:dev": "dotenv -e ../../.env pnpm prisma migrate dev",
+    "migrate:deploy": "pnpm prisma migrate deploy",
+    "generate": "prisma generate --schema=./src/schema.prisma",
+    "typecheck": "tsc -p ./tsconfig.lib.json --noEmit"
+  },
+  "dependencies": {
+    "@prisma/client": "~3.14.0",
+    "encoding": "^0.1.13",
+    "prisma": "~3.14.0",
+    "zod-prisma": "^0.5.4"
+  },
+  "prisma": {
+    "schema": "src/schema.prisma"
+  }
+}

@@ -16,5 +16,10 @@ export const removeInputFromNode =
 
     if (inputIndex >= 0) {
       node.data.inputs.splice(inputIndex, 1);
+      return true;
     }
+
+    return new Error(
+      `The input with id ${inputId} could not be found on the node`
+    );
   };

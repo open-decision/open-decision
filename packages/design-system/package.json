@@ -1,29 +1,8 @@
 {
   "name": "@open-decision/design-system",
   "version": "0.26.0",
-  "main": "./lib/index.cjs",
-  "module": "./lib/index.mjs",
-  "types": "./src/index.ts",
-  "type": "module",
-  "exports": {
-    ".": {
-      "import": "./lib/index.mjs",
-      "require": "./lib/index.cjs",
-      "types": "./src/index.ts"
-    }
-  },
-  "publishConfig": {
-    "main": "./lib/index.cjs",
-    "module": "./lib/index.mjs",
-    "types": "./lib/index.d.ts",
-    "exports": {
-      ".": {
-        "import": "./lib/index.mjs",
-        "require": "./lib/index.cjs",
-        "types": "./lib/index.d.ts"
-      }
-    }
-  },
+  "type": "commonjs",
+  "main": "./src/index.ts",
   "files": [
     "/lib",
     "/src"
@@ -32,9 +11,9 @@
   "sideEffects": false,
   "scripts": {
     "build:icons": "svgr ./src/icons/svgs -d ./src/icons/ --replace-attr-values '#2329D6=currentcolor' --typescript --no-dimensions --svg-props 'width=1.1em','height=1.1em' --ignore-existing",
-    "build": "rm -rf lib && vite build && pnpm tsc -p tsconfig.build.json",
-    "dev": "tsc --composite false --incremental false -p tsconfig.build.json & vite build --watch",
-    "typecheck": "tsc -w -noEmit",
+    "build": "rm -rf lib && vite build",
+    "dev": "vite build --watch",
+    "typecheck": "tsc -p tsconfig.lib.json",
     "prepublishOnly": "pnpm build",
     "prettier": "prettier --check src/",
     "prettier:fix": "prettier --write src/",
@@ -44,7 +23,6 @@
     "verify:fix": "yarn prettier:fix && yarn lint:fix"
   },
   "dependencies": {
-    "@hookform/error-message": "^2.0.0",
     "@radix-ui/colors": "^0.1.7",
     "@radix-ui/react-accessible-icon": "^0.1.4",
     "@radix-ui/react-checkbox": "^0.1.5",
@@ -57,14 +35,15 @@
     "@radix-ui/react-popover": "^0.1.6",
     "@radix-ui/react-radio-group": "^0.1.5",
     "@radix-ui/react-scroll-area": "^0.1.4",
+    "@radix-ui/react-separator": "^0.1.4",
     "@radix-ui/react-slot": "^0.1.1",
     "@radix-ui/react-tabs": "^0.1.5",
     "@radix-ui/react-toggle": "^0.1.4",
     "@radix-ui/react-toggle-group": "^0.1.5",
+    "@radix-ui/react-toolbar": "^0.1.5",
     "@radix-ui/react-tooltip": "^0.1.7",
-    "@stitches/react": "^1.2.7",
-    "downshift": "^6.1.7",
-    "match-sorter": "^6.3.1",
+    "@stitches/react": "^1.2.8",
+    "ariakit": "^2.0.0-next.25",
     "react-hook-form": "^7.28.0",
     "react-use": "^17.3.1",
     "remeda": "^0.0.32",
@@ -82,12 +61,7 @@
     "@svgr/cli": "^6.2.1",
     "@types/react": "^17.0.40",
     "@types/react-dom": "^17.0.13",
-    "@vitejs/plugin-react": "^1.2.0",
     "cross-env": "^7.0.3",
-    "glob": "^7.2.0",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "tsup": "^5.12.1",
-    "vite": "^2.8.6"
+    "glob": "^7.2.0"
   }
 }

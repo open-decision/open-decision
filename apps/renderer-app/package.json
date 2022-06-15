@@ -1,0 +1,36 @@
+{
+  "name": "@open-decision/renderer-app",
+  "version": "0.0.1",
+  "private": true,
+  "description": "",
+  "license": "",
+  "sideEffects": false,
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "start": "remix-serve build"
+  },
+  "dependencies": {
+    "@open-decision/design-system": "workspace:*",
+    "@open-decision/renderer": "workspace:*",
+    "@open-decision/type-classes": "workspace:*",
+    "@open-decision/interpreter-react": "workspace:*",
+    "@open-decision/rich-text-editor": "workspace:*",
+    "@open-decision/interpreter": "workspace:*",
+    "@open-decision/tree-api-specification": "workspace:*",
+    "@remix-run/node": "^1.5.1",
+    "@remix-run/react": "^1.5.1",
+    "@remix-run/serve": "^1.5.1",
+    "cross-env": "^7.0.3",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "@remix-run/dev": "^1.5.1",
+    "@remix-run/eslint-config": "^1.5.1",
+    "@types/react": "^17.0.45",
+    "@types/react-dom": "^17.0.17",
+    "eslint": "^8.15.0",
+    "typescript": "^4.6.4",
+    "@babel/preset-env": "^7.18.2"
+  }
+}

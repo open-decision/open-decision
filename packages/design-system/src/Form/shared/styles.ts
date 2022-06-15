@@ -1,7 +1,7 @@
 import { css } from "../../stitches";
-import { alignByContent } from "../../shared/variants";
 
 export const baseInputStyles = css({
+  colorScheme: "primary",
   $$borderWidth: "1px",
   border: "$$borderWidth solid $colors$gray7",
   textStyle: "medium-text",
@@ -9,17 +9,15 @@ export const baseInputStyles = css({
   transition: "all 0.2s",
 
   "&[data-state='checked']": {
-    backgroundColor: "$primary9",
-    borderColor: "$primary9",
+    backgroundColor: "$colorScheme9",
+    borderColor: "$colorScheme9",
   },
 
   "&:disabled, &[data-disabled='true']": {
     opacity: 0.4,
     borderColor: "$gray8",
   },
-});
 
-export const baseTextInputStyle = css(alignByContent, {
   variants: {
     variant: {
       raised: { layer: "2" },
@@ -28,9 +26,23 @@ export const baseTextInputStyle = css(alignByContent, {
         borderColor: "transparent",
       },
     },
+  },
+
+  defaultVariants: {
+    variant: "raised",
+  },
+});
+
+export const baseTextInputStyle = css({
+  borderRadius: "$md",
+  focusType: "inner-within",
+  display: "flex",
+  alignItems: "center",
+
+  variants: {
     size: {
       small: {
-        $$paddingBlock: "$space$2",
+        $$paddingBlock: "$space$1",
         $$paddingInline: "$space$2",
         textStyle: "small-text",
       },
@@ -40,8 +52,13 @@ export const baseTextInputStyle = css(alignByContent, {
         textStyle: "medium-text",
       },
       large: {
-        $$paddingInline: "$space$3",
-        $$paddingBlock: "$space$4",
+        $$paddingInline: "$space$4",
+        $$paddingBlock: "$space$3",
+        textStyle: "large-text",
+      },
+      xl: {
+        $$paddingInline: "$space$5",
+        $$paddingBlock: "$space$3",
         textStyle: "large-text",
       },
     },
@@ -49,15 +66,15 @@ export const baseTextInputStyle = css(alignByContent, {
 
   defaultVariants: {
     size: "medium",
-    variant: "raised",
   },
 });
 
 export const baseInputBoxStyles = css({
-  width: "24px",
-  height: "24px",
+  width: "20px",
+  height: "20px",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   color: "white",
+  focusType: "outer-within",
 });

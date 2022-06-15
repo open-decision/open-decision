@@ -1,5 +1,11 @@
-import { disabledStyle, intentStyle } from "../shared/utils";
+import { labelStyles } from "../Form/Label";
 import { css, darkTheme, keyframes } from "../stitches";
+import { innerFocusStyle } from "../stitches/focusStyles";
+import {
+  activeSelector,
+  disabledSelector,
+  intentSelector,
+} from "../stitches/stateSelectors";
 
 const scaleIn = keyframes({
   "0%": { opacity: 0, transform: "scale(0)" },
@@ -48,42 +54,35 @@ export const menuItemStyles = css({
     focusColor: "$colorScheme8",
   },
 
-  ...intentStyle({
+  [`${intentSelector}, ${activeSelector}`]: {
     backgroundColor: "$colorScheme2",
-    focusType: "inner",
+    ...innerFocusStyle,
 
     [`.${darkTheme} &`]: {
       backgroundColor: "$colorScheme4",
       focusColor: "$colorScheme8",
     },
-  }),
+  },
 
-  ...disabledStyle({
+  [`${disabledSelector}`]: {
     color: "$gray11",
     cursor: "not-allowed",
 
-    ...intentStyle({
+    [`${intentSelector}`]: {
       backgroundColor: "$gray2",
-    }),
-  }),
-});
-
-export const menuLabelStyles = css({
-  variants: {
-    variant: {
-      small: {
-        textStyle: "small-text",
-      },
-      medium: {
-        textStyle: "medium-text",
-      },
     },
   },
-
-  defaultVariants: {
-    variant: "medium",
-  },
 });
+
+export const menuLabelStyles = css(
+  {
+    gap: "$3",
+    marginInline: "$2",
+    paddingInline: "$3",
+    paddingBlock: "6px",
+  },
+  labelStyles
+);
 
 export const menuSeparatorStyles = css({
   backgroundColor: "$gray4",

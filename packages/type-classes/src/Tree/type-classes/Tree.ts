@@ -1,5 +1,8 @@
 import { z } from "zod";
-import { Condition, Edge, Input, Node } from "./";
+import * as Condition from "./Condition";
+import * as Edge from "./Edge";
+import * as Input from "./Input";
+import * as Node from "./Node";
 
 import {
   createAnswer,
@@ -15,8 +18,10 @@ import {
   getEdge,
   getInput,
   getInputs,
+  getInputsWithAnswers,
   getNode,
   getTree,
+  getNodeNames,
 } from "../getters";
 import {
   addCondition,
@@ -95,7 +100,9 @@ export function createTreeMethods(tree: TTree) {
     getEdge: getEdge(tree),
     getInput: getInput(tree),
     getInputs: getInputs(tree),
+    getInputsWithAnswers: getInputsWithAnswers(tree),
     getNode: getNode(tree),
+    getNodeNames: getNodeNames(tree),
     getParents: getParents(tree),
     getPaths: getPaths(tree),
     getTree: getTree(tree),
@@ -140,7 +147,9 @@ export {
   getEdge,
   getInput,
   getInputs,
+  getInputsWithAnswers,
   getNode,
+  getNodeNames,
   getTree,
   isValidEdge,
   relateConditionToNode,

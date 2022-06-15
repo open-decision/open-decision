@@ -17,6 +17,7 @@ packages/*/lib
 generated
 stats.html
 .vercel
+.cache
 
 # misc
 .DS_Store
@@ -30,6 +31,8 @@ package-lock.json
 yarn.lock
 .next
 .sentryclirc
+*.log
+.vsls.json
 
 npm-debug.log*
 yarn-debug.log*

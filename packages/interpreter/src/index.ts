@@ -1,2 +1,2 @@
 export * from "./interpreter";
-export * from "./react-binding/useInterpreter";
+export { createInterpreterMethods } from "./methods";

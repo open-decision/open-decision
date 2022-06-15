@@ -1,0 +1,112 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+
+}
+
+generator client {
+  provider      = "prisma-client-js"
+  output        = "./generated/prisma-client"
+  binaryTargets = ["native", "linux-arm64-openssl-1.1.x"]
+}
+
+// generator zod {
+//   provider              = "node_modules/zod-prisma/bin/cli.js"
+//   output                = "./generated/zod"
+//   prismaJsonNullability = false
+// }
+
+model DecisionTree {
+  uuid           String          @id @default(uuid()) @db.Uuid
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  status         TreeStatus      @default(ACTIVE)
+  name           String
+  Tags           Tag[]
+  treeData       Json?           @db.JsonB
+  yDocument      String?
+  owner          User            @relation(fields: [ownerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  ownerUuid      String          @db.Uuid
+  publishedTrees PublishedTree[]
+}
+
+model PublishedTree {
+  uuid           String       @id @default(uuid()) @db.Uuid
+  createdAt      DateTime     @default(now())
+  name           String
+  treeData       Json?        @db.JsonB
+  owner          User         @relation(fields: [ownerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  ownerUuid      String       @db.Uuid
+  originTree     DecisionTree @relation(fields: [originTreeUuid], references: [uuid])
+  originTreeUuid String       @db.Uuid
+}
+
+model User {
+  id               Int              @unique @default(autoincrement())
+  uuid             String           @id @default(uuid()) @db.Uuid
+  name             String?
+  role             Role             @default(USER)
+  email            String           @unique
+  password         String
+  emailIsVerified  Boolean          @default(false)
+  DecisionTrees    DecisionTree[]
+  PublishedTrees   PublishedTree[]
+  Token            Token[]
+  UserTags         Tag[]
+  WhitelistEntries WhitelistEntry[]
+}
+
+model WhitelistEntry {
+  id               Int              @unique @default(autoincrement())
+  createdAt        DateTime         @default(now())
+  createdBy        User             @relation(fields: [creatorUuid], references: [uuid])
+  creatorUuid      String           @db.Uuid
+  emailOrDomain    String           @unique
+  sendInvite       Boolean          @default(false)
+  dateOfLastInvite DateTime?
+  type             WhitelistingType @default(INDIVIDUAL)
+}
+
+model Token {
+  id          Int       @id @default(autoincrement())
+  token       String
+  type        TokenType
+  owner       User      @relation(fields: [ownerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  ownerUuid   String    @db.Uuid
+  expires     DateTime
+  blacklisted Boolean   @default(false)
+}
+
+model Tag {
+  id            Int            @id @default(autoincrement())
+  text          String
+  color         String?
+  owner         User?          @relation(fields: [ownerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  ownerUuid     String?        @db.Uuid
+  DecisionTrees DecisionTree[]
+  // @@unique([ownerUuid, text], map: "TheLastUser_firstName_lastName_unique_constraint")
+}
+
+enum Role {
+  USER
+  STAFF
+  DEVELOPER
+  ADMIN
+}
+
+enum TokenType {
+  ACCESS
+  REFRESH
+  RESET_PASSWORD
+  VERIFY_EMAIL
+}
+
+enum TreeStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+enum WhitelistingType {
+  INDIVIDUAL
+  DOMAIN
+}

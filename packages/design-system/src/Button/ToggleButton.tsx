@@ -4,15 +4,13 @@ import { Button, ButtonProps } from "..";
 
 export type ToggleButtonProps = Toggle.ToggleProps & ButtonProps;
 
-export const ToggleButton = ({
-  children,
-  pressed,
-  defaultPressed,
-  onPressedChange,
-  ...props
-}: ToggleButtonProps) => {
+export const ToggleButton = React.forwardRef<
+  HTMLButtonElement,
+  ToggleButtonProps
+>(({ children, pressed, defaultPressed, onPressedChange, ...props }, ref) => {
   return (
     <Toggle.Root
+      ref={ref}
       asChild
       pressed={pressed}
       defaultPressed={defaultPressed}
@@ -23,4 +21,4 @@ export const ToggleButton = ({
       </Button>
     </Toggle.Root>
   );
-};
+});

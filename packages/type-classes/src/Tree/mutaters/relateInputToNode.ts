@@ -17,4 +17,6 @@ export const relateInputToNode =
       );
 
     node.data.inputs.push(inputId);
+
+    return true;
   };

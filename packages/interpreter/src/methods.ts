@@ -24,6 +24,7 @@ export function createInterpreterMethods(
     getAnswer: (inputId: string) => {
       const maybeAnswer = interpreterContext.answers[inputId];
       if (!maybeAnswer) return undefined;
+
       return maybeAnswer;
     },
     canGoBack: canGoBack(interpreterContext),
@@ -36,6 +37,7 @@ export function createInterpreterMethods(
       "getEdge",
       "getInput",
       "getInputs",
+      "getInputsWithAnswers",
       "getNode",
     ]),
   };

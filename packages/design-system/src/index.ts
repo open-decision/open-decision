@@ -10,7 +10,6 @@ export * from "./Text";
 export * from "./Form";
 export * from "./Link/Link";
 export * from "./Menus";
-export * from "./Label/Label";
 export * from "./Icon/Icon";
 export * from "./Overlays/Dialog/Dialog";
 export * from "./Overlays/Tooltip/Tooltip";
@@ -19,10 +18,15 @@ export * from "./Overlays/HoverCard/HoverCard";
 export * from "./Tabs/Tabs";
 export * from "./LoadingSpinner/LoadingSpinner";
 export * as ScrollArea from "./ScrollArea/ScrollArea";
+export * from "./VisuallyHidden/VisuallyHidden";
+export * from "./Separator";
+export * as Toolbar from "./Toolbar/Toolbar";
 
 // Styling solutions
 export * from "./stitches";
 export { aliasColor } from "./internal/utils";
+export type { ColorKeys } from "./internal/utils";
 export type { SystemColors } from "./internal/utils";
 export * from "./shared/utils";
 export * from "./shared/variants";
+export * from "./stitches/stateSelectors";

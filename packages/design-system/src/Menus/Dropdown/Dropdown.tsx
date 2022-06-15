@@ -8,7 +8,11 @@ import {
   menuLabelStyles,
   menuSeparatorStyles,
 } from "../shared";
-import { CheckIcon, TriangleDownIcon } from "@radix-ui/react-icons";
+import {
+  CheckIcon,
+  TriangleDownIcon,
+  TriangleRightIcon,
+} from "@radix-ui/react-icons";
 import { Button as SystemButton, ButtonProps } from "../../Button";
 
 const DropdownContext = React.createContext<null | {
@@ -129,20 +133,25 @@ export function CheckboxGroup<TOptions extends Record<string, string>>({
 }: CheckboxGroupProps<TOptions>) {
   return (
     <>
-      {Object.entries(options).map(([key, optionText]) => (
-        <CheckboxItem
-          key={key}
-          checked={selected === key}
-          onSelect={() => toggleOption(key)}
-        >
-          {optionText}
-        </CheckboxItem>
-      ))}
+      {Object.entries(options).map(([key, optionText]) => {
+        return optionText ? (
+          <CheckboxItem
+            key={key}
+            checked={selected === key}
+            onSelect={() => toggleOption(key)}
+          >
+            {optionText}
+          </CheckboxItem>
+        ) : null;
+      })}
     </>
   );
 }
 
-function DropdownButtonImpl({ children, css, ...props }: ButtonProps, ref) {
+function DropdownButtonImpl(
+  { children, css, ...props }: ButtonProps,
+  ref: React.Ref<HTMLButtonElement>
+) {
   return (
     <SystemButton
       css={{
@@ -167,6 +176,27 @@ function DropdownButtonImpl({ children, css, ...props }: ButtonProps, ref) {
   );
 }
 
+const StyledTriggerItem = styled(
+  DropdownMenuPrimitives.TriggerItem,
+  menuItemStyles
+);
+
+export const TriggerItem = ({
+  children,
+  css,
+  ...props
+}: DropdownMenuTriggerItemProps) => (
+  <StyledTriggerItem
+    css={{ justifyContent: "space-between", ...css }}
+    {...props}
+  >
+    {children}
+    <Icon>
+      <TriangleRightIcon />
+    </Icon>
+  </StyledTriggerItem>
+);
+
 export const Button = React.forwardRef(DropdownButtonImpl);
 
 export type DropdownMenuRootProps = DropdownMenuPrimitives.DropdownMenuProps & {
@@ -186,7 +216,7 @@ export type DropdownCheckboxItemProps = React.ComponentProps<
 >;
 export type DropdownMenuLabelProps = React.ComponentProps<typeof Label>;
 export type DropdownMenuTriggerItemProps = React.ComponentProps<
-  typeof TriggerItem
+  typeof StyledTriggerItem
 >;
 export type DropdownMenuSeparatorProps = React.ComponentProps<typeof Separator>;
 
@@ -200,10 +230,7 @@ Content.defaultProps = { sideOffset: 5 };
 export const Item = styled(DropdownMenuPrimitives.Item, menuItemStyles);
 export const Label = styled(DropdownMenuPrimitives.Label, menuLabelStyles);
 export const Trigger = DropdownMenuPrimitives.Trigger;
-export const TriggerItem = styled(
-  DropdownMenuPrimitives.TriggerItem,
-  menuItemStyles
-);
+
 export const Separator = styled(
   DropdownMenuPrimitives.Separator,
   menuSeparatorStyles

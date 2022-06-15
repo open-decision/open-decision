@@ -1,14 +1,18 @@
 {
-  "files.exclude": {
-    "**/node_modules": true,
-    "**/node_modules.*": true
-  },
+  "files.exclude": {},
   "conventionalCommits.scopes": [
     "builder",
     "type-classes",
     "design-system",
     "interpreter",
-    "api"
+    "api",
+    "storybook",
+    "renderer-app",
+    "rich-text-editor",
+    "interpreter-react",
+    "models",
+    "api-specification",
+    "tree-api-specification"
   ],
   "typescript.tsdk": "node_modules/typescript/lib",
   "todo-tree.general.tags": [

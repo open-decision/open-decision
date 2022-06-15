@@ -8,6 +8,7 @@ import { ColorKeys } from "../../internal/utils";
 import { Stack } from "../../Layout/Stack";
 import { SubmitButton, SubmitButtonProps } from "../../Button/SubmitButton";
 import { Cross2Icon } from "@radix-ui/react-icons";
+import { Row } from "../../Layout/Row";
 
 function DialogRoot({ children, ...props }: DialogRootProps) {
   return (
@@ -91,21 +92,19 @@ function CloseButton(props: Partial<ButtonProps>) {
   );
 }
 
+const StyledHeader = styled("header", Row, {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "baseline",
+});
+
 function Header({ children, css }: HeaderProps) {
   return (
-    <Box
-      as="header"
-      css={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "baseline",
-        ...css,
-      }}
-    >
+    <StyledHeader css={css}>
       <Dialog.Title asChild>
         <Heading size="extra-small">{children}</Heading>
       </Dialog.Title>
-    </Box>
+    </StyledHeader>
   );
 }
 
@@ -156,7 +155,7 @@ export const Dialog = {
   Trigger: DialogPrimitive.Trigger,
   Content: DialogContent,
   Title: DialogPrimitive.Title,
-  Description: styled(DialogPrimitive.Description, { color: "$gray11" }),
+  Description: styled(DialogPrimitive.Description),
   Close: DialogPrimitive.Close,
   CloseButton,
   Header,

@@ -1,0 +1,33 @@
+{
+  "name": "@open-decision/rich-text-editor",
+  "version": "0.0.0",
+  "main": "./src/index.ts",
+  "sideEffects": false,
+  "scripts": {
+    "typecheck": "tsc -p ./tsconfig.lib.json --noEmit"
+  },
+  "dependencies": {
+    "@tiptap/core": "^2.0.0-beta.176",
+    "@tiptap/extension-bold": "^2.0.0-beta.26",
+    "@tiptap/extension-bullet-list": "^2.0.0-beta.26",
+    "@tiptap/extension-document": "^2.0.0-beta.15",
+    "@tiptap/extension-dropcursor": "^2.0.0-beta.25",
+    "@tiptap/extension-gapcursor": "^2.0.0-beta.34",
+    "@tiptap/extension-hard-break": "^2.0.0-beta.30",
+    "@tiptap/extension-heading": "^2.0.0-beta.26",
+    "@tiptap/extension-horizontal-rule": "^2.0.0-beta.31",
+    "@tiptap/extension-italic": "^2.0.0-beta.26",
+    "@tiptap/extension-link": "^2.0.0-beta.38",
+    "@tiptap/extension-list-item": "^2.0.0-beta.20",
+    "@tiptap/extension-ordered-list": "^2.0.0-beta.27",
+    "@tiptap/extension-paragraph": "^2.0.0-beta.23",
+    "@tiptap/extension-text": "^2.0.0-beta.15",
+    "@tiptap/extension-underline": "^2.0.0-beta.23",
+    "@tiptap/react": "^2.0.0-beta.109",
+    "@radix-ui/react-icons": "^1.1.1"
+  },
+  "peerDependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  }
+}

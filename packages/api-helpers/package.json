@@ -1,0 +1,13 @@
+{
+  "name": "@open-decision/api-helpers",
+  "version": "0.0.1",
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "scripts": {
+    "typecheck": "tsc -p ./tsconfig.lib.json --noEmit"
+  },
+  "dependencies": {
+    "zod": "^3.17.3",
+    "validator": "^13.7.0"
+  }
+}

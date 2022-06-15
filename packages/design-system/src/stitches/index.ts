@@ -35,6 +35,8 @@ import {
   TextStyles,
   SystemColors,
 } from "../internal/utils";
+import { outerFocusStyle, innerFocusStyle } from "./focusStyles";
+import { focusSelector } from "./stateSelectors";
 
 type focusTypes =
   | "inner-within"
@@ -239,22 +241,15 @@ export const designSystem = createStitches({
         case "outer":
         case "outer-within": {
           return {
-            [`&:focus-visible, ${focusWithin}, ${focusOnIntent}, &[data-focus='true']`]:
-              {
-                boxShadow: `0 0 0 1px var(--layer), 0 0 0 3px var(--colors-focusColor, $colors$primary10)`,
-                outline: "none",
-              },
+            [`${focusSelector}, ${focusWithin}, ${focusOnIntent}`]:
+              outerFocusStyle,
           };
         }
 
         default: {
           return {
-            [`&:focus-visible, ${focusWithin}, ${focusOnIntent}, &[data-focus='true']`]:
-              {
-                boxShadow: `inset 0 0 0 1px var(--colors-focusColor, $colors$primary10)`,
-                borderColor: `var(--colors-focusColor, $colors$primary10)`,
-                outline: "none",
-              },
+            [`${focusSelector}, ${focusWithin}, ${focusOnIntent}`]:
+              innerFocusStyle,
           };
         }
       }
@@ -411,3 +406,5 @@ export const darkTheme = createTheme("dark", {
     layer5: "$gray6",
   },
 });
+
+export { innerFocusStyle, outerFocusStyle };

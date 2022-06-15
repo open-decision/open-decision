@@ -7,21 +7,19 @@ export type ProgrammerErrors =
   | "UNAUTHENTICATED_API_CALL"
   | "MISSING_URL_PARTS";
 
-// export type DesignSystemErrors = ""
-
 export type InterpreterErrors =
-  | "GENERIC_ERROR"
   | "INVALID_TREE"
   | "MISSING_STARTNODE"
-  | "NO_EDGE_FOR_THRUTHY_CONDITION"
-  | "NO_TRUTHY_CONDITION";
+  | "NO_CURRENT_NODE";
 
 export type BuilderErrors =
   | "AUTH_VALIDATION_FAILED"
   | "WEBSOCKET_CONNECTION_FAILED";
 
 export enum APIErrors {
-  TREE_NOT_FOUND = 404,
+  NOT_FOUND = 404,
+  NO_TREE_DATA = 400,
+  UNAUTHORIZED = 401,
 }
 
 export type ErrorCodes =

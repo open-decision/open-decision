@@ -1,0 +1,9 @@
+{
+  "name": "@open-decision/user-api-specification",
+  "version": "0.0.1",
+  "type": "commonjs",
+  "sideEffects": false,
+  "scripts": {
+    "typecheck": "tsc -p ./tsconfig.lib.json --noEmit"
+  }
+}

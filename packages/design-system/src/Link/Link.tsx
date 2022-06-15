@@ -1,10 +1,10 @@
 import * as React from "react";
-import { intentStyle } from "../shared/utils";
 import { styled, css } from "../stitches";
+import { intentSelector } from "../stitches/stateSelectors";
 
 export type LinkProps = React.ComponentProps<typeof Link>;
 
-export const baseLinkStyles = css({
+export const linkStyles = css({
   display: "inline-flex",
   alignItems: "center",
   textDecoration: "none",
@@ -12,9 +12,8 @@ export const baseLinkStyles = css({
   colorFallback: "$primary11",
   borderRadius: "$sm",
   focusType: "outer",
-  gap: "$1",
 
-  ...intentStyle({ textDecoration: "underline" }),
+  [`${intentSelector}`]: { textDecoration: "underline" },
 });
 
-export const Link = styled("a", baseLinkStyles);
+export const Link = styled("a", linkStyles);

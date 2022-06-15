@@ -1,49 +1,13 @@
-import {
-  Tree,
-  ODError,
-  ODValidationErrorConstructorParameters,
-  ODValidationError,
-} from "@open-decision/type-classes";
+import { Edge, Tree } from "@open-decision/type-classes";
 import { Required } from "utility-types";
 import { assign, createMachine, Interpreter, Sender } from "xstate";
+import {
+  InvalidTreeError,
+  MissingStartNodeError,
+  MissingEdgeForThruthyConditionException,
+  NoTruthyConditionException,
+} from "./errors";
 import { canGoBack, canGoForward } from "./methods";
-
-export class MissingStartNodeError extends ODError {
-  constructor() {
-    super({
-      message: "The provided tree does not have a startNode",
-      code: "INTERPRETER_MISSING_STARTNODE",
-    });
-  }
-}
-
-export class InvalidTreeError extends ODValidationError {
-  constructor(zodError: ODValidationErrorConstructorParameters["zodError"]) {
-    super({
-      message: `The provided tree is not in the correct format`,
-      code: "INTERPRETER_INVALID_TREE",
-      zodError,
-    });
-  }
-}
-
-export class MissingEdgeForThruthyCondition extends ODError {
-  constructor() {
-    super({
-      message: "There is no Edge for this condition.",
-      code: "INTERPRETER_NO_EDGE_FOR_THRUTHY_CONDITION",
-    });
-  }
-}
-
-export class NoTruthyCondition extends ODError {
-  constructor() {
-    super({
-      message: "No thruthy condition has been found.",
-      code: "INTERPRETER_NO_TRUTHY_CONDITION",
-    });
-  }
-}
 
 export function createInterpreter(
   json: Tree.TTree,
@@ -67,7 +31,7 @@ type ResolveEvents = {
 
 type ResolverEvents =
   | { type: "VALID_INTERPRETATION"; target: string }
-  | { type: "INVALID_INTERPRETATION"; Error: ODError };
+  | { type: "INVALID_INTERPRETATION"; exception: InterpreterExceptions };
 
 const resolveConditions =
   (tree: Tree.TTree) =>
@@ -80,14 +44,14 @@ const resolveConditions =
       const existingAnswerId = context.answers[condition.inputId];
 
       if (condition.answerId === existingAnswerId) {
-        const edge = Object.values(tree.edges ?? {}).find(
+        const edge = Object.values<Edge.TEdge>(tree.edges ?? {}).find(
           (edge) => edge.conditionId === condition.id
         );
 
         if (!edge)
           return callback({
             type: "INVALID_INTERPRETATION",
-            Error: new MissingEdgeForThruthyCondition(),
+            exception: new MissingEdgeForThruthyConditionException(),
           });
 
         return callback({
@@ -98,17 +62,20 @@ const resolveConditions =
     }
     callback({
       type: "INVALID_INTERPRETATION",
-      Error: new NoTruthyCondition(),
+      exception: new NoTruthyConditionException(),
     });
   };
+
+export type InterpreterExceptions =
+  | MissingEdgeForThruthyConditionException
+  | NoTruthyConditionException;
 
 export type InterpreterContext = {
   history: { nodes: string[]; position: number };
   answers: Record<string, string>;
-  Error?: MissingEdgeForThruthyCondition | NoTruthyCondition;
 };
 
-type Events =
+export type InterpreterEvents =
   | { type: "ADD_USER_ANSWER"; inputId: string; answerId: string }
   | { type: "EVALUATE_NODE_CONDITIONS"; conditionIds: string[] }
   | { type: "RESET" }
@@ -121,28 +88,29 @@ type Events =
 export type InterpreterService = Interpreter<
   InterpreterContext,
   any,
-  Events,
+  InterpreterEvents,
   any,
   any
 >;
 
-export type InterpreterOptions = { isDebugMode?: boolean };
+export type InterpreterOptions = {
+  onException?: (exception: InterpreterExceptions) => void;
+};
 
 export const createInterpreterMachine = (
   tree: Required<Tree.TTree, "startNode">,
-  { isDebugMode = false }: InterpreterOptions = {}
+  { onException }: InterpreterOptions = {}
 ) =>
   createMachine(
     {
       tsTypes: {} as import("./interpreter.typegen").Typegen0,
       schema: {
         context: {} as InterpreterContext,
-        events: {} as Events,
+        events: {} as InterpreterEvents,
       },
       context: {
         history: { nodes: [tree.startNode], position: 0 },
         answers: {},
-        Error: undefined,
       },
       id: "interpreter",
       initial: "idle",
@@ -182,17 +150,8 @@ export const createInterpreterMachine = (
               actions: "assignNewTarget",
             },
             INVALID_INTERPRETATION: {
-              target: "error",
-              actions: "assignErrorToContext",
-            },
-          },
-        },
-        error: {
-          on: {
-            RECOVER: {
-              cond: "isDebugMode",
               target: "idle",
-              actions: ["clearErrorFromContext", "goBack"],
+              actions: "callOnException",
             },
           },
         },
@@ -232,12 +191,7 @@ export const createInterpreterMachine = (
             },
           };
         }),
-        assignErrorToContext: assign({
-          Error: (_context, event) => event.Error,
-        }),
-        clearErrorFromContext: assign((_context, _event) => ({
-          Error: undefined,
-        })),
+        callOnException: (_context, event) => onException?.(event.exception),
         assignNewTarget: assign((context, event) => ({
           history: {
             position: context.history.position,
@@ -251,7 +205,6 @@ export const createInterpreterMachine = (
       guards: {
         canGoBack,
         canGoForward,
-        isDebugMode: () => isDebugMode,
       },
     }
   );
