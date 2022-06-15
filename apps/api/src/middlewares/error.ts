@@ -5,6 +5,7 @@ import ApiError from "../utils/ApiError";
 import { NextFunction, Request, Response } from "express";
 import { Prisma } from "@open-decision/models/prisma-client";
 import http from "http";
+import { APIError } from "@open-decision/type-classes";
 
 export const errorConverter = (
   err: any,
@@ -13,7 +14,7 @@ export const errorConverter = (
   next: NextFunction
 ) => {
   let error = err;
-  if (!(error instanceof ApiError)) {
+  if (!(error instanceof APIError)) {
     let statusCode = httpStatus.INTERNAL_SERVER_ERROR;
     if (
       error.statusCode ||
@@ -39,12 +40,14 @@ export const errorConverter = (
 
 // eslint-disable-next-line no-unused-vars
 export const errorHandler = (
-  err: ApiError,
+  err: APIError,
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   let { statusCode, message } = err;
+  const { code } = err;
+
   if (config.NODE_ENV === "production" && !err.isOperational) {
     statusCode = httpStatus.INTERNAL_SERVER_ERROR;
     message =
@@ -55,7 +58,8 @@ export const errorHandler = (
   res.locals.errorMessage = err.message;
 
   const response = {
-    code: statusCode,
+    code,
+    statusCode,
     message,
     ...(config.NODE_ENV === "development" && { stack: err.stack }),
   };

@@ -1,25 +1,16 @@
 import { z } from "zod";
+import { APIError } from "@open-decision/type-classes";
 
 async function getResponseData(response: Response): Promise<unknown> {
-  if (response.ok) {
-    const contentType = response.headers.get("content-type");
-
-    if (contentType?.includes("application/json")) return await response.json();
-
-    return response;
-  }
-
-  if (response.status >= 500) {
-    throw new Error(
-      "Es gab einen Error auf dem Server. Bitte versuchen Sie es erneut."
-    );
-  }
+  let data;
+  const contentType = response.headers.get("content-type");
+  if (contentType?.includes("application/json")) data = await response.json();
 
   if (response.status >= 400) {
-    throw new Error(response.statusText);
+    throw new APIError(data);
   }
 
-  throw new Error(response.statusText);
+  return data;
 }
 
 type Config<TValidation extends z.ZodTypeAny> = {

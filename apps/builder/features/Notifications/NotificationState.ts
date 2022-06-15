@@ -1,6 +1,5 @@
-import create from "zustand";
-import produce from "immer";
 import { v4 as uuidV4 } from "uuid";
+import { proxy, useSnapshot } from "valtio";
 
 export type notificationVariants = "success" | "danger" | "info" | "warning";
 
@@ -17,18 +16,19 @@ export type NotificationState = {
   removeNotification: (id: string) => void;
 };
 
-export const useNotificationStore = create<NotificationState>((set) => ({
+export const notificationState = proxy<NotificationState>({
   notifications: {},
-  addNotification: (notification) =>
-    set(
-      produce((state: NotificationState) => {
-        state.notifications[uuidV4()] = { duration: 5, ...notification };
-      })
-    ),
-  removeNotification: (id) =>
-    set(
-      produce((state: NotificationState) => {
-        delete state.notifications[id];
-      })
-    ),
-}));
+  addNotification: (notification) => {
+    notificationState.notifications[uuidV4()] = {
+      duration: 5,
+      ...notification,
+    };
+  },
+  removeNotification: (id) => {
+    delete notificationState.notifications[id];
+  },
+});
+
+export const useNotificationStore = () => {
+  return useSnapshot(notificationState);
+};

@@ -1,10 +1,9 @@
 import React, { useEffect } from "react";
-import { styled, Icon, Button } from "@open-decision/design-system";
+import { Icon, Button } from "@open-decision/design-system";
 import {
   Notification as NotificationType,
   useNotificationStore,
 } from "./NotificationState";
-import * as Progress from "@radix-ui/react-progress";
 import { motion, useAnimation } from "framer-motion";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { InfoBox } from "./InfoBox";
@@ -13,17 +12,6 @@ type NotificationProps = {
   notification: NotificationType;
   id: string;
 };
-
-const ProgressBar = styled(Progress.Root, {
-  height: 3,
-  margin: "0px 4px 4px 4px",
-});
-
-const ProgressIndicator = styled(Progress.Indicator, {
-  height: "100%",
-  backgroundColor: "$$accentColor",
-  borderRadius: "$md",
-});
 
 export const Notification = ({ notification, id }: NotificationProps) => {
   const animation = useAnimation();
@@ -39,9 +27,7 @@ export const Notification = ({ notification, id }: NotificationProps) => {
     animation.start("empty");
   }, [notification.duration]);
 
-  const removeNotification = useNotificationStore(
-    (state) => state.removeNotification
-  );
+  const { removeNotification } = useNotificationStore();
 
   const progress = {
     full: { width: "100%" },

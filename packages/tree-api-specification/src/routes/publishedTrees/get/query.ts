@@ -13,13 +13,9 @@ export const getPublishedTrees =
 
     if (prefix) combinedUrl = prefix + combinedUrl;
 
-    // if (inputs.query) {
-    //   combinedUrl = combinedUrl + `?${new URLSearchParams(inputs.query)}`;
-    // }
-
     return await safeFetch(
       combinedUrl,
-      { headers: context.headers },
+      { headers: context.headers, cache: "no-cache" },
       { validation: getPublishedTreesOutput }
     );
   };

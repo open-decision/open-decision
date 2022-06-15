@@ -15,10 +15,10 @@ export const publishDecisionTree = async (
     userUuid,
     treeToPublish
   );
-  if (!treeWithUpdatedTreeData || !treeWithUpdatedTreeData.treeData)
-    return treeWithUpdatedTreeData;
 
-  return prisma.publishedTree.create({
+  if (treeWithUpdatedTreeData instanceof Error) return treeWithUpdatedTreeData;
+
+  const publishedTree = prisma.publishedTree.create({
     data: {
       name: treeWithUpdatedTreeData.name,
       treeData: treeWithUpdatedTreeData.treeData,
@@ -26,6 +26,8 @@ export const publishDecisionTree = async (
       originTree: { connect: { uuid: treeToPublish } },
     },
   });
+
+  return publishedTree;
 };
 
 /**

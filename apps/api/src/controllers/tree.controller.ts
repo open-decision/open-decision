@@ -155,6 +155,8 @@ const createPublishedTree = catchAsync(async (req: Request, res: Response) => {
     reqData.params.treeUuid
   );
 
+  if (publishedTree instanceof Error) throw publishedTree;
+
   res.status(httpStatus.CREATED).send(publishedTree);
 });
 
