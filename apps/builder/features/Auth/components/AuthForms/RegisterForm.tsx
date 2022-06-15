@@ -39,8 +39,13 @@ export function CombinedRegisterForm() {
   const { mutate, isSuccess, isError, isLoading, variables } =
     useIsOnWhiteListQuery();
 
-  if (isSuccess && variables?.email)
-    return <RegisterForm email={variables.email} />;
+  // Here we show the RegisterForm either when the below process has happened or directly if the
+  // whitelist feature is deactivated
+  if (
+    (isSuccess && variables?.email) ||
+    !process.env.NEXT_PUBLIC_FEATURE_WHITELIST
+  )
+    return <RegisterForm email={variables?.email} />;
 
   if (isError) {
     return (
@@ -74,10 +79,10 @@ export function CombinedRegisterForm() {
   );
 }
 
-function RegisterForm({ email }: { email: string }) {
+function RegisterForm({ email }: { email?: string }) {
   const formState = Form.useFormState({
     defaultValues: {
-      email,
+      email: email ?? "",
       password: "",
       passwordConfirmation: "",
     },
@@ -108,7 +113,7 @@ function RegisterForm({ email }: { email: string }) {
           css={{ layer: "2" }}
           name={formState.names.email}
           type="email"
-          disabled
+          disabled={!!email}
           placeholder="beispiel@web.de"
         />
       </Form.Field>
