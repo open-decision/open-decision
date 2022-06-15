@@ -5,7 +5,7 @@ import { useNotificationStore } from "./NotificationState";
 import { AnimatePresence } from "framer-motion";
 
 export const Notifications = () => {
-  const notifications = useNotificationStore((state) => state.notifications);
+  const { notifications } = useNotificationStore();
 
   return (
     <Box

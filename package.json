@@ -4,6 +4,7 @@
   "scripts": {
     "serve:builder": "nx run-many --target=serve --projects=builder,api",
     "serve:renderer": "nx run-many --target=serve --projects='renderer-app,api'",
+    "serve": "nx run-many --target=serve --projects=renderer-app,api,builder",
     "remove:node_modules": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' + ",
     "remove:dist": "rm -rf dist"
   },

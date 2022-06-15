@@ -8,13 +8,16 @@ import {
   Row,
   Box,
   intentWithinSelector,
+  Icon,
+  Link as SystemLink,
 } from "@open-decision/design-system";
 import { formatRelative, parseISO } from "date-fns";
-import de from "date-fns/locale/de";
 import Link from "next/link";
+import de from "date-fns/locale/de";
 import { Card as DefaultCard } from "../../../../components/Card";
 import { TreeCardMenu } from "./TreeCardMenu";
 import { TGetTreeOutput } from "@open-decision/tree-api-specification";
+import { ArrowRightIcon } from "@radix-ui/react-icons";
 
 const readableStatus = {
   ACTIVE: "AKTIV",
@@ -51,7 +54,18 @@ export function TreeCard({ tree }: Props) {
               </Badge>
             ) : null}
             {tree.publishedTrees.length > 0 ? (
-              <Badge size="small">VERÖFFENTLICHT</Badge>
+              <SystemLink
+                href={`${process.env.NEXT_PUBLIC_OD_RENDERER_ENDPOINT}/tree/${tree.publishedTrees[0].uuid}`}
+                target="_blank"
+                onClick={(event) => event.stopPropagation()}
+              >
+                <Badge size="small">
+                  VERÖFFENTLICHT{" "}
+                  <Icon>
+                    <ArrowRightIcon />
+                  </Icon>
+                </Badge>
+              </SystemLink>
             ) : null}
           </Row>
           <Text css={{ color: "$gray11" }} size="small">

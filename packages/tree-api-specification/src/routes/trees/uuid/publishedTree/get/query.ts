@@ -18,7 +18,7 @@ export const getPublishedTreesOfTree =
 
     return await safeFetch(
       combinedUrl,
-      { headers: context.headers },
+      { headers: context.headers, cache: "no-cache" },
       { validation: getPublishedTreesOfTreeOutput }
     );
   };

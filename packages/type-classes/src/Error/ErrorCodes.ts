@@ -18,6 +18,8 @@ export type BuilderErrors =
 
 export enum APIErrors {
   NOT_FOUND = 404,
+  NO_TREE_DATA = 400,
+  UNAUTHORIZED = 401,
 }
 
 export type ErrorCodes =

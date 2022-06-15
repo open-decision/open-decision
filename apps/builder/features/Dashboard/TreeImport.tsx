@@ -22,9 +22,7 @@ export const TreeImport = React.forwardRef<
   const [importedData, setImportedData] = React.useState<
     Tree.TTree | undefined
   >();
-  const addNotification = useNotificationStore(
-    (state) => state.addNotification
-  );
+  const { addNotification } = useNotificationStore();
 
   const OD = useOD();
 
