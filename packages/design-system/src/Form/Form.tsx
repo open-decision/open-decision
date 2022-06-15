@@ -2,7 +2,6 @@ import * as Form from "ariakit/form";
 import { styled } from "../stitches";
 import { Checkbox as SystemCheckbox } from "./Checkbox";
 import { labelStyles } from "./Label";
-import { Input as SystemInput, InputProps as SystemInputProps } from "./Input";
 import { ErrorMessage } from "./ErrorMessage";
 import {
   Item as SystemRadioButton,
@@ -23,10 +22,8 @@ export type CheckboxProps = React.ComponentProps<typeof Checkbox>;
 export const Label = styled(Form.FormLabel, labelStyles);
 export type LabelProps = React.ComponentProps<typeof Label>;
 
-export type InputProps = Form.FormInputProps & Omit<SystemInputProps, "name">;
-export const Input = (props: InputProps) => (
-  <Form.FormInput as={SystemInput} {...props} />
-);
+export type { InputProps } from "./Input";
+export { Input } from "./Input";
 
 export const Error = styled(Form.FormError, ErrorMessage);
 export type ErrorProps = React.ComponentProps<typeof Error>;
