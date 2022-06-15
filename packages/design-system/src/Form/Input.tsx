@@ -3,8 +3,8 @@ import * as React from "react";
 import { styled, VariantProps } from "../stitches";
 import { baseInputStyles, baseTextInputStyle } from "./shared/styles";
 import { Box } from "../Box";
-import { useInputFocus } from "./shared/useInputFocus";
 import { alignByContent } from "../shared/variants";
+import { FormInput } from "ariakit/form";
 
 const StyledBox = styled(
   Box,
@@ -14,7 +14,7 @@ const StyledBox = styled(
   { overflow: "hidden" }
 );
 
-const StyledInput = styled("input", {
+const StyledInput = styled(FormInput, {
   paddingBlock: "$$paddingBlock",
   paddingInline: "$$paddingInline",
   border: "none",
@@ -49,8 +49,6 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     },
     ref
   ) {
-    // const [inputFocusRef, hasFocus, setHasFocus] = useInputFocus();
-
     const EnhancedIcon = React.isValidElement(Icon)
       ? React.cloneElement(Icon, {
           // "data-active": hasFocus,
@@ -69,25 +67,13 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         css={{ $color: disabled ? "$gray8" : css?.color, ...css }}
         className={className}
         data-disabled={disabled}
-        // data-focus={hasFocus}
         size={size}
         variant={variant}
         alignByContent={alignByContent}
       >
         {EnhancedIcon}
         <StyledInput
-          // onFocus={(event) => {
-          //   onFocus?.(event);
-          //   setHasFocus(true);
-          // }}
-          // onBlur={(event) => {
-          //   onBlur?.(event);
-          //   setHasFocus(false);
-          // }}
-          ref={(e) => {
-            typeof ref === "function" ? ref?.(e) : null;
-            // inputFocusRef.current = e;
-          }}
+          ref={ref}
           disabled={disabled}
           css={{
             paddingLeft: EnhancedIcon
