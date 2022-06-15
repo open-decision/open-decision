@@ -13,7 +13,6 @@ import {
 import { ErrorBoundary } from "@sentry/nextjs";
 import { FullPageErrorFallback } from "./Error/FullPageErrorFallback";
 import { ErrorReportLink } from "./Error/ErrorReportLink";
-import { FeedbackLink } from "./Error/FeedbackLink";
 
 const AppContainer = styled("main", {
   height: "100%",
@@ -48,14 +47,18 @@ const AlphaBanner = () => {
           css={{
             layer: "3",
             padding: "$2",
-            gap: "$2",
             cursor: "pointer",
             boxShadow: "$1",
+            justifyContent: "space-between",
           }}
           center
         >
-          <Badge css={{ colorScheme: "warning" }}>Alpha</Badge>
-          <Text>Klicke für mehr Informationen.</Text>
+          <Box />
+          <Row center css={{ gap: "$2" }}>
+            <Badge css={{ colorScheme: "warning" }}>Alpha</Badge>
+            <Text>Klicke für mehr Informationen.</Text>
+          </Row>
+          <ErrorReportLink>Feedback</ErrorReportLink>
         </Row>
       </Popover.Trigger>
       <Popover.Content
@@ -75,12 +78,8 @@ const AlphaBanner = () => {
             unserer Software dauerhaft zu gewährleisten.
           </Text>
           <Text>
-            Sollten Programmfehler auftreten, dann beschreibe sie uns bitte
-            hier: <ErrorReportLink />
-          </Text>
-          <Text>
-            Solltest du Ideen zur Verbesserung der Software haben, dann
-            beschreibe sie uns bitte hier: <FeedbackLink />
+            Bei Fehlern oder Feedback jeglicher Art, schreib uns bitte hier:{" "}
+            <ErrorReportLink />
           </Text>
           <Text size="large">Vielen Dank!</Text>
         </Stack>

@@ -11,7 +11,7 @@ import { InputProps as SystemInputProps } from "./Input";
 import { Input as SystemInput } from "./Input";
 
 export type InputProps = Combobox.ComboboxProps &
-  Omit<SystemInputProps, "name">;
+  Omit<SystemInputProps, "name" | "state">;
 export const Input = (props: InputProps) => (
   <Combobox.Combobox as={SystemInput} {...props} />
 );
