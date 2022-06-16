@@ -420,19 +420,19 @@ export const createAuthenticationMachine = (router: NextRouter) =>
             id: context.auth.user.uuid,
           });
         },
-        assignUserToContext: assign((context, event) => {
-          if (
-            event.type !== "REPORT_IS_LOGGED_IN" &&
-            event.type !== "SUCCESSFULL_LOGIN" &&
-            event.type !== "SUCCESSFULL_REGISTER"
-          ) {
-            return context;
-          }
+        assignUserToContext: assign({
+          //@ts-expect-error - Typechecking fails here, because undefined is not assignable to auth in all situations
+          auth: (_, event) => {
+            if (
+              event.type !== "REPORT_IS_LOGGED_IN" &&
+              event.type !== "SUCCESSFULL_LOGIN" &&
+              event.type !== "SUCCESSFULL_REGISTER"
+            ) {
+              return;
+            }
 
-          return {
-            ...context,
-            auth: event.user,
-          };
+            return event.user;
+          },
         }),
         clearUserDetailsFromContext: assign({
           auth: (_context, _event) => undefined,
