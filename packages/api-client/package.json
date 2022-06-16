@@ -1,18 +1,16 @@
 {
-  "name": "@open-decision/tree-api-specification",
+  "name": "@open-decision/api-client",
   "version": "0.0.1",
   "type": "commonjs",
   "sideEffects": false,
+  "main": "./src/index.js",
   "scripts": {
     "typecheck": "tsc -p ./tsconfig.lib.json --noEmit"
   },
   "dependencies": {
     "@open-decision/api-helpers": "workspace:*",
-    "@open-decision/models": "workspace:*",
-    "validator": "^13.7.0",
-    "zod": "^3.17.3"
-  },
-  "devDependencies": {
-    "vitest": "^0.9.2"
+    "@open-decision/auth-api-specification": "workspace:*",
+    "@open-decision/tree-api-specification": "workspace:*",
+    "remeda": "^0.0.35"
   }
 }

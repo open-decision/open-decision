@@ -20,6 +20,7 @@
     "baseUrl": ".",
     "paths": {
       "@open-decision/api-helpers": ["packages/api-helpers/src/index.ts"],
+      "@open-decision/api-client": ["packages/api-client/src/index.ts"],
       "@open-decision/auth-api-specification": [
         "packages/auth-api-specification/src/index.ts"
       ],

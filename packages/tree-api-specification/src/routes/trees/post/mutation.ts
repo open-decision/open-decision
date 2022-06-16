@@ -1,10 +1,10 @@
-import { ClientConfig, Post, safeFetch } from "@open-decision/api-helpers";
+import { TContext, Post, safeFetch } from "@open-decision/api-helpers";
 import { treesCollection } from "../../../urls";
 import { TCreateTreeInput } from "./input";
 import { TCreateTreeOutput, createTreeOutput } from "./output";
 
 export const createTree =
-  (context: ClientConfig): Post<TCreateTreeInput, TCreateTreeOutput> =>
+  (context: TContext): Post<TCreateTreeInput, TCreateTreeOutput> =>
   async (inputs, config) => {
     let combinedUrl = treesCollection;
     const prefix = config?.urlPrefix ?? context.urlPrefix;

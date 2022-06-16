@@ -2,7 +2,6 @@ import { NextRouter } from "next/router";
 import { assign, createMachine, Interpreter } from "xstate";
 import { Doc } from "yjs";
 import { refreshMachine } from "./refresh.machine";
-import { login } from "./utils/login";
 import { logout } from "./utils/logout";
 import { refresh } from "./utils/refresh";
 import { register } from "./utils/register";
@@ -16,6 +15,16 @@ import {
   TRefreshTokenOutput,
   TRegisterOutput,
 } from "@open-decision/auth-api-specification";
+import {
+  client,
+  TAuthenticatedClient,
+  TUnauthenticatedClient,
+} from "@open-decision/api-client";
+
+const createClient = ({
+  urlPrefix = "/external-api",
+  ...context
+}: Parameters<typeof client>[0]) => client({ urlPrefix, ...context });
 
 type SharedContext = {
   location?: string;
@@ -26,10 +35,12 @@ type SharedContext = {
 
 type EmptyContext = {
   auth: undefined;
+  client: TUnauthenticatedClient;
 } & SharedContext;
 
 type DefinedContext = {
   auth: TLoginOutput;
+  client: TAuthenticatedClient;
 } & SharedContext;
 
 export type Context = EmptyContext | DefinedContext;
@@ -90,6 +101,7 @@ export const createAuthenticationMachine = (router: NextRouter) =>
       id: "authentication",
       initial: "undetermined",
       context: {
+        client: createClient({}),
         auth: undefined,
         location: undefined,
         error: undefined,
@@ -108,6 +120,7 @@ export const createAuthenticationMachine = (router: NextRouter) =>
                 target: "loggedIn",
                 actions: [
                   "assignUserToContext",
+                  "assignAuthenticatedClient",
                   "assignLocationToContext",
                   "setTrackingUser",
                 ],
@@ -163,7 +176,10 @@ export const createAuthenticationMachine = (router: NextRouter) =>
                   on: {
                     REPORT_IS_LOGGED_IN: {
                       target: "idle",
-                      actions: "assignUserToContext",
+                      actions: [
+                        "assignUserToContext",
+                        "assignAuthenticatedClient",
+                      ],
                     },
                     REPORT_IS_LOGGED_OUT: "#authentication.loggedOut",
                   },
@@ -276,7 +292,11 @@ export const createAuthenticationMachine = (router: NextRouter) =>
               on: {
                 SUCCESSFULL_LOGIN: {
                   target: "#authentication.loggedIn",
-                  actions: ["assignUserToContext", "removeErrorFromContext"],
+                  actions: [
+                    "assignUserToContext",
+                    "assignAuthenticatedClient",
+                    "removeErrorFromContext",
+                  ],
                 },
                 FAILED_LOGIN: {
                   target: "#authentication.loggedOut",
@@ -297,7 +317,7 @@ export const createAuthenticationMachine = (router: NextRouter) =>
               on: {
                 SUCCESSFULL_REGISTER: {
                   target: "#authentication.loggedIn",
-                  actions: "assignUserToContext",
+                  actions: ["assignUserToContext", "assignAuthenticatedClient"],
                 },
                 FAILED_REGISTER: {
                   target: "#authentication.loggedOut",
@@ -324,20 +344,22 @@ export const createAuthenticationMachine = (router: NextRouter) =>
             () => send({ type: "REPORT_IS_LOGGED_OUT" })
           );
         },
-        login: (_context, event) => async (send) => {
+        login: (context, event) => async (send) => {
           if (event.type !== "LOG_IN") return;
           const { email, password } = event;
 
-          await login(
-            email,
-            password,
-            (data) =>
+          context.client.auth
+            .login({ body: { email, password } })
+            .then((data) =>
               send({
                 type: "SUCCESSFULL_LOGIN",
                 user: data,
-              }),
-            (error) => send({ type: "FAILED_LOGIN", error })
-          );
+              })
+            )
+            .catch((error) => {
+              console.log(error);
+              return send({ type: "FAILED_LOGIN", error });
+            });
         },
         register: (_context, event) => async (send) => {
           if (event.type !== "REGISTER") return;
@@ -443,6 +465,17 @@ export const createAuthenticationMachine = (router: NextRouter) =>
         clearWebsocketDataFromContext: assign({
           id: (_context, _event) => undefined,
           yDoc: (_context, _event) => undefined,
+        }),
+        assignAuthenticatedClient: assign({
+          client: (context, event) => {
+            if (
+              event.type !== "SUCCESSFULL_LOGIN" &&
+              event.type !== "REPORT_IS_LOGGED_IN"
+            )
+              return context.client;
+
+            return createClient({ token: event.user.access.token });
+          },
         }),
       },
       guards: {
