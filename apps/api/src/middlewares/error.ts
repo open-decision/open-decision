@@ -2,7 +2,7 @@ import httpStatus from "http-status";
 import config from "../config/config";
 import { logger } from "../config/logger";
 import { NextFunction, Request, Response } from "express";
-import { Prisma } from "@open-decision/models/prisma-client";
+import { Prisma } from "@open-decision/prisma";
 import http from "http";
 import { APIError } from "@open-decision/type-classes";
 

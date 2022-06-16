@@ -1,4 +1,4 @@
-import { User, TokenType } from "@open-decision/models/prisma-client";
+import { User, TokenType } from "@open-decision/prisma";
 
 // export enum TokenTypes {
 //   ACCESS = "access",

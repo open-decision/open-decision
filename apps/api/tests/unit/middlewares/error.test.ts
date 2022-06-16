@@ -4,9 +4,7 @@ import { errorConverter, errorHandler } from "../../../src/middlewares/error";
 import ApiError from "../../../src/utils/ApiError";
 import config from "../../../src/config/config";
 import { logger } from "../../../src/config/logger";
-import {
-  PrismaClientKnownRequestError,
-} from "@open-decision/models/prisma-client";
+import { PrismaClientKnownRequestError } from "@open-decision/prisma";
 
 describe("Error middlewares", () => {
   describe("Error converter", () => {

@@ -2,7 +2,7 @@ import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import config from "./config";
 import UserHandler from "../models/user.model";
 import { JwtPayload } from "jsonwebtoken";
-import { TokenType } from "@open-decision/models/prisma-client";
+import { TokenType } from "@open-decision/prisma";
 
 export const jwtStrategy = new JwtStrategy(
   {

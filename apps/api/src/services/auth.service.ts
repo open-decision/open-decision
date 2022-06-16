@@ -1,5 +1,5 @@
 import { tokenService, userService } from ".";
-import { TokenType } from "@open-decision/models/prisma-client";
+import { TokenType } from "@open-decision/prisma";
 import UserHandler from "../models/user.model";
 import { tokenHandler } from "../models/token.model";
 import { APIError } from "@open-decision/type-classes";

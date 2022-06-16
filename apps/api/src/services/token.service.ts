@@ -4,7 +4,7 @@ import config from "../config/config";
 import { userService } from "./index";
 import { tokenHandler } from "../models/token.model";
 import { UUID } from "../types/uuid-class";
-import { TokenType, User } from "@open-decision/models/prisma-client";
+import { TokenType, User } from "@open-decision/prisma";
 import { TokenInterface } from "../types/AuthInterfaces";
 import { APIError } from "@open-decision/type-classes";
 /**
