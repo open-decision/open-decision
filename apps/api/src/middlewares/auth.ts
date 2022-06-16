@@ -3,9 +3,9 @@ import * as http from "http";
 import passport from "passport";
 import { Permissions, roleRights } from "../config/roles";
 import { User } from "@open-decision/models/prisma-client";
-import ApiError from "../utils/ApiError";
 import httpStatus from "http-status";
 import { jwtStrategy, jwtWebsocketStrategy } from "../config/passport";
+import { APIError } from "@open-decision/type-classes";
 
 const verifyCallback =
   (
@@ -17,8 +17,8 @@ const verifyCallback =
   async (err: any, user: User, info: any) => {
     if (err || info || !user) {
       return reject(
-        new ApiError({
-          statusCode: httpStatus.UNAUTHORIZED,
+        new APIError({
+          code: "UNAUTHORIZED",
           message: "Please authenticate",
         })
       );
@@ -41,9 +41,9 @@ const verifyCallback =
         req.params.userUuid !== user.uuid
       ) {
         return reject(
-          new ApiError({
-            statusCode: httpStatus.FORBIDDEN,
-            message: "Forbidden",
+          new APIError({
+            code: "FORBIDDEN",
+            message: "User is not allowed to request this ressource.",
           })
         );
       }

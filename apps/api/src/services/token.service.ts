@@ -3,11 +3,10 @@ import dayjs from "dayjs";
 import config from "../config/config";
 import { userService } from "./index";
 import { tokenHandler } from "../models/token.model";
-import ApiError from "../utils/ApiError";
 import { UUID } from "../types/uuid-class";
 import { TokenType, User } from "@open-decision/models/prisma-client";
-import httpStatus from "http-status";
 import { TokenInterface } from "../types/AuthInterfaces";
+import { APIError } from "@open-decision/type-classes";
 /**
  * Generate token
  * @param {(UUID|string)} userId
@@ -192,8 +191,8 @@ const generateAuthTokens = async (user: User) => {
 const generateResetPasswordToken = async (email: string) => {
   const user = await userService.getUserByEmail(email);
   if (!user) {
-    throw new ApiError({
-      statusCode: httpStatus.NOT_FOUND,
+    throw new APIError({
+      code: "USER_NOT_FOUND",
       message: "No users found with this email",
     });
   }

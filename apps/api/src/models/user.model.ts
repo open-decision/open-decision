@@ -1,11 +1,10 @@
-import ApiError from "../utils/ApiError";
 import { User as PrismaUser } from "@open-decision/models/prisma-client";
 import { UserBody } from "../types/types";
 import prisma from "../init-prisma-client";
 import * as argon2 from "argon2";
 import getConstraint from "../utils/getConstraint";
-import httpStatus from "http-status";
 import config from "../config/config";
+import { APIError } from "@open-decision/type-classes";
 
 /**
  * Create a new user
@@ -16,12 +15,10 @@ import config from "../config/config";
 async function create(email: string, password: string) {
   if (await emailIsTaken(email)) {
     //OWASP: use a different error message (OWASP recommendation)?
-    throw new ApiError({
-      name: "EmailAlreadyUsed",
-      statusCode: httpStatus.BAD_REQUEST,
+    throw new APIError({
+      code: "EMAIL_ALREADY_USED",
       message:
         "The e-mail adress is already being used. Please choose another e-mail address.",
-      // "A link to activate your account has been emailed to the address provided.",
     });
   } else {
     if (config.DEV_ACCOUNT_WHITELIST.includes(email)) {

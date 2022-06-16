@@ -1,7 +1,5 @@
 import { UserBody } from "../types/types";
 import UserHandler from "../models/user.model";
-import ApiError from "../utils/ApiError";
-import httpStatus from "http-status";
 import {
   createManyWhitelistEntries,
   deleteManyWhitelistEntries,
@@ -9,6 +7,7 @@ import {
   emailIsWhitelisted,
 } from "../models/whitelistEntry.model";
 import config from "../config/config";
+import { APIError } from "@open-decision/type-classes";
 /**
  * Create a user
  * @param {string} email
@@ -19,8 +18,8 @@ const createUser = async (email: string, password: string) => {
   if (config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS) {
     const isWhitelisted = await emailIsWhitelisted(email);
     if (!isWhitelisted.result) {
-      throw new ApiError({
-        statusCode: httpStatus.FORBIDDEN,
+      throw new APIError({
+        code: "EMAIL_NOT_WHITELISTED",
         message: "The email is not whitelisted.",
       });
     } else {
@@ -63,14 +62,14 @@ const updateUserByUuidOrId = async (
 ) => {
   const user = await getUserByUuidOrId(userIdOrUUID);
   if (!user) {
-    throw new ApiError({
-      statusCode: httpStatus.NOT_FOUND,
+    throw new APIError({
+      code: "USER_NOT_FOUND",
       message: "User not found",
     });
   }
   if (Object.keys(updateBody).length === 0) {
-    throw new ApiError({
-      statusCode: httpStatus.BAD_REQUEST,
+    throw new APIError({
+      code: "INVALID_DATA",
       message: "The update data is empty",
     });
   }
@@ -80,8 +79,8 @@ const updateUserByUuidOrId = async (
     (await UserHandler.emailIsTaken(updateBody.email))
   ) {
     //OWASP: use a different error message (OWASP recommendation)?
-    throw new ApiError({
-      statusCode: httpStatus.BAD_REQUEST,
+    throw new APIError({
+      code: "EMAIL_ALREADY_USED",
       message: "Email already taken",
     });
   }
@@ -98,8 +97,8 @@ const deleteUserByUuidOrId = async (userIdOrUUID: string | number) => {
     return await UserHandler.remove(userIdOrUUID);
   } catch {
     //OWASP: use a different error message (OWASP recommendation)?
-    throw new ApiError({
-      statusCode: httpStatus.NOT_FOUND,
+    throw new APIError({
+      code: "USER_NOT_FOUND",
       message: "User not found",
     });
   }
@@ -138,8 +137,8 @@ const whitelistUsersByMail = async (
   try {
     await createManyWhitelistEntries(emails, creatorUuid, sendInvite);
   } catch {
-    throw new ApiError({
-      statusCode: httpStatus.BAD_REQUEST,
+    throw new APIError({
+      code: "WHITELIST_ENTRY_COULD_NOT_BE_CREATED",
       message: "Creation of whitelist entries failed.",
     });
   }
@@ -153,8 +152,8 @@ const removeWhitelistedUsersByMail = async (emailsOrDomains: Array<string>) => {
   try {
     await deleteManyWhitelistEntries(emailsOrDomains);
   } catch {
-    throw new ApiError({
-      statusCode: httpStatus.BAD_REQUEST,
+    throw new APIError({
+      code: "WHITELIST_ENTRY_COULD_NOT_BE_DELETED",
       message: "Deletion of whitelist entries failed.",
     });
   }

@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
 import * as R from "remeda";
 import httpStatus from "http-status";
-import ApiError from "../utils/ApiError";
 import catchAsync from "../utils/catchAsync";
 import pickSafeUserProperties from "../utils/pickSafeUserProperties";
 import { userService } from "../services";
 import { userValidation } from "../validations";
 import validateRequest from "../validations/validateRequest";
+import { APIError } from "@open-decision/type-classes";
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
   const reqData = await validateRequest(userValidation.createUser)(req);
@@ -30,8 +30,8 @@ const getUser = catchAsync(async (req: Request, res: Response) => {
 
   const user = await userService.getUserByUuidOrId(reqData.params.userUuid);
   if (!user) {
-    throw new ApiError({
-      statusCode: httpStatus.NOT_FOUND,
+    throw new APIError({
+      code: "NOT_FOUND",
       message: "User not found",
     });
   }

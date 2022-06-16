@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import catchAsync from "../utils/catchAsync";
-import ApiError from "../utils/ApiError";
 import httpStatus from "http-status";
 import validateRequest from "../validations/validateRequest";
 import {
@@ -24,9 +23,9 @@ const getPublishedTrees = catchAsync(async (req: Request, res: Response) => {
     });
 
   if (!publishedTree)
-    throw new ApiError({
+    throw new APIError({
       message: "Published tree not found.",
-      statusCode: httpStatus.NOT_FOUND,
+      code: "NOT_FOUND",
     });
 
   res.send(publishedTree);

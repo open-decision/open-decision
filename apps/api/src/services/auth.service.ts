@@ -1,9 +1,8 @@
-import httpStatus from "http-status";
 import { tokenService, userService } from ".";
-import ApiError from "../utils/ApiError";
 import { TokenType } from "@open-decision/models/prisma-client";
 import UserHandler from "../models/user.model";
 import { tokenHandler } from "../models/token.model";
+import { APIError } from "@open-decision/type-classes";
 /**
  * Login with username and password
  * @param {string} email
@@ -17,8 +16,8 @@ const loginUserWithEmailAndPassword = async (
 ) => {
   const user = await userService.getUserByEmail(email);
   if (!user || !(await UserHandler.isPasswordMatch(password, user))) {
-    throw new ApiError({
-      statusCode: httpStatus.UNAUTHORIZED,
+    throw new APIError({
+      code: "INCORRECT_EMAIL_OR_PASSWORD",
       message: "Incorrect email or password",
     });
   }
@@ -53,8 +52,8 @@ const refreshAuth = async (refreshToken: string) => {
   try {
     return await tokenService.refreshTokens(refreshToken);
   } catch (error) {
-    throw new ApiError({
-      statusCode: httpStatus.UNAUTHORIZED,
+    throw new APIError({
+      code: "UNAUTHENTICATED",
       message: "Please authenticate",
     });
   }
@@ -95,8 +94,8 @@ const resetPassword = async (
 
     //TODO: add acccessToken to blocklist
   } catch (error) {
-    throw new ApiError({
-      statusCode: httpStatus.UNAUTHORIZED,
+    throw new APIError({
+      code: "PASSWORD_RESET_FAILED",
       message: "Password reset failed",
     });
   }
@@ -127,8 +126,8 @@ const verifyEmail = async (verifyEmailToken: string) => {
 
     await userService.updateUserByUuidOrId(user.id, { emailIsVerified: true });
   } catch (error) {
-    throw new ApiError({
-      statusCode: httpStatus.UNAUTHORIZED,
+    throw new APIError({
+      code: "EMAIL_VERIFICATION_FAILED",
       message: "Email verification failed",
     });
   }
