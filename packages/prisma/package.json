@@ -1,0 +1,13 @@
+{
+  "name": "@open-decision/prisma",
+  "dependencies": {
+    "@prisma/client": "~3.14.0",
+    "encoding": "^0.1.13",
+    "prisma": "~3.14.0",
+    "zod-prisma": "^0.5.4"
+  },
+  "prisma": {
+    "schema": "src/schema.prisma"
+  },
+  "main": "./src/generated/prisma-client/index.js"
+}

@@ -66,7 +66,8 @@
     "y-websocket": "^1.3.18",
     "yjs": "^13.5.34",
     "zod": "^3.11.6",
-    "@types/validator": "^13.7.0"
+    "@types/validator": "^13.7.0",
+    "@open-decision/prisma": "workspace:*"
   },
   "devDependencies": {
     "@types/compression": "^1.7.2",

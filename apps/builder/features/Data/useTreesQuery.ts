@@ -3,7 +3,7 @@ import { useOD } from "./odClient";
 
 export const useTreesQueryKey = "Trees";
 export function useTreesQuery() {
-  const OD = useOD();
+  const OD = useOD("authenticated");
 
   return useQuery(
     useTreesQueryKey,
