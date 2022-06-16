@@ -20,6 +20,7 @@ import {
   forgotPassword,
   resetPassword,
   verifyEmail,
+  refreshToken,
 } from "@open-decision/auth-api-specification";
 import { merge } from "remeda";
 import { Required } from "utility-types";
@@ -37,8 +38,8 @@ export const unauthenticatedClient = (config: TClientConfig) => {
   return {
     auth: {
       login: login(context),
-      logout: logout(context),
       register: register(context),
+      refreshToken: refreshToken(context),
       resetPassword: resetPassword(context),
       forgotPassword: forgotPassword(context),
       verifyEmail: verifyEmail(context),
@@ -53,6 +54,9 @@ export const unauthenticatedClient = (config: TClientConfig) => {
 const authenticatedClient = (config: Required<TClientConfig, "token">) => {
   const context = createContext(config);
   return merge(unauthenticatedClient(context), {
+    auth: {
+      logout: logout(context),
+    },
     trees: {
       getSingle: getTree(context),
       getCollection: getTrees(context),

@@ -9,7 +9,7 @@ import { TLogoutInput } from "./input";
 import { logoutOutput, TLogoutOutput } from "./output";
 
 export const logout =
-  (context: TContext): Post<TLogoutInput, TLogoutOutput> =>
+  (context: TContext): Post<Omit<TLogoutInput, "cookies">, TLogoutOutput> =>
   async (_, config) => {
     const combinedUrl = prefixUrl(
       logoutUrl,

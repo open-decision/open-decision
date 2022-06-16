@@ -9,7 +9,9 @@ import { TRefreshTokenInput } from "./input";
 import { refreshTokenOutput, TRefreshTokenOutput } from "./output";
 
 export const refreshToken =
-  (context: TContext): Post<TRefreshTokenInput, TRefreshTokenOutput> =>
+  (
+    context: TContext
+  ): Post<Omit<TRefreshTokenInput, "cookies">, TRefreshTokenOutput> =>
   async (_, config) => {
     const combinedUrl = prefixUrl(
       refreshTokenUrl,
