@@ -112,18 +112,6 @@ function RegisterForm({ email }: { email?: string }) {
         formState.names.passwordConfirmation,
         "Die Passwörter stimmen nicht überein."
       );
-
-    if (!formState.values.privacy)
-      formState.setError(
-        formState.names.privacy,
-        "Die Datenschutzerklärung muss akzeptiert werden."
-      );
-
-    if (!formState.values.legal)
-      formState.setError(
-        formState.names.legal,
-        "Der Haftungsausschluss muss akzeptiert werden."
-      );
   });
 
   const [state, send] = useAuth();
@@ -161,12 +149,16 @@ function RegisterForm({ email }: { email?: string }) {
       <Stack css={{ gap: "$2", marginTop: "$4" }}>
         <Stack>
           <Row css={{ alignItems: "center", gap: "$2" }}>
-            <Form.Checkbox name="privacy" required />
+            <Form.Checkbox
+              formState={formState}
+              name={formState.names.privacy}
+              required
+            />
             <Box as="span" css={{ lineHeight: "2px" }}>
               <Form.Label
                 css={{ display: "inline" }}
                 size="small"
-                name="privacy"
+                name={formState.names.privacy}
               >
                 Ich habe die
               </Form.Label>{" "}
@@ -180,36 +172,28 @@ function RegisterForm({ email }: { email?: string }) {
               <Form.Label
                 css={{ display: "inline" }}
                 size="small"
-                name="privacy"
+                name={formState.names.privacy}
               >
                 gelesen und stimme ihr zu.
               </Form.Label>
             </Box>
           </Row>
-          <Form.Error name="privacy" css={{ marginTop: "$2" }} />
+          <Form.Error
+            name={formState.names.privacy}
+            css={{ marginTop: "$2" }}
+          />
         </Stack>
-        <Stack>
-          <Row css={{ alignItems: "center", gap: "$2" }}>
-            <Form.Checkbox name="legal" required />
-
-            <Box as="span" css={{ lineHeight: "1em" }}>
-              <Form.Label css={{ display: "inline" }} size="small" name="legal">
-                Ich habe den
-              </Form.Label>{" "}
-              <InternalLink
-                href="https://open-decision.org/disclaimer"
-                target="_blank"
-                size="small"
-              >
-                Haftungsausschluss
-              </InternalLink>{" "}
-              <Form.Label css={{ display: "inline" }} size="small" name="legal">
-                zur Kenntnis genommen und bin damit einverstanden.
-              </Form.Label>
-            </Box>
-          </Row>
-          <Form.Error name="legal" css={{ marginTop: "$2" }} />
-        </Stack>
+        <Form.Field
+          css={{ textStyle: "small-text" }}
+          layout="inline-right"
+          Label="Ich habe zur Kenntnis genommen, dass sich die Software in einer frühen Entwicklungsphase befindet und ein fehlerfreier Betrieb nicht garantiert werden kann."
+        >
+          <Form.Checkbox
+            formState={formState}
+            name={formState.names.legal}
+            required
+          />
+        </Form.Field>
       </Stack>
       {state.context.error ? (
         <ErrorMessage css={{ marginBlock: "$2" }}>

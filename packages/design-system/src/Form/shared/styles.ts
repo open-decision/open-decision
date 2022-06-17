@@ -8,11 +8,6 @@ export const baseInputStyles = css({
 
   transition: "all 0.2s",
 
-  "&[data-state='checked']": {
-    backgroundColor: "$colorScheme9",
-    borderColor: "$colorScheme9",
-  },
-
   "&:disabled, &[data-disabled='true']": {
     opacity: 0.4,
     borderColor: "$gray8",
@@ -70,11 +65,14 @@ export const baseTextInputStyle = css({
 });
 
 export const baseInputBoxStyles = css({
-  width: "20px",
-  height: "20px",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   color: "white",
   focusType: "outer-within",
+
+  "&[data-checked='true']": {
+    backgroundColor: "$colorScheme9",
+    borderColor: "$colorScheme9",
+  },
 });

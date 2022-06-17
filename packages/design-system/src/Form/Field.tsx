@@ -4,6 +4,7 @@ import { StyleObject } from "../stitches";
 import { Form } from ".";
 import { VisuallyHidden } from "ariakit";
 import { Stack } from "../Layout";
+import { Box } from "../Box";
 
 export type FieldProps = {
   children: JSX.Element;
@@ -24,17 +25,15 @@ export function Field({ Label, children, css, layout = "block" }: FieldProps) {
     throw new Error(`The Field components input child needs a name.`);
 
   const name = children.props.name;
-  const value = children.props.value;
 
   const EnhancedInput = React.cloneElement(children, {
-    id: `${name}-${value}`,
     css: { ...children.props?.css, gridArea: "input" },
   });
 
   const isLabelHidden = layout === "no-label";
 
   return (
-    <Stack css={css}>
+    <Stack css={{ textStyle: "medium-text", ...css }}>
       {isLabelHidden ? (
         <>
           <VisuallyHidden>
@@ -50,21 +49,37 @@ export function Field({ Label, children, css, layout = "block" }: FieldProps) {
             gridArea: "label",
             gridTemplateAreas: `"label" "input"`,
             gap: "$2",
+            textStyle: "inherit",
 
             "&[data-layout='inline-left']": {
               gridTemplateAreas: `"label input"`,
-              gridTemplateColumns: "max-content 1fr",
+              gridTemplateColumns: "max(max-content, 100%) 1fr",
             },
 
             "&[data-layout='inline-right']": {
               gridTemplateAreas: `"input label"`,
-              gridTemplateColumns: "max-content max-content",
+              gridTemplateColumns:
+                "max(max-content, 100%) max(max-content, 100%)",
             },
           }}
           data-layout={layout}
         >
-          <span style={{ gridArea: "label" }}>{Label}</span>
-          <span style={{ gridArea: "input" }}>{EnhancedInput}</span>
+          <Box
+            as="span"
+            css={{
+              gridArea: "label",
+              ...(typeof Label === "string"
+                ? {
+                    wordBreak: "break-word",
+                  }
+                : {}),
+            }}
+          >
+            {Label}
+          </Box>
+          <Box as="span" css={{ gridArea: "input" }}>
+            {EnhancedInput}
+          </Box>
         </Form.Label>
       )}
       <Form.Error name={name} css={{ gridArea: "error", marginTop: "$2" }} />
