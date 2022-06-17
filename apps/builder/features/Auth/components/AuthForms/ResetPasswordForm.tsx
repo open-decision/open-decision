@@ -23,7 +23,7 @@ export function ResetPasswordForm({ token }: Props) {
 
   return (
     <Form.Root state={formState}>
-      <Form.Field label="Neues Passwort">
+      <Form.Field Label="Neues Passwort">
         <Form.Input
           name={formState.names.newPassword}
           required
