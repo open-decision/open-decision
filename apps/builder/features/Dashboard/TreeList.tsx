@@ -34,7 +34,7 @@ export const TreeList = () => {
   const hasTrees = trees && trees.length > 0;
 
   const { search, setSearch, SortButton, FilterButton, filteredData } =
-    useFilter(trees ?? [], sorts, "updatedAt", filters);
+    useFilter(trees ?? [], sorts, "updatedAt", filters, "active");
 
   const formState = Form.useFormState({
     defaultValues: { search },
