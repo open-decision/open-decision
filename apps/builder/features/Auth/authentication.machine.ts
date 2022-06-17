@@ -69,7 +69,7 @@ export type Events =
   | { type: "SUCCESSFULL_LOGIN"; user: TLoginOutput }
   | { type: "FAILED_LOGIN"; error: string }
   | { type: "SAFE_USER"; user: TLoginOutput }
-  | { type: "REGISTER"; email: string; password: string }
+  | { type: "REGISTER"; email: string; password: string; toc: true }
   | { type: "SUCCESSFULL_REGISTER"; user: TRegisterOutput }
   | { type: "FAILED_REGISTER"; error: string }
   | { type: "SUCCESSFULL_REDIRECT" }
@@ -360,10 +360,10 @@ export const createAuthenticationMachine = (router: NextRouter) =>
         register: (context, event) => async (send) => {
           if (event.type !== "REGISTER") return;
 
-          const { email, password } = event;
+          const { email, password, toc } = event;
 
           context.client.auth
-            .register({ body: { email, password } })
+            .register({ body: { email, password, toc } })
             .then((user) =>
               send({
                 type: "SUCCESSFULL_REGISTER",
