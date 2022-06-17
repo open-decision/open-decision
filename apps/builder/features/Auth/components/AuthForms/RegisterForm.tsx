@@ -1,4 +1,10 @@
-import { Form, ErrorMessage, Text } from "@open-decision/design-system";
+import {
+  Form,
+  ErrorMessage,
+  Stack,
+  Box,
+  Row,
+} from "@open-decision/design-system";
 import { useAuth } from "../../useAuth";
 import { useMutation, UseMutationOptions } from "react-query";
 import axios from "axios";
@@ -64,7 +70,7 @@ export function CombinedRegisterForm() {
       state={formState}
       css={{ display: "flex", flexDirection: "column" }}
     >
-      <Form.Field label="Mailadresse">
+      <Form.Field Label="Mailadresse">
         <Form.Input
           css={{ layer: "2" }}
           type="email"
@@ -96,6 +102,7 @@ function RegisterForm({ email }: { email?: string }) {
       type: "REGISTER",
       email: formState.values.email,
       password: formState.values.password,
+      toc: true,
     });
   });
 
@@ -105,30 +112,44 @@ function RegisterForm({ email }: { email?: string }) {
         formState.names.passwordConfirmation,
         "Die Passwörter stimmen nicht überein."
       );
+
+    if (!formState.values.privacy)
+      formState.setError(
+        formState.names.privacy,
+        "Die Datenschutzerklärung muss akzeptiert werden."
+      );
+
+    if (!formState.values.legal)
+      formState.setError(
+        formState.names.legal,
+        "Der Haftungsausschluss muss akzeptiert werden."
+      );
   });
 
   const [state, send] = useAuth();
 
   return (
     <Form.Root state={formState}>
-      <Form.Field label="Mailadresse">
+      <Form.Field Label="Mailadresse">
         <Form.Input
           css={{ layer: "2" }}
           name={formState.names.email}
           type="email"
           disabled={!!email}
           placeholder="beispiel@web.de"
+          required
         />
       </Form.Field>
-      <Form.Field label="Passwort" css={{ marginTop: "$4" }}>
+      <Form.Field Label="Passwort" css={{ marginTop: "$4" }}>
         <Form.Input
           css={{ layer: "2" }}
           type="password"
           name={formState.names.password}
           placeholder="*******"
+          required
         />
       </Form.Field>
-      <Form.Field label="Passwort wiederholen" css={{ marginTop: "$4" }}>
+      <Form.Field Label="Passwort wiederholen" css={{ marginTop: "$4" }}>
         <Form.Input
           css={{ layer: "2" }}
           type="password"
@@ -137,65 +158,59 @@ function RegisterForm({ email }: { email?: string }) {
           placeholder="*******"
         />
       </Form.Field>
-      <Form.Field
-        customLabel
-        label={
-          <Text size="small">
-            <Form.Label
-              css={{ display: "inline", textStyle: "inherit" }}
-              name="legal"
-            >
-              Ich habe die
-            </Form.Label>{" "}
-            <InternalLink
-              href="https://open-decision.org/privacy"
-              target="_blank"
-              css={{ textStyle: "inherit" }}
-            >
-              Datenschutzerklärung
-            </InternalLink>{" "}
-            <Form.Label
-              css={{ display: "inline", textStyle: "inherit" }}
-              name="legal"
-            >
-              gelesen und stimme ihr zu.
-            </Form.Label>
-          </Text>
-        }
-        layout="inline-right"
-        css={{ marginTop: "$4" }}
-      >
-        <Form.Checkbox name="privacy" required />
-      </Form.Field>
-      <Form.Field
-        customLabel
-        label={
-          <Text size="small">
-            <Form.Label
-              css={{ display: "inline", textStyle: "inherit" }}
-              name="legal"
-            >
-              Ich habe den
-            </Form.Label>{" "}
-            <InternalLink
-              href="https://open-decision.org/disclaimer"
-              target="_blank"
-              css={{ textStyle: "inherit" }}
-            >
-              Haftungsausschluss
-            </InternalLink>{" "}
-            <Form.Label
-              css={{ display: "inline", textStyle: "inherit" }}
-              name="legal"
-            >
-              zur Kenntnis genommen und bin damit einverstanden.
-            </Form.Label>
-          </Text>
-        }
-        layout="inline-right"
-      >
-        <Form.Checkbox name="legal" required />
-      </Form.Field>
+      <Stack css={{ gap: "$2", marginTop: "$4" }}>
+        <Stack>
+          <Row css={{ alignItems: "center", gap: "$2" }}>
+            <Form.Checkbox name="privacy" required />
+            <Box as="span" css={{ lineHeight: "2px" }}>
+              <Form.Label
+                css={{ display: "inline" }}
+                size="small"
+                name="privacy"
+              >
+                Ich habe die
+              </Form.Label>{" "}
+              <InternalLink
+                href="https://open-decision.org/privacy"
+                target="_blank"
+                size="small"
+              >
+                Datenschutzerklärung
+              </InternalLink>{" "}
+              <Form.Label
+                css={{ display: "inline" }}
+                size="small"
+                name="privacy"
+              >
+                gelesen und stimme ihr zu.
+              </Form.Label>
+            </Box>
+          </Row>
+          <Form.Error name="privacy" css={{ marginTop: "$2" }} />
+        </Stack>
+        <Stack>
+          <Row css={{ alignItems: "center", gap: "$2" }}>
+            <Form.Checkbox name="legal" required />
+
+            <Box as="span" css={{ lineHeight: "1em" }}>
+              <Form.Label css={{ display: "inline" }} size="small" name="legal">
+                Ich habe den
+              </Form.Label>{" "}
+              <InternalLink
+                href="https://open-decision.org/disclaimer"
+                target="_blank"
+                size="small"
+              >
+                Haftungsausschluss
+              </InternalLink>{" "}
+              <Form.Label css={{ display: "inline" }} size="small" name="legal">
+                zur Kenntnis genommen und bin damit einverstanden.
+              </Form.Label>
+            </Box>
+          </Row>
+          <Form.Error name="legal" css={{ marginTop: "$2" }} />
+        </Stack>
+      </Stack>
       {state.context.error ? (
         <ErrorMessage css={{ marginBlock: "$2" }}>
           {state.context.error}
