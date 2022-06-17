@@ -1,5 +1,6 @@
 import { styled, css } from "../stitches";
 import { disabledSelector } from "../stitches/stateSelectors";
+import { textSizeVariant } from "../Text";
 
 export const labelStyles = css({
   display: "inline-flex",
@@ -7,27 +8,10 @@ export const labelStyles = css({
   alignItems: "center",
   gap: "$2",
   fontWeight: "500",
+  lineHeight: "0.5",
 
   [`${disabledSelector}`]: { color: "$gray11" },
-
-  variants: {
-    size: {
-      small: {
-        textStyle: "small-text",
-      },
-      medium: {
-        textStyle: "medium-text",
-      },
-      large: {
-        textStyle: "large-text",
-      },
-    },
-  },
-
-  defaultVariants: {
-    size: "medium",
-  },
 });
 
 export type LabelProps = React.ComponentProps<typeof Label>;
-export const Label = styled("label", labelStyles);
+export const Label = styled("label", textSizeVariant, labelStyles);
