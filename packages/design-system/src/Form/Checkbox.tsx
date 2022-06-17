@@ -1,37 +1,47 @@
-import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
+import * as CheckboxPrimitive from "ariakit/checkbox";
 import * as React from "react";
 import { styled } from "../stitches";
 
 import { baseInputBoxStyles, baseInputStyles } from "./shared/styles";
-import { CheckIcon } from "@radix-ui/react-icons";
+import { VisuallyHidden } from "ariakit/visually-hidden";
+import { Box } from "../Box";
 
-const Indicator = styled(CheckboxPrimitive.Indicator, {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
+const StyledCheckbox = styled(Box, baseInputStyles, baseInputBoxStyles, {
+  boxSizing: "border-box",
+  borderRadius: "$md",
+  padding: "2px",
 });
 
-const StyledCheckbox = styled(
-  CheckboxPrimitive.Root,
-  baseInputStyles,
-  baseInputBoxStyles,
-  {
-    boxSizing: "border-box",
-    borderRadius: "$md",
-    padding: "4px",
-  }
-);
+export type CheckboxProps = CheckboxPrimitive.CheckboxStateProps<boolean> &
+  Omit<CheckboxPrimitive.CheckboxProps, "name">;
+export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
+  function Box({ defaultValue, value, setValue, ...props }, ref) {
+    const checkbox = CheckboxPrimitive.useCheckboxState<boolean>({
+      defaultValue,
+      setValue,
+      value,
+    });
 
-export type CheckboxProps = React.ComponentProps<typeof StyledCheckbox>;
+    const [focusVisible, setFocusVisible] = React.useState(false);
 
-export const Checkbox = React.forwardRef<HTMLButtonElement, CheckboxProps>(
-  function Box(props, ref) {
     return (
-      <StyledCheckbox {...props} ref={ref}>
-        <Indicator>
-          <CheckIcon width="100%" height="100%" />
-        </Indicator>
-      </StyledCheckbox>
+      <label>
+        <VisuallyHidden>
+          <CheckboxPrimitive.Checkbox
+            state={checkbox}
+            onFocusVisible={() => setFocusVisible(true)}
+            onBlur={() => setFocusVisible(false)}
+            ref={ref}
+            {...props}
+          />
+        </VisuallyHidden>
+        <StyledCheckbox
+          data-checked={checkbox.value}
+          data-focus-visible={focusVisible ? "" : null}
+        >
+          <CheckboxPrimitive.CheckboxCheck checked={checkbox.value} />
+        </StyledCheckbox>
+      </label>
     );
   }
 );

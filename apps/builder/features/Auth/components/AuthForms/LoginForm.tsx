@@ -29,7 +29,7 @@ export function LoginForm() {
   return (
     <Form.Root state={formState} css={{ gap: "$6" }}>
       <Stack>
-        <Form.Field label="Mailadresse">
+        <Form.Field Label="Mailadresse">
           <Form.Input
             required
             name={formState.names.email}
@@ -38,7 +38,7 @@ export function LoginForm() {
           />
         </Form.Field>
         <Form.Field
-          label={
+          Label={
             <Row
               css={{
                 justifyContent: "space-between",

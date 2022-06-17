@@ -1,8 +1,15 @@
-import { Form, ErrorMessage } from "@open-decision/design-system";
+import {
+  Form,
+  ErrorMessage,
+  Stack,
+  Box,
+  Row,
+} from "@open-decision/design-system";
 import { useAuth } from "../../useAuth";
 import { useMutation, UseMutationOptions } from "react-query";
 import axios from "axios";
 import { InfoBox } from "../../../Notifications/InfoBox";
+import { InternalLink } from "../../../../components/InternalLink";
 
 type Data = { email: string };
 
@@ -63,7 +70,7 @@ export function CombinedRegisterForm() {
       state={formState}
       css={{ display: "flex", flexDirection: "column" }}
     >
-      <Form.Field label="Mailadresse">
+      <Form.Field Label="Mailadresse">
         <Form.Input
           css={{ layer: "2" }}
           type="email"
@@ -85,6 +92,8 @@ function RegisterForm({ email }: { email?: string }) {
       email: email ?? "",
       password: "",
       passwordConfirmation: "",
+      legal: false,
+      privacy: false,
     },
   });
 
@@ -93,6 +102,7 @@ function RegisterForm({ email }: { email?: string }) {
       type: "REGISTER",
       email: formState.values.email,
       password: formState.values.password,
+      toc: true,
     });
   });
 
@@ -108,24 +118,26 @@ function RegisterForm({ email }: { email?: string }) {
 
   return (
     <Form.Root state={formState}>
-      <Form.Field label="Mailadresse">
+      <Form.Field Label="Mailadresse">
         <Form.Input
           css={{ layer: "2" }}
           name={formState.names.email}
           type="email"
           disabled={!!email}
           placeholder="beispiel@web.de"
+          required
         />
       </Form.Field>
-      <Form.Field label="Passwort" css={{ marginTop: "$4" }}>
+      <Form.Field Label="Passwort" css={{ marginTop: "$4" }}>
         <Form.Input
           css={{ layer: "2" }}
           type="password"
           name={formState.names.password}
           placeholder="*******"
+          required
         />
       </Form.Field>
-      <Form.Field label="Passwort wiederholen" css={{ marginTop: "$4" }}>
+      <Form.Field Label="Passwort wiederholen" css={{ marginTop: "$4" }}>
         <Form.Input
           css={{ layer: "2" }}
           type="password"
@@ -134,6 +146,55 @@ function RegisterForm({ email }: { email?: string }) {
           placeholder="*******"
         />
       </Form.Field>
+      <Stack css={{ gap: "$2", marginTop: "$4" }}>
+        <Stack>
+          <Row css={{ alignItems: "center", gap: "$2" }}>
+            <Form.Checkbox
+              formState={formState}
+              name={formState.names.privacy}
+              required
+            />
+            <Box as="span" css={{ lineHeight: "2px" }}>
+              <Form.Label
+                css={{ display: "inline" }}
+                size="small"
+                name={formState.names.privacy}
+              >
+                Ich habe die
+              </Form.Label>{" "}
+              <InternalLink
+                href="https://open-decision.org/privacy"
+                target="_blank"
+                size="small"
+              >
+                Datenschutzerklärung
+              </InternalLink>{" "}
+              <Form.Label
+                css={{ display: "inline" }}
+                size="small"
+                name={formState.names.privacy}
+              >
+                gelesen und stimme ihr zu.
+              </Form.Label>
+            </Box>
+          </Row>
+          <Form.Error
+            name={formState.names.privacy}
+            css={{ marginTop: "$2" }}
+          />
+        </Stack>
+        <Form.Field
+          css={{ textStyle: "small-text" }}
+          layout="inline-right"
+          Label="Ich habe zur Kenntnis genommen, dass sich die Software in einer frühen Entwicklungsphase befindet und ein fehlerfreier Betrieb nicht garantiert werden kann."
+        >
+          <Form.Checkbox
+            formState={formState}
+            name={formState.names.legal}
+            required
+          />
+        </Form.Field>
+      </Stack>
       {state.context.error ? (
         <ErrorMessage css={{ marginBlock: "$2" }}>
           {state.context.error}
