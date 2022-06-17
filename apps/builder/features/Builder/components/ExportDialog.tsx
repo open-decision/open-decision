@@ -87,7 +87,7 @@ export function ExportDialog({
                 </Text>
               </Dialog.Description>
               <Form.Root state={formState} css={{ marginTop: "$4" }}>
-                <Form.Field label="Dateiname">
+                <Form.Field Label="Dateiname">
                   <Form.Input name={formState.names.name} />
                 </Form.Field>
                 <Form.Submit

@@ -56,7 +56,7 @@ export const TreeList = () => {
         }}
       >
         <Form.Field
-          label="Suche"
+          Label="Suche"
           layout="no-label"
           css={{ flexBasis: "400px" }}
         >

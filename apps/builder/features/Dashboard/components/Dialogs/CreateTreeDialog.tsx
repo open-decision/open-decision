@@ -47,7 +47,7 @@ export const CreateTreeDialog = ({
           css={{ display: "flex", flexDirection: "column" }}
         >
           <Form.Field
-            label={<Dialog.Description>Projektname</Dialog.Description>}
+            Label={<Dialog.Description>Projektname</Dialog.Description>}
           >
             <Form.Input name={formState.names.treeName} required autoFocus />
           </Form.Field>
