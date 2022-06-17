@@ -4,12 +4,14 @@ type Props<TOptions extends Record<string, string>> = {
   filter?: keyof TOptions;
   options: TOptions;
   setFilter: (newOption: keyof TOptions) => void;
+  defaultFilter?: string;
 };
 
 export function FilterButton<TOptions extends Record<string, string>>({
   filter,
   options,
   setFilter,
+  defaultFilter,
 }: Props<TOptions>) {
   return (
     <DropdownMenu.Root>
@@ -19,7 +21,8 @@ export function FilterButton<TOptions extends Record<string, string>>({
             variant="secondary"
             size="small"
             css={{
-              colorScheme: filter ? "primary" : "gray",
+              colorScheme:
+                filter && filter !== defaultFilter ? "primary" : "gray",
             }}
           >
             <span>

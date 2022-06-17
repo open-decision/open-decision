@@ -7,10 +7,9 @@ import compression from "compression";
 import { morganSuccessHandler, morganErrorHandler } from "./config/morgan";
 import config from "./config/config";
 import { errorConverter, errorHandler } from "./middlewares/error";
-import ApiError from "./utils/ApiError";
 import { authLimiter } from "./middlewares/rateLimiter";
-import httpStatus from "http-status";
 import router from "./routes/v1";
+import { APIError } from "@open-decision/type-classes";
 
 export const app = express();
 
@@ -54,9 +53,9 @@ app.use("/v1", router);
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {
   next(
-    new ApiError({
-      statusCode: httpStatus.NOT_FOUND,
-      message: "Not found.",
+    new APIError({
+      code: "NOT_FOUND",
+      message: "Route does not exist.",
     })
   );
 });

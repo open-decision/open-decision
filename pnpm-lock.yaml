@@ -113,6 +113,7 @@ importers:
 
   apps/api:
     specifiers:
+      '@open-decision/prisma': workspace:*
       '@types/compression': ^1.7.2
       '@types/cookie-parser': ^1.4.2
       '@types/cors': ^2.8.12
@@ -193,6 +194,7 @@ importers:
       yjs: ^13.5.34
       zod: ^3.11.6
     dependencies:
+      '@open-decision/prisma': link:../../packages/prisma
       '@types/validator': 13.7.2
       '@zxcvbn-ts/core': 1.2.0
       '@zxcvbn-ts/language-common': 1.0.2
@@ -382,12 +384,12 @@ importers:
   apps/renderer-app:
     specifiers:
       '@babel/preset-env': ^7.18.2
+      '@open-decision/api-client': workspace:*
       '@open-decision/design-system': workspace:*
       '@open-decision/interpreter': workspace:*
       '@open-decision/interpreter-react': workspace:*
       '@open-decision/renderer': workspace:*
       '@open-decision/rich-text-editor': workspace:*
-      '@open-decision/tree-api-specification': workspace:*
       '@open-decision/type-classes': workspace:*
       '@remix-run/dev': ^1.5.1
       '@remix-run/eslint-config': ^1.5.1
@@ -402,12 +404,12 @@ importers:
       react-dom: ^17.0.2
       typescript: ^4.6.4
     dependencies:
+      '@open-decision/api-client': link:../../packages/api-client
       '@open-decision/design-system': link:../../packages/design-system
       '@open-decision/interpreter': link:../../packages/interpreter
       '@open-decision/interpreter-react': link:../../packages/interpreter-react
       '@open-decision/renderer': link:../../packages/renderer
       '@open-decision/rich-text-editor': link:../../packages/rich-text-editor
-      '@open-decision/tree-api-specification': link:../../packages/tree-api-specification
       '@open-decision/type-classes': link:../../packages/type-classes
       '@remix-run/node': 1.5.1_sfoxds7t5ydpegc3knd667wn6m
       '@remix-run/react': 1.5.1_sfoxds7t5ydpegc3knd667wn6m
@@ -460,6 +462,18 @@ importers:
       '@storybook/testing-library': 0.0.11_sfoxds7t5ydpegc3knd667wn6m
       babel-loader: 8.2.5_@babel+core@7.18.2
       storybook-dark-mode: 1.1.0
+
+  packages/api-client:
+    specifiers:
+      '@open-decision/api-helpers': workspace:*
+      '@open-decision/auth-api-specification': workspace:*
+      '@open-decision/tree-api-specification': workspace:*
+      remeda: ^0.0.35
+    dependencies:
+      '@open-decision/api-helpers': link:../api-helpers
+      '@open-decision/auth-api-specification': link:../auth-api-specification
+      '@open-decision/tree-api-specification': link:../tree-api-specification
+      remeda: 0.0.35
 
   packages/api-helpers:
     specifiers:
@@ -572,6 +586,9 @@ importers:
       xstate: 4.32.1
 
   packages/models:
+    specifiers: {}
+
+  packages/prisma:
     specifiers:
       '@prisma/client': ~3.14.0
       encoding: ^0.1.13
@@ -640,7 +657,7 @@ importers:
   packages/tree-api-specification:
     specifiers:
       '@open-decision/api-helpers': workspace:*
-      '@open-decision/models': workspace:^*
+      '@open-decision/models': workspace:*
       validator: ^13.7.0
       vitest: ^0.9.2
       zod: ^3.17.3
@@ -8460,7 +8477,7 @@ packages:
   /@types/cross-spawn/6.0.2:
     resolution: {integrity: sha512-KuwNhp3eza+Rhu8IFI5HUXRP0LIhqH5cAjubUvGXXthh4YYBuP2ntwEX+Cz8GJoZUHlKo247wPWOfA9LYEq4cw==}
     dependencies:
-      '@types/node': 16.11.38
+      '@types/node': 17.0.38
     dev: false
 
   /@types/dagre/0.7.47:
@@ -21995,6 +22012,10 @@ packages:
 
   /remeda/0.0.32:
     resolution: {integrity: sha512-FEdl8ONpqY7AvvMHG5WYdomc0mGf2khHPUDu6QvNkOq4Wjkw5BvzWM4QyksAQ/US1sFIIRG8TVBn6iJx6HbRrA==}
+    dev: false
+
+  /remeda/0.0.35:
+    resolution: {integrity: sha512-3/HunoFQVnPNkh8tX1kmKx8thZWpnENgRVRbaze0IYiWkLDbMxrQWai5bZt+yOedf5fkrnj9+iJ+bCU27+Zuzw==}
     dev: false
 
   /remove-accents/0.4.2:

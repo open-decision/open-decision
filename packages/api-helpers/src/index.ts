@@ -4,6 +4,8 @@ export type {
   Post,
   Delete,
   Patch,
-  ClientConfig,
+  TContext,
+  TJWT,
 } from "./fetchClientFunctionHelpers";
+export { prefixUrl } from "./prefixUrl";
 export { AuthHeader } from "./fetchClientFunctionHelpers";

@@ -1,7 +1,6 @@
 import { ZodSchema } from "zod";
 import { Request } from "express";
-import ApiError from "../utils/ApiError";
-import httpStatus from "http-status";
+import { APIError } from "@open-decision/type-classes";
 
 const validateRequest =
   <TSchema>(schema: ZodSchema<TSchema>) =>
@@ -11,8 +10,8 @@ const validateRequest =
     if (!validationResult.success) {
       const errors = validationResult.error.format();
 
-      throw new ApiError({
-        statusCode: httpStatus.BAD_REQUEST,
+      throw new APIError({
+        code: "VALIDATION_ERROR",
         message: JSON.stringify(errors),
       });
     }

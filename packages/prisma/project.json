@@ -1,0 +1,41 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/prisma/src",
+  "projectType": "library",
+  "targets": {
+    "serve": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "pnpm prisma studio",
+        "cwd": "packages/prisma"
+      }
+    },
+    "build": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          "mkdir -p ../../dist/packages/prisma/src",
+          "cp -R ./src/generated ../../dist/packages/prisma/src"
+        ],
+        "cwd": "packages/prisma",
+        "parallel": false
+      },
+      "dependsOn": [{ "target": "generate_prisma", "projects": "self" }]
+    },
+    "generate_prisma": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "prisma generate --schema=./src/schema.prisma",
+        "cwd": "packages/prisma"
+      }
+    },
+    "migrate:deploy": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "prisma migrate deploy --schema=./src/schema.prisma",
+        "cwd": "packages/prisma"
+      }
+    }
+  },
+  "tags": []
+}

@@ -16,7 +16,7 @@
     "@open-decision/interpreter-react": "workspace:*",
     "@open-decision/rich-text-editor": "workspace:*",
     "@open-decision/interpreter": "workspace:*",
-    "@open-decision/tree-api-specification": "workspace:*",
+    "@open-decision/api-client": "workspace:*",
     "@remix-run/node": "^1.5.1",
     "@remix-run/react": "^1.5.1",
     "@remix-run/serve": "^1.5.1",

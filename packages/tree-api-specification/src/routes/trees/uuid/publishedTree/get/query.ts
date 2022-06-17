@@ -1,4 +1,4 @@
-import { ClientConfig, Get, safeFetch } from "@open-decision/api-helpers";
+import { TContext, Get, safeFetch } from "@open-decision/api-helpers";
 import { publishedTreesOfTreesCollection } from "../../../../../urls";
 import { TGetPublishedTreeOfTreeInput } from "./input";
 import {
@@ -8,7 +8,7 @@ import {
 
 export const getPublishedTreesOfTree =
   (
-    context: ClientConfig
+    context: TContext
   ): Get<TGetPublishedTreeOfTreeInput, TGetPublishedTreesOfTreeOutput> =>
   async (inputs, config) => {
     let combinedUrl = publishedTreesOfTreesCollection(inputs.params?.treeUuid);

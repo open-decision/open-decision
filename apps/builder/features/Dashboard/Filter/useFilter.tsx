@@ -24,10 +24,13 @@ export function useFilter<
   data: any[],
   sortOptions: TSortOptions,
   initialSortOption: keyof TSortOptions,
-  filterOptions: TFilterOptions
+  filterOptions: TFilterOptions,
+  defaultFilter?: string
 ) {
   const [search, setSearch] = React.useState("");
-  const [filter, setFilter] = React.useState<keyof TFilterOptions>("");
+  const [filter, setFilter] = React.useState<keyof TFilterOptions>(
+    defaultFilter ?? ""
+  );
   const [sort, setSort] = React.useState<keyof TSortOptions>(initialSortOption);
   const [direction, setDirection] = React.useState<SortDirections>("ascending");
 
@@ -69,12 +72,15 @@ export function useFilter<
       <GenericFilterButton
         options={filterOptions}
         setFilter={(newFilter) =>
-          newFilter === filter ? setFilter("") : setFilter(newFilter)
+          newFilter === filter
+            ? setFilter(defaultFilter ?? "")
+            : setFilter(newFilter)
         }
-        filter={filter as string}
+        filter={filter}
+        defaultFilter={defaultFilter}
       />
     ),
-    [filter, filterOptions]
+    [defaultFilter, filter, filterOptions]
   );
 
   return {

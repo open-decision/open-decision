@@ -3,14 +3,7 @@
   "sourceRoot": "packages/models/src",
   "projectType": "library",
   "targets": {
-    "serve": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "command": "pnpm prisma studio",
-        "cwd": "packages/models"
-      }
-    },
-    "build_lib": {
+    "build": {
       "executor": "@nrwl/js:swc",
       "outputs": ["{options.outputPath}"],
       "options": {
@@ -18,29 +11,6 @@
         "main": "packages/models/src/index.ts",
         "tsConfig": "packages/models/tsconfig.lib.json",
         "assets": ["packages/models/*.md", "**/generated/prisma-client/*"]
-      },
-      "dependsOn": [{ "target": "generate_prisma", "projects": "self" }]
-    },
-    "build": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "command": "cp -R ./src/generated ../../dist/packages/models/src",
-        "cwd": "packages/models"
-      },
-      "dependsOn": [{ "target": "build_lib", "projects": "self" }]
-    },
-    "generate_prisma": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "command": "prisma generate --schema=./src/schema.prisma",
-        "cwd": "packages/models"
-      }
-    },
-    "migrate:deploy": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "command": "prisma migrate deploy --schema=./src/schema.prisma",
-        "cwd": "packages/models"
       }
     },
     "lint": {

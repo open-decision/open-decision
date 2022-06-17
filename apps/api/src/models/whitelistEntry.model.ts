@@ -1,7 +1,4 @@
-import {
-  WhitelistEntry,
-  WhitelistingType,
-} from "@open-decision/models/prisma-client";
+import { WhitelistEntry, WhitelistingType } from "@open-decision/prisma";
 import prisma from "../init-prisma-client";
 import validator from "validator";
 /**

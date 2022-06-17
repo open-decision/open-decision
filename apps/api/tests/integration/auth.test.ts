@@ -25,7 +25,7 @@ import {
 } from "../fixtures/token.fixture";
 import UserHandler from "../../src/models/user.model";
 import { tokenHandler } from "../../src/models/token.model";
-import { TokenType } from "@open-decision/models/prisma-client";
+import { TokenType } from "@open-decision/prisma";
 import {
   hasNoRefreshCookie,
   hasRefreshCookie,
