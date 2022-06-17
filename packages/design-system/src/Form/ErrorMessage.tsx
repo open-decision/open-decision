@@ -7,6 +7,10 @@ export const ErrorMessage = styled(Box, textStyles, {
   backgroundColor: "$danger1",
   borderRadius: "$md",
 
+  "&:empty": {
+    display: "none",
+  },
+
   "&:not(:empty)": {
     padding: "$1 $2",
     border: "1px solid $colors$danger5",

@@ -1,8 +1,9 @@
-import { Form, ErrorMessage } from "@open-decision/design-system";
+import { Form, ErrorMessage, Text } from "@open-decision/design-system";
 import { useAuth } from "../../useAuth";
 import { useMutation, UseMutationOptions } from "react-query";
 import axios from "axios";
 import { InfoBox } from "../../../Notifications/InfoBox";
+import { InternalLink } from "../../../../components/InternalLink";
 
 type Data = { email: string };
 
@@ -85,6 +86,8 @@ function RegisterForm({ email }: { email?: string }) {
       email: email ?? "",
       password: "",
       passwordConfirmation: "",
+      legal: false,
+      privacy: false,
     },
   });
 
@@ -133,6 +136,65 @@ function RegisterForm({ email }: { email?: string }) {
           required
           placeholder="*******"
         />
+      </Form.Field>
+      <Form.Field
+        customLabel
+        label={
+          <Text size="small">
+            <Form.Label
+              css={{ display: "inline", textStyle: "inherit" }}
+              name="legal"
+            >
+              Ich habe die
+            </Form.Label>{" "}
+            <InternalLink
+              href="https://open-decision.org/privacy"
+              target="_blank"
+              css={{ textStyle: "inherit" }}
+            >
+              Datenschutzerklärung
+            </InternalLink>{" "}
+            <Form.Label
+              css={{ display: "inline", textStyle: "inherit" }}
+              name="legal"
+            >
+              gelesen und stimme ihr zu.
+            </Form.Label>
+          </Text>
+        }
+        layout="inline-right"
+        css={{ marginTop: "$4" }}
+      >
+        <Form.Checkbox name="privacy" required />
+      </Form.Field>
+      <Form.Field
+        customLabel
+        label={
+          <Text size="small">
+            <Form.Label
+              css={{ display: "inline", textStyle: "inherit" }}
+              name="legal"
+            >
+              Ich habe den
+            </Form.Label>{" "}
+            <InternalLink
+              href="https://open-decision.org/disclaimer"
+              target="_blank"
+              css={{ textStyle: "inherit" }}
+            >
+              Haftungsausschluss
+            </InternalLink>{" "}
+            <Form.Label
+              css={{ display: "inline", textStyle: "inherit" }}
+              name="legal"
+            >
+              zur Kenntnis genommen und bin damit einverstanden.
+            </Form.Label>
+          </Text>
+        }
+        layout="inline-right"
+      >
+        <Form.Checkbox name="legal" required />
       </Form.Field>
       {state.context.error ? (
         <ErrorMessage css={{ marginBlock: "$2" }}>
