@@ -27,8 +27,6 @@ stats.html
 .env.test.local
 .env.production
 .env.js
-package-lock.json
-yarn.lock
 .next
 .sentryclirc
 *.log

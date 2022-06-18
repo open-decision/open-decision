@@ -6,7 +6,7 @@
   "sideEffects": false,
   "dependencies": {
     "@xstate/react": "^3.0.0",
-    "xstate": "^4.31.0",
+    "xstate": "^4.32.1",
     "@open-decision/interpreter": "workspace:*"
   },
   "peerDependencies": {

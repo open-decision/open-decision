@@ -1,10 +1,12 @@
 {
   "name": "@open-decision/prisma",
+  "version": "0.0.1",
   "dependencies": {
     "@prisma/client": "~3.14.0",
     "encoding": "^0.1.13",
     "prisma": "~3.14.0",
-    "zod-prisma": "^0.5.4"
+    "zod-prisma": "^0.5.4",
+    "zod": "^3"
   },
   "prisma": {
     "schema": "src/schema.prisma"
