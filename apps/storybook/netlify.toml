@@ -1,6 +1,0 @@
-[build.environment]
-  NPM_FLAGS = "--version"
-[build]
-  command = "npx pnpm install --store=node_modules/.pnpm-store && npx pnpm build-storybook"
-[[plugins]]
-  package = "../../plugins/pnpm-preinstaller"
