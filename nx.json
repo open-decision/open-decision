@@ -21,6 +21,11 @@
   "cli": {
     "defaultCollection": "@nrwl/js"
   },
+  "pluginsConfig": {
+    "@nrwl/js": {
+      "analyzeSourceFiles": true
+    }
+  },
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "targetDefaults": {
     "build": {

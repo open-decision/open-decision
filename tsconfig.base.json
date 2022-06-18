@@ -12,56 +12,36 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "lib": [
-      "es2019",
-      "dom"
-    ],
+    "lib": ["es2019", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "declaration": false,
     "rootDir": ".",
     "baseUrl": ".",
     "paths": {
-      "@open-decision/api-client": [
-        "packages/api-client/src/index.ts"
-      ],
-      "@open-decision/api-helpers": [
-        "packages/api-helpers/src/index.ts"
-      ],
+      "@open-decision/api-client": ["packages/api-client/src/index.ts"],
+      "@open-decision/api-helpers": ["packages/api-helpers/src/index.ts"],
       "@open-decision/auth-api-specification": [
         "packages/auth-api-specification/src/index.ts"
       ],
-      "@open-decision/design-system": [
-        "packages/design-system/src/index.ts"
-      ],
-      "@open-decision/interpreter": [
-        "packages/interpreter/src/index.ts"
-      ],
+      "@open-decision/design-system": ["packages/design-system/src/index.ts"],
+      "@open-decision/interpreter": ["packages/interpreter/src/index.ts"],
       "@open-decision/interpreter-react": [
         "packages/interpreter-react/src/index.ts"
       ],
-      "@open-decision/models": [
-        "packages/models/src/index.ts"
-      ],
-      "@open-decision/renderer": [
-        "packages/renderer/src/index.ts"
-      ],
+      "@open-decision/models": ["packages/models/src/index.ts"],
+      "@open-decision/renderer": ["packages/renderer/src/index.ts"],
       "@open-decision/rich-text-editor": [
         "packages/rich-text-editor/src/index.ts"
       ],
       "@open-decision/tree-api-specification": [
         "packages/tree-api-specification/src/index.ts"
       ],
-      "@open-decision/type-classes": [
-        "packages/type-classes/src/index.ts"
-      ],
+      "@open-decision/type-classes": ["packages/type-classes/src/index.ts"],
       "@open-decision/user-api-specification": [
         "packages/user-api-specification/src/index.ts"
       ]
     }
   },
-  "exclude": [
-    "node_modules",
-    "tmp"
-  ]
+  "exclude": ["node_modules", "tmp"]
 }
