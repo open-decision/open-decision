@@ -7,7 +7,8 @@
     "build": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
-        "command": "pnpm remix build apps/renderer-app"
+        "command": "pnpm remix build",
+        "cwd": "apps/renderer-app"
       }
     },
     "serve": {
@@ -27,17 +28,7 @@
       "executor": "@nrwl/workspace:run-commands",
       "options": {
         "command": "fly deploy --config apps/renderer-app/fly.toml --dockerfile apps/renderer-app/Dockerfile"
-      },
-      "dependsOn": [
-        {
-          "target": "build",
-          "projects": "self"
-        },
-        {
-          "target": "build",
-          "projects": "dependencies"
-        }
-      ]
+      }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
