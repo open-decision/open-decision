@@ -1,8 +1,7 @@
-import { NextPage } from "next";
 import * as React from "react";
 import { Layout } from "../../../components";
 
-export function getAuthLayout(page: NextPage) {
+export function getAuthLayout(page: React.ReactElement) {
   return (
     <Layout
       css={{
