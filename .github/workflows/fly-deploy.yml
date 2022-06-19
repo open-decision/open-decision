@@ -11,14 +11,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: latest
+          run_install: true
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 16
           cache: "pnpm"
-      - uses: pnpm/action-setup@v2.2.2
-        with:
-          version: latest
-          run_install: true
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: pnpm nx deploy renderer-app
