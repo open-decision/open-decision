@@ -20,7 +20,12 @@
         "cwd": "packages/prisma",
         "parallel": false
       },
-      "dependsOn": [{ "target": "generate_prisma", "projects": "self" }]
+      "dependsOn": [
+        {
+          "target": "generate_prisma",
+          "projects": "self"
+        }
+      ]
     },
     "generate_prisma": {
       "executor": "@nrwl/workspace:run-commands",

@@ -1,10 +1,5 @@
 {
-  "extends": [
-    "plugin:@nrwl/nx/react-typescript",
-    "../../.eslintrc.json",
-    "next",
-    "next/core-web-vitals"
-  ],
+  "extends": ["../../.eslintrc.json", "next", "next/core-web-vitals"],
   "ignorePatterns": ["!**/*", "**/*typegen.ts"],
   "overrides": [
     {
@@ -13,14 +8,6 @@
         "@next/next/no-html-link-for-pages": ["error", "apps/builder/pages"]
       }
     }
-    // {
-    //   "files": ["*.ts", "*.tsx"],
-    //   "rules": {}
-    // },
-    // {
-    //   "files": ["*.js", "*.jsx"],
-    //   "rules": {}
-    // }
   ],
   "env": {
     "jest": true

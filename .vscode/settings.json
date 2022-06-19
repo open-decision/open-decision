@@ -1,5 +1,4 @@
 {
-  "files.exclude": {},
   "conventionalCommits.scopes": [
     "builder",
     "type-classes",
@@ -16,20 +15,13 @@
     "api-client"
   ],
   "typescript.tsdk": "node_modules/typescript/lib",
-  "todo-tree.general.tags": [
-    "BUG",
-    "HACK",
-    "FIXME",
-    "TODO",
-    "XXX",
-    "INSECURE",
-    "SECURITY",
-    "WARNING",
-    "INFO"
-  ],
+  "todo-tree.general.tags": ["BUG", "HACK", "FIXME", "TODO", "SECURITY"],
   "rest-client.environmentVariables": {
     "$shared": {
       "dev_email": "dev@open-decision.org"
     }
-  }
+  },
+  "conventionalCommits.gitmoji": false,
+  "conventionalCommits.lineBreak": "\\n",
+  "conventionalCommits.showEditor": true
 }

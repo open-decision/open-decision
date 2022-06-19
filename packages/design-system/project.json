@@ -5,12 +5,16 @@
   "targets": {
     "build": {
       "executor": "@nrwl/js:swc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/packages/design-system",
         "main": "packages/design-system/src/index.ts",
         "tsConfig": "packages/design-system/tsconfig.lib.json",
-        "assets": ["packages/design-system/*.md"]
+        "assets": [
+          "packages/design-system/*.md"
+        ]
       }
     },
     "publish": {
@@ -27,9 +31,13 @@
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
-        "lintFilePatterns": ["packages/design-system/**/*.ts"]
+        "lintFilePatterns": [
+          "packages/design-system/**/*.ts"
+        ]
       }
     },
     "test": {

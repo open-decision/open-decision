@@ -9,5 +9,8 @@
     "migrate:deploy": "pnpm prisma migrate deploy",
     "generate": "prisma generate --schema=./src/schema.prisma",
     "typecheck": "tsc -p ./tsconfig.lib.json --noEmit"
+  },
+  "dependencies": {
+    "zod": "^3"
   }
 }

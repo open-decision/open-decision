@@ -15,7 +15,7 @@ RUN pnpm fetch
 
 COPY . .
 
-RUN pnpm install -r --offline
+RUN pnpm install --offline --shamefully-hoist
 RUN pnpm nx build api
 
 ENV PRISMA_QUERY_ENGINE_BINARY=/prisma-engines/query-engine \
@@ -34,4 +34,4 @@ WORKDIR /app
 COPY --from=image_builder /app .
 RUN npm install -g pnpm
 
-CMD pnpm nx migrate:deploy models && pnpm nx start api
+CMD pnpm nx migrate:deploy prisma && pnpm nx start api

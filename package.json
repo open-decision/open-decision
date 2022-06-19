@@ -1,83 +1,87 @@
 {
   "name": "open-decision",
   "repository": "https://github.com/open-legal-tech/open-decision",
+  "workspaces": [
+    "packages/**",
+    "apps/**"
+  ],
   "scripts": {
     "serve:builder": "nx run-many --target=serve --projects=builder,api",
     "serve:renderer": "nx run-many --target=serve --projects='renderer-app,api'",
     "serve": "nx run-many --target=serve --projects=renderer-app,api,builder",
     "remove:node_modules": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' + ",
     "remove:dist": "rm -rf dist",
-    "setup_repo": "pnpm install && pnpm nx build prisma"
+    "setup_repo": "pnpm install && nx build prisma"
   },
   "license": "MIT",
   "private": true,
   "version": "0.0.1",
-  "workspaces": [
-    "packages/**",
-    "apps/**"
-  ],
   "dependencies": {
-    "@babel/core": "^7.17.10",
+    "@babel/core": "^7.18.5",
     "@babel/preset-env": "^7.18.2",
-    "@nrwl/devkit": "14.1.9",
-    "@nrwl/eslint-plugin-nx": "^14.1.9",
-    "@nrwl/js": "^14.1.9",
-    "@nrwl/linter": "^14.1.9",
-    "@nrwl/next": "^14.1.9",
-    "@nrwl/node": "^14.1.9",
-    "@nrwl/nx-cloud": "^14.0.5",
-    "@nrwl/tao": "^14.1.9",
-    "@nrwl/workspace": "14.1.8",
+    "@nrwl/devkit": "14.3.6",
+    "@nrwl/js": "14.3.6",
+    "@nrwl/next": "^14.3.6",
+    "@nrwl/node": "14.3.6",
+    "@nrwl/nx-cloud": "14.1.2",
+    "@nrwl/tao": "14.3.6",
+    "@nrwl/workspace": "14.3.6",
     "@nxext/vitest": "^14.0.0",
-    "@swc/cli": "~0.1.57",
-    "@swc/core": "~1.2.192",
-    "@swc/helpers": "~0.3.15",
-    "@swc/jest": "0.2.21",
-    "@types/jest": "27.5.1",
-    "@types/node": "^17.0.35",
-    "@types/react": "^17.0.45",
-    "@types/react-dom": "^17.0.17",
-    "@typescript-eslint/eslint-plugin": "^5.26.0",
-    "@typescript-eslint/parser": "^5.26.0",
     "babel-loader": "^8.2.5",
     "c8": "^7.11.3",
-    "core-js": "^3.22.7",
+    "core-js": "^3.23.1",
     "dotenv": "^16.0.1",
-    "eslint": "^8.16.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-import": "2.26.0",
-    "eslint-plugin-jsx-a11y": "^6.5.1",
-    "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-react": "^7.30.0",
-    "eslint-plugin-react-hooks": "^4.5.0",
-    "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-unused-imports": "^2.0.0",
-    "eslint-plugin-valtio": "^0.4.4",
     "husky": "^8.0.1",
-    "jest": "28.1.0",
-    "next": "12.1.4",
-    "nx": "14.1.9",
-    "prettier": "2.6.2",
+    "next": "12.1.6",
+    "nx": "14.3.6",
+    "prettier": "2.7.1",
     "regenerator-runtime": "0.13.9",
     "rxjs": "^7.5.5",
-    "ts-jest": "28.0.3",
-    "ts-node": "10.8.0",
+    "ts-jest": "28.0.5",
+    "ts-node": "10.8.1",
     "tslib": "^2.4.0",
-    "typescript": "^4.7.2",
+    "typescript": "4.7.4",
     "utility-types": "^3.10.0",
-    "vitest": "^0.12.9",
+    "vite": "^2.9.12",
+    "vitest": "^0.15.1",
     "wait-on": "^6.0.1",
-    "webpack": "^5.72.1"
+    "webpack": "^5.73.0"
   },
   "devDependencies": {
-    "@nrwl/jest": "14.1.9",
-    "@swc/cli": "~0.1.55",
-    "@swc/core": "~1.2.143",
-    "@swc/jest": "0.2.20",
-    "@types/jest": "27.4.1",
-    "@types/node": "16.11.7",
-    "jest": "27.5.1",
-    "ts-jest": "27.1.4",
-    "ts-node": "9.1.1"
+    "@nrwl/eslint-plugin-nx": "14.3.6",
+    "@nrwl/jest": "14.3.6",
+    "@nrwl/linter": "14.3.6",
+    "@sentry/cli": "^2.2.0",
+    "@swc/cli": "~0.1.57",
+    "@swc/core": "~1.2.204",
+    "@swc/helpers": "^0.4.2",
+    "@swc/jest": "0.2.21",
+    "@types/jest": "28.1.2",
+    "@types/node": "^18.0.0",
+    "@types/react": "^18.0.14",
+    "@types/react-dom": "^18.0.5",
+    "jest": "28",
+    "tsconfig-paths-webpack-plugin": "^3.5.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "react@^17.0": "^18.2.0",
+      "react-dom@^17.0": "^18.2.0"
+    },
+    "packageExtensions": {
+      "@radix-ui/react-dropdown-menu": {
+        "peerDependencies": {
+          "react": "^18.2.0",
+          "react-dom": "^18.2.0"
+        }
+      }
+    },
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "react",
+        "react-dom"
+      ]
+    }
   }
 }
