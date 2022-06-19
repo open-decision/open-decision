@@ -27,7 +27,7 @@
     "deploy": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
-        "command": "fly deploy --config apps/renderer-app/fly.toml --dockerfile apps/renderer-app/Dockerfile"
+        "command": "flyctl deploy --config apps/renderer-app/fly.toml --dockerfile apps/renderer-app/Dockerfile"
       }
     },
     "lint": {

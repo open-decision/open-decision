@@ -1,13 +1,14 @@
 {
   "name": "open-decision",
   "repository": "https://github.com/open-legal-tech/open-decision",
+  "workspaces": [
+    "packages/**",
+    "apps/**"
+  ],
   "scripts": {
     "serve:builder": "nx run-many --target=serve --projects=builder,api",
     "serve:renderer": "nx run-many --target=serve --projects='renderer-app,api'",
     "serve": "nx run-many --target=serve --projects=renderer-app,api,builder",
-    "build:builder": "nx build builder",
-    "build:api": "nx build api",
-    "build:renderer": "nx build renderer-app",
     "remove:node_modules": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' + ",
     "remove:dist": "rm -rf dist",
     "setup_repo": "pnpm install && nx build prisma"
