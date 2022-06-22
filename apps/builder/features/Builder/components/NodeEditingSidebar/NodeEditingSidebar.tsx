@@ -7,7 +7,6 @@ import {
   Row,
   Form,
 } from "@open-decision/design-system";
-import { OptionTargetInputs } from "../../../../features/Builder/components/OptionTargetInput/OptionTargetInput";
 import * as React from "react";
 import { Node } from "@open-decision/type-classes";
 import { nodeNameMaxLength } from "../../utilities/constants";
@@ -23,6 +22,7 @@ import { useTreeContext } from "../../state/treeStore/TreeContext";
 import { AnimatePresence, motion } from "framer-motion";
 import { ParentNodeSelector } from "./ParentNodeSelector";
 import { StartNodeLabel } from "../NodeLabels/StartNodeLabels";
+import { OptionTargetInputs } from "../InputConfigurators/OptionTargetInput/OptionTargetInput";
 
 const styledMotionDiv = css({
   position: "relative",

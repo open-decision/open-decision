@@ -14,14 +14,14 @@ import * as React from "react";
 import { Edge, Input as InputType } from "@open-decision/type-classes";
 import { DragHandle } from "./DragHandle";
 import { Reorder, useDragControls } from "framer-motion";
-import {
-  useConditionsOfNode,
-  useEdgesOfNode,
-  useNode,
-} from "../../../../features/Builder/state/treeStore/hooks";
-import { useTreeContext } from "../../../../features/Builder/state/treeStore/TreeContext";
-import { useNotificationStore } from "../../../../features/Notifications/NotificationState";
 import { Crosshair2Icon, PlusIcon, TrashIcon } from "@radix-ui/react-icons";
+import { useNotificationStore } from "../../../../Notifications/NotificationState";
+import {
+  useEdgesOfNode,
+  useConditionsOfNode,
+  useNode,
+} from "../../../state/treeStore/hooks";
+import { useTreeContext } from "../../../state/treeStore/TreeContext";
 
 const StyledReorderGroup = styled(Reorder.Group, {
   listStyle: "none",

@@ -330,76 +330,96 @@ export const createAuthenticationMachine = (router: NextRouter) =>
     {
       services: {
         checkIfLoggedIn: (context) => async (send) => {
-          context.client.auth
-            .refreshToken({})
-            .then((user) =>
-              send({
-                type: "REPORT_IS_LOGGED_IN",
-                user,
-              })
-            )
-            .catch(() => send({ type: "REPORT_IS_LOGGED_OUT" }));
+          try {
+            const response = await context.client.auth.refreshToken({});
+
+            return send({
+              type: "REPORT_IS_LOGGED_IN",
+              user: response,
+            });
+          } catch (error) {
+            return send({ type: "REPORT_IS_LOGGED_OUT" });
+          }
         },
         login: (context, event) => async (send) => {
           if (event.type !== "LOG_IN") return;
           const { email, password } = event;
 
-          context.client.auth
-            .login({ body: { email, password } })
-            .then((data) =>
-              send({
-                type: "SUCCESSFULL_LOGIN",
-                user: data,
-              })
-            )
-            .catch((error) => {
-              console.log(error);
-              return send({ type: "FAILED_LOGIN", error });
+          try {
+            const response = await context.client.auth.login({
+              body: { email, password },
             });
+
+            return send({
+              type: "SUCCESSFULL_LOGIN",
+              user: response,
+            });
+          } catch (error) {
+            if (error instanceof Error)
+              return send({ type: "FAILED_LOGIN", error: error.message });
+          }
         },
         register: (context, event) => async (send) => {
           if (event.type !== "REGISTER") return;
 
           const { email, password, toc } = event;
+          try {
+            const response = await context.client.auth.register({
+              body: { email, password, toc },
+            });
 
-          context.client.auth
-            .register({ body: { email, password, toc } })
-            .then((user) =>
-              send({
-                type: "SUCCESSFULL_REGISTER",
-                user,
-              })
-            )
-            .catch((error) => send({ type: "FAILED_REGISTER", error }));
+            return send({
+              type: "SUCCESSFULL_REGISTER",
+              user: response,
+            });
+          } catch (error) {
+            if (error instanceof Error)
+              return send({ type: "FAILED_REGISTER", error: error.message });
+          }
         },
         logout: (context, event) => async (send) => {
           if (event.type !== "LOG_OUT") return;
           if (!context.auth) return;
 
-          context.client.auth
-            .logout({})
-            .then(() => send({ type: "SUCCESSFULL_LOGOUT" }))
-            .catch(() => send({ type: "FAILED_LOGOUT" }));
+          try {
+            await context.client.auth.logout({});
+
+            return send({ type: "SUCCESSFULL_LOGOUT" });
+          } catch (error) {
+            if (error instanceof Error) return send({ type: "FAILED_LOGOUT" });
+          }
         },
         requestPasswordReset: (context, event) => async (send) => {
           if (event.type !== "REQUEST_PASSWORD_RESET") return;
+          try {
+            await context.client.auth.forgotPassword({
+              body: { email: event.email },
+            });
 
-          context.client.auth
-            .forgotPassword({ body: { email: event.email } })
-            .then(() => send("SUCCESSFULL_PASSWORD_RESET_REQUEST"))
-            .catch((error) =>
-              send({ type: "FAILED_PASSWORD_RESET_REQUEST", error })
-            );
+            return send("SUCCESSFULL_PASSWORD_RESET_REQUEST");
+          } catch (error) {
+            if (error instanceof Error)
+              return send({
+                type: "FAILED_PASSWORD_RESET_REQUEST",
+                error: error.message,
+              });
+          }
         },
         resetPassword: (context, event) => async (send) => {
           if (event.type !== "RESET_PASSWORD") return;
-
-          context.client.auth
-            .resetPassword({
+          try {
+            await context.client.auth.resetPassword({
               body: { password: event.password, token: event.token },
-            })
-            .then(() => send("SUCCESSFULL_PASSWORD_RESET"))
-            .catch((error) => send({ type: "FAILED_PASSWORD_RESET", error }));
+            });
+
+            return send("SUCCESSFULL_PASSWORD_RESET");
+          } catch (error) {
+            if (error instanceof Error)
+              return send({
+                type: "FAILED_PASSWORD_RESET",
+                error: error.message,
+              });
+          }
         },
         redirectToLogin: (_context, _event) => async (_send) => {
           router.push("/auth/login");
