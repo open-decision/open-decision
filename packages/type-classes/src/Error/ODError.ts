@@ -3,13 +3,13 @@ import { ErrorCodes, ProgrammerErrors } from "./ErrorCodes";
 
 export type ODErrorConstructorParameters = {
   code: ErrorCodes;
-  additionalData?: {};
+  additionalData?: Record<string, unknown>;
 } & Omit<Error, "name">;
 
 export class ODError extends Error {
   readonly code: ErrorCodes;
   readonly timestamp?: number;
-  readonly additionalData?: {};
+  readonly additionalData?: Record<string, unknown>;
 
   constructor({ code, additionalData, message }: ODErrorConstructorParameters) {
     super(message);

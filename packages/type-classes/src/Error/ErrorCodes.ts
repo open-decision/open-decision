@@ -1,4 +1,4 @@
-export type CommonErrors = "GENERIC_ERROR";
+export type CommonErrors = "GENERIC_ERROR" | "UNEXPECTED_ERROR";
 
 export type ProgrammerErrors =
   | "MISSING_CONTEXT_PROVIDER"
