@@ -176,7 +176,7 @@ export const createAuthenticationMachine = (router: NextRouter) =>
                         "assignAuthenticatedClient",
                       ],
                     },
-                    REPORT_IS_LOGGED_OUT: "#authentication.loggedOut",
+                    REPORT_IS_LOGGED_OUT: "#authentication.loggedOut.idle",
                   },
                 },
                 loggingOut: {

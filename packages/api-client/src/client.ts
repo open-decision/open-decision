@@ -22,7 +22,6 @@ import {
   verifyEmail,
   refreshToken,
 } from "@open-decision/auth-api-specification";
-import { merge } from "remeda";
 import { Required } from "utility-types";
 
 export type TClientConfig = { token?: TJWT; urlPrefix?: string };
@@ -32,7 +31,7 @@ const createContext = ({ token, ...config }: TClientConfig): TContext => ({
   ...config,
 });
 
-export const unauthenticatedClient = (config: TClientConfig) => {
+export const createUnauthenticatedClient = (config: TClientConfig) => {
   const context = createContext(config);
 
   return {
@@ -53,8 +52,11 @@ export const unauthenticatedClient = (config: TClientConfig) => {
 
 const authenticatedClient = (config: Required<TClientConfig, "token">) => {
   const context = createContext(config);
-  return merge(unauthenticatedClient(context), {
+  const unauthenticatedClient = createUnauthenticatedClient(context);
+
+  return {
     auth: {
+      ...unauthenticatedClient.auth,
       logout: logout(context),
     },
     trees: {
@@ -69,12 +71,15 @@ const authenticatedClient = (config: Required<TClientConfig, "token">) => {
       },
     },
     publishedTrees: {
+      ...unauthenticatedClient.publishedTrees,
       delete: deletePublishedTree(context),
     },
-  });
+  };
 };
 
-export type TUnauthenticatedClient = ReturnType<typeof unauthenticatedClient>;
+export type TUnauthenticatedClient = ReturnType<
+  typeof createUnauthenticatedClient
+>;
 export type TAuthenticatedClient = ReturnType<typeof authenticatedClient>;
 
 export const client = ({
@@ -82,10 +87,12 @@ export const client = ({
   ...context
 }: TClientConfig): TUnauthenticatedClient | TAuthenticatedClient => {
   if (token) {
-    return authenticatedClient({ token, ...context });
+    const client = authenticatedClient({ token, ...context });
+    return client;
   }
 
-  return unauthenticatedClient(context);
+  const client = createUnauthenticatedClient(context);
+  return client;
 };
 
 export type TClient = TUnauthenticatedClient | TAuthenticatedClient;
