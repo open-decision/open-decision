@@ -33,7 +33,7 @@
     "dotenv": "^16.0.1",
     "eslint-plugin-unused-imports": "^2.0.0",
     "husky": "^8.0.1",
-    "next": "12.1.6",
+    "next": "^12.1.7-canary",
     "nx": "14.3.6",
     "prettier": "2.7.1",
     "regenerator-runtime": "0.13.9",
