@@ -54,8 +54,6 @@ function ProtectedRoute({ children }: ProtectedRouteProps): JSX.Element {
   const [state] = useAuth();
   const { pathname } = useRouter();
 
-  console.log(state.value);
-
   if (
     (!state.matches("loggedIn") &&
       protectedRoutes.some((routeRegEx) => routeRegEx.test(pathname))) ||
