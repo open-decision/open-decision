@@ -6,12 +6,6 @@ export const textStyles = css({
   colorFallback: "$colorScheme-text",
   margin: "unset",
 
-  defaultVariants: {
-    size: "medium",
-  },
-});
-
-export const textSizeVariant = css({
   variants: {
     size: {
       large: { textStyle: "large-text" },
@@ -26,4 +20,4 @@ export const textSizeVariant = css({
   },
 });
 
-export const Text = styled("p", textSizeVariant, textStyles);
+export const Text = styled("p", textStyles);

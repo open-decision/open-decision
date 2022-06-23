@@ -1,8 +1,8 @@
 import { Box } from "../Box";
 import { styled } from "../stitches";
-import { textSizeVariant, textStyles } from "../Text";
+import { textStyles } from "../Text";
 
-export const ErrorMessage = styled(Box, textSizeVariant, textStyles, {
+export const ErrorMessage = styled(Box, textStyles, {
   color: "$danger11",
   backgroundColor: "$danger1",
   borderRadius: "$md",

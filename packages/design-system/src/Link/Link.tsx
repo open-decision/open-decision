@@ -1,7 +1,7 @@
 import * as React from "react";
 import { styled, css } from "../stitches";
 import { intentSelector } from "../stitches/stateSelectors";
-import { textSizeVariant } from "../Text";
+import { textStyles } from "../Text";
 
 export type LinkProps = React.ComponentProps<typeof Link>;
 
@@ -16,4 +16,4 @@ export const linkStyles = css({
   [`${intentSelector}`]: { textDecoration: "underline" },
 });
 
-export const Link = styled("a", textSizeVariant, linkStyles);
+export const Link = styled("a", linkStyles, textStyles);
