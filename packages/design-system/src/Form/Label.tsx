@@ -1,6 +1,6 @@
 import { styled, css } from "../stitches";
 import { disabledSelector } from "../stitches/stateSelectors";
-import { textSizeVariant } from "../Text";
+import { textStyles } from "../Text";
 
 export const labelStyles = css({
   display: "inline-flex",
@@ -14,4 +14,4 @@ export const labelStyles = css({
 });
 
 export type LabelProps = React.ComponentProps<typeof Label>;
-export const Label = styled("label", textSizeVariant, labelStyles);
+export const Label = styled("label", labelStyles, textStyles);
