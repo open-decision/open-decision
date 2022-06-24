@@ -11,18 +11,9 @@ import { useTreeContext } from "../state/treeStore/TreeContext";
 type Props = { css?: StyleObject };
 
 export const NodeSearch = ({ css }: Props) => {
-  const {
-    createNode,
-    addNode,
-    getNode,
-    createInput,
-    createAnswer,
-    addInput,
-    replaceSelectedNodes,
-    getNodeNames,
-  } = useTreeContext();
+  const { nodes, replaceSelectedNodes } = useTreeContext();
 
-  const nodeNames = getNodeNames();
+  const nodeNames = nodes.getN.onlyWithNames();
 
   const { getCenter, zoomToNode } = useEditor();
   const combobox = Combobox.useComboboxState({
@@ -32,20 +23,16 @@ export const NodeSearch = ({ css }: Props) => {
   });
 
   function createHandler(label: string) {
-    const newAnswer = createAnswer({ text: "" });
-    const newInput = createInput({ answers: [newAnswer] });
-
-    const newNode = createNode({
+    const newNode = nodes.create({
       position: getCenter(),
       data: {
         name: label,
-        inputs: [newInput.id],
+        inputs: [],
         conditions: [],
       },
     });
 
-    addNode(newNode);
-    addInput(newInput);
+    nodes.add(newNode);
     replaceSelectedNodes([newNode.id]);
     zoomToNode(newNode);
 
@@ -54,7 +41,7 @@ export const NodeSearch = ({ css }: Props) => {
 
   function changeHandler(newSelectedItemId: string) {
     replaceSelectedNodes([newSelectedItemId]);
-    const node = getNode(newSelectedItemId);
+    const node = nodes.get.byId(newSelectedItemId);
 
     if (!node) return;
     zoomToNode(node);

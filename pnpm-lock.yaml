@@ -385,6 +385,14 @@ importers:
     devDependencies:
       '@types/validator': 13.7.3
 
+  packages/condition-plugins/compare:
+    specifiers:
+      ramda: 0.28.0
+      zod: ^3
+    dependencies:
+      ramda: 0.28.0
+      zod: 3.17.3
+
   packages/design-system:
     specifiers:
       '@fontsource/poppins': ^4.5.8
@@ -445,6 +453,14 @@ importers:
       '@svgr/cli': 6.2.1
       '@types/react': 18.0.14
       '@types/react-dom': 18.0.5
+
+  packages/input-plugins/select:
+    specifiers:
+      remeda: 0.0.35
+      zod: ^3
+    dependencies:
+      remeda: 0.0.35
+      zod: 3.17.3
 
   packages/interpreter:
     specifiers:

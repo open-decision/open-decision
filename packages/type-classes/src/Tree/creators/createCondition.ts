@@ -1,17 +1,8 @@
 import { Condition } from "../type-classes";
 import { v4 as uuid } from "uuid";
 
-export type NewConditionData = {
-  inputId: string;
-  answerId: string;
-};
-
-export function createCondition(
-  condition: NewConditionData
-): Condition.TSelectCondition {
+export function createCondition(): Condition.TCondition {
   return {
     id: uuid(),
-    type: "select",
-    ...condition,
   };
 }

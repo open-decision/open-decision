@@ -1,4 +1,4 @@
-import { Tree } from "@open-decision/type-classes";
+import { createTreeClient, Tree } from "@open-decision/type-classes";
 import { proxy } from "valtio";
 import { derive } from "valtio/utils";
 import { bindProxyAndYMap } from "valtio-yjs";
@@ -48,7 +48,7 @@ export function createTreeStore(id: string) {
     nonSyncedStore,
   });
 
-  const methods = Tree.createTreeMethods(syncedStore);
+  const methods = createTreeClient(syncedStore);
 
   bindProxyAndYMap(syncedStore, yMap, {
     transactionOrigin: `valtio for ${id}`,
@@ -58,12 +58,12 @@ export function createTreeStore(id: string) {
   // Connection
 
   function startConnecting(sourceNodeId: string) {
-    const connectionOriginNode = methods.getNode(sourceNodeId);
+    const connectionOriginNode = methods.nodes.get.byId(sourceNodeId);
     if (!connectionOriginNode) return;
 
     nonSyncedStore.connectionSourceNodeId = sourceNodeId;
 
-    const validConnections = methods.getConnectableNodes(
+    const validConnections = methods.nodes.get.connectableNodes(
       connectionOriginNode.id
     );
 

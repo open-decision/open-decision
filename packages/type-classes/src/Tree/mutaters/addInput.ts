@@ -1,6 +1,4 @@
 import { Tree, Input } from "../type-classes";
-import { pipe } from "remeda";
-import { createInput, NewInputData } from "../creators";
 /**
  * @description Always adds a new Input to the tree. There are no rules so this
  * will never fail.
@@ -13,6 +11,3 @@ export const addInput = (tree: Tree.TTree) => (input: Input.TInput) => {
 
   tree.inputs[input.id] = input;
 };
-
-export const createAndAddInput = (tree: Tree.TTree) => (input?: NewInputData) =>
-  pipe(input, createInput, addInput(tree));

@@ -1,4 +1,4 @@
-import { Input } from "../type-classes";
+import { Input } from "@open-decision/type-classes";
 import { v4 as uuid } from "uuid";
 
 export type NewAnswerData = Pick<Input.TAnswer, "text">;

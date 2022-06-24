@@ -1,19 +1,18 @@
-import { Tree } from "../type-classes";
-import { getInput } from "../getters";
-import { deleteConditions } from "./deleteConditions";
+import { TTreeClient } from "@open-decision/type-classes";
+import { get } from "./get";
 
 export const deleteInputAnswer =
-  (tree: Tree.TTree) => (inputId: string, answerId: string) => {
-    const input = getInput(tree)(inputId);
+  (treeClient: TTreeClient) => (inputId: string, answerId: string) => {
+    const input = get(treeClient)(inputId);
 
-    if (!input) return;
+    if (input instanceof Error) return;
 
     const answerIndex = input.answers.findIndex(({ id }) => id === answerId);
 
     input.answers.splice(answerIndex, 1);
 
     // When an Input is deleted all conditions using it need to be removed.
-    deleteConditions(tree)(
+    treeClient.conditions.deleteN(
       Object.values(tree.conditions ?? {})
         .filter((condition) => condition.answerId === answerId)
         .map((condition) => condition.id)

@@ -22,8 +22,11 @@ type Props = {
 };
 
 export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
-  const { deleteNodes, updateStartNode, removeSelectedNodes } =
-    useTreeContext();
+  const {
+    nodes: { deleteN },
+    updateStartNode,
+    removeSelectedNodes,
+  } = useTreeContext();
 
   return (
     <DropdownMenu.Root>
@@ -54,10 +57,7 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
         {isStartNode ? (
           <Tooltip.Root>
             <Tooltip.Trigger style={{ all: "unset" }}>
-              <DropdownMenu.Item
-                onSelect={() => deleteNodes([nodeId])}
-                disabled
-              >
+              <DropdownMenu.Item onSelect={() => deleteN([nodeId])} disabled>
                 <Icon label="Löschen Icon" css={{ $$paddingInline: 0 }}>
                   <TrashIcon />
                 </Icon>
@@ -80,7 +80,7 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
             </DropdownMenu.Item>
             <DropdownMenu.Item
               onSelect={() => {
-                deleteNodes([nodeId]);
+                deleteN([nodeId]);
                 removeSelectedNodes();
               }}
               css={{ colorScheme: "danger" }}

@@ -194,10 +194,15 @@ export function useTree() {
 }
 
 export function useParents(nodeId: string): { id: string; name?: string }[] {
-  const { getParents, derivedNodeNames } = useTreeContext();
+  const {
+    nodes: {
+      get: { parents },
+    },
+    derivedNodeNames,
+  } = useTreeContext();
   const { nodeNames } = useSnapshot(derivedNodeNames);
 
-  const parentIds = getParents(nodeId);
+  const parentIds = parents(nodeId);
 
   return Object.values(nodeNames).filter((nodeName) =>
     parentIds.includes(nodeName.id)

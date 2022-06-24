@@ -1,7 +1,5 @@
 import { Tree } from "../type-classes";
 import * as Condition from "../type-classes/Condition";
-import { pipe } from "remeda";
-import { createCondition } from "../creators";
 
 /**
  * @description Always adds a new Condition to the tree. There are no rules so this
@@ -16,7 +14,3 @@ export const addCondition =
 
     tree.conditions[condition.id] = condition;
   };
-
-export const createAndAddCondition =
-  (tree: Tree.TTree) => (condition: Parameters<typeof createCondition>[0]) =>
-    pipe(condition, createCondition, addCondition(tree));

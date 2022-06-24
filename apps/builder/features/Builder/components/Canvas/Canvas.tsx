@@ -53,16 +53,9 @@ function Nodes() {
   const edges = useRFEdges();
   const {
     abortConnecting,
-    createAndAddEdge,
-    deleteNodes,
+    nodes: nodesMethods,
+    edges: edgesMethods,
     startConnecting,
-    updateNodePosition,
-    getNode,
-    createAnswer,
-    addCondition,
-    relateConditionToNode,
-    createCondition,
-    addInputAnswer,
     tree,
   } = useTreeContext();
 
@@ -102,14 +95,14 @@ function Nodes() {
           switch (nodeChange.type) {
             case "remove":
               if (nodeChange.id !== startNodeId) {
-                deleteNodes([nodeChange.id]);
+                nodesMethods.deleteN([nodeChange.id]);
                 removeSelectedNodes();
               }
               break;
             case "position": {
               if (nodeChange.dragging) {
                 setDragging(true);
-                updateNodePosition(
+                nodesMethods.updatePosition(
                   nodeChange.id,
                   nodeChange.position ?? { x: 0, y: 0 }
                 );
@@ -150,34 +143,24 @@ function Nodes() {
         if (!validConnectEvent(event.target) || !event.target.dataset.nodeid)
           return abortConnecting();
 
-        const sourceNode = getNode(tree.nonSyncedStore.connectionSourceNodeId);
+        const sourceNode = nodesMethods.get.byId(
+          tree.nonSyncedStore.connectionSourceNodeId
+        );
         if (!sourceNode) return abortConnecting();
-        const firstInputId = sourceNode?.data.inputs[0];
 
-        const newAnswer = createAnswer({ text: "" });
-        addInputAnswer(firstInputId, newAnswer);
-        const newCondition = createCondition({
-          inputId: firstInputId,
-          answerId: newAnswer.id,
-        });
-        const possibleEdge = createAndAddEdge({
+        const possibleEdge = edgesMethods.create({
           source: tree.nonSyncedStore.connectionSourceNodeId,
           target: event.target.dataset.nodeid,
-          conditionId: newCondition.id,
         });
 
         if (possibleEdge instanceof Error)
-          addNotification({
+          return addNotification({
             title: "Verbindung fehlgeschlagen",
             content: possibleEdge.message,
             variant: "danger",
           });
 
-        addCondition(newCondition);
-        relateConditionToNode(
-          tree.nonSyncedStore.connectionSourceNodeId,
-          newCondition.id
-        );
+        edgesMethods.add(possibleEdge);
       }}
       style={{
         gridColumn: "1 / -1",

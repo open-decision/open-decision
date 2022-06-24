@@ -6,13 +6,14 @@ import {
   StyleObject,
   Row,
   Form,
+  Label,
+  DropdownMenu,
 } from "@open-decision/design-system";
 import * as React from "react";
-import { Node } from "@open-decision/type-classes";
+import { Input, Node } from "@open-decision/type-classes";
 import { nodeNameMaxLength } from "../../utilities/constants";
 import { NodeMenu } from "../Canvas/Nodes/NodeMenu";
 import {
-  useInputs,
   useParents,
   useSelectedNodes,
   useStartNodeId,
@@ -23,6 +24,56 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ParentNodeSelector } from "./ParentNodeSelector";
 import { StartNodeLabel } from "../NodeLabels/StartNodeLabels";
 import { OptionTargetInputs } from "../InputConfigurators/OptionTargetInput/OptionTargetInput";
+
+type InputHeaderProps = {
+  children?: React.ReactNode;
+  input: Input.TInput;
+};
+
+const InputHeader = ({ children, input }: InputHeaderProps) => {
+  // const { updateInputType } = useTreeContext();
+
+  return (
+    <Box
+      css={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: "$2",
+        marginBottom: "$3",
+      }}
+    >
+      <Label as="h2" css={{ margin: 0, display: "block" }}>
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger asChild>
+            <DropdownMenu.Button
+              alignByContent="left"
+              variant="neutral"
+              size="small"
+              css={{ textStyle: "medium-text" }}
+            >
+              {/* FIXME missing input types */}
+              {/* {input.type.charAt(0).toUpperCase() + input.type.slice(1)} */}
+            </DropdownMenu.Button>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content align="start">
+            {/* {Input.Types.options.map((typeOption) => {
+              return (
+                <DropdownMenu.Item
+                  key={typeOption}
+                  // onClick={() => updateInputType(input.id, typeOption)}
+                >
+                  {typeOption}
+                </DropdownMenu.Item>
+              );
+            })} */}
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
+      </Label>
+      {children}
+    </Box>
+  );
+};
 
 const styledMotionDiv = css({
   position: "relative",
@@ -64,8 +115,6 @@ export function NodeEditingSidebar() {
             css={{
               height: "100%",
               layer: "1",
-              paddingInlineEnd: "$5",
-              paddingInlineStart: "$5",
               paddingBlock: "$5",
               overflow: "hidden",
             }}
@@ -88,11 +137,20 @@ export function NodeEditingSidebar() {
 type Props = { node: Pick<Node.TNode, "id" | "data">; css?: StyleObject };
 
 export function NodeEditingSidebarContent({ node, css }: Props) {
-  const inputs = useInputs(node.data.inputs);
-  const { updateNodeContent } = useTreeContext();
+  const {
+    nodes: { updateContent },
+  } = useTreeContext();
 
   return (
-    <Grid css={{ gridAutoRows: "max-content", gap: "$6", ...css }}>
+    <Grid
+      css={{
+        gridAutoRows: "max-content",
+        gap: "$6",
+        paddingInlineEnd: "$5",
+        paddingInlineStart: "$5",
+        ...css,
+      }}
+    >
       <Header node={node} />
       <Box as="section">
         <Form.Label
@@ -106,17 +164,32 @@ export function NodeEditingSidebarContent({ node, css }: Props) {
           Inhalt
         </Form.Label>
         <RichTextEditor
-          onUpdate={({ editor }) =>
-            updateNodeContent(node.id, editor.getJSON())
-          }
+          onUpdate={({ editor }) => updateContent(node.id, editor.getJSON())}
           content={node.data.content}
         />
       </Box>
-      <Box as="section">
-        {Object.values(inputs).map((input) => (
-          <OptionTargetInputs nodeId={node.id} input={input} key={input.id} />
-        ))}
-      </Box>
+      {/* {Object.values(inputs).map((input) => {
+        switch (input.type) {
+          case "select":
+            return (
+              <Box as="section" key={input.id}>
+                <InputHeader input={input}>
+                  <SingleSelectInput.PrimaryActionSlot input={input} />
+                </InputHeader>
+                <SingleSelectInput.Component nodeId={node.id} input={input} />
+              </Box>
+            );
+          case "free-text":
+            return (
+              <Box as="section" key={input.id}>
+                <InputHeader input={input} />
+                <FreeTextInput.Component nodeId={node.id} inputId={input.id} />
+              </Box>
+            );
+          default:
+            return <Text>Der Input Typ existiert nicht</Text>;
+        }
+      })} */}
     </Grid>
   );
 }
@@ -125,14 +198,16 @@ type HeaderProps = { node: Pick<Node.TNode, "id" | "data"> };
 
 const Header = ({ node }: HeaderProps) => {
   const startNodeId = useStartNodeId();
-  const { updateNodeName } = useTreeContext();
+  const {
+    nodes: { updateName },
+  } = useTreeContext();
   const parentNodes = useParents(node.id);
   const isStartNode = node?.id === startNodeId;
 
   const formState = Form.useFormState({
     defaultValues: { name: node?.data.name ?? "" },
     setValues(values) {
-      updateNodeName(node.id, values.name);
+      updateName(node.id, values.name);
     },
   });
 

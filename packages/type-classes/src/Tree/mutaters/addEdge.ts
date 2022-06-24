@@ -1,4 +1,3 @@
-import { createEdge, NewEdgeData } from "../creators";
 import { Tree, Edge } from "../type-classes";
 
 /**
@@ -17,12 +16,4 @@ export const addEdge = (tree: Tree.TTree) => (edge: Edge.TEdge) => {
   if (!tree.edges) tree.edges = {};
 
   tree.edges[edge.id] = edge;
-};
-
-export const createAndAddEdge = (tree: Tree.TTree) => (edge: NewEdgeData) => {
-  const newEdge = createEdge(tree)(edge);
-
-  if (newEdge instanceof Error) return newEdge;
-
-  return addEdge(tree)(newEdge);
 };

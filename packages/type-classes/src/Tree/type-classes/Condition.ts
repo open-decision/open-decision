@@ -1,16 +1,14 @@
 import { z } from "zod";
 
-export const SelectCondition = z.object({
-  type: z.enum(["select"]),
-  id: z.string().uuid(),
-  inputId: z.string().uuid(),
-  answerId: z.string().uuid(),
-});
+export const Types = z.enum(["select", "always"]);
 
-export const Type = SelectCondition;
+export const Type = z.object({
+  id: z.string().uuid(),
+  type: z.string().optional(),
+  inputId: z.string().uuid().optional(),
+});
 
 export const Record = z.record(Type);
 
-export type TSelectCondition = z.infer<typeof SelectCondition>;
 export type TCondition = z.infer<typeof Type>;
 export type TRecord = z.infer<typeof Record>;

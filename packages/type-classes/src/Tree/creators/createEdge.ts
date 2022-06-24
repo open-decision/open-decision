@@ -3,7 +3,7 @@ import { v4 as uuid } from "uuid";
 import { isValidEdge } from "../validators";
 
 export type NewEdgeData = Partial<Edge.TEdge> &
-  Required<Pick<Edge.TEdge, "source" | "target" | "conditionId">>;
+  Required<Pick<Edge.TEdge, "source" | "target">>;
 
 export const createEdge =
   (tree: Tree.TTree) =>

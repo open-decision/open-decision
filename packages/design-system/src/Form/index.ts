@@ -1,7 +1,7 @@
 export * from "./Checkbox";
 export * as Combobox from "./Combobox";
 export * as Select from "./Select";
-export { SelectWithCombobox } from "./SelectWithCombobox";
+export * from "./SelectWithCombobox";
 // export * from "./ControlledInput";
 export * from "./Field";
 export * from "./Input";

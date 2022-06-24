@@ -38,7 +38,7 @@ export function ExportDialog({
   css,
 }: Props) {
   const uuid = useTreeId();
-  const { getTree } = useTreeContext();
+  const { get } = useTreeContext();
   const { data } = useTreeQuery(uuid);
 
   const [fileName, setFileName] = React.useState("");
@@ -49,7 +49,7 @@ export function ExportDialog({
     reset,
   } = useMutation(() => {
     return new Promise<Blob>((resolve) => {
-      const tree = getTree();
+      const tree = get();
 
       return setTimeout(
         () => resolve(createFile({ name: data?.name, ...tree })),

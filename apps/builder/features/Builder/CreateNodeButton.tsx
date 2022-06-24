@@ -12,14 +12,7 @@ import { useEditor } from "./state/useEditor";
 type Props = { css?: StyleObject };
 
 export function CreateNodeButton({ css }: Props) {
-  const {
-    createInput,
-    createAnswer,
-    createNode,
-    addNode,
-    addInput,
-    addInputAnswer,
-  } = useTreeContext();
+  const { nodes } = useTreeContext();
 
   const { getCenter, zoomToNode } = useEditor();
   const { replaceSelectedNodes } = useTreeContext();
@@ -31,17 +24,12 @@ export function CreateNodeButton({ css }: Props) {
           square
           css={{ boxShadow: "$2", ...css }}
           onClick={() => {
-            const newInput = createInput();
-            const newAnswer = createAnswer({ text: "" });
-
-            const newNode = createNode({
-              data: { inputs: [newInput.id], conditions: [] },
+            const newNode = nodes.create({
+              data: { inputs: [], conditions: [] },
               position: getCenter(),
             });
 
-            addNode(newNode);
-            addInput(newInput);
-            addInputAnswer(newInput.id, newAnswer);
+            nodes.add(newNode);
 
             replaceSelectedNodes([newNode.id]);
             zoomToNode(newNode);
