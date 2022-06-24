@@ -23,5 +23,6 @@
   },
   "conventionalCommits.gitmoji": false,
   "conventionalCommits.lineBreak": "\\n",
-  "conventionalCommits.showEditor": true
+  "conventionalCommits.showEditor": true,
+  "typescript.preferences.importModuleSpecifier": "project-relative"
 }
