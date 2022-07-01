@@ -4,7 +4,7 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
-    "target": "ES2019",
+    "target": "ES2021",
     "sourceMap": true,
     "module": "ESNEXT",
     "moduleResolution": "node",
@@ -21,6 +21,7 @@
     "baseUrl": ".",
     "paths": {
       "@open-decision/api-client": ["packages/api-client/src/index.ts"],
+      "@open-decision/utils": ["packages/utils/src/index.ts"],
       "@open-decision/api-helpers": ["packages/api-helpers/src/index.ts"],
       "@open-decision/auth-api-specification": [
         "packages/auth-api-specification/src/index.ts"
@@ -45,8 +46,12 @@
       "@open-decision/free-text-input-plugin": [
         "packages/input-plugins/free-text/src/index.ts"
       ],
+      "@open-decision/tree-client": ["packages/tree-client/src/index.ts"],
       "@open-decision/compare-condition-plugin": [
         "packages/condition-plugins/compare/src/index.ts"
+      ],
+      "@open-decision/direct-condition-plugin": [
+        "packages/condition-plugins/direct/src/index.ts"
       ],
       "@open-decision/user-api-specification": [
         "packages/user-api-specification/src/index.ts"

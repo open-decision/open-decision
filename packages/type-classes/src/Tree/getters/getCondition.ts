@@ -1,3 +1,4 @@
+import { isEmpty } from "ramda";
 import { pick } from "remeda";
 import { Condition, Tree } from "../type-classes";
 
@@ -11,7 +12,7 @@ export const getConditions =
     if (!tree.conditions) return undefined;
 
     const conditions = pick(tree.conditions, conditionIds);
-    if (!conditions) return undefined;
+    if (!conditions || isEmpty(conditions)) return undefined;
 
     return conditions;
   };

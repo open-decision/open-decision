@@ -1,3 +1,4 @@
+import { isEmpty } from "ramda";
 import { pick } from "remeda";
 import { Input, Tree } from "../type-classes";
 
@@ -11,7 +12,7 @@ export const getInputs =
     if (!tree.inputs) return undefined;
 
     const inputs = pick(tree.inputs, inputIds);
-    if (!inputs) return undefined;
+    if (!inputs || isEmpty(inputs)) return undefined;
 
     return inputs;
   };

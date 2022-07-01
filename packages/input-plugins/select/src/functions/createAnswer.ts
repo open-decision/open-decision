@@ -1,7 +1,7 @@
-import { Input } from "@open-decision/type-classes";
 import { v4 as uuid } from "uuid";
+import { TAnswer } from "../types";
 
-export type NewAnswerData = Pick<Input.TAnswer, "text">;
+export type NewAnswerData = Pick<TAnswer, "text">;
 
 export const createAnswer = (answer: NewAnswerData) => {
   return { id: uuid(), ...answer };

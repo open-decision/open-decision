@@ -11,7 +11,10 @@ import { useTreeContext } from "../state/treeStore/TreeContext";
 type Props = { css?: StyleObject };
 
 export const NodeSearch = ({ css }: Props) => {
-  const { nodes, replaceSelectedNodes } = useTreeContext();
+  const {
+    treeClient: { nodes },
+    replaceSelectedNodes,
+  } = useTreeContext();
 
   const nodeNames = nodes.getN.onlyWithNames();
 

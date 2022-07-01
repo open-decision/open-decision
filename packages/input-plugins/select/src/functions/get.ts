@@ -1,21 +1,15 @@
-import { ODError, TTreeClient } from "@open-decision/type-classes";
-import { TSelectInput, Type, type } from "../types";
+import { TTreeClient } from "@open-decision/type-classes";
+import { selectType, TSelectInput } from "../selectPlugin";
 
-export const get =
-  (treeClient: TTreeClient) =>
-  (id: string): TSelectInput | ODError => {
-    const input = treeClient.inputs.get(id);
+export const get = (treeClient: TTreeClient) => (id: string) => {
+  const input = treeClient.inputs.get(id);
 
-    const parsedInput = Type.safeParse(input);
+  const parsedInput = selectType.validate(input);
 
-    if (!parsedInput.success)
-      return new ODError({
-        code: "GENERIC_ERROR",
-        message: `The requested input has been found but is not of type ${type}`,
-      });
+  if (!parsedInput.success) return undefined;
 
-    return parsedInput.data;
-  };
+  return parsedInput.data;
+};
 
 export const getInputsWithAnswers = (
   inputs: TSelectInput[]

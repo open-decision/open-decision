@@ -3,13 +3,13 @@ import {
   isCompareCondition,
   TCompareCondition,
 } from "packages/condition-plugins/compare/src/types";
-import { selectPlugin } from "../selectPlugin";
+import { get } from "./get";
 
 export const deleteAnswer =
   (treeClient: TTreeClient) => (inputId: string, answerId: string) => {
-    const input = selectPlugin(treeClient).input.select.get(inputId);
+    const input = get(treeClient)(inputId);
 
-    if (input instanceof Error) return;
+    if (!input) return;
 
     const answerIndex = input.answers.findIndex(({ id }) => id === answerId);
 

@@ -1,9 +1,12 @@
-import { createTreeClient, Tree } from "@open-decision/type-classes";
+import { createUseTree, Tree } from "@open-decision/type-classes";
+import { createExtendedTreeClient } from "@open-decision/type-classes";
 import { proxy } from "valtio";
 import { derive } from "valtio/utils";
 import { bindProxyAndYMap } from "valtio-yjs";
 import * as Y from "yjs";
 import { mapValues } from "remeda";
+import { SelectPlugin } from "@open-decision/select-input-plugin";
+import { ComparePlugin } from "@open-decision/compare-condition-plugin";
 
 declare module "valtio" {
   function useSnapshot<T extends object>(p: T): T;
@@ -43,12 +46,21 @@ export function createTreeStore(id: string) {
     },
   });
 
+  const treeClientConfig = createExtendedTreeClient((treeClient) => ({
+    input: {
+      select: new SelectPlugin(treeClient),
+      // freeText: new FreeTextPlugin(treeClient),
+    },
+    condition: { compare: new ComparePlugin(treeClient) },
+  }));
+  const useTreeClient = createUseTree(syncedStore, treeClientConfig);
+
+  const treeClient = treeClientConfig(syncedStore);
+
   const tree = proxy({
     syncedStore,
     nonSyncedStore,
   });
-
-  const methods = createTreeClient(syncedStore);
 
   bindProxyAndYMap(syncedStore, yMap, {
     transactionOrigin: `valtio for ${id}`,
@@ -58,12 +70,12 @@ export function createTreeStore(id: string) {
   // Connection
 
   function startConnecting(sourceNodeId: string) {
-    const connectionOriginNode = methods.nodes.get.byId(sourceNodeId);
+    const connectionOriginNode = treeClient.nodes.get.byId(sourceNodeId);
     if (!connectionOriginNode) return;
 
     nonSyncedStore.connectionSourceNodeId = sourceNodeId;
 
-    const validConnections = methods.nodes.get.connectableNodes(
+    const validConnections = treeClient.nodes.get.connectableNodes(
       connectionOriginNode.id
     );
 
@@ -128,6 +140,8 @@ export function createTreeStore(id: string) {
     removeSelectedNodes,
     addSelectedEdges,
     getTreeData: () => yMap.toJSON(),
-    ...methods,
+    treeClient,
+    treeClientConfig,
+    useTreeClient,
   };
 }

@@ -1,6 +1,6 @@
-import { AddOptionButton, OptionTargetInputs } from "./SingleSelect";
+import { AddOptionButton, SingleSelect } from "./SingleSelect";
 
 export const SingleSelectInput = {
-  Component: OptionTargetInputs,
+  Component: SingleSelect,
   PrimaryActionSlot: AddOptionButton,
 };

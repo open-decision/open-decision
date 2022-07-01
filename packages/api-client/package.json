@@ -10,7 +10,6 @@
   "dependencies": {
     "@open-decision/api-helpers": "workspace:*",
     "@open-decision/auth-api-specification": "workspace:*",
-    "@open-decision/tree-api-specification": "workspace:*",
-    "remeda": "^0.0.35"
+    "@open-decision/tree-api-specification": "workspace:*"
   }
 }

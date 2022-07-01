@@ -23,7 +23,9 @@ type Props = {
 
 export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
   const {
-    nodes: { deleteN },
+    treeClient: {
+      nodes: { deleteN },
+    },
     updateStartNode,
     removeSelectedNodes,
   } = useTreeContext();

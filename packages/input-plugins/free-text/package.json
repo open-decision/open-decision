@@ -2,7 +2,6 @@
   "name": "@open-decision/free-text-input-plugin",
   "version": "0.0.1",
   "dependencies": {
-    "zod": "^3",
-    "remeda": "0.0.35"
+    "zod": "^3"
   }
 }

@@ -1,13 +1,14 @@
 import { TTreeClient } from "@open-decision/type-classes";
-import { selectPlugin } from "../selectPlugin";
+import { get } from "./get";
+import { getAnswer } from "./getAnswer";
 
 export const updateAnswer =
   (treeClient: TTreeClient) =>
   (inputId: string, answerId: string, newValue: string) => {
-    const input = selectPlugin(treeClient).input.select.get(inputId);
-    if (input instanceof Error) return;
+    const input = get(treeClient)(inputId);
+    if (!input) return;
 
-    const answer = selectPlugin(treeClient).input.select.getAnswer(answerId);
+    const answer = getAnswer(input, answerId);
 
     if (!answer) return;
 

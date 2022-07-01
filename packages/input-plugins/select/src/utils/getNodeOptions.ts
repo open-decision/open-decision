@@ -1,7 +1,7 @@
-import { TTreeClient, Edge } from "@open-decision/type-classes";
+import { TBaseTreeClient, Edge } from "@open-decision/type-classes";
 
 export const getNodeOptions =
-  (treeClient: TTreeClient) => (nodeId: string, edge?: Edge.TEdge) => {
+  (treeClient: TBaseTreeClient) => (nodeId: string, edge?: Edge.TEdge) => {
     const node = treeClient.nodes.get.byId(nodeId);
 
     const nodeOptions = node

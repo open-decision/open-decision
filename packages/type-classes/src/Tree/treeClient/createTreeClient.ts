@@ -4,7 +4,7 @@ import {
   createEdge,
   createInput,
   createNode,
-} from "../Tree/creators";
+} from "../creators";
 import {
   getCondition,
   getConditions,
@@ -16,8 +16,9 @@ import {
   getInputs,
   getNode,
   getNodeNames,
+  getNodeOptions,
   getNodes,
-} from "../Tree/getters";
+} from "../getters";
 import {
   addCondition,
   addEdge,
@@ -36,23 +37,26 @@ import {
   updateNodeName,
   updateNodePosition,
   updateStartNode,
-} from "../Tree/mutaters";
-import { Tree } from "../Tree/type-classes";
+} from "../mutaters";
+import { Tree } from "../type-classes";
 import {
   getChildren,
   getConnectableNodes,
   getParents,
   getPaths,
   isCircular,
-} from "../Tree/utils";
-import { isValidEdge } from "../Tree/validators";
+} from "../utils";
+import { isValidEdge } from "../validators";
+import { merge } from "remeda";
+import { mergeDeepRight } from "ramda";
 
 export const createTreeClient = (tree: Tree.TTree) => {
   return {
-    // The plural version of the Entities are immutable and contain standard functions to operate on
-    // the tree data structure.
     updateStartNode: updateStartNode(tree),
     get: () => tree,
+    validate: Tree.Type.safeParse,
+    // The plural version of the Entities are immutable and contain standard functions to operate on
+    // the tree data structure.
     nodes: {
       get: {
         byId: getNode(tree),
@@ -60,6 +64,7 @@ export const createTreeClient = (tree: Tree.TTree) => {
         children: getChildren(tree),
         parents: getParents(tree),
         getPaths: getPaths(tree),
+        options: getNodeOptions(tree),
       },
       getN: { byId: getNodes(tree), onlyWithNames: getNodeNames(tree) },
       getAll: () => tree.nodes,
@@ -113,4 +118,43 @@ export const createTreeClient = (tree: Tree.TTree) => {
   };
 };
 
-export type TTreeClient = ReturnType<typeof createTreeClient>;
+type PluginConfig = {
+  condition?: Record<string, any>;
+  input?: Record<string, any>;
+};
+
+export type TBaseTreeClient = ReturnType<typeof createTreeClient>;
+
+export type Plugins<TPlugins extends PluginConfig> =
+  TPlugins extends infer Plugins ? Plugins : never;
+
+export type createTreeClientConfig<TPlugins extends PluginConfig> = ReturnType<
+  typeof createExtendedTreeClient<Plugins<TPlugins>>
+>;
+
+export const createExtendedTreeClient =
+  <
+    TPlugins extends PluginConfig,
+    TConditions = (keyof TPlugins["condition"])[],
+    TInputs = (keyof TPlugins["input"])[]
+  >(
+    plugins: (tree: TBaseTreeClient) => TPlugins
+  ) =>
+  (tree: Tree.TTree) => {
+    const baseTreeClient = createTreeClient(tree);
+    const calledPlugins = plugins(baseTreeClient);
+    // This is not really a type safe way to do it. By the nature of JavaScript it can not be assured that
+    // the plugins object as not been modified. We do however assert that it has not, because of convenience.
+    const pluginsWithTypes = mergeDeepRight(calledPlugins, {
+      input: {
+        types: Object.keys(calledPlugins.input ?? {}) as unknown as TInputs,
+      },
+      condition: {
+        types: Object.keys(
+          calledPlugins.condition ?? {}
+        ) as unknown as TConditions,
+      },
+    });
+
+    return merge(baseTreeClient, pluginsWithTypes);
+  };

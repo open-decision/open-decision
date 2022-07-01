@@ -9,41 +9,44 @@ import {
   NodeLinkProps,
 } from "@open-decision/design-system";
 import * as React from "react";
-import {
-  Edge,
-  Input as InputType,
-  TTreeClient,
-} from "@open-decision/type-classes";
+import { createUseTree, Edge, Tree } from "@open-decision/type-classes";
 import { DragHandle } from "./DragHandle";
 import { Reorder, useDragControls } from "framer-motion";
-
 import { PlusIcon, TrashIcon } from "@radix-ui/react-icons";
-import { createAnswer } from "../functions/createAnswer";
-import { addAnswer } from "../functions/addAnswer";
-import { selectPlugin } from "../selectPlugin";
+import { treeClientConfig, TSelectInput, TTreeClient } from "../selectPlugin";
 import { getNodeOptions } from "../utils";
+import { TAnswer } from "../types";
 
-type AddOptionButtonProps = { input: InputType.TSingleSelect };
+type SharedProps = {
+  treeClient: TTreeClient;
+  tree: Tree.TTree;
+};
 
-export const AddOptionButton =
-  (treeClient: TTreeClient) =>
-  ({ input }: AddOptionButtonProps) => {
-    return (
-      <Button
-        size="small"
-        variant="secondary"
-        onClick={() => {
-          const newAnswer = createAnswer({ text: "" });
-          addAnswer(treeClient)(input.id, newAnswer);
-        }}
-      >
-        <Icon label="Neue Antwortmöglichkeit hinzufügen">
-          <PlusIcon />
-        </Icon>
-        Hinzufügen
-      </Button>
-    );
-  };
+type AddOptionButtonProps = {
+  input: TSelectInput;
+  treeClient: TTreeClient;
+};
+
+export const AddOptionButton = ({
+  input,
+  treeClient,
+}: AddOptionButtonProps) => {
+  return (
+    <Button
+      size="small"
+      variant="secondary"
+      onClick={() => {
+        const newAnswer = treeClient.input.select.createAnswer({ text: "" });
+        treeClient.input.select.addAnswer(input.id, newAnswer);
+      }}
+    >
+      <Icon label="Neue Antwortmöglichkeit hinzufügen">
+        <PlusIcon />
+      </Icon>
+      Hinzufügen
+    </Button>
+  );
+};
 
 const StyledReorderGroup = styled(Reorder.Group, {
   listStyle: "none",
@@ -54,54 +57,56 @@ const StyledReorderGroup = styled(Reorder.Group, {
 
 type SingleSelectProps = {
   nodeId: string;
-  input: InputType.TSingleSelect;
-} & Pick<NodeLinkProps, "onClick">;
+  input: TSelectInput;
+} & Pick<NodeLinkProps, "onClick"> &
+  SharedProps;
 
-export const SingleSelect =
-  (treeClient: TTreeClient) =>
-  ({ nodeId, input, onClick }: SingleSelectProps) => {
-    const ref = React.useRef<HTMLDivElement | null>(null);
+export const SingleSelect = ({
+  nodeId,
+  input,
+  onClick,
+  treeClient,
+  tree,
+}: SingleSelectProps) => {
+  const ref = React.useRef<HTMLDivElement | null>(null);
 
-    return (
-      <StyledReorderGroup
-        ref={ref}
-        axis="y"
-        values={input?.answers}
-        onReorder={(newOrder) => {
-          return selectPlugin(treeClient).input.select.reorderAnswers(
-            input.id
-          )?.(newOrder);
-        }}
-      >
-        {input.answers.map((answer) => {
-          const edge = selectPlugin(treeClient).condition.compare.getBy.answer(
-            answer.id
-          );
+  return (
+    <StyledReorderGroup
+      ref={ref}
+      axis="y"
+      values={input?.answers}
+      onReorder={(newOrder) => {
+        return treeClient.input.select.reorderAnswers(input)?.(newOrder);
+      }}
+    >
+      {input.answers.map((answer) => {
+        const edge = treeClient.condition.compare.getBy.answer(answer.id);
 
-          return (
-            <OptionTargetInput
-              onClick={onClick}
-              treeClient={treeClient}
-              nodeId={nodeId}
-              answer={answer}
-              edge={edge}
-              inputId={input.id}
-              key={answer.id}
-              groupRef={ref}
-            />
-          );
-        })}
-      </StyledReorderGroup>
-    );
-  };
+        return (
+          <OptionTargetInput
+            tree={tree}
+            onClick={onClick}
+            treeClient={treeClient}
+            nodeId={nodeId}
+            answer={answer}
+            edge={edge}
+            inputId={input.id}
+            key={answer.id}
+            groupRef={ref}
+          />
+        );
+      })}
+    </StyledReorderGroup>
+  );
+};
 type SingleSelectInputProps = {
-  answer: InputType.TAnswer;
+  answer: TAnswer;
   edge?: Edge.TEdge;
   nodeId: string;
   inputId: string;
   groupRef: React.MutableRefObject<HTMLDivElement | null>;
-  treeClient: TTreeClient;
-} & Pick<NodeLinkProps, "onClick">;
+} & Pick<NodeLinkProps, "onClick"> &
+  SharedProps;
 
 export const OptionTargetInput = ({
   treeClient,
@@ -111,9 +116,13 @@ export const OptionTargetInput = ({
   nodeId,
   groupRef,
   onClick,
+  tree,
 }: SingleSelectInputProps) => {
-  const node = treeClient.nodes.get.byId(nodeId);
   const controls = useDragControls();
+  const node = createUseTree(
+    tree,
+    treeClientConfig
+  )((treeClient) => treeClient.nodes.get.byId(nodeId));
 
   const ref = React.useRef<HTMLDivElement | null>(null);
 
@@ -155,7 +164,7 @@ export const OptionTargetInput = ({
           <Form.Input
             name={formState.names.answer}
             onChange={(event) =>
-              selectPlugin(treeClient).input.select.updateAnswer(
+              treeClient.input.select.updateAnswer(
                 inputId,
                 answer.id,
                 event.target.value
@@ -180,18 +189,19 @@ export const OptionTargetInput = ({
             edge={edge}
             name={formState.names.target}
             value={formState.values.target}
-            setValue={(newValue: string) =>
+            setValue={(newValue) =>
               formState.setValue(formState.names.target, newValue)
             }
-            onCreate={(name: string) =>
-              selectPlugin(treeClient).input.select.createTargetNode(
+            onCreate={(name) =>
+              treeClient.input.select.createTargetNode(
                 nodeId,
                 inputId,
-                name
+                answer.id,
+                { name }
               )
             }
-            onSelect={(newItem: string) =>
-              selectPlugin(treeClient).input.select.updateTarget({
+            onSelect={(newItem) =>
+              treeClient.input.select.updateTarget({
                 edgeId: edge?.id,
                 nodeId,
                 inputId,
@@ -225,10 +235,7 @@ export const OptionTargetInput = ({
             type="button"
             square
             onClick={() =>
-              selectPlugin(treeClient).input.select.deleteAnswer(
-                inputId,
-                answer.id
-              )
+              treeClient.input.select.deleteAnswer(inputId, answer.id)
             }
           >
             <Icon label="Entferne den Input">

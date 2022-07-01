@@ -1,1 +1,2 @@
-export * from "./selectPlugin";
+export { SelectPlugin } from "./selectPlugin";
+export { SingleSelectInput } from "./components";

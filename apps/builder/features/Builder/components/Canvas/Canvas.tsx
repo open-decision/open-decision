@@ -53,8 +53,7 @@ function Nodes() {
   const edges = useRFEdges();
   const {
     abortConnecting,
-    nodes: nodesMethods,
-    edges: edgesMethods,
+    treeClient: { nodes: nodesMethods, edges: edgesMethods },
     startConnecting,
     tree,
   } = useTreeContext();
@@ -63,6 +62,7 @@ function Nodes() {
   const {
     nonSyncedStore: { selectedNodeIds },
   } = useSnapshot(tree);
+
   const startNodeId = useStartNodeId();
 
   const { closeNodeEditingSidebar } = useEditor();

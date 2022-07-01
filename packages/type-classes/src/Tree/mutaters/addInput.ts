@@ -6,7 +6,7 @@ import { Tree, Input } from "../type-classes";
  * @params - Accepts a partial or full Input. A partial Input is used to create a new Input,
  * while a full Input is directly added to the Tree.
  */
-export const addInput = (tree: Tree.TTree) => (input: Input.TInput) => {
+export const addInput = (tree: Tree.TTree) => (input: Input.TBaseInput) => {
   if (!tree.inputs) tree.inputs = {};
 
   tree.inputs[input.id] = input;

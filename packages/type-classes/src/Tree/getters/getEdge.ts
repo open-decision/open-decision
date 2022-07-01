@@ -1,3 +1,4 @@
+import { isEmpty } from "ramda";
 import { pick } from "remeda";
 import { Edge, Tree } from "../type-classes";
 
@@ -11,7 +12,7 @@ export const getEdges =
     if (!tree.edges) return undefined;
 
     const edges = pick(tree.edges, edgeIds);
-    if (!edges) return undefined;
+    if (!edges || isEmpty(edges)) return undefined;
 
     return edges;
   };

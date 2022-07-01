@@ -1,105 +1,31 @@
-import { Form } from "@open-decision/design-system";
-import { useNotificationStore } from "../../../../Notifications/NotificationState";
-import { useEdgesOfNode } from "../../../state/treeStore/hooks";
-import { useNodeOptions } from "../../../state/treeStore/hooks/useNodeOptions";
-import { useTreeContext } from "../../../state/treeStore/TreeContext";
-import { TargetSelector } from "../TargetSelector";
+import {
+  Form,
+  NodeLinkProps,
+  TargetSelector,
+} from "@open-decision/design-system";
+import { createUseTree, Edge, Tree } from "@open-decision/type-classes";
+import { treeClientConfig, TTreeClient } from "./freeTextPlugin";
 
 type FreeTextInputConfiguratorProps = {
   nodeId: string;
   inputId: string;
-};
+  treeClient: TTreeClient;
+  tree: Tree.TTree;
+} & Pick<NodeLinkProps, "onClick">;
 
 export const FreeTextInputConfigurator = ({
   nodeId,
   inputId,
+  treeClient,
+  tree,
+  onClick,
 }: FreeTextInputConfiguratorProps) => {
-  const edge = Object.values(useEdgesOfNode(nodeId))[0];
-
-  const {
-    createAndAddEdge,
-    relateConditionToNode,
-    updateEdgeTarget,
-    addNode,
-    addCondition,
-    createInput,
-    addEdge,
-    createChildNode,
-    createCondition,
-    createEdge,
-    addInput,
-  } = useTreeContext();
-  const { addNotification } = useNotificationStore();
-
-  function handleCreate(name: string) {
-    const newInput = createInput();
-    const childNode = createChildNode(nodeId, {
-      data: {
-        inputs: [newInput.id],
-        name,
-        conditions: [],
-      },
-    });
-
-    if (childNode instanceof Error) return childNode;
-
-    if (edge?.target) {
-      updateEdgeTarget(edge.id, childNode.id);
-    } else {
-      // Construct the Relationship
-      const newCondition = createCondition({
-        inputId,
-        type: "always",
-      });
-
-      const newEdge = createEdge({
-        source: nodeId,
-        target: childNode.id,
-        conditionId: newCondition.id,
-      });
-
-      if (newEdge instanceof Error) {
-        addNotification({
-          title: "Es konnte keine verbundender Knoten erstellt werden.",
-          content: newEdge.message,
-          variant: "danger",
-        });
-
-        return newEdge;
-      }
-
-      addCondition(newCondition);
-      relateConditionToNode(nodeId, newCondition.id);
-      addEdge(newEdge);
-    }
-
-    addInput(newInput);
-    addNode(childNode);
-
-    return { id: childNode.id, label: childNode.data.name };
-  }
-
-  function handleSelect(newItem: string) {
-    if (!edge?.target && newItem) {
-      const newCondition = createCondition({
-        inputId,
-        type: "always",
-      });
-
-      addCondition(newCondition);
-      relateConditionToNode(nodeId, newCondition.id);
-
-      createAndAddEdge({
-        source: nodeId,
-        target: newItem,
-        conditionId: newCondition.id,
-      });
-    }
-
-    if (edge?.target && newItem) updateEdgeTarget(edge.id, newItem);
-  }
-
-  const nodeOptions = useNodeOptions(nodeId, edge);
+  const useTree = createUseTree(tree, treeClientConfig);
+  //FIXME I cannot just assume there is ony one edge
+  const edge = useTree((treeClient) => treeClient.edges.getBy.node(nodeId)[0]);
+  const nodeOptions = useTree((treeClient) =>
+    treeClient.nodes.get.options(nodeId, edge)
+  );
 
   const formState = Form.useFormState({
     defaultValues: {
@@ -113,10 +39,21 @@ export const FreeTextInputConfigurator = ({
     <Form.Root state={formState} css={{ groupColor: "$colorScheme-text" }}>
       <TargetSelector
         name={formState.names.target}
-        nodeId={nodeId}
         edge={edge}
-        onCreate={handleCreate}
-        onSelect={handleSelect}
+        onCreate={(value) =>
+          treeClient.input.freeText.createTargetNode(nodeId, inputId, {
+            name: value,
+          })
+        }
+        onSelect={(newItem) =>
+          treeClient.input.freeText.updateTarget({
+            edgeId: edge?.id,
+            nodeId,
+            inputId,
+            newItem,
+          })
+        }
+        onClick={onClick}
         value={formState.values.target}
         setValue={(newValue) =>
           formState.setValue(formState.names.target, newValue)

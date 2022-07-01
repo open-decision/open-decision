@@ -6,7 +6,7 @@ export const addAnswer =
   (treeClient: TTreeClient) => (inputId: string, answer: TAnswer) => {
     const input = get(treeClient)(inputId);
 
-    if (input instanceof Error) return;
+    if (!input) return;
 
     input.answers.push(answer);
   };

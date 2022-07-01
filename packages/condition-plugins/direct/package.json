@@ -1,0 +1,9 @@
+{
+  "name": "@open-decision/direct-condition-plugin",
+  "version": "0.0.1",
+  "dependencies": {
+    "zod": "^3",
+    "ramda": "0.28.0"
+  },
+  "devDependencies": {}
+}

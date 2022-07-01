@@ -1,4 +1,4 @@
-import { Condition, Edge, Node } from "@open-decision/type-classes";
+import { Node } from "@open-decision/type-classes";
 import { MarkerType } from "react-flow-renderer";
 import { pick } from "remeda";
 import { useSnapshot } from "valtio";
@@ -88,118 +88,16 @@ export function useRFEdges() {
   }));
 }
 
-export function useNodes(ids?: string[]): Node.TNodesRecord {
-  const { tree } = useTreeContext();
-
-  const {
-    syncedStore: { nodes },
-  } = useSnapshot(tree);
-
-  if (!nodes) return {};
-  if (ids) return pick(nodes, ids);
-  return nodes;
-}
-
-export function useEdges(ids?: string[]) {
-  const { tree } = useTreeContext();
-
-  const {
-    syncedStore: { edges },
-  } = useSnapshot(tree);
-
-  if (!edges) return {};
-  if (ids) return pick(edges, ids);
-
-  return edges;
-}
-
-export function useEdge(id: string) {
-  const { tree } = useTreeContext();
-
-  const {
-    syncedStore: { edges },
-  } = useSnapshot(tree);
-
-  return edges?.[id];
-}
-
-export function useNode(id: string) {
-  const { tree } = useTreeContext();
-
-  const {
-    syncedStore: { nodes },
-  } = useSnapshot(tree);
-
-  return nodes?.[id];
-}
-
-export function useInput(id: string) {
-  const { tree } = useTreeContext();
-  const {
-    syncedStore: { inputs },
-  } = useSnapshot(tree);
-
-  return inputs?.[id];
-}
-
-export function useInputs(ids: string[]) {
-  const { tree } = useTreeContext();
-  const {
-    syncedStore: { inputs },
-  } = useSnapshot(tree);
-
-  if (!inputs) return {};
-  if (ids) return pick(inputs, ids);
-
-  return inputs;
-}
-
-export function useEdgesOfNode(nodeId: string) {
-  const { tree } = useTreeContext();
-  const {
-    syncedStore: { edges },
-  } = useSnapshot(tree);
-
-  const nodesEdges: Edge.TEdgesRecord = {};
-
-  if (edges) {
-    for (const key in edges) {
-      const edge = edges[key];
-
-      if (edge.source === nodeId) nodesEdges[key] = edge;
-    }
-  }
-
-  return nodesEdges;
-}
-
-export function useConditionsOfNode(
-  nodeId: string
-): Condition.TRecord | undefined {
-  const { tree } = useTreeContext();
-  const {
-    syncedStore: { conditions, nodes },
-  } = useSnapshot(tree);
-  const node = nodes?.[nodeId];
-
-  if (conditions && node) {
-    return pick(conditions, node.data.conditions);
-  }
-}
-
-export function useTree() {
-  const { tree } = useTreeContext();
-
-  return useSnapshot(tree);
-}
-
 export function useParents(nodeId: string): { id: string; name?: string }[] {
   const {
-    nodes: {
-      get: { parents },
+    treeClient: {
+      nodes: {
+        get: { parents },
+      },
     },
     derivedNodeNames,
   } = useTreeContext();
+
   const { nodeNames } = useSnapshot(derivedNodeNames);
 
   const parentIds = parents(nodeId);

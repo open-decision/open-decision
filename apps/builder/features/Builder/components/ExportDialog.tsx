@@ -38,7 +38,9 @@ export function ExportDialog({
   css,
 }: Props) {
   const uuid = useTreeId();
-  const { get } = useTreeContext();
+  const {
+    treeClient: { get },
+  } = useTreeContext();
   const { data } = useTreeQuery(uuid);
 
   const [fileName, setFileName] = React.useState("");

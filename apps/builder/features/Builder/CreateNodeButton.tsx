@@ -12,7 +12,9 @@ import { useEditor } from "./state/useEditor";
 type Props = { css?: StyleObject };
 
 export function CreateNodeButton({ css }: Props) {
-  const { nodes } = useTreeContext();
+  const {
+    treeClient: { nodes },
+  } = useTreeContext();
 
   const { getCenter, zoomToNode } = useEditor();
   const { replaceSelectedNodes } = useTreeContext();

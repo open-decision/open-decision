@@ -1,0 +1,35 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/condition-plugins/direct/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/condition-plugins/direct",
+        "main": "packages/condition-plugins/direct/src/index.ts",
+        "tsConfig": "packages/condition-plugins/direct/tsconfig.lib.json",
+        "assets": ["packages/condition-plugins/direct/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "packages/condition-plugins/direct/**/*.{ts,tsx,js,jsx}"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/packages/condition-plugins/direct"],
+      "options": {
+        "jestConfig": "packages/condition-plugins/direct/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  }
+}

@@ -6,3 +6,4 @@ export * from "./getTree";
 export * from "./getNodeNames";
 export * from "./getConditionsByNode";
 export * from "./getEdgesByNode";
+export * from "./getNodeOptions";

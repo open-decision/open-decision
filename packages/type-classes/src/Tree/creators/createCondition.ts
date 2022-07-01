@@ -1,8 +1,8 @@
-import { Condition } from "../type-classes";
 import { v4 as uuid } from "uuid";
+import { merge } from "remeda";
 
-export function createCondition(): Condition.TCondition {
-  return {
+export function createCondition<TData>(data?: TData): TData & { id: string } {
+  return merge(data, {
     id: uuid(),
-  };
+  });
 }

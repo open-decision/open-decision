@@ -9,7 +9,7 @@
       "request": "launch",
       "name": "Launch Chrome",
       "url": "http://localhost:4200",
-      "webRoot": "${workspaceFolder}/packages/builder",
+      "webRoot": "${workspaceFolder}",
       "runtimeExecutable": "canary",
       "sourceMapPathOverrides": {
         "webpack://_N_E/*": "${webRoot}/*"

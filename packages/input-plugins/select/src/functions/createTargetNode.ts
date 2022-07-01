@@ -24,7 +24,7 @@ export const createTargetNode =
     if (newEdge instanceof Error) return newEdge;
 
     treeClient.conditions.add(newCondition);
-    treeClient.nodes.connect(nodeId, newCondition.id);
+    treeClient.nodes.connect.toCondition(nodeId, newCondition.id);
     treeClient.edges.add(newEdge);
 
     treeClient.nodes.add(childNode);

@@ -17,6 +17,7 @@
   "private": true,
   "version": "0.0.1",
   "dependencies": {
+    "remeda": "0.0.35",
     "@babel/core": "^7.18.5",
     "@babel/preset-env": "^7.18.2",
     "@nrwl/devkit": "14.3.6",

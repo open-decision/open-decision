@@ -1,0 +1,7 @@
+{
+  "name": "@open-decision/tree-client",
+  "version": "0.0.1",
+  "dependencies": {
+    "zod": "^3"
+  }
+}

@@ -1,9 +1,7 @@
-import { TTreeClient } from "@open-decision/type-classes";
-import { comparePlugin } from "./comparePlugin";
-import { isCompareCondition } from "./types";
+import { TBaseTreeClient } from "@open-decision/type-classes";
 
 export const getCompareConditionByAnswer =
-  (treeClient: TTreeClient) => (answerId: string, nodeId?: string) => {
+  (treeClient: TBaseTreeClient) => (answerId: string, nodeId?: string) => {
     const conditions = nodeId
       ? comparePlugin(treeClient).getBy.node(nodeId)
       : treeClient.conditions.getAll();

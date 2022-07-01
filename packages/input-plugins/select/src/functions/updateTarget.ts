@@ -1,5 +1,4 @@
 import { TTreeClient } from "@open-decision/type-classes";
-import { selectPlugin } from "../selectPlugin";
 
 export const updateTarget =
   (treeClient: TTreeClient) =>
@@ -19,13 +18,13 @@ export const updateTarget =
     const edge = edgeId ? treeClient.edges.get(edgeId) : undefined;
 
     if (!edge?.target && newItem) {
-      const newCondition = selectPlugin(treeClient).condition.compare.create({
+      const newCondition = treeClient.condition.compare.create({
         inputId,
         valueId: answerId,
       });
 
       treeClient.conditions.add(newCondition);
-      treeClient.nodes.connect(nodeId, newCondition.id);
+      treeClient.nodes.connect.toCondition(nodeId, newCondition.id);
 
       const newEdge = treeClient.edges.create({
         source: nodeId,

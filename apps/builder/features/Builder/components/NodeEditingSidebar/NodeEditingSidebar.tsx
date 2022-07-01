@@ -10,7 +10,7 @@ import {
   DropdownMenu,
 } from "@open-decision/design-system";
 import * as React from "react";
-import { Input, Node } from "@open-decision/type-classes";
+import { Node } from "@open-decision/type-classes";
 import { nodeNameMaxLength } from "../../utilities/constants";
 import { NodeMenu } from "../Canvas/Nodes/NodeMenu";
 import {
@@ -23,15 +23,17 @@ import { useTreeContext } from "../../state/treeStore/TreeContext";
 import { AnimatePresence, motion } from "framer-motion";
 import { ParentNodeSelector } from "./ParentNodeSelector";
 import { StartNodeLabel } from "../NodeLabels/StartNodeLabels";
-import { OptionTargetInputs } from "../InputConfigurators/OptionTargetInput/OptionTargetInput";
+import { TInputType } from "@open-decision/tree-client";
+import { SingleSelectInput } from "@open-decision/select-input-plugin";
 
 type InputHeaderProps = {
   children?: React.ReactNode;
-  input: Input.TInput;
+  input?: TInputType;
+  nodeId: string;
 };
 
-const InputHeader = ({ children, input }: InputHeaderProps) => {
-  // const { updateInputType } = useTreeContext();
+const InputHeader = ({ children, input, nodeId }: InputHeaderProps) => {
+  const { treeClient } = useTreeContext();
 
   return (
     <Box
@@ -53,20 +55,27 @@ const InputHeader = ({ children, input }: InputHeaderProps) => {
               css={{ textStyle: "medium-text" }}
             >
               {/* FIXME missing input types */}
-              {/* {input.type.charAt(0).toUpperCase() + input.type.slice(1)} */}
+              {input?.type
+                ? input.type.charAt(0).toUpperCase() + input.type.slice(1)
+                : "Kein Input Typ ausgewählt"}
             </DropdownMenu.Button>
           </DropdownMenu.Trigger>
           <DropdownMenu.Content align="start">
-            {/* {Input.Types.options.map((typeOption) => {
+            {treeClient.input.types.map((type) => {
               return (
-                <DropdownMenu.Item
-                  key={typeOption}
-                  // onClick={() => updateInputType(input.id, typeOption)}
+                <DropdownMenu.CheckboxItem
+                  key={type}
+                  checked={input?.type === type}
+                  onClick={() => {
+                    const newInput = treeClient.input.select.create();
+                    treeClient.inputs.add(newInput);
+                    treeClient.inputs.connect.toNode(nodeId, newInput.id);
+                  }}
                 >
-                  {typeOption}
-                </DropdownMenu.Item>
+                  {type.charAt(0).toUpperCase() + type.slice(1)}
+                </DropdownMenu.CheckboxItem>
               );
-            })} */}
+            })}
           </DropdownMenu.Content>
         </DropdownMenu.Root>
       </Label>
@@ -138,8 +147,18 @@ type Props = { node: Pick<Node.TNode, "id" | "data">; css?: StyleObject };
 
 export function NodeEditingSidebarContent({ node, css }: Props) {
   const {
-    nodes: { updateContent },
+    tree: { syncedStore },
+    treeClient: {
+      nodes: { updateContent },
+    },
+    replaceSelectedNodes,
+    useTreeClient,
   } = useTreeContext();
+  const { treeClient } = useTreeContext();
+
+  const inputs = useTreeClient((treeClient) =>
+    treeClient.input.select.getN(node.data.inputs)
+  );
 
   return (
     <Grid
@@ -168,28 +187,31 @@ export function NodeEditingSidebarContent({ node, css }: Props) {
           content={node.data.content}
         />
       </Box>
-      {/* {Object.values(inputs).map((input) => {
-        switch (input.type) {
-          case "select":
-            return (
-              <Box as="section" key={input.id}>
-                <InputHeader input={input}>
-                  <SingleSelectInput.PrimaryActionSlot input={input} />
-                </InputHeader>
-                <SingleSelectInput.Component nodeId={node.id} input={input} />
-              </Box>
-            );
-          case "free-text":
-            return (
-              <Box as="section" key={input.id}>
-                <InputHeader input={input} />
-                <FreeTextInput.Component nodeId={node.id} inputId={input.id} />
-              </Box>
-            );
-          default:
-            return <Text>Der Input Typ existiert nicht</Text>;
-        }
-      })} */}
+      {inputs ? (
+        Object.values(inputs).map((input) =>
+          input.type ? (
+            <Box as="section" key={input.id}>
+              <InputHeader input={input} nodeId={node.id}>
+                <SingleSelectInput.PrimaryActionSlot
+                  treeClient={treeClient}
+                  input={input}
+                />
+              </InputHeader>
+              <SingleSelectInput.Component
+                tree={syncedStore}
+                treeClient={treeClient}
+                nodeId={node.id}
+                input={input}
+                onClick={() => replaceSelectedNodes([node.id])}
+              />
+            </Box>
+          ) : (
+            <InputHeader input={input} nodeId={node.id} />
+          )
+        )
+      ) : (
+        <InputHeader nodeId={node.id} />
+      )}
     </Grid>
   );
 }
@@ -199,7 +221,9 @@ type HeaderProps = { node: Pick<Node.TNode, "id" | "data"> };
 const Header = ({ node }: HeaderProps) => {
   const startNodeId = useStartNodeId();
   const {
-    nodes: { updateName },
+    treeClient: {
+      nodes: { updateName },
+    },
   } = useTreeContext();
   const parentNodes = useParents(node.id);
   const isStartNode = node?.id === startNodeId;

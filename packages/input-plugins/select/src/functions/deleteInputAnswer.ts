@@ -1,11 +1,11 @@
-import { TTreeClient } from "@open-decision/type-classes";
+import { TTreeClient } from "../selectPlugin";
 import { get } from "./get";
-
+// FIXME
 export const deleteInputAnswer =
   (treeClient: TTreeClient) => (inputId: string, answerId: string) => {
     const input = get(treeClient)(inputId);
 
-    if (input instanceof Error) return;
+    if (!input) return;
 
     const answerIndex = input.answers.findIndex(({ id }) => id === answerId);
 
@@ -13,8 +13,8 @@ export const deleteInputAnswer =
 
     // When an Input is deleted all conditions using it need to be removed.
     treeClient.conditions.deleteN(
-      Object.values(tree.conditions ?? {})
-        .filter((condition) => condition.answerId === answerId)
+      Object.values(treeClient.condition.compare.getAll() ?? {})
+        .filter((condition) => condition.valueId === answerId)
         .map((condition) => condition.id)
     );
   };
