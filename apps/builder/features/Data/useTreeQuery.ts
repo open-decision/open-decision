@@ -11,7 +11,7 @@ export function useTreeQuery(uuid: string) {
       return await OD.trees.getSingle({ params: { uuid } });
     },
     {
-      select(data) {
+      select({ data }) {
         return {
           ...data,
           status: data.publishedTrees.length > 0 ? "PUBLISHED" : data.status,

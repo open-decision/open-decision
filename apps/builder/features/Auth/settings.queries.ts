@@ -11,12 +11,12 @@ export const useUserUpdateMutation = (
   return useMutation(
     "updateUser",
     (data: Data) => {
-      return fetch(`/external-api/users/${context.auth?.user.uuid}`, {
+      return fetch(`/users/${context?.user.uuid}`, {
         body: JSON.stringify(data),
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${context.auth?.access.token}`,
+          Authorization: `Bearer ${context?.access.token}`,
         },
       });
     },
@@ -30,10 +30,10 @@ export const useDeleteUserMutation = (options?: UseMutationOptions) => {
   return useMutation(
     "deleteUser",
     () => {
-      return fetch(`/external-api/users/${context.auth?.user.uuid}`, {
+      return fetch(`/users/${context?.user.uuid}`, {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${context.auth?.access.token}`,
+          Authorization: `Bearer ${context?.access.token}`,
         },
       });
     },

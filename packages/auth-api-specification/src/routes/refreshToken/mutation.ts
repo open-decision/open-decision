@@ -21,9 +21,9 @@ export const refreshToken =
     return await safeFetch(
       combinedUrl,
       {
-        headers: context.headers,
+        headers: { ...context.headers, ...config?.headers },
         method: "POST",
       },
-      { validation: refreshTokenOutput }
+      { validation: refreshTokenOutput.passthrough() }
     );
   };

@@ -11,7 +11,7 @@ export function useTreesQuery() {
       return await OD.trees.getCollection({});
     },
     {
-      select(data) {
+      select({ data }) {
         return data.map((tree) => ({
           ...tree,
           status: tree.publishedTrees.length > 0 ? "PUBLISHED" : tree.status,

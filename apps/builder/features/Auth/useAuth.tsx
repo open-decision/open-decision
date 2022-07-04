@@ -1,7 +1,8 @@
+import { TLoginOutput } from "@open-decision/auth-api-specification";
 import { ODProgrammerError } from "@open-decision/type-classes";
 import { useActor, useInterpret } from "@xstate/react";
-import { NextRouter } from "next/router";
 import * as React from "react";
+import { ODProvider } from "../Data/odClient";
 import {
   AuthService,
   createAuthenticationMachine,
@@ -12,18 +13,27 @@ export const AuthContext = React.createContext<AuthService | null>(null);
 type AuthProviderProps = Omit<
   React.ComponentProps<typeof AuthContext.Provider>,
   "value"
-> & { router: NextRouter };
+> & {
+  initial: Parameters<typeof createAuthenticationMachine>[0];
+} & TLoginOutput;
 
-export function AuthProvider({ children, router }: AuthProviderProps) {
+export function AuthProvider({
+  children,
+  initial,
+  user,
+  access,
+}: AuthProviderProps) {
   const authMachine = React.useCallback(
-    () => createAuthenticationMachine(router),
-    [router]
+    () => createAuthenticationMachine(initial, user, access),
+    [initial, user, access]
   );
 
   const service = useInterpret(authMachine, { devTools: true });
 
   return (
-    <AuthContext.Provider value={service}>{children}</AuthContext.Provider>
+    <ODProvider value={{ token: access.token }}>
+      <AuthContext.Provider value={service}>{children}</AuthContext.Provider>
+    </ODProvider>
   );
 }
 

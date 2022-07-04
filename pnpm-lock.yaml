@@ -360,11 +360,14 @@ importers:
 
   packages/api-helpers:
     specifiers:
+      '@types/node': ^18.0.0
       validator: ^13.7.0
       zod: ^3.17.3
     dependencies:
       validator: 13.7.0
       zod: 3.17.3
+    devDependencies:
+      '@types/node': 18.0.0
 
   packages/auth-api-specification:
     specifiers:

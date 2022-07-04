@@ -20,7 +20,7 @@ const useIsOnWhiteListQuery = (
     "isOnWhiteList",
     async (data: Data) => {
       const result = await axios({
-        url: `/external-api/users/is-whitelisted`,
+        url: `/users/is-whitelisted`,
         data,
         method: "POST",
       });
