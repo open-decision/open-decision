@@ -17,6 +17,12 @@ import { useTreeContext } from "../../../features/Builder/state/treeStore/TreeCo
 import { useTreeId } from "../../../features/Data/useTreeId";
 import { useNotificationStore } from "../../../features/Notifications/NotificationState";
 import { Renderer } from "@open-decision/renderer";
+import { GetServerSideProps } from "next";
+import { checkAuthentication } from "../../../features/Auth/checkAuthentication";
+
+export const getServerSideProps: GetServerSideProps = async function (context) {
+  return checkAuthentication(context);
+};
 
 export default function VorschauPage() {
   return (
