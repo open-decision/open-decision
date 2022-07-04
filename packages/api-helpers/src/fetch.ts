@@ -10,14 +10,15 @@ export const safeFetch = async <TValidation extends z.ZodTypeAny>(
   { body, headers, ...options }: RequestInit,
   { validation }: Config<TValidation> = {}
 ): Promise<{ data: z.output<TValidation>; response: Response }> => {
-  const request = new Request(url, {
-    headers: { "Content-Type": "application/json", ...headers },
-    body: body ? body : undefined,
-    ...options,
-  });
-
   try {
-    const response = await fetch(request);
+    const response = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        ...headers,
+      },
+      body: body ? body : undefined,
+      ...options,
+    });
 
     let data;
     const contentType = response.headers.get("content-type");

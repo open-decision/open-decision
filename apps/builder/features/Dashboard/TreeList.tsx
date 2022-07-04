@@ -14,7 +14,7 @@ import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { useFilter } from "./Filter";
 import { Card } from "../../components/Card";
 import { NewProjectDropdown } from "./NewProjectDropdown";
-import { useTreesQuery } from "../Data/useTreesQuery";
+import { TGetTreesOutput } from "@open-decision/tree-api-specification";
 
 const NoProjects = styled("span", Heading);
 
@@ -28,8 +28,10 @@ const filters = {
   published: "Veröffentlicht",
 };
 
-export const TreeList = () => {
-  const { data: trees } = useTreesQuery();
+type Props = { trees: TGetTreesOutput };
+
+export const TreeList = ({ trees }: Props) => {
+  // const { data: trees } = useTreesQuery();
 
   const hasTrees = trees && trees.length > 0;
 

@@ -5,11 +5,12 @@ import {
   Box,
   Row,
 } from "@open-decision/design-system";
-import { useAuth } from "../../useAuth";
 import { useMutation, UseMutationOptions } from "react-query";
 import axios from "axios";
 import { InfoBox } from "../../../Notifications/InfoBox";
 import { InternalLink } from "../../../../components/InternalLink";
+import { useRegisterMutation } from "../../mutations/useRegisterMutation";
+import { useRouter } from "next/router";
 
 type Data = { email: string };
 
@@ -87,6 +88,13 @@ export function CombinedRegisterForm() {
 }
 
 function RegisterForm({ email }: { email?: string }) {
+  const router = useRouter();
+  const {
+    mutate: register,
+    error,
+    isLoading,
+  } = useRegisterMutation({ onSuccess: () => router.push("/") });
+
   const formState = Form.useFormState({
     defaultValues: {
       email: email ?? "",
@@ -98,8 +106,7 @@ function RegisterForm({ email }: { email?: string }) {
   });
 
   formState.useSubmit(() => {
-    send({
-      type: "REGISTER",
+    register({
       email: formState.values.email,
       password: formState.values.password,
       toc: true,
@@ -113,8 +120,6 @@ function RegisterForm({ email }: { email?: string }) {
         "Die Passwörter stimmen nicht überein."
       );
   });
-
-  const [state, send] = useAuth();
 
   return (
     <Form.Root state={formState}>
@@ -195,13 +200,11 @@ function RegisterForm({ email }: { email?: string }) {
           />
         </Form.Field>
       </Stack>
-      {state.context.error ? (
-        <ErrorMessage css={{ marginBlock: "$2" }}>
-          {state.context.error}
-        </ErrorMessage>
+      {error ? (
+        <ErrorMessage css={{ marginBlock: "$2" }}>{error.message}</ErrorMessage>
       ) : null}
       <Form.Submit
-        isLoading={state.matches("loggedOut.register")}
+        isLoading={isLoading}
         css={{ marginTop: "$6" }}
         type="submit"
       >

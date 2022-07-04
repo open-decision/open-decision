@@ -1,10 +1,15 @@
-import { Form, ErrorMessage, Button } from "@open-decision/design-system";
+import { Form, ErrorMessage } from "@open-decision/design-system";
 import * as React from "react";
-import { useAuth } from "../../useAuth";
+import { useResetPasswordMutation } from "../../mutations/useResetPasswordMutation";
 
 type Props = { token: string };
 
 export function ResetPasswordForm({ token }: Props) {
+  const {
+    mutate: resetPassword,
+    error,
+    isLoading,
+  } = useResetPasswordMutation();
   const formState = Form.useFormState({
     defaultValues: {
       newPassword: "",
@@ -12,14 +17,11 @@ export function ResetPasswordForm({ token }: Props) {
   });
 
   formState.useSubmit(() => {
-    send({
-      type: "RESET_PASSWORD",
+    resetPassword({
       password: formState.values.newPassword,
       token,
     });
   });
-
-  const [state, send] = useAuth();
 
   return (
     <Form.Root state={formState}>
@@ -31,14 +33,16 @@ export function ResetPasswordForm({ token }: Props) {
           placeholder="*******"
         />
       </Form.Field>
-      {state.context.error ? (
-        <ErrorMessage css={{ marginTop: "$2" }}>
-          {state.context.error}
-        </ErrorMessage>
+      {error ? (
+        <ErrorMessage css={{ marginTop: "$2" }}>{error.message}</ErrorMessage>
       ) : null}
-      <Button type="submit" css={{ marginTop: "$6" }}>
+      <Form.Submit
+        isLoading={isLoading}
+        type="submit"
+        css={{ marginTop: "$6" }}
+      >
         Passwort zurücksetzen
-      </Button>
+      </Form.Submit>
     </Form.Root>
   );
 }
