@@ -42,6 +42,7 @@ const resolveConditions =
     for (const conditionId in conditions) {
       const condition = conditions[conditionId];
       const existingAnswerId = context.answers[condition.inputId];
+      console.log(condition.answerId);
 
       if (condition.answerId === existingAnswerId) {
         const edge = Object.values<Edge.TEdge>(tree.edges ?? {}).find(
@@ -161,6 +162,7 @@ export const createInterpreterMachine = (
       actions: {
         assignAnswerToContext: assign((context, event) => ({
           answers: { ...context.answers, [event.inputId]: event.answerId },
+          history: { ...context.history, position: 0 },
         })),
         resetToInitialContext: assign((_context, _event) => ({
           history: { nodes: [tree.startNode], position: 0 },

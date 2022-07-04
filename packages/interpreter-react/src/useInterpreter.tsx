@@ -47,7 +47,11 @@ export function InterpreterProvider({
 }: InterpreterProviderProps) {
   const interpreterMachine = useInterpreterMachine(tree, options);
 
-  const service = useInterpret(interpreterMachine, config, onChange);
+  const service = useInterpret(
+    interpreterMachine,
+    { ...config, devTools: true },
+    onChange
+  );
 
   return (
     <InterpreterContext.Provider value={{ service, tree }}>
