@@ -7,9 +7,11 @@ import {
   SubmitButton,
 } from "@open-decision/design-system";
 import { useRouter } from "next/router";
+import { useLocation } from "react-use";
 import { useLoginMutation } from "../../mutations/useLoginMutation";
 
 export function LoginForm() {
+  const location = useLocation();
   const router = useRouter();
   const formState = Form.useFormState({
     defaultValues: {
@@ -24,7 +26,12 @@ export function LoginForm() {
     isLoading,
   } = useLoginMutation({
     onSuccess: () => {
-      return router.replace("/", undefined);
+      const redirectUrl = new URL(
+        location.search?.replace("?from=", "") ?? "/",
+        process.env.NEXT_PUBLIC_OD_BUILDER_ENDPOINT
+      );
+
+      return router.replace(redirectUrl);
     },
   });
 

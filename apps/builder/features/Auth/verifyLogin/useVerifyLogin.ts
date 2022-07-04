@@ -14,24 +14,24 @@ export function useVerifyLogin(
 ) {
   const [
     {
-      context: { auth },
+      context: {
+        user: { email },
+      },
     },
   ] = useAuth();
 
-  if (!auth?.user.email)
+  if (!email)
     throw new ODProgrammerError({
       code: "TRIED_VERIFY_UNAUTHENTICATED_USER_LOGIN",
       message: "Tried to verify login for unauthenticated user.",
     });
 
-  const email = auth.user.email;
-
   const verifyLoginMachine = React.useMemo(
     () => createVerifyLoginMachine(email, onVerify, onVerifyFailure),
-    [email, onVerify]
+    [email, onVerify, onVerifyFailure]
   );
 
   const service = useInterpret(verifyLoginMachine);
 
-  return [auth.user.email, ...useActor(service)] as const;
+  return [email, ...useActor(service)] as const;
 }

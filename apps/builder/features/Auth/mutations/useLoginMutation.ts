@@ -7,7 +7,7 @@ import { useMutation, UseMutationOptions } from "react-query";
 import { useOD } from "../../Data/odClient";
 
 export function useLoginMutation(
-  config: Omit<
+  config?: Omit<
     UseMutationOptions<TLoginOutput, unknown, TLoginInput["body"], unknown>,
     "mutationFn"
   >

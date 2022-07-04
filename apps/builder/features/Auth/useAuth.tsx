@@ -1,6 +1,7 @@
 import { TLoginOutput } from "@open-decision/auth-api-specification";
 import { ODProgrammerError } from "@open-decision/type-classes";
 import { useActor, useInterpret } from "@xstate/react";
+import { useRouter } from "next/router";
 import * as React from "react";
 import { ODProvider } from "../Data/odClient";
 import {
@@ -23,9 +24,13 @@ export function AuthProvider({
   user,
   access,
 }: AuthProviderProps) {
+  const router = useRouter();
   const authMachine = React.useCallback(
-    () => createAuthenticationMachine(initial, user, access),
-    [initial, user, access]
+    () =>
+      createAuthenticationMachine(initial, user, access, () =>
+        router.push("/auth/login")
+      ),
+    [initial, user, access, router]
   );
 
   const service = useInterpret(authMachine, { devTools: true });

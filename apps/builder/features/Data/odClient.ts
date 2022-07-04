@@ -28,11 +28,11 @@ export function useOD(
 
     return client({
       token,
-      urlPrefix: process.env.NEXT_PUBLIC_OD_API_ENDPOINT,
+      urlPrefix: "/external-api",
     });
   }
 
-  return client({ urlPrefix: process.env.NEXT_PUBLIC_OD_API_ENDPOINT });
+  return client({ urlPrefix: "/external-api" });
 }
 
 export const ODProvider = ODContext.Provider;
