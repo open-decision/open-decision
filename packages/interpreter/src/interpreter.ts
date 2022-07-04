@@ -42,7 +42,6 @@ const resolveConditions =
     for (const conditionId in conditions) {
       const condition = conditions[conditionId];
       const existingAnswerId = context.answers[condition.inputId];
-      console.log(condition.answerId);
 
       if (condition.answerId === existingAnswerId) {
         const edge = Object.values<Edge.TEdge>(tree.edges ?? {}).find(

@@ -19,15 +19,11 @@ export const TreeImport = React.forwardRef<
   HTMLLabelElement,
   Omit<FileInputProps, "children"> & { onDone?: () => void }
 >(function TreeImport({ onDone, ...props }, ref) {
-  const [importedData, setImportedData] = React.useState<
-    Tree.TTree | undefined
-  >();
   const { addNotification } = useNotificationStore();
 
   const OD = useOD();
 
   const { mutate: createTree } = useMutation(
-    [importedData],
     ({ name, ..._ }: { name: string; data: Tree.TTree }) =>
       OD.trees.create({ body: { name } }),
     {
@@ -71,8 +67,6 @@ export const TreeImport = React.forwardRef<
           }
 
           const { name, ...data } = validatedResult.data;
-
-          setImportedData(data);
 
           return createTree({ name, data });
         };
