@@ -19,23 +19,21 @@ export const TreeImport = React.forwardRef<
   HTMLLabelElement,
   Omit<FileInputProps, "children"> & { onDone?: () => void }
 >(function TreeImport({ onDone, ...props }, ref) {
-  const [importedData, setImportedData] = React.useState<
-    Tree.TTree | undefined
-  >();
   const { addNotification } = useNotificationStore();
 
   const OD = useOD();
 
   const { mutate: createTree } = useMutation(
-    (name: string) => OD.trees.create({ body: { name } }),
+    ({ name, ..._ }: { name: string; data: Tree.TTree }) =>
+      OD.trees.create({ body: { name } }),
     {
-      onSuccess: ({ uuid }) => {
-        if (!importedData) return;
+      onSuccess: ({ uuid }, { data }) => {
+        if (!data) return;
 
         const yDoc = new Y.Doc();
         const yMap = yDoc.getMap("tree");
         new IndexeddbPersistence(uuid, yDoc);
-        const importStore = proxy(importedData);
+        const importStore = proxy(data);
         bindProxyAndYMap(importStore, yMap);
 
         queryClient.invalidateQueries(useTreesQueryKey);
@@ -70,9 +68,7 @@ export const TreeImport = React.forwardRef<
 
           const { name, ...data } = validatedResult.data;
 
-          setImportedData(data);
-
-          return createTree(name);
+          return createTree({ name, data });
         };
 
         fileReader.readAsText(event.currentTarget.files?.[0]);

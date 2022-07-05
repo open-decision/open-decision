@@ -161,6 +161,7 @@ export const createInterpreterMachine = (
       actions: {
         assignAnswerToContext: assign((context, event) => ({
           answers: { ...context.answers, [event.inputId]: event.answerId },
+          history: { ...context.history, position: 0 },
         })),
         resetToInitialContext: assign((_context, _event) => ({
           history: { nodes: [tree.startNode], position: 0 },
