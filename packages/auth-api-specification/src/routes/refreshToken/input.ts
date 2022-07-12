@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { hasRefreshTokenCookieInput } from "../shared";
+import { hasRefreshTokenInput } from "../shared";
 
-export const refreshTokenInput = hasRefreshTokenCookieInput;
+export const refreshTokenInput = hasRefreshTokenInput;
 
 export type TRefreshTokenInput = z.infer<typeof refreshTokenInput>;

@@ -7,11 +7,9 @@ import { SideMenu } from "../../../features/Builder/SideMenu";
 import { Layout } from "../../../components";
 import { LoadingSpinner, Stack } from "@open-decision/design-system";
 import { BuilderLayout } from "../../../features/Builder/components/BuilderLayout";
-import { GetServerSideProps } from "next";
-import { checkAuthentication } from "../../../features/Auth/checkAuthentication";
 
-export const getServerSideProps: GetServerSideProps = async function (context) {
-  return checkAuthentication(context);
+export const getServerSideProps = async () => {
+  return { props: {} };
 };
 
 export default function BuilderPage() {

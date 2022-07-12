@@ -5,12 +5,12 @@ import {
   Link as SystemLink,
 } from "@open-decision/design-system";
 import { ExitIcon, GearIcon, HomeIcon } from "@radix-ui/react-icons";
-import { useAuth } from "../../features/Auth/useAuth";
 import Link from "next/link";
+import { useLogoutMutation } from "../../features/Auth/mutations/useLogoutMutation";
 import { MenuButton } from "./MenuButton";
 
 export function UserMenu() {
-  const [, send] = useAuth();
+  const { mutate: logout } = useLogoutMutation();
 
   return (
     <DropdownMenu.Root>
@@ -43,7 +43,7 @@ export function UserMenu() {
             </SystemLink>
           </DropdownMenu.Item>
         </Link>
-        <DropdownMenu.Item onSelect={() => send({ type: "LOG_OUT" })}>
+        <DropdownMenu.Item onSelect={() => logout()}>
           <Icon>
             <ExitIcon />
           </Icon>

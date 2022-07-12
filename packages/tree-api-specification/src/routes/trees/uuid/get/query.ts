@@ -12,7 +12,7 @@ export const getTree =
     if (prefix) combinedUrl = prefix + combinedUrl;
     return await safeFetch(
       combinedUrl,
-      { headers: context.headers, cache: "no-cache" },
+      { cache: "no-cache" },
       { validation: getTreeOutput }
     );
   };

@@ -17,7 +17,7 @@ export function useResetPasswordMutation(
     "mutationFn"
   >
 ) {
-  const OD = useOD("unauthenticated");
+  const OD = useOD();
 
   return useMutation<any, ODError, any, unknown>(({ token, password }) => {
     return OD.auth.resetPassword({ body: { password, token } });

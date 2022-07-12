@@ -19,7 +19,6 @@ export const register =
     return await safeFetch(
       combinedUrl,
       {
-        headers: context.headers,
         body: JSON.stringify(inputs.body),
         method: "POST",
       },

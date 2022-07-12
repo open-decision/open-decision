@@ -1,7 +1,6 @@
 import * as React from "react";
 import { ODProgrammerError } from "@open-decision/type-classes";
 import { useActor, useInterpret } from "@xstate/react";
-import { useAuth } from "../useAuth";
 import {
   createVerifyLoginMachine,
   onVerify,
@@ -12,14 +11,6 @@ export function useVerifyLogin(
   onVerify: onVerify,
   onVerifyFailure?: onVerifyFailure
 ) {
-  const [
-    {
-      context: {
-        user: { email },
-      },
-    },
-  ] = useAuth();
-
   if (!email)
     throw new ODProgrammerError({
       code: "TRIED_VERIFY_UNAUTHENTICATED_USER_LOGIN",

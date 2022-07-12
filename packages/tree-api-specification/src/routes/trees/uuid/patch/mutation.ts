@@ -11,7 +11,6 @@ export const updateTree =
     if (prefix) combinedUrl = prefix + combinedUrl;
 
     return await safeFetch(combinedUrl, {
-      headers: context.headers,
       body: JSON.stringify(inputs.body),
       method: "PATCH",
     });

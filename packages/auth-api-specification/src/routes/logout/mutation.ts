@@ -9,7 +9,7 @@ import { TLogoutInput } from "./input";
 import { logoutOutput, TLogoutOutput } from "./output";
 
 export const logout =
-  (context: TContext): Post<Omit<TLogoutInput, "cookies">, TLogoutOutput> =>
+  (context: TContext): Post<TLogoutInput, TLogoutOutput> =>
   async (_, config) => {
     const combinedUrl = prefixUrl(
       logoutUrl,
@@ -19,7 +19,6 @@ export const logout =
     return await safeFetch(
       combinedUrl,
       {
-        headers: context.headers,
         method: "POST",
       },
       { validation: logoutOutput }

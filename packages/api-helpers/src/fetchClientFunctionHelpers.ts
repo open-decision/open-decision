@@ -20,17 +20,17 @@ export const AuthHeader = z.object({
 
 export const Context = z.object({
   urlPrefix: z.string().optional(),
-  headers: AuthHeader.merge(
-    z.object({ Cookie: z.string().optional() })
-  ).optional(),
+  authPrefix: z.string().optional(),
+  token: z.string().optional(),
+  requestOrigin: z.string().optional(),
 });
 
-export type TContext = z.infer<typeof Context>;
+export type TContext = z.infer<typeof Context> & { headers?: HeadersInit };
 
 export type QueryConfig = TContext;
 
 export type Get<TInput, TOutput> = (
-  inputs: Omit<TInput, keyof TContext>,
+  inputs: TInput,
   config?: QueryConfig
 ) => Promise<{ data: TOutput; response: Response }>;
 

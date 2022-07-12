@@ -14,7 +14,8 @@ export const jwtStrategy = new JwtStrategy(
       if (payload.type !== TokenType.ACCESS) {
         throw new Error("Invalid token type");
       }
-      const user = await UserHandler.findByUuidOrId(payload.sub!);
+
+      const user = await UserHandler.findByUuidOrId(payload.userUuid);
       if (!user) {
         return done(null, false);
       }

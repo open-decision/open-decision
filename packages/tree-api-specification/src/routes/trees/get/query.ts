@@ -16,7 +16,13 @@ export const getTrees =
 
     return await safeFetch(
       combinedUrl,
-      { headers: context.headers, cache: "no-cache" },
+      {
+        cache: "no-cache",
+        headers: {
+          authorization: `Bearer ${context.token}`,
+        },
+        ...context.headers,
+      },
       { validation: getTreesOutput }
     );
   };

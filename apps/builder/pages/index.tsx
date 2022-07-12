@@ -1,25 +1,19 @@
 import { LoadingSpinner, Stack } from "@open-decision/design-system";
 import { ErrorBoundary } from "@sentry/nextjs";
 import { BaseHeader } from "../components";
-import { TreeList } from "../features/Dashboard/TreeList";
+// import { TreeList } from "../features/Dashboard/TreeList";
 import * as React from "react";
 import { ErrorCard } from "../components/Error/ErrorCard";
 import { getDashboardLayout } from "../features/Dashboard/DashboardLayout";
-import { GetServerSideProps } from "next";
-import { AuthProvider } from "../features/Auth/useAuth";
-import { TLoginOutput } from "@open-decision/auth-api-specification";
-import { TGetTreesOutput } from "@open-decision/tree-api-specification";
-import { checkAuthentication } from "../features/Auth/checkAuthentication";
+import dynamic from "next/dynamic";
 
-export const getServerSideProps: GetServerSideProps = async function (context) {
-  return checkAuthentication(context);
-};
+const TreeList = dynamic(() => import("../features/Dashboard/TreeList"), {
+  ssr: false,
+});
 
-type PageProps = TLoginOutput & { trees: TGetTreesOutput };
-
-export default function DashboardPage({ user, access, trees }: PageProps) {
+export default function DashboardPage() {
   return (
-    <AuthProvider initial="loggedIn" user={user} access={access}>
+    <>
       <BaseHeader css={{ gridColumn: "1 / -1" }} />
       <ErrorBoundary
         fallback={
@@ -42,11 +36,11 @@ export default function DashboardPage({ user, access, trees }: PageProps) {
               />
             }
           >
-            <TreeList trees={trees} />
+            <TreeList />
           </React.Suspense>
         </Stack>
       </ErrorBoundary>
-    </AuthProvider>
+    </>
   );
 }
 

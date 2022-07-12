@@ -10,14 +10,20 @@ export const authOuput = z.object({
     role: z.enum(["ADMIN", "USER", "DEVELOPER"]),
   }),
   access: z.object({
-    token: z.string(),
-    expires: z.string(),
+    token: z.object({
+      token: z.string(),
+      expires: z.string(),
+    }),
+    refreshToken: z.object({
+      token: z.string(),
+      expires: z.string(),
+    }),
   }),
 });
 
-export const hasRefreshTokenCookieInput = z.object({
-  cookies: z.object({
-    refreshCookie: z.string().refine((val) => isJWT(val), {
+export const hasRefreshTokenInput = z.object({
+  body: z.object({
+    refreshToken: z.string().refine((val) => isJWT(val), {
       message: "Refresh token is not a valid JWT.",
     }),
   }),

@@ -1,11 +1,11 @@
-import { useAuth } from "../../../../features/Auth/useAuth";
 import * as React from "react";
 import { createTreeStore } from "./treeStore";
-import { useEffectOnce } from "react-use";
 import { IndexeddbPersistence } from "y-indexeddb";
 import { useTreeId } from "../../../Data/useTreeId";
 import { ODError } from "@open-decision/type-classes";
 import { useTreeSuspension } from "./hooks/useTreeSuspension";
+import { websocketMachine } from "../../../Data/websocket.machine";
+import { useMachine } from "@xstate/react";
 
 export type TTreeContext = ReturnType<typeof createTreeStore>;
 
@@ -14,34 +14,28 @@ const TreeContext = React.createContext<TTreeContext | null>(null);
 type Props = { children: React.ReactNode };
 export const TreeProvider = ({ children }: Props) => {
   const id = useTreeId();
-  const [state, send] = useAuth();
   const treeStore = React.useMemo(() => createTreeStore(id), [id]);
+  const [state, send] = useMachine(websocketMachine, { devTools: true });
 
-  if (
-    state.matches({
-      loggedIn: {
-        websocket: "connect_failed",
-      },
-    })
-  )
+  if (state.matches("error"))
     throw new ODError({
       code: "BUILDER_WEBSOCKET_CONNECTION_FAILED",
       message: "Es konnte keine Websocket Verbindung hergestellt werden.",
     });
 
-  useEffectOnce(() => {
+  React.useEffect(() => {
     new IndexeddbPersistence(id, treeStore.yDoc);
     send({
-      type: "OPEN_WEBSOCKET",
+      type: "OPEN",
       id,
       yDoc: treeStore.yDoc,
       onSync: treeStore.onSync,
     });
 
     return () => {
-      send("CLOSE_WEBSOCKET");
+      send("CLOSE");
     };
-  });
+  }, [id, send, treeStore.onSync, treeStore.yDoc]);
 
   return (
     <TreeContext.Provider value={treeStore}>{children}</TreeContext.Provider>
