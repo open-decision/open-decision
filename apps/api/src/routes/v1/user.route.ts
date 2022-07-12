@@ -1,29 +1,32 @@
 import express from "express";
 import { auth } from "../../middlewares/auth";
 import { userController } from "../../controllers";
+const usersRouter = express.Router();
 const userRouter = express.Router();
 
-userRouter.route("/").post(auth("manageUsers"), userController.createUser);
+userRouter.route("/").get(auth(), userController.getUser);
+
+usersRouter.route("/").post(auth("manageUsers"), userController.createUser);
 // .get(
 //   auth("getUsers"),
 //   userController.getUsers
 // );
 
-userRouter
+usersRouter
   .route("/whitelist")
   .get(auth("getWhitelist"), userController.getWhitelist)
   .post(auth("manageWhitelist"), userController.addToWhitelist)
   .delete(auth("manageWhitelist"), userController.removeFromWhitelist);
 
-userRouter.post("/is-whitelisted", userController.isWhitelisted);
+usersRouter.post("/is-whitelisted", userController.isWhitelisted);
 
-userRouter
+usersRouter
   .route("/:userUuid")
   .get(auth("getUsers"), userController.getUser)
   .patch(auth("manageUsers"), userController.updateUser)
   .delete(auth("manageUsers"), userController.deleteUser);
 
-export default userRouter;
+export { usersRouter, userRouter };
 /**
  * @openapi
  * tags:

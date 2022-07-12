@@ -17,7 +17,7 @@ export function useForgotPasswordMutation(
     "mutationFn"
   >
 ) {
-  const OD = useOD("unauthenticated");
+  const OD = useOD();
 
   return useMutation<any, ODError, any, unknown>(({ email }) => {
     return OD.auth.forgotPassword({ body: { email } });

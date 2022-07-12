@@ -15,7 +15,8 @@
       "executor": "@nrwl/next:server",
       "options": {
         "buildTarget": "builder:build",
-        "dev": true
+        "dev": true,
+        "hostname": "localhost"
       }
     },
     "export": {

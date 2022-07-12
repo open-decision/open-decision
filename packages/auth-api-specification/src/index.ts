@@ -5,3 +5,5 @@ export * from "./routes/logout";
 export * from "./routes/refreshToken";
 export * from "./routes/resetPassword";
 export * from "./routes/verifyEmail";
+
+export * from "./utils/verifyTokenByExpiry";

@@ -4,7 +4,6 @@ import {
 } from "@open-decision/auth-api-specification";
 import { ODError } from "@open-decision/type-classes";
 import { useMutation, UseMutationOptions } from "react-query";
-import { useOD } from "../../Data/odClient";
 
 export function useLoginMutation(
   config?: Omit<
@@ -12,9 +11,10 @@ export function useLoginMutation(
     "mutationFn"
   >
 ) {
-  const OD = useOD("unauthenticated");
-
   return useMutation<any, ODError, any, unknown>(({ email, password }) => {
-    return OD.auth.login({ body: { email, password } });
+    return fetch("/api/external-api/auth/login", {
+      body: JSON.stringify({ email, password }),
+      method: "POST",
+    });
   }, config);
 }

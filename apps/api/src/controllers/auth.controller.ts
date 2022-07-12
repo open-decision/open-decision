@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import config from "../config/config";
 import catchAsync from "../utils/catchAsync";
 import pickSafeUserProperties from "../utils/pickSafeUserProperties";
 import {
@@ -18,6 +17,9 @@ import {
   forgotPasswordInput,
   resetPasswordInput,
   verifyEmailInput,
+  TRefreshTokenOutput,
+  TLoginOutput,
+  TRegisterOutput,
 } from "@open-decision/auth-api-specification";
 
 const register = catchAsync(async (req: Request, res: Response) => {
@@ -38,13 +40,6 @@ const register = catchAsync(async (req: Request, res: Response) => {
 
   const { refresh, access } = await tokenService.generateAuthTokens(user);
 
-  res.cookie("refreshCookie", refresh.token, {
-    maxAge: config.JWT_REFRESH_EXPIRATION_DAYS * 86400 * 1000,
-    secure: config.NODE_ENV === "production" ? true : false,
-    httpOnly: true,
-    sameSite: config.NODE_ENV === "production" ? "none" : "lax",
-  });
-
   if (user) {
     const verifyEmailToken = await tokenService.generateVerifyEmailToken(user);
     emailService.sendVerificationEmail(user.email, verifyEmailToken);
@@ -53,7 +48,13 @@ const register = catchAsync(async (req: Request, res: Response) => {
   res
     .status(httpStatus.CREATED)
     // .send({ user: pickSafeUserProperties(user), access } as TRegisterOutput);
-    .send({ user: pickSafeUserProperties(user), access });
+    .send({
+      user: pickSafeUserProperties(user),
+      access: {
+        token: access,
+        refreshToken: refresh,
+      },
+    } as TRegisterOutput);
 });
 
 const login = catchAsync(async (req: Request, res: Response) => {
@@ -75,24 +76,20 @@ const login = catchAsync(async (req: Request, res: Response) => {
   //   });
   // }
   const { refresh, access } = await tokenService.generateAuthTokens(user);
-  res.cookie("refreshCookie", refresh.token, {
-    maxAge: config.JWT_REFRESH_EXPIRATION_DAYS * 86400 * 1000,
-    secure: config.NODE_ENV === "production" ? true : false,
-    httpOnly: true,
-    sameSite: config.NODE_ENV === "production" ? "none" : "lax",
-  });
-  res.send({ user: pickSafeUserProperties(user), access });
+  res.send({
+    user: pickSafeUserProperties(user),
+    access: {
+      token: access,
+      refreshToken: refresh,
+    },
+  } as TLoginOutput);
 });
 
 const logout = catchAsync(async (req: Request, res: Response) => {
   await validateRequest(logoutInput)(req);
 
   await authService.logout(res.locals.refreshCookie);
-  res.clearCookie("refreshCookie", {
-    secure: config.NODE_ENV === "production" ? true : false,
-    httpOnly: true,
-    sameSite: config.NODE_ENV === "production" ? "none" : "lax",
-  });
+
   res.status(httpStatus.NO_CONTENT).send();
 });
 
@@ -100,20 +97,16 @@ const refreshTokens = catchAsync(async (req: Request, res: Response) => {
   const reqData = await validateRequest(refreshTokenInput)(req);
 
   const refreshedTokens = await authService.refreshAuth(
-    reqData.cookies.refreshCookie
+    reqData.body.refreshToken
   );
-
-  res.cookie("refreshCookie", refreshedTokens.refresh.token, {
-    maxAge: config.JWT_REFRESH_EXPIRATION_DAYS * 86400 * 1000,
-    secure: config.NODE_ENV === "production" ? true : false,
-    httpOnly: true,
-    sameSite: config.NODE_ENV === "production" ? "none" : "lax",
-  });
 
   res.send({
     user: pickSafeUserProperties(refreshedTokens.user),
-    access: refreshedTokens?.access,
-  });
+    access: {
+      token: refreshedTokens?.access,
+      refreshToken: refreshedTokens?.refresh,
+    },
+  } as TRefreshTokenOutput);
 });
 
 const forgotPassword = catchAsync(async (req: Request, res: Response) => {

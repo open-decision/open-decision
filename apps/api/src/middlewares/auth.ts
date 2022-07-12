@@ -3,9 +3,9 @@ import * as http from "http";
 import passport from "passport";
 import { Permissions, roleRights } from "../config/roles";
 import { User } from "@open-decision/prisma";
-import httpStatus from "http-status";
 import { jwtStrategy, jwtWebsocketStrategy } from "../config/passport";
 import { APIError } from "@open-decision/type-classes";
+import cookieParser from "cookie-parser";
 
 const verifyCallback =
   (
@@ -75,7 +75,7 @@ export const wsAuth = async (req: http.IncomingMessage, next: Function) => {
         verifyCallback(req, resolve, reject, [])
       )(req, next);
     })
-      //@ts-ignore - whatever
+      //@ts-expect-error - whatever
       .then(() => next(false, req!.user))
       .catch((err) => next(err))
   );

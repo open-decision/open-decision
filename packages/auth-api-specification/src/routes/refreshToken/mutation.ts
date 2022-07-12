@@ -9,10 +9,8 @@ import { TRefreshTokenInput } from "./input";
 import { refreshTokenOutput, TRefreshTokenOutput } from "./output";
 
 export const refreshToken =
-  (
-    context: TContext
-  ): Post<Omit<TRefreshTokenInput, "cookies">, TRefreshTokenOutput> =>
-  async (_, config) => {
+  (context: TContext): Post<TRefreshTokenInput, TRefreshTokenOutput> =>
+  async (inputs, config) => {
     const combinedUrl = prefixUrl(
       refreshTokenUrl,
       config?.urlPrefix ?? context.urlPrefix
@@ -21,7 +19,7 @@ export const refreshToken =
     return await safeFetch(
       combinedUrl,
       {
-        headers: { ...context.headers, ...config?.headers },
+        body: JSON.stringify(inputs.body),
         method: "POST",
       },
       { validation: refreshTokenOutput.passthrough() }

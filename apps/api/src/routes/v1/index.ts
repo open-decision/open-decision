@@ -1,6 +1,6 @@
 import express from "express";
 import authRouter from "./auth.route";
-import userRouter from "./user.route";
+import { userRouter, usersRouter } from "./user.route";
 import docsRouter from "./docs.route";
 import config from "../../config/config";
 import treeRouter from "./tree.route";
@@ -9,7 +9,8 @@ const router = express.Router();
 
 const defaultRoutes = [
   { path: "/auth", route: authRouter },
-  { path: "/users", route: userRouter },
+  { path: "/user", route: userRouter },
+  { path: "/users", route: usersRouter },
 ];
 
 const devRoutes = [

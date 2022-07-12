@@ -9,6 +9,7 @@ import * as net from "net";
 import * as Y from "yjs";
 import prisma from "../init-prisma-client";
 import buffer from "../utils/buffer";
+
 export const wss = new WebSocketServer({
   noServer: true,
 });

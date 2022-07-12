@@ -3,8 +3,10 @@ import { Heading, Form } from "@open-decision/design-system";
 import { Card } from "../../components/Card";
 import { useUserUpdateMutation } from "../Auth/settings.queries";
 import { VerifiedSettingsChange } from "./VerifiedSettingsChange";
+import { useUserQuery } from "../Data/useUserQuery";
 
 export function ChangePassword() {
+  const { data: user, isLoading: isLoadingUser } = useUserQuery();
   const formState = Form.useFormState({
     defaultValues: {
       newPassword: "",
@@ -23,16 +25,12 @@ export function ChangePassword() {
   const { mutate, isLoading } = useUserUpdateMutation();
   const [open, setOpen] = React.useState(false);
 
-  const handleVerify = React.useCallback(
-    () => mutate({ password: newPassword }),
-    []
-  );
-
   return (
     <VerifiedSettingsChange
-      onVerify={handleVerify}
+      onVerify={() => (user ? mutate({ password: newPassword, user }) : null)}
       open={open}
       setOpen={setOpen}
+      disabled={isLoadingUser}
     >
       <Card>
         <Heading as="h3" size="small">

@@ -17,7 +17,7 @@ export function useRegisterMutation(
     "mutationFn"
   >
 ) {
-  const OD = useOD("unauthenticated");
+  const OD = useOD();
 
   return useMutation<any, ODError, any, unknown>(({ email, password, toc }) => {
     return OD.auth.register({ body: { email, password, toc } });

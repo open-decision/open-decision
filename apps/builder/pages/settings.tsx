@@ -16,12 +16,6 @@ import { getDashboardLayout } from "../features/Dashboard/DashboardLayout";
 import { ChangeEmail } from "../features/Settings/ChangeEmail";
 import { ChangePassword } from "../features/Settings/ChangePassword";
 import { DeleteAccount } from "../features/Settings/DeleteAccount";
-import { GetServerSideProps } from "next";
-import { checkAuthentication } from "../features/Auth/checkAuthentication";
-
-export const getServerSideProps: GetServerSideProps = async function (context) {
-  return checkAuthentication(context);
-};
 
 const SideMenuLink = styled("a", Label, {
   position: "relative",
