@@ -3,6 +3,15 @@ import config from "./config";
 import UserHandler from "../models/user.model";
 import { JwtPayload } from "jsonwebtoken";
 import { TokenType } from "@open-decision/prisma";
+import { Request } from "express";
+
+const cookieExtractor = function (req: Request) {
+  let token = null;
+  if (req && req.cookies) {
+    token = req.cookies["token"];
+  }
+  return token;
+};
 
 export const jwtStrategy = new JwtStrategy(
   {
@@ -29,7 +38,7 @@ export const jwtStrategy = new JwtStrategy(
 export const jwtWebsocketStrategy = new JwtStrategy(
   {
     secretOrKey: config.ACCESS_TOKEN_SECRET,
-    jwtFromRequest: ExtractJwt.fromUrlQueryParameter("auth"),
+    jwtFromRequest: cookieExtractor,
   },
   async (payload: JwtPayload, done: Function) => {
     try {
