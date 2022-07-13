@@ -44,7 +44,7 @@ export const errorHandler = (
   _next: NextFunction
 ) => {
   let { statusCode, message } = err;
-  const { code } = err;
+  const { code, errors } = err;
 
   if (config.NODE_ENV === "production" && !err.isOperational) {
     statusCode = httpStatus.INTERNAL_SERVER_ERROR;
@@ -59,6 +59,7 @@ export const errorHandler = (
     code,
     statusCode,
     message,
+    errors,
     ...(config.NODE_ENV === "development" && { stack: err.stack }),
   };
 

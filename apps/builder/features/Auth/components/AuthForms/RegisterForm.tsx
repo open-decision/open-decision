@@ -88,13 +88,6 @@ export function CombinedRegisterForm() {
 }
 
 function RegisterForm({ email }: { email?: string }) {
-  const router = useRouter();
-  const {
-    mutate: register,
-    error,
-    isLoading,
-  } = useRegisterMutation({ onSuccess: () => router.push("/") });
-
   const formState = Form.useFormState({
     defaultValues: {
       email: email ?? "",
@@ -102,6 +95,23 @@ function RegisterForm({ email }: { email?: string }) {
       passwordConfirmation: "",
       legal: false,
       privacy: false,
+    },
+  });
+
+  const router = useRouter();
+  const {
+    mutate: register,
+    error,
+    isLoading,
+    reset,
+    isError,
+  } = useRegisterMutation({
+    onSuccess: () => router.push("/"),
+    onError: (error) => {
+      formState.setErrors({
+        password: error?.errors?.body?.password?._errors[0],
+        email: error?.errors?.body?.email?._errors[0],
+      });
     },
   });
 
@@ -114,6 +124,7 @@ function RegisterForm({ email }: { email?: string }) {
   });
 
   formState.useValidate(() => {
+    reset();
     if (formState.values.password !== formState.values.passwordConfirmation)
       formState.setError(
         formState.names.passwordConfirmation,
@@ -122,7 +133,7 @@ function RegisterForm({ email }: { email?: string }) {
   });
 
   return (
-    <Form.Root state={formState}>
+    <Form.Root state={formState} resetOnSubmit={false}>
       <Form.Field Label="Mailadresse">
         <Form.Input
           css={{ layer: "2" }}
@@ -200,12 +211,12 @@ function RegisterForm({ email }: { email?: string }) {
           />
         </Form.Field>
       </Stack>
-      {error ? (
-        <ErrorMessage css={{ marginBlock: "$2" }}>{error.message}</ErrorMessage>
+      {isError ? (
+        <ErrorMessage css={{ marginTop: "$4" }}>{error.message}</ErrorMessage>
       ) : null}
       <Form.Submit
         isLoading={isLoading}
-        css={{ marginTop: "$6" }}
+        css={{ marginTop: "$4" }}
         type="submit"
       >
         Jetzt Registrieren

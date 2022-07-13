@@ -14,11 +14,11 @@ export const wss = new WebSocketServer({
   noServer: true,
 });
 
-wss.on("connection", (websocket, request) =>
-  setupWSConnection(websocket, request, {
+wss.on("connection", (websocket, request) => {
+  return setupWSConnection(websocket, request, {
     docName: getUuidFromRequest(request),
-  })
-);
+  });
+});
 
 export const websocketUpgradeHandler = catchAsync(
   async (request: http.IncomingMessage, socket: net.Socket, head: Buffer) => {

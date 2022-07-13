@@ -9,7 +9,7 @@ export const ODContext = React.createContext<{ token?: TJWT }>({
 export function useOD() {
   return client({
     requestOrigin: "client",
-    urlPrefix: `${process.env.NEXT_PUBLIC_URL}/api/external-api`,
+    urlPrefix: `/api/external-api`,
   });
 }
 
