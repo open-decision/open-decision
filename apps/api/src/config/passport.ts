@@ -4,11 +4,13 @@ import UserHandler from "../models/user.model";
 import { JwtPayload } from "jsonwebtoken";
 import { TokenType } from "@open-decision/prisma";
 import { Request } from "express";
+import cookie from "cookie";
 
 const cookieExtractor = function (req: Request) {
-  let token = null;
-  if (req && req.cookies) {
-    token = req.cookies["token"];
+  let token: string | null = null;
+  if (req && req.headers.cookie) {
+    const parsedCookies = cookie.parse(req.headers.cookie);
+    token = parsedCookies["token"];
   }
   return token;
 };
@@ -45,7 +47,7 @@ export const jwtWebsocketStrategy = new JwtStrategy(
       if (payload.type !== TokenType.ACCESS) {
         throw new Error("Invalid token type");
       }
-      const user = await UserHandler.findByUuidOrId(payload.sub!);
+      const user = await UserHandler.findByUuidOrId(payload.userUuid);
       if (!user) {
         return done(null, false);
       }

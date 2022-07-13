@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { APIError, ODError } from "@open-decision/type-classes";
+import { APIError, isAPIError } from "@open-decision/type-classes";
 
 type Config<TValidation extends z.ZodTypeAny> = {
   validation?: TValidation;
@@ -24,15 +24,15 @@ export const safeFetch = async <TValidation extends z.ZodTypeAny>(
     const contentType = response.headers.get("content-type");
     if (contentType?.includes("application/json")) data = await response.json();
 
-    if (response.status >= 400) {
-      throw new APIError(data);
+    if (response.status >= 400 && isAPIError(data)) {
+      throw data;
     }
 
     return { data: validation?.parse(data) ?? data, response };
   } catch (error) {
-    if (error instanceof Error) throw error;
+    if (isAPIError(error)) throw error;
 
-    throw new ODError({
+    throw new APIError({
       code: "UNEXPECTED_ERROR",
       message: "Something unexpected happened when fetching from the API.",
     });

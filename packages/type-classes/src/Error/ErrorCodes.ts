@@ -34,11 +34,16 @@ export enum APIErrors {
   WHITELIST_ENTRY_COULD_NOT_BE_DELETED = 400,
   VALIDATION_ERROR = 400,
   EXPIRED_TOKEN = 401,
+  UNEXPECTED_ERROR = 500,
+  PASSWORD_TO_WEAK = 400,
+  INVALID_EMAIL = 400,
 }
 
 export type ErrorCodes =
   | CommonErrors
   | ProgrammerErrors
-  | `INTERPRETER_${InterpreterErrors}`
-  | `BUILDER_${BuilderErrors}`
-  | `API_${keyof typeof APIErrors}`;
+  | InterpreterErrors
+  | BuilderErrors
+  | keyof typeof APIErrors;
+
+export type Origins = "API" | "INTERPRETER" | "BUILDER";

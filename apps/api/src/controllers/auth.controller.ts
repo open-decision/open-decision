@@ -30,14 +30,6 @@ const register = catchAsync(async (req: Request, res: Response) => {
     reqData.body.password
   );
 
-  // For now this is not necessary, we don't force the user to verify its email before the login is possible
-  // if (
-  //   config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS &&
-  //   user.role == "USER"
-  // ) {
-  //   res.status(httpStatus.CREATED).send({ user: pickSafeUserProperties(user) });
-  // }
-
   const { refresh, access } = await tokenService.generateAuthTokens(user);
 
   if (user) {
@@ -45,16 +37,13 @@ const register = catchAsync(async (req: Request, res: Response) => {
     emailService.sendVerificationEmail(user.email, verifyEmailToken);
   }
 
-  res
-    .status(httpStatus.CREATED)
-    // .send({ user: pickSafeUserProperties(user), access } as TRegisterOutput);
-    .send({
-      user: pickSafeUserProperties(user),
-      access: {
-        token: access,
-        refreshToken: refresh,
-      },
-    } as TRegisterOutput);
+  res.status(httpStatus.CREATED).send({
+    user: pickSafeUserProperties(user),
+    access: {
+      token: access,
+      refreshToken: refresh,
+    },
+  } as TRegisterOutput);
 });
 
 const login = catchAsync(async (req: Request, res: Response) => {
@@ -63,18 +52,6 @@ const login = catchAsync(async (req: Request, res: Response) => {
   const { email, password } = reqData.body;
   const user = await authService.loginUserWithEmailAndPassword(email, password);
 
-  // For now this is not necessary, we don't force the user to verify its email before the login is possible
-
-  // if (
-  //   config.RESTRICT_REGISTRATION_TO_WHITELISTED_ACCOUNTS &&
-  //   user.emailIsVerified &&
-  //   user.role == "USER"
-  // ) {
-  //   throw new ApiError({
-  //     statusCode: httpStatus.UNAUTHORIZED,
-  //     message: "Please confirm your email",
-  //   });
-  // }
   const { refresh, access } = await tokenService.generateAuthTokens(user);
   res.send({
     user: pickSafeUserProperties(user),

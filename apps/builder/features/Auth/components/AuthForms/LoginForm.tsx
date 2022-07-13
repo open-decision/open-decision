@@ -33,6 +33,12 @@ export function LoginForm() {
 
       return router.replace(redirectUrl);
     },
+    onError: (error) => {
+      formState.setErrors({
+        email: error.errors?.body?.email?._errors[0],
+        password: error.errors?.body?.password?._errors[0],
+      });
+    },
   });
 
   formState.useSubmit(() => {
@@ -43,7 +49,7 @@ export function LoginForm() {
   });
 
   return (
-    <Form.Root state={formState} css={{ gap: "$6" }}>
+    <Form.Root state={formState} css={{ gap: "$6" }} resetOnSubmit={false}>
       <Stack>
         <Form.Field Label="Mailadresse">
           <Form.Input

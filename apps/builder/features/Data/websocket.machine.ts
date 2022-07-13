@@ -80,8 +80,7 @@ export const websocketMachine = createMachine(
         const websocket = new WebsocketProvider(
           `${process.env.NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT}/v1/builder-sync`,
           context.id,
-          context.yDoc,
-          { connect: true }
+          context.yDoc
         );
 
         websocket.on("sync", () => context.onSync?.(true));

@@ -1,17 +1,25 @@
 import { ZodError, ZodIssue } from "zod";
 import { ErrorCodes, ProgrammerErrors } from "./ErrorCodes";
 
-export type ODErrorConstructorParameters = {
-  code: ErrorCodes;
+export type ODErrorConstructorParameters<
+  TErrorCodes extends ErrorCodes = ErrorCodes
+> = {
+  code: TErrorCodes;
   additionalData?: Record<string, unknown>;
 } & Omit<Error, "name">;
 
-export class ODError extends Error {
-  readonly code: ErrorCodes;
+export class ODError<
+  TErrorCodes extends ErrorCodes = ErrorCodes
+> extends Error {
+  readonly code: TErrorCodes;
   readonly timestamp?: number;
   readonly additionalData?: Record<string, unknown>;
 
-  constructor({ code, additionalData, message }: ODErrorConstructorParameters) {
+  constructor({
+    code,
+    additionalData,
+    message,
+  }: ODErrorConstructorParameters<TErrorCodes>) {
     super(message);
 
     this.code = code;
@@ -22,14 +30,14 @@ export class ODError extends Error {
 }
 
 export type ODProgrammerErrorConstructorParameters = Omit<
-  ODErrorConstructorParameters,
+  ODErrorConstructorParameters<ProgrammerErrors>,
   "code"
 > & {
   link?: string;
   code: ProgrammerErrors;
 };
 
-export class ODProgrammerError extends ODError {
+export class ODProgrammerError extends ODError<ProgrammerErrors> {
   link?: string;
 
   constructor({ link, ...args }: ODProgrammerErrorConstructorParameters) {
@@ -39,17 +47,25 @@ export class ODProgrammerError extends ODError {
   }
 }
 
-export type ODValidationErrorConstructorParameters =
-  ODErrorConstructorParameters & {
-    zodError?: ZodError;
-  };
+export type ODValidationErrorConstructorParameters<
+  TErrorCodes extends ErrorCodes = ErrorCodes
+> = ODErrorConstructorParameters<TErrorCodes> & {
+  zodError: ZodError;
+};
 
-export class ODValidationError extends ODError {
+export class ODValidationError<
+  TErrorCodes extends ErrorCodes = ErrorCodes
+> extends ODError<TErrorCodes> {
   issues?: ZodIssue[];
 
-  constructor({ zodError, ...args }: ODValidationErrorConstructorParameters) {
+  constructor({
+    zodError,
+    ...args
+  }: ODValidationErrorConstructorParameters<TErrorCodes>) {
     super(args);
 
     this.issues = zodError?.issues;
   }
 }
+
+export { ZodError } from "zod";
