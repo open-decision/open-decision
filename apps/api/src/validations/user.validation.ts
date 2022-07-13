@@ -30,22 +30,6 @@ export const getUser = z.object({
   }),
 });
 
-export const updateUser = z.object({
-  params: z.object({
-    userUuid: z.string().uuid(),
-  }),
-  body: z.object({
-    password: z
-      .string()
-      .min(8)
-      .max(300)
-      .refine(async (val) => isPasswordStrongEnough(val))
-      .optional(),
-    email: z.string().email().optional(),
-    name: z.string().optional(),
-  }),
-});
-
 export const deleteUser = z.object({
   params: z.object({
     userUuid: z.string().uuid(),

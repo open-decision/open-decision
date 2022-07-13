@@ -4,7 +4,11 @@ import { userController } from "../../controllers";
 const usersRouter = express.Router();
 const userRouter = express.Router();
 
-userRouter.route("/").get(auth(), userController.getUser);
+userRouter
+  .route("/")
+  .get(auth(), userController.getUser)
+  .patch(auth(), userController.updateUser)
+  .delete(auth("manageUsers"), userController.deleteUser);
 
 usersRouter.route("/").post(auth("manageUsers"), userController.createUser);
 // .get(
@@ -19,12 +23,6 @@ usersRouter
   .delete(auth("manageWhitelist"), userController.removeFromWhitelist);
 
 usersRouter.post("/is-whitelisted", userController.isWhitelisted);
-
-usersRouter
-  .route("/:userUuid")
-  .get(auth("getUsers"), userController.getUser)
-  .patch(auth("manageUsers"), userController.updateUser)
-  .delete(auth("manageUsers"), userController.deleteUser);
 
 export { usersRouter, userRouter };
 /**

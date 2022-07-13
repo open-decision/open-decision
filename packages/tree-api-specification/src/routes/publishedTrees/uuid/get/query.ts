@@ -11,10 +11,6 @@ export const getPublishedTree =
 
     if (prefix) combinedUrl = prefix + combinedUrl;
 
-    // if (inputs.query) {
-    //   combinedUrl = combinedUrl + `?${new URLSearchParams(inputs.query)}`;
-    // }
-
     return await safeFetch(
       combinedUrl,
       {},

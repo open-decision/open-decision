@@ -14,7 +14,6 @@ export const getUser =
     return await safeFetch(
       combinedUrl,
       {
-        cache: "no-cache",
         headers: {
           authorization: `Bearer ${context.token}`,
         },

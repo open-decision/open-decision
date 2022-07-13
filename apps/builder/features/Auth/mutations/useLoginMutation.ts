@@ -20,7 +20,7 @@ export function useLoginMutation(
   return useMutation<any, APIError<TLoginInput>, any, unknown>(
     ({ email, password }) => {
       return safeFetch("/api/external-api/auth/login", {
-        body: JSON.stringify({ email, password }),
+        body: { email, password },
         method: "POST",
       });
     },

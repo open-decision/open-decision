@@ -14,8 +14,7 @@ import {
 } from ".";
 
 export const UserModel = z.object({
-  id: z.number().int(),
-  uuid: z.string(),
+  uuid: z.string().uuid(),
   name: z.string().nullish(),
   role: z.enum(Role),
   email: z.string(),

@@ -22,7 +22,11 @@ import {
   verifyEmail,
   refreshToken,
 } from "@open-decision/auth-api-specification";
-import { getUser } from "@open-decision/user-api-specification";
+import {
+  deleteUser,
+  getUser,
+  updateUser,
+} from "@open-decision/user-api-specification";
 
 export const client = (context: TContext) => {
   return {
@@ -53,6 +57,8 @@ export const client = (context: TContext) => {
     },
     user: {
       getUser: getUser(context),
+      updateUser: updateUser(context),
+      deleteUser: deleteUser(context),
     },
   };
 };

@@ -21,7 +21,6 @@ export function createTreeStore(id: string) {
   });
 
   let onSync = (_value: unknown) => {
-    console.log("called");
     return;
   };
 

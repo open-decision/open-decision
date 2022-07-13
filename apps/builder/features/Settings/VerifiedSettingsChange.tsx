@@ -6,12 +6,13 @@ import {
 
 type Props = {
   children: React.ReactNode;
+  email: string;
 } & VerfiyLoginDialogProps;
 
-export function VerifiedSettingsChange({ children, ...props }: Props) {
+export function VerifiedSettingsChange({ children, email, ...props }: Props) {
   return (
     <>
-      <VerifyLoginDialog {...props} />
+      {props.open ? <VerifyLoginDialog email={email} {...props} /> : null}
       {children}
     </>
   );
