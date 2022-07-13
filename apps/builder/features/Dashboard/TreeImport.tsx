@@ -9,9 +9,9 @@ import { IndexeddbPersistence } from "y-indexeddb";
 import { proxy } from "valtio";
 import { bindProxyAndYMap } from "valtio-yjs";
 import { FileInputProps } from "../../components/FileInput";
-import { useOD } from "../Data/odClient";
 import { useMutation } from "react-query";
 import { useTreesQueryKey } from "../Data/useTreesQuery";
+import { proxiedOD } from "../Data/odClient";
 
 const TreeImportType = Tree.Type.extend({ name: z.string() });
 
@@ -24,10 +24,8 @@ export const TreeImport = React.forwardRef<
   >();
   const { addNotification } = useNotificationStore();
 
-  const OD = useOD();
-
   const { mutate: createTree } = useMutation(
-    (name: string) => OD.trees.create({ body: { name } }),
+    (name: string) => proxiedOD.trees.create({ body: { name } }),
     {
       onSuccess: ({ data: { uuid } }) => {
         if (!importedData) return;

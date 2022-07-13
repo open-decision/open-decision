@@ -1,14 +1,12 @@
 import { useQuery } from "react-query";
-import { useOD } from "./odClient";
+import { proxiedOD } from "./odClient";
 
 export const useTreesQueryKey = "Trees";
 export function useTreesQuery() {
-  const OD = useOD();
-
   return useQuery(
     useTreesQueryKey,
     () => {
-      return OD.trees.getCollection({});
+      return proxiedOD.trees.getCollection({});
     },
     {
       select({ data }) {

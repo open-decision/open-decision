@@ -1,10 +1,10 @@
+import { client } from "@open-decision/api-client";
 import {
   TForgotPasswordInput,
   TForgotPasswordOutput,
 } from "@open-decision/auth-api-specification";
 import { ODError } from "@open-decision/type-classes";
 import { useMutation, UseMutationOptions } from "react-query";
-import { useOD } from "../../Data/odClient";
 
 export function useForgotPasswordMutation(
   config?: Omit<
@@ -17,7 +17,9 @@ export function useForgotPasswordMutation(
     "mutationFn"
   >
 ) {
-  const OD = useOD();
+  const OD = client({
+    urlPrefix: `${process.env.NEXT_PUBLIC_OD_API_ENDPOINT}/v1`,
+  });
 
   return useMutation<any, ODError, any, unknown>(({ email }) => {
     return OD.auth.forgotPassword({ body: { email } });
