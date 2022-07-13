@@ -19,7 +19,7 @@ export const resetPassword =
     return await safeFetch(
       combinedUrl,
       {
-        body: JSON.stringify(inputs.body),
+        body: inputs.body,
         method: "POST",
       },
       { validation: resetPasswordOutput }

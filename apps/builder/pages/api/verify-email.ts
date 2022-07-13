@@ -18,7 +18,7 @@ export default async function handler(
     `${process.env.OD_API_ENDPOINT}/v1/auth/verify-email`,
     {
       method: "POST",
-      body: JSON.stringify({ token }),
+      body: { token },
       headers: {
         "Content-Type": "application/json",
       },

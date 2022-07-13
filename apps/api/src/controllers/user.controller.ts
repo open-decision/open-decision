@@ -7,6 +7,7 @@ import { userService } from "../services";
 import { userValidation } from "../validations";
 import validateRequest from "../validations/validateRequest";
 import { APIError } from "@open-decision/type-classes";
+import { updateUserInput } from "@open-decision/user-api-specification";
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
   const reqData = await validateRequest(userValidation.createUser)(req);
@@ -26,9 +27,7 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
 // });
 
 const getUser = catchAsync(async (req: Request, res: Response) => {
-  const reqData = await validateRequest(userValidation.getUser)(req);
-
-  const user = await userService.getUserByUuidOrId(reqData.params.userUuid);
+  const user = await userService.getUserByUuidOrId(req.user.uuid);
   if (!user) {
     throw new APIError({
       code: "NOT_FOUND",
@@ -39,20 +38,16 @@ const getUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateUser = catchAsync(async (req: Request, res: Response) => {
-  const reqData = await validateRequest(userValidation.updateUser)(req);
+  const reqData = await validateRequest(updateUserInput)(req);
 
   //These are the only values an user is allowed to change, check how to allow editing by admins
   const updateData = R.pick(reqData.body, ["name", "email", "password"]);
-  const user = await userService.updateUserByUuidOrId(
-    reqData.params.userUuid,
-    updateData
-  );
-  res.send(pickSafeUserProperties(user));
+  await userService.updateUserByUuidOrId(req.user.uuid, updateData);
+  res.status(httpStatus.NO_CONTENT).send();
 });
 
 const deleteUser = catchAsync(async (req: Request, res: Response) => {
-  const reqData = await validateRequest(userValidation.deleteUser)(req);
-  await userService.deleteUserByUuidOrId(reqData.params.userUuid);
+  await userService.deleteUserByUuidOrId(req.user.uuid);
   res.status(httpStatus.NO_CONTENT).send();
 });
 

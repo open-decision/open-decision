@@ -22,7 +22,7 @@ export function useRegisterMutation(
     ({ email, password, toc }) => {
       return safeFetch("/api/external-api/auth/register", {
         method: "POST",
-        body: JSON.stringify({ email, password, toc }),
+        body: { email, password, toc },
       });
     },
     config

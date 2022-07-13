@@ -7,7 +7,11 @@ type Config<TValidation extends z.ZodTypeAny> = {
 
 export const safeFetch = async <TValidation extends z.ZodTypeAny>(
   url: string,
-  { body, headers, ...options }: RequestInit,
+  {
+    body,
+    headers,
+    ...options
+  }: Omit<RequestInit, "body"> & { body?: Record<string, any> },
   { validation }: Config<TValidation> = {}
 ): Promise<{ data: z.output<TValidation>; response: Response }> => {
   try {
@@ -16,7 +20,7 @@ export const safeFetch = async <TValidation extends z.ZodTypeAny>(
         "Content-Type": "application/json",
         ...headers,
       },
-      body: body ? body : undefined,
+      body: body ? JSON.stringify(body) : undefined,
       ...options,
     });
 

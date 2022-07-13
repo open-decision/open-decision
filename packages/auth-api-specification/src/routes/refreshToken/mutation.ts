@@ -19,7 +19,7 @@ export const refreshToken =
     return await safeFetch(
       combinedUrl,
       {
-        body: JSON.stringify(inputs.body),
+        body: inputs.body,
         method: "POST",
       },
       { validation: refreshTokenOutput.passthrough() }

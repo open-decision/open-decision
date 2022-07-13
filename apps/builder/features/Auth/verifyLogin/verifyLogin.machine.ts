@@ -1,4 +1,4 @@
-import { TClient } from "@open-decision/api-client";
+import { safeFetch } from "@open-decision/api-helpers";
 import { assign, createMachine } from "xstate";
 import { VerificationFailedError } from "../errors/AuthErrors";
 
@@ -9,7 +9,7 @@ type Events =
   | { type: "SUCCESSFULL_VERIFY_LOGIN" }
   | { type: "FAILED_VERIFY_LOGIN"; error: Errors };
 
-type Context = { Error?: Errors; client: TClient };
+type Context = { Error?: Errors };
 
 export type onVerify = () => void;
 export type onVerifyFailure = () => void;
@@ -57,15 +57,13 @@ export const createVerifyLoginMachine = (
         })),
       },
       services: {
-        verifyLogin: (context, event) => async (send) => {
-          if (event.type !== "VERIFY_LOGIN" || !email) return;
-
+        verifyLogin: (_, event) => async (send) => {
           const { password } = event;
 
-          await context.client.auth
-            .login({
-              body: { email, password },
-            })
+          await safeFetch("/api/external-api/auth/verifyLogin", {
+            body: { email, password },
+            method: "POST",
+          })
             .then(() => send("SUCCESSFULL_VERIFY_LOGIN"))
             .catch((error) =>
               send({

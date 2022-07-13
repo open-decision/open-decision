@@ -6,11 +6,10 @@ export function useUserQuery() {
   return useQuery(
     [useUserQueryKey],
     async () => {
-      return await (
-        await proxiedOD.user.getUser({})
-      ).data;
+      return proxiedOD.user.getUser({});
     },
     {
+      select: ({ data }) => data,
       staleTime: Infinity,
     }
   );

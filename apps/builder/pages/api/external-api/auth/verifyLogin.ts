@@ -4,11 +4,10 @@ import { setCookieHeaders } from "../../../../utils/auth";
 import { NextApiHandler } from "next";
 import { APIError, isAPIError } from "@open-decision/type-classes";
 
-const authCatch: NextApiHandler = async (req, res) => {
-  const path = req.url?.split("external-api")[1];
+const verifyLogin: NextApiHandler = async (req, res) => {
   try {
     const authResponse = await safeFetch(
-      `${process.env.OD_API_ENDPOINT}/v1/${path}`,
+      `${process.env.OD_API_ENDPOINT}/v1/auth/login`,
       {
         body: req.body,
         method: req.method,
@@ -18,7 +17,7 @@ const authCatch: NextApiHandler = async (req, res) => {
 
     setCookieHeaders(res, authResponse.data);
 
-    return res.status(200).redirect(307, "/");
+    return res.status(200).json({ success: true });
   } catch (error) {
     if (isAPIError(error)) {
       return res.status(error.statusCode).json(error);
@@ -33,4 +32,4 @@ const authCatch: NextApiHandler = async (req, res) => {
   }
 };
 
-export default authCatch;
+export default verifyLogin;
