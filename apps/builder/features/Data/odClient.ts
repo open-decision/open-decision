@@ -1,30 +1,38 @@
+import * as React from "react";
 import {
+  client,
   TAuthenticatedClient,
   TUnauthenticatedClient,
 } from "@open-decision/api-client";
+import { TJWT } from "@open-decision/api-helpers";
 import { ODProgrammerError } from "@open-decision/type-classes";
-import { useAuth } from "../Auth/useAuth";
+
+export const ODContext = React.createContext<{ token?: TJWT }>({
+  token: undefined,
+});
 
 export function useOD(type?: "authenticated"): TAuthenticatedClient;
 export function useOD(type?: "unauthenticated"): TUnauthenticatedClient;
 export function useOD(
   type: "unauthenticated" | "authenticated" = "authenticated"
 ): TAuthenticatedClient | TUnauthenticatedClient {
-  const [
-    {
-      context: { client },
-      matches,
-    },
-  ] = useAuth();
+  const { token } = React.useContext(ODContext);
 
-  if (!matches("loggedIn") && type === "authenticated")
-    throw new ODProgrammerError({
-      code: "UNAUTHENTICATED_API_CALL",
-      message:
-        "The authenticated OD client has been requested as authenticated while it was not. Please make sure that the user has loggedIn.",
+  if (type === "authenticated") {
+    if (!token)
+      throw new ODProgrammerError({
+        code: "UNAUTHENTICATED_API_CALL",
+        message:
+          "You tried to make an authenticated API call without access to a user access token. This could be the result of not having the ODContextProvider wrapped around the component calling it. ",
+      });
+
+    return client({
+      token,
+      urlPrefix: process.env.NEXT_PUBLIC_OD_API_ENDPOINT,
     });
+  }
 
-  if (type === "authenticated") return client;
-
-  return client;
+  return client({ urlPrefix: process.env.NEXT_PUBLIC_OD_API_ENDPOINT });
 }
+
+export const ODProvider = ODContext.Provider;

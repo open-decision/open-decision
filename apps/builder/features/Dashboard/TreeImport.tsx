@@ -27,7 +27,7 @@ export const TreeImport = React.forwardRef<
     ({ name, ..._ }: { name: string; data: Tree.TTree }) =>
       OD.trees.create({ body: { name } }),
     {
-      onSuccess: ({ uuid }, { data }) => {
+      onSuccess: ({ data: { uuid } }, { data }) => {
         if (!data) return;
 
         const yDoc = new Y.Doc();

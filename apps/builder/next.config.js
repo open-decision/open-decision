@@ -16,14 +16,6 @@ const nextConfig = {
     // See: https://github.com/gregberge/svgr
     svgr: false,
   },
-  async rewrites() {
-    return [
-      {
-        source: "/external-api/:path*",
-        destination: `${process.env.OD_API_ENDPOINT}/v1/:path*`,
-      },
-    ];
-  },
 };
 
 module.exports = withPlugins(

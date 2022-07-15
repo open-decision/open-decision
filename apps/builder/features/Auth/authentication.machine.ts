@@ -1,59 +1,20 @@
-import { NextRouter } from "next/router";
 import { assign, createMachine, Interpreter } from "xstate";
 import { Doc } from "yjs";
 import { refreshMachine } from "./refresh.machine";
-import * as Sentry from "@sentry/nextjs";
-import { protectedRoutes } from "../../config/protectedRoutes";
 import { websocketMachine } from "../Data/websocket.machine";
 import {
   TLoginOutput,
   TRefreshTokenOutput,
   TRegisterOutput,
 } from "@open-decision/auth-api-specification";
-import {
-  client,
-  TAuthenticatedClient,
-  TUnauthenticatedClient,
-} from "@open-decision/api-client";
+import { client, TAuthenticatedClient } from "@open-decision/api-client";
 
-const createClient = ({
-  urlPrefix = "/external-api",
-  ...context
-}: Parameters<typeof client>[0]) => client({ urlPrefix, ...context });
-
-type SharedContext = {
-  location?: string;
+export type Context = {
+  client: TAuthenticatedClient;
   error?: string;
   id?: string;
   yDoc?: Doc;
-};
-
-type EmptyContext = {
-  auth: undefined;
-  client: TUnauthenticatedClient;
-} & SharedContext;
-
-type DefinedContext = {
-  auth: TLoginOutput;
-  client: TAuthenticatedClient;
-} & SharedContext;
-
-export type Context = EmptyContext | DefinedContext;
-
-type State =
-  | {
-      value: "undetermined";
-      context: EmptyContext;
-    }
-  | {
-      value: "loggedIn";
-      context: DefinedContext;
-    }
-  | {
-      value: "loggedOut";
-      context: EmptyContext;
-    };
-
+} & TLoginOutput;
 type OPEN_WEBSOCKET_EVENT = {
   type: "OPEN_WEBSOCKET";
   id: string;
@@ -88,49 +49,27 @@ export type Events =
   | { type: "WEBSOCKET_CLOSED" }
   | { type: "CLOSE_WEBSOCKET" };
 
-export type AuthService = Interpreter<Context, any, Events, State, any>;
+export type AuthService = Interpreter<Context, any, Events, any, any>;
 
-export const createAuthenticationMachine = (router: NextRouter) =>
-  createMachine<Context, Events, State>(
+export const createAuthenticationMachine = (
+  initial: "loggedIn" | "loggedOut",
+  user: TLoginOutput["user"],
+  access: TLoginOutput["access"]
+) =>
+  createMachine<Context, Events, any>(
     {
       id: "authentication",
-      initial: "undetermined",
+      initial,
       context: {
-        client: createClient({}),
-        auth: undefined,
-        location: undefined,
+        client: client({
+          token: access.token,
+          urlPrefix: process.env.NEXT_PUBLIC_OD_API_ENDPOINT,
+        }),
+        user,
+        access,
         error: undefined,
       },
       states: {
-        undetermined: {
-          invoke: {
-            src: "checkIfLoggedIn",
-            onError: {
-              target: "loggedOut",
-            },
-          },
-          on: {
-            REPORT_IS_LOGGED_IN: [
-              {
-                target: "loggedIn",
-                actions: [
-                  "assignUserToContext",
-                  "assignAuthenticatedClient",
-                  "assignLocationToContext",
-                  "setTrackingUser",
-                ],
-              },
-            ],
-            REPORT_IS_LOGGED_OUT: [
-              {
-                target: "loggedOut.redirectToLogin",
-                actions: "assignLocationToContext",
-                cond: "isProtectedRoute",
-              },
-              { target: "loggedOut" },
-            ],
-          },
-        },
         loggedIn: {
           type: "parallel",
           states: {
@@ -149,8 +88,7 @@ export const createAuthenticationMachine = (router: NextRouter) =>
                     id: "refreshMachine",
                     src: refreshMachine,
                     data: {
-                      expires: (context: DefinedContext) =>
-                        context.auth.access.expires,
+                      expires: (context: Context) => context.access.expires,
                     },
                     onDone: "refresh",
                   },
@@ -209,7 +147,7 @@ export const createAuthenticationMachine = (router: NextRouter) =>
                     id: "websocket",
                     src: websocketMachine,
                     data: (context, event: OPEN_WEBSOCKET_EVENT) => ({
-                      token: context.auth?.access.token,
+                      token: context.access.token,
                       id: event.id,
                       yDoc: event.yDoc,
                       onSync: event.onSync,
@@ -333,6 +271,8 @@ export const createAuthenticationMachine = (router: NextRouter) =>
           try {
             const response = await context.client.auth.refreshToken({});
 
+            if (response instanceof Error) throw response;
+
             return send({
               type: "REPORT_IS_LOGGED_IN",
               user: response,
@@ -349,6 +289,8 @@ export const createAuthenticationMachine = (router: NextRouter) =>
             const response = await context.client.auth.login({
               body: { email, password },
             });
+
+            if (response instanceof Error) throw response;
 
             return send({
               type: "SUCCESSFULL_LOGIN",
@@ -368,6 +310,8 @@ export const createAuthenticationMachine = (router: NextRouter) =>
               body: { email, password, toc },
             });
 
+            if (response instanceof Error) throw response;
+
             return send({
               type: "SUCCESSFULL_REGISTER",
               user: response,
@@ -379,7 +323,6 @@ export const createAuthenticationMachine = (router: NextRouter) =>
         },
         logout: (context, event) => async (send) => {
           if (event.type !== "LOG_OUT") return;
-          if (!context.auth) return;
 
           try {
             await context.client.auth.logout({});
@@ -421,22 +364,8 @@ export const createAuthenticationMachine = (router: NextRouter) =>
               });
           }
         },
-        redirectToLogin: (_context, _event) => async (_send) => {
-          router.push("/auth/login");
-        },
-        redirectToLocation: (context) => async () => {
-          router.push(context?.location ?? "/");
-        },
       },
       actions: {
-        setTrackingUser: (context, _event) => {
-          if (!context.auth) return;
-
-          Sentry.setUser({
-            email: context.auth?.user.email,
-            id: context.auth.user.uuid,
-          });
-        },
         assignUserToContext: assign({
           //@ts-expect-error - Typechecking fails here, because undefined is not assignable to auth in all situations
           auth: (_, event) => {
@@ -449,18 +378,6 @@ export const createAuthenticationMachine = (router: NextRouter) =>
             }
 
             return event.user;
-          },
-        }),
-        clearUserDetailsFromContext: assign({
-          auth: (_context, _event) => undefined,
-        }),
-        assignLocationToContext: assign({
-          location: (_context, _event) => {
-            const isProtected = protectedRoutes.some((routeRegEx) =>
-              routeRegEx.test(window.location.pathname)
-            );
-
-            return isProtected ? window.location.pathname : "/";
           },
         }),
         assignErrorToContext: assign({
@@ -483,23 +400,6 @@ export const createAuthenticationMachine = (router: NextRouter) =>
           id: (_context, _event) => undefined,
           yDoc: (_context, _event) => undefined,
         }),
-        assignAuthenticatedClient: assign({
-          client: (context, event) => {
-            if (
-              event.type !== "SUCCESSFULL_LOGIN" &&
-              event.type !== "REPORT_IS_LOGGED_IN"
-            )
-              return context.client;
-
-            return createClient({ token: event.user.access.token });
-          },
-        }),
-      },
-      guards: {
-        isProtectedRoute: () =>
-          protectedRoutes.some((routeRegEx) =>
-            routeRegEx.test(window.location.pathname)
-          ),
       },
     }
   );

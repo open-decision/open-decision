@@ -6,9 +6,11 @@ import {
   Stack,
   SubmitButton,
 } from "@open-decision/design-system";
-import { useAuth } from "../../useAuth";
+import { useRouter } from "next/router";
+import { useLoginMutation } from "../../mutations/useLoginMutation";
 
 export function LoginForm() {
+  const router = useRouter();
   const formState = Form.useFormState({
     defaultValues: {
       email: "",
@@ -16,15 +18,22 @@ export function LoginForm() {
     },
   });
 
+  const {
+    mutate: login,
+    error,
+    isLoading,
+  } = useLoginMutation({
+    onSuccess: () => {
+      return router.replace("/", undefined);
+    },
+  });
+
   formState.useSubmit(() => {
-    send({
-      type: "LOG_IN",
+    login({
       email: formState.values.email,
       password: formState.values.password,
     });
   });
-
-  const [state, send] = useAuth();
 
   return (
     <Form.Root state={formState} css={{ gap: "$6" }}>
@@ -65,13 +74,8 @@ export function LoginForm() {
           />
         </Form.Field>
       </Stack>
-      {state.context.error ? (
-        <ErrorMessage>{state.context.error}</ErrorMessage>
-      ) : null}
-      <SubmitButton
-        isLoading={state.matches("loggedOut.loggingIn")}
-        type="submit"
-      >
+      {error ? <ErrorMessage>{error.message}</ErrorMessage> : null}
+      <SubmitButton isLoading={isLoading} type="submit">
         Jetzt Anmelden
       </SubmitButton>
     </Form.Root>

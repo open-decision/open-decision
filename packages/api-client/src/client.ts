@@ -22,11 +22,13 @@ import {
   verifyEmail,
   refreshToken,
 } from "@open-decision/auth-api-specification";
-import { Required } from "utility-types";
 
-export type TClientConfig = { token?: TJWT; urlPrefix?: string };
+export type TClientConfig = { urlPrefix?: string };
 
-const createContext = ({ token, ...config }: TClientConfig): TContext => ({
+const createContext = ({
+  token,
+  ...config
+}: TClientConfig & { token?: TJWT }): TContext => ({
   headers: token ? { authorization: `Bearer ${token}` } : undefined,
   ...config,
 });
@@ -50,7 +52,7 @@ export const createUnauthenticatedClient = (config: TClientConfig) => {
   };
 };
 
-const authenticatedClient = (config: Required<TClientConfig, "token">) => {
+const authenticatedClient = (config: TClientConfig & { token: TJWT }) => {
   const context = createContext(config);
   const unauthenticatedClient = createUnauthenticatedClient(context);
 
@@ -82,10 +84,17 @@ export type TUnauthenticatedClient = ReturnType<
 >;
 export type TAuthenticatedClient = ReturnType<typeof authenticatedClient>;
 
-export const client = ({
+export function client({
   token,
   ...context
-}: TClientConfig): TUnauthenticatedClient | TAuthenticatedClient => {
+}: TClientConfig & { token: TJWT }): TAuthenticatedClient;
+export function client(context: TClientConfig): TUnauthenticatedClient;
+export function client({
+  token,
+  ...context
+}: TClientConfig & { token?: TJWT }):
+  | TUnauthenticatedClient
+  | TAuthenticatedClient {
   if (token) {
     const client = authenticatedClient({ token, ...context });
     return client;
@@ -93,6 +102,6 @@ export const client = ({
 
   const client = createUnauthenticatedClient(context);
   return client;
-};
+}
 
 export type TClient = TUnauthenticatedClient | TAuthenticatedClient;
