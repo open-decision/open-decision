@@ -7,7 +7,7 @@ import {
 import { queryClient } from "../../../../features/Data/queryClient";
 import * as React from "react";
 import { useMutation } from "react-query";
-import { useOD } from "../../../../features/Data/odClient";
+import { proxiedOD } from "../../../../features/Data/odClient";
 import { useTreeQueryKey } from "../../../Data/useTreeQuery";
 
 type Props = {
@@ -35,11 +35,9 @@ export function UpdateTreeDialog({
     updateTree();
   });
 
-  const OD = useOD();
-
   const { mutate: updateTree, isLoading } = useMutation(
     () =>
-      OD.trees.update({
+      proxiedOD.trees.update({
         body: { name: formState.values.treeName },
         params: { uuid: treeId },
       }),

@@ -2,17 +2,15 @@ import { DropdownMenu, Icon } from "@open-decision/design-system";
 import { Share2Icon } from "@radix-ui/react-icons";
 import { queryClient } from "../../../../features/Data/queryClient";
 import { useMutation } from "react-query";
-import { useOD } from "../../../../../builder/features/Data/odClient";
+import { proxiedOD } from "../../../../../builder/features/Data/odClient";
 import { useTreesQueryKey } from "../../../Data/useTreesQuery";
 
 export type PublishItemProps = { treeId: string; publishedTreeId?: string };
 
 export function PublishItem({ treeId, publishedTreeId }: PublishItemProps) {
-  const OD = useOD();
-
   const { mutate: publish } = useMutation(
     () =>
-      OD.trees.publishedTrees.create({
+      proxiedOD.trees.publishedTrees.create({
         params: { treeUuid: treeId },
         body: { name: "test" },
       }),

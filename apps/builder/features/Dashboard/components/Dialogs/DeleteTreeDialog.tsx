@@ -8,7 +8,7 @@ import {
 } from "@open-decision/design-system";
 import { queryClient } from "../../../../features/Data/queryClient";
 import * as React from "react";
-import { useOD } from "../../../../features/Data/odClient";
+import { proxiedOD } from "../../../../features/Data/odClient";
 import { useMutation } from "react-query";
 import { useTreesQueryKey } from "../../../Data/useTreesQuery";
 
@@ -51,10 +51,8 @@ export function DeleteTreeDialog({
       );
   });
 
-  const OD = useOD();
-
   const { mutate: deleteTree, isLoading } = useMutation(
-    () => OD.trees.delete({ params: { uuid: tree.uuid } }),
+    () => proxiedOD.trees.delete({ params: { uuid: tree.uuid } }),
     {
       onSuccess: () => {
         setOpen?.(false);
