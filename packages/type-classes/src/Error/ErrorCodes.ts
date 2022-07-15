@@ -37,6 +37,7 @@ export enum APIErrors {
   UNEXPECTED_ERROR = 500,
   PASSWORD_TO_WEAK = 400,
   INVALID_EMAIL = 400,
+  OFFLINE = 500,
 }
 
 export type ErrorCodes =

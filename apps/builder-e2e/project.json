@@ -1,0 +1,83 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/builder-e2e/src",
+  "projectType": "application",
+  "targets": {
+    "e2e": {
+      "executor": "@nrwl/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/builder-e2e/cypress.config.ts",
+        "devServerTarget": "builder:serve"
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "builder:serve:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/builder-e2e/**/*.{js,ts}"]
+      }
+    },
+    "start:db": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          "docker compose -f docker-compose.yml up -d ",
+          "pnpm nx migrate:deploy prisma"
+        ],
+        "parallel": false,
+        "cwd": "apps/builder-e2e"
+      }
+    },
+    "open": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          "pnpm nx serve builder",
+          "pnpm nx serve api",
+          "cypress open"
+        ],
+        "cwd": "apps/builder-e2e"
+      },
+      "dependsOn": [{ "target": "start:db", "projects": "self" }]
+    },
+    "close": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": ["docker compose -f docker-compose.yml down"],
+        "cwd": "apps/builder-e2e"
+      }
+    },
+    "test": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          "printenv",
+          "pnpm playwright test --headed --config=apps/builder-e2e/playwright.config.ts"
+        ]
+      },
+      "dependsOn": [
+        { "target": "start:db", "projects": "self" },
+        { "target": "build", "projects": "dependencies" }
+      ]
+    },
+    "show-trace": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "pnpm playwright show-trace",
+        "cwd": "apps/builder-e2e"
+      }
+    },
+    "record": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "pnpm playwright codegen localhost:4200"
+      }
+    }
+  },
+  "tags": []
+}

@@ -82,7 +82,11 @@ export function Field({ Label, children, css, layout = "block" }: FieldProps) {
           </Box>
         </Form.Label>
       )}
-      <Form.Error name={name} css={{ gridArea: "error", marginTop: "$2" }} />
+      <Form.Error
+        data-test={`error-${name}`}
+        name={name}
+        css={{ gridArea: "error", marginTop: "$2" }}
+      />
     </Stack>
   );
 }

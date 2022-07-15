@@ -18,7 +18,9 @@ export function LoginCard() {
       <AuthCard.Footer>
         <Text css={{ color: "$gray11" }}>
           Sie haben noch kein Konto?{" "}
-          <Link href="/auth/register">Dann registrieren Sie sich hier.</Link>
+          <Link data-test="registerLink" href="/auth/register">
+            Dann registrieren Sie sich hier.
+          </Link>
         </Text>
       </AuthCard.Footer>
     </AuthCard.Container>

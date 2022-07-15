@@ -142,6 +142,7 @@ function RegisterForm({ email }: { email?: string }) {
           disabled={!!email}
           placeholder="beispiel@web.de"
           required
+          data-test="email"
         />
       </Form.Field>
       <Form.Field Label="Passwort" css={{ marginTop: "$4" }}>
@@ -151,6 +152,7 @@ function RegisterForm({ email }: { email?: string }) {
           name={formState.names.password}
           placeholder="*******"
           required
+          data-test="password"
         />
       </Form.Field>
       <Form.Field Label="Passwort wiederholen" css={{ marginTop: "$4" }}>
@@ -160,6 +162,7 @@ function RegisterForm({ email }: { email?: string }) {
           name={formState.names.passwordConfirmation}
           required
           placeholder="*******"
+          data-test="passwordConfirmation"
         />
       </Form.Field>
       <Stack css={{ gap: "$2", marginTop: "$4" }}>
@@ -169,6 +172,7 @@ function RegisterForm({ email }: { email?: string }) {
               formState={formState}
               name={formState.names.privacy}
               required
+              data-test="privacy"
             />
             <Box as="span" css={{ lineHeight: "2px" }}>
               <Form.Label
@@ -199,22 +203,31 @@ function RegisterForm({ email }: { email?: string }) {
             css={{ marginTop: "$2" }}
           />
         </Stack>
-        <Form.Field
-          css={{ textStyle: "small-text" }}
-          layout="inline-right"
-          Label="Ich habe zur Kenntnis genommen, dass sich die Software in einer frühen Entwicklungsphase befindet und ein fehlerfreier Betrieb nicht garantiert werden kann."
-        >
+        <Row css={{ alignItems: "center", gap: "$2" }}>
           <Form.Checkbox
             formState={formState}
             name={formState.names.legal}
             required
+            data-test="legal"
           />
-        </Form.Field>
+          <Form.Label
+            css={{ display: "inline" }}
+            size="small"
+            name={formState.names.privacy}
+          >
+            Ich habe zur Kenntnis genommen, dass sich die Software in einer
+            frühen Entwicklungsphase befindet und ein fehlerfreier Betrieb nicht
+            garantiert werden kann.
+          </Form.Label>
+        </Row>
       </Stack>
       {isError ? (
-        <ErrorMessage css={{ marginTop: "$4" }}>{error.message}</ErrorMessage>
+        <ErrorMessage data-test="error" css={{ marginTop: "$4" }}>
+          {error.message}
+        </ErrorMessage>
       ) : null}
       <Form.Submit
+        data-test="submit"
         isLoading={isLoading}
         css={{ marginTop: "$4" }}
         type="submit"

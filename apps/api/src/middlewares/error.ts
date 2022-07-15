@@ -43,6 +43,8 @@ export const errorHandler = (
   res: Response,
   _next: NextFunction
 ) => {
+  console.log(err);
+
   let { statusCode, message } = err;
   const { code, errors } = err;
 

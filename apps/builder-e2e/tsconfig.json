@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "target": "ESNEXT",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "../../dist/out-tsc"
+  },
+  "include": ["**/*.ts", "**/*.js"]
+}
