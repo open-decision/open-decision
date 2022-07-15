@@ -19,7 +19,7 @@ export const TreeProvider = ({ children }: Props) => {
 
   if (state.matches("error"))
     throw new ODError({
-      code: "BUILDER_WEBSOCKET_CONNECTION_FAILED",
+      code: "WEBSOCKET_CONNECTION_FAILED",
       message: "Es konnte keine Websocket Verbindung hergestellt werden.",
     });
 

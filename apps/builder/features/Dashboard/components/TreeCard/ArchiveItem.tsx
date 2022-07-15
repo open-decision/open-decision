@@ -26,7 +26,7 @@ export function ArchiveItem({ treeId, status }: PublishItemProps) {
 
   const { mutate: unarchive } = useMutation(
     () =>
-      OD.trees.update({
+      proxiedOD.trees.update({
         body: { status: "ACTIVE" },
         params: { uuid: treeId },
       }),

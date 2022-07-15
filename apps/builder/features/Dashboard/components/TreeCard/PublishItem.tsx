@@ -23,7 +23,7 @@ export function PublishItem({ treeId, publishedTreeId }: PublishItemProps) {
 
   const { mutate: unPublish } = useMutation(
     (publishedTreeId: string) => {
-      return OD.publishedTrees.delete({
+      return proxiedOD.publishedTrees.delete({
         params: { uuid: publishedTreeId },
       });
     },
