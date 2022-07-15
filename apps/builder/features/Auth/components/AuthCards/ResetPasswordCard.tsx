@@ -1,4 +1,4 @@
-import { Icon, Link, Stack } from "@open-decision/design-system";
+import { Icon, Link } from "@open-decision/design-system";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/router";
 import { ResetPasswordForm } from "../AuthForms/ResetPasswordForm";

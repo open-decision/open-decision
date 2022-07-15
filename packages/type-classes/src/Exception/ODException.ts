@@ -2,13 +2,13 @@ import { ExceptionCodes } from "./ExceptionCodes";
 
 export type ODExceptionConstructorParameters = {
   code: ExceptionCodes;
-  additionalData?: {};
+  additionalData?: Record<string, any>;
 } & Omit<Error, "name">;
 
 export class ODException extends Error {
   readonly code: ExceptionCodes;
   readonly timestamp?: number;
-  readonly additionalData?: {};
+  declare readonly additionalData?;
 
   constructor({
     code,
