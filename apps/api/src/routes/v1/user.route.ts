@@ -8,7 +8,7 @@ userRouter
   .route("/")
   .get(auth(), userController.getUser)
   .patch(auth(), userController.updateUser)
-  .delete(auth("manageUsers"), userController.deleteUser);
+  .delete(auth(), userController.deleteUser);
 
 usersRouter.route("/").post(auth("manageUsers"), userController.createUser);
 // .get(
