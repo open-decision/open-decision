@@ -6,9 +6,12 @@ import { EditorHeader } from "../../../features/Builder/components/EditorHeader"
 import { SideMenu } from "../../../features/Builder/SideMenu";
 import { Layout } from "../../../components";
 import { BuilderLayout } from "../../../features/Builder/components/BuilderLayout";
+import { useTreeId } from "../../../features/Data/useTreeId";
 
 export default function BuilderPage() {
-  return (
+  const treeId = useTreeId();
+
+  return treeId ? (
     <Layout
       css={{
         display: "grid",
@@ -19,6 +22,7 @@ export default function BuilderPage() {
       <ReactFlowProvider>
         <EditorProvider>
           <EditorHeader
+            treeId={treeId}
             css={{
               gridColumn: "1 / -1",
               gridRow: "1",
@@ -34,7 +38,7 @@ export default function BuilderPage() {
         </EditorProvider>
       </ReactFlowProvider>
     </Layout>
-  );
+  ) : null;
 }
 
 BuilderPage.getLayout = function getLayout(page: React.ReactElement) {

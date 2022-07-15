@@ -16,10 +16,10 @@ import { DesktopIcon, MobileIcon, Pencil1Icon } from "@radix-ui/react-icons";
 import Link from "next/link";
 
 export default function VorschauPage() {
-  const id = useTreeId();
+  const treeId = useTreeId();
   const [selectedTab, setSelectedTab] = React.useState("desktop");
 
-  return (
+  return treeId ? (
     <Tabs.Root defaultValue="desktop" asChild>
       <Layout
         css={{
@@ -32,7 +32,7 @@ export default function VorschauPage() {
       >
         <BaseHeader
           css={{ gridColumn: "1 / -1", gridRow: "1" }}
-          LogoSlot={<ProjectMenu />}
+          LogoSlot={<ProjectMenu treeId={treeId} />}
         >
           <Row css={{ justifyContent: "center", flex: 1 }}>
             <Tabs.List>
@@ -67,7 +67,7 @@ export default function VorschauPage() {
               </ToggleGroup.Root>
             </Tabs.List>
           </Row>
-          <Link passHref href={`/builder/${id}`}>
+          <Link passHref href={`/builder/${treeId}`}>
             <SystemLink
               className={buttonStyles({
                 variant: "secondary",
@@ -84,7 +84,7 @@ export default function VorschauPage() {
         <VorschauPageImpl />
       </Layout>
     </Tabs.Root>
-  );
+  ) : null;
 }
 
 VorschauPage.getLayout = function getLayout(page: React.ReactElement) {

@@ -10,7 +10,6 @@ import {
   StyleObject,
 } from "@open-decision/design-system";
 import { readableDate } from "../../../features/Dashboard/utils";
-import { useTreeId } from "../../../features/Data/useTreeId";
 import { ErrorBoundary } from "@sentry/nextjs";
 import { useMutation } from "react-query";
 import { useTreeContext } from "../state/treeStore/TreeContext";
@@ -27,6 +26,7 @@ type Props = {
   className?: string;
   children?: DialogTriggerProps["children"];
   css?: StyleObject;
+  treeId: string;
 };
 
 export function ExportDialog({
@@ -36,10 +36,10 @@ export function ExportDialog({
   focusOnClose,
   className,
   css,
+  treeId,
 }: Props) {
-  const uuid = useTreeId();
   const { getTree } = useTreeContext();
-  const { data } = useTreeQuery(uuid);
+  const { data } = useTreeQuery(treeId);
 
   const [fileName, setFileName] = React.useState("");
   const {
