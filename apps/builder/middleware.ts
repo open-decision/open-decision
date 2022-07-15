@@ -13,7 +13,7 @@ export const middleware: NextMiddleware = async (request) => {
     const response = NextResponse.next();
 
     if (token) {
-      return response;
+      return;
     }
 
     if (refreshToken) {

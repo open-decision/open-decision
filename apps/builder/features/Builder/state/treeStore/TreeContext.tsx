@@ -14,7 +14,10 @@ const TreeContext = React.createContext<TTreeContext | null>(null);
 type Props = { children: React.ReactNode };
 export const TreeProvider = ({ children }: Props) => {
   const id = useTreeId();
-  const treeStore = React.useMemo(() => createTreeStore(id), [id]);
+  const treeStore = React.useMemo(
+    () => (id ? createTreeStore(id) : undefined),
+    [id]
+  );
   const [state, send] = useMachine(websocketMachine, { devTools: true });
 
   if (state.matches("error"))
@@ -24,18 +27,20 @@ export const TreeProvider = ({ children }: Props) => {
     });
 
   React.useEffect(() => {
-    new IndexeddbPersistence(id, treeStore.yDoc);
-    send({
-      type: "OPEN",
-      id,
-      yDoc: treeStore.yDoc,
-      onSync: treeStore.onSync,
-    });
-  }, [id, send, treeStore.onSync, treeStore.yDoc]);
+    if (id && treeStore) {
+      new IndexeddbPersistence(id, treeStore.yDoc);
+      send({
+        type: "OPEN",
+        id,
+        yDoc: treeStore.yDoc,
+        onSync: treeStore.onSync,
+      });
+    }
+  }, [id, send, treeStore]);
 
-  return (
+  return id && treeStore ? (
     <TreeContext.Provider value={treeStore}>{children}</TreeContext.Provider>
-  );
+  ) : null;
 };
 
 export const useTreeContext = () => {
