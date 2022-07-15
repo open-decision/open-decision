@@ -3,7 +3,7 @@
   "sourceRoot": "packages/prisma/src",
   "projectType": "library",
   "targets": {
-    "serve": {
+    "serve:studio": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
         "command": "pnpm prisma studio",

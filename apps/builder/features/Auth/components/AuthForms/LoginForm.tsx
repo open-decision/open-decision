@@ -57,6 +57,7 @@ export function LoginForm() {
             name={formState.names.email}
             placeholder="beispiel@web.de"
             type="email"
+            data-test="email"
           />
         </Form.Field>
         <Form.Field
@@ -84,11 +85,14 @@ export function LoginForm() {
             required
             name={formState.names.password}
             placeholder="*******"
+            data-test="password"
           />
         </Form.Field>
       </Stack>
-      {error ? <ErrorMessage>{error.message}</ErrorMessage> : null}
-      <SubmitButton isLoading={isLoading} type="submit">
+      {error ? (
+        <ErrorMessage data-test="error">{error.message}</ErrorMessage>
+      ) : null}
+      <SubmitButton isLoading={isLoading} type="submit" data-test="submit">
         Jetzt Anmelden
       </SubmitButton>
     </Form.Root>

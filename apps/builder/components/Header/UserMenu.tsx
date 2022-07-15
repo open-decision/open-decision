@@ -15,7 +15,7 @@ export function UserMenu() {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <MenuButton label="Mein Account" />
+        <MenuButton label="Mein Account" data-test="user-menu" />
       </DropdownMenu.Trigger>
       <DropdownMenu.Content
         sideOffset={15}
@@ -43,7 +43,7 @@ export function UserMenu() {
             </SystemLink>
           </DropdownMenu.Item>
         </Link>
-        <DropdownMenu.Item onSelect={() => logout()}>
+        <DropdownMenu.Item onSelect={() => logout()} data-test="logout">
           <Icon>
             <ExitIcon />
           </Icon>

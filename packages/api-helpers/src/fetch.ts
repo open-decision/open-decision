@@ -14,8 +14,10 @@ export const safeFetch = async <TValidation extends z.ZodTypeAny>(
   }: Omit<RequestInit, "body"> & { body?: Record<string, any> },
   { validation }: Config<TValidation> = {}
 ): Promise<{ data: z.output<TValidation>; response: Response }> => {
+  let response;
+
   try {
-    const response = await fetch(url, {
+    response = await fetch(url, {
       headers: {
         "Content-Type": "application/json",
         ...headers,
@@ -23,12 +25,19 @@ export const safeFetch = async <TValidation extends z.ZodTypeAny>(
       body: body ? JSON.stringify(body) : undefined,
       ...options,
     });
+  } catch (error) {
+    throw new APIError({
+      code: "OFFLINE",
+      message: "The request failed because the user is offline",
+    });
+  }
 
+  try {
     let data;
     const contentType = response.headers.get("content-type");
     if (contentType?.includes("application/json")) data = await response.json();
 
-    if (response.status >= 400 && isAPIError(data)) {
+    if (response.status >= 400) {
       throw data;
     }
 

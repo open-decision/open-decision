@@ -8,7 +8,7 @@ const authCatch: NextApiHandler = async (req, res) => {
   const path = req.url?.split("external-api")[1];
   try {
     const authResponse = await safeFetch(
-      `${process.env.OD_API_ENDPOINT}/v1/${path}`,
+      `${process.env.OD_API_ENDPOINT}/v1${path}`,
       {
         body: req.body,
         method: req.method,

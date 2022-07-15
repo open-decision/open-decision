@@ -11,7 +11,7 @@ export type ODAPIErrorConstructorParameters<TSchema> =
 export class APIError<TSchema = any> extends ODError<keyof typeof APIErrors> {
   statusCode: APIErrors;
   isOperational: boolean;
-  declare errors?: ZodFormattedError<TSchema>;
+  errors?: ZodFormattedError<TSchema>;
 
   constructor({
     code,
