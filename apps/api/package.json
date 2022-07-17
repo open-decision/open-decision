@@ -43,7 +43,6 @@
     "nodemailer": "^6.7.1",
     "passport": "^0.5.0",
     "passport-jwt": "^4.0.0",
-    "prisma": "~3.14.0",
     "reflect-metadata": "^0.1.13",
     "remeda": "^0.0.31",
     "swagger-jsdoc": "^6.1.0",

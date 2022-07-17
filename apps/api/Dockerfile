@@ -1,23 +1,41 @@
 FROM positivly/prisma-binaries:latest AS prisma
-FROM node:lts AS image_builder
-
-ENV NODE_ENV development
-RUN npm install -g pnpm
-
-WORKDIR /app
+FROM node:16-bullseye-slim as base
 RUN apt-get update || : && apt-get install -y \
     python \
     build-essential \
-    node-gyp
+    node-gyp \
+    git \
+    openssl
 
-COPY pnpm-lock.yaml .
+# Default powerline10k theme, no plugins installed
+RUN sh -c "$(curl -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.1.2/zsh-in-docker.sh)"
+
+RUN npm i --location=global pnpm
+
+FROM base as store
+ENV NODE_ENV=development
+
+WORKDIR /store
+
+COPY pnpm-lock.yaml .npmrc ./
 RUN pnpm fetch
+
+# ------------------------------------------------------------------
+# Install all node_modules, including dev dependencies
+FROM store as deps
+ENV NODE_ENV=development
+
+WORKDIR /app
+RUN mkdir node_modules
+RUN chmod a+rwx -R node_modules
 
 COPY . .
 
 RUN pnpm install --offline --shamefully-hoist
-RUN pnpm nx build api
 
+RUN mkdir dist
+RUN chmod a+rwx -R dist
+RUN pnpm nx build api
 ENV PRISMA_QUERY_ENGINE_BINARY=/prisma-engines/query-engine \
     PRISMA_MIGRATION_ENGINE_BINARY=/prisma-engines/migration-engine \
     PRISMA_INTROSPECTION_ENGINE_BINARY=/prisma-engines/introspection-engine \
@@ -26,12 +44,22 @@ ENV PRISMA_QUERY_ENGINE_BINARY=/prisma-engines/query-engine \
     PRISMA_CLIENT_ENGINE_TYPE=binary
 COPY --from=prisma /prisma-engines/query-engine /prisma-engines/migration-engine /prisma-engines/introspection-engine /prisma-engines/prisma-fmt /prisma-engines/
 
-FROM node:lts AS production
-RUN apt-get update || : && apt-get install -y \
-    openssl
 
-WORKDIR /app
-COPY --from=image_builder /app .
-RUN npm install -g pnpm
+# # ------------------------------------------------------------------
+# # Finally, build the production image with minimal footprint
+# FROM base as prod
 
-CMD pnpm nx migrate:deploy prisma && pnpm nx start api
+# ENV NODE_ENV=production
+
+# WORKDIR /app
+
+# RUN mkdir dist
+# RUN mkdir node_modules
+# RUN chmod a+rwx -R dist
+# RUN chmod a+rwx -R node_modules
+
+# COPY --from=build /app .
+
+USER node
+
+CMD ["node", "dist/apps/api/main.js"]

@@ -23,12 +23,6 @@
         }
       ]
     },
-    "start": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "command": "node dist/apps/api/main.js"
-      }
-    },
     "serve": {
       "executor": "@nrwl/node:node",
       "options": {
@@ -56,6 +50,18 @@
       "options": {
         "jestConfig": "apps/api/jest.config.ts",
         "passWithNoTests": true
+      }
+    },
+    "deploy": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "flyctl deploy --config apps/api/fly.toml --dockerfile apps/api/Dockerfile"
+      }
+    },
+    "launch": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "flyctl launch --path apps/api --dockerfile apps/api/Dockerfile"
       }
     }
   },
