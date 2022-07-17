@@ -13,7 +13,7 @@ export const getPublishedTrees =
 
     return await safeFetch(
       combinedUrl,
-      { headers: context.headers, cache: "no-cache" },
+      { cache: "no-cache" },
       { validation: getPublishedTreesOutput }
     );
   };

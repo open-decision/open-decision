@@ -1,11 +1,10 @@
-import jwt from "jsonwebtoken";
+import * as jose from "jose";
 import dayjs from "dayjs";
 import config from "../config/config";
 import { userService } from "./index";
 import { tokenHandler } from "../models/token.model";
 import { UUID } from "../types/uuid-class";
 import { TokenType, User } from "@open-decision/prisma";
-import { TokenInterface } from "../types/AuthInterfaces";
 import { APIError } from "@open-decision/type-classes";
 /**
  * Generate token
@@ -15,21 +14,20 @@ import { APIError } from "@open-decision/type-classes";
  * @param {string} [secret]
  * @returns {string}
  */
-const generateToken = (
+const generateToken = async (
   userUuid: UUID | string,
   expiry: dayjs.Dayjs,
   type: TokenType,
   secret: string
 ) => {
-  const payload = {
-    sub: userUuid instanceof UUID ? userUuid.toString() : userUuid,
+  return await new jose.SignJWT({
+    userUuid: userUuid instanceof UUID ? userUuid.toString() : userUuid,
     type,
-    exp: expiry.unix(),
-  };
-
-  return jwt.sign(payload, secret, {
-    algorithm: "HS256",
-  });
+  })
+    .setProtectedHeader({ alg: "HS256", typ: "JWT" })
+    .setExpirationTime(expiry.unix())
+    .setIssuedAt(dayjs().unix())
+    .sign(new TextEncoder().encode(secret));
 };
 
 /**
@@ -70,12 +68,14 @@ const verifyToken = async (token: string, type: TokenType) => {
       ? config.REFRESH_TOKEN_SECRET
       : config.ACCESS_TOKEN_SECRET;
 
-  const verifiedToken = jwt.verify(token, secret, {
-    algorithms: ["HS256"],
-  }) as TokenInterface;
+  const { payload } = await jose.jwtVerify(
+    token,
+    new TextEncoder().encode(secret)
+  );
+
   const tokenFromDatabase = await tokenHandler.findOne({
     token,
-    ownerUuid: verifiedToken.userUuid,
+    ownerUuid: payload.userUuid as string,
     blacklisted: false,
     type,
   });
@@ -96,14 +96,14 @@ const refreshTokens = async (refreshToken: string) => {
   const refreshTokenFromDb = await verifyToken(refreshToken, TokenType.REFRESH);
 
   const user = await userService.getUserByUuidOrId(
-    refreshTokenFromDb!.ownerUuid
+    refreshTokenFromDb.ownerUuid
   );
   if (!user) {
     throw new Error();
   }
 
   //Delete old refresh token
-  await tokenHandler.deleteFromDbById(refreshTokenFromDb!.id);
+  await tokenHandler.deleteFromDbById(refreshTokenFromDb.id);
   // Issue new access and refresh token
   const newTokens = await generateAuthTokens(user);
 
@@ -119,13 +119,14 @@ const refreshTokens = async (refreshToken: string) => {
  * @param {boolean} [isDevAccount=false]
  * @returns {Object}
  */
-const generateAccessToken = (userUuid: string, isDevAccount = false) => {
+const generateAccessToken = async (userUuid: string, isDevAccount = false) => {
   const accessTokenExpires = dayjs().add(
     // Dev accounts get an access token that is valid for one year
     !isDevAccount ? config.JWT_ACCESS_EXPIRATION_MINUTES : 60 * 24 * 365,
     "minutes"
   );
-  const accessToken = generateToken(
+
+  const accessToken = await generateToken(
     userUuid,
     accessTokenExpires,
     TokenType.ACCESS,
@@ -148,7 +149,7 @@ const generateRefreshToken = async (userUuid: string) => {
     "days"
   );
 
-  const refreshToken = generateToken(
+  const refreshToken = await generateToken(
     userUuid,
     refreshTokenExpires,
     TokenType.REFRESH,
@@ -163,7 +164,7 @@ const generateRefreshToken = async (userUuid: string) => {
 
   return {
     token: refreshToken,
-    expires: refreshTokenExpires.toDate(),
+    expires: refreshTokenExpires.toString(),
   };
 };
 
@@ -175,7 +176,7 @@ const generateRefreshToken = async (userUuid: string) => {
  */
 const generateAuthTokens = async (user: User) => {
   return {
-    access: generateAccessToken(
+    access: await generateAccessToken(
       user.uuid,
       user.role === "DEVELOPER" ? true : false
     ),
@@ -201,7 +202,7 @@ const generateResetPasswordToken = async (email: string) => {
     "minutes"
   );
 
-  const resetPasswordToken = generateToken(
+  const resetPasswordToken = await generateToken(
     user.uuid,
     expires,
     TokenType.RESET_PASSWORD,
@@ -227,7 +228,7 @@ const generateVerifyEmailToken = async (user: User) => {
     config.VERIFY_EMAIL_EXPIRATION_MINUTES,
     "minutes"
   );
-  const verifyEmailToken = generateToken(
+  const verifyEmailToken = await generateToken(
     user.uuid,
     expires,
     TokenType.VERIFY_EMAIL,

@@ -15,19 +15,17 @@ import {
 import { MenuButton } from "../../../components/Header/MenuButton";
 import { DeleteTreeDialog } from "../../../features/Dashboard/components/Dialogs/DeleteTreeDialog";
 import { UpdateTreeDialog } from "../../../features/Dashboard/components/Dialogs/UpdateTreeDialog";
-import { useTreeId } from "../../../features/Data/useTreeId";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { ExportDialog } from "./ExportDialog";
 import { useTreeQuery } from "../../Data/useTreeQuery";
 
-type Props = { css?: StyleObject };
+type Props = { css?: StyleObject; treeId: string };
 
-export function ProjectMenu({ css }: Props) {
-  const uuid = useTreeId();
+export function ProjectMenu({ css, treeId }: Props) {
   const router = useRouter();
 
-  const { data } = useTreeQuery(uuid);
+  const { data } = useTreeQuery(treeId);
 
   const name = data?.name ?? "Kein Name";
 
@@ -38,12 +36,13 @@ export function ProjectMenu({ css }: Props) {
           <ExportDialog
             className={defaultTheme}
             css={{ groupColor: "$black" }}
+            treeId={treeId}
           />
         ),
         update: (
           <UpdateTreeDialog
             className={defaultTheme}
-            treeId={uuid}
+            treeId={treeId}
             css={{ groupColor: "$black" }}
           />
         ),
@@ -51,7 +50,7 @@ export function ProjectMenu({ css }: Props) {
           <DeleteTreeDialog
             className={defaultTheme}
             css={{ groupColor: "$black" }}
-            tree={{ uuid, name }}
+            tree={{ uuid: treeId, name }}
             onDelete={() => router.push("/")}
           />
         ),
@@ -77,7 +76,7 @@ export function ProjectMenu({ css }: Props) {
           </DropdownMenu.Item>
         </NextLink>
         <DropdownMenu.Separator />
-        <UpdateTreeDialog treeId={uuid}>
+        <UpdateTreeDialog treeId={treeId}>
           <DropdownMenu.DialogItem dialogKey="update">
             <Icon>
               <Pencil2Icon />

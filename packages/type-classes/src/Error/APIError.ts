@@ -1,29 +1,47 @@
 import { APIErrors } from "./ErrorCodes";
 import { ODError, ODErrorConstructorParameters } from "./ODError";
+import { ZodFormattedError } from "zod";
 
-export type ODAPIErrorConstructorParameters = Omit<
-  ODErrorConstructorParameters,
-  "code"
-> & {
-  code: `${keyof typeof APIErrors}`;
-  isOperational?: boolean;
-};
+export type ODAPIErrorConstructorParameters<TSchema> =
+  ODErrorConstructorParameters<keyof typeof APIErrors> & {
+    isOperational?: boolean;
+    errors?: ZodFormattedError<TSchema>;
+  };
 
-export class APIError extends ODError {
+export class APIError<TSchema = any> extends ODError<keyof typeof APIErrors> {
   statusCode: APIErrors;
   isOperational: boolean;
+  errors?: ZodFormattedError<TSchema>;
 
   constructor({
     code,
     message,
     isOperational = true,
-  }: ODAPIErrorConstructorParameters) {
-    const prefixedCode = (
-      code.includes("API") ? code : `API_${code}`
-    ) as `API_${typeof code}`;
-    super({ code: prefixedCode, message });
+    errors,
+  }: ODAPIErrorConstructorParameters<TSchema>) {
+    super({ code, message });
 
+    this.errors = errors;
     this.statusCode = APIErrors[code];
     this.isOperational = isOperational;
   }
 }
+
+export const isAPIError = (error: any): error is APIError =>
+  !!APIErrors[error?.code];
+
+// export type ODAPIValidationErrorConstructorParameters = {
+//   zodError: ODValidationErrorConstructorParameters["zodError"];
+// };
+
+// export class APIValidationError extends APIError {
+//   declare zodError: ZodError;
+//   constructor({ zodError }: ODAPIValidationErrorConstructorParameters) {
+//     super({
+//       code: "VALIDATION_ERROR",
+//       message: "The validation of the inputs failed",
+//     });
+
+//     this.zodError = zodError;
+//   }
+// }

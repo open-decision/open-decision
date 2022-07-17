@@ -6,10 +6,14 @@ import {
   Text,
   ErrorMessage,
 } from "@open-decision/design-system";
-import { useVerifyLogin } from "../verifyLogin/useVerifyLogin";
 import { InfoBox, InfoBoxProps } from "../../Notifications/InfoBox";
 import { ColorKeys } from "@open-decision/design-system";
-import { onVerify, onVerifyFailure } from "../verifyLogin/verifyLogin.machine";
+import {
+  createVerifyLoginMachine,
+  onVerify,
+  onVerifyFailure,
+} from "../verifyLogin/verifyLogin.machine";
+import { useMachine } from "@xstate/react";
 
 export type VerfiyLoginDialogProps = DialogTriggerProps & {
   open?: boolean;
@@ -21,6 +25,7 @@ export type VerfiyLoginDialogProps = DialogTriggerProps & {
   onClose?: () => void;
   colorScheme?: ColorKeys;
   additionalMessage?: InfoBoxProps;
+  email: string;
 };
 
 export function VerifyLoginDialog({
@@ -34,8 +39,11 @@ export function VerifyLoginDialog({
   colorScheme = "success",
   description = "Bitte bestätigen Sie ihre Identität.",
   additionalMessage,
+  email,
 }: VerfiyLoginDialogProps) {
-  const [email, state, send] = useVerifyLogin(onVerify, onVerifyFailure);
+  const [state, send] = useMachine(
+    createVerifyLoginMachine(email, onVerify, onVerifyFailure)
+  );
 
   const formState = Form.useFormState({
     defaultValues: {

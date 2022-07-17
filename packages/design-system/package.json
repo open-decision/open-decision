@@ -41,9 +41,9 @@
     "@radix-ui/react-toolbar": "^0.1.5",
     "@radix-ui/react-tooltip": "^0.1.7",
     "@stitches/react": "^1.2.8",
-    "ariakit": "^2.0.0-next.30",
-    "ariakit-utils": "^0.17.0-next.21",
-    "react-hook-form": "^7.32.2",
+    "ariakit": "^2.0.0-next.34",
+    "ariakit-utils": "^0.17.0-next.23",
+    "react-hook-form": "^7.33.1",
     "remeda": "^0.0.35",
     "spinners-react": "^1.0.7",
     "use-resize-observer": "^9.0.2"
@@ -56,7 +56,7 @@
   "devDependencies": {
     "@fontsource/poppins": "^4.5.8",
     "@svgr/cli": "^6.2.1",
-    "@types/react": "^18.0.14",
-    "@types/react-dom": "^18.0.5"
+    "@types/react": "^18.0.15",
+    "@types/react-dom": "^18.0.6"
   }
 }

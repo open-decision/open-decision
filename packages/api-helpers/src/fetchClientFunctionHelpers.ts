@@ -15,28 +15,30 @@ export const JWTToken = z.string().refine((val) => {
 export type TJWT = z.infer<typeof JWTToken>;
 
 export const AuthHeader = z.object({
-  authorization: JWTToken,
+  authorization: JWTToken.optional(),
 });
 
 export const Context = z.object({
   urlPrefix: z.string().optional(),
-  headers: AuthHeader.optional(),
+  authPrefix: z.string().optional(),
+  token: z.string().optional(),
+  requestOrigin: z.string().optional(),
 });
 
-export type TContext = z.infer<typeof Context>;
+export type TContext = z.infer<typeof Context> & { headers?: HeadersInit };
 
 export type QueryConfig = TContext;
 
 export type Get<TInput, TOutput> = (
-  inputs: Omit<TInput, keyof TContext>,
+  inputs: TInput,
   config?: QueryConfig
-) => Promise<TOutput>;
+) => Promise<{ data: TOutput; response: Response }>;
 
 export type Post<TInput, TOutput> = Get<TInput, TOutput>;
 
 export type Patch<TInput> = (
   inputs: Omit<TInput, keyof TContext>,
   config?: QueryConfig
-) => Promise<void>;
+) => Promise<{ response: Response; data: undefined }>;
 
 export type Delete<TInput> = Patch<TInput>;

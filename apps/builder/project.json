@@ -15,7 +15,17 @@
       "executor": "@nrwl/next:server",
       "options": {
         "buildTarget": "builder:build",
-        "dev": true
+        "dev": true,
+        "hostname": "localhost"
+      }
+    },
+    "serve:test": {
+      "executor": "@nrwl/next:server",
+      "options": {
+        "buildTarget": "builder:build",
+        "dev": true,
+        "hostname": "localhost",
+        "port": 4400
       }
     },
     "export": {

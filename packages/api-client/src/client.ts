@@ -1,4 +1,4 @@
-import { TContext, TJWT } from "@open-decision/api-helpers";
+import { TContext } from "@open-decision/api-helpers";
 import {
   deletePublishedTree,
   getPublishedTree,
@@ -22,18 +22,13 @@ import {
   verifyEmail,
   refreshToken,
 } from "@open-decision/auth-api-specification";
-import { Required } from "utility-types";
+import {
+  deleteUser,
+  getUser,
+  updateUser,
+} from "@open-decision/user-api-specification";
 
-export type TClientConfig = { token?: TJWT; urlPrefix?: string };
-
-const createContext = ({ token, ...config }: TClientConfig): TContext => ({
-  headers: token ? { authorization: `Bearer ${token}` } : undefined,
-  ...config,
-});
-
-export const createUnauthenticatedClient = (config: TClientConfig) => {
-  const context = createContext(config);
-
+export const client = (context: TContext) => {
   return {
     auth: {
       login: login(context),
@@ -42,21 +37,6 @@ export const createUnauthenticatedClient = (config: TClientConfig) => {
       resetPassword: resetPassword(context),
       forgotPassword: forgotPassword(context),
       verifyEmail: verifyEmail(context),
-    },
-    publishedTrees: {
-      getCollection: getPublishedTrees(context),
-      getSingle: getPublishedTree(context),
-    },
-  };
-};
-
-const authenticatedClient = (config: Required<TClientConfig, "token">) => {
-  const context = createContext(config);
-  const unauthenticatedClient = createUnauthenticatedClient(context);
-
-  return {
-    auth: {
-      ...unauthenticatedClient.auth,
       logout: logout(context),
     },
     trees: {
@@ -71,28 +51,16 @@ const authenticatedClient = (config: Required<TClientConfig, "token">) => {
       },
     },
     publishedTrees: {
-      ...unauthenticatedClient.publishedTrees,
+      getCollection: getPublishedTrees(context),
+      getSingle: getPublishedTree(context),
       delete: deletePublishedTree(context),
+    },
+    user: {
+      getUser: getUser(context),
+      updateUser: updateUser(context),
+      deleteUser: deleteUser(context),
     },
   };
 };
 
-export type TUnauthenticatedClient = ReturnType<
-  typeof createUnauthenticatedClient
->;
-export type TAuthenticatedClient = ReturnType<typeof authenticatedClient>;
-
-export const client = ({
-  token,
-  ...context
-}: TClientConfig): TUnauthenticatedClient | TAuthenticatedClient => {
-  if (token) {
-    const client = authenticatedClient({ token, ...context });
-    return client;
-  }
-
-  const client = createUnauthenticatedClient(context);
-  return client;
-};
-
-export type TClient = TUnauthenticatedClient | TAuthenticatedClient;
+export type TClient = ReturnType<typeof client>;

@@ -119,3 +119,5 @@ const EmptyState = () => (
     </Card>
   </Stack>
 );
+
+export default TreeList;

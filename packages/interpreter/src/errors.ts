@@ -18,7 +18,7 @@ export class InvalidTreeError extends ODValidationError {
   constructor(zodError: ODValidationErrorConstructorParameters["zodError"]) {
     super({
       message: `The provided tree is not in the correct format`,
-      code: "INTERPRETER_INVALID_TREE",
+      code: "INVALID_TREE",
       zodError,
     });
   }

@@ -1,12 +1,11 @@
 import { InterpreterErrors } from "./ErrorCodes";
 import { ODError, ODErrorConstructorParameters } from "./ODError";
 
-export type InterpreterErrorConstructorParameters = {
-  code: InterpreterErrors;
-} & Omit<ODErrorConstructorParameters, "code">;
+export type InterpreterErrorConstructorParameters =
+  ODErrorConstructorParameters<InterpreterErrors>;
 
-export class InterpreterError extends ODError {
+export class InterpreterError extends ODError<InterpreterErrors> {
   constructor({ code, message }: InterpreterErrorConstructorParameters) {
-    super({ code: `INTERPRETER_${code}`, message });
+    super({ code, message });
   }
 }

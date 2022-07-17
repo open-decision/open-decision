@@ -3,12 +3,14 @@ import { isPasswordStrongEnough } from "../../utils/password.validation";
 
 export const registerInput = z.object({
   body: z.object({
-    email: z.string().email(),
+    email: z.string().email({ message: "INVALID_EMAIL" }),
     password: z
       .string()
       .min(8)
       .max(300)
-      .refine(async (val) => isPasswordStrongEnough(val)),
+      .refine(async (val) => isPasswordStrongEnough(val), {
+        message: "PASSWORD_TO_WEAK",
+      }),
     toc: z.literal(true),
   }),
 });

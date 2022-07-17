@@ -1,10 +1,15 @@
 import { LoadingSpinner, Stack } from "@open-decision/design-system";
 import { ErrorBoundary } from "@sentry/nextjs";
 import { BaseHeader } from "../components";
-import { TreeList } from "../features/Dashboard/TreeList";
+// import { TreeList } from "../features/Dashboard/TreeList";
 import * as React from "react";
 import { ErrorCard } from "../components/Error/ErrorCard";
 import { getDashboardLayout } from "../features/Dashboard/DashboardLayout";
+import dynamic from "next/dynamic";
+
+const TreeList = dynamic(() => import("../features/Dashboard/TreeList"), {
+  ssr: false,
+});
 
 export default function DashboardPage() {
   return (

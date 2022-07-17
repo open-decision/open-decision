@@ -1,19 +1,5 @@
 import { z } from "zod";
-import { APIError, ODError } from "@open-decision/type-classes";
-
-async function getResponseData<TData>(
-  response: Response
-): Promise<TData | APIError> {
-  let data;
-  const contentType = response.headers.get("content-type");
-  if (contentType?.includes("application/json")) data = await response.json();
-
-  if (response.status >= 400) {
-    return new APIError(data);
-  }
-
-  return data;
-}
+import { APIError, isAPIError } from "@open-decision/type-classes";
 
 type Config<TValidation extends z.ZodTypeAny> = {
   validation?: TValidation;
@@ -21,30 +7,45 @@ type Config<TValidation extends z.ZodTypeAny> = {
 
 export const safeFetch = async <TValidation extends z.ZodTypeAny>(
   url: string,
-  { body, headers, ...options }: RequestInit,
+  {
+    body,
+    headers,
+    ...options
+  }: Omit<RequestInit, "body"> & { body?: Record<string, any> },
   { validation }: Config<TValidation> = {}
-): Promise<z.output<TValidation>> => {
-  const request = new Request(url, {
-    headers: { "Content-Type": "application/json", ...headers },
-    body: body ? body : undefined,
-    ...options,
-  });
-  try {
-    const response = await fetch(request);
+): Promise<{ data: z.output<TValidation>; response: Response }> => {
+  let response;
 
+  try {
+    response = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        ...headers,
+      },
+      body: body ? JSON.stringify(body) : undefined,
+      ...options,
+    });
+  } catch (error) {
+    throw new APIError({
+      code: "OFFLINE",
+      message: "The request failed because the user is offline",
+    });
+  }
+
+  try {
     let data;
     const contentType = response.headers.get("content-type");
     if (contentType?.includes("application/json")) data = await response.json();
 
     if (response.status >= 400) {
-      return new APIError(data);
+      throw data;
     }
 
-    return validation ? validation.parse(data) : data;
+    return { data: validation?.parse(data) ?? data, response };
   } catch (error) {
-    if (error instanceof Error) throw error;
+    if (isAPIError(error)) throw error;
 
-    throw new ODError({
+    throw new APIError({
       code: "UNEXPECTED_ERROR",
       message: "Something unexpected happened when fetching from the API.",
     });

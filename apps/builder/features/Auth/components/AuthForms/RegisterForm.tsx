@@ -5,11 +5,12 @@ import {
   Box,
   Row,
 } from "@open-decision/design-system";
-import { useAuth } from "../../useAuth";
 import { useMutation, UseMutationOptions } from "react-query";
 import axios from "axios";
 import { InfoBox } from "../../../Notifications/InfoBox";
 import { InternalLink } from "../../../../components/InternalLink";
+import { useRegisterMutation } from "../../mutations/useRegisterMutation";
+import { useRouter } from "next/router";
 
 type Data = { email: string };
 
@@ -20,7 +21,7 @@ const useIsOnWhiteListQuery = (
     "isOnWhiteList",
     async (data: Data) => {
       const result = await axios({
-        url: `/external-api/users/is-whitelisted`,
+        url: `/users/is-whitelisted`,
         data,
         method: "POST",
       });
@@ -97,9 +98,25 @@ function RegisterForm({ email }: { email?: string }) {
     },
   });
 
+  const router = useRouter();
+  const {
+    mutate: register,
+    error,
+    isLoading,
+    reset,
+    isError,
+  } = useRegisterMutation({
+    onSuccess: () => router.push("/"),
+    onError: (error) => {
+      formState.setErrors({
+        password: error?.errors?.body?.password?._errors[0],
+        email: error?.errors?.body?.email?._errors[0],
+      });
+    },
+  });
+
   formState.useSubmit(() => {
-    send({
-      type: "REGISTER",
+    register({
       email: formState.values.email,
       password: formState.values.password,
       toc: true,
@@ -107,6 +124,7 @@ function RegisterForm({ email }: { email?: string }) {
   });
 
   formState.useValidate(() => {
+    reset();
     if (formState.values.password !== formState.values.passwordConfirmation)
       formState.setError(
         formState.names.passwordConfirmation,
@@ -114,10 +132,8 @@ function RegisterForm({ email }: { email?: string }) {
       );
   });
 
-  const [state, send] = useAuth();
-
   return (
-    <Form.Root state={formState}>
+    <Form.Root state={formState} resetOnSubmit={false}>
       <Form.Field Label="Mailadresse">
         <Form.Input
           css={{ layer: "2" }}
@@ -126,6 +142,7 @@ function RegisterForm({ email }: { email?: string }) {
           disabled={!!email}
           placeholder="beispiel@web.de"
           required
+          data-test="email"
         />
       </Form.Field>
       <Form.Field Label="Passwort" css={{ marginTop: "$4" }}>
@@ -135,6 +152,7 @@ function RegisterForm({ email }: { email?: string }) {
           name={formState.names.password}
           placeholder="*******"
           required
+          data-test="password"
         />
       </Form.Field>
       <Form.Field Label="Passwort wiederholen" css={{ marginTop: "$4" }}>
@@ -144,6 +162,7 @@ function RegisterForm({ email }: { email?: string }) {
           name={formState.names.passwordConfirmation}
           required
           placeholder="*******"
+          data-test="passwordConfirmation"
         />
       </Form.Field>
       <Stack css={{ gap: "$2", marginTop: "$4" }}>
@@ -153,6 +172,7 @@ function RegisterForm({ email }: { email?: string }) {
               formState={formState}
               name={formState.names.privacy}
               required
+              data-test="privacy"
             />
             <Box as="span" css={{ lineHeight: "2px" }}>
               <Form.Label
@@ -183,26 +203,33 @@ function RegisterForm({ email }: { email?: string }) {
             css={{ marginTop: "$2" }}
           />
         </Stack>
-        <Form.Field
-          css={{ textStyle: "small-text" }}
-          layout="inline-right"
-          Label="Ich habe zur Kenntnis genommen, dass sich die Software in einer frühen Entwicklungsphase befindet und ein fehlerfreier Betrieb nicht garantiert werden kann."
-        >
+        <Row css={{ alignItems: "center", gap: "$2" }}>
           <Form.Checkbox
             formState={formState}
             name={formState.names.legal}
             required
+            data-test="legal"
           />
-        </Form.Field>
+          <Form.Label
+            css={{ display: "inline" }}
+            size="small"
+            name={formState.names.privacy}
+          >
+            Ich habe zur Kenntnis genommen, dass sich die Software in einer
+            frühen Entwicklungsphase befindet und ein fehlerfreier Betrieb nicht
+            garantiert werden kann.
+          </Form.Label>
+        </Row>
       </Stack>
-      {state.context.error ? (
-        <ErrorMessage css={{ marginBlock: "$2" }}>
-          {state.context.error}
+      {isError ? (
+        <ErrorMessage data-test="error" css={{ marginTop: "$4" }}>
+          {error.message}
         </ErrorMessage>
       ) : null}
       <Form.Submit
-        isLoading={state.matches("loggedOut.register")}
-        css={{ marginTop: "$6" }}
+        data-test="submit"
+        isLoading={isLoading}
+        css={{ marginTop: "$4" }}
         type="submit"
       >
         Jetzt Registrieren

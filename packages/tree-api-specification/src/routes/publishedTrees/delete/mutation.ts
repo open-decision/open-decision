@@ -11,7 +11,6 @@ export const deletePublishedTree =
     if (prefix) combinedUrl = prefix + combinedUrl;
 
     return await safeFetch(combinedUrl, {
-      headers: context.headers,
       method: "DELETE",
     });
   };

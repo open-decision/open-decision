@@ -6,9 +6,13 @@ import {
   Stack,
   SubmitButton,
 } from "@open-decision/design-system";
-import { useAuth } from "../../useAuth";
+import { useRouter } from "next/router";
+import { useLocation } from "react-use";
+import { useLoginMutation } from "../../mutations/useLoginMutation";
 
 export function LoginForm() {
+  const location = useLocation();
+  const router = useRouter();
   const formState = Form.useFormState({
     defaultValues: {
       email: "",
@@ -16,18 +20,36 @@ export function LoginForm() {
     },
   });
 
+  const {
+    mutate: login,
+    error,
+    isLoading,
+  } = useLoginMutation({
+    onSuccess: () => {
+      const redirectUrl = new URL(
+        location.search?.replace("?from=", "") ?? "/",
+        process.env.NEXT_PUBLIC_OD_BUILDER_ENDPOINT
+      );
+
+      return router.replace(redirectUrl);
+    },
+    onError: (error) => {
+      formState.setErrors({
+        email: error.errors?.body?.email?._errors[0],
+        password: error.errors?.body?.password?._errors[0],
+      });
+    },
+  });
+
   formState.useSubmit(() => {
-    send({
-      type: "LOG_IN",
+    login({
       email: formState.values.email,
       password: formState.values.password,
     });
   });
 
-  const [state, send] = useAuth();
-
   return (
-    <Form.Root state={formState} css={{ gap: "$6" }}>
+    <Form.Root state={formState} css={{ gap: "$6" }} resetOnSubmit={false}>
       <Stack>
         <Form.Field Label="Mailadresse">
           <Form.Input
@@ -35,6 +57,7 @@ export function LoginForm() {
             name={formState.names.email}
             placeholder="beispiel@web.de"
             type="email"
+            data-test="email"
           />
         </Form.Field>
         <Form.Field
@@ -62,16 +85,14 @@ export function LoginForm() {
             required
             name={formState.names.password}
             placeholder="*******"
+            data-test="password"
           />
         </Form.Field>
       </Stack>
-      {state.context.error ? (
-        <ErrorMessage>{state.context.error}</ErrorMessage>
+      {error ? (
+        <ErrorMessage data-test="error">{error.message}</ErrorMessage>
       ) : null}
-      <SubmitButton
-        isLoading={state.matches("loggedOut.loggingIn")}
-        type="submit"
-      >
+      <SubmitButton isLoading={isLoading} type="submit" data-test="submit">
         Jetzt Anmelden
       </SubmitButton>
     </Form.Root>

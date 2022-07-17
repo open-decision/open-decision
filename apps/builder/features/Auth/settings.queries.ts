@@ -1,46 +1,35 @@
+import { APIError } from "@open-decision/type-classes";
+import { TUpdateUserInput } from "@open-decision/user-api-specification";
 import { useMutation, UseMutationOptions } from "react-query";
-import { useAuth } from "./useAuth";
-
-type Data = { name?: string; email?: string; password?: string };
+import { proxiedOD } from "../Data/odClient";
+import { useLogoutMutation } from "./mutations/useLogoutMutation";
 
 export const useUserUpdateMutation = (
-  options?: UseMutationOptions<unknown, unknown, Data>
+  options?: UseMutationOptions<
+    unknown,
+    APIError<TUpdateUserInput>,
+    Partial<TUpdateUserInput["body"]>
+  >
 ) => {
-  const [{ context }] = useAuth();
-
   return useMutation(
     "updateUser",
-    (data: Data) => {
-      return fetch(`/external-api/users/${context.auth?.user.uuid}`, {
-        body: JSON.stringify(data),
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${context.auth?.access.token}`,
-        },
-      });
+    (data: Partial<TUpdateUserInput["body"]>) => {
+      return proxiedOD.user.updateUser({ body: data });
     },
     options
   );
 };
 
 export const useDeleteUserMutation = (options?: UseMutationOptions) => {
-  const [{ context }, send] = useAuth();
+  const { mutate: logout } = useLogoutMutation();
 
   return useMutation(
     "deleteUser",
     () => {
-      return fetch(`/external-api/users/${context.auth?.user.uuid}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${context.auth?.access.token}`,
-        },
-      });
+      return proxiedOD.user.deleteUser({});
     },
     {
-      onSuccess: () => {
-        send("LOG_OUT");
-      },
+      onSettled: (_data, _error, _variables, _context) => logout(),
       ...options,
     }
   );

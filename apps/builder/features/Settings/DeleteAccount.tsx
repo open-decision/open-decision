@@ -3,24 +3,19 @@ import { Heading, SubmitButton } from "@open-decision/design-system";
 import { Card } from "../../components/Card";
 import { useDeleteUserMutation } from "../Auth/settings.queries";
 import { VerifiedSettingsChange } from "./VerifiedSettingsChange";
-import { useAuth } from "../Auth/useAuth";
-import { onVerify } from "../Auth/verifyLogin/verifyLogin.machine";
+import { TGetUserOutput } from "@open-decision/user-api-specification";
 
-export function DeleteAccount() {
-  const [, send] = useAuth();
-  const { mutate, isLoading } = useDeleteUserMutation({
-    onSuccess: () => {
-      send("LOG_OUT");
-    },
-  });
+type Props = { user: TGetUserOutput };
+
+export function DeleteAccount({ user }: Props) {
+  const { mutate, isLoading } = useDeleteUserMutation();
 
   const [open, setOpen] = React.useState(false);
 
-  const handleVerify = React.useCallback<onVerify>(() => mutate(), []);
-
   return (
     <VerifiedSettingsChange
-      onVerify={handleVerify}
+      email={user.email}
+      onVerify={() => mutate()}
       open={open}
       setOpen={setOpen}
       description="Bitte verifizieren Sie sich um Ihren Account zu löschen."

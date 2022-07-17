@@ -1,18 +1,19 @@
 import { Icon, Link } from "@open-decision/design-system";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import * as React from "react";
-import { useAuth } from "../../useAuth";
+import { useForgotPasswordMutation } from "../../mutations/useForgotPasswordMutation";
 import { ForgotPasswordForm } from "../AuthForms/ForgotPasswordForm";
 import { AuthCard } from "./";
 
 export function ForgotPasswordCard() {
-  const [state, send] = useAuth();
+  const {
+    mutate: forgotPassword,
+    error,
+    isLoading,
+    isSuccess,
+  } = useForgotPasswordMutation();
 
-  const hasPasswordResetRequested = state.matches(
-    "loggedOut.passwordResetRequested"
-  );
-
-  return !hasPasswordResetRequested ? (
+  return !isSuccess ? (
     <AuthCard.Container>
       <AuthCard.Header>
         <AuthCard.Heading>Passwort zurücksetzen</AuthCard.Heading>
@@ -22,7 +23,11 @@ export function ForgotPasswordCard() {
         </AuthCard.Description>
       </AuthCard.Header>
       <AuthCard.Body>
-        <ForgotPasswordForm />
+        <ForgotPasswordForm
+          onSubmit={forgotPassword}
+          error={error}
+          isLoading={isLoading}
+        />
       </AuthCard.Body>
     </AuthCard.Container>
   ) : (

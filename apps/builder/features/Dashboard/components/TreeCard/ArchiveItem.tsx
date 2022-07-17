@@ -2,7 +2,7 @@ import { DropdownMenu, Icon } from "@open-decision/design-system";
 import { ArchiveIcon } from "@radix-ui/react-icons";
 import { queryClient } from "../../../../features/Data/queryClient";
 import { useMutation } from "react-query";
-import { useOD } from "../../../../../builder/features/Data/odClient";
+import { proxiedOD } from "../../../../../builder/features/Data/odClient";
 import { useTreesQueryKey } from "../../../Data/useTreesQuery";
 
 export type PublishItemProps = {
@@ -11,11 +11,9 @@ export type PublishItemProps = {
 };
 
 export function ArchiveItem({ treeId, status }: PublishItemProps) {
-  const OD = useOD();
-
   const { mutate: archive } = useMutation(
     () =>
-      OD.trees.update({
+      proxiedOD.trees.update({
         body: { status: "ARCHIVED" },
         params: { uuid: treeId },
       }),
@@ -28,7 +26,7 @@ export function ArchiveItem({ treeId, status }: PublishItemProps) {
 
   const { mutate: unarchive } = useMutation(
     () =>
-      OD.trees.update({
+      proxiedOD.trees.update({
         body: { status: "ACTIVE" },
         params: { uuid: treeId },
       }),

@@ -24,7 +24,7 @@ const readableStatus = {
   ARCHIVED: "ARCHIVIERT",
 };
 
-const Card = styled("a", Stack, DefaultCard, {
+const Card = styled(Stack, DefaultCard, {
   position: "relative",
   textDecoration: "none",
 });
@@ -41,40 +41,46 @@ export function TreeCard({ tree }: Props) {
         [`${intentWithinSelector}`]: { boxShadow: "$3" },
       }}
     >
-      <Link href={`/builder/${tree.uuid}`} passHref>
-        <Card title={`Öffne das Projekt ${tree.name}`}>
-          <Row css={{ gap: "$2", alignItems: "center", marginBottom: "$1" }}>
-            <Heading size="small">{tree.name}</Heading>
-            {tree.status === "ACTIVE" ? (
-              <Badge size="small">{readableStatus[tree.status]}</Badge>
-            ) : null}
-            {tree.status === "ARCHIVED" ? (
-              <Badge css={{ colorScheme: "gray" }} size="small">
-                {readableStatus[tree.status]}
+      <Card>
+        <Row css={{ gap: "$2", alignItems: "center", marginBottom: "$1" }}>
+          <Link
+            href={`/builder/${tree.uuid}`}
+            title={`Öffne das Projekt ${tree.name}`}
+          >
+            <Heading size="small" css={{ cursor: "pointer" }}>
+              {tree.name}
+            </Heading>
+          </Link>
+
+          {tree.status === "ACTIVE" ? (
+            <Badge size="small">{readableStatus[tree.status]}</Badge>
+          ) : null}
+          {tree.status === "ARCHIVED" ? (
+            <Badge css={{ colorScheme: "gray" }} size="small">
+              {readableStatus[tree.status]}
+            </Badge>
+          ) : null}
+          {tree.publishedTrees.length > 0 ? (
+            <SystemLink
+              href={`${process.env.NEXT_PUBLIC_OD_RENDERER_ENDPOINT}/tree/${tree.publishedTrees[0].uuid}`}
+              target="_blank"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <Badge size="small">
+                VERÖFFENTLICHT{" "}
+                <Icon>
+                  <ArrowRightIcon />
+                </Icon>
               </Badge>
-            ) : null}
-            {tree.publishedTrees.length > 0 ? (
-              <SystemLink
-                href={`${process.env.NEXT_PUBLIC_OD_RENDERER_ENDPOINT}/tree/${tree.publishedTrees[0].uuid}`}
-                target="_blank"
-                onClick={(event) => event.stopPropagation()}
-              >
-                <Badge size="small">
-                  VERÖFFENTLICHT{" "}
-                  <Icon>
-                    <ArrowRightIcon />
-                  </Icon>
-                </Badge>
-              </SystemLink>
-            ) : null}
-          </Row>
-          <Text css={{ color: "$gray11" }} size="small">
-            {formatRelative(parseISO(tree.updatedAt), new Date(), {
-              locale: de,
-            })}
-          </Text>
-        </Card>
-      </Link>
+            </SystemLink>
+          ) : null}
+        </Row>
+        <Text css={{ color: "$gray11" }} size="small">
+          {formatRelative(parseISO(tree.updatedAt), new Date(), {
+            locale: de,
+          })}
+        </Text>
+      </Card>
       <TreeCardMenu tree={tree} />
     </Box>
   );

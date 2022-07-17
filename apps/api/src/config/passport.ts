@@ -3,6 +3,17 @@ import config from "./config";
 import UserHandler from "../models/user.model";
 import { JwtPayload } from "jsonwebtoken";
 import { TokenType } from "@open-decision/prisma";
+import { Request } from "express";
+import cookie from "cookie";
+
+const cookieExtractor = function (req: Request) {
+  let token: string | null = null;
+  if (req && req.headers.cookie) {
+    const parsedCookies = cookie.parse(req.headers.cookie);
+    token = parsedCookies["token"];
+  }
+  return token;
+};
 
 export const jwtStrategy = new JwtStrategy(
   {
@@ -14,7 +25,8 @@ export const jwtStrategy = new JwtStrategy(
       if (payload.type !== TokenType.ACCESS) {
         throw new Error("Invalid token type");
       }
-      const user = await UserHandler.findByUuidOrId(payload.sub!);
+
+      const user = await UserHandler.findByUuidOrId(payload.userUuid);
       if (!user) {
         return done(null, false);
       }
@@ -28,14 +40,14 @@ export const jwtStrategy = new JwtStrategy(
 export const jwtWebsocketStrategy = new JwtStrategy(
   {
     secretOrKey: config.ACCESS_TOKEN_SECRET,
-    jwtFromRequest: ExtractJwt.fromUrlQueryParameter("auth"),
+    jwtFromRequest: cookieExtractor,
   },
   async (payload: JwtPayload, done: Function) => {
     try {
       if (payload.type !== TokenType.ACCESS) {
         throw new Error("Invalid token type");
       }
-      const user = await UserHandler.findByUuidOrId(payload.sub!);
+      const user = await UserHandler.findByUuidOrId(payload.userUuid);
       if (!user) {
         return done(null, false);
       }

@@ -13,14 +13,13 @@ export const login =
   async (inputs, config) => {
     const combinedUrl = prefixUrl(
       loginUrl,
-      config?.urlPrefix ?? context.urlPrefix
+      config?.urlPrefix ?? context.urlPrefix ?? ""
     );
 
     return await safeFetch(
       combinedUrl,
       {
-        headers: context.headers,
-        body: JSON.stringify(inputs.body),
+        body: inputs.body,
         method: "POST",
       },
       { validation: loginOutput }

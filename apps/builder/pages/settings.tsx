@@ -10,12 +10,27 @@ import {
 import { AvatarIcon } from "@radix-ui/react-icons";
 import { BaseHeader } from "../components";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import * as React from "react";
 import { getDashboardLayout } from "../features/Dashboard/DashboardLayout";
+import { TGetUserOutput } from "@open-decision/user-api-specification";
 import { ChangeEmail } from "../features/Settings/ChangeEmail";
 import { ChangePassword } from "../features/Settings/ChangePassword";
 import { DeleteAccount } from "../features/Settings/DeleteAccount";
+import { GetServerSidePropsContext } from "next";
+import { client } from "@open-decision/api-client";
+
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const OD = client({
+    token: context.req.cookies["token"],
+    urlPrefix: `${process.env.NEXT_PUBLIC_OD_API_ENDPOINT}/v1`,
+  });
+
+  const user = await OD.user.getUser({});
+
+  return { props: { user: user.data } };
+};
 
 const SideMenuLink = styled("a", Label, {
   position: "relative",
@@ -38,9 +53,9 @@ const SideMenuLink = styled("a", Label, {
 
 SideMenuLink.defaultProps = { size: "medium" };
 
-export default function SettingsPage() {
-  const router = useRouter();
+type PageProps = { user: TGetUserOutput };
 
+export default function SettingsPage({ user }: PageProps) {
   return (
     <>
       <BaseHeader css={{ gridColumn: "1 / -1" }} />
@@ -53,7 +68,7 @@ export default function SettingsPage() {
       </Heading>
       <Stack css={{ gap: "$1", gridColumn: "2" }}>
         <Link href="#account" passHref>
-          <SideMenuLink data-active={router.asPath.includes("account")}>
+          <SideMenuLink data-active>
             <Icon css={{ fontSize: "1.5em" }}>
               <AvatarIcon />
             </Icon>
@@ -67,9 +82,9 @@ export default function SettingsPage() {
             gap: "$3",
           }}
         >
-          <ChangePassword />
-          <ChangeEmail />
-          <DeleteAccount />
+          <ChangePassword user={user} />
+          <ChangeEmail user={user} />
+          <DeleteAccount user={user} />
         </Stack>
       </Stack>
     </>
