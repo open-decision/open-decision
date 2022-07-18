@@ -25,6 +25,6 @@ jobs:
 
       - name: Deploy
         id: deploy
-        uses: brentd/fly-staging-app@v1
+        uses: PhilGarb/fly-pr-review-apps@v1.2
         with:
-          path: apps/api
+          config: apps/api/fly.toml
