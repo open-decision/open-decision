@@ -517,9 +517,6 @@ importers:
       zod: 3.17.3
       zod-prisma: 0.5.4_prisma@3.14.0+zod@3.17.3
 
-  packages/prisma/src/generated:
-    specifiers: {}
-
   packages/renderer:
     specifiers:
       '@open-decision/interpreter-react': workspace:*
