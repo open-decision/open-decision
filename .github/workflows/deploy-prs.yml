@@ -26,3 +26,5 @@ jobs:
       - name: Deploy
         id: deploy
         uses: brentd/fly-staging-app@v1
+        with:
+          path: apps/api/fly.toml
