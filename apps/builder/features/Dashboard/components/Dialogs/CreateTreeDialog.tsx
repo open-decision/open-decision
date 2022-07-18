@@ -41,6 +41,7 @@ export const CreateTreeDialog = ({
           Neues Projekt erstellen
         </Dialog.Header>
         <Form.Root
+          validateOnBlur={false}
           state={formState}
           css={{ display: "flex", flexDirection: "column" }}
         >
