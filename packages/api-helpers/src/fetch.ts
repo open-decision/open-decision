@@ -26,6 +26,7 @@ export const safeFetch = async <TValidation extends z.ZodTypeAny>(
       ...options,
     });
   } catch (error) {
+    console.log(error);
     throw new APIError({
       code: "OFFLINE",
       message: "The request failed because the user is offline",
@@ -40,9 +41,11 @@ export const safeFetch = async <TValidation extends z.ZodTypeAny>(
     if (response.status >= 400) {
       throw data;
     }
+    console.log(data);
 
     return { data: validation?.parse(data) ?? data, response };
   } catch (error) {
+    console.log(error);
     if (isAPIError(error)) throw error;
 
     throw new APIError({

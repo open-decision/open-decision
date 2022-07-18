@@ -8,7 +8,7 @@ const logout: NextApiHandler = async (req, res) => {
 
   deleteCookies(res);
 
-  return res.status(200).redirect(307, "/auth/login");
+  return res.redirect(303, "/auth/login");
 };
 
 export default logout;

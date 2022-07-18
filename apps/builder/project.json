@@ -9,6 +9,10 @@
       "options": {
         "root": "apps/builder",
         "outputPath": "dist/apps/builder"
+      },
+      "configurations": {
+        "production": {},
+        "development": {}
       }
     },
     "serve": {
@@ -17,6 +21,19 @@
         "buildTarget": "builder:build",
         "dev": true,
         "hostname": "localhost"
+      },
+      "configurations": {
+        "production": {
+          "dev": false,
+          "buildTarget": "builder:build:production",
+          "hostname": "localhost",
+          "dependsOn": ["build:production"]
+        },
+        "development": {
+          "buildTarget": "builder:build",
+          "dev": true,
+          "hostname": "localhost"
+        }
       }
     },
     "serve:test": {

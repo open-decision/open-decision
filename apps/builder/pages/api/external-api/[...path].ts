@@ -8,7 +8,8 @@ const SilentAuth: NextApiHandler = async (req, res) => {
   try {
     refreshedToken = await refreshAuth(req, res);
   } catch (error) {
-    return res.redirect("/auth/login");
+    console.log(error);
+    return res.redirect(303, "/auth/login");
   }
 
   try {
@@ -26,16 +27,15 @@ const SilentAuth: NextApiHandler = async (req, res) => {
 
     return res.json(response.data);
   } catch (error) {
+    console.log(error);
     if (isAPIError(error)) return res.status(error.statusCode).json(error);
 
-    return res
-      .status(500)
-      .json(
-        new APIError({
-          code: "UNEXPECTED_ERROR",
-          message: "An unexpected error occurred.",
-        })
-      );
+    return res.status(500).json(
+      new APIError({
+        code: "UNEXPECTED_ERROR",
+        message: "An unexpected error occurred.",
+      })
+    );
   }
 };
 

@@ -25,7 +25,7 @@ export default async function handler(
     }
   );
 
-  if (response.ok) return res.redirect("/");
+  if (response.ok) return res.redirect(303, "/");
 
   return res.status(500).send({ error: response.statusText });
 }

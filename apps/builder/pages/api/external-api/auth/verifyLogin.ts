@@ -19,6 +19,7 @@ const verifyLogin: NextApiHandler = async (req, res) => {
 
     return res.status(200).json({ success: true });
   } catch (error) {
+    console.log(error);
     if (isAPIError(error)) {
       return res.status(error.statusCode).json(error);
     }
