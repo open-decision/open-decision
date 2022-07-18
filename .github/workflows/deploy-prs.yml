@@ -26,6 +26,6 @@ jobs:
 
       - name: Deploy
         id: deploy
-        uses: PhilGarb/fly-pr-review-apps@v1.2
+        uses: PhilGarb/fly-pr-review-apps@1.8.1
         with:
           config: apps/api/fly.toml
