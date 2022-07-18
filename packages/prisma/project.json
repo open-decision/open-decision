@@ -13,6 +13,23 @@
     "build": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
+        "commands": [
+          "mkdir -p ../../dist/packages/prisma/src",
+          "cp -R ./src/generated ../../dist/packages/prisma/src"
+        ],
+        "cwd": "packages/prisma",
+        "parallel": false
+      },
+      "dependsOn": [
+        {
+          "target": "generate_prisma",
+          "projects": "self"
+        }
+      ]
+    },
+    "generate_prisma": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
         "command": "prisma generate --schema=./src/schema.prisma",
         "cwd": "packages/prisma"
       }

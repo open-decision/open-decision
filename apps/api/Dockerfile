@@ -1,4 +1,3 @@
-FROM positivly/prisma-binaries:latest AS prisma
 FROM node:16-bullseye-slim as base
 RUN apt-get update || : && apt-get install -y \
     python \
@@ -12,6 +11,8 @@ RUN sh -c "$(curl -O- https://github.com/deluan/zsh-in-docker/releases/download/
 
 RUN npm i --location=global pnpm
 
+# ------------------------------------------------------------------
+# Fetch node_modules so they can be cached by docker
 FROM base as store
 ENV NODE_ENV=development
 
@@ -22,7 +23,8 @@ RUN pnpm fetch
 
 # ------------------------------------------------------------------
 # Install all node_modules, including dev dependencies
-FROM store as deps
+FROM positivly/prisma-binaries:latest as prisma
+FROM store as build
 ENV NODE_ENV=development
 
 WORKDIR /app
@@ -44,21 +46,21 @@ ENV PRISMA_QUERY_ENGINE_BINARY=/prisma-engines/query-engine \
     PRISMA_CLIENT_ENGINE_TYPE=binary
 COPY --from=prisma /prisma-engines/query-engine /prisma-engines/migration-engine /prisma-engines/introspection-engine /prisma-engines/prisma-fmt /prisma-engines/
 
+# ------------------------------------------------------------------
+# Finally, build the production image with minimal footprint
+FROM base as prod
 
-# # ------------------------------------------------------------------
-# # Finally, build the production image with minimal footprint
-# FROM base as prod
+EXPOSE 8080
+ENV NODE_ENV=production
 
-# ENV NODE_ENV=production
-
-# WORKDIR /app
+WORKDIR /app
 
 # RUN mkdir dist
 # RUN mkdir node_modules
 # RUN chmod a+rwx -R dist
 # RUN chmod a+rwx -R node_modules
 
-# COPY --from=build /app .
+COPY --from=build /app .
 
 USER node
 
