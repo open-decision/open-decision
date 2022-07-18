@@ -9,6 +9,7 @@ import * as React from "react";
 import { useMutation } from "react-query";
 import { proxiedOD } from "../../../../features/Data/odClient";
 import { useTreeQueryKey } from "../../../Data/useTreeQuery";
+import { useTreesQueryKey } from "../../../Data/useTreesQuery";
 
 type Props = {
   treeId: string;
@@ -43,8 +44,9 @@ export function UpdateTreeDialog({
       }),
     {
       onSuccess: () => {
-        setOpen?.(false);
         queryClient.invalidateQueries(useTreeQueryKey);
+        queryClient.invalidateQueries(useTreesQueryKey);
+        setOpen?.(false);
       },
     }
   );

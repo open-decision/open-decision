@@ -14,7 +14,7 @@ const SilentAuth: NextApiHandler = async (req, res) => {
 
   try {
     const path = req.url?.split("external-api")[1];
-    const response = await safeFetch(
+    const { data, response } = await safeFetch(
       `${process.env.OD_API_ENDPOINT}/v1${path}`,
       {
         body: req.method === "GET" ? undefined : req.body,
@@ -25,7 +25,7 @@ const SilentAuth: NextApiHandler = async (req, res) => {
       }
     );
 
-    return res.json(response.data);
+    return res.status(response.status).json(data);
   } catch (error) {
     console.log(error);
     if (isAPIError(error)) return res.status(error.statusCode).json(error);
