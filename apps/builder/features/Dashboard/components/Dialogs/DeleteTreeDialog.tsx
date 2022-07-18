@@ -79,7 +79,7 @@ export function DeleteTreeDialog({
             Bestätigung der Löschung ein.
           </Text>
         </Dialog.Description>
-        <Form.Root state={formState}>
+        <Form.Root state={formState} validateOnBlur={false}>
           <Form.Field Label="Projektname">
             <Form.Input
               name={formState.names.treeName}
