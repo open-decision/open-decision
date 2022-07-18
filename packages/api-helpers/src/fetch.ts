@@ -36,14 +36,16 @@ export const safeFetch = async <TValidation extends z.ZodTypeAny>(
   try {
     let data;
     const contentType = response.headers.get("content-type");
-    if (contentType?.includes("application/json")) data = await response.json();
+    if (contentType?.includes("application/json") && response.status !== 204)
+      data = await response.json();
 
     if (response.status >= 400) {
       throw data;
     }
-    console.log(data);
 
-    return { data: validation?.parse(data) ?? data, response };
+    const parsedData = validation ? validation.parse(data) : data;
+
+    return { data: parsedData, response };
   } catch (error) {
     console.log(error);
     if (isAPIError(error)) throw error;
