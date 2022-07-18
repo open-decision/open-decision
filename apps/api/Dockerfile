@@ -6,9 +6,6 @@ RUN apt-get update || : && apt-get install -y \
     git \
     openssl
 
-# Default powerline10k theme, no plugins installed
-RUN sh -c "$(curl -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.1.2/zsh-in-docker.sh)"
-
 RUN npm i --location=global pnpm
 
 # ------------------------------------------------------------------

@@ -57,12 +57,6 @@
       "options": {
         "command": "flyctl deploy --config apps/api/fly.toml --dockerfile apps/api/Dockerfile"
       }
-    },
-    "launch": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "command": "flyctl launch --path apps/api --dockerfile apps/api/Dockerfile"
-      }
     }
   },
   "tags": []
