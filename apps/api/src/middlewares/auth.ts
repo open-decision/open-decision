@@ -5,7 +5,6 @@ import { Permissions, roleRights } from "../config/roles";
 import { User } from "@open-decision/prisma";
 import { jwtStrategy, jwtWebsocketStrategy } from "../config/passport";
 import { APIError } from "@open-decision/type-classes";
-import cookieParser from "cookie-parser";
 
 const verifyCallback =
   (

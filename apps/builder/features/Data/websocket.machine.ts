@@ -1,7 +1,9 @@
+import { safeFetch } from "@open-decision/api-helpers";
 import { ODProgrammerError } from "@open-decision/type-classes";
 import { assign, createMachine, Interpreter } from "xstate";
 import { WebsocketProvider } from "y-websocket";
 import { Doc } from "yjs";
+import { z } from "zod";
 
 type Context = {
   id?: string;
@@ -67,7 +69,7 @@ export const websocketMachine = createMachine(
   },
   {
     services: {
-      openWebsocket: (context) => (callback) => {
+      openWebsocket: (context) => async (callback) => {
         if (!context.id || !context.yDoc) return;
 
         if (!process.env.NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT)
@@ -77,10 +79,19 @@ export const websocketMachine = createMachine(
               "To run the builder the NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT needs to be set to a valid websocket endpoint.",
           });
 
+        const {
+          data: { token },
+        } = await safeFetch(
+          "/api/external-api/auth/getToken",
+          {},
+          { validation: z.object({ token: z.string() }) }
+        );
+
         const websocket = new WebsocketProvider(
           `${process.env.NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT}/v1/builder-sync`,
           context.id,
-          context.yDoc
+          context.yDoc,
+          { params: { auth: token } }
         );
 
         websocket.on("sync", () => context.onSync?.(true));
