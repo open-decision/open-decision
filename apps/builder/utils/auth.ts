@@ -25,18 +25,23 @@ export const deleteCookies = (res: NextApiResponse) => {
 };
 
 export const setCookieHeaders = (
+  req: NextApiRequest,
   res: NextApiResponse,
   loginResponse: TLoginOutput
 ) => {
+  const domain = new URL(req.url ?? "/", req.headers.origin).hostname;
+
   res.setHeader("Set-Cookie", [
     serialize("refreshToken", loginResponse.access.refreshToken.token, {
       ...authCookieConfig,
       maxAge:
         Number(process.env.JWT_REFRESH_EXPIRATION_DAYS ?? 7) * 86400 * 1000,
+      domain,
     }),
     serialize("token", loginResponse.access.token.token, {
       ...authCookieConfig,
       maxAge: Number(process.env.JWT_ACCESS_EXPIRATION_MINUTES ?? 15) * 60,
+      domain,
     }),
   ]);
 };
@@ -62,7 +67,7 @@ export const refreshAuth = async (
 
     if (authData instanceof ODError) throw authResponse;
 
-    setCookieHeaders(res, authData);
+    setCookieHeaders(req, res, authData);
 
     return authData.access.token.token;
   }

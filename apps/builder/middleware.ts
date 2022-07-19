@@ -26,10 +26,12 @@ export const middleware: NextMiddleware = async (request) => {
         ...authCookieConfig,
         maxAge:
           Number(process.env.JWT_REFRESH_EXPIRATION_DAYS ?? 7) * 86400 * 1000,
+        domain: request.nextUrl.hostname,
       });
       response.cookies.set("token", authData.access.token.token, {
         ...authCookieConfig,
         maxAge: Number(process.env.JWT_ACCESS_EXPIRATION_MINUTES ?? 15) * 60,
+        domain: request.nextUrl.hostname,
       });
 
       return response;

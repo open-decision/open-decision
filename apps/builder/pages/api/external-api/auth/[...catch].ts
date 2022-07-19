@@ -16,7 +16,7 @@ const authCatch: NextApiHandler = async (req, res) => {
       { validation: loginOutput }
     );
 
-    setCookieHeaders(res, authResponse.data);
+    setCookieHeaders(req, res, authResponse.data);
 
     res.redirect(303, "/");
   } catch (error) {
