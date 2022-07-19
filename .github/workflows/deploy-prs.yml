@@ -17,6 +17,7 @@ env:
   SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
   SMTP_PORT: ${{ secrets.SMTP_PORT }}
   SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+  PORT: 8080
 
 jobs:
   staging_app:
@@ -37,6 +38,6 @@ jobs:
 
       - name: Deploy
         id: deploy
-        uses: PhilGarb/fly-pr-review-apps@2.0
+        uses: PhilGarb/fly-pr-review-apps@2.3
         with:
           config: apps/api/fly.toml
