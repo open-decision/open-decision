@@ -6,6 +6,17 @@ env:
   FLY_ORG: open-decision
   FLY_REGION: fra
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
+  ADMIN_ACCOUNT_WHITELIST: ${{ secrets.ADMIN_ACCOUNT_WHITELIST }}
+  DEV_ACCOUNT_WHITELIST: ${{ secrets.DEV_ACCOUNT_WHITELIST }}
+  EMAIL_FROM_ADDRESS: ${{ secrets.EMAIL_FROM_ADDRESS }}
+  FEATURE_WHITELIST: ${{ secrets.FEATURE_WHITELIST }}
+  PUBLIC_API_DOCUMENTATION: ${{ secrets.PUBLIC_API_DOCUMENTATION }}
+  REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
+  SMTP_HOST: ${{ secrets.SMTP_HOST }}
+  SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+  SMTP_PORT: ${{ secrets.SMTP_PORT }}
+  SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
 
 jobs:
   staging_app:
@@ -26,6 +37,6 @@ jobs:
 
       - name: Deploy
         id: deploy
-        uses: PhilGarb/fly-pr-review-apps@1.8.1
+        uses: PhilGarb/fly-pr-review-apps@2.0
         with:
           config: apps/api/fly.toml
