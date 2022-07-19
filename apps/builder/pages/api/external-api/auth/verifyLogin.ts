@@ -15,7 +15,7 @@ const verifyLogin: NextApiHandler = async (req, res) => {
       { validation: loginOutput }
     );
 
-    setCookieHeaders(res, authResponse.data);
+    setCookieHeaders(req, res, authResponse.data);
 
     return res.status(200).json({ success: true });
   } catch (error) {

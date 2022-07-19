@@ -9,6 +9,7 @@ import * as net from "net";
 import * as Y from "yjs";
 import prisma from "../init-prisma-client";
 import buffer from "../utils/buffer";
+import { logger } from "../config/logger";
 
 export const wss = new WebSocketServer({
   noServer: true,
@@ -23,13 +24,22 @@ wss.on("connection", (websocket, request) => {
 export const websocketUpgradeHandler = catchAsync(
   async (request: http.IncomingMessage, socket: net.Socket, head: Buffer) => {
     wsAuth(request, async function next(err, client) {
-      if (err || !client) {
-        socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
+      logger.info(`${socket.remoteAddress}:wss ${request.url} upgrade`);
+
+      if (!request.url?.startsWith("/v1/builder-sync/")) {
+        socket.write("HTTP/1.1 404 Not found\r\n\r\n");
+        logger.error(
+          `${socket.remoteAddress}:wss ${request.url} Server only accepts websocket connections to /v1/builder-sync/`
+        );
         socket.destroy();
         return;
       }
-      if (!request.url!.startsWith("/v1/builder-sync/")) {
-        socket.write("HTTP/1.1 404 Not found\r\n\r\n");
+
+      if (err || !client) {
+        socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
+        logger.error(
+          `${socket.remoteAddress}:wss ${request.url} Unauthorized websocket connection`
+        );
         socket.destroy();
         return;
       }
@@ -39,12 +49,16 @@ export const websocketUpgradeHandler = catchAsync(
 
       if (!(await hasPermissionsForTree(client.uuid, treeUuid))) {
         socket.write("HTTP/1.1 403 Forbidden\r\n\r\n");
+        logger.error(
+          `${socket.remoteAddress}:wss ${request.url} User is not authorized to access this tree`
+        );
         socket.destroy();
         return;
       }
 
       wss.handleUpgrade(request, socket, head, function done(ws) {
         wss.emit("connection", ws, request);
+        logger.info(`${socket.remoteAddress}:wss /v1/builder-sync connected`);
       });
     });
   }
