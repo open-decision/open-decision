@@ -38,6 +38,7 @@ export enum APIErrors {
   PASSWORD_TO_WEAK = 400,
   INVALID_EMAIL = 400,
   OFFLINE = 500,
+  EMAIL_NOT_SEND = 500,
 }
 
 export type ErrorCodes =

@@ -1,6 +1,8 @@
 import { z } from "zod";
 
 export const MailserverConfig = z.object({
+  OD_BUILDER_ENDPOINT: z.string(),
+  NODE_ENV: z.enum(["production", "development"]),
   SMTP_HOST: z.string(),
   SMTP_PORT: z.string().transform((str) => parseInt(str, 10)),
   SMTP_USERNAME: z.string(),
@@ -9,3 +11,5 @@ export const MailserverConfig = z.object({
   EMAIL_SENDER_NAME: z.string().optional().default("Open Decision"),
   EMAIL_REPLY_TO_ADDRESS: z.string().email().optional(),
 });
+
+export type TMailServerConfig = z.infer<typeof MailserverConfig>;
