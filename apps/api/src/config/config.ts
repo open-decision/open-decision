@@ -1,14 +1,6 @@
-import dotenv from "dotenv";
-import path from "path";
-import { EnvVars } from "../validations/env.validation";
+import { baseEnvVars } from "../validations/env.validation";
 
-// TODO: properly load env file
-if (process.env.NODE_ENV == "development") {
-  dotenv.config({ path: path.join(__dirname, `../../.env.development`) });
-} else if (process.env.NODE_ENV == "test") {
-  dotenv.config({ path: path.join(__dirname, `../../.env.test`) });
-}
-const validationResult = EnvVars.safeParse(process.env);
+const validationResult = baseEnvVars.safeParse(process.env);
 
 if (!validationResult.success) {
   throw new Error(
