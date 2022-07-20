@@ -1,3 +1,4 @@
+import * as React from "react";
 import { v4 as uuidV4 } from "uuid";
 import { proxy, useSnapshot } from "valtio";
 
@@ -6,7 +7,7 @@ export type notificationVariants = "success" | "danger" | "info" | "warning";
 export type Notification = {
   variant: notificationVariants;
   title: React.ReactNode;
-  content: React.ReactNode;
+  content?: React.ReactNode;
   duration?: number | "persistent";
 };
 

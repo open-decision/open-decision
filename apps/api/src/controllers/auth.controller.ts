@@ -4,7 +4,7 @@ import pickSafeUserProperties from "../utils/pickSafeUserProperties";
 import {
   userService,
   tokenService,
-  emailService,
+  createEmailService,
   authService,
 } from "../services/index";
 import httpStatus from "http-status";
@@ -20,7 +20,10 @@ import {
   TRefreshTokenOutput,
   TLoginOutput,
   TRegisterOutput,
+  TResetPasswordOutput,
 } from "@open-decision/auth-api-specification";
+
+const emailService = createEmailService();
 
 const register = catchAsync(async (req: Request, res: Response) => {
   const reqData = await validateRequest(registerInput)(req);
@@ -34,7 +37,7 @@ const register = catchAsync(async (req: Request, res: Response) => {
 
   if (user) {
     const verifyEmailToken = await tokenService.generateVerifyEmailToken(user);
-    emailService.sendVerificationEmail(user.email, verifyEmailToken);
+    await emailService?.sendVerificationEmail(user.email, verifyEmailToken);
   }
 
   res.status(httpStatus.CREATED).send({
@@ -92,15 +95,30 @@ const forgotPassword = catchAsync(async (req: Request, res: Response) => {
   const resetPasswordToken = await tokenService.generateResetPasswordToken(
     reqData.body.email
   );
-  emailService.sendResetPasswordEmail(res.locals.email, resetPasswordToken);
+
+  await emailService?.sendResetPasswordEmail(
+    reqData.body.email,
+    resetPasswordToken
+  );
+
   res.status(httpStatus.NO_CONTENT).send();
 });
 
 const resetPassword = catchAsync(async (req: Request, res: Response) => {
   const reqData = await validateRequest(resetPasswordInput)(req);
 
-  await authService.resetPassword(reqData.body.token, reqData.body.password);
-  res.status(httpStatus.NO_CONTENT).send();
+  const user = await authService.resetPassword(
+    reqData.body.token,
+    reqData.body.password
+  );
+  const { refresh, access } = await tokenService.generateAuthTokens(user);
+  res.send({
+    user: pickSafeUserProperties(user),
+    access: {
+      token: access,
+      refreshToken: refresh,
+    },
+  } as TResetPasswordOutput);
 });
 
 const sendVerificationEmail = catchAsync(
@@ -108,7 +126,7 @@ const sendVerificationEmail = catchAsync(
     const verifyEmailToken = await tokenService.generateVerifyEmailToken(
       req.user
     );
-    emailService.sendVerificationEmail(req.user.email, verifyEmailToken);
+    await emailService?.sendVerificationEmail(req.user.email, verifyEmailToken);
     res.status(httpStatus.NO_CONTENT).send();
   }
 );

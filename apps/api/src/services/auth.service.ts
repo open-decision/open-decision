@@ -92,6 +92,7 @@ const resetPassword = async (
       TokenType.RESET_PASSWORD
     );
 
+    return user;
     //TODO: add acccessToken to blocklist
   } catch (error) {
     throw new APIError({

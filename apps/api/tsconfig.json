@@ -4,7 +4,8 @@
     "module": "commonjs",
     "esModuleInterop": true,
     "noImplicitAny": false,
-    "types": ["jest", "node"]
+    "types": ["jest", "node"],
+    "useUnknownInCatchVariables": true
   },
   "files": ["src/types/express.d.ts"],
   "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "next-env.d.ts"],
