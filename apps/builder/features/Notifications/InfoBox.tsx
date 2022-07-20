@@ -73,7 +73,13 @@ export function InfoBox({
         </Icon>
         <Stack css={{ gap: "$1", flex: 1 }}>
           <Heading size="extra-small">{title}</Heading>
-          {typeof content === "string" ? <Text>{content}</Text> : content}
+          {content ? (
+            typeof content === "string" ? (
+              <Text>{content}</Text>
+            ) : (
+              content
+            )
+          ) : null}
         </Stack>
         {CloseButton}
       </Stack>

@@ -5,6 +5,9 @@ import { globalStyles, Tooltip } from "@open-decision/design-system";
 import { queryClient } from "../features/Data/queryClient";
 import { QueryClientProvider } from "react-query";
 import { NextPage } from "next";
+import { useRouter } from "next/router";
+import { useNotificationStore } from "../features/Notifications/NotificationState";
+import { notificationTemplates } from "../features/Notifications/NotificationTemplates";
 
 // if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
 //   inspect({
@@ -25,6 +28,17 @@ export default function App({
 }: AppPropsWithLayout): JSX.Element {
   globalStyles();
   const getLayout = Component.getLayout || ((page) => page);
+
+  const {
+    query: { notify },
+  } = useRouter();
+  const { addNotification } = useNotificationStore();
+
+  React.useEffect(() => {
+    if (notify && typeof notify === "string") {
+      addNotification(notificationTemplates[notify]);
+    }
+  }, [notify, addNotification]);
 
   return (
     <QueryClientProvider client={queryClient}>
