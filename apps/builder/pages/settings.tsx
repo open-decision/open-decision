@@ -18,6 +18,7 @@ import { ChangePassword } from "../features/Settings/ChangePassword";
 import { DeleteAccount } from "../features/Settings/DeleteAccount";
 import { GetServerSidePropsContext } from "next";
 import { client } from "@open-decision/api-client";
+import Head from "next/head";
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
@@ -58,6 +59,9 @@ type PageProps = { user: TGetUserOutput };
 export default function SettingsPage({ user }: PageProps) {
   return (
     <>
+      <Head>
+        <title>Open Decision Settings</title>
+      </Head>
       <BaseHeader css={{ gridColumn: "1 / -1" }} />
       <Heading
         size="large"

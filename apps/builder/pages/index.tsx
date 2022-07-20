@@ -6,6 +6,7 @@ import * as React from "react";
 import { ErrorCard } from "../components/Error/ErrorCard";
 import { getDashboardLayout } from "../features/Dashboard/DashboardLayout";
 import dynamic from "next/dynamic";
+import Head from "next/head";
 
 const TreeList = dynamic(() => import("../features/Dashboard/TreeList"), {
   ssr: false,
@@ -14,6 +15,9 @@ const TreeList = dynamic(() => import("../features/Dashboard/TreeList"), {
 export default function DashboardPage() {
   return (
     <>
+      <Head>
+        <title>Open Decision Dashboard</title>
+      </Head>
       <BaseHeader css={{ gridColumn: "1 / -1" }} />
       <ErrorBoundary
         fallback={
