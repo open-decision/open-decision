@@ -1,15 +1,27 @@
 import { Form, ErrorMessage } from "@open-decision/design-system";
+import { useRouter } from "next/router";
 import * as React from "react";
+import { useNotificationStore } from "../../../Notifications/NotificationState";
 import { useResetPasswordMutation } from "../../mutations/useResetPasswordMutation";
 
 type Props = { token: string };
 
 export function ResetPasswordForm({ token }: Props) {
+  const { addNotification } = useNotificationStore();
+  const router = useRouter();
   const {
     mutate: resetPassword,
     error,
     isLoading,
-  } = useResetPasswordMutation();
+  } = useResetPasswordMutation({
+    onSuccess: () => {
+      router.push("/");
+      addNotification({
+        title: "Erfolgreich Passwort geändert",
+        variant: "success",
+      });
+    },
+  });
   const formState = Form.useFormState({
     defaultValues: {
       newPassword: "",
