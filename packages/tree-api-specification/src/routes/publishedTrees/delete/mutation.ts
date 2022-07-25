@@ -1,10 +1,10 @@
-import { TContext, Delete, safeFetch } from "@open-decision/api-helpers";
+import { TContext, safeFetch, QueryConfig } from "@open-decision/api-helpers";
 import { publishedTreesSingle } from "../../../urls";
 import { TDeletePublishedTreeInput } from "./input";
 
 export const deletePublishedTree =
-  (context: TContext): Delete<TDeletePublishedTreeInput> =>
-  async (inputs, config) => {
+  (context: TContext) =>
+  async (inputs: TDeletePublishedTreeInput, config?: QueryConfig) => {
     let combinedUrl = publishedTreesSingle(inputs.params.uuid);
     const prefix = config?.urlPrefix ?? context.urlPrefix;
 

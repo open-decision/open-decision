@@ -1,10 +1,10 @@
-import { TContext, safeFetch, Post } from "@open-decision/api-helpers";
+import { TContext, safeFetch, QueryConfig } from "@open-decision/api-helpers";
 import { userRoot } from "../../../urls";
 import { TUpdateUserInput } from "./input";
 
 export const updateUser =
-  (context: TContext): Post<TUpdateUserInput, void> =>
-  async (inputs, config) => {
+  (context: TContext) =>
+  async (inputs: TUpdateUserInput, config?: QueryConfig) => {
     let combinedUrl = userRoot;
     const prefix = config?.urlPrefix ?? context.urlPrefix;
 

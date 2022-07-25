@@ -1,10 +1,10 @@
-import { TContext, Patch, safeFetch } from "@open-decision/api-helpers";
+import { TContext, safeFetch, QueryConfig } from "@open-decision/api-helpers";
 import { treesSingle } from "../../../../urls";
 import { TUpdateTreeInput } from "./input";
 
 export const updateTree =
-  (context: TContext): Patch<TUpdateTreeInput> =>
-  async (inputs, config) => {
+  (context: TContext) =>
+  async (inputs: TUpdateTreeInput, config?: QueryConfig) => {
     let combinedUrl = treesSingle(inputs.params.uuid);
     const prefix = config?.urlPrefix ?? context.urlPrefix;
 

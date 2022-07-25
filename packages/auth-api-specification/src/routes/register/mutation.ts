@@ -1,16 +1,16 @@
 import {
   TContext,
-  Post,
   prefixUrl,
   safeFetch,
+  QueryConfig,
 } from "@open-decision/api-helpers";
 import { registerUrl } from "../../urls";
 import { TRegisterInput } from "./input";
-import { registerOutput, TRegisterOutput } from "./output";
+import { registerOutput } from "./output";
 
 export const register =
-  (context: TContext): Post<TRegisterInput, TRegisterOutput> =>
-  async (inputs, config) => {
+  (context: TContext) =>
+  async (inputs: TRegisterInput, config?: QueryConfig) => {
     const combinedUrl = prefixUrl(
       registerUrl,
       config?.urlPrefix ?? context.urlPrefix

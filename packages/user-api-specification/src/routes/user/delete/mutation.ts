@@ -1,10 +1,9 @@
-import { TContext, Delete, safeFetch } from "@open-decision/api-helpers";
+import { TContext, safeFetch, QueryConfig } from "@open-decision/api-helpers";
 import { userRoot } from "../../../urls";
 import { TDeleteUserInput } from "./input";
 
 export const deleteUser =
-  (context: TContext): Delete<TDeleteUserInput> =>
-  async (_, config) => {
+  (context: TContext) => async (_?: TDeleteUserInput, config?: QueryConfig) => {
     let combinedUrl = userRoot;
     const prefix = config?.urlPrefix ?? context.urlPrefix;
 

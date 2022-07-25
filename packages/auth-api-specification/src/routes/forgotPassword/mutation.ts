@@ -1,16 +1,16 @@
 import {
   TContext,
-  Post,
   prefixUrl,
   safeFetch,
+  QueryConfig,
 } from "@open-decision/api-helpers";
 import { forgotPasswordUrl } from "../../urls";
 import { TForgotPasswordInput } from "./input";
-import { forgotPasswordOutput, TForgotPasswordOutput } from "./output";
+import { forgotPasswordOutput } from "./output";
 
 export const forgotPassword =
-  (context: TContext): Post<TForgotPasswordInput, TForgotPasswordOutput> =>
-  async (inputs, config) => {
+  (context: TContext) =>
+  async (inputs: TForgotPasswordInput, config?: QueryConfig) => {
     const combinedUrl = prefixUrl(
       forgotPasswordUrl,
       config?.urlPrefix ?? context.urlPrefix

@@ -5,7 +5,7 @@ type Config<TValidation extends z.ZodTypeAny> = {
   validation?: TValidation;
 };
 
-export const safeFetch = async <TValidation extends z.ZodTypeAny>(
+export async function safeFetch<TValidation extends z.ZodTypeAny>(
   url: string,
   {
     body,
@@ -13,7 +13,7 @@ export const safeFetch = async <TValidation extends z.ZodTypeAny>(
     ...options
   }: Omit<RequestInit, "body"> & { body?: Record<string, any> },
   { validation }: Config<TValidation> = {}
-): Promise<{ data: z.output<TValidation>; response: Response }> => {
+): Promise<{ data: z.output<TValidation>; status: number }> {
   let response;
 
   try {
@@ -36,16 +36,17 @@ export const safeFetch = async <TValidation extends z.ZodTypeAny>(
   try {
     let data;
     const contentType = response.headers.get("content-type");
-    if (contentType?.includes("application/json") && response.status !== 204)
+    if (contentType?.includes("application/json") && response.status !== 204) {
       data = await response.json();
+    }
 
     if (response.status >= 400) {
       throw data;
     }
 
-    const parsedData = validation ? validation.parse(data) : data;
+    const parsedData = validation?.parse(data) ?? data;
 
-    return { data: parsedData, response };
+    return { data: parsedData, status: response.status };
   } catch (error) {
     console.log(error);
     if (isAPIError(error)) throw error;
@@ -55,4 +56,6 @@ export const safeFetch = async <TValidation extends z.ZodTypeAny>(
       message: "Something unexpected happened when fetching from the API.",
     });
   }
-};
+}
+
+export type FetchReturn<TData> = { data: TData; response: Response };

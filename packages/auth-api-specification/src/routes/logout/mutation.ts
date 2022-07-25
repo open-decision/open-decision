@@ -1,16 +1,15 @@
 import {
   TContext,
-  Post,
   prefixUrl,
   safeFetch,
+  QueryConfig,
 } from "@open-decision/api-helpers";
 import { logoutUrl } from "../../urls";
 import { TLogoutInput } from "./input";
-import { logoutOutput, TLogoutOutput } from "./output";
+import { logoutOutput } from "./output";
 
 export const logout =
-  (context: TContext): Post<TLogoutInput, TLogoutOutput> =>
-  async (_, config) => {
+  (context: TContext) => async (_?: TLogoutInput, config?: QueryConfig) => {
     const combinedUrl = prefixUrl(
       logoutUrl,
       config?.urlPrefix ?? context.urlPrefix
