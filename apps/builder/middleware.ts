@@ -17,21 +17,20 @@ export const middleware: NextMiddleware = async (request) => {
     }
 
     if (refreshToken) {
-      const { data: authData, response: authResponse } =
-        await OD.auth.refreshToken({ body: { refreshToken } });
+      const { data } = await OD.auth.refreshToken({ body: { refreshToken } });
 
-      if (authData instanceof ODError) throw authResponse;
+      if (data instanceof ODError) throw data;
 
-      response.cookies.set("refreshToken", authData.access.refreshToken.token, {
+      response.cookies.set("refreshToken", data.access.refreshToken.token, {
         ...authCookieConfig,
         maxAge:
           Number(process.env.JWT_REFRESH_EXPIRATION_DAYS ?? 7) * 86400 * 1000,
-        domain: request.nextUrl.hostname,
+        domain: process.env.DOMAIN,
       });
-      response.cookies.set("token", authData.access.token.token, {
+      response.cookies.set("token", data.access.token.token, {
         ...authCookieConfig,
         maxAge: Number(process.env.JWT_ACCESS_EXPIRATION_MINUTES ?? 15) * 60,
-        domain: request.nextUrl.hostname,
+        domain: process.env.DOMAIN,
       });
 
       return response;
