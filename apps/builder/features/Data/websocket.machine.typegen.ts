@@ -4,10 +4,20 @@ export interface Typegen0 {
   "@@xstate/typegen": true;
   eventsCausingActions: {
     assignDataToContext: "OPEN";
-    incrementRetries: "RETRY";
+    assignTokenToContext: "done.invoke.authenticate";
+    incrementRetries: "connection.error";
   };
   internalEvents: {
+    "done.invoke.authenticate": {
+      type: "done.invoke.authenticate";
+      data: unknown;
+      __tip: "See the XState TS docs to learn how to strongly type this.";
+    };
     "xstate.init": { type: "xstate.init" };
+    "error.platform.authenticate": {
+      type: "error.platform.authenticate";
+      data: unknown;
+    };
     "done.invoke.openWebsocketConnection": {
       type: "done.invoke.openWebsocketConnection";
       data: unknown;
@@ -19,6 +29,7 @@ export interface Typegen0 {
     };
   };
   invokeSrcNameMap: {
+    authenticate: "done.invoke.authenticate";
     openWebsocket: "done.invoke.openWebsocketConnection";
   };
   missingImplementations: {
@@ -28,12 +39,13 @@ export interface Typegen0 {
     delays: never;
   };
   eventsCausingServices: {
-    openWebsocket: "OPEN" | "RETRY";
+    authenticate: "OPEN";
+    openWebsocket: "done.invoke.authenticate" | "connection.error";
   };
   eventsCausingGuards: {
-    underRetryLimit: "RETRY";
+    underRetryLimit: "connection.error";
   };
   eventsCausingDelays: {};
-  matchesStates: "unconnected" | "connected" | "closed" | "error";
+  matchesStates: "unconnected" | "authenticating" | "connected" | "error";
   tags: never;
 }

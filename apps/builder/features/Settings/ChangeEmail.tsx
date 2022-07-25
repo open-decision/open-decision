@@ -1,13 +1,15 @@
 import * as React from "react";
 import { Heading, Form } from "@open-decision/design-system";
 import { Card } from "../../components/Card";
-import { useUserUpdateMutation } from "../Auth/settings.queries";
 import { VerifiedSettingsChange } from "./VerifiedSettingsChange";
 import { TGetUserOutput } from "@open-decision/user-api-specification";
+import { useNotificationStore } from "../Notifications/NotificationState";
+import { useUser } from "../Auth/useUserQuery";
 
 type Props = { user: TGetUserOutput };
 
 export function ChangeEmail({ user }: Props) {
+  const { addNotification } = useNotificationStore();
   const formState = Form.useFormState({
     defaultValues: {
       newEmail: "",
@@ -18,9 +20,16 @@ export function ChangeEmail({ user }: Props) {
     setOpen(true);
   });
 
-  const { mutate, isLoading } = useUserUpdateMutation({
+  const { mutate, isLoading } = useUser().useUserUpdateMutation({
     onError: (error) => {
       formState.setErrors({ newEmail: error.message });
+    },
+    onSuccess: () => {
+      addNotification({
+        title: "E-Mail Adresse erfolgreich geändert",
+        variant: "success",
+      });
+      formState.reset();
     },
   });
 

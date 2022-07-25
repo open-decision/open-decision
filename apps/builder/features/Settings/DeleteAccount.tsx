@@ -1,14 +1,14 @@
 import * as React from "react";
 import { Heading, SubmitButton } from "@open-decision/design-system";
 import { Card } from "../../components/Card";
-import { useDeleteUserMutation } from "../Auth/settings.queries";
 import { VerifiedSettingsChange } from "./VerifiedSettingsChange";
 import { TGetUserOutput } from "@open-decision/user-api-specification";
+import { useUser } from "../Auth/useUserQuery";
 
 type Props = { user: TGetUserOutput };
 
 export function DeleteAccount({ user }: Props) {
-  const { mutate, isLoading } = useDeleteUserMutation();
+  const { mutate, isLoading } = useUser().useDeleteUserMutation();
 
   const [open, setOpen] = React.useState(false);
 

@@ -1,11 +1,4 @@
 export * from "./fetch";
-export type {
-  Get,
-  Post,
-  Delete,
-  Patch,
-  TContext,
-  TJWT,
-} from "./fetchClientFunctionHelpers";
+export type { TContext, TJWT, QueryConfig } from "./fetchClientFunctionHelpers";
 export { prefixUrl } from "./prefixUrl";
 export { AuthHeader } from "./fetchClientFunctionHelpers";

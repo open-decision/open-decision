@@ -1,16 +1,16 @@
 import {
   TContext,
-  Post,
   prefixUrl,
   safeFetch,
+  QueryConfig,
 } from "@open-decision/api-helpers";
 import { refreshTokenUrl } from "../../urls";
 import { TRefreshTokenInput } from "./input";
-import { refreshTokenOutput, TRefreshTokenOutput } from "./output";
+import { refreshTokenOutput } from "./output";
 
 export const refreshToken =
-  (context: TContext): Post<TRefreshTokenInput, TRefreshTokenOutput> =>
-  async (inputs, config) => {
+  (context: TContext) =>
+  async (inputs: TRefreshTokenInput, config?: QueryConfig) => {
     const combinedUrl = prefixUrl(
       refreshTokenUrl,
       config?.urlPrefix ?? context.urlPrefix
@@ -22,6 +22,8 @@ export const refreshToken =
         body: inputs.body,
         method: "POST",
       },
-      { validation: refreshTokenOutput.passthrough() }
+      {
+        validation: refreshTokenOutput.passthrough(),
+      }
     );
   };

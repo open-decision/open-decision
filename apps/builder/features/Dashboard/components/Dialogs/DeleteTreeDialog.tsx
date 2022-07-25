@@ -6,11 +6,8 @@ import {
   styled,
   StyleObject,
 } from "@open-decision/design-system";
-import { queryClient } from "../../../../features/Data/queryClient";
 import * as React from "react";
-import { proxiedOD } from "../../../../features/Data/odClient";
-import { useMutation } from "react-query";
-import { useTreesQueryKey } from "../../../Data/useTreesQuery";
+import { useTreeAPI } from "../../../Data/useTreeAPI";
 
 const Bold = styled("span", { color: "$gray12" });
 
@@ -40,7 +37,7 @@ export function DeleteTreeDialog({
   });
 
   formState.useSubmit(() => {
-    deleteTree();
+    deleteTree({ params: { uuid: tree.uuid } });
   });
 
   formState.useValidate(() => {
@@ -51,16 +48,12 @@ export function DeleteTreeDialog({
       );
   });
 
-  const { mutate: deleteTree, isLoading } = useMutation(
-    () => proxiedOD.trees.delete({ params: { uuid: tree.uuid } }),
-    {
-      onSuccess: () => {
-        setOpen?.(false);
-        queryClient.invalidateQueries(useTreesQueryKey);
-        onDelete?.();
-      },
-    }
-  );
+  const { mutate: deleteTree, isLoading } = useTreeAPI().useDelete({
+    onSuccess: () => {
+      setOpen?.(false);
+      onDelete?.();
+    },
+  });
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>

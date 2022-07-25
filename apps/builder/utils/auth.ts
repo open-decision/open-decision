@@ -29,19 +29,17 @@ export const setCookieHeaders = (
   res: NextApiResponse,
   loginResponse: TLoginOutput
 ) => {
-  const domain = new URL(req.url ?? "/", req.headers.origin).hostname;
-
   res.setHeader("Set-Cookie", [
     serialize("refreshToken", loginResponse.access.refreshToken.token, {
       ...authCookieConfig,
       maxAge:
         Number(process.env.JWT_REFRESH_EXPIRATION_DAYS ?? 7) * 86400 * 1000,
-      domain,
+      domain: process.env.DOMAIN,
     }),
     serialize("token", loginResponse.access.token.token, {
       ...authCookieConfig,
       maxAge: Number(process.env.JWT_ACCESS_EXPIRATION_MINUTES ?? 15) * 60,
-      domain,
+      domain: process.env.DOMAIN,
     }),
   ]);
 };
@@ -62,10 +60,11 @@ export const refreshAuth = async (
 
   // When there is a valid refreshToken we can use it to refresh the token
   if (refreshToken) {
-    const { data: authData, response: authResponse } =
-      await OD.auth.refreshToken({ body: { refreshToken } });
+    const { data: authData } = await OD.auth.refreshToken({
+      body: { refreshToken },
+    });
 
-    if (authData instanceof ODError) throw authResponse;
+    if (authData instanceof ODError) throw authData;
 
     setCookieHeaders(req, res, authData);
 

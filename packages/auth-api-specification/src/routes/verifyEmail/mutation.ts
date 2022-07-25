@@ -1,16 +1,16 @@
 import {
   TContext,
-  Post,
   prefixUrl,
   safeFetch,
+  QueryConfig,
 } from "@open-decision/api-helpers";
 import { verifyEmailUrl } from "../../urls";
 import { TVerifyEmailInput } from "./input";
-import { verifyEmailOutput, TVerifyEmailOutput } from "./output";
+import { verifyEmailOutput } from "./output";
 
 export const verifyEmail =
-  (context: TContext): Post<TVerifyEmailInput, TVerifyEmailOutput> =>
-  async (inputs, config) => {
+  (context: TContext) =>
+  async (inputs: TVerifyEmailInput, config?: QueryConfig) => {
     const combinedUrl = prefixUrl(
       verifyEmailUrl,
       config?.urlPrefix ?? context.urlPrefix

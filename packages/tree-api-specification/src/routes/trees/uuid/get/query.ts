@@ -1,11 +1,11 @@
-import { TContext, Get, safeFetch } from "@open-decision/api-helpers";
+import { TContext, safeFetch, QueryConfig } from "@open-decision/api-helpers";
 import { treesSingle } from "../../../../urls";
 import { TGetTreeInput } from "./input";
-import { TGetTreeOutput, getTreeOutput } from "./output";
+import { getTreeOutput } from "./output";
 
 export const getTree =
-  (context: TContext): Get<TGetTreeInput, TGetTreeOutput> =>
-  async (inputs, config) => {
+  (context: TContext) =>
+  async (inputs: TGetTreeInput, config?: QueryConfig) => {
     let combinedUrl = treesSingle(inputs.params.uuid);
     const prefix = config?.urlPrefix ?? context.urlPrefix;
 

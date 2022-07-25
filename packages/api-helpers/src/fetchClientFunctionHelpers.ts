@@ -25,20 +25,8 @@ export const Context = z.object({
   requestOrigin: z.string().optional(),
 });
 
-export type TContext = z.infer<typeof Context> & { headers?: HeadersInit };
+export type TContext = z.infer<typeof Context> & {
+  headers?: HeadersInit;
+};
 
 export type QueryConfig = TContext;
-
-export type Get<TInput, TOutput> = (
-  inputs: TInput,
-  config?: QueryConfig
-) => Promise<{ data: TOutput; response: Response }>;
-
-export type Post<TInput, TOutput> = Get<TInput, TOutput>;
-
-export type Patch<TInput> = (
-  inputs: Omit<TInput, keyof TContext>,
-  config?: QueryConfig
-) => Promise<{ response: Response; data: undefined }>;
-
-export type Delete<TInput> = Patch<TInput>;

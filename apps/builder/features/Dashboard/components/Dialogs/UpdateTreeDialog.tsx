@@ -4,12 +4,8 @@ import {
   DialogTriggerProps,
   StyleObject,
 } from "@open-decision/design-system";
-import { queryClient } from "../../../../features/Data/queryClient";
 import * as React from "react";
-import { useMutation } from "react-query";
-import { proxiedOD } from "../../../../features/Data/odClient";
-import { useTreeQueryKey } from "../../../Data/useTreeQuery";
-import { useTreesQueryKey } from "../../../Data/useTreesQuery";
+import { useTreeAPI } from "../../../Data/useTreeAPI";
 
 type Props = {
   treeId: string;
@@ -33,23 +29,17 @@ export function UpdateTreeDialog({
   const formState = Form.useFormState({ defaultValues: { treeName: "" } });
 
   formState.useSubmit(() => {
-    updateTree();
+    updateTree({
+      body: { name: formState.values.treeName },
+      params: { uuid: treeId },
+    });
   });
 
-  const { mutate: updateTree, isLoading } = useMutation(
-    () =>
-      proxiedOD.trees.update({
-        body: { name: formState.values.treeName },
-        params: { uuid: treeId },
-      }),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(useTreeQueryKey);
-        queryClient.invalidateQueries(useTreesQueryKey);
-        setOpen?.(false);
-      },
-    }
-  );
+  const { mutate: updateTree, isLoading } = useTreeAPI().useUpdate({
+    onSuccess: () => {
+      setOpen?.(false);
+    },
+  });
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>

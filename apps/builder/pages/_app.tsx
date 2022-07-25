@@ -2,18 +2,21 @@ import * as React from "react";
 import type { AppProps } from "next/app";
 import "../design/index.css";
 import { globalStyles, Tooltip } from "@open-decision/design-system";
-import { queryClient } from "../features/Data/queryClient";
-import { QueryClientProvider } from "react-query";
+import { Hydrate, QueryClientProvider } from "@tanstack/react-query";
 import { NextPage } from "next";
-import { useRouter } from "next/router";
-import { useNotificationStore } from "../features/Notifications/NotificationState";
-import { notificationTemplates } from "../features/Notifications/NotificationTemplates";
+import { useUrlNotification } from "../features/Notifications/useUrlNotification";
+import { useQueryClient } from "../features/Data/useQueryClient";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
+// ------------------------------------------------------------------
+// xstate devtools
+// import { inspect } from "@xstate/inspect";
 // if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
 //   inspect({
 //     iframe: false,
 //   });
 // }
+// ------------------------------------------------------------------
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: React.ReactElement) => React.ReactNode;
@@ -29,22 +32,17 @@ export default function App({
   globalStyles();
   const getLayout = Component.getLayout || ((page) => page);
 
-  const {
-    query: { notify },
-  } = useRouter();
-  const { addNotification } = useNotificationStore();
-
-  React.useEffect(() => {
-    if (notify && typeof notify === "string") {
-      addNotification(notificationTemplates[notify]);
-    }
-  }, [notify, addNotification]);
+  useUrlNotification();
+  const queryClient = useQueryClient();
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Tooltip.Provider delayDuration={50}>
-        {getLayout(<Component {...pageProps} />)}
-      </Tooltip.Provider>
+      <Hydrate state={pageProps.dehydratedState}>
+        <Tooltip.Provider delayDuration={50}>
+          {getLayout(<Component {...pageProps} />)}
+        </Tooltip.Provider>
+        <ReactQueryDevtools />
+      </Hydrate>
     </QueryClientProvider>
   );
 }

@@ -1,16 +1,15 @@
 import {
   TContext,
-  Post,
   prefixUrl,
   safeFetch,
+  QueryConfig,
 } from "@open-decision/api-helpers";
 import { loginUrl } from "../../urls";
 import { TLoginInput } from "./input";
-import { loginOutput, TLoginOutput } from "./output";
+import { loginOutput } from "./output";
 
 export const login =
-  (context: TContext): Post<TLoginInput, TLoginOutput> =>
-  async (inputs, config) => {
+  (context: TContext) => async (inputs: TLoginInput, config?: QueryConfig) => {
     const combinedUrl = prefixUrl(
       loginUrl,
       config?.urlPrefix ?? context.urlPrefix ?? ""
