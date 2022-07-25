@@ -29,16 +29,7 @@ export default function App({
   globalStyles();
   const getLayout = Component.getLayout || ((page) => page);
 
-  const {
-    query: { notify },
-  } = useRouter();
-  const { addNotification } = useNotificationStore();
-
-  React.useEffect(() => {
-    if (notify && typeof notify === "string") {
-      addNotification(notificationTemplates[notify]);
-    }
-  }, [notify, addNotification]);
+  useUrlNotification();
 
   return (
     <QueryClientProvider client={queryClient}>
