@@ -20,11 +20,18 @@ export function useQueryClient() {
               return !query.state.data;
             },
             onError(error) {
+              if (!isAPIError(error)) {
+                return addNotification({
+                  title: "Unbekannter Error",
+                  content: "Ein unbekannter Error ist aufgetreten",
+                  variant: "danger",
+                });
+              }
               // If we get an unauthenticated API error we want to show a notification and
               // redirect the user to the login page.
-              if (isAPIError(error) && error.code === "UNAUTHENTICATED") {
+              if (error.code === "UNAUTHENTICATED") {
                 router.push("/auth/login");
-                addNotification({
+                return addNotification({
                   title: "Du bist nicht angemeldet",
                   content: "Bitte melde dich an, um fortzufahren.",
                   variant: "danger",
@@ -32,7 +39,24 @@ export function useQueryClient() {
               }
             },
           },
-          mutations: {},
+          mutations: {
+            onError(error) {
+              if (!isAPIError(error)) {
+                return addNotification({
+                  title: "Unbekannter Error",
+                  content:
+                    "Ein unbekannter Error ist aufgetreten. Bitte lade die Seite neu.",
+                  variant: "danger",
+                });
+              }
+
+              return addNotification({
+                title: error.code,
+                content: error.message,
+                variant: "danger",
+              });
+            },
+          },
         },
       }),
     [addNotification, router]
