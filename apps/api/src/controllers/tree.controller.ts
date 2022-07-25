@@ -9,8 +9,11 @@ import {
   getPublishedTreeInput,
   getTreeInput,
   getTreesInput,
+  TCreatePublishedTreeOutput,
+  TCreateTreeOutput,
   TGetPublishedTreesOfTreeOutput,
   TGetTreeOutput,
+  TGetTreesOutput,
   updateTreeInput,
 } from "@open-decision/tree-api-specification";
 import prisma from "../init-prisma-client";
@@ -49,7 +52,7 @@ const getDecisionTrees = catchAsync(async (req: Request, res: Response) => {
       code: "NOT_FOUND",
     });
 
-  res.send(trees);
+  res.send(trees as Omit<TGetTreesOutput, "createdAt" | "updatedAt">);
 });
 
 const getDecisionTree = catchAsync(async (req: Request, res: Response) => {
@@ -71,7 +74,7 @@ const getDecisionTree = catchAsync(async (req: Request, res: Response) => {
       code: "NOT_FOUND",
     });
 
-  res.send(tree);
+  res.send(tree as Omit<TGetTreeOutput, "createdAt" | "updatedAt">);
 });
 
 const createDecisionTree = catchAsync(async (req: Request, res: Response) => {
@@ -85,7 +88,9 @@ const createDecisionTree = catchAsync(async (req: Request, res: Response) => {
     select: prismaSelectionForTree,
   });
 
-  res.status(httpStatus.CREATED).send(tree);
+  res
+    .status(httpStatus.CREATED)
+    .send(tree as Omit<TCreateTreeOutput, "createdAt" | "updatedAt">);
 });
 
 const deleteDecisionTree = catchAsync(async (req: Request, res: Response) => {
@@ -132,19 +137,19 @@ const getPublishedTrees = catchAsync(async (req: Request, res: Response) => {
     "createdAt" | "updatedAt"
   >;
 
-  const publishedTree: PrismaReturn[] = await prisma.publishedTree.findMany({
+  const publishedTrees: PrismaReturn[] = await prisma.publishedTree.findMany({
     where: {
       originTreeUuid: reqData.params.uuid,
     },
   });
 
-  if (!publishedTree)
+  if (!publishedTrees)
     throw new APIError({
-      message: "Published tree not found.",
+      message: "Published trees not found.",
       code: "NOT_FOUND",
     });
 
-  res.send(publishedTree);
+  res.send(publishedTrees as TGetPublishedTreesOfTreeOutput);
 });
 
 const createPublishedTree = catchAsync(async (req: Request, res: Response) => {
@@ -157,7 +162,9 @@ const createPublishedTree = catchAsync(async (req: Request, res: Response) => {
 
   if (publishedTree instanceof Error) throw publishedTree;
 
-  res.status(httpStatus.CREATED).send(publishedTree);
+  res
+    .status(httpStatus.CREATED)
+    .send(publishedTree as Omit<TCreatePublishedTreeOutput, "createdAt">);
 });
 
 export const treeController = {

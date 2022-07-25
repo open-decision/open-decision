@@ -58,4 +58,4 @@ export async function safeFetch<TValidation extends z.ZodTypeAny>(
   }
 }
 
-export type FetchReturn<TData> = { data: TData; response: Response };
+export type FetchReturn<TData> = { data: TData; status: number };
