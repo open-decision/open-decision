@@ -7,9 +7,7 @@ import {
   StyleObject,
 } from "@open-decision/design-system";
 import * as React from "react";
-import { proxiedOD } from "../../../../features/Data/odClient";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { treesQueryKey } from "../../../Data/useTreesQuery";
+import { useTreeAPI } from "../../../Data/useTreeAPI";
 
 const Bold = styled("span", { color: "$gray12" });
 
@@ -34,13 +32,12 @@ export function DeleteTreeDialog({
   css,
   onDelete,
 }: Props) {
-  const queryClient = useQueryClient();
   const formState = Form.useFormState({
     defaultValues: { treeName: "" },
   });
 
   formState.useSubmit(() => {
-    deleteTree();
+    deleteTree({ params: { uuid: tree.uuid } });
   });
 
   formState.useValidate(() => {
@@ -51,17 +48,12 @@ export function DeleteTreeDialog({
       );
   });
 
-  const { mutate: deleteTree, isLoading } = useMutation(
-    ["deleteTree"],
-    () => proxiedOD.trees.delete({ params: { uuid: tree.uuid } }),
-    {
-      onSuccess: () => {
-        setOpen?.(false);
-        queryClient.invalidateQueries(treesQueryKey);
-        onDelete?.();
-      },
-    }
-  );
+  const { mutate: deleteTree, isLoading } = useTreeAPI().useDelete({
+    onSuccess: () => {
+      setOpen?.(false);
+      onDelete?.();
+    },
+  });
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>

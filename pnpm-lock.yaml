@@ -241,7 +241,7 @@ importers:
       '@radix-ui/react-icons': ^1.1.1
       '@sentry/nextjs': ^7.5.0
       '@sentry/tracing': ^7.5.0
-      '@tanstack/react-query': ^4.0.5
+      '@tanstack/react-query': ^4.0.10
       '@tanstack/react-query-devtools': ^4.0.10
       '@types/cookies': ^0.7.7
       '@types/ramda': ^0.28.14
@@ -281,7 +281,7 @@ importers:
       '@radix-ui/react-icons': 1.1.1_react@18.2.0
       '@sentry/nextjs': 7.7.0_next@12.2.2+react@18.2.0
       '@sentry/tracing': 7.7.0
-      '@tanstack/react-query': 4.0.5_biqbaboplfbrettd7655fr4n2y
+      '@tanstack/react-query': 4.0.10_biqbaboplfbrettd7655fr4n2y
       '@tanstack/react-query-devtools': 4.0.10_react@18.2.0
       '@xstate/react': 3.0.0_ad54ufqkthlhcdffkpeqdmqmtm
       cookie: 0.5.0
@@ -5237,8 +5237,8 @@ packages:
       - react
     dev: false
 
-  /@tanstack/react-query/4.0.5_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-tIggVlhoFevVpY/LkZroPmrERFHN8tw4aZLtgwSArzHmMJ03WQcaNvbbHy6GERidXtaMdUz+IeQryrE7cO7WPQ==}
+  /@tanstack/react-query/4.0.10_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-Wn5QhZUE5wvr6rGClV7KeQIUsdTmYR9mgmMZen7DSRWauHW2UTynFg3Kkf6pw+XlxxOLsyLWwz/Q6q1lSpM3TQ==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0

@@ -18,16 +18,16 @@ import { UpdateTreeDialog } from "../../../features/Dashboard/components/Dialogs
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { ExportDialog } from "./ExportDialog";
-import { useTreeQuery } from "../../Data/useTreeQuery";
+import { useTreeAPI } from "../../Data/useTreeAPI";
 
 type Props = { css?: StyleObject; treeId: string };
 
 export function ProjectMenu({ css, treeId }: Props) {
   const router = useRouter();
 
-  const { data } = useTreeQuery(treeId);
-
-  const name = data?.name ?? "Kein Name";
+  const { data: name } = useTreeAPI().useTreeQuery(treeId, {
+    select: ({ data }) => data.name,
+  });
 
   return (
     <DropdownMenu.Root
@@ -50,7 +50,7 @@ export function ProjectMenu({ css, treeId }: Props) {
           <DeleteTreeDialog
             className={defaultTheme}
             css={{ groupColor: "$black" }}
-            tree={{ uuid: treeId, name }}
+            tree={{ uuid: treeId, name: name ?? "Kein Name" }}
             onDelete={() => router.push("/")}
           />
         ),

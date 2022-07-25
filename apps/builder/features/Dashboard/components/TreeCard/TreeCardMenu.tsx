@@ -29,7 +29,7 @@ export function TreeCardMenu({ tree }: TreeCardMenuProps) {
         ),
         delete: (
           <DeleteTreeDialog
-            tree={tree}
+            tree={{ name: tree.name, uuid: tree.uuid }}
             focusOnClose={() => dropdownTriggerRef.current?.focus()}
           />
         ),
@@ -53,8 +53,8 @@ export function TreeCardMenu({ tree }: TreeCardMenuProps) {
           </Icon>
           Name ändern
         </DropdownMenu.DialogItem>
-        {/* FIXME published needs to be set properly when the tree supports it */}
         <PublishItem
+          treeName={tree.name}
           treeId={tree.uuid}
           publishedTreeId={tree.publishedTrees[0]?.uuid}
         />

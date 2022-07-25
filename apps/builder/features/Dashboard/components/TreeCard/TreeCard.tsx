@@ -19,7 +19,7 @@ import { TreeCardMenu } from "./TreeCardMenu";
 import { TGetTreeOutput } from "@open-decision/tree-api-specification";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { useQueryClient } from "../../../Data/useQueryClient";
-import { treeQueryKey } from "../../../Data/useTreeQuery";
+import { treeQueryKey } from "../../../Data/useTreeAPI";
 
 const readableStatus = {
   ACTIVE: "AKTIV",

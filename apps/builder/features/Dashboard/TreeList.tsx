@@ -8,13 +8,14 @@ import {
   Text,
   Form,
   styled,
+  LoadingSpinner,
 } from "@open-decision/design-system";
 import { TreeCard } from "./components/TreeCard/TreeCard";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { useFilter } from "./Filter";
 import { Card } from "../../components/Card";
 import { NewProjectDropdown } from "./NewProjectDropdown";
-import { useTreesQuery } from "../Data/useTreesQuery";
+import { useTreeAPI } from "../Data/useTreeAPI";
 
 const NoProjects = styled("span", Heading);
 
@@ -29,9 +30,14 @@ const filters = {
 };
 
 export const TreeList = () => {
-  const { data: trees } = useTreesQuery();
+  const {
+    data: trees,
+    isLoading,
+    isFetching,
+    isSuccess,
+  } = useTreeAPI().useTreesQuery({ select: ({ data }) => data });
 
-  const hasTrees = trees && trees.length > 0;
+  const hasTrees = isSuccess && trees.length > 0;
 
   const { search, setSearch, SortButton, FilterButton, filteredData } =
     useFilter(trees ?? [], sorts, "updatedAt", filters, "active");
@@ -40,6 +46,12 @@ export const TreeList = () => {
     defaultValues: { search },
     setValues: ({ search }) => setSearch(search),
   });
+
+  // Hard loading state when fetching initial data
+  if (isLoading)
+    return (
+      <LoadingSpinner size="50px" css={{ flex: 1, alignSelf: "center" }} />
+    );
 
   return hasTrees ? (
     <>
@@ -71,9 +83,10 @@ export const TreeList = () => {
             placeholder="Suche"
           />
         </Form.Field>
-        <Row css={{ gap: "$2" }}>
+        <Row css={{ gap: "$2", alignItems: "center" }}>
           <FilterButton />
           <SortButton />
+          <LoadingSpinner isLoading={isFetching} />
         </Row>
       </Form.Root>
       <Stack

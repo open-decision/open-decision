@@ -11,13 +11,7 @@ import {
 } from "@open-decision/design-system";
 import { readableDate } from "../../../features/Dashboard/utils";
 import { ErrorBoundary } from "@sentry/nextjs";
-import { useMutation } from "react-query";
-import { useTreeContext } from "../state/treeStore/TreeContext";
-import { useTreeQuery } from "../../Data/useTreeQuery";
-
-function createFile(data: object) {
-  return new Blob([JSON.stringify(data)], { type: "application/json" });
-}
+import { useTreeAPI } from "../../Data/useTreeAPI";
 
 type Props = {
   open?: boolean;
@@ -38,25 +32,11 @@ export function ExportDialog({
   css,
   treeId,
 }: Props) {
-  const { getTree } = useTreeContext();
-  const { data } = useTreeQuery(treeId);
-
   const [fileName, setFileName] = React.useState("");
-  const {
-    mutate,
-    data: file,
-    isLoading,
-    reset,
-  } = useMutation(() => {
-    return new Promise<Blob>((resolve) => {
-      const tree = getTree();
-
-      return setTimeout(
-        () => resolve(createFile({ name: data?.name, ...tree })),
-        2000
-      );
-    });
+  const { data } = useTreeAPI().useTreeQuery(treeId, {
+    select: ({ data }) => data,
   });
+  const { mutate, data: file, isLoading, reset } = useTreeAPI().useExport();
 
   const formState = Form.useFormState({
     defaultValues: {
@@ -66,7 +46,7 @@ export function ExportDialog({
 
   formState.useSubmit(() => {
     setFileName(formState.values.name);
-    mutate();
+    mutate({ name: fileName });
   });
 
   return (

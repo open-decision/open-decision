@@ -1,8 +1,6 @@
 import * as React from "react";
 import { Form, Dialog, DialogTriggerProps } from "@open-decision/design-system";
-import { proxiedOD } from "../../../../features/Data/odClient";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { treesQueryKey } from "../../../Data/useTreesQuery";
+import { useTreeAPI } from "../../../Data/useTreeAPI";
 
 type Props = DialogTriggerProps & {
   open?: boolean;
@@ -16,23 +14,14 @@ export const CreateTreeDialog = ({
   open,
   setOpen,
 }: Props) => {
-  const queryClient = useQueryClient();
   const formState = Form.useFormState({ defaultValues: { treeName: "" } });
-
-  formState.useSubmit(() => {
-    createTree(formState.values.treeName);
+  const { mutate: createTree, isLoading } = useTreeAPI().useCreate({
+    onSuccess: () => setOpen?.(false),
   });
 
-  const { mutate: createTree, isLoading } = useMutation(
-    ["createTree"],
-    (name: string) => proxiedOD.trees.create({ body: { name } }),
-    {
-      onSuccess: () => {
-        setOpen?.(false);
-        queryClient.invalidateQueries(treesQueryKey);
-      },
-    }
-  );
+  formState.useSubmit(() => {
+    createTree({ body: { name: formState.values.treeName } });
+  });
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
