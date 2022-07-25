@@ -1,15 +1,13 @@
 import { safeFetch } from "@open-decision/api-helpers";
+import { APIError, isAPIError } from "@open-decision/type-classes";
 import { assign, createMachine } from "xstate";
-import { VerificationFailedError } from "../errors/AuthErrors";
-
-type Errors = VerificationFailedError;
 
 type Events =
   | { type: "VERIFY_LOGIN"; password: string }
   | { type: "SUCCESSFULL_VERIFY_LOGIN" }
-  | { type: "FAILED_VERIFY_LOGIN"; error: Errors };
+  | { type: "FAILED_VERIFY_LOGIN"; error: APIError };
 
-type Context = { Error?: Errors };
+type Context = { Error?: APIError };
 
 export type onVerify = () => void;
 export type onVerifyFailure = () => void;
@@ -66,10 +64,22 @@ export const createVerifyLoginMachine = (
           })
             .then(() => send("SUCCESSFULL_VERIFY_LOGIN"))
             .catch((error) =>
-              send({
-                type: "FAILED_VERIFY_LOGIN",
-                error: new VerificationFailedError(error),
-              })
+              isAPIError(error)
+                ? send({
+                    type: "FAILED_VERIFY_LOGIN",
+                    error: new APIError({
+                      ...error,
+                      message: "Incorrect Password",
+                    }),
+                  })
+                : send({
+                    type: "FAILED_VERIFY_LOGIN",
+                    error: new APIError({
+                      code: "UNEXPECTED_ERROR",
+                      message:
+                        "Ein Fehler ist aufgetreten. Bitte versuce es erneut.",
+                    }),
+                  })
             );
         },
       },
