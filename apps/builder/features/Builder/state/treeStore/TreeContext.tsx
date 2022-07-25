@@ -35,6 +35,10 @@ export const TreeProvider = ({ children }: Props) => {
         yDoc: treeStore.yDoc,
         onSync: treeStore.onSync,
       });
+
+      return () => {
+        send({ type: "CLOSE" });
+      };
     }
   }, [id, send, treeStore]);
 
