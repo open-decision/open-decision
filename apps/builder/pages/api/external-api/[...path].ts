@@ -6,13 +6,8 @@ import { refreshAuth } from "../../../utils/auth";
 const SilentAuth: NextApiHandler = async (req, res) => {
   let refreshedToken: string;
   try {
-    refreshedToken = await refreshAuth(req, res);
-  } catch (error) {
-    console.log(error);
-    return res.redirect(303, "/auth/login");
-  }
+    const refreshedToken = await refreshAuth(req, res);
 
-  try {
     const path = req.url?.split("external-api")[1];
     const { data, response } = await safeFetch(
       `${process.env.OD_API_ENDPOINT}/v1${path}`,
