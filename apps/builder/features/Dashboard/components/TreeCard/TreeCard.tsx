@@ -18,6 +18,8 @@ import { Card as DefaultCard } from "../../../../components/Card";
 import { TreeCardMenu } from "./TreeCardMenu";
 import { TGetTreeOutput } from "@open-decision/tree-api-specification";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
+import { useQueryClient } from "../../../Data/useQueryClient";
+import { treeQueryKey } from "../../../Data/useTreeQuery";
 
 const readableStatus = {
   ACTIVE: "AKTIV",
@@ -32,6 +34,8 @@ const Card = styled(Stack, DefaultCard, {
 type Props = { tree: TGetTreeOutput };
 
 export function TreeCard({ tree }: Props) {
+  const queryClient = useQueryClient();
+
   return (
     <Box
       css={{
@@ -46,6 +50,9 @@ export function TreeCard({ tree }: Props) {
           <Link
             href={`/builder/${tree.uuid}`}
             title={`Öffne das Projekt ${tree.name}`}
+            onClick={() =>
+              queryClient.setQueryData(treeQueryKey(tree.uuid), tree)
+            }
           >
             <Heading size="small" css={{ cursor: "pointer" }}>
               {tree.name}
