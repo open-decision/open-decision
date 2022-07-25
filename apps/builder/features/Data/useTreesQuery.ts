@@ -1,20 +1,12 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { proxiedOD } from "./odClient";
 
-export const useTreesQueryKey = "Trees";
+export const treesQueryKey = ["Trees"];
 export function useTreesQuery() {
-  return useQuery(
-    useTreesQueryKey,
-    () => {
-      return proxiedOD.trees.getCollection({});
+  return useQuery(treesQueryKey, () => proxiedOD.trees.getCollection({}), {
+    suspense: true,
+    select(response) {
+      return response.data;
     },
-    {
-      select({ data }) {
-        return data.map((tree) => ({
-          ...tree,
-          status: tree.publishedTrees.length > 0 ? "PUBLISHED" : tree.status,
-        }));
-      },
-    }
-  );
+  });
 }

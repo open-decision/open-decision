@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Tree } from "@open-decision/type-classes";
 import { FileInput } from "../../components";
-import { queryClient } from "../../features/Data/queryClient";
 import { useNotificationStore } from "../../features/Notifications/NotificationState";
 import { z } from "zod";
 import * as Y from "yjs";
@@ -9,8 +8,8 @@ import { IndexeddbPersistence } from "y-indexeddb";
 import { proxy } from "valtio";
 import { bindProxyAndYMap } from "valtio-yjs";
 import { FileInputProps } from "../../components/FileInput";
-import { useMutation } from "react-query";
-import { useTreesQueryKey } from "../Data/useTreesQuery";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { treesQueryKey } from "../Data/useTreesQuery";
 import { proxiedOD } from "../Data/odClient";
 
 const TreeImportType = Tree.Type.extend({ name: z.string() });
@@ -20,8 +19,10 @@ export const TreeImport = React.forwardRef<
   Omit<FileInputProps, "children"> & { onDone?: () => void }
 >(function TreeImport({ onDone, ...props }, ref) {
   const { addNotification } = useNotificationStore();
+  const queryClient = useQueryClient();
 
   const { mutate: createTree } = useMutation(
+    ["createTree"],
     ({ name, ..._ }: { name: string; data: Tree.TTree }) =>
       proxiedOD.trees.create({ body: { name } }),
     {
@@ -34,7 +35,7 @@ export const TreeImport = React.forwardRef<
         const importStore = proxy(data);
         bindProxyAndYMap(importStore, yMap);
 
-        queryClient.invalidateQueries(useTreesQueryKey);
+        queryClient.invalidateQueries(treesQueryKey);
         return onDone?.();
       },
     }

@@ -5,7 +5,7 @@ import {
   TRegisterOutput,
 } from "@open-decision/auth-api-specification";
 import { APIError } from "@open-decision/type-classes";
-import { useMutation, UseMutationOptions } from "react-query";
+import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 
 export function useRegisterMutation(
   config?: Omit<
@@ -19,6 +19,7 @@ export function useRegisterMutation(
   >
 ) {
   return useMutation<any, APIError<TLoginInput>, any, unknown>(
+    ["register"],
     ({ email, password, toc }) => {
       return safeFetch("/api/external-api/auth/register", {
         method: "POST",

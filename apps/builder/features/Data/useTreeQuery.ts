@@ -1,19 +1,20 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { proxiedOD } from "./odClient";
+import { treesQueryKey } from "./useTreesQuery";
 
-export const useTreeQueryKey = "Tree";
+export const treeQueryKey = (treeUuid: string) => [
+  "Tree",
+  ...treesQueryKey,
+  treeUuid,
+];
 export function useTreeQuery(uuid: string) {
   return useQuery(
-    [useTreeQueryKey, uuid],
-    async () => {
-      return await proxiedOD.trees.getSingle({ params: { uuid } });
-    },
+    treeQueryKey(uuid),
+    () => proxiedOD.trees.getSingle({ params: { uuid } }),
     {
-      select({ data }) {
-        return {
-          ...data,
-          status: data.publishedTrees.length > 0 ? "PUBLISHED" : data.status,
-        };
+      suspense: true,
+      select(response) {
+        return response.data;
       },
     }
   );

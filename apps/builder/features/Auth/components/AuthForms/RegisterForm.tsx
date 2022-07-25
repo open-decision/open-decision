@@ -5,12 +5,12 @@ import {
   Box,
   Row,
 } from "@open-decision/design-system";
-import { useMutation, UseMutationOptions } from "react-query";
-import axios from "axios";
+import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import { InfoBox } from "../../../Notifications/InfoBox";
 import { InternalLink } from "../../../../components/InternalLink";
 import { useRegisterMutation } from "../../mutations/useRegisterMutation";
 import { useRouter } from "next/router";
+import { safeFetch } from "@open-decision/api-helpers";
 
 type Data = { email: string };
 
@@ -18,11 +18,10 @@ const useIsOnWhiteListQuery = (
   options?: UseMutationOptions<unknown, unknown, Data>
 ) =>
   useMutation(
-    "isOnWhiteList",
+    ["isOnWhiteList"],
     async (data: Data) => {
-      const result = await axios({
-        url: `/users/is-whitelisted`,
-        data,
+      const result = await safeFetch(`/users/is-whitelisted`, {
+        body: data,
         method: "POST",
       });
 

@@ -1,9 +1,8 @@
 import { DropdownMenu, Icon } from "@open-decision/design-system";
 import { ArchiveIcon } from "@radix-ui/react-icons";
-import { queryClient } from "../../../../features/Data/queryClient";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { proxiedOD } from "../../../../../builder/features/Data/odClient";
-import { useTreesQueryKey } from "../../../Data/useTreesQuery";
+import { treesQueryKey } from "../../../Data/useTreesQuery";
 
 export type PublishItemProps = {
   treeId: string;
@@ -11,7 +10,9 @@ export type PublishItemProps = {
 };
 
 export function ArchiveItem({ treeId, status }: PublishItemProps) {
+  const queryClient = useQueryClient();
   const { mutate: archive } = useMutation(
+    ["archiveTree"],
     () =>
       proxiedOD.trees.update({
         body: { status: "ARCHIVED" },
@@ -19,12 +20,13 @@ export function ArchiveItem({ treeId, status }: PublishItemProps) {
       }),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(useTreesQueryKey);
+        queryClient.invalidateQueries(treesQueryKey);
       },
     }
   );
 
   const { mutate: unarchive } = useMutation(
+    ["unarchiveTree"],
     () =>
       proxiedOD.trees.update({
         body: { status: "ACTIVE" },
@@ -32,7 +34,7 @@ export function ArchiveItem({ treeId, status }: PublishItemProps) {
       }),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(useTreesQueryKey);
+        queryClient.invalidateQueries(treesQueryKey);
       },
     }
   );

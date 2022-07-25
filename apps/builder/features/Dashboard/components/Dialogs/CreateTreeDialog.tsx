@@ -1,9 +1,8 @@
 import * as React from "react";
 import { Form, Dialog, DialogTriggerProps } from "@open-decision/design-system";
-import { queryClient } from "../../../../features/Data/queryClient";
 import { proxiedOD } from "../../../../features/Data/odClient";
-import { useMutation } from "react-query";
-import { useTreesQueryKey } from "../../../Data/useTreesQuery";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { treesQueryKey } from "../../../Data/useTreesQuery";
 
 type Props = DialogTriggerProps & {
   open?: boolean;
@@ -17,6 +16,7 @@ export const CreateTreeDialog = ({
   open,
   setOpen,
 }: Props) => {
+  const queryClient = useQueryClient();
   const formState = Form.useFormState({ defaultValues: { treeName: "" } });
 
   formState.useSubmit(() => {
@@ -24,11 +24,12 @@ export const CreateTreeDialog = ({
   });
 
   const { mutate: createTree, isLoading } = useMutation(
+    ["createTree"],
     (name: string) => proxiedOD.trees.create({ body: { name } }),
     {
       onSuccess: () => {
         setOpen?.(false);
-        queryClient.invalidateQueries(useTreesQueryKey);
+        queryClient.invalidateQueries(treesQueryKey);
       },
     }
   );

@@ -4,12 +4,11 @@ import {
   DialogTriggerProps,
   StyleObject,
 } from "@open-decision/design-system";
-import { queryClient } from "../../../../features/Data/queryClient";
 import * as React from "react";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { proxiedOD } from "../../../../features/Data/odClient";
-import { useTreeQueryKey } from "../../../Data/useTreeQuery";
-import { useTreesQueryKey } from "../../../Data/useTreesQuery";
+import { treeQueryKey } from "../../../Data/useTreeQuery";
+import { treesQueryKey } from "../../../Data/useTreesQuery";
 
 type Props = {
   treeId: string;
@@ -30,6 +29,7 @@ export function UpdateTreeDialog({
   className,
   css,
 }: Props) {
+  const queryClient = useQueryClient();
   const formState = Form.useFormState({ defaultValues: { treeName: "" } });
 
   formState.useSubmit(() => {
@@ -37,6 +37,7 @@ export function UpdateTreeDialog({
   });
 
   const { mutate: updateTree, isLoading } = useMutation(
+    ["updateTree"],
     () =>
       proxiedOD.trees.update({
         body: { name: formState.values.treeName },
@@ -44,8 +45,8 @@ export function UpdateTreeDialog({
       }),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(useTreeQueryKey);
-        queryClient.invalidateQueries(useTreesQueryKey);
+        queryClient.invalidateQueries(treeQueryKey(treeId));
+        queryClient.invalidateQueries(treesQueryKey);
         setOpen?.(false);
       },
     }
