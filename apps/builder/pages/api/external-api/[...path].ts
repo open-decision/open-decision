@@ -4,12 +4,11 @@ import { NextApiHandler } from "next";
 import { refreshAuth } from "../../../utils/auth";
 
 const SilentAuth: NextApiHandler = async (req, res) => {
-  let refreshedToken: string;
   try {
     const refreshedToken = await refreshAuth(req, res);
 
     const path = req.url?.split("external-api")[1];
-    const { data, response } = await safeFetch(
+    const { status, data } = await safeFetch(
       `${process.env.OD_API_ENDPOINT}/v1${path}`,
       {
         body: req.method === "GET" ? undefined : req.body,
@@ -20,9 +19,9 @@ const SilentAuth: NextApiHandler = async (req, res) => {
       }
     );
 
-    return res.status(response.status).json(data);
+    return res.status(status).json(data);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     if (isAPIError(error)) return res.status(error.statusCode).json(error);
 
     return res.status(500).json(
