@@ -1,6 +1,5 @@
 import { labelStyles } from "../Form/Label";
 import { css, darkTheme, keyframes } from "../stitches";
-import { innerFocusStyle } from "../stitches/focusStyles";
 import {
   activeSelector,
   disabledSelector,
@@ -56,7 +55,6 @@ export const menuItemStyles = css({
 
   [`${intentSelector}, ${activeSelector}`]: {
     backgroundColor: "$colorScheme2",
-    ...innerFocusStyle,
 
     [`.${darkTheme} &`]: {
       backgroundColor: "$colorScheme4",
@@ -66,11 +64,8 @@ export const menuItemStyles = css({
 
   [`${disabledSelector}`]: {
     color: "$gray11",
+    colorScheme: "gray",
     cursor: "not-allowed",
-
-    [`${intentSelector}`]: {
-      backgroundColor: "$gray2",
-    },
   },
 });
 

@@ -1,5 +1,10 @@
 import * as React from "react";
-import { DropdownMenu, Button, Icon } from "@open-decision/design-system";
+import {
+  DropdownMenu,
+  Button,
+  Icon,
+  Tooltip,
+} from "@open-decision/design-system";
 import { DeleteTreeDialog } from "../Dialogs/DeleteTreeDialog";
 import { UpdateTreeDialog } from "../Dialogs/UpdateTreeDialog";
 import {
@@ -17,6 +22,8 @@ export type TreeCardMenuProps = {
 
 export function TreeCardMenu({ tree }: TreeCardMenuProps) {
   const dropdownTriggerRef = React.useRef<HTMLButtonElement | null>(null);
+
+  const isPublished = tree.publishedTrees.length > 0;
 
   return (
     <DropdownMenu.Root
@@ -59,15 +66,26 @@ export function TreeCardMenu({ tree }: TreeCardMenuProps) {
           publishedTreeId={tree.publishedTrees[0]?.uuid}
         />
         <ArchiveItem treeId={tree.uuid} status={tree.status} />
-        <DropdownMenu.DialogItem
-          dialogKey="delete"
-          css={{ colorScheme: "danger" }}
-        >
-          <Icon css={{ marginTop: "2px" }}>
-            <TrashIcon />
-          </Icon>
-          Projekt löschen
-        </DropdownMenu.DialogItem>
+        <Tooltip.Root>
+          <Tooltip.Trigger disabled={!isPublished} asChild>
+            <DropdownMenu.DialogItem
+              dialogKey="delete"
+              css={{ colorScheme: "danger" }}
+              disabled={isPublished}
+            >
+              <Icon css={{ marginTop: "2px" }}>
+                <TrashIcon />
+              </Icon>
+              Projekt löschen
+            </DropdownMenu.DialogItem>
+          </Tooltip.Trigger>
+          <Tooltip.Content>
+            <Tooltip.Title>
+              Ein veröffentlichter Baum kann nicht gelöscht werden. Bitte
+              unveröffentliche den Baum erst.
+            </Tooltip.Title>
+          </Tooltip.Content>
+        </Tooltip.Root>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
   );

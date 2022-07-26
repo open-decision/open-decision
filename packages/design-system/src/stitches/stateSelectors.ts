@@ -5,4 +5,4 @@ export const intentSelector = "&:focus-visible, &[data-focus='true'], &:hover";
 export const intentWithinSelector = `${intentSelector}, &:focus-within`;
 export const activeSelector =
   "&:active, &[data-active='true'], &[data-active-item], &[data-state=on]";
-export const disabledSelector = "&:disabled, &[data-disabled='true']";
+export const disabledSelector = "&:disabled, &[data-disabled]";

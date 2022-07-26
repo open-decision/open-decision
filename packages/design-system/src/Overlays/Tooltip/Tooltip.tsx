@@ -23,7 +23,6 @@ const StyledArrow = styled(TooltipPrimitive.Arrow, {
 
 const StyledTrigger = styled(TooltipPrimitive.Trigger, {
   backgroundColor: "transparent",
-  border: "none",
 });
 
 const Body = styled(Text, {
