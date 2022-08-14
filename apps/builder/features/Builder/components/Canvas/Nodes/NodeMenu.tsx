@@ -11,6 +11,7 @@ import {
   RocketIcon,
   TrashIcon,
 } from "@radix-ui/react-icons";
+import { useTranslations } from "next-intl";
 import { useTreeContext } from "../../../../../features/Builder/state/treeStore/TreeContext";
 import { PreviewLink } from "../../PreviewLink";
 
@@ -22,6 +23,7 @@ type Props = {
 };
 
 export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
+  const t = useTranslations("builder.nodeEditingSidebar.menu");
   const { deleteNodes, updateStartNode, removeSelectedNodes } =
     useTreeContext();
 
@@ -37,7 +39,7 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
           }}
           square
         >
-          <Icon label={`Öffne Menü Node: ${name}`}>
+          <Icon label={t("iconLabel", { name })}>
             <HamburgerMenuIcon />
           </Icon>
         </Button>
@@ -48,7 +50,7 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
             <Icon>
               <FileTextIcon />
             </Icon>
-            Vorschau
+            {t("previewLabel")}
           </PreviewLink>
         </DropdownMenu.Item>
         {isStartNode ? (
@@ -56,27 +58,28 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
             <Tooltip.Trigger style={{ all: "unset" }}>
               <DropdownMenu.Item
                 onSelect={() => deleteNodes([nodeId])}
+                css={{ colorScheme: "danger" }}
                 disabled
               >
-                <Icon label="Löschen Icon" css={{ $$paddingInline: 0 }}>
+                <Icon css={{ $$paddingInline: 0 }}>
                   <TrashIcon />
                 </Icon>
-                Node löschen
+                {t("deleteNode.label")}
               </DropdownMenu.Item>
             </Tooltip.Trigger>
             <Tooltip.Content>
               <Tooltip.Title>
-                Die Startnode kann nicht entfernt werden.
+                {t("deleteNode.disabledForStartNodeLabel")}
               </Tooltip.Title>
             </Tooltip.Content>
           </Tooltip.Root>
         ) : (
           <>
             <DropdownMenu.Item onSelect={() => updateStartNode(nodeId)}>
-              <Icon label="Zur Startnode machen" css={{ $$paddingInline: 0 }}>
+              <Icon css={{ $$paddingInline: 0 }}>
                 <RocketIcon />
               </Icon>
-              Zur Startnode machen
+              {t("makeStartNode.label")}
             </DropdownMenu.Item>
             <DropdownMenu.Item
               onSelect={() => {
@@ -85,10 +88,10 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
               }}
               css={{ colorScheme: "danger" }}
             >
-              <Icon label="Löschen Icon" css={{ $$paddingInline: 0 }}>
+              <Icon css={{ $$paddingInline: 0 }}>
                 <TrashIcon />
               </Icon>
-              Node löschen
+              {t("deleteNode.label")}
             </DropdownMenu.Item>
           </>
         )}

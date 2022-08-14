@@ -12,6 +12,7 @@ import {
 import { readableDate } from "../../../features/Dashboard/utils";
 import { ErrorBoundary } from "@sentry/nextjs";
 import { useTreeAPI } from "../../Data/useTreeAPI";
+import { useTranslations } from "next-intl";
 
 type Props = {
   open?: boolean;
@@ -32,6 +33,7 @@ export function ExportDialog({
   css,
   treeId,
 }: Props) {
+  const t = useTranslations("common.exportDialog");
   const [fileName, setFileName] = React.useState("");
   const { data } = useTreeAPI().useTreeQuery(treeId, {
     select: ({ data }) => data,
@@ -57,33 +59,31 @@ export function ExportDialog({
         css={css}
         onCloseAutoFocus={focusOnClose}
       >
-        <Dialog.Header>Projekt exportieren</Dialog.Header>
+        <Dialog.Header>{t("title")}</Dialog.Header>
         <ErrorBoundary fallback={ExportErrorFallback}>
           {!file ? (
             <>
               <Dialog.Description asChild>
                 <Text css={{ marginTop: "$2" }}>
-                  Nehmen Sie Anpassungen am Export vor.
+                  {t("customization.description")}
                 </Text>
               </Dialog.Description>
               <Form.Root state={formState} css={{ marginTop: "$4" }}>
-                <Form.Field Label="Dateiname">
+                <Form.Field Label={t("customization.nameInput.label")}>
                   <Form.Input name={formState.names.name} />
                 </Form.Field>
                 <Form.Submit
                   isLoading={isLoading}
                   css={{ marginTop: "$2", marginLeft: "auto" }}
                 >
-                  Weiter
+                  {t("customization.submit")}
                 </Form.Submit>
               </Form.Root>
             </>
           ) : (
             <Stack>
               <Dialog.Description asChild>
-                <Text css={{ marginTop: "$2" }}>
-                  Speichern Sie ihren exportierten Baum.
-                </Text>
+                <Text css={{ marginTop: "$2" }}>{t("save.description")}</Text>
               </Dialog.Description>
               <Link
                 className={buttonStyles({
@@ -96,7 +96,7 @@ export function ExportDialog({
                   setOpen?.(false);
                 }}
               >
-                Speichern
+                {t("save.cta")}
               </Link>
             </Stack>
           )}
@@ -107,5 +107,6 @@ export function ExportDialog({
 }
 
 function ExportErrorFallback() {
-  return <Text>Beim Export ihres Baumes ist ein Fehler aufgetreten.</Text>;
+  const t = useTranslations("common.exportDialog");
+  return <Text>{t("errorFallback")}</Text>;
 }

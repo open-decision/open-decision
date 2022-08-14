@@ -11,20 +11,15 @@ import {
   Icon,
   Link as SystemLink,
 } from "@open-decision/design-system";
-import { formatRelative, parseISO } from "date-fns";
+import { parseISO } from "date-fns";
 import Link from "next/link";
-import de from "date-fns/locale/de";
 import { Card as DefaultCard } from "../../../../components/Card";
 import { TreeCardMenu } from "./TreeCardMenu";
 import { TGetTreeOutput } from "@open-decision/tree-api-specification";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { useQueryClient } from "../../../Data/useQueryClient";
 import { treeQueryKey } from "../../../Data/useTreeAPI";
-
-const readableStatus = {
-  ACTIVE: "AKTIV",
-  ARCHIVED: "ARCHIVIERT",
-};
+import { useIntl, useTranslations } from "next-intl";
 
 const Card = styled(Stack, DefaultCard, {
   position: "relative",
@@ -34,6 +29,8 @@ const Card = styled(Stack, DefaultCard, {
 type Props = { tree: TGetTreeOutput };
 
 export function TreeCard({ tree }: Props) {
+  const t = useTranslations("dashboard.treeList.treeCard");
+  const intl = useIntl();
   const queryClient = useQueryClient();
 
   return (
@@ -44,50 +41,52 @@ export function TreeCard({ tree }: Props) {
         borderRadius: "$md",
         [`${intentWithinSelector}`]: { boxShadow: "$3" },
       }}
+      as="section"
     >
-      <Card>
-        <Row css={{ gap: "$2", alignItems: "center", marginBottom: "$1" }}>
-          <Link
-            href={`/builder/${tree.uuid}`}
-            title={`Öffne das Projekt ${tree.name}`}
-            onClick={() =>
-              queryClient.setQueryData(treeQueryKey(tree.uuid), tree)
-            }
+      <Link
+        href={`/builder/${tree.uuid}`}
+        title={t("hiddenTitleLink", { name: tree.name })}
+      >
+        <Card
+          css={{ cursor: "pointer" }}
+          onClick={() =>
+            queryClient.setQueryData(treeQueryKey(tree.uuid), tree)
+          }
+        >
+          <Row
+            css={{ gap: "$2", alignItems: "center", marginBottom: "$1" }}
+            as="header"
           >
-            <Heading size="small" css={{ cursor: "pointer" }}>
+            <Heading size="small" css={{ maxWidth: "70%" }}>
               {tree.name}
             </Heading>
-          </Link>
-
-          {tree.status === "ACTIVE" ? (
-            <Badge size="small">{readableStatus[tree.status]}</Badge>
-          ) : null}
-          {tree.status === "ARCHIVED" ? (
-            <Badge css={{ colorScheme: "gray" }} size="small">
-              {readableStatus[tree.status]}
-            </Badge>
-          ) : null}
-          {tree.publishedTrees.length > 0 ? (
-            <SystemLink
-              href={`${process.env.NEXT_PUBLIC_OD_RENDERER_ENDPOINT}/tree/${tree.publishedTrees[0].uuid}`}
-              target="_blank"
-              onClick={(event) => event.stopPropagation()}
-            >
-              <Badge size="small">
-                VERÖFFENTLICHT{" "}
-                <Icon>
-                  <ArrowRightIcon />
-                </Icon>
+            {tree.status === "ARCHIVED" ? (
+              <Badge css={{ colorScheme: "gray" }} size="small">
+                {t(tree.status)}
               </Badge>
-            </SystemLink>
-          ) : null}
-        </Row>
-        <Text css={{ color: "$gray11" }} size="small">
-          {formatRelative(parseISO(tree.updatedAt), new Date(), {
-            locale: de,
-          })}
-        </Text>
-      </Card>
+            ) : null}
+            {tree.publishedTrees.length > 0 ? (
+              <SystemLink
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+                href={`${process.env.NEXT_PUBLIC_OD_RENDERER_ENDPOINT}/tree/${tree.publishedTrees[0].uuid}`}
+                target="_blank"
+              >
+                <Badge size="small">
+                  {t("published")}{" "}
+                  <Icon>
+                    <ArrowRightIcon />
+                  </Icon>
+                </Badge>
+              </SystemLink>
+            ) : null}
+          </Row>
+          <Text css={{ color: "$gray11" }} size="small">
+            {intl.formatRelativeTime(parseISO(tree.updatedAt))}
+          </Text>
+        </Card>
+      </Link>
       <TreeCardMenu tree={tree} />
     </Box>
   );

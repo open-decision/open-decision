@@ -15,12 +15,14 @@ import {
 import { PublishItem } from "./PublishItem";
 import { ArchiveItem } from "./ArchiveItem";
 import { TGetTreeOutput } from "@open-decision/tree-api-specification";
+import { useTranslations } from "next-intl";
 
 export type TreeCardMenuProps = {
   tree: TGetTreeOutput;
 };
 
 export function TreeCardMenu({ tree }: TreeCardMenuProps) {
+  const t = useTranslations("dashboard");
   const dropdownTriggerRef = React.useRef<HTMLButtonElement | null>(null);
 
   const isPublished = tree.publishedTrees.length > 0;
@@ -48,7 +50,7 @@ export function TreeCardMenu({ tree }: TreeCardMenuProps) {
           square
           css={{ position: "absolute", right: 20, top: 12 }}
         >
-          <Icon label={`Projektmenü ${tree.name}`}>
+          <Icon label={t("treeList.cardMenu.hiddenLabel", { name: tree.name })}>
             <DotsHorizontalIcon />
           </Icon>
         </Button>
@@ -58,7 +60,7 @@ export function TreeCardMenu({ tree }: TreeCardMenuProps) {
           <Icon>
             <Pencil2Icon />
           </Icon>
-          Name ändern
+          {t("treeList.cardMenu.changeName")}
         </DropdownMenu.DialogItem>
         <PublishItem
           treeName={tree.name}

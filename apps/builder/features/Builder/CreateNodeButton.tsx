@@ -6,12 +6,14 @@ import {
   Tooltip,
 } from "@open-decision/design-system";
 import { PlusIcon } from "@radix-ui/react-icons";
+import { useTranslations } from "next-intl";
 import { useTreeContext } from "./state/treeStore/TreeContext";
 import { useEditor } from "./state/useEditor";
 
 type Props = { css?: StyleObject };
 
 export function CreateNodeButton({ css }: Props) {
+  const t = useTranslations("builder.createNodeButton");
   const {
     createInput,
     createAnswer,
@@ -28,6 +30,7 @@ export function CreateNodeButton({ css }: Props) {
     <Tooltip.Root>
       <Tooltip.Trigger asChild>
         <Button
+          name={t("hiddenLabel")}
           square
           css={{ boxShadow: "$2", ...css }}
           onClick={() => {
@@ -47,13 +50,13 @@ export function CreateNodeButton({ css }: Props) {
             zoomToNode(newNode);
           }}
         >
-          <Icon>
+          <Icon label={t("hiddenLabel")}>
             <PlusIcon />
           </Icon>
         </Button>
       </Tooltip.Trigger>
       <Tooltip.Content side="right" sideOffset={15}>
-        <Text>Neuen Knoten hinzufügen</Text>
+        <Text>{t("tooltip")}</Text>
       </Tooltip.Content>
     </Tooltip.Root>
   );

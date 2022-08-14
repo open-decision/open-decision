@@ -6,6 +6,7 @@ import {
   styled,
   StyleObject,
 } from "@open-decision/design-system";
+import { useTranslations } from "next-intl";
 import * as React from "react";
 import { useTreeAPI } from "../../../Data/useTreeAPI";
 
@@ -32,6 +33,7 @@ export function DeleteTreeDialog({
   css,
   onDelete,
 }: Props) {
+  const t = useTranslations("common.deleteTreeDialog");
   const formState = Form.useFormState({
     defaultValues: { treeName: "" },
   });
@@ -68,8 +70,10 @@ export function DeleteTreeDialog({
         </Dialog.Header>
         <Dialog.Description asChild>
           <Text css={{ marginBottom: "$4", color: "$gray11" }}>
-            Bitte geben Sie den Namen des Projekts: <Bold>{tree.name}</Bold> zur
-            Bestätigung der Löschung ein.
+            {t.rich("description", {
+              treeName: tree.name,
+              bold: (children) => <Bold>{children}</Bold>,
+            })}
           </Text>
         </Dialog.Description>
         <Form.Root state={formState} validateOnBlur={false}>

@@ -4,6 +4,7 @@ import {
   DialogTriggerProps,
   StyleObject,
 } from "@open-decision/design-system";
+import { useTranslations } from "next-intl";
 import * as React from "react";
 import { useTreeAPI } from "../../../Data/useTreeAPI";
 
@@ -26,6 +27,7 @@ export function UpdateTreeDialog({
   className,
   css,
 }: Props) {
+  const t = useTranslations("common.updateTreeDialog");
   const formState = Form.useFormState({ defaultValues: { treeName: "" } });
 
   formState.useSubmit(() => {
@@ -49,16 +51,18 @@ export function UpdateTreeDialog({
         className={className}
         css={css}
       >
-        <Dialog.Header css={{ marginBottom: "$4" }}>
-          Projektname ändern
-        </Dialog.Header>
+        <Dialog.Header css={{ marginBottom: "$4" }}>{t("title")}</Dialog.Header>
         <Form.Root
           state={formState}
           css={{ display: "flex", flexDirection: "column" }}
           validateOnBlur={false}
         >
           <Form.Field
-            Label={<Dialog.Description> Projektname</Dialog.Description>}
+            Label={
+              <Dialog.Description>
+                {t("treeNameInput.label")}
+              </Dialog.Description>
+            }
           >
             <Form.Input
               name={formState.names.treeName}
@@ -67,7 +71,7 @@ export function UpdateTreeDialog({
             />
           </Form.Field>
           <Dialog.ButtonRow isLoading={isLoading} colorScheme="success">
-            Ändern
+            {t("submit")}
           </Dialog.ButtonRow>
         </Form.Root>
       </Dialog.Content>

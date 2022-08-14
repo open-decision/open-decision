@@ -5,17 +5,19 @@ import {
   Link as SystemLink,
 } from "@open-decision/design-system";
 import { ExitIcon, GearIcon, HomeIcon } from "@radix-ui/react-icons";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useLogoutMutation } from "../../features/Auth/mutations/useLogoutMutation";
 import { MenuButton } from "./MenuButton";
 
 export function UserMenu() {
+  const t = useTranslations();
   const { mutate: logout } = useLogoutMutation();
 
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <MenuButton label="Mein Account" data-test="user-menu" />
+        <MenuButton label={t("common.UserMenu.label")} />
       </DropdownMenu.Trigger>
       <DropdownMenu.Content
         sideOffset={15}
@@ -39,15 +41,15 @@ export function UserMenu() {
               <Icon>
                 <GearIcon />
               </Icon>
-              Einstellungen
+              {t("common.glossary.settings")}
             </SystemLink>
           </DropdownMenu.Item>
         </Link>
-        <DropdownMenu.Item onSelect={() => logout()} data-test="logout">
+        <DropdownMenu.Item onSelect={() => logout()}>
           <Icon>
             <ExitIcon />
           </Icon>
-          Logout
+          {t("common.glossary.logout")}
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>

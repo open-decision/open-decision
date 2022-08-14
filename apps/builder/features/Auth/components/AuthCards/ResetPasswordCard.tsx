@@ -1,20 +1,20 @@
 import { Icon, Link } from "@open-decision/design-system";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/router";
 import { ResetPasswordForm } from "../AuthForms/ResetPasswordForm";
 import { AuthCard } from "./";
 
 export function ResetPasswordCard() {
+  const t = useTranslations("resetPassword");
   const { query } = useRouter();
   const token = query.token;
 
   return token ? (
     <AuthCard.Container>
       <AuthCard.Header>
-        <AuthCard.Heading>Passwort zurücksetzen</AuthCard.Heading>
-        <AuthCard.Description>
-          Bitte vergeben Sie ein neues Passwort.
-        </AuthCard.Description>
+        <AuthCard.Heading>{t("title")}</AuthCard.Heading>
+        <AuthCard.Description>{t("description")} </AuthCard.Description>
       </AuthCard.Header>
       <AuthCard.Body>
         <ResetPasswordForm token={token instanceof Object ? token[0] : token} />
@@ -23,11 +23,8 @@ export function ResetPasswordCard() {
   ) : (
     <AuthCard.Container>
       <AuthCard.Header>
-        <AuthCard.Heading>Ungültig</AuthCard.Heading>
-        <AuthCard.Description>
-          Dies ist kein gültiger Link um ein Passwort zurückzusetzen. Bitte
-          versuchen Sie es erneut.
-        </AuthCard.Description>
+        <AuthCard.Heading>{t("invalid.title")}</AuthCard.Heading>
+        <AuthCard.Description>{t("invalid.description")} </AuthCard.Description>
       </AuthCard.Header>
       <AuthCard.Footer
         css={{
@@ -47,7 +44,7 @@ export function ResetPasswordCard() {
           }}
           href="/auth/forgot_password"
         >
-          Passwort erneut zurücksetzen
+          {t("invalid.retry")}
         </Link>
       </AuthCard.Footer>
     </AuthCard.Container>

@@ -1,16 +1,14 @@
 import React from "react";
-import {
-  Combobox,
-  StyleObject,
-  Row,
-  Badge,
-} from "@open-decision/design-system";
+import { Combobox, StyleObject, Badge } from "@open-decision/design-system";
 import { useEditor } from "../state/useEditor";
 import { useTreeContext } from "../state/treeStore/TreeContext";
+import { useTranslations } from "next-intl";
 
 type Props = { css?: StyleObject };
 
 export const NodeSearch = ({ css }: Props) => {
+  const t = useTranslations("builder.nodeSearch");
+
   const {
     createNode,
     addNode,
@@ -64,7 +62,7 @@ export const NodeSearch = ({ css }: Props) => {
     <>
       <Combobox.Input
         state={combobox}
-        placeholder="Suche"
+        placeholder={t("placeholder")}
         css={{ width: "400px", ...css }}
       />
       {combobox.value ? (
@@ -81,7 +79,7 @@ export const NodeSearch = ({ css }: Props) => {
                   onClick={() => changeHandler(id)}
                 >
                   {item}
-                  <Badge size="small">Auswählen</Badge>
+                  <Badge size="small">{t("selectBadge")}</Badge>
                 </Combobox.Item>
               ) : null;
             })
@@ -91,18 +89,9 @@ export const NodeSearch = ({ css }: Props) => {
               value={combobox.value}
             >
               {combobox.value}
-              <Row
-                css={{
-                  colorScheme: "success",
-                  fontWeight: "500",
-                  alignItems: "center",
-                  color: "$success11",
-                  gap: "$1",
-                  minWidth: "max-content",
-                }}
-              >
-                Erstellen
-              </Row>
+              <Badge css={{ colorScheme: "success" }} size="small">
+                {t("createBadge")}
+              </Badge>
             </Combobox.Item>
           )}
         </Combobox.Popover>

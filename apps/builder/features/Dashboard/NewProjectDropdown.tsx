@@ -3,8 +3,10 @@ import { ButtonProps, DropdownMenu, Icon } from "@open-decision/design-system";
 import { PlusIcon, RocketIcon } from "@radix-ui/react-icons";
 import { CreateTreeDialog } from "./components/Dialogs/CreateTreeDialog";
 import { TreeImport } from "./TreeImport";
+import { useTranslations } from "next-intl";
 
 export function NewProjectDropdown(props: ButtonProps) {
+  const t = useTranslations("common");
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -18,7 +20,7 @@ export function NewProjectDropdown(props: ButtonProps) {
           <Icon css={{ marginTop: "2px" }}>
             <RocketIcon />
           </Icon>
-          Projekt erstellen
+          {t("NewProjectDropdown.label")}
         </DropdownMenu.Button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content align="end">
@@ -29,7 +31,7 @@ export function NewProjectDropdown(props: ButtonProps) {
           <Icon>
             <PlusIcon />
           </Icon>
-          Neues Projekt erstellen
+          {t("NewProjectDropdown.createProjectLabel")}
         </DropdownMenu.DialogItem>
         <DropdownMenu.Item
           asChild
@@ -37,7 +39,9 @@ export function NewProjectDropdown(props: ButtonProps) {
             event.preventDefault();
           }}
         >
-          <TreeImport css={{ fontWeight: 500 }} onDone={() => setOpen(false)} />
+          <TreeImport css={{ fontWeight: 500 }} onDone={() => setOpen(false)}>
+            {t("NewProjectDropdown.importProject.label")}
+          </TreeImport>
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>

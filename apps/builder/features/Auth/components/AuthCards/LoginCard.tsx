@@ -2,25 +2,24 @@ import * as React from "react";
 import { Link, Text } from "@open-decision/design-system";
 import { LoginForm } from "../AuthForms/LoginForm";
 import { AuthCard } from "./";
+import { useTranslations } from "next-intl";
 
 export function LoginCard() {
+  const t = useTranslations("login");
+
   return (
     <AuthCard.Container>
       <AuthCard.Header>
-        <AuthCard.Heading>Anmelden</AuthCard.Heading>
-        <AuthCard.Description>
-          Loggen Sie sich ein um mit Open-Decision fortzufahren.
-        </AuthCard.Description>
+        <AuthCard.Heading>{t("title")}</AuthCard.Heading>
+        <AuthCard.Description>{t("description")}</AuthCard.Description>
       </AuthCard.Header>
       <AuthCard.Body>
         <LoginForm />
       </AuthCard.Body>
       <AuthCard.Footer>
         <Text css={{ color: "$gray11" }}>
-          Sie haben noch kein Konto?{" "}
-          <Link data-test="registerLink" href="/auth/register">
-            Dann registrieren Sie sich hier.
-          </Link>
+          {t("registerQuestion")}{" "}
+          <Link href="/auth/register">{t("registerCTA")}</Link>
         </Text>
       </AuthCard.Footer>
     </AuthCard.Container>

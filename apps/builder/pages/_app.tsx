@@ -1,5 +1,4 @@
 import * as React from "react";
-import type { AppProps } from "next/app";
 import "../design/index.css";
 import { globalStyles, Tooltip } from "@open-decision/design-system";
 import { Hydrate, QueryClientProvider } from "@tanstack/react-query";
@@ -7,6 +6,7 @@ import { NextPage } from "next";
 import { useUrlNotification } from "../features/Notifications/useUrlNotification";
 import { useQueryClient } from "../features/Data/useQueryClient";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { NextIntlProvider } from "next-intl";
 
 // ------------------------------------------------------------------
 // xstate devtools
@@ -22,13 +22,12 @@ type NextPageWithLayout = NextPage & {
   getLayout?: (page: React.ReactElement) => React.ReactNode;
 };
 
-type AppPropsWithLayout = AppProps & {
+type AppPropsWithLayout = {
   Component: NextPageWithLayout;
+  pageProps: any;
 };
-export default function App({
-  Component,
-  pageProps,
-}: AppPropsWithLayout): JSX.Element {
+
+function App({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
   globalStyles();
   const getLayout = Component.getLayout || ((page) => page);
 
@@ -41,8 +40,23 @@ export default function App({
         <Tooltip.Provider delayDuration={50}>
           {getLayout(<Component {...pageProps} />)}
         </Tooltip.Provider>
-        <ReactQueryDevtools />
+        {process.env.NODE_ENV === "development" && <ReactQueryDevtools />}
       </Hydrate>
     </QueryClientProvider>
+  );
+}
+
+export default function AppWithContext({
+  Component,
+  pageProps,
+}: AppPropsWithLayout): JSX.Element {
+  return (
+    <NextIntlProvider
+      now={new Date(pageProps.now)}
+      locale={pageProps.locale}
+      messages={pageProps.messages}
+    >
+      <App pageProps={pageProps} Component={Component} />
+    </NextIntlProvider>
   );
 }

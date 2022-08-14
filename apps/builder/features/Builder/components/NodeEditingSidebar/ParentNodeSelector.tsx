@@ -1,9 +1,11 @@
 import { Box, DropdownMenu, hoverSelector } from "@open-decision/design-system";
+import { useTranslations } from "next-intl";
 import { useTreeContext } from "../../state/treeStore/TreeContext";
 
 type Props = { parentNodes: { id: string; name?: string }[] };
 
 export function ParentNodeSelector({ parentNodes }: Props) {
+  const t = useTranslations("builder.nodeEditingSidebar.parentNodeSelector");
   const { replaceSelectedNodes } = useTreeContext();
 
   return (
@@ -11,7 +13,7 @@ export function ParentNodeSelector({ parentNodes }: Props) {
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
           <DropdownMenu.Button variant="secondary" size="small">
-            Elternknoten
+            {t("label")}
           </DropdownMenu.Button>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content align="end">
@@ -24,7 +26,7 @@ export function ParentNodeSelector({ parentNodes }: Props) {
                   [`${hoverSelector}`]: { textDecoration: "underline" },
                 }}
               >
-                {parentNode.name || <i>Elternknoten ohne Namen</i>}
+                {parentNode.name || <i>{t("noNameFallback")}</i>}
               </DropdownMenu.Item>
             );
           })}

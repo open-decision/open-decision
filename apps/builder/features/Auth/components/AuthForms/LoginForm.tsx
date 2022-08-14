@@ -1,15 +1,13 @@
-import {
-  ErrorMessage,
-  Form,
-  Link,
-  Row,
-  Stack,
-  SubmitButton,
-} from "@open-decision/design-system";
+import { Form, Stack, SubmitButton } from "@open-decision/design-system";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/router";
+import { EmailField } from "../../../../components/EmailInput";
+import { ErrorMessage } from "../../../../components/Error/ErrorMessage";
+import { PasswordInput } from "../../../../components/PasswordInput";
 import { useLoginMutation } from "../../mutations/useLoginMutation";
 
 export function LoginForm() {
+  const t = useTranslations();
   const router = useRouter();
   const formState = Form.useFormState({
     defaultValues: {
@@ -44,49 +42,16 @@ export function LoginForm() {
   return (
     <Form.Root state={formState} css={{ gap: "$6" }} resetOnSubmit={false}>
       <Stack>
-        <Form.Field Label="Mailadresse">
-          <Form.Input
-            required
-            name={formState.names.email}
-            placeholder="beispiel@web.de"
-            type="email"
-            data-test="email"
-          />
-        </Form.Field>
-        <Form.Field
-          Label={
-            <Row
-              css={{
-                justifyContent: "space-between",
-                alignItems: "center",
-                width: "100%",
-              }}
-            >
-              Passwort
-              <Link
-                href="/auth/forgot_password"
-                css={{ textStyle: "small-text" }}
-              >
-                Passwort vergessen?
-              </Link>
-            </Row>
-          }
-          css={{ marginTop: "$4" }}
-        >
-          <Form.Input
-            type="password"
-            required
-            name={formState.names.password}
-            placeholder="*******"
-            data-test="password"
-          />
-        </Form.Field>
+        <EmailField name={formState.names.email} />
+        <PasswordInput
+          name={formState.names.password}
+          hasPasswordResetLink
+          fieldCss={{ marginTop: "$4" }}
+        />
       </Stack>
-      {error ? (
-        <ErrorMessage data-test="error">{error.message}</ErrorMessage>
-      ) : null}
-      <SubmitButton isLoading={isLoading} type="submit" data-test="submit">
-        Jetzt Anmelden
+      {error ? <ErrorMessage code={error.code} /> : null}
+      <SubmitButton isLoading={isLoading} type="submit">
+        {t("login.submitButton")}
       </SubmitButton>
     </Form.Root>
   );
