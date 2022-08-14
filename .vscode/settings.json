@@ -8,7 +8,8 @@
     "renderer-app",
     "models",
     "api-client",
-    "e2e"
+    "e2e",
+    "ci/cd"
   ],
   "typescript.tsdk": "node_modules/typescript/lib",
   "todo-tree.general.tags": ["BUG", "HACK", "FIXME", "TODO", "SECURITY"],
