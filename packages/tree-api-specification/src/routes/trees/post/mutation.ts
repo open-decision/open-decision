@@ -1,4 +1,4 @@
-import { TContext, safeFetch, QueryConfig } from "@open-decision/api-helpers";
+import { TContext, QueryConfig } from "@open-decision/api-helpers";
 import { treesCollection } from "../../../urls";
 import { TCreateTreeInput } from "./input";
 import { createTreeOutput } from "./output";
@@ -11,11 +11,15 @@ export const createTree =
 
     if (prefix) combinedUrl = prefix + combinedUrl;
 
-    return await safeFetch(
+    return await context.fetchFunction(
       combinedUrl,
       {
         body: inputs.body,
         method: "POST",
+        headers: {
+          authorization: `Bearer ${context.token}`,
+          ...context.headers,
+        },
       },
       { validation: createTreeOutput }
     );

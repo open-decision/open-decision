@@ -10,9 +10,15 @@ export const getTree =
     const prefix = config?.urlPrefix ?? context.urlPrefix;
 
     if (prefix) combinedUrl = prefix + combinedUrl;
-    return await safeFetch(
+    return await context.fetchFunction(
       combinedUrl,
-      { cache: "no-cache" },
+      {
+        cache: "no-cache",
+        headers: {
+          authorization: `Bearer ${context.token}`,
+          ...context.headers,
+        },
+      },
       { validation: getTreeOutput }
     );
   };

@@ -1,8 +1,4 @@
-import {
-  TContext,
-  safeFetch,
-  QueryConfig,
-} from "@open-decision/api-helpers";
+import { TContext, safeFetch, QueryConfig } from "@open-decision/api-helpers";
 import { publishedTreesCollection } from "../../../urls";
 import { TGetPublishedTreesInput } from "./input";
 import { getPublishedTreesOutput } from "./output";
@@ -15,9 +11,15 @@ export const getPublishedTrees =
 
     if (prefix) combinedUrl = prefix + combinedUrl;
 
-    return await safeFetch(
+    return await context.fetchFunction(
       combinedUrl,
-      { cache: "no-cache" },
+      {
+        cache: "no-cache",
+        headers: {
+          authorization: `Bearer ${context.token}`,
+          ...context.headers,
+        },
+      },
       { validation: getPublishedTreesOutput }
     );
   };

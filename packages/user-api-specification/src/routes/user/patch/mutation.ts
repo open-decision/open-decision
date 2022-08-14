@@ -1,4 +1,4 @@
-import { TContext, safeFetch, QueryConfig } from "@open-decision/api-helpers";
+import { TContext, QueryConfig } from "@open-decision/api-helpers";
 import { userRoot } from "../../../urls";
 import { TUpdateUserInput } from "./input";
 
@@ -10,11 +10,16 @@ export const updateUser =
 
     if (prefix) combinedUrl = prefix + combinedUrl;
 
-    return await safeFetch(combinedUrl, {
-      body: inputs.body,
-      headers: {
-        authorization: `Bearer ${context.token}`,
+    return await context.fetchFunction(
+      combinedUrl,
+      {
+        body: inputs.body,
+        headers: {
+          authorization: `Bearer ${context.token}`,
+          ...context.headers,
+        },
+        method: "PATCH",
       },
-      method: "PATCH",
-    });
+      {}
+    );
   };

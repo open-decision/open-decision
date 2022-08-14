@@ -10,7 +10,15 @@ export const deleteTree =
 
     if (prefix) combinedUrl = prefix + combinedUrl;
 
-    return await safeFetch(combinedUrl, {
-      method: "DELETE",
-    });
+    return await context.fetchFunction(
+      combinedUrl,
+      {
+        method: "DELETE",
+        headers: {
+          authorization: `Bearer ${context.token}`,
+          ...context.headers,
+        },
+      },
+      {}
+    );
   };

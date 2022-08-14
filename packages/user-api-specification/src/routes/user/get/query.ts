@@ -10,13 +10,13 @@ export const getUser =
 
     if (prefix) combinedUrl = prefix + combinedUrl;
 
-    return await safeFetch(
+    return await context.fetchFunction(
       combinedUrl,
       {
         headers: {
           authorization: `Bearer ${context.token}`,
+          ...context.headers,
         },
-        ...context.headers,
       },
       { validation: getUserOutput }
     );

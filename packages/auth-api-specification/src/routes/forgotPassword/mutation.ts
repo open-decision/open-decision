@@ -16,7 +16,7 @@ export const forgotPassword =
       config?.urlPrefix ?? context.urlPrefix
     );
 
-    return await safeFetch(
+    return await context.fetchFunction(
       combinedUrl,
       {
         body: inputs.body,

@@ -1,9 +1,4 @@
-import {
-  TContext,
-  prefixUrl,
-  safeFetch,
-  QueryConfig,
-} from "@open-decision/api-helpers";
+import { TContext, prefixUrl, QueryConfig } from "@open-decision/api-helpers";
 import { loginUrl } from "../../urls";
 import { TLoginInput } from "./input";
 import { loginOutput } from "./output";
@@ -15,7 +10,7 @@ export const login =
       config?.urlPrefix ?? context.urlPrefix ?? ""
     );
 
-    return await safeFetch(
+    return await context.fetchFunction(
       combinedUrl,
       {
         body: inputs.body,

@@ -1,19 +1,11 @@
-import { z } from "zod";
 import { APIError, isAPIError } from "@open-decision/type-classes";
+import { FetchFunction } from "./fetchClientFunctionHelpers";
 
-type Config<TValidation extends z.ZodTypeAny> = {
-  validation?: TValidation;
-};
-
-export async function safeFetch<TValidation extends z.ZodTypeAny>(
-  url: string,
-  {
-    body,
-    headers,
-    ...options
-  }: Omit<RequestInit, "body"> & { body?: Record<string, any> },
-  { validation }: Config<TValidation> = {}
-): Promise<{ data: z.output<TValidation>; status: number }> {
+export const safeFetch: FetchFunction = async (
+  url,
+  { body, headers, ...options },
+  { validation } = {}
+) => {
   let response;
 
   try {
@@ -26,10 +18,10 @@ export async function safeFetch<TValidation extends z.ZodTypeAny>(
       ...options,
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw new APIError({
       code: "OFFLINE",
-      message: "The request failed because the user is offline",
+      message: "The user is offline. So the request failed.",
     });
   }
 
@@ -48,7 +40,7 @@ export async function safeFetch<TValidation extends z.ZodTypeAny>(
 
     return { data: parsedData, status: response.status };
   } catch (error) {
-    console.log(error);
+    console.error(error);
     if (isAPIError(error)) throw error;
 
     throw new APIError({
@@ -56,6 +48,6 @@ export async function safeFetch<TValidation extends z.ZodTypeAny>(
       message: "Something unexpected happened when fetching from the API.",
     });
   }
-}
+};
 
 export type FetchReturn<TData> = { data: TData; status: number };

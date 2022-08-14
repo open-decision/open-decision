@@ -1,9 +1,4 @@
-import {
-  TContext,
-  prefixUrl,
-  safeFetch,
-  QueryConfig,
-} from "@open-decision/api-helpers";
+import { TContext, prefixUrl, QueryConfig } from "@open-decision/api-helpers";
 import { verifyEmailUrl } from "../../urls";
 import { TVerifyEmailInput } from "./input";
 import { verifyEmailOutput } from "./output";
@@ -16,7 +11,7 @@ export const verifyEmail =
       config?.urlPrefix ?? context.urlPrefix
     );
 
-    return await safeFetch(
+    return await context.fetchFunction(
       combinedUrl,
       {
         body: inputs.body,

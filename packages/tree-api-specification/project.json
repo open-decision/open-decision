@@ -5,27 +5,19 @@
   "targets": {
     "build": {
       "executor": "@nrwl/js:swc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/tree-api-specification",
         "main": "packages/tree-api-specification/src/index.ts",
         "tsConfig": "packages/tree-api-specification/tsconfig.lib.json",
-        "assets": [
-          "packages/tree-api-specification/*.md"
-        ]
+        "assets": ["packages/tree-api-specification/*.md"]
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
+      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "packages/tree-api-specification/**/*.ts"
-        ]
+        "lintFilePatterns": ["packages/tree-api-specification/**/*.ts"]
       }
     },
     "test": {
