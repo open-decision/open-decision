@@ -4,7 +4,10 @@ import { APIError, ODError } from "@open-decision/type-classes";
 import { authCookieConfig } from "./utils/auth";
 
 export const middleware: NextMiddleware = async (request) => {
-  const OD = client({ urlPrefix: `${process.env.OD_API_ENDPOINT}/v1` });
+  const OD = client({
+    urlPrefix: `${process.env.NEXT_PUBLIC_OD_API_ENDPOINT}/v1`,
+    fetchFunction: safeFetch,
+  });
 
   try {
     const refreshToken = request.cookies.get("refreshToken");

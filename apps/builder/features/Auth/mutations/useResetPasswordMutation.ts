@@ -20,10 +20,14 @@ export function useResetPasswordMutation(
   return useMutation<any, ODError, any, unknown>(
     ["resetPassword"],
     ({ token, password }) => {
-      return safeFetch("/api/external-api/auth/reset-password", {
-        method: "POST",
-        body: { password, token },
-      });
+      return safeFetch(
+        "/api/external-api/auth/reset-password",
+        {
+          method: "POST",
+          body: { password, token },
+        },
+        {}
+      );
     },
     config
   );

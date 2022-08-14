@@ -51,7 +51,10 @@ export const refreshAuth = async (
   const token = req.cookies["token"];
   const refreshToken = req.cookies["refreshToken"];
 
-  const OD = client({ urlPrefix: `${process.env.OD_API_ENDPOINT}/v1` });
+  const OD = client({
+    urlPrefix: `${process.env.NEXT_PUBLIC_OD_API_ENDPOINT}/v1`,
+    fetchFunction: safeFetch,
+  });
 
   // When the token is still valid we don't need to refresh it and just return it
   if (token) {
