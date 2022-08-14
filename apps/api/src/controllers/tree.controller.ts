@@ -83,6 +83,7 @@ const createDecisionTree = catchAsync(async (req: Request, res: Response) => {
   const tree = await prisma.decisionTree.create({
     data: {
       name: reqData.body.name,
+      status: reqData.body.status,
       owner: { connect: { uuid: req.user.uuid } },
     },
     select: prismaSelectionForTree,
