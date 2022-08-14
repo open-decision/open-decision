@@ -2,6 +2,7 @@ import { NextMiddleware, NextResponse } from "next/server";
 import { client } from "@open-decision/api-client";
 import { APIError, ODError } from "@open-decision/type-classes";
 import { authCookieConfig } from "./utils/auth";
+import { safeFetch } from "@open-decision/api-helpers";
 
 export const middleware: NextMiddleware = async (request) => {
   const OD = client({
@@ -28,12 +29,10 @@ export const middleware: NextMiddleware = async (request) => {
         ...authCookieConfig,
         maxAge:
           Number(process.env.JWT_REFRESH_EXPIRATION_DAYS ?? 7) * 86400 * 1000,
-        domain: process.env.DOMAIN,
       });
       response.cookies.set("token", data.access.token.token, {
         ...authCookieConfig,
         maxAge: Number(process.env.JWT_ACCESS_EXPIRATION_MINUTES ?? 15) * 60,
-        domain: process.env.DOMAIN,
       });
 
       return response;
@@ -44,6 +43,7 @@ export const middleware: NextMiddleware = async (request) => {
       message: "The user is not authenticated",
     });
   } catch (error) {
+    console.error(error);
     const url = request.nextUrl.clone();
     url.pathname = "/auth/login";
 

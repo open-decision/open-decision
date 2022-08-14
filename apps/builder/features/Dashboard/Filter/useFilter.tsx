@@ -34,25 +34,17 @@ export function useFilter<
   const [sort, setSort] = React.useState<keyof TSortOptions>(initialSortOption);
   const [direction, setDirection] = React.useState<SortDirections>("ascending");
 
-  const [filteredData, setFilteredData] = React.useState<any[]>([]);
-
   const handleFilterChange = React.useCallback(
     function handleFilterChange() {
-      const modifiedData = pipe(
+      return pipe(
         data,
         search ? searchData(search) : identity,
         filter ? filterData(filter as string) : identity,
         sort ? sortData(sort as string, direction) : identity
       );
-
-      setFilteredData(modifiedData);
     },
     [data, search, filter, sort, direction]
   );
-
-  React.useEffect(() => {
-    handleFilterChange();
-  }, [handleFilterChange]);
 
   const SortButton = React.useCallback(
     () => (
@@ -60,31 +52,38 @@ export function useFilter<
         sort={sort as string}
         direction={direction}
         options={sortOptions}
-        setDirection={setDirection}
-        setSort={setSort}
+        setDirection={(direction) => {
+          setDirection(direction);
+          handleFilterChange();
+        }}
+        setSort={(option) => {
+          setSort(option);
+          handleFilterChange();
+        }}
       />
     ),
-    [direction, sort, sortOptions]
+    [direction, sort, sortOptions, handleFilterChange]
   );
 
   const FilterButton = React.useCallback(
     () => (
       <GenericFilterButton
         options={filterOptions}
-        setFilter={(newFilter) =>
+        setFilter={(newFilter) => {
           newFilter === filter
             ? setFilter(defaultFilter ?? "")
-            : setFilter(newFilter)
-        }
+            : setFilter(newFilter);
+          return handleFilterChange();
+        }}
         filter={filter}
         defaultFilter={defaultFilter}
       />
     ),
-    [defaultFilter, filter, filterOptions]
+    [defaultFilter, filter, filterOptions, handleFilterChange]
   );
 
   return {
-    filteredData,
+    filteredData: handleFilterChange(),
     search,
     filter,
     sort,
