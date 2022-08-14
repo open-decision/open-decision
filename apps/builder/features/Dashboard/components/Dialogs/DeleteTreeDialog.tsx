@@ -21,6 +21,7 @@ type Props = {
   children?: DialogTriggerProps["children"];
   css?: StyleObject;
   onDelete?: () => void;
+  onDeleteAsync?: () => Promise<any>;
 };
 
 export function DeleteTreeDialog({
@@ -32,14 +33,27 @@ export function DeleteTreeDialog({
   className,
   css,
   onDelete,
+  onDeleteAsync,
 }: Props) {
   const t = useTranslations("common.deleteTreeDialog");
   const formState = Form.useFormState({
     defaultValues: { treeName: "" },
   });
 
-  formState.useSubmit(() => {
-    deleteTree({ params: { uuid: tree.uuid } });
+  const { mutate: deleteTree, isLoading } = useTreeAPI().useDelete({
+    onSuccess: onDelete,
+  });
+
+  formState.useSubmit(async () => {
+    await deleteTree(
+      { params: { uuid: tree.uuid } },
+      {
+        onSuccess: () => {
+          setOpen?.(false);
+          onDeleteAsync?.();
+        },
+      }
+    );
   });
 
   formState.useValidate(() => {
@@ -50,13 +64,6 @@ export function DeleteTreeDialog({
       );
   });
 
-  const { mutate: deleteTree, isLoading } = useTreeAPI().useDelete({
-    onSuccess: () => {
-      setOpen?.(false);
-      onDelete?.();
-    },
-  });
-
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       {children ? <Dialog.Trigger asChild>{children}</Dialog.Trigger> : null}
@@ -65,9 +72,7 @@ export function DeleteTreeDialog({
         className={className}
         css={css}
       >
-        <Dialog.Header css={{ marginBottom: "$2" }}>
-          Projekt löschen
-        </Dialog.Header>
+        <Dialog.Header css={{ marginBottom: "$2" }}>{t("title")}</Dialog.Header>
         <Dialog.Description asChild>
           <Text css={{ marginBottom: "$4", color: "$gray11" }}>
             {t.rich("description", {
@@ -77,7 +82,7 @@ export function DeleteTreeDialog({
           </Text>
         </Dialog.Description>
         <Form.Root state={formState} validateOnBlur={false}>
-          <Form.Field Label="Projektname">
+          <Form.Field Label={t("treeNameInput.label")}>
             <Form.Input
               name={formState.names.treeName}
               required
@@ -85,7 +90,7 @@ export function DeleteTreeDialog({
             />
           </Form.Field>
           <Dialog.ButtonRow isLoading={isLoading} colorScheme="danger">
-            Löschen
+            {t("submit")}
           </Dialog.ButtonRow>
         </Form.Root>
       </Dialog.Content>
