@@ -47,6 +47,12 @@
         "jestConfig": "apps/api/jest.config.ts",
         "passWithNoTests": true
       }
+    },
+    "deploy": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "flyctl deploy --config apps/api/fly.toml --dockerfile apps/api/Dockerfile"
+      }
     }
   },
   "tags": []
