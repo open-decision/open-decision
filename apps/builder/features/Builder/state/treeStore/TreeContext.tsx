@@ -13,6 +13,7 @@ const TreeContext = React.createContext<TTreeContext | null>(null);
 
 type Props = { children: React.ReactNode };
 export const TreeProvider = ({ children }: Props) => {
+  const isClient = typeof window != "undefined";
   const id = useTreeId();
   const treeStore = React.useMemo(
     () => (id ? createTreeStore(id) : undefined),
@@ -27,7 +28,7 @@ export const TreeProvider = ({ children }: Props) => {
     });
 
   React.useEffect(() => {
-    if (id && treeStore) {
+    if (id && treeStore && isClient) {
       new IndexeddbPersistence(id, treeStore.yDoc);
       send({
         type: "OPEN",
@@ -40,7 +41,7 @@ export const TreeProvider = ({ children }: Props) => {
         send({ type: "CLOSE" });
       };
     }
-  }, [id, send, treeStore]);
+  }, [id, isClient, send, treeStore]);
 
   return id && treeStore ? (
     <TreeContext.Provider value={treeStore}>{children}</TreeContext.Provider>

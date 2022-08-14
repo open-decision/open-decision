@@ -27,7 +27,10 @@ export function createTreeStore(id: string) {
   const nonSyncedStore = proxy({
     connectionSourceNodeId: "",
     validConnections: [] as string[],
-    synced: new Promise((r) => (onSync = r)),
+    synced: new Promise((r) => {
+      if (typeof window === "undefined") return r(true);
+      onSync = r;
+    }),
     selectedNodeIds: [] as string[],
     selectedEdgeIds: [] as string[],
   });
