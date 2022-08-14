@@ -3,7 +3,6 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Button, Icon, ButtonProps } from "../../index";
 import { styled, keyframes, StyleObject } from "../../stitches";
 import { Heading } from "../../Heading";
-import { Box } from "../../Box";
 import { ColorKeys } from "../../internal/utils";
 import { Stack } from "../../Layout/Stack";
 import { SubmitButton, SubmitButtonProps } from "../../Button/SubmitButton";

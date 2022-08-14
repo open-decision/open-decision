@@ -16,15 +16,7 @@ export type CheckboxProps = CheckboxPrimitive.CheckboxStateProps<boolean> &
   Omit<CheckboxPrimitive.CheckboxProps, "name">;
 export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
   function Box(
-    {
-      defaultValue,
-      value,
-      setValue,
-      "data-test": dataTest,
-      onBlur,
-      onFocusVisible,
-      ...props
-    },
+    { defaultValue, value, setValue, onBlur, onFocusVisible, ...props },
     ref
   ) {
     const checkbox = CheckboxPrimitive.useCheckboxState<boolean>({
@@ -36,7 +28,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
     const [focusVisible, setFocusVisible] = React.useState(false);
 
     return (
-      <label data-test={dataTest}>
+      <label>
         <VisuallyHidden>
           <CheckboxPrimitive.Checkbox
             state={checkbox}
