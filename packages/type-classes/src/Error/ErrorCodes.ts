@@ -10,11 +10,14 @@ export type ProgrammerErrors =
 export type InterpreterErrors =
   | "INVALID_TREE"
   | "MISSING_STARTNODE"
-  | "NO_CURRENT_NODE";
+  | "NO_CURRENT_NODE"
+  | "NO_EDGE_FOR_THRUTHY_CONDITION"
+  | "NO_TRUTHY_CONDITION";
 
 export type BuilderErrors =
   | "AUTH_VALIDATION_FAILED"
-  | "WEBSOCKET_CONNECTION_FAILED";
+  | "WEBSOCKET_CONNECTION_FAILED"
+  | "IMPORT_INVALID_FILE";
 
 export enum APIErrors {
   NOT_FOUND = 404,
@@ -43,7 +46,6 @@ export enum APIErrors {
 
 export type ErrorCodes =
   | CommonErrors
-  | ProgrammerErrors
   | InterpreterErrors
   | BuilderErrors
   | keyof typeof APIErrors;

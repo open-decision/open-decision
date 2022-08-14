@@ -29,20 +29,19 @@ export class ODError<
   }
 }
 
-export type ODProgrammerErrorConstructorParameters = Omit<
-  ODErrorConstructorParameters<ProgrammerErrors>,
-  "code"
-> & {
+export type ODProgrammerErrorConstructorParameters = {
   link?: string;
   code: ProgrammerErrors;
+  message?: string;
 };
 
-export class ODProgrammerError extends ODError<ProgrammerErrors> {
+export class ODProgrammerError extends Error {
   link?: string;
+  code?: ProgrammerErrors;
 
-  constructor({ link, ...args }: ODProgrammerErrorConstructorParameters) {
-    super(args);
-
+  constructor({ link, code, message }: ODProgrammerErrorConstructorParameters) {
+    super(message);
+    this.code = code;
     this.link = link;
   }
 }
@@ -67,5 +66,6 @@ export class ODValidationError<
     this.issues = zodError?.issues;
   }
 }
+export const isODError = (error: any): error is ODError => !!error?.code;
 
 export { ZodError } from "zod";
