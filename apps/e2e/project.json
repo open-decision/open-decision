@@ -1,0 +1,82 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/e2e/src",
+  "projectType": "application",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/e2e/**/*.{js,ts}"]
+      }
+    },
+    "start:db": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": ["docker compose -f docker-compose.yml up -d"],
+        "cwd": "apps/e2e"
+      }
+    },
+    "cleanup": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          "docker compose -f docker-compose.yml down",
+          "rm -rf sessions"
+        ],
+        "cwd": "apps/e2e"
+      }
+    },
+    "test": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "pnpm playwright test",
+        "cwd": "apps/e2e"
+      },
+      "dependsOn": [{ "target": "build", "projects": "dependencies" }]
+    },
+    "test:ci": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "pnpm playwright test --config=playwright.ci.config.ts",
+        "cwd": "apps/e2e"
+      },
+      "dependsOn": [{ "target": "build", "projects": "dependencies" }]
+    },
+    "show-trace": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "pnpm playwright show-trace",
+        "cwd": "apps/e2e"
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "pnpm playwright show-report playwright-report",
+        "cwd": "apps/e2e"
+      }
+    },
+    "serve:app": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          "pnpm nx migrate:deploy prisma",
+          "pnpm nx run-many --target=serve:test --projects=builder,api --parallel=2 --output-style=stream"
+        ],
+        "parallel": false
+      },
+      "dependsOn": [
+        { "target": "start:db", "projects": "self" },
+        { "target": "build", "projects": "dependencies" }
+      ]
+    },
+    "record": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "pnpm playwright codegen --load-storage=apps/e2e/storageState.json localhost:4400"
+      }
+    }
+  },
+  "tags": []
+}

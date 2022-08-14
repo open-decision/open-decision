@@ -1,0 +1,12 @@
+{
+  "Test": {
+    "prefix": "test",
+    "body": ["test('$1', async ({page}) => {$2test.fixme()})"],
+    "description": "Add a playwright test"
+  },
+  "Translate": {
+    "prefix": "translate",
+    "body": ["{t('$1')}"],
+    "description": "Add boilerplate for i18 translation"
+  }
+}

@@ -52,7 +52,7 @@
     "@nrwl/eslint-plugin-nx": "^14.4.2",
     "@nrwl/jest": "^14.4.2",
     "@nrwl/linter": "^14.4.2",
-    "@playwright/test": "^1.23.3",
+    "@playwright/test": "^1.25.0",
     "@sentry/cli": "^2.4.0",
     "@swc/cli": "~0.1.57",
     "@swc/core": "~1.2.213",
