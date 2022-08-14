@@ -5,14 +5,10 @@
     "design-system",
     "interpreter",
     "api",
-    "storybook",
     "renderer-app",
-    "rich-text-editor",
-    "interpreter-react",
     "models",
-    "api-specification",
-    "tree-api-specification",
-    "api-client"
+    "api-client",
+    "e2e"
   ],
   "typescript.tsdk": "node_modules/typescript/lib",
   "todo-tree.general.tags": ["BUG", "HACK", "FIXME", "TODO", "SECURITY"],

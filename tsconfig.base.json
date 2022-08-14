@@ -42,7 +42,8 @@
       "@open-decision/type-classes": ["packages/type-classes/src/index.ts"],
       "@open-decision/user-api-specification": [
         "packages/user-api-specification/src/index.ts"
-      ]
+      ],
+      "@open-decision/test-utils": ["packages/test-utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
