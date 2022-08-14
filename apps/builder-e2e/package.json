@@ -1,7 +1,0 @@
-{
-  "name": "@open-decision/builder-e2e",
-  "dependencies": {
-    "@open-decision/api-client": "link:../../dist/packages/api-client",
-    "@open-decision/prisma": "workspace:*"
-  }
-}
