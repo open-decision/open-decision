@@ -31,7 +31,7 @@ type ResolveEvents = {
 
 type ResolverEvents =
   | { type: "VALID_INTERPRETATION"; target: string }
-  | { type: "INVALID_INTERPRETATION"; exception: InterpreterExceptions };
+  | { type: "INVALID_INTERPRETATION"; exception: InterpreterErrors };
 
 const resolveConditions =
   (tree: Tree.TTree) =>
@@ -66,7 +66,7 @@ const resolveConditions =
     });
   };
 
-export type InterpreterExceptions =
+export type InterpreterErrors =
   | MissingEdgeForThruthyConditionException
   | NoTruthyConditionException;
 
@@ -94,12 +94,12 @@ export type InterpreterService = Interpreter<
 >;
 
 export type InterpreterOptions = {
-  onException?: (exception: InterpreterExceptions) => void;
+  onError?: (exception: InterpreterErrors) => void;
 };
 
 export const createInterpreterMachine = (
   tree: Required<Tree.TTree, "startNode">,
-  { onException }: InterpreterOptions = {}
+  { onError: onException }: InterpreterOptions = {}
 ) =>
   createMachine(
     {
