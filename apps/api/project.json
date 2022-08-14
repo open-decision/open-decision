@@ -11,11 +11,6 @@
         "main": "apps/api/src/index.ts",
         "tsConfig": "apps/api/tsconfig.app.json"
       },
-      "defaultConfiguration": "production",
-      "configurations": {
-        "production": {},
-        "development": {}
-      },
       "dependsOn": [
         {
           "target": "build",
@@ -23,23 +18,18 @@
         }
       ]
     },
-    "start": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "command": "node dist/apps/api/main.js"
-      }
-    },
     "serve": {
       "executor": "@nrwl/node:node",
       "options": {
-        "buildTarget": "api:build:development"
+        "buildTarget": "api:build"
       },
       "watch": true
     },
     "serve:test": {
       "executor": "@nrwl/node:node",
       "options": {
-        "buildTarget": "api:build:development"
+        "buildTarget": "api:build",
+        "inspect": false
       },
       "watch": true
     },
