@@ -1,4 +1,4 @@
-import prisma from "../../src/init-prisma-client";
+import { prisma } from "@open-decision/prisma";
 export const setupTestDB = () => {
   beforeEach(async () => {
     const deleteToken = prisma.token.deleteMany();

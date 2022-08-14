@@ -10,29 +10,31 @@
         "cwd": "packages/prisma"
       }
     },
-    "build": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "commands": [
-          "mkdir -p ../../dist/packages/prisma/src",
-          "cp -R ./src/generated ../../dist/packages/prisma/src"
-        ],
-        "cwd": "packages/prisma",
-        "parallel": false
-      },
-      "dependsOn": [
-        {
-          "target": "generate_prisma",
-          "projects": "self"
-        }
-      ]
-    },
-    "generate_prisma": {
+    "generate": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
         "command": "prisma generate --schema=./src/schema.prisma",
         "cwd": "packages/prisma"
       }
+    },
+    "build:lib": {
+      "executor": "@nrwl/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/prisma",
+        "main": "packages/prisma/src/index.ts",
+        "tsConfig": "packages/prisma/tsconfig.lib.json",
+        "assets": ["packages/prisma/*.md", "node_modules/.prisma"]
+      },
+      "dependsOn": [{ "target": "generate", "projects": "self" }]
+    },
+    "build": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "cp -r node_modules/.prisma ../../dist/packages/prisma/node_modules",
+        "cwd": "packages/prisma"
+      },
+      "dependsOn": [{ "target": "build:lib", "projects": "self" }]
     },
     "migrate:deploy": {
       "executor": "@nrwl/workspace:run-commands",
