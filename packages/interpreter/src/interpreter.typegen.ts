@@ -2,16 +2,7 @@
 
 export interface Typegen0 {
   "@@xstate/typegen": true;
-  eventsCausingActions: {
-    resetToInitialContext: "RESET";
-    assignAnswerToContext: "ADD_USER_ANSWER";
-    goBack: "GO_BACK";
-    goForward: "GO_FORWARD";
-    assignNewTarget: "VALID_INTERPRETATION";
-    callOnException: "INVALID_INTERPRETATION";
-  };
   internalEvents: {
-    "xstate.init": { type: "xstate.init" };
     "done.invoke.interpret_select_answer": {
       type: "done.invoke.interpret_select_answer";
       data: unknown;
@@ -21,6 +12,7 @@ export interface Typegen0 {
       type: "error.platform.interpret_select_answer";
       data: unknown;
     };
+    "xstate.init": { type: "xstate.init" };
   };
   invokeSrcNameMap: {
     resolveConditions: "done.invoke.interpret_select_answer";
@@ -30,6 +22,14 @@ export interface Typegen0 {
     services: never;
     guards: never;
     delays: never;
+  };
+  eventsCausingActions: {
+    assignAnswerToContext: "ADD_USER_ANSWER";
+    assignNewTarget: "VALID_INTERPRETATION";
+    callOnException: "INVALID_INTERPRETATION";
+    goBack: "GO_BACK";
+    goForward: "GO_FORWARD";
+    resetToInitialContext: "RESET";
   };
   eventsCausingServices: {
     resolveConditions: "EVALUATE_NODE_CONDITIONS";

@@ -21,18 +21,35 @@ import { client } from "@open-decision/api-client";
 import Head from "next/head";
 import { dehydrate, QueryClient } from "@tanstack/react-query";
 import { useUser } from "../features/Auth/useUserQuery";
+import { useTranslations } from "next-intl";
+import { safeFetch } from "@open-decision/api-helpers";
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
+  const messages = await import(`@open-decision/translations`).then(
+    (translations) => ({
+      common: translations.de.common,
+      settings: translations.de.settings,
+    })
+  );
+
   const OD = client({
     token: context.req.cookies["token"],
     urlPrefix: `${process.env.NEXT_PUBLIC_OD_API_ENDPOINT}/v1`,
+    fetchFunction: safeFetch,
   });
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery(["user"], () => OD.user.getUser({}));
 
-  return { props: { dehydratedState: dehydrate(queryClient) } };
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+      messages,
+      locale: context.locale,
+      now: new Date().toISOString(),
+    },
+  };
 };
 
 const SideMenuLink = styled("a", Label, {
@@ -57,6 +74,7 @@ const SideMenuLink = styled("a", Label, {
 SideMenuLink.defaultProps = { size: "medium" };
 
 export default function SettingsPage() {
+  const t = useTranslations("settings");
   const { data: user, isLoading, isSuccess } = useUser().useUserQuery();
 
   if (isLoading) {
@@ -67,7 +85,7 @@ export default function SettingsPage() {
     return (
       <>
         <Head>
-          <title>Open Decision Settings</title>
+          <title>{t("pageTitle")}</title>
         </Head>
         <BaseHeader css={{ gridColumn: "1 / -1" }} />
         <Heading
@@ -75,7 +93,7 @@ export default function SettingsPage() {
           as="h1"
           css={{ gridColumn: "2 / 4", marginBlock: "$9 $7" }}
         >
-          Einstellungen
+          {t("title")}
         </Heading>
         <Stack css={{ gap: "$1", gridColumn: "2" }}>
           <Link href="#account" passHref>
@@ -83,7 +101,7 @@ export default function SettingsPage() {
               <Icon css={{ fontSize: "1.5em" }}>
                 <AvatarIcon />
               </Icon>
-              Account
+              {t("account.title")}
             </SideMenuLink>
           </Link>
         </Stack>

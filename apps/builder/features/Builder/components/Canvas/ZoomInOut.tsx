@@ -6,6 +6,7 @@ import {
   StyleObject,
 } from "@open-decision/design-system";
 import { ZoomInIcon, ZoomOutIcon } from "@radix-ui/react-icons";
+import { useTranslations } from "next-intl";
 import { useReactFlow } from "react-flow-renderer";
 
 const Container = styled(Row, {
@@ -18,6 +19,7 @@ const Container = styled(Row, {
 type Props = { css?: StyleObject };
 
 export function ZoomInOut({ css }: Props) {
+  const t = useTranslations("builder.canvas.zoomInAndOut");
   const { zoomIn, zoomOut } = useReactFlow();
 
   return (
@@ -26,8 +28,9 @@ export function ZoomInOut({ css }: Props) {
         onClick={() => zoomIn({ duration: 200 })}
         variant="neutral"
         square
+        name={t("zoomIn.hiddenLabel")}
       >
-        <Icon>
+        <Icon label={t("zoomIn.hiddenLabel")}>
           <ZoomInIcon />
         </Icon>
       </Button>
@@ -35,8 +38,9 @@ export function ZoomInOut({ css }: Props) {
         onClick={() => zoomOut({ duration: 200 })}
         variant="neutral"
         square
+        name={t("zoomOut.hiddenLabel")}
       >
-        <Icon>
+        <Icon label={t("zoomOut.hiddenLabel")}>
           <ZoomOutIcon />
         </Icon>
       </Button>

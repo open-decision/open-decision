@@ -1,4 +1,5 @@
 import { client } from "@open-decision/api-client";
+import { safeFetch } from "@open-decision/api-helpers";
 import {
   TForgotPasswordInput,
   TForgotPasswordOutput,
@@ -19,6 +20,7 @@ export function useForgotPasswordMutation(
 ) {
   const OD = client({
     urlPrefix: `${process.env.NEXT_PUBLIC_OD_API_ENDPOINT}/v1`,
+    fetchFunction: safeFetch,
   });
 
   return useMutation<any, ODError, any, unknown>(

@@ -1,4 +1,5 @@
 import { client } from "@open-decision/api-client";
+import { safeFetch } from "@open-decision/api-helpers";
 import { TLoginOutput } from "@open-decision/auth-api-specification";
 import { APIError, ODError } from "@open-decision/type-classes";
 import { serialize } from "cookie";
@@ -34,12 +35,10 @@ export const setCookieHeaders = (
       ...authCookieConfig,
       maxAge:
         Number(process.env.JWT_REFRESH_EXPIRATION_DAYS ?? 7) * 86400 * 1000,
-      domain: process.env.DOMAIN,
     }),
     serialize("token", loginResponse.access.token.token, {
       ...authCookieConfig,
       maxAge: Number(process.env.JWT_ACCESS_EXPIRATION_MINUTES ?? 15) * 60,
-      domain: process.env.DOMAIN,
     }),
   ]);
 };
@@ -51,7 +50,10 @@ export const refreshAuth = async (
   const token = req.cookies["token"];
   const refreshToken = req.cookies["refreshToken"];
 
-  const OD = client({ urlPrefix: `${process.env.OD_API_ENDPOINT}/v1` });
+  const OD = client({
+    urlPrefix: `${process.env.NEXT_PUBLIC_OD_API_ENDPOINT}/v1`,
+    fetchFunction: safeFetch,
+  });
 
   // When the token is still valid we don't need to refresh it and just return it
   if (token) {

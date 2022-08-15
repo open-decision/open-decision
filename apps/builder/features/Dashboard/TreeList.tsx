@@ -16,6 +16,7 @@ import { useFilter } from "./Filter";
 import { Card } from "../../components/Card";
 import { NewProjectDropdown } from "./NewProjectDropdown";
 import { useTreeAPI } from "../Data/useTreeAPI";
+import { useTranslations } from "next-intl";
 
 const NoProjects = styled("span", Heading);
 
@@ -30,14 +31,15 @@ const filters = {
 };
 
 export const TreeList = () => {
+  const t = useTranslations("dashboard");
+
   const {
     data: trees,
     isLoading,
     isFetching,
-    isSuccess,
   } = useTreeAPI().useTreesQuery({ select: ({ data }) => data });
 
-  const hasTrees = isSuccess && trees.length > 0;
+  const hasTrees = trees && trees.length > 0;
 
   const { search, setSearch, SortButton, FilterButton, filteredData } =
     useFilter(trees ?? [], sorts, "updatedAt", filters, "active");
@@ -56,7 +58,7 @@ export const TreeList = () => {
   return hasTrees ? (
     <>
       <Row css={{ justifyContent: "space-between", marginBlock: "$9 $7" }}>
-        <Heading size="large">Meine Projekte</Heading>
+        <Heading size="large">{t("title")}</Heading>
         <NewProjectDropdown />
       </Row>
       <Form.Root
@@ -68,7 +70,7 @@ export const TreeList = () => {
         }}
       >
         <Form.Field
-          Label="Suche"
+          Label={t("treeList.search.label")}
           layout="no-label"
           css={{ flexBasis: "400px" }}
         >
@@ -80,7 +82,7 @@ export const TreeList = () => {
                 <MagnifyingGlassIcon />
               </Icon>
             }
-            placeholder="Suche"
+            placeholder={t("treeList.search.placeholder")}
           />
         </Form.Field>
         <Row css={{ gap: "$2", alignItems: "center" }}>
@@ -109,7 +111,7 @@ export const TreeList = () => {
           ))
         ) : (
           <Stack center css={{ height: "100%" }}>
-            <NoProjects>Keine Projekte</NoProjects>
+            <NoProjects>{t("treeList.noResults")}</NoProjects>
           </Stack>
         )}
       </Stack>
@@ -119,18 +121,20 @@ export const TreeList = () => {
   );
 };
 
-const EmptyState = () => (
-  <Stack center css={{ flex: 1 }}>
-    <Card css={{ alignItems: "center", padding: "$9", gap: "$2" }}>
-      <Heading size="medium">
-        Sie haben noch kein Open-Decision-Projekt.
-      </Heading>
-      <Text size="large" css={{ marginBottom: "$6" }}>
-        Erstellen oder importieren Sie jetzt ihr erstes Projekt.
-      </Text>
-      <NewProjectDropdown size="large" />
-    </Card>
-  </Stack>
-);
+const EmptyState = () => {
+  const t = useTranslations("dashboard.treeList.empty");
+
+  return (
+    <Stack center css={{ flex: 1 }}>
+      <Card css={{ alignItems: "center", padding: "$9", gap: "$2" }}>
+        <Heading size="medium">{t("title")}</Heading>
+        <Text size="large" css={{ marginBottom: "$6" }}>
+          {t("callToAction")}{" "}
+        </Text>
+        <NewProjectDropdown size="large" />
+      </Card>
+    </Stack>
+  );
+};
 
 export default TreeList;

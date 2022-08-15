@@ -21,6 +21,7 @@
     "baseUrl": ".",
     "paths": {
       "@open-decision/api-client": ["packages/api-client/src/index.ts"],
+      "@open-decision/prisma": ["packages/prisma/src/index.ts"],
       "@open-decision/api-helpers": ["packages/api-helpers/src/index.ts"],
       "@open-decision/auth-api-specification": [
         "packages/auth-api-specification/src/index.ts"
@@ -41,7 +42,8 @@
       "@open-decision/type-classes": ["packages/type-classes/src/index.ts"],
       "@open-decision/user-api-specification": [
         "packages/user-api-specification/src/index.ts"
-      ]
+      ],
+      "@open-decision/test-utils": ["packages/test-utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

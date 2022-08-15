@@ -25,8 +25,25 @@ export const Context = z.object({
   requestOrigin: z.string().optional(),
 });
 
+type Config<TValidation extends z.ZodTypeAny> = {
+  validation?: TValidation;
+};
+
+export type FetchFunction = <TValidation extends z.ZodTypeAny = z.ZodTypeAny>(
+  url: string,
+  {
+    body,
+    headers,
+    ...options
+  }: Omit<RequestInit, "body"> & {
+    body?: Record<string, any>;
+  },
+  { validation }: Config<TValidation>
+) => Promise<{ data: z.output<TValidation>; status: number }>;
+
 export type TContext = z.infer<typeof Context> & {
   headers?: HeadersInit;
+  fetchFunction: FetchFunction;
 };
 
 export type QueryConfig = TContext;

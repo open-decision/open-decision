@@ -10,8 +10,16 @@ export const updateTree =
 
     if (prefix) combinedUrl = prefix + combinedUrl;
 
-    return await safeFetch(combinedUrl, {
-      body: inputs.body,
-      method: "PATCH",
-    });
+    return await context.fetchFunction(
+      combinedUrl,
+      {
+        body: inputs.body,
+        method: "PATCH",
+        headers: {
+          authorization: `Bearer ${context.token}`,
+          ...context.headers,
+        },
+      },
+      {}
+    );
   };

@@ -19,10 +19,12 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { ExportDialog } from "./ExportDialog";
 import { useTreeAPI } from "../../Data/useTreeAPI";
+import { useTranslations } from "next-intl";
 
 type Props = { css?: StyleObject; treeId: string };
 
 export function ProjectMenu({ css, treeId }: Props) {
+  const t = useTranslations("builder");
   const router = useRouter();
 
   const { data: name } = useTreeAPI().useTreeQuery(treeId, {
@@ -51,7 +53,7 @@ export function ProjectMenu({ css, treeId }: Props) {
             className={defaultTheme}
             css={{ groupColor: "$black" }}
             tree={{ uuid: treeId, name: name ?? "Kein Name" }}
-            onDelete={() => router.push("/")}
+            onDeleteAsync={() => router.push("/")}
           />
         ),
       }}
@@ -71,7 +73,7 @@ export function ProjectMenu({ css, treeId }: Props) {
               <Icon>
                 <ArrowLeftIcon />
               </Icon>
-              Zurück zum Dashboard
+              {t("projectMenu.backToDashboard")}
             </Link>
           </DropdownMenu.Item>
         </NextLink>
@@ -81,14 +83,14 @@ export function ProjectMenu({ css, treeId }: Props) {
             <Icon>
               <Pencil2Icon />
             </Icon>
-            Namen ändern
+            {t("projectMenu.changeName")}{" "}
           </DropdownMenu.DialogItem>
         </UpdateTreeDialog>
         <DropdownMenu.DialogItem dialogKey="export">
           <Icon>
             <Share2Icon />
           </Icon>
-          Exportieren
+          {t("projectMenu.export")}
         </DropdownMenu.DialogItem>
         <DropdownMenu.DialogItem
           dialogKey="delete"
@@ -97,7 +99,7 @@ export function ProjectMenu({ css, treeId }: Props) {
           <Icon>
             <TrashIcon />
           </Icon>
-          Projekt löschen
+          {t("projectMenu.delete")}
         </DropdownMenu.DialogItem>
       </DropdownMenu.Content>
     </DropdownMenu.Root>

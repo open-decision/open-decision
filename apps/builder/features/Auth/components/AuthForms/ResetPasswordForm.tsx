@@ -1,12 +1,16 @@
-import { Form, ErrorMessage } from "@open-decision/design-system";
+import { Form } from "@open-decision/design-system";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/router";
 import * as React from "react";
+import { ErrorMessage } from "../../../../components/Error/ErrorMessage";
+import { PasswordInput } from "../../../../components/PasswordInput";
 import { useNotificationStore } from "../../../Notifications/NotificationState";
 import { useResetPasswordMutation } from "../../mutations/useResetPasswordMutation";
 
 type Props = { token: string };
 
 export function ResetPasswordForm({ token }: Props) {
+  const t = useTranslations("resetPassword");
   const { addNotification } = useNotificationStore();
   const router = useRouter();
   const {
@@ -37,23 +41,16 @@ export function ResetPasswordForm({ token }: Props) {
 
   return (
     <Form.Root state={formState}>
-      <Form.Field Label="Neues Passwort">
-        <Form.Input
-          name={formState.names.newPassword}
-          required
-          type="password"
-          placeholder="*******"
-        />
-      </Form.Field>
+      <PasswordInput name={formState.names.newPassword} />
       {error ? (
-        <ErrorMessage css={{ marginTop: "$2" }}>{error.message}</ErrorMessage>
+        <ErrorMessage code={error.code} css={{ marginTop: "$2" }} />
       ) : null}
       <Form.Submit
         isLoading={isLoading}
         type="submit"
         css={{ marginTop: "$6" }}
       >
-        Passwort zurücksetzen
+        {t("submitButton")}
       </Form.Submit>
     </Form.Root>
   );

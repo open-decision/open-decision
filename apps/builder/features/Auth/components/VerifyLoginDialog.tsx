@@ -4,7 +4,6 @@ import {
   DialogTriggerProps,
   Form,
   Text,
-  ErrorMessage,
 } from "@open-decision/design-system";
 import { InfoBox, InfoBoxProps } from "../../Notifications/InfoBox";
 import { ColorKeys } from "@open-decision/design-system";
@@ -14,6 +13,10 @@ import {
   onVerifyFailure,
 } from "../verifyLogin/verifyLogin.machine";
 import { useMachine } from "@xstate/react";
+import { useTranslations } from "next-intl";
+import { EmailField } from "../../../components/EmailInput";
+import { PasswordInput } from "../../../components/PasswordInput";
+import { ErrorMessage } from "../../../components/Error/ErrorMessage";
 
 export type VerfiyLoginDialogProps = DialogTriggerProps & {
   open?: boolean;
@@ -37,10 +40,11 @@ export function VerifyLoginDialog({
   onVerifyFailure,
   onClose,
   colorScheme = "success",
-  description = "Bitte bestätigen Sie ihre Identität.",
+  description,
   additionalMessage,
   email,
 }: VerfiyLoginDialogProps) {
+  const t = useTranslations("common.verifyLogin");
   const [state, send] = useMachine(
     createVerifyLoginMachine(email, onVerify, onVerifyFailure)
   );
@@ -55,6 +59,8 @@ export function VerifyLoginDialog({
   formState.useSubmit(() => {
     send({ type: "VERIFY_LOGIN", password: formState.values.password });
   });
+
+  const definedDescription = description ?? t("descriptionFallback");
 
   return (
     <Dialog.Root
@@ -75,40 +81,26 @@ export function VerifyLoginDialog({
           Passwort verifizieren
         </Dialog.Header>
         <Dialog.Description asChild>
-          {typeof description === "string" ? (
-            <Text>{description}</Text>
+          {typeof definedDescription === "string" ? (
+            <Text>{definedDescription}</Text>
           ) : (
-            description
+            definedDescription
           )}
         </Dialog.Description>
-        <Form.Root
-          state={formState}
-          css={{
-            marginTop: "$4",
-          }}
-        >
-          <Form.Field Label="E-Mail">
-            <Form.Input disabled name={formState.names.email} type="email" />
-          </Form.Field>
-          <Form.Field Label="Passwort">
-            <Form.Input
-              autoFocus
-              name={formState.names.password}
-              required
-              placeholder="*****"
-              type="password"
-            />
-          </Form.Field>
+        <Form.Root state={formState} css={{ marginTop: "$4" }}>
+          <EmailField name={formState.names.email} disabled />
+          <PasswordInput autoFocus name={formState.names.password} />
           {state.context.Error ? (
-            <ErrorMessage css={{ marginTop: "$2" }}>
-              {state.context.Error.message}
-            </ErrorMessage>
+            <ErrorMessage
+              css={{ marginTop: "$2" }}
+              code={state.context.Error.code}
+            />
           ) : null}
           <Dialog.ButtonRow
             isLoading={state.matches("verifingLogin")}
             colorScheme={colorScheme}
           >
-            Bestätigen
+            {t("submit")}
           </Dialog.ButtonRow>
         </Form.Root>
       </Dialog.Content>

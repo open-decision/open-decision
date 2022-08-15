@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Box } from "../Box";
 import { styled } from "../stitches";
 import { textStyles } from "../Text";
@@ -16,3 +17,5 @@ export const ErrorMessage = styled(Box, textStyles, {
     border: "1px solid $colors$danger5",
   },
 });
+
+export type ErrorMessageProps = React.ComponentProps<typeof ErrorMessage>;

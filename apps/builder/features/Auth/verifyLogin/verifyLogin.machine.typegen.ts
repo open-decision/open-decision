@@ -2,9 +2,6 @@
 
 export interface Typegen0 {
   "@@xstate/typegen": true;
-  eventsCausingActions: {
-    assignErrorToContext: "FAILED_VERIFY_LOGIN";
-  };
   internalEvents: {
     "xstate.init": { type: "xstate.init" };
   };
@@ -17,6 +14,9 @@ export interface Typegen0 {
     guards: never;
     delays: never;
   };
+  eventsCausingActions: {
+    assignErrorToContext: "FAILED_VERIFY_LOGIN";
+  };
   eventsCausingServices: {
     verifyLogin: "VERIFY_LOGIN";
   };
@@ -24,8 +24,8 @@ export interface Typegen0 {
   eventsCausingDelays: {};
   matchesStates:
     | "unverified"
-    | "verifingLogin"
+    | "verification_failed"
     | "verified"
-    | "verification_failed";
+    | "verifingLogin";
   tags: never;
 }

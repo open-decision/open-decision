@@ -5,10 +5,13 @@ import { VerifiedSettingsChange } from "./VerifiedSettingsChange";
 import { TGetUserOutput } from "@open-decision/user-api-specification";
 import { useNotificationStore } from "../Notifications/NotificationState";
 import { useUser } from "../Auth/useUserQuery";
+import { useTranslations } from "next-intl";
+import { PasswordInput } from "../../components/PasswordInput";
 
 type Props = { user: TGetUserOutput };
 
 export function ChangePassword({ user }: Props) {
+  const t = useTranslations("settings.account.changePassword");
   const { addNotification } = useNotificationStore();
   const formState = Form.useFormState({
     defaultValues: {
@@ -28,7 +31,7 @@ export function ChangePassword({ user }: Props) {
     },
     onSuccess: () => {
       addNotification({
-        title: "Passwort erfolgreich geändert",
+        title: t("success.title"),
         variant: "success",
       });
       formState.reset();
@@ -48,23 +51,19 @@ export function ChangePassword({ user }: Props) {
     >
       <Card>
         <Heading as="h3" size="small">
-          Passwort ändern
+          {t("title")}
         </Heading>
         <Form.Root state={formState} resetOnSubmit={false}>
-          <Form.Field Label="Neues Passwort">
-            <Form.Input
-              name={formState.names.newPassword}
-              required
-              type="password"
-              placeholder="********"
-            />
-          </Form.Field>
+          <PasswordInput
+            name={formState.names.newPassword}
+            customLabel={t("inputLabel")}
+          />
           <Form.Submit
             isLoading={isLoading}
             variant="secondary"
             css={{ marginLeft: "auto", marginTop: "$3" }}
           >
-            Passwort ändern
+            {t("submit")}
           </Form.Submit>
         </Form.Root>
       </Card>

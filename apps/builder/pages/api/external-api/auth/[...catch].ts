@@ -8,7 +8,7 @@ const authCatch: NextApiHandler = async (req, res) => {
   try {
     const path = req.url?.split("external-api")[1];
     const authResponse = await safeFetch(
-      `${process.env.OD_API_ENDPOINT}/v1${path}`,
+      `${process.env.NEXT_PUBLIC_OD_API_ENDPOINT}/v1${path}`,
       {
         body: req.body,
         method: req.method,
@@ -18,9 +18,9 @@ const authCatch: NextApiHandler = async (req, res) => {
 
     setCookieHeaders(req, res, authResponse.data);
 
-    res.redirect(303, "/");
+    return res.status(authResponse.status).json(authResponse.data.user);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     if (isAPIError(error)) {
       return res.status(error.statusCode).json(error);
     }

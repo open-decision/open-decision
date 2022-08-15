@@ -9,7 +9,7 @@ import {
   TGetTreesOutput,
   TUpdateTreeInput,
 } from "@open-decision/tree-api-specification";
-import { APIError, Tree } from "@open-decision/type-classes";
+import { APIError, ODError, Tree } from "@open-decision/type-classes";
 import {
   useMutation,
   UseMutationOptions,
@@ -23,12 +23,15 @@ import { bindProxyAndYMap } from "valtio-yjs";
 import { proxiedOD } from "../Data/odClient";
 import { useNotificationStore } from "../Notifications/NotificationState";
 import { useTreeContext } from "../Builder/state/treeStore/TreeContext";
+import { useTranslations } from "next-intl";
+import { z } from "zod";
 
 export const treesQueryKey = ["Trees"] as const;
 export const treeQueryKey = (treeUuid: string) =>
   ["Tree", ...treesQueryKey, treeUuid] as const;
 
 export const useTreeAPI = () => {
+  const t = useTranslations("common");
   const queryClient = useQueryClient();
   const { addNotification } = useNotificationStore();
 
@@ -36,8 +39,8 @@ export const useTreeAPI = () => {
     select?: (data: FetchReturn<TGetTreesOutput>) => TData;
   }) => {
     return useQuery(treesQueryKey, () => proxiedOD.trees.getCollection({}), {
+      staleTime: 5000,
       ...options,
-      suspense: true,
     });
   };
 
@@ -47,9 +50,11 @@ export const useTreeAPI = () => {
   ) =>
     useQuery(
       treeQueryKey(uuid),
-      () => proxiedOD.trees.getSingle({ params: { uuid } }),
+      () => {
+        return proxiedOD.trees.getSingle({ params: { uuid } });
+      },
       {
-        suspense: true,
+        staleTime: 5000,
         ...options,
       }
     );
@@ -67,7 +72,7 @@ export const useTreeAPI = () => {
         options?.onSuccess?.(...params);
         queryClient.invalidateQueries(treesQueryKey);
         addNotification({
-          title: "Baum erfolgreich erstellt",
+          title: t("createTreeDialog.successNotification"),
           variant: "success",
         });
       },
@@ -78,13 +83,13 @@ export const useTreeAPI = () => {
   ) =>
     useMutation(["deleteTree"], (data) => proxiedOD.trees.delete(data), {
       ...options,
-      onSuccess: (...params) => {
-        options?.onSuccess?.(...params);
-        queryClient.invalidateQueries(treesQueryKey);
+      onSuccess: async (...params) => {
         addNotification({
-          title: "Baum erfolgreich gelöscht",
+          title: t("deleteTreeDialog.successNotification"),
           variant: "success",
         });
+        options?.onSuccess?.(...params);
+        return queryClient.invalidateQueries(treesQueryKey);
       },
     });
 
@@ -98,7 +103,7 @@ export const useTreeAPI = () => {
         queryClient.invalidateQueries(treeQueryKey(params[1].params.uuid));
         queryClient.invalidateQueries(treesQueryKey);
         addNotification({
-          title: "Baum erfolgreich aktualisiert",
+          title: t("updateTreeDialog.successNotification"),
           variant: "success",
         });
       },
@@ -124,7 +129,7 @@ export const useTreeAPI = () => {
           options?.onSuccess?.(...params);
           queryClient.invalidateQueries(treesQueryKey);
           addNotification({
-            title: "Baum erfolgreich unarchiviert",
+            title: t("successNotifications.unarchived"),
             variant: "success",
           });
         },
@@ -151,7 +156,7 @@ export const useTreeAPI = () => {
           options?.onSuccess?.(...params);
           queryClient.invalidateQueries(treesQueryKey);
           addNotification({
-            title: "Baum erfolgreich archiviert",
+            title: t("successNotifications.archived"),
             variant: "success",
           });
         },
@@ -174,7 +179,7 @@ export const useTreeAPI = () => {
           options?.onSuccess?.(...params);
           queryClient.invalidateQueries(treesQueryKey);
           addNotification({
-            title: "Baum erfolgreich veröffentlicht",
+            title: t("successNotifications.published"),
             variant: "success",
           });
         },
@@ -199,28 +204,46 @@ export const useTreeAPI = () => {
           options?.onSuccess?.(...params);
           queryClient.invalidateQueries(treesQueryKey);
           addNotification({
-            title: "Baum erfolgreich unveröffentlicht",
+            title: t("successNotifications.unpublished"),
             variant: "success",
           });
         },
       }
     );
 
+  const TreeImportType = Tree.Type.extend({ name: z.string() });
+
   const useImport = (
     options?: UseMutationOptions<
       unknown,
       APIError<void>,
-      { name: string; data: Tree.TTree }
+      { event: ProgressEvent<FileReader> }
     >
   ) =>
     useMutation(
       ["importTree"],
-      ({ name, ..._ }) => proxiedOD.trees.create({ body: { name } }),
+      ({ event }) => {
+        try {
+          const result = event.target?.result;
+
+          if (!result || !(typeof result === "string")) throw result;
+          const parsedResult = JSON.parse(result);
+          const validatedResult = TreeImportType.safeParse(parsedResult);
+
+          if (!validatedResult.success) throw validatedResult;
+          const { name, ..._ } = validatedResult.data;
+
+          return proxiedOD.trees.create({ body: { name } });
+        } catch (error) {
+          throw new ODError({
+            code: "IMPORT_INVALID_FILE",
+            message: "The provided file is invalid.",
+          });
+        }
+      },
       {
         ...options,
         onSuccess: (...params) => {
-          if (!params[0].data) return;
-
           const yDoc = new Y.Doc();
           const yMap = yDoc.getMap("tree");
           new IndexeddbPersistence(params[0].data.uuid, yDoc);
@@ -228,6 +251,10 @@ export const useTreeAPI = () => {
           bindProxyAndYMap(importStore, yMap);
 
           queryClient.invalidateQueries(treesQueryKey);
+          addNotification({
+            title: t("successNotifications.import"),
+            variant: "success",
+          });
           return options?.onSuccess?.(...params);
         },
       }
@@ -248,10 +275,13 @@ export const useTreeAPI = () => {
         return new Promise<Blob>((resolve) => {
           const tree = getTree();
 
-          return setTimeout(
-            () => resolve(createFile({ name: data?.name, ...tree })),
-            2000
-          );
+          return setTimeout(() => {
+            addNotification({
+              title: t("successNotifications.export"),
+              variant: "success",
+            });
+            return resolve(createFile({ name: data?.name, ...tree }));
+          }, 2000);
         });
       },
       options

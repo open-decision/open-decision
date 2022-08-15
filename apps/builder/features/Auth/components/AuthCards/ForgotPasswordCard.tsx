@@ -1,11 +1,14 @@
 import { Icon, Link } from "@open-decision/design-system";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
+import { useTranslations } from "next-intl";
 import * as React from "react";
 import { useForgotPasswordMutation } from "../../mutations/useForgotPasswordMutation";
 import { ForgotPasswordForm } from "../AuthForms/ForgotPasswordForm";
 import { AuthCard } from "./";
+import NextLink from "next/link";
 
 export function ForgotPasswordCard() {
+  const t = useTranslations("forgotPassword");
   const {
     mutate: forgotPassword,
     error,
@@ -16,11 +19,8 @@ export function ForgotPasswordCard() {
   return !isSuccess ? (
     <AuthCard.Container>
       <AuthCard.Header>
-        <AuthCard.Heading>Passwort zurücksetzen</AuthCard.Heading>
-        <AuthCard.Description>
-          Bitte geben Sie die E-Mail Adresse an, mit der Sie sich bei Open
-          Decision registriert haben.
-        </AuthCard.Description>
+        <AuthCard.Heading>{t("title")}</AuthCard.Heading>
+        <AuthCard.Description>{t("description")}</AuthCard.Description>
       </AuthCard.Header>
       <AuthCard.Body>
         <ForgotPasswordForm
@@ -33,26 +33,24 @@ export function ForgotPasswordCard() {
   ) : (
     <AuthCard.Container>
       <AuthCard.Header>
-        <AuthCard.Heading>Passwort zurückgesetzt</AuthCard.Heading>
-        <AuthCard.Description>
-          Eine E-Mail zum Zurücksetzen des Passworts wurde an die angegebene
-          E-Mail Adresse verschickt. Bitte prüfen Sie ihr Postfach.
-        </AuthCard.Description>
+        <AuthCard.Heading>{t("success.title")}</AuthCard.Heading>
+        <AuthCard.Description>{t("success.description")}</AuthCard.Description>
       </AuthCard.Header>
       <AuthCard.Footer>
-        <Link
-          css={{
-            maxWidth: "max-content",
-            gap: "$1",
-            textStyle: "large-text",
-          }}
-          href="/auth/login"
-        >
-          <Icon>
-            <ArrowLeftIcon />
-          </Icon>
-          Zurück zum Login
-        </Link>
+        <NextLink passHref href="/auth/login">
+          <Link
+            css={{
+              maxWidth: "max-content",
+              gap: "$1",
+              textStyle: "large-text",
+            }}
+          >
+            <Icon>
+              <ArrowLeftIcon />
+            </Icon>
+            {t("success.loginLink")}
+          </Link>
+        </NextLink>
       </AuthCard.Footer>
     </AuthCard.Container>
   );

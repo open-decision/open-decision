@@ -21,10 +21,14 @@ export function useRegisterMutation(
   return useMutation<any, APIError<TLoginInput>, any, unknown>(
     ["register"],
     ({ email, password, toc }) => {
-      return safeFetch("/api/external-api/auth/register", {
-        method: "POST",
-        body: { email, password, toc },
-      });
+      return safeFetch(
+        "/api/external-api/auth/register",
+        {
+          method: "POST",
+          body: { email, password, toc },
+        },
+        {}
+      );
     },
     config
   );

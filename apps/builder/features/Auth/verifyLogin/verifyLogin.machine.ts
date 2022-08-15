@@ -58,10 +58,14 @@ export const createVerifyLoginMachine = (
         verifyLogin: (_, event) => async (send) => {
           const { password } = event;
 
-          await safeFetch("/api/external-api/auth/verifyLogin", {
-            body: { email, password },
-            method: "POST",
-          })
+          await safeFetch(
+            "/api/external-api/auth/verifyLogin",
+            {
+              body: { email, password },
+              method: "POST",
+            },
+            {}
+          )
             .then(() => send("SUCCESSFULL_VERIFY_LOGIN"))
             .catch((error) =>
               isAPIError(error)

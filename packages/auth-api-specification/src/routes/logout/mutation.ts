@@ -1,9 +1,4 @@
-import {
-  TContext,
-  prefixUrl,
-  safeFetch,
-  QueryConfig,
-} from "@open-decision/api-helpers";
+import { TContext, prefixUrl, QueryConfig } from "@open-decision/api-helpers";
 import { logoutUrl } from "../../urls";
 import { TLogoutInput } from "./input";
 import { logoutOutput } from "./output";
@@ -15,7 +10,7 @@ export const logout =
       config?.urlPrefix ?? context.urlPrefix
     );
 
-    return await safeFetch(
+    return await context.fetchFunction(
       combinedUrl,
       {
         method: "POST",

@@ -20,10 +20,14 @@ export function useLoginMutation(
   return useMutation<any, APIError<TLoginInput>, any, unknown>(
     ["login"],
     ({ email, password }) => {
-      return safeFetch("/api/external-api/auth/login", {
-        body: { email, password },
-        method: "POST",
-      });
+      return safeFetch(
+        "/api/external-api/auth/login",
+        {
+          body: { email, password },
+          method: "POST",
+        },
+        {}
+      );
     },
     config
   );

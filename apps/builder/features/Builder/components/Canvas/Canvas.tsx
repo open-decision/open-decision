@@ -185,6 +185,7 @@ function Nodes() {
         isolation: "isolate",
       }}
       connectionLineComponent={ConnectionLine}
+      data-test="canvas"
     />
   );
 }

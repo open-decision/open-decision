@@ -1,4 +1,5 @@
 import { StyleObject, Text } from "@open-decision/design-system";
+import { useTranslations } from "next-intl";
 import { InfoBox } from "../../features/Notifications/InfoBox";
 import { ErrorReportLink } from "./ErrorReportLink";
 
@@ -8,22 +9,19 @@ export type ErrorCardProps = {
   css?: StyleObject;
 };
 
-export function ErrorCard({
-  title = "Es ist ein unbekannter Fehler aufgetreten.",
-  description = "Bitte lade die Seite neu.",
-  css,
-}: ErrorCardProps) {
+export function ErrorCard({ title, description, css }: ErrorCardProps) {
+  const t = useTranslations();
+
   return (
     <InfoBox
-      title={title}
+      title={title ?? t("common.ErrorCard.titleFallback")}
       content={
         <>
           <Text size="large" css={{ marginBottom: "$6" }}>
-            {description}
+            {description ?? t("common.ErrorCard.descriptionFallback")}
           </Text>
           <Text>
-            Sollte der Fehler weiterhin auftreten dann erstelle bitte einen
-            Bugreport hier: <ErrorReportLink />
+            {t("common.ErrorCard.callToAction")} <ErrorReportLink />
           </Text>
         </>
       }

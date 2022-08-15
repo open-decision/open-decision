@@ -1,14 +1,16 @@
-import { isAPIError } from "@open-decision/type-classes";
+import { isAPIError, isODError } from "@open-decision/type-classes";
 import { QueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/router";
 import * as React from "react";
 import { useNotificationStore } from "../Notifications/NotificationState";
 
 export function useQueryClient() {
+  const t = useTranslations("common.errors");
   const router = useRouter();
   const { addNotification } = useNotificationStore();
 
-  return React.useMemo(
+  const [state] = React.useState(
     () =>
       new QueryClient({
         defaultOptions: {
@@ -22,18 +24,20 @@ export function useQueryClient() {
             onError(error) {
               if (!isAPIError(error)) {
                 return addNotification({
-                  title: "Unbekannter Error",
-                  content: "Ein unbekannter Error ist aufgetreten",
+                  title: t("UNEXPECTED_ERROR.short"),
+                  content: t("UNEXPECTED_ERROR.long"),
                   variant: "danger",
                 });
               }
               // If we get an unauthenticated API error we want to show a notification and
               // redirect the user to the login page.
               if (error.code === "UNAUTHENTICATED") {
-                router.push("/auth/login");
+                typeof window != "undefined"
+                  ? router.push("/auth/login")
+                  : null;
                 return addNotification({
-                  title: "Du bist nicht angemeldet",
-                  content: "Bitte melde dich an, um fortzufahren.",
+                  title: t("UNAUTHENTICATED.short"),
+                  content: t("UNAUTHENTICATED.long"),
                   variant: "danger",
                 });
               }
@@ -41,24 +45,24 @@ export function useQueryClient() {
           },
           mutations: {
             onError(error) {
-              if (!isAPIError(error)) {
+              if (!isODError(error)) {
                 return addNotification({
-                  title: "Unbekannter Error",
-                  content:
-                    "Ein unbekannter Error ist aufgetreten. Bitte lade die Seite neu.",
+                  title: t("UNEXPECTED_ERROR.short"),
+                  content: t("UNEXPECTED_ERROR.long"),
                   variant: "danger",
                 });
               }
 
               return addNotification({
-                title: error.code,
-                content: error.message,
+                title: t(`${error.code}.short`),
+                content: t(`${error.code}.long`),
                 variant: "danger",
               });
             },
           },
         },
-      }),
-    [addNotification, router]
+      })
   );
+
+  return state;
 }

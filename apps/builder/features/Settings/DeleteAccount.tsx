@@ -4,10 +4,12 @@ import { Card } from "../../components/Card";
 import { VerifiedSettingsChange } from "./VerifiedSettingsChange";
 import { TGetUserOutput } from "@open-decision/user-api-specification";
 import { useUser } from "../Auth/useUserQuery";
+import { useTranslations } from "next-intl";
 
 type Props = { user: TGetUserOutput };
 
 export function DeleteAccount({ user }: Props) {
+  const t = useTranslations("settings.account.deleteAccount");
   const { mutate, isLoading } = useUser().useDeleteUserMutation();
 
   const [open, setOpen] = React.useState(false);
@@ -18,11 +20,11 @@ export function DeleteAccount({ user }: Props) {
       onVerify={() => mutate()}
       open={open}
       setOpen={setOpen}
-      description="Bitte verifizieren Sie sich um Ihren Account zu löschen."
+      description={t("verifyOverlay.description")}
       additionalMessage={{
         variant: "danger",
-        title: "Achtung!",
-        content: "Dies kann nicht rückgängig gemacht werden.",
+        title: t("verifyOverlay.additionalMessage.title"),
+        content: t("verifyOverlay.additionalMessage.content"),
         css: {
           backgroundColor: "$danger2",
         },
@@ -37,7 +39,7 @@ export function DeleteAccount({ user }: Props) {
         }}
       >
         <Heading as="h3" size="small">
-          Account löschen
+          {t("title")}
         </Heading>
         <SubmitButton
           onClick={() => setOpen(true)}
@@ -45,7 +47,7 @@ export function DeleteAccount({ user }: Props) {
           colorScheme="danger"
           variant="secondary"
         >
-          Account löschen
+          {t("submit")}
         </SubmitButton>
       </Card>
     </VerifiedSettingsChange>

@@ -1,0 +1,11 @@
+{
+  "name": "@open-decision/e2e",
+  "dependencies": {
+    "@open-decision/api-client": "link:../../dist/packages/api-client",
+    "@open-decision/prisma": "workspace:*",
+    "@open-decision/test-utils": "link:../../dist/packages/test-utils",
+    "@open-decision/translations": "link:../../packages/translations",
+    "@open-decision/tree-api-specification": "link:../../dist/packages/tree-api-specification",
+    "intl-messageformat": "^10.1.1"
+  }
+}

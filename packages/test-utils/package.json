@@ -1,0 +1,12 @@
+{
+  "name": "@open-decision/test-utils",
+  "version": "0.0.1",
+  "main": "index.ts",
+  "type": "commonjs",
+  "sideEffects": false,
+  "dependencies": {
+    "@faker-js/faker": "^7.3.0",
+    "@open-decision/prisma": "workspace:*",
+    "@open-decision/auth-api-specification": "workspace:*"
+  }
+}

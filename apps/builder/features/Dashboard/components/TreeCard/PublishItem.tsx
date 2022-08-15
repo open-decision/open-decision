@@ -1,5 +1,6 @@
 import { DropdownMenu, Icon } from "@open-decision/design-system";
 import { Share2Icon } from "@radix-ui/react-icons";
+import { useTranslations } from "next-intl";
 import { useTreeAPI } from "../../../Data/useTreeAPI";
 
 export type PublishItemProps = {
@@ -13,6 +14,7 @@ export function PublishItem({
   treeName,
   publishedTreeId,
 }: PublishItemProps) {
+  const t = useTranslations("dashboard.treeList");
   const { mutate: publish } = useTreeAPI().usePublish();
   const { mutate: unPublish } = useTreeAPI().useUnPublish();
 
@@ -30,7 +32,7 @@ export function PublishItem({
       <Icon css={{ marginTop: "2px" }}>
         <Share2Icon />
       </Icon>
-      {publishedTreeId ? "Unveröffentlichen" : "Veröffentlichen"}
+      {publishedTreeId ? t("cardMenu.unpublish") : t("cardMenu.publish")}
     </DropdownMenu.Item>
   );
 }

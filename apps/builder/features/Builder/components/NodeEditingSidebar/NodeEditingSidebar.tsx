@@ -6,6 +6,7 @@ import {
   StyleObject,
   Row,
   Form,
+  Label,
 } from "@open-decision/design-system";
 import * as React from "react";
 import { Node } from "@open-decision/type-classes";
@@ -23,6 +24,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ParentNodeSelector } from "./ParentNodeSelector";
 import { StartNodeLabel } from "../NodeLabels/StartNodeLabels";
 import { OptionTargetInputs } from "../InputConfigurators/OptionTargetInput/OptionTargetInput";
+import { useTranslations } from "next-intl";
 
 const styledMotionDiv = css({
   position: "relative",
@@ -41,7 +43,7 @@ export function NodeEditingSidebar() {
   return (
     <AnimatePresence>
       {selectionType === "single" ? (
-        <motion.div
+        <motion.aside
           layout
           key={selectionType}
           initial={{ x: "100%" }}
@@ -79,7 +81,7 @@ export function NodeEditingSidebar() {
             </ScrollArea.Viewport>
             <ScrollArea.Scrollbar />
           </ScrollArea.Root>
-        </motion.div>
+        </motion.aside>
       ) : null}
     </AnimatePresence>
   );
@@ -88,6 +90,7 @@ export function NodeEditingSidebar() {
 type Props = { node: Pick<Node.TNode, "id" | "data">; css?: StyleObject };
 
 export function NodeEditingSidebarContent({ node, css }: Props) {
+  const t = useTranslations("builder.nodeEditingSidebar");
   const inputs = useInputs(node.data.inputs);
   const { updateNodeContent } = useTreeContext();
 
@@ -95,21 +98,23 @@ export function NodeEditingSidebarContent({ node, css }: Props) {
     <Grid css={{ gridAutoRows: "max-content", gap: "$6", ...css }}>
       <Header node={node} />
       <Box as="section">
-        <Form.Label
-          as="h2"
-          css={{
-            margin: 0,
-            marginBottom: "$3",
-            display: "block",
-          }}
-        >
-          Inhalt
-        </Form.Label>
         <RichTextEditor
+          data-test="richTextEditor"
           onUpdate={({ editor }) =>
             updateNodeContent(node.id, editor.getJSON())
           }
           content={node.data.content}
+          Label={
+            <Label
+              css={{
+                margin: 0,
+                marginBottom: "$3",
+                display: "block",
+              }}
+            >
+              {t("richTextEditor.label")}
+            </Label>
+          }
         />
       </Box>
       <Box as="section">
@@ -124,6 +129,7 @@ export function NodeEditingSidebarContent({ node, css }: Props) {
 type HeaderProps = { node: Pick<Node.TNode, "id" | "data"> };
 
 const Header = ({ node }: HeaderProps) => {
+  const t = useTranslations("builder.nodeEditingSidebar");
   const startNodeId = useStartNodeId();
   const { updateNodeName } = useTreeContext();
   const parentNodes = useParents(node.id);
@@ -145,7 +151,9 @@ const Header = ({ node }: HeaderProps) => {
         }}
         as="header"
       >
-        <Form.Label name={formState.names.name}>Knoten</Form.Label>
+        <Form.Label name={formState.names.name}>
+          {t("nameInput.label")}
+        </Form.Label>
         <Row css={{ gap: "$2" }} center>
           {parentNodes.length > 0 ? (
             <ParentNodeSelector parentNodes={parentNodes} />
@@ -163,7 +171,7 @@ const Header = ({ node }: HeaderProps) => {
       <Form.Input
         name={formState.names.name}
         maxLength={nodeNameMaxLength}
-        placeholder="Knotenname"
+        placeholder={t("nameInput.placeholder")}
         css={{
           layer: "2",
           color: "$gray12",

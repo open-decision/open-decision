@@ -13,7 +13,7 @@ function VorschauPageImpl() {
   return (
     <Renderer.Root
       tree={treeSnapshot}
-      onException={(error) =>
+      onError={(error) =>
         addNotification({
           title: error.code,
           content: error.message,

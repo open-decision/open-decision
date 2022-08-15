@@ -22,7 +22,6 @@ stats.html
 # misc
 .DS_Store
 .env
-.env.local
 .env.development
 .env.test.local
 .env.production
@@ -79,3 +78,5 @@ coverage/validations/env.validation.ts.html
 coverage/validations/index.html
 coverage/validations/mailserver.validation.ts.html
 test-results
+playwright-report
+sessions
