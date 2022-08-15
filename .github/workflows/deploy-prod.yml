@@ -1,0 +1,48 @@
+name: Fly Deploy
+on:
+  push:
+    branches:
+      - main
+env:
+  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+  FLY_REGION: fra
+  FLY_ORG: open-decision
+
+jobs:
+  api:
+    name: Deploy api
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: latest
+          run_install: true
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "pnpm"
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - run: pnpm nx deploy api
+
+  builder:
+    name: Deploy builder
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: latest
+
+      - name: Install Vercel CLI
+        run: pnpm install -g vercel@latest
+
+      - name: Deploy to Vercel Action
+        uses: PhilGarb/deploy-to-vercel-action@v1.9.8
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
