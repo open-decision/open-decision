@@ -115,3 +115,6 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: apps/e2e/playwright-report
+          clean: true
+          clean-exclude: |
+            vercel.json
