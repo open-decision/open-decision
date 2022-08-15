@@ -37,7 +37,7 @@ const errorMessages: Record<ErrorCodes, { short: string; long: string }> = {
     short: "Email bereits verwendet",
     long: "Die angegebene Email Adresse wird schon von einem anderen Account verwendet.",
   },
-  EMAIL_NOT_SEND: { short: "", long: "" },
+  EMAIL_NOT_SEND: { short: "Test", long: "" },
   EMAIL_NOT_WHITELISTED: { short: "", long: "" },
   EMAIL_VERIFICATION_FAILED: { short: "", long: "" },
   EXPIRED_TOKEN: { short: "", long: "" },
