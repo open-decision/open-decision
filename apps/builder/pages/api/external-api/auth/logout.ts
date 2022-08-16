@@ -8,8 +8,8 @@ const logout: NextApiHandler = async (req, res) => {
     urlPrefix: `${process.env.NEXT_PUBLIC_OD_API_ENDPOINT}/v1`,
     fetchFunction: safeFetch,
   });
-  OD.auth.logout({});
 
+  await OD.auth.logout({});
   deleteCookies(res);
 
   return res.status(200).json({});

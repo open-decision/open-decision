@@ -6,9 +6,8 @@ import { APIError, isAPIError } from "@open-decision/type-classes";
 
 const authCatch: NextApiHandler = async (req, res) => {
   try {
-    const path = req.url?.split("external-api")[1];
     const authResponse = await safeFetch(
-      `${process.env.NEXT_PUBLIC_OD_API_ENDPOINT}/v1${path}`,
+      `${process.env.NEXT_PUBLIC_OD_API_ENDPOINT}/v1/auth/${req.query.slug}`,
       {
         body: req.body,
         method: req.method,
