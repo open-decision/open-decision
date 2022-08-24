@@ -75,7 +75,7 @@ const resetPassword = async (
       TokenType.RESET_PASSWORD
     );
     const user = await userService.getUserByUuidOrId(
-      resetPasswordTokenFromDb!.ownerUuid
+      resetPasswordTokenFromDb.ownerUuid
     );
     if (!user) {
       throw new Error();
@@ -83,12 +83,12 @@ const resetPassword = async (
     await userService.updateUserByUuidOrId(user.id, { password: newPassword });
 
     await tokenHandler.deleteAllTokenOfUser(
-      resetPasswordTokenFromDb!.ownerUuid,
+      resetPasswordTokenFromDb.ownerUuid,
       TokenType.REFRESH
     );
 
     await tokenHandler.deleteAllTokenOfUser(
-      resetPasswordTokenFromDb!.ownerUuid,
+      resetPasswordTokenFromDb.ownerUuid,
       TokenType.RESET_PASSWORD
     );
 
@@ -115,13 +115,13 @@ const verifyEmail = async (verifyEmailToken: string) => {
     );
 
     const user = await userService.getUserByUuidOrId(
-      verifyEmailTokenFromDb!.ownerUuid
+      verifyEmailTokenFromDb.ownerUuid
     );
     if (!user) {
       throw new Error();
     }
     await tokenHandler.deleteAllTokenOfUser(
-      verifyEmailTokenFromDb!.ownerUuid,
+      verifyEmailTokenFromDb.ownerUuid,
       TokenType.VERIFY_EMAIL
     );
 

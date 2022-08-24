@@ -9,7 +9,7 @@ export const jwtStrategy = new JwtStrategy(
     secretOrKey: config.ACCESS_TOKEN_SECRET,
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   },
-  async (payload: JwtPayload, done: Function) => {
+  async (payload: JwtPayload, done) => {
     try {
       if (payload.type !== TokenType.ACCESS) {
         throw new Error("Invalid token type");
@@ -31,7 +31,7 @@ export const jwtWebsocketStrategy = new JwtStrategy(
     secretOrKey: config.ACCESS_TOKEN_SECRET,
     jwtFromRequest: ExtractJwt.fromUrlQueryParameter("auth"),
   },
-  async (payload: JwtPayload, done: Function) => {
+  async (payload: JwtPayload, done) => {
     try {
       if (payload.type !== TokenType.ACCESS) {
         throw new Error("Invalid token type");

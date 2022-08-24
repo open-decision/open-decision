@@ -1,12 +1,13 @@
+import { SwaggerDefinition } from "swagger-jsdoc";
 import config from "../config/config";
 
-const swaggerDef = {
+const swaggerDef: SwaggerDefinition = {
   openapi: "3.0.0",
   info: {
     title: "Open Decision Backend Documentation",
     description:
       "Open API definition for the Open Decision backend. Refer to [github.com/open-legal-tech](https://github.com/open-legal-tech) for more information. Download the API definition as JSON [here](export).",
-    version: process.env.npm_package_version!,
+    version: process.env["npm_package_version"] ?? "1",
     license: {
       name: "MIT",
       url: "",

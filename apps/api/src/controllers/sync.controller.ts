@@ -44,8 +44,8 @@ export const websocketUpgradeHandler = catchAsync(
         return;
       }
 
-      if (!request.url) return;
       const treeUuid = getUuidFromRequest(request);
+      if (!treeUuid) return;
 
       if (!(await hasPermissionsForTree(client.uuid, treeUuid))) {
         socket.write("HTTP/1.1 403 Forbidden\r\n\r\n");
@@ -106,8 +106,10 @@ const getYDocFromDatabase = async (docName: string) => {
 };
 
 const getUuidFromRequest = (request: http.IncomingMessage) => {
+  if (!request.url) return undefined;
+
   return new URL(
-    request.url!,
+    request.url,
     `http://${request.headers.host}`
   ).pathname.replace("/v1/builder-sync/", "");
 };
