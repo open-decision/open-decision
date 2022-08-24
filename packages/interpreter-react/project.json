@@ -5,16 +5,12 @@
   "targets": {
     "build": {
       "executor": "@nrwl/js:swc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/interpreter-react",
         "main": "packages/interpreter-react/src/index.ts",
         "tsConfig": "packages/interpreter-react/tsconfig.lib.json",
-        "assets": [
-          "packages/interpreter-react/*.md"
-        ]
+        "assets": ["packages/interpreter-react/*.md"]
       }
     },
     "publish": {
@@ -31,24 +27,26 @@
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
+      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "packages/interpreter-react/**/*.ts"
-        ]
+        "lintFilePatterns": ["packages/interpreter-react/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": [
-        "coverage/packages/interpreter-react"
-      ],
+      "outputs": ["coverage/packages/interpreter-react"],
       "options": {
         "jestConfig": "packages/interpreter-react/jest.config.ts",
         "passWithNoTests": true
       }
+    },
+    "typecheck": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "tsc -p tsconfig.lib.json",
+        "cwd": "packages/interpreter-react"
+      },
+      "dependsOn": [{ "projects": "dependencies", "target": "build" }]
     }
   },
   "tags": []

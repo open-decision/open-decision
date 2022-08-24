@@ -65,6 +65,14 @@
       "options": {
         "command": "vercel deploy --force"
       }
+    },
+    "typecheck": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "tsc -p tsconfig.json",
+        "cwd": "apps/builder"
+      },
+      "dependsOn": [{ "projects": "dependencies", "target": "build" }]
     }
   },
   "tags": []
