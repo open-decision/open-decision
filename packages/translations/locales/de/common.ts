@@ -41,14 +41,14 @@ export default {
       label: "Projektname",
     },
     submit: "Erstellen",
-    successNotification: "Baum erfolgreich erstellt",
+    successNotification: "Projekt erfolgreich erstellt",
   },
   deleteTreeDialog: {
     title: "Projekt löschen",
     description:
       "Bitte geben Sie den Namen des Projekts: <bold>{treeName}</bold> zur Bestätigung der Löschung ein.",
     submit: "Löschen",
-    successNotification: "Baum erfolgreich gelöscht",
+    successNotification: "Projekt erfolgreich gelöscht",
     treeNameInput: {
       label: "Projektname",
     },
@@ -60,7 +60,7 @@ export default {
     },
 
     submit: "Ändern",
-    successNotification: "Baum erfolgreich aktualisiert",
+    successNotification: "Projekt erfolgreich aktualisiert",
   },
   exportDialog: {
     title: "Projekt exportieren",
@@ -70,17 +70,17 @@ export default {
       submit: "Weiter",
     },
     save: {
-      description: "Speichern Sie ihren exportierten Baum.",
+      description: "Speichern Sie ihr exportiertes Projekt.",
       cta: "Speichern",
     },
-    errorFallback: "Beim Export ihres Baumes ist ein Fehler aufgetreten.",
+    errorFallback: "Beim Export ihres Projektes ist ein Fehler aufgetreten.",
   },
   successNotifications: {
-    unarchived: "Baum erfolgreich unarchiviert",
-    archived: "Baum erfolgreich archiviert",
-    published: "Baum erfolgreich veröffentlicht",
-    unpublished: "Baum erfolgreich unveröffentlicht",
-    import: "Baum erfolgreich importiert",
-    export: "Baum erfolgreich exportiert",
+    unarchived: "Projekt erfolgreich unarchiviert",
+    archived: "Projekt erfolgreich archiviert",
+    published: "Projekt erfolgreich veröffentlicht",
+    unpublished: "Projekt erfolgreich unveröffentlicht",
+    import: "Projekt erfolgreich importiert",
+    export: "Projekt erfolgreich exportiert",
   },
 } as const;
