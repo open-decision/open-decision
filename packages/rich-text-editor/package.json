@@ -1,12 +1,12 @@
 {
   "name": "@open-decision/rich-text-editor",
-  "version": "0.0.0",
-  "main": "./src/index.ts",
+  "version": "0.0.1",
+  "main": "src/index.ts",
   "sideEffects": false,
-  "scripts": {
-    "typecheck": "tsc -p ./tsconfig.lib.json --noEmit"
-  },
+  "scripts": {},
   "dependencies": {
+    "@open-decision/design-system": "workspace:*",
+    "@open-decision/type-classes": "workspace:*",
     "@tiptap/core": "^2.0.0-beta.176",
     "@tiptap/extension-bold": "^2.0.0-beta.26",
     "@tiptap/extension-bullet-list": "^2.0.0-beta.26",

@@ -2,7 +2,7 @@
   "name": "@open-decision/type-classes",
   "version": "0.0.1",
   "type": "commonjs",
-  "main": "./src/index.ts",
+  "main": "src/index.ts",
   "description": "The foundational types classes shared by all parts of the open decision application.",
   "sideEffects": false,
   "dependencies": {

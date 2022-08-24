@@ -26,6 +26,11 @@
   "dependencies": {
     "cookie": "^0.5.0",
     "@open-decision/prisma": "workspace:*",
+    "@open-decision/type-classes": "workspace:*",
+    "@open-decision/user-api-specification": "workspace:*",
+    "@open-decision/tree-api-specification": "workspace:*",
+    "@open-decision/auth-api-specification": "workspace:*",
+    "@open-decision/api-helpers": "workspace:*",
     "argon2": "^0.28.5",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",

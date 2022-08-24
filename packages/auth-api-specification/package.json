@@ -2,6 +2,7 @@
   "name": "@open-decision/auth-api-specification",
   "version": "0.0.1",
   "type": "commonjs",
+  "main": "src/index.ts",
   "scripts": {
     "typecheck": "tsc -p ./tsconfig.lib.json --noEmit"
   },
@@ -13,7 +14,9 @@
     "@zxcvbn-ts/language-common": "^1.0.0",
     "@zxcvbn-ts/language-de": "^1.0.0",
     "@zxcvbn-ts/language-en": "^1.0.0",
-    "jose": "^4.8.3"
+    "jose": "^4.8.3",
+    "@open-decision/api-helpers": "workspace:*",
+    "@open-decision/type-classes": "workspace:*"
   },
   "devDependencies": {
     "@types/validator": "^13.7.0"
