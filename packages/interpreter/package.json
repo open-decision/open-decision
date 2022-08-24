@@ -2,36 +2,21 @@
   "name": "@open-decision/interpreter",
   "version": "0.0.1",
   "type": "commonjs",
-  "main": "./src/index.ts",
+  "main": "src/index.ts",
   "files": [
     "/lib",
     "/src"
   ],
   "description": "The foundational types classes shared by all parts of the open decision application.",
   "sideEffects": false,
-  "scripts": {
-    "build": "rm -rf lib && vite build && pnpm tsc -p tsconfig.build.json",
-    "dev": "pnpm tsc -p tsconfig.build.json & vite build --watch",
-    "prepublish": "pnpm build",
-    "prettier": "prettier --check src/",
-    "prettier:fix": "prettier --write src/",
-    "lint": "eslint . --ext .ts,.tsx",
-    "lint:fix": "yarn lint --fix",
-    "verify": "run-p prettier lint",
-    "verify:fix": "yarn prettier:fix && yarn lint:fix",
-    "test": "vitest",
-    "coverage": "vitest run --coverage",
-    "typecheck": "tsc -p ./tsconfig.lib.json --noEmit"
-  },
+  "scripts": {},
   "dependencies": {
+    "@open-decision/type-classes": "workspace:*",
     "remeda": "^0.0.35",
-    "xstate": "^4.32.1"
+    "xstate": "^4.33.0"
   },
-  "peerDependencies": {
-    "react": "^17.0.2"
-  },
+  "peerDependencies": {},
   "devDependencies": {
-    "typescript": "^4.7.4",
     "vitest": "^0.15.1"
   }
 }

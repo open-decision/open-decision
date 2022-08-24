@@ -11,5 +11,5 @@
   "prisma": {
     "schema": "src/schema.prisma"
   },
-  "main": "./src/index.ts"
+  "main": "src/index.ts"
 }

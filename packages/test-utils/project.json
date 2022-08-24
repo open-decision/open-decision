@@ -32,6 +32,14 @@
           "projects": "dependencies"
         }
       ]
+    },
+    "typecheck": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "tsc -p tsconfig.lib.json",
+        "cwd": "packages/test-utils"
+      },
+      "dependsOn": [{ "projects": "dependencies", "target": "build" }]
     }
   }
 }

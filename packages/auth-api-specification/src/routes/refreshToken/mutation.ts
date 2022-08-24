@@ -1,9 +1,4 @@
-import {
-  TContext,
-  prefixUrl,
-  safeFetch,
-  QueryConfig,
-} from "@open-decision/api-helpers";
+import { TContext, prefixUrl, QueryConfig } from "@open-decision/api-helpers";
 import { refreshTokenUrl } from "../../urls";
 import { TRefreshTokenInput } from "./input";
 import { refreshTokenOutput } from "./output";

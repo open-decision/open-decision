@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test } from "@playwright/test";
 
 // eslint-disable-next-line no-empty-pattern
 test.beforeEach(async ({}, testInfo) => {

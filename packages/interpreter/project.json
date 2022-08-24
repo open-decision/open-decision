@@ -6,27 +6,19 @@
   "targets": {
     "build": {
       "executor": "@nrwl/js:swc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/interpreter",
         "main": "packages/interpreter/src/index.ts",
         "tsConfig": "packages/interpreter/tsconfig.lib.json",
-        "assets": [
-          "packages/interpreter/*.md"
-        ]
+        "assets": ["packages/interpreter/*.md"]
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
+      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "packages/interpreter/**/*.ts"
-        ]
+        "lintFilePatterns": ["packages/interpreter/**/*.ts"]
       }
     },
     "test": {
@@ -46,6 +38,14 @@
           "target": "build"
         }
       ]
+    },
+    "typecheck": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "tsc -p tsconfig.lib.json",
+        "cwd": "packages/interpreter"
+      },
+      "dependsOn": [{ "projects": "dependencies", "target": "build" }]
     }
   }
 }

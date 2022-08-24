@@ -1,4 +1,4 @@
-import { ErrorCodes } from "@open-decision/type-classes";
+import type { ErrorCodes } from "@open-decision/type-classes";
 
 const errorMessages: Record<ErrorCodes, { short: string; long: string }> = {
   VALIDATION_ERROR: {

@@ -3,9 +3,8 @@
   "version": "0.0.1",
   "type": "commonjs",
   "sideEffects": false,
-  "scripts": {
-    "typecheck": "tsc -p ./tsconfig.lib.json --noEmit"
-  },
+  "main": "src/index.ts",
+  "scripts": {},
   "dependencies": {
     "@open-decision/api-helpers": "workspace:*",
     "@open-decision/models": "workspace:*",

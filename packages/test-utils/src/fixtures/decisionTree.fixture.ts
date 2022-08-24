@@ -1,7 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { DecisionTree } from "@open-decision/prisma";
 import prisma from "../client";
-import { userOne } from "./user.fixture";
 import { yDocumentOne } from "./yDocument.fixture";
 
 export type PartialTree = Pick<

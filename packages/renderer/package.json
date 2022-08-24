@@ -1,20 +1,19 @@
 {
   "name": "@open-decision/renderer",
   "version": "0.0.1",
-  "main": "./src/index.ts",
+  "main": "src/index.ts",
   "sideEffects": false,
   "dependencies": {
     "@radix-ui/react-icons": "^1.1.1",
     "remeda": "^0.0.32",
     "@open-decision/rich-text-editor": "workspace:*",
     "@open-decision/interpreter-react": "workspace:*",
-    "@open-decision/type-classes": "workspace:*"
+    "@open-decision/type-classes": "workspace:*",
+    "@open-decision/design-system": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
-  "scripts": {
-    "typecheck": "tsc -p ./tsconfig.lib.json"
-  }
+  "scripts": {}
 }

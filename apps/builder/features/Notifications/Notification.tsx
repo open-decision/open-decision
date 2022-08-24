@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Icon, Button } from "@open-decision/design-system";
 import {
   Notification as NotificationType,
@@ -16,16 +16,14 @@ type NotificationProps = {
 export const Notification = ({ notification, id }: NotificationProps) => {
   const animation = useAnimation();
 
+  if (notification.duration == "persistent") {
+    animation.stop();
+  } else {
+    animation.start("empty");
+  }
+
   const duration =
     notification.duration === "persistent" ? 5 : notification.duration;
-
-  useEffect(() => {
-    if (notification.duration === "persistent") {
-      return animation.stop();
-    }
-
-    animation.start("empty");
-  }, [notification.duration]);
 
   const { removeNotification } = useNotificationStore();
 

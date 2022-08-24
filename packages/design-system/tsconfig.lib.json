@@ -4,7 +4,6 @@
     "outDir": "../../dist/out-tsc",
     "types": ["node"]
   },
-  "files": [],
   "exclude": [
     "**/*.config.ts",
     "**/*.spec.ts",

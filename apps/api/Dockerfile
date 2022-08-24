@@ -30,7 +30,7 @@ RUN chmod a+rwx -R node_modules
 
 COPY . .
 
-RUN pnpm install --offline --shamefully-hoist
+RUN pnpm install --offline
 
 RUN mkdir dist
 RUN chmod a+rwx -R dist

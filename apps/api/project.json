@@ -53,6 +53,14 @@
       "options": {
         "command": "flyctl deploy --config apps/api/fly.toml --dockerfile apps/api/Dockerfile"
       }
+    },
+    "typecheck": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "tsc -p tsconfig.app.json",
+        "cwd": "apps/api"
+      },
+      "dependsOn": [{ "projects": "dependencies", "target": "build" }]
     }
   },
   "tags": []

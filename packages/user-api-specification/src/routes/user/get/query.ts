@@ -1,4 +1,4 @@
-import { TContext, safeFetch, QueryConfig } from "@open-decision/api-helpers";
+import { TContext, QueryConfig } from "@open-decision/api-helpers";
 import { userRoot } from "../../../urls";
 import { TGetUserInput } from "./input";
 import { getUserOutput } from "./output";

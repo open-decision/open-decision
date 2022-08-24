@@ -9,8 +9,8 @@ import { APIError } from "@open-decision/type-classes";
 const verifyCallback =
   (
     req: Request | http.IncomingMessage,
-    resolve: Function,
-    reject: Function,
+    resolve,
+    reject,
     requiredRights: Permissions[]
   ) =>
   async (err: any, user: User, info: any) => {
@@ -30,9 +30,9 @@ const verifyCallback =
     }
 
     if (requiredRights.length !== 0) {
-      const userRights = roleRights.get(user.role);
+      const userRights = roleRights.get(user.role) ?? [];
       const hasRequiredRights = requiredRights.every((requiredRight) =>
-        userRights!.includes(requiredRight)
+        userRights.includes(requiredRight)
       );
       if (
         !hasRequiredRights &&
@@ -65,7 +65,7 @@ export const auth =
       .catch((err) => next(err));
   };
 
-export const wsAuth = async (req: http.IncomingMessage, next: Function) => {
+export const wsAuth = async (req: http.IncomingMessage, next) => {
   return (
     new Promise((resolve, reject) => {
       passport.authenticate(
@@ -75,7 +75,7 @@ export const wsAuth = async (req: http.IncomingMessage, next: Function) => {
       )(req, next);
     })
       //@ts-expect-error - whatever
-      .then(() => next(false, req!.user))
+      .then(() => next(false, req.user))
       .catch((err) => next(err))
   );
 };

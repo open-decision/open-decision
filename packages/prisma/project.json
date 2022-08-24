@@ -13,7 +13,7 @@
     "generate": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
-        "command": "prisma generate --schema=./src/schema.prisma",
+        "command": "pnpm prisma generate --schema=./src/schema.prisma",
         "cwd": "packages/prisma"
       }
     },

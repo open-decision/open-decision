@@ -2,25 +2,11 @@
   "name": "@open-decision/design-system",
   "version": "0.26.0",
   "type": "commonjs",
-  "main": "./src/index.ts",
-  "files": [
-    "/lib",
-    "/src"
-  ],
+  "main": "src/index.ts",
   "description": "The open legal tech design system",
   "sideEffects": false,
   "scripts": {
-    "build:icons": "svgr ./src/icons/svgs -d ./src/icons/ --replace-attr-values '#2329D6=currentcolor' --typescript --no-dimensions --svg-props 'width=1.1em','height=1.1em' --ignore-existing",
-    "build": "rm -rf lib && vite build",
-    "dev": "vite build --watch",
-    "typecheck": "tsc -p tsconfig.lib.json",
-    "prepublishOnly": "pnpm build",
-    "prettier": "prettier --check src/",
-    "prettier:fix": "prettier --write src/",
-    "lint": "eslint . --ext .ts,.tsx",
-    "lint:fix": "yarn lint --fix",
-    "verify": "run-p prettier lint",
-    "verify:fix": "yarn prettier:fix && yarn lint:fix"
+    "build:icons": "svgr ./src/icons/svgs -d ./src/icons/ --replace-attr-values '#2329D6=currentcolor' --typescript --no-dimensions --svg-props 'width=1.1em','height=1.1em' --ignore-existing"
   },
   "dependencies": {
     "@radix-ui/colors": "^0.1.8",
@@ -56,7 +42,7 @@
   "devDependencies": {
     "@fontsource/poppins": "^4.5.8",
     "@svgr/cli": "^6.2.1",
-    "@types/react": "^18.0.15",
+    "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6"
   }
 }
