@@ -3,13 +3,6 @@
   "sourceRoot": "apps/e2e/src",
   "projectType": "application",
   "targets": {
-    "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["apps/e2e/**/*.{js,ts}"]
-      }
-    },
     "start:db": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
