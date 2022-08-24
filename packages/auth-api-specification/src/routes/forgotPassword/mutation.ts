@@ -1,9 +1,4 @@
-import {
-  TContext,
-  prefixUrl,
-  safeFetch,
-  QueryConfig,
-} from "@open-decision/api-helpers";
+import { TContext, prefixUrl, QueryConfig } from "@open-decision/api-helpers";
 import { forgotPasswordUrl } from "../../urls";
 import { TForgotPasswordInput } from "./input";
 import { forgotPasswordOutput } from "./output";

@@ -1,9 +1,4 @@
-import {
-  TContext,
-  prefixUrl,
-  safeFetch,
-  QueryConfig,
-} from "@open-decision/api-helpers";
+import { TContext, prefixUrl, QueryConfig } from "@open-decision/api-helpers";
 import { resetPasswordUrl } from "../../urls";
 import { TResetPasswordInput } from "./input";
 import { resetPasswordOutput } from "./output";

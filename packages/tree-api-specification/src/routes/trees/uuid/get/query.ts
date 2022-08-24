@@ -1,4 +1,4 @@
-import { TContext, safeFetch, QueryConfig } from "@open-decision/api-helpers";
+import { TContext, QueryConfig } from "@open-decision/api-helpers";
 import { treesSingle } from "../../../../urls";
 import { TGetTreeInput } from "./input";
 import { getTreeOutput } from "./output";

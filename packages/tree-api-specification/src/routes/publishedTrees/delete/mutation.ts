@@ -1,4 +1,4 @@
-import { TContext, safeFetch, QueryConfig } from "@open-decision/api-helpers";
+import { TContext, QueryConfig } from "@open-decision/api-helpers";
 import { publishedTreesSingle } from "../../../urls";
 import { TDeletePublishedTreeInput } from "./input";
 
