@@ -3,6 +3,10 @@ on:
   pull_request:
     branches: [main]
 
+concurrency:
+  group: ${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
 env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
   FLY_ORG: open-decision
@@ -29,13 +33,41 @@ env:
   NEXT_PUBLIC_OD_BUILDER_ENDPOINT: ${{format('https://open-decision-{0}.vercel.app', github.event.pull_request.number)}}
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    name: Format and Lint
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Setup environment
+        uses: ./.github/actions/setup
+
+      - name: Format and Lint
+        uses: ./.github/actions/lint
+
+  typecheck:
+    runs-on: ubuntu-latest
+    name: Typecheck
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Setup environment
+        uses: ./.github/actions/setup
+      - name: Typecheck
+        if: always()
+        uses: ./.github/actions/typecheck
+
   preview_api:
     runs-on: ubuntu-latest
     name: "Deploy api"
-
-    # Only run one deployment at a time per PR.
-    concurrency:
-      group: pr-${{ github.event.number }}
 
     outputs:
       API_PREVIEW_URL: ${{ steps.deploy.outputs.url }}
@@ -57,23 +89,26 @@ jobs:
       PREVIEW_URL: ${{ steps.step1.outputs.PREVIEW_URL }}
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: pnpm/action-setup@v2.2.2
+      - name: Check out Git repository
+        uses: actions/checkout@v2
         with:
-          version: latest
+          fetch-depth: 0
+
+      - name: Setup environment
+        uses: ./.github/actions/setup
 
       - name: Install Vercel CLI
         run: pnpm install -g vercel@latest
       - name: Set api endpoint end var
         continue-on-error: true
         run: |
-          vercel env rm NEXT_PUBLIC_OD_API_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} --yes
+          vercel env rm NEXT_PUBLIC_OD_API_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} --yes || true
           echo ${{ env.NEXT_PUBLIC_OD_API_ENDPOINT }}|  vercel env add NEXT_PUBLIC_OD_API_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}}
 
       - name: Set api websocket endpoint env var
         continue-on-error: true
         run: |
-          vercel env rm NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} --yes
+          vercel env rm NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} --yes || true
           echo ${{ env.NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT }} | vercel env add NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}}
 
       - name: Deploy to Vercel Action
@@ -96,15 +131,14 @@ jobs:
       DATABASE_URL: ${{secrets.DATABASE_URL_PROXIED}}
 
     steps:
-      - name: Prepare testing env
-        uses: actions/checkout@v3
-      - uses: actions/setup-node@v2
+      - name: Check out Git repository
+        uses: actions/checkout@v2
         with:
-          node-version: "16"
-      - uses: pnpm/action-setup@v2.2.2
-        with:
-          version: latest
-          run_install: true
+          fetch-depth: 0
+
+      - name: Setup environment
+        uses: ./.github/actions/setup
+
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: flyctl proxy 5432 -a od-preview-db &
       - run: pnpx playwright install --with-deps

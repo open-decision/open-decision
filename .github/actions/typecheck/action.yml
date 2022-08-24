@@ -1,0 +1,8 @@
+name: "Typecheck"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Typecheck
+      shell: bash
+      run: pnpm nx affected --target=typecheck --parallel=3
