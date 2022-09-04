@@ -75,7 +75,8 @@ export function NodeEditingSidebar() {
             <ScrollArea.Viewport css={{ height: "100%" }}>
               <NodeEditingSidebarContent
                 key={selectedNode.id}
-                css={{ groupColor: "$gray11" }}
+                borderLeft: "$border$layer",
+              }}
                 node={{ id: selectedNode.id, data: selectedNode.data }}
               />
             </ScrollArea.Viewport>

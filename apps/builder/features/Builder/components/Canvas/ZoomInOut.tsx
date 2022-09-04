@@ -13,7 +13,7 @@ const Container = styled(Row, {
   layer: "1",
   borderRadius: "$md",
   padding: "$1",
-  boxShadow: "$1",
+  border: "$border$layer",
 });
 
 type Props = { css?: StyleObject };

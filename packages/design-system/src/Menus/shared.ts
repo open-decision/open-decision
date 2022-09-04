@@ -22,6 +22,7 @@ export const menuContainerStyles = css({
   display: "flex",
   flexDirection: "column",
   gap: "$1",
+  border: "$border$layer",
 
   transformOrigin: "var(--radix-dropdown-menu-content-transform-origin)",
   animation: `${scaleIn} 0.1s ease-out`,

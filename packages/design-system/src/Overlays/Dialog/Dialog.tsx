@@ -46,6 +46,7 @@ const DialogCard = styled(Stack, {
   borderRadius: "$md",
   layer: "1",
   padding: "$6",
+  border: "$border$layer",
 });
 
 const overlayShow = keyframes({
@@ -66,14 +67,14 @@ const StyledOverlay = styled(DialogPrimitive.Overlay, {
 
 const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps>(
   ({ children, Above, Below, ...props }, ref) => {
-  return (
+    return (
       <StyledContent ref={ref} {...props}>
-      {Above}
-      <DialogCard>{children}</DialogCard>
-      {Below}
-    </StyledContent>
-  );
-}
+        {Above}
+        <DialogCard>{children}</DialogCard>
+        {Below}
+      </StyledContent>
+    );
+  }
 );
 
 function CloseButton(props: Partial<ButtonProps>) {

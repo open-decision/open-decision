@@ -9,7 +9,7 @@ import { UserMenu } from "./UserMenu";
 
 const Container = styled("div", {
   layer: "1",
-  paddingInline: "$4",
+  borderBottom: "$border$layer",
 });
 
 const Content = styled("header", {

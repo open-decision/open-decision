@@ -49,6 +49,7 @@ type focusTypes =
 
 export const designSystem = createStitches({
   theme: {
+    border: { layer: "1px solid $colors$gray5" },
     colors: {
       ...aliasColor("gray", slate, true),
       ...aliasColor("grayA", slateA, true),
