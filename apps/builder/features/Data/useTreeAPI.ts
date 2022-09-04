@@ -238,27 +238,32 @@ export const useTreeAPI = () => {
 
   const TreeImportType = Tree.Type.extend({ name: z.string() });
 
-  const useImport = (
-    options?: UseMutationOptions<
-      unknown,
-      APIError<void>,
-      { event: ProgressEvent<FileReader> }
-    >
-  ) =>
+  const useImport = ({
+    onSuccess,
+    onSettled,
+    notification,
+    ...options
+  }: useImportOptions & { notification?: notification } = {}) =>
     useMutation(
       ["importTree"],
-      ({ event }) => {
+      async ({ event }) => {
         try {
           const result = event.target?.result;
 
           if (!result || !(typeof result === "string")) throw result;
           const parsedResult = JSON.parse(result);
           const validatedResult = TreeImportType.safeParse(parsedResult);
-
           if (!validatedResult.success) throw validatedResult;
-          const { name, ..._ } = validatedResult.data;
+          const data = validatedResult.data;
 
-          return proxiedOD.trees.create({ body: { name } });
+          const response = await proxiedOD.trees.create({
+            body: { name: data.name },
+          });
+
+          createYjsDocumentIndexedDB(data, response.data.uuid);
+
+          queryClient.invalidateQueries(treesQueryKey);
+          return response;
         } catch (error) {
           throw new ODError({
             code: "IMPORT_INVALID_FILE",
@@ -269,47 +274,57 @@ export const useTreeAPI = () => {
       {
         ...options,
         onSuccess: (...params) => {
-          const yDoc = new Y.Doc();
-          const yMap = yDoc.getMap("tree");
-          new IndexeddbPersistence(params[0].data.uuid, yDoc);
-          const importStore = proxy(params[0].data);
-          bindProxyAndYMap(importStore, yMap);
-
-          queryClient.invalidateQueries(treesQueryKey);
-          addNotification({
-            title: t("successNotifications.import"),
-            variant: "success",
-          });
-          return options?.onSuccess?.(...params);
+          notification !== false
+            ? addNotificationFromTemplate(notification ?? "import")
+            : null;
+          return onSuccess?.(...params);
+        },
+        onSettled: (...params) => {
+          invalidateTrees();
+          return onSettled?.(...params);
         },
       }
     );
 
   const useExport = (
-    options?: UseMutationOptions<unknown, APIError<void>, { name: string }>
+    uuid: string,
+    {
+      notification,
+      onSuccess,
+      ...options
+    }: useExportOptions & { notification?: notification } = {}
   ) => {
-    const { getTree } = useTreeContext();
+    const { data: tree } = useTreeData(uuid);
 
-    function createFile(data: object) {
-      return new Blob([JSON.stringify(data)], { type: "application/json" });
+    function createFile(data: object, name: string) {
+      return new File([JSON.stringify(data)], name, {
+        type: "application/json",
+      });
     }
 
     return useMutation(
       ["exportTree"],
       (data) => {
-        return new Promise<Blob>((resolve) => {
-          const tree = getTree();
-
+        return new Promise<{ fileUrl: string; file: File }>((resolve) => {
           return setTimeout(() => {
-            addNotification({
-              title: t("successNotifications.export"),
-              variant: "success",
-            });
-            return resolve(createFile({ name: data?.name, ...tree }));
+            const file = createFile(
+              { name: data?.name, ...tree?.data },
+              data.fileName
+            );
+
+            return resolve({ fileUrl: URL.createObjectURL(file), file });
           }, 2000);
         });
       },
-      options
+      {
+        ...options,
+        onSuccess: (...params) => {
+          notification !== false
+            ? addNotificationFromTemplate(notification ?? "export")
+            : null;
+          return onSuccess?.(...params);
+        },
+      }
     );
   };
 

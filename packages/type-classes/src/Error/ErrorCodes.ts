@@ -17,6 +17,7 @@ export type InterpreterErrors =
 export type BuilderErrors =
   | "AUTH_VALIDATION_FAILED"
   | "WEBSOCKET_CONNECTION_FAILED"
+  | "IMPORT_INVALID_FILE"
   | "DUPLICATE_EDGE"
   | "CIRCULAR_CONNECTION"
   | "CONNECTED_TO_SELF";
