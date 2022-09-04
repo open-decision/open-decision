@@ -52,14 +52,14 @@ export default {
   deleteTreeDialog: {
     title: "Projekt löschen",
     description:
-      "Bitte geben Sie den Namen des Projekts: <bold>{treeName}</bold> zur Bestätigung der Löschung ein.",
+      "Bitte gib den Namen des Projekts: <bold>{treeName}</bold> zur Bestätigung der Löschung ein.",
     submit: "Löschen",
     treeNameInput: {
       label: "Projektname",
     },
   },
   updateTreeDialog: {
-    title: "Projektname ändern",
+    title: "Projektnamen ändern",
     treeNameInput: {
       label: "Projektname",
       placeholder: "Mein Projektname",
@@ -70,15 +70,15 @@ export default {
   exportDialog: {
     title: "Projekt exportieren",
     customization: {
-      description: "Nehmen Sie Anpassungen am Export vor.",
+      description: "Nimm Anpassungen am Export vor.",
       nameInput: { label: "Dateiname" },
       submit: "Weiter",
     },
     save: {
-      description: "Speichern Sie ihr exportiertes Projekt.",
+      description: "Speichere dein exportiertes Projekt.",
       cta: "Speichern",
     },
-    errorFallback: "Beim Export ihres Projektes ist ein Fehler aufgetreten.",
+    errorFallback: "Beim Export deines Projektes ist ein Fehler aufgetreten.",
   },
   projectMenu: {
     changeName: "Namen ändern",

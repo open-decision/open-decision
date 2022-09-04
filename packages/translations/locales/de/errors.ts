@@ -7,7 +7,7 @@ const errorMessages: Record<ErrorCodes, { short: string; long: string }> = {
   },
   INCORRECT_EMAIL_OR_PASSWORD: {
     short: "Falsche Email oder Passwort",
-    long: "Sie haben eine falsche Email-Adresse oder ein falsches Passwort eingegeben.",
+    long: "Du hast eine falsche Email-Adresse oder ein falsches Passwort eingegeben.",
   },
   UNEXPECTED_ERROR: {
     short: "Unbekannter Fehler",
