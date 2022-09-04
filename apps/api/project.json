@@ -33,6 +33,13 @@
       },
       "watch": true
     },
+    "seed:db": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": ["pnpm prisma db seed"],
+        "cwd": "apps/api"
+      }
+    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
