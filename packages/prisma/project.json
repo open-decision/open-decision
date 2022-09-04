@@ -42,6 +42,13 @@
         "command": "prisma migrate deploy --schema=./src/schema.prisma",
         "cwd": "packages/prisma"
       }
+    },
+    "migrate:dev": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "prisma migrate dev --schema=./src/schema.prisma",
+        "cwd": "packages/prisma"
+      }
     }
   },
   "tags": []
