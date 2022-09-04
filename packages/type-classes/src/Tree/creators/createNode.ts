@@ -19,7 +19,7 @@ export function createNode({
   return {
     id: uuid(),
     data: {
-      name,
+      name: name ?? "",
       inputs,
       conditions,
     },
