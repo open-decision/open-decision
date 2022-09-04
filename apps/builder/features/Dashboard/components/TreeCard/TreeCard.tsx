@@ -9,17 +9,17 @@ import {
   Box,
   intentWithinSelector,
   Icon,
-  Link as SystemLink,
+  Button,
 } from "@open-decision/design-system";
 import { parseISO } from "date-fns";
 import Link from "next/link";
 import { Card as DefaultCard } from "../../../../components/Card";
-import { TreeCardMenu } from "./TreeCardMenu";
 import { TGetTreeOutput } from "@open-decision/tree-api-specification";
-import { ArrowRightIcon } from "@radix-ui/react-icons";
+import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { useQueryClient } from "../../../Data/useQueryClient";
 import { treeQueryKey } from "../../../Data/useTreeAPI";
 import { useIntl, useTranslations } from "next-intl";
+import { ProjectMenu } from "../../../../components/ProjectMenu/ProjectMenu";
 
 const Card = styled(Stack, DefaultCard, {
   position: "relative",
@@ -66,20 +66,7 @@ export function TreeCard({ tree }: Props) {
               </Badge>
             ) : null}
             {tree.publishedTrees.length > 0 ? (
-              <SystemLink
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
-                href={`${process.env.NEXT_PUBLIC_OD_RENDERER_ENDPOINT}/tree/${tree.publishedTrees[0].uuid}`}
-                target="_blank"
-              >
-                <Badge size="small">
-                  {t("published")}{" "}
-                  <Icon>
-                    <ArrowRightIcon />
-                  </Icon>
-                </Badge>
-              </SystemLink>
+              <Badge size="small">{t("published")}</Badge>
             ) : null}
           </Row>
           <Text css={{ color: "$gray11" }} size="small">
@@ -87,7 +74,17 @@ export function TreeCard({ tree }: Props) {
           </Text>
         </Card>
       </Link>
-      <TreeCardMenu tree={tree} />
+      <ProjectMenu tree={tree}>
+        <Button
+          variant="ghost"
+          square
+          css={{ position: "absolute", right: 20, top: 12 }}
+        >
+          <Icon label={t("menu.hiddenLabel", { name: tree.name })}>
+            <DotsHorizontalIcon />
+          </Icon>
+        </Button>
+      </ProjectMenu>
     </Box>
   );
 }

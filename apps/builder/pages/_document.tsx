@@ -4,7 +4,7 @@ import { getCssText } from "@open-decision/design-system";
 import { defaultTheme } from "../design/stitches.config";
 
 export default class Document extends NextDocument {
-  render() {
+  override render() {
     return (
       <Html lang="en">
         <Head>

@@ -7,8 +7,9 @@ import {
 } from "@open-decision/design-system";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
-import { useTreeContext } from "./state/treeStore/TreeContext";
-import { useEditor } from "./state/useEditor";
+import { useTreeContext } from "../state/treeStore/TreeContext";
+import { useEditor } from "../state/useEditor";
+import { sideMenuTooltipProps } from "./SideMenu/shared";
 
 type Props = { css?: StyleObject };
 
@@ -30,9 +31,10 @@ export function CreateNodeButton({ css }: Props) {
     <Tooltip.Root>
       <Tooltip.Trigger asChild>
         <Button
+          variant="primary"
           name={t("hiddenLabel")}
           square
-          css={{ boxShadow: "$2", ...css }}
+          css={css}
           onClick={() => {
             const newInput = createInput();
             const newAnswer = createAnswer({ text: "" });
@@ -55,9 +57,11 @@ export function CreateNodeButton({ css }: Props) {
           </Icon>
         </Button>
       </Tooltip.Trigger>
-      <Tooltip.Content side="right" sideOffset={15}>
-        <Text>{t("tooltip")}</Text>
-      </Tooltip.Content>
+      <Tooltip.Portal>
+        <Tooltip.Content {...sideMenuTooltipProps}>
+          <Text>{t("tooltip")}</Text>
+        </Tooltip.Content>
+      </Tooltip.Portal>
     </Tooltip.Root>
   );
 }

@@ -1,12 +1,10 @@
 import {
   Box,
-  css,
-  ScrollArea,
-  Grid,
   StyleObject,
   Row,
   Form,
   Label,
+  Stack,
 } from "@open-decision/design-system";
 import * as React from "react";
 import { Node } from "@open-decision/type-classes";
@@ -25,17 +23,6 @@ import { ParentNodeSelector } from "./ParentNodeSelector";
 import { StartNodeLabel } from "../NodeLabels/StartNodeLabels";
 import { OptionTargetInputs } from "../InputConfigurators/OptionTargetInput/OptionTargetInput";
 import { useTranslations } from "next-intl";
-
-const styledMotionDiv = css({
-  position: "relative",
-  gridRow: "1 / -1",
-  gridColumn: "2",
-  overflow: "hidden",
-  zIndex: "$10",
-  boxShadow: "$1",
-  width: "100%",
-  borderLeft: "1px solid $gray5",
-});
 
 export function NodeEditingSidebar() {
   const [selectionType, selectedNode] = useSelectedNodes();
@@ -60,28 +47,30 @@ export function NodeEditingSidebar() {
               delay: 0.1,
             },
           }}
-          className={styledMotionDiv()}
+          style={{
+            gridRow: "1 / -1",
+            gridColumn: "2",
+            zIndex: "$10",
+            height: "100%",
+            overflow: "hidden scroll",
+            width: "100%",
+          }}
         >
-          <ScrollArea.Root
-            css={{
-              height: "100%",
-              layer: "1",
-              paddingInlineEnd: "$5",
-              paddingInlineStart: "$5",
-              paddingBlock: "$5",
-              overflow: "hidden",
-            }}
-          >
-            <ScrollArea.Viewport css={{ height: "100%" }}>
-              <NodeEditingSidebarContent
-                key={selectedNode.id}
+          {selectionType === "single" ? (
+            <NodeEditingSidebarContent
+              key={selectedNode.id}
+              css={{
+                gridRow: "1 / -1",
+                gridColumn: "2",
+                zIndex: "$10",
+                height: "100%",
+                overflow: "hidden scroll",
+                groupColor: "$gray11",
                 borderLeft: "$border$layer",
               }}
-                node={{ id: selectedNode.id, data: selectedNode.data }}
-              />
-            </ScrollArea.Viewport>
-            <ScrollArea.Scrollbar />
-          </ScrollArea.Root>
+              node={{ id: selectedNode.id, data: selectedNode.data }}
+            />
+          ) : null}
         </motion.aside>
       ) : null}
     </AnimatePresence>
@@ -90,13 +79,24 @@ export function NodeEditingSidebar() {
 
 type Props = { node: Pick<Node.TNode, "id" | "data">; css?: StyleObject };
 
-export function NodeEditingSidebarContent({ node, css }: Props) {
+function NodeEditingSidebarContent({ node, css }: Props) {
   const t = useTranslations("builder.nodeEditingSidebar");
   const inputs = useInputs(node.data.inputs);
   const { updateNodeContent } = useTreeContext();
 
   return (
-    <Grid css={{ gridAutoRows: "max-content", gap: "$6", ...css }}>
+    <Stack
+      css={{
+        groupColor: "$gray11",
+        gap: "$6",
+        flex: 1,
+        layer: "1",
+        paddingInlineEnd: "$5",
+        paddingInlineStart: "$5",
+        paddingBlock: "$5",
+        ...css,
+      }}
+    >
       <Header node={node} />
       <Box as="section">
         <RichTextEditor
@@ -123,7 +123,7 @@ export function NodeEditingSidebarContent({ node, css }: Props) {
           <OptionTargetInputs nodeId={node.id} input={input} key={input.id} />
         ))}
       </Box>
-    </Grid>
+    </Stack>
   );
 }
 
@@ -144,11 +144,12 @@ const Header = ({ node }: HeaderProps) => {
   });
 
   return (
-    <Form.Root state={formState}>
+    <Form.Root state={formState} resetOnSubmit={false}>
       <Row
         css={{
           justifyContent: "space-between",
           alignItems: "center",
+          minHeight: "26px",
         }}
         as="header"
       >
