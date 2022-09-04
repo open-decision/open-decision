@@ -1,7 +1,13 @@
 import errors from "./errors";
+import { notifications } from "./notifications";
 
 export default {
   errors,
+  notifications,
+  header: { homeButtonHiddenLabel: "Zurück zum Dashboard" },
+  notificationsGeneral: {
+    closeIconHiddenLabel: "Benachrichtigung schließen",
+  },
   ErrorCard: {
     titleFallback: "Es ist ein unbekannter Fehler aufgetreten",
     descriptionFallback: "Bitte lade die Seite neu.",
@@ -10,7 +16,7 @@ export default {
     errorReportLink: "Bug Reports",
   },
   UserMenu: {
-    label: "Mein Account",
+    label: "Account",
   },
   NewProjectDropdown: {
     label: "Projekt erstellen",
@@ -39,16 +45,15 @@ export default {
     title: "Neues Projekt erstellen",
     treeNameInput: {
       label: "Projektname",
+      placeholder: "Mein Projektname",
     },
     submit: "Erstellen",
-    successNotification: "Projekt erfolgreich erstellt",
   },
   deleteTreeDialog: {
     title: "Projekt löschen",
     description:
       "Bitte geben Sie den Namen des Projekts: <bold>{treeName}</bold> zur Bestätigung der Löschung ein.",
     submit: "Löschen",
-    successNotification: "Projekt erfolgreich gelöscht",
     treeNameInput: {
       label: "Projektname",
     },
@@ -57,10 +62,10 @@ export default {
     title: "Projektname ändern",
     treeNameInput: {
       label: "Projektname",
+      placeholder: "Mein Projektname",
     },
 
     submit: "Ändern",
-    successNotification: "Projekt erfolgreich aktualisiert",
   },
   exportDialog: {
     title: "Projekt exportieren",
@@ -75,12 +80,19 @@ export default {
     },
     errorFallback: "Beim Export ihres Projektes ist ein Fehler aufgetreten.",
   },
-  successNotifications: {
-    unarchived: "Projekt erfolgreich unarchiviert",
-    archived: "Projekt erfolgreich archiviert",
-    published: "Projekt erfolgreich veröffentlicht",
-    unpublished: "Projekt erfolgreich unveröffentlicht",
-    import: "Projekt erfolgreich importiert",
-    export: "Projekt erfolgreich exportiert",
+  projectMenu: {
+    changeName: "Namen ändern",
+    export: "Exportieren",
+    publish: {
+      publish: "Veröffentlichen",
+      unpublish: "Unveröffentlichen",
+      open: "Öffnen",
+      copyLink: "Link kopieren",
+    },
+    archive: "Archivieren",
+    unarchive: "Unarchivieren",
+    delete: "Projekt löschen",
+    disabledDeletePublishedTreeTooltip:
+      "Ein veröffentlichter Baum kann nicht gelöscht werden. Bitte unveröffentliche den Baum erst.",
   },
 } as const;

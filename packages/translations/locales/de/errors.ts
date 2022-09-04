@@ -103,7 +103,7 @@ const errorMessages: Record<ErrorCodes, { short: string; long: string }> = {
   },
   PASSWORD_TO_WEAK: {
     short: "Passwort zu schwach",
-    long: "Dein Open Decision Passwort muss noch ein bisschen länger sein.",
+    long: "Dein Open Decision Passwort muss komplexer sein.",
   },
   UNAUTHORIZED: {
     short: "Nicht berechtigt",
@@ -124,6 +124,22 @@ const errorMessages: Record<ErrorCodes, { short: string; long: string }> = {
   WHITELIST_ENTRY_COULD_NOT_BE_DELETED: {
     short: "Whitelisteintrag konnte nicht gelöscht werden",
     long: "Whitelisteintrag konnte nicht gelöscht werden",
+  },
+  PREVIEW_NOT_ENABLED: {
+    short: "Vorschau nicht verfügbar",
+    long: "Die Vorschau für dieses Projekt ist nicht aktiviert.",
+  },
+  CIRCULAR_CONNECTION: {
+    short: "Fehlerhafte Verbindung",
+    long: "Ein Knoten kann nicht mit sich selbst verbunden werden.",
+  },
+  DUPLICATE_EDGE: {
+    short: "Doppelte Verbindung",
+    long: "Eine Verbindung zwischen diesen Knoten existiert bereits.",
+  },
+  CONNECTED_TO_SELF: {
+    short: "Fehlerhafte Verbindung",
+    long: "Eine Verbindung zwischen diesen Knoten würde zu einer zirkulären Verbindung führen.",
   },
 } as const;
 
