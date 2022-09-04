@@ -5,8 +5,9 @@ import { textStyles } from "../Text";
 
 export const ErrorMessage = styled(Box, textStyles, {
   color: "$danger11",
-  backgroundColor: "$danger1",
+  backgroundColor: "$danger2",
   borderRadius: "$md",
+  maxWidth: "max-content",
 
   "&:empty": {
     display: "none",
@@ -14,7 +15,6 @@ export const ErrorMessage = styled(Box, textStyles, {
 
   "&:not(:empty)": {
     padding: "$1 $2",
-    border: "1px solid $colors$danger5",
   },
 });
 
