@@ -13,6 +13,8 @@ import { useNotificationStore } from "../../../../features/Notifications/Notific
 import { ConnectionLine } from "./Edges/ConnectionLine";
 import { CustomEdge } from "./Edges/CustomEdge";
 import { useSnapshot } from "valtio";
+import { useNotificationStore } from "../../../../config/notifications";
+import { useTranslations } from "next-intl";
 
 const validConnectEvent = (
   target: MouseEvent["target"]

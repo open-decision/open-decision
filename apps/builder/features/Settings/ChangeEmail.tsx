@@ -3,10 +3,10 @@ import { Heading, Form } from "@open-decision/design-system";
 import { Card } from "../../components/Card";
 import { VerifiedSettingsChange } from "./VerifiedSettingsChange";
 import { TGetUserOutput } from "@open-decision/user-api-specification";
-import { useNotificationStore } from "../Notifications/NotificationState";
 import { useUser } from "../Auth/useUserQuery";
 import { EmailField } from "../../components/EmailInput";
 import { useTranslations } from "next-intl";
+import { useNotificationStore } from "../../config/notifications";
 
 type Props = { user: TGetUserOutput };
 

@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useRouter } from "next/router";
-import { useNotificationStore } from "./NotificationState";
-import { notificationTemplates } from "./NotificationTemplates";
+import { useNotificationStore } from "../config/notifications";
 
 export function useUrlNotification() {
   const {
@@ -11,7 +10,7 @@ export function useUrlNotification() {
 
   React.useEffect(() => {
     if (notify && typeof notify === "string") {
-      addNotification(notificationTemplates[notify]);
+      addNotification(notify as any);
     }
   }, [notify, addNotification]);
 }

@@ -1,18 +1,16 @@
 import {
-  Box,
-  Heading,
-  Icon,
-  Stack,
-  styled,
-  StyleObject,
-  Text,
-} from "@open-decision/design-system";
-import {
   CheckCircledIcon,
   CrossCircledIcon,
   ExclamationTriangleIcon,
   InfoCircledIcon,
 } from "@radix-ui/react-icons";
+import { Required } from "utility-types";
+import { Box } from "../Box";
+import { Heading } from "../Heading";
+import { Icon } from "../Icon/Icon";
+import { Stack } from "../Layout";
+import { styled, StyleObject } from "../stitches";
+import { Text } from "../Text";
 import { Notification } from "./NotificationState";
 
 const Container = styled(Box, {
@@ -36,7 +34,7 @@ export type InfoBoxProps = {
   children?: React.ReactNode;
   CloseButton?: React.ReactNode;
   css?: StyleObject;
-} & Omit<Notification, "duration">;
+} & Required<Omit<Notification, "duration">, "variant">;
 
 export function InfoBox({
   children,

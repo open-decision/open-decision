@@ -21,6 +21,7 @@ export * as ScrollArea from "./ScrollArea/ScrollArea";
 export * from "./VisuallyHidden/VisuallyHidden";
 export * from "./Separator";
 export * as Toolbar from "./Toolbar/Toolbar";
+export * from "./Notifications";
 
 // Styling solutions
 export * from "./stitches";

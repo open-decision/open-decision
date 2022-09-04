@@ -6,7 +6,7 @@ import { NextPage } from "next";
 import { useUrlNotification } from "../features/Notifications/useUrlNotification";
 import { useQueryClient } from "../features/Data/useQueryClient";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { NextIntlProvider } from "next-intl";
+import { useNotificationStore } from "../config/notifications";
 
 // ------------------------------------------------------------------
 // xstate devtools
