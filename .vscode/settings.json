@@ -9,7 +9,8 @@
     "models",
     "api-client",
     "e2e",
-    "ci/cd"
+    "ci/cd",
+    "translations"
   ],
   "typescript.tsdk": "node_modules/typescript/lib",
   "todo-tree.general.tags": ["BUG", "HACK", "FIXME", "TODO", "SECURITY"],
