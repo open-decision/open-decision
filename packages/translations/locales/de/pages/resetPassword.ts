@@ -1,7 +1,7 @@
 export default {
   pageTitle: "Passwort zurücksetzen | OD",
   title: "Passwort zurücksetzen",
-  description: "Bitte vergebe ein neues Passwort",
+  description: "Bitte vergib ein neues Passwort",
   submitButton: "Passwort zurücksetzen",
   invalid: {
     title: "Ungültig",
