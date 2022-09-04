@@ -1,7 +1,7 @@
 import { DropdownMenu, Icon } from "@open-decision/design-system";
 import { ArchiveIcon } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
-import { useTreeAPI } from "../../../Data/useTreeAPI";
+import { useTreeAPI } from "../../features/Data/useTreeAPI";
 
 export type PublishItemProps = {
   treeId: string;
@@ -9,7 +9,7 @@ export type PublishItemProps = {
 };
 
 export function ArchiveItem({ treeId, status }: PublishItemProps) {
-  const t = useTranslations("dashboard.treeList.cardMenu");
+  const t = useTranslations("common.projectMenu");
   const { mutate: archive } = useTreeAPI().useArchive();
   const { mutate: unarchive } = useTreeAPI().useUnArchive();
 
@@ -17,8 +17,8 @@ export function ArchiveItem({ treeId, status }: PublishItemProps) {
     <DropdownMenu.Item
       onSelect={() =>
         status === "ARCHIVED"
-          ? unarchive({ uuid: treeId })
-          : archive({ uuid: treeId })
+          ? unarchive({ params: { uuid: treeId } })
+          : archive({ params: { uuid: treeId } })
       }
     >
       <Icon css={{ marginTop: "2px" }}>

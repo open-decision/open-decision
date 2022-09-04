@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as DropdownMenuPrimitives from "@radix-ui/react-dropdown-menu";
-import { styled } from "../../stitches";
+import { styled, StyleObject } from "../../stitches";
 import { Icon } from "../../Icon/Icon";
 import {
   menuContainerStyles,
@@ -14,74 +14,9 @@ import {
   TriangleRightIcon,
 } from "@radix-ui/react-icons";
 import { Button as SystemButton, ButtonProps } from "../../Button";
+import { Row } from "../../Layout";
 
-const DropdownContext = React.createContext<null | {
-  setOpenDialog: React.Dispatch<React.SetStateAction<string>>;
-  dialogKeys: string[];
-}>(null);
-
-export const Root = ({
-  children,
-  dialogs,
-  ...props
-}: DropdownMenuRootProps) => {
-  const [openDialog, setOpenDialog] = React.useState<
-    keyof typeof dialogs | string
-  >("");
-
-  const Dialog = dialogs?.[openDialog];
-  const EnhancedDialog = React.isValidElement(Dialog)
-    ? React.cloneElement(Dialog, {
-        open: true,
-        setOpen: () => setOpenDialog(""),
-      })
-    : null;
-
-  return (
-    <>
-      {EnhancedDialog}
-      <DropdownContext.Provider
-        value={
-          dialogs ? { setOpenDialog, dialogKeys: Object.keys(dialogs) } : null
-        }
-      >
-        <DropdownMenuPrimitives.Root {...props}>
-          {children}
-        </DropdownMenuPrimitives.Root>
-      </DropdownContext.Provider>
-    </>
-  );
-};
-
-const DialogItemImpl = (
-  { children, dialogKey, ...props }: DropdownMenuDialogItemProps,
-  ref: React.Ref<HTMLDivElement>
-) => {
-  const dropdownContext = React.useContext(DropdownContext);
-
-  if (!dropdownContext)
-    throw new Error(
-      `DropdownMenu.DialogItems can only be used when the dialogs prop is set on the DialogMenu.Root component`
-    );
-
-  if (!dropdownContext.dialogKeys.includes(dialogKey))
-    throw new Error(
-      `The provided dialogKey ${dialogKey} does not exist on the dialog object passed to DropdownMenu.Root. Valid keys are ${dropdownContext.dialogKeys}`
-    );
-
-  return (
-    <Item
-      onClick={(event) => event.stopPropagation()}
-      onSelect={() => dropdownContext.setOpenDialog(dialogKey)}
-      ref={ref}
-      {...props}
-    >
-      {children}
-    </Item>
-  );
-};
-
-export const DialogItem = React.forwardRef(DialogItemImpl);
+export const Root = DropdownMenuPrimitives.Root;
 
 type IndicatorProps = { children?: React.ReactNode };
 
@@ -155,6 +90,8 @@ function DropdownButtonImpl(
   return (
     <SystemButton
       css={{
+        gap: "$1",
+
         "&[data-state='open'] .rotate": {
           transform: "rotate(180deg)",
         },
@@ -163,7 +100,9 @@ function DropdownButtonImpl(
       ref={ref}
       {...props}
     >
-      {children}
+      <Row as="span" css={{ gap: "$2" }}>
+        {children}
+      </Row>
       <Icon
         className="rotate"
         css={{
@@ -176,26 +115,26 @@ function DropdownButtonImpl(
   );
 }
 
-const StyledTriggerItem = styled(
-  DropdownMenuPrimitives.TriggerItem,
+const StyledSubTriggerItem = styled(
+  DropdownMenuPrimitives.SubTrigger,
   menuItemStyles
 );
 
-export const TriggerItem = ({
+export const SubTrigger = ({
   children,
   css,
   ...props
 }: DropdownMenuTriggerItemProps) => (
-  <StyledTriggerItem
-    css={{ justifyContent: "space-between", ...css }}
-    {...props}
-  >
+  <StyledSubTriggerItem css={{ ...css }} {...props}>
     {children}
-    <Icon>
+    <Icon css={{ marginLeft: "auto" }}>
       <TriangleRightIcon />
     </Icon>
-  </StyledTriggerItem>
+  </StyledSubTriggerItem>
 );
+
+export const Sub = DropdownMenuPrimitives.Sub;
+export const Portal = DropdownMenuPrimitives.Portal;
 
 export const Button = React.forwardRef(DropdownButtonImpl);
 
@@ -204,7 +143,8 @@ export type DropdownMenuRootProps = DropdownMenuPrimitives.DropdownMenuProps & {
 };
 export type DropdownMenuTriggerProps =
   DropdownMenuPrimitives.DropdownMenuTriggerProps;
-export type DropdownMenuContentProps = React.ComponentProps<typeof Content>;
+export type DropdownMenuContentProps =
+  DropdownMenuPrimitives.DropdownMenuContentProps & { css?: StyleObject };
 export type DropdownMenuItemProps = React.ComponentProps<typeof Item>;
 export type DropdownMenuDialogItemProps = Omit<
   DropdownMenuItemProps,
@@ -216,16 +156,52 @@ export type DropdownCheckboxItemProps = React.ComponentProps<
 >;
 export type DropdownMenuLabelProps = React.ComponentProps<typeof Label>;
 export type DropdownMenuTriggerItemProps = React.ComponentProps<
-  typeof StyledTriggerItem
+  typeof StyledSubTriggerItem
 >;
 export type DropdownMenuSeparatorProps = React.ComponentProps<typeof Separator>;
 
-export const Content = styled(
-  DropdownMenuPrimitives.Content,
-  menuContainerStyles
-);
+export const Content = ({
+  className,
+  children,
+  css,
+  hidden,
+  ...props
+}: DropdownMenuContentProps) => {
+  return (
+    <DropdownMenuPrimitives.Content
+      className={
+        !hidden ? `${menuContainerStyles({ css })} ${className}` : undefined
+      }
+      hidden={hidden}
+      {...props}
+    >
+      {children}
+    </DropdownMenuPrimitives.Content>
+  );
+};
+
+export const SubContent = ({
+  className,
+  children,
+  css,
+  hidden,
+  ...props
+}: DropdownMenuContentProps) => {
+  return (
+    <DropdownMenuPrimitives.SubContent
+      className={
+        !hidden ? `${menuContainerStyles({ css })} ${className}` : undefined
+      }
+      hidden={hidden}
+      {...props}
+    >
+      {children}
+    </DropdownMenuPrimitives.SubContent>
+  );
+};
 
 Content.defaultProps = { sideOffset: 5 };
+SubContent.defaultProps = { sideOffset: 5 };
 
 export const Item = styled(DropdownMenuPrimitives.Item, menuItemStyles);
 export const Label = styled(DropdownMenuPrimitives.Label, menuLabelStyles);

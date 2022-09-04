@@ -64,20 +64,17 @@ const StyledOverlay = styled(DialogPrimitive.Overlay, {
   },
 });
 
-function DialogContent({
-  children,
-  Above,
-  Below,
-  ...props
-}: DialogContentProps) {
+const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps>(
+  ({ children, Above, Below, ...props }, ref) => {
   return (
-    <StyledContent {...props}>
+      <StyledContent ref={ref} {...props}>
       {Above}
       <DialogCard>{children}</DialogCard>
       {Below}
     </StyledContent>
   );
 }
+);
 
 function CloseButton(props: Partial<ButtonProps>) {
   return (
@@ -160,6 +157,7 @@ export const Dialog = {
   Header,
   ActionButton,
   ButtonRow,
+  Portal: DialogPrimitive.Portal,
 };
 
 export type DialogRootProps = DialogPrimitive.DialogProps;
