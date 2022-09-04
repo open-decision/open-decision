@@ -20,8 +20,8 @@ function createTreeFromYDocument(yDocument: string) {
  * @returns {string}
  */
 export const getTreeWithUpdatedTreeData = async (
-  userUuid: string,
-  treeUuid: string
+  treeUuid: string,
+  userUuid?: string
 ) => {
   const treeFromDb = await prisma.decisionTree.findFirst({
     where: {
@@ -34,11 +34,11 @@ export const getTreeWithUpdatedTreeData = async (
   if (!treeFromDb)
     return new APIError({
       code: "NOT_FOUND",
-      message: "The user does not have the requested tree.",
+      message: "The requested tree does not exist.",
     });
 
   // Check if the tree is currently being edited using the yjs-websocket and use that version otherwise use the dbs version
-  const treeData = docs.has(treeFromDb)
+  const treeData = docs.has(treeFromDb.uuid)
     ? docs.get(treeFromDb.uuid).getMap("tree").toJSON()
     : treeFromDb.yDocument
     ? createTreeFromYDocument(treeFromDb.yDocument)
