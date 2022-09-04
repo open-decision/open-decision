@@ -50,20 +50,6 @@
         "cwd": "apps/e2e"
       }
     },
-    "serve:app": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "commands": [
-          "pnpm nx migrate:deploy prisma",
-          "pnpm nx run-many --target=serve:test --projects=builder,api --parallel=2 --output-style=stream"
-        ],
-        "parallel": false
-      },
-      "dependsOn": [
-        { "target": "start:db", "projects": "self" },
-        { "target": "build", "projects": "dependencies" }
-      ]
-    },
     "record": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {

@@ -5,7 +5,7 @@ import {
 } from "@open-decision/test-utils";
 import { test } from "@playwright/test";
 
-export const loginUniqueUserBeforeEach = (specName: string) => {
+export const withUniqueUser = (specName: string) => {
   test.beforeEach(async ({ baseURL, browserName }, testInfo) => {
     const user = createUserFixture();
 
