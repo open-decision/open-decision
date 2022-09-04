@@ -20,6 +20,7 @@ model DecisionTree {
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
   status         TreeStatus      @default(ACTIVE)
+  hasPreview     Boolean         @default(false)
   name           String
   Tags           Tag[]
   treeData       Json?           @db.JsonB
