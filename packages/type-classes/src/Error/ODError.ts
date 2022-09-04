@@ -6,7 +6,9 @@ export type ODErrorConstructorParameters<
 > = {
   code: TErrorCodes;
   additionalData?: Record<string, unknown>;
-} & Omit<Error, "name">;
+  message?: string;
+  isOperational?: boolean;
+} & Omit<Error, "name" | "message">;
 
 export class ODError<
   TErrorCodes extends ErrorCodes = ErrorCodes
@@ -14,11 +16,21 @@ export class ODError<
   readonly code: TErrorCodes;
   readonly timestamp?: number;
   readonly additionalData?: Record<string, unknown>;
+  /**
+   * An operational error is an expected error resulting from invalid inputs or user behaviors.
+   * This should be true for all cases where the user is directly responsible for the error and should
+   * be informed. This should not break the application flow and should be easily recoverable.
+   *
+   * A non operational error on the other hand describes an unexpected error that should be fixed by
+   * the programmer.
+   */
+  readonly isOperational: boolean;
 
   constructor({
     code,
     additionalData,
     message,
+    isOperational = true,
   }: ODErrorConstructorParameters<TErrorCodes>) {
     super(message);
 
@@ -26,6 +38,7 @@ export class ODError<
     this.timestamp = Date.now();
     this.name = "ODError";
     this.additionalData = additionalData;
+    this.isOperational = isOperational;
   }
 }
 
