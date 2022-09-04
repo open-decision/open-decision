@@ -1,6 +1,7 @@
-import { Link, Icon } from "@open-decision/design-system";
 import { ExternalLinkIcon } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
+import { Icon } from "../Icon/Icon";
+import { Link } from "../Link/Link";
 
 type Props = { children?: React.ReactNode };
 

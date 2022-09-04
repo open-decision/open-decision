@@ -22,6 +22,7 @@ export * from "./VisuallyHidden/VisuallyHidden";
 export * from "./Separator";
 export * as Toolbar from "./Toolbar/Toolbar";
 export * from "./Notifications";
+export * from "./Error";
 
 // Styling solutions
 export * from "./stitches";
