@@ -3,6 +3,7 @@ import {
   deletePublishedTree,
   getPublishedTree,
   getPublishedTrees,
+  getTreeData,
 } from "@open-decision/tree-api-specification";
 import {
   createPublishedTreeOfTree,
@@ -45,6 +46,9 @@ export const client = (context: TContext) => {
       create: createTree(context),
       delete: deleteTree(context),
       update: updateTree(context),
+      data: {
+        get: getTreeData(context),
+      },
       publishedTrees: {
         get: getPublishedTreesOfTree(context),
         create: createPublishedTreeOfTree(context),
