@@ -26,7 +26,7 @@ export interface Typegen0 {
   eventsCausingActions: {
     assignAnswerToContext: "ADD_USER_ANSWER";
     assignNewTarget: "VALID_INTERPRETATION";
-    callOnException: "INVALID_INTERPRETATION";
+    callOnError: "INVALID_INTERPRETATION";
     goBack: "GO_BACK";
     goForward: "GO_FORWARD";
     resetToInitialContext: "RESET";

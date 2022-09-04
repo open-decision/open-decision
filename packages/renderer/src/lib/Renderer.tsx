@@ -20,11 +20,11 @@ export type RendererProps = {
 } & StackProps;
 
 function RendererImpl(
-  { css, nodeId, ...props }: RendererProps,
+  { css, ...props }: RendererProps,
   ref: React.Ref<HTMLDivElement>
 ) {
-  const { getCurrentNode, getInputsWithAnswers, getNode } = useInterpreter();
-  const node = nodeId ? getNode(nodeId) : getCurrentNode();
+  const { getCurrentNode, getInputsWithAnswers } = useInterpreter();
+  const node = getCurrentNode();
 
   if (!node) throw node;
   const inputs = getInputsWithAnswers(node.data.inputs);

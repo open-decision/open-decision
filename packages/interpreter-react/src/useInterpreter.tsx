@@ -1,29 +1,19 @@
-import { ODError, ODProgrammerError, Tree } from "@open-decision/type-classes";
+import { ODProgrammerError, Tree } from "@open-decision/type-classes";
 import * as React from "react";
 import {
   createInterpreter,
   InterpreterService,
   createInterpreterMethods,
-  InterpreterContext,
   InterpreterEvents,
   InterpreterOptions,
 } from "@open-decision/interpreter";
+import type { InterpreterContext } from "@open-decision/interpreter";
 import { useActor, useInterpret } from "@xstate/react";
-import {
-  InterpreterOptions as XStateInterpreteOptions,
-  StateConfig,
-} from "xstate";
+import { InterpreterOptions as XStateInterpreteOptions } from "xstate";
 import { UseMachineOptions } from "@xstate/react/lib/types";
+import { ErrorCard, Stack } from "@open-decision/design-system";
 
-function useInterpreterMachine(tree: Tree.TTree, options: InterpreterOptions) {
-  const interpreterMachine = createInterpreter(tree, options);
-
-  if (interpreterMachine instanceof ODError) throw interpreterMachine;
-
-  return interpreterMachine;
-}
-
-const InterpreterContext = React.createContext<{
+const MachineContext = React.createContext<{
   service: InterpreterService;
   tree: Tree.TTree;
 } | null>(null);
@@ -31,46 +21,57 @@ const InterpreterContext = React.createContext<{
 export type InterpreterProviderProps = {
   children: React.ReactNode;
   tree: Tree.TTree;
+  defaultNode?: string;
   config?: XStateInterpreteOptions &
     UseMachineOptions<InterpreterContext, InterpreterEvents>;
-  onChange?: (
-    state: StateConfig<InterpreterContext, InterpreterEvents>
-  ) => void;
 } & InterpreterOptions;
 
 export function InterpreterProvider({
   children,
   tree,
   config,
-  onChange,
+  defaultNode,
   ...options
 }: InterpreterProviderProps) {
-  const interpreterMachine = useInterpreterMachine(tree, options);
-
-  const service = useInterpret(
-    interpreterMachine,
-    { ...config, devTools: true },
-    onChange
+  const [[interpreterMachine]] = React.useState(
+    React.useState(createInterpreter(tree, defaultNode, options))
   );
 
+  if (interpreterMachine instanceof Error)
+    return (
+      <Stack center css={{ height: "100%" }}>
+        <ErrorCard error={interpreterMachine} css={{ maxWidth: "600px" }} />
+      </Stack>
+    );
+
+  const service = useInterpret(interpreterMachine, {
+    ...config,
+    devTools: true,
+  });
+
   return (
-    <InterpreterContext.Provider value={{ service, tree }}>
+    <MachineContext.Provider
+      value={{
+        service,
+        tree,
+      }}
+    >
       {children}
-    </InterpreterContext.Provider>
+    </MachineContext.Provider>
   );
 }
 
 export function useInterpreterService() {
-  const service = React.useContext(InterpreterContext);
+  const context = React.useContext(MachineContext);
 
-  if (!service)
+  if (!context)
     throw new ODProgrammerError({
       message:
         "useInterpreter or useInterpreterService can only be used inside of an InterpreterProvider",
       code: "MISSING_CONTEXT_PROVIDER",
     });
 
-  return service;
+  return context;
 }
 
 export function useInterpreter() {
