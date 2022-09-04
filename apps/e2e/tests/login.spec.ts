@@ -101,11 +101,9 @@ test.describe("builder login incomplete credentials", () => {
     await page.goto("/auth/login");
   });
 
-  test("should show error message when data is not provided and not send a request", async ({
+  test("should show error message when data is not provided", async ({
     page,
   }) => {
-    await page.route("**/auth/login", () => test.fail());
-
     // Get inputs
     await page
       .locator(`text=${de.common.emailInput.label}`)

@@ -11,7 +11,7 @@ test.beforeEach(async ({ page }, testInfo) => {
   testInfo.snapshotSuffix = "";
   const user = createUserFixture();
   await insertUsers([user]);
-  process.env.user = JSON.stringify(user);
+  process.env["user"] = JSON.stringify(user);
 
   await page.goto("/auth/login");
   await page
