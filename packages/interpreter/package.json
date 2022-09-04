@@ -12,11 +12,13 @@
   "scripts": {},
   "dependencies": {
     "@open-decision/type-classes": "workspace:*",
-    "remeda": "^0.0.35",
-    "xstate": "^4.33.0"
+    "remeda": "^1.1.0",
+    "xstate": "^4.33.5"
   },
-  "peerDependencies": {},
+  "peerDependencies": {
+    "react": "^18.2.0"
+  },
   "devDependencies": {
-    "vitest": "^0.15.1"
+    "vitest": "^0.23.0"
   }
 }

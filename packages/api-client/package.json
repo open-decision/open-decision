@@ -12,6 +12,6 @@
     "@open-decision/auth-api-specification": "workspace:*",
     "@open-decision/tree-api-specification": "workspace:*",
     "@open-decision/user-api-specification": "workspace:*",
-    "remeda": "^0.0.35"
+    "remeda": "^1.1.0"
   }
 }
