@@ -21,6 +21,9 @@ export interface Typegen0 {
       type: "error.platform.openWebsocketConnection";
       data: unknown;
     };
+    "xstate.after(retry_delay)#websocketMachine.retry": {
+      type: "xstate.after(retry_delay)#websocketMachine.retry";
+    };
     "xstate.init": { type: "xstate.init" };
   };
   invokeSrcNameMap: {
@@ -36,16 +39,23 @@ export interface Typegen0 {
   eventsCausingActions: {
     assignDataToContext: "OPEN";
     assignTokenToContext: "done.invoke.authenticate";
-    incrementRetries: "connection.error";
+    incrementRetries: "xstate.after(retry_delay)#websocketMachine.retry";
   };
   eventsCausingServices: {
-    authenticate: "OPEN";
-    openWebsocket: "connection.error" | "done.invoke.authenticate";
+    authenticate: "OPEN" | "xstate.after(retry_delay)#websocketMachine.retry";
+    openWebsocket: "done.invoke.authenticate";
   };
   eventsCausingGuards: {
     underRetryLimit: "connection.error";
   };
-  eventsCausingDelays: {};
-  matchesStates: "authenticating" | "connected" | "error" | "unconnected";
+  eventsCausingDelays: {
+    retry_delay: "connection.error";
+  };
+  matchesStates:
+    | "authenticating"
+    | "connected"
+    | "error"
+    | "retry"
+    | "unconnected";
   tags: never;
 }

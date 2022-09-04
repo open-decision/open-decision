@@ -3,7 +3,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/router";
 import * as React from "react";
-import { useNotificationStore } from "../Notifications/NotificationState";
+import { useNotificationStore } from "../../config/notifications";
 
 export function useQueryClient() {
   const t = useTranslations("common.errors");
@@ -45,6 +45,7 @@ export function useQueryClient() {
           },
           mutations: {
             onError(error) {
+              console.log(error);
               if (!isODError(error)) {
                 return addNotification({
                   title: t("UNEXPECTED_ERROR.short"),

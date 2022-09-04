@@ -24,16 +24,6 @@ export function useSelectedNodes():
   return ["none", undefined];
 }
 
-export function useHasStartNode() {
-  const { tree } = useTreeContext();
-
-  const {
-    syncedStore: { startNode },
-  } = useSnapshot(tree);
-
-  return Boolean(startNode);
-}
-
 export function useStartNodeId() {
   const { tree } = useTreeContext();
 
@@ -185,6 +175,8 @@ export function useConditionsOfNode(
   if (conditions && node) {
     return pick(conditions, node.data.conditions);
   }
+
+  return undefined;
 }
 
 export function useTree() {

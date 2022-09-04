@@ -1,8 +1,14 @@
 import React from "react";
-import { Combobox, StyleObject, Badge } from "@open-decision/design-system";
+import {
+  Combobox,
+  StyleObject,
+  Badge,
+  Icon,
+} from "@open-decision/design-system";
 import { useEditor } from "../state/useEditor";
 import { useTreeContext } from "../state/treeStore/TreeContext";
 import { useTranslations } from "next-intl";
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 
 type Props = { css?: StyleObject };
 
@@ -26,7 +32,7 @@ export const NodeSearch = ({ css }: Props) => {
   const combobox = Combobox.useComboboxState({
     gutter: 8,
     sameWidth: true,
-    list: nodeNames.map((nodeName) => nodeName.name),
+    list: nodeNames.map((nodeName) => nodeName.name) ?? [],
   });
 
   function createHandler(label: string) {
@@ -64,6 +70,11 @@ export const NodeSearch = ({ css }: Props) => {
         state={combobox}
         placeholder={t("placeholder")}
         css={{ width: "400px", ...css }}
+        Icon={
+          <Icon>
+            <MagnifyingGlassIcon />
+          </Icon>
+        }
       />
       {combobox.value ? (
         <Combobox.Popover state={combobox}>
@@ -99,3 +110,5 @@ export const NodeSearch = ({ css }: Props) => {
     </>
   );
 };
+
+export default NodeSearch;

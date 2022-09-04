@@ -1,5 +1,4 @@
 import React from "react";
-import { Notifications } from "../features/Notifications/Notifications";
 import {
   Badge,
   Box,
@@ -9,15 +8,12 @@ import {
   Stack,
   styled,
   Text,
+  ErrorReportLink,
 } from "@open-decision/design-system";
-import { ErrorBoundary } from "@sentry/nextjs";
-import { FullPageErrorFallback } from "./Error/FullPageErrorFallback";
-import { ErrorReportLink } from "./Error/ErrorReportLink";
 
 const AppContainer = styled("main", {
   height: "100%",
-  width: "100vw",
-  overflow: "hidden",
+  width: "100%",
   display: "flex",
   flexDirection: "column",
   layer: "2",
@@ -94,32 +90,11 @@ export const LayoutImpl = (
 ): JSX.Element => {
   return (
     <>
-      <ErrorBoundary
-        fallback={({ error }) => {
-          return (
-            <FullPageErrorFallback
-              title="Es ist ein Fehler aufgetreten."
-              description={`${error.message} Bitte laden Sie die Seite neu.`}
-            />
-          );
-        }}
-      >
-        <React.Suspense fallback={<Loading {...props} />}>
-          <Box
-            css={{
-              height: "100vh",
-              display: "grid",
-              gridTemplateRows: "max-content 1fr",
-            }}
-          >
-            <AlphaBanner />
-            <AppContainer {...props} ref={ref}>
-              <Notifications />
-              {children}
-            </AppContainer>
-          </Box>
-        </React.Suspense>
-      </ErrorBoundary>
+      <React.Suspense fallback={<Loading {...props} />}>
+        <AppContainer {...props} ref={ref}>
+          {children}
+        </AppContainer>
+      </React.Suspense>
     </>
   );
 };

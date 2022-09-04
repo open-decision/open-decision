@@ -51,10 +51,11 @@ export const Node = memo(
     return (
       <NodeContainer
         aria-label={t("empty.hiddenLabel", {
-          content: data.name != null,
+          content: (data.name?.length ?? 0) > 0 ? true : null,
           name: data.name,
           selected: isSelected,
         })}
+        data-test="questionNode"
         data-nodeid={id}
         data-connecting={isConnecting}
         data-connectable={connectable}

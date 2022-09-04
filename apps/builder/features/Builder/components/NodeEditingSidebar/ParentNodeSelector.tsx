@@ -1,4 +1,4 @@
-import { Box, DropdownMenu, hoverSelector } from "@open-decision/design-system";
+import { Box, DropdownMenu } from "@open-decision/design-system";
 import { useTranslations } from "next-intl";
 import { useTreeContext } from "../../state/treeStore/TreeContext";
 
@@ -16,15 +16,12 @@ export function ParentNodeSelector({ parentNodes }: Props) {
             {t("label")}
           </DropdownMenu.Button>
         </DropdownMenu.Trigger>
-        <DropdownMenu.Content align="end">
+        <DropdownMenu.Content align="end" css={{ groupColor: "$black" }}>
           {parentNodes.map((parentNode) => {
             return (
               <DropdownMenu.Item
                 key={parentNode.id}
                 onClick={() => replaceSelectedNodes([parentNode.id])}
-                css={{
-                  [`${hoverSelector}`]: { textDecoration: "underline" },
-                }}
               >
                 {parentNode.name || <i>{t("noNameFallback")}</i>}
               </DropdownMenu.Item>

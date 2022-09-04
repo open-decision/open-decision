@@ -1,9 +1,7 @@
-import { LoadingSpinner, Stack } from "@open-decision/design-system";
+import { ErrorCard, Stack } from "@open-decision/design-system";
 import { ErrorBoundary } from "@sentry/nextjs";
 import { BaseHeader } from "../components";
-// import { TreeList } from "../features/Dashboard/TreeList";
 import * as React from "react";
-import { ErrorCard } from "../components/Error/ErrorCard";
 import { getDashboardLayout } from "../features/Dashboard/DashboardLayout";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
@@ -68,16 +66,7 @@ export default function DashboardPage() {
             gridRow: "2 / 4",
           }}
         >
-          <React.Suspense
-            fallback={
-              <LoadingSpinner
-                size="50px"
-                css={{ flex: 1, alignSelf: "center" }}
-              />
-            }
-          >
-            <TreeList />
-          </React.Suspense>
+          <TreeList />
         </Stack>
       </ErrorBoundary>
     </>

@@ -13,5 +13,5 @@ Content-Type: application/json
 
 {
   "email": "{{dev_email}}",
-  "password": "ZqVfk63oiUFUWBcAEhpQ"
+  "password": "development"
 }

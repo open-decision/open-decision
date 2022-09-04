@@ -9,18 +9,18 @@ import {
   useStartNodeId,
 } from "../../../../features/Builder/state/treeStore/hooks";
 import { useTreeContext } from "../../../../features/Builder/state/treeStore/TreeContext";
-import { useNotificationStore } from "../../../../features/Notifications/NotificationState";
 import { ConnectionLine } from "./Edges/ConnectionLine";
 import { CustomEdge } from "./Edges/CustomEdge";
 import { useSnapshot } from "valtio";
 import { useNotificationStore } from "../../../../config/notifications";
 import { useTranslations } from "next-intl";
+import { ODError } from "@open-decision/type-classes";
 
 const validConnectEvent = (
   target: MouseEvent["target"]
 ): target is HTMLDivElement | HTMLSpanElement =>
   (target instanceof HTMLDivElement || target instanceof HTMLSpanElement) &&
-  target.dataset.nodeid != null;
+  target.dataset["nodeid"] != null;
 
 const Container = styled("div", {
   display: "grid",
@@ -51,6 +51,7 @@ export function Canvas({ children, css, className }: Props) {
 }
 
 function Nodes() {
+  const t = useTranslations("common.errors");
   const nodes = useRFNodes();
   const edges = useRFEdges();
   const {
@@ -144,12 +145,12 @@ function Nodes() {
         });
       }}
       onConnectStart={(event) => {
-        if (validConnectEvent(event.target) && event.target.dataset.nodeid) {
-          startConnecting(event.target.dataset.nodeid);
+        if (validConnectEvent(event.target) && event.target.dataset["nodeid"]) {
+          startConnecting(event.target.dataset["nodeid"]);
         }
       }}
       onConnectEnd={(event) => {
-        if (!validConnectEvent(event.target) || !event.target.dataset.nodeid)
+        if (!validConnectEvent(event.target) || !event.target.dataset["nodeid"])
           return abortConnecting();
 
         const sourceNode = getNode(tree.nonSyncedStore.connectionSourceNodeId);
@@ -164,14 +165,14 @@ function Nodes() {
         });
         const possibleEdge = createAndAddEdge({
           source: tree.nonSyncedStore.connectionSourceNodeId,
-          target: event.target.dataset.nodeid,
+          target: event.target.dataset["nodeid"],
           conditionId: newCondition.id,
         });
 
-        if (possibleEdge instanceof Error)
+        if (possibleEdge instanceof ODError)
           addNotification({
-            title: "Verbindung fehlgeschlagen",
-            content: possibleEdge.message,
+            title: t(`${possibleEdge.code}.short`),
+            content: t(`${possibleEdge.code}.long`),
             variant: "danger",
           });
 
@@ -185,6 +186,7 @@ function Nodes() {
         gridColumn: "1 / -1",
         gridRow: "1 / -1",
         isolation: "isolate",
+        overflow: "hidden",
       }}
       connectionLineComponent={ConnectionLine}
       data-test="canvas"
