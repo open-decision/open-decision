@@ -8,7 +8,7 @@ import { AuthCard } from "./";
 export function ResetPasswordCard() {
   const t = useTranslations("resetPassword");
   const { query } = useRouter();
-  const token = query.token;
+  const token = query["token"];
 
   return token ? (
     <AuthCard.Container>

@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import * as React from "react";
 import { ErrorMessage } from "../../../../components/Error/ErrorMessage";
 import { PasswordInput } from "../../../../components/PasswordInput";
-import { useNotificationStore } from "../../../Notifications/NotificationState";
+import { useNotificationStore } from "../../../../config/notifications";
 import { useResetPasswordMutation } from "../../mutations/useResetPasswordMutation";
 
 type Props = { token: string };

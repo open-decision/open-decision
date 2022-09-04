@@ -1,6 +1,5 @@
-import { Form, Stack, Box, Row } from "@open-decision/design-system";
+import { Form, Stack, Box, Row, InfoBox } from "@open-decision/design-system";
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
-import { InfoBox } from "../../../Notifications/InfoBox";
 import { InternalLink } from "../../../../components/InternalLink";
 import { useRegisterMutation } from "../../mutations/useRegisterMutation";
 import { useRouter } from "next/router";
@@ -9,6 +8,7 @@ import { useTranslations } from "next-intl";
 import { EmailField } from "../../../../components/EmailInput";
 import { PasswordInput } from "../../../../components/PasswordInput";
 import { ErrorMessage } from "../../../../components/Error/ErrorMessage";
+import { APIErrors } from "@open-decision/type-classes";
 
 type Data = { email: string };
 
@@ -54,7 +54,7 @@ export function CombinedRegisterForm() {
   // whitelist feature is deactivated
   if (
     (isSuccess && variables?.email) ||
-    !!process.env.NEXT_PUBLIC_FEATURE_WHITELIST
+    !!process.env["NEXT_PUBLIC_FEATURE_WHITELIST"]
   )
     return <RegisterForm email={variables?.email} />;
 
@@ -105,8 +105,14 @@ function RegisterForm({ email }: { email?: string }) {
     onSuccess: () => router.push("/"),
     onError: (error) => {
       formState.setErrors({
-        password: error?.errors?.body?.password?._errors[0],
-        email: error?.errors?.body?.email?._errors[0],
+        password: t(
+          `common.errors.${
+            error?.errors?.body?.password?._errors[0] as keyof typeof APIErrors
+          }.long`
+        ),
+        email: `common.errors.${
+          error?.errors?.body?.email?._errors[0] as keyof typeof APIErrors
+        }.long`,
       });
     },
   });
@@ -120,7 +126,6 @@ function RegisterForm({ email }: { email?: string }) {
   });
 
   formState.useValidate(() => {
-    reset();
     if (formState.values.password !== formState.values.passwordConfirmation)
       formState.setError(
         formState.names.passwordConfirmation,

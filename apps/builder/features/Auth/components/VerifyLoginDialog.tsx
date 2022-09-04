@@ -3,9 +3,10 @@ import {
   Dialog,
   DialogTriggerProps,
   Form,
+  InfoBox,
+  InfoBoxProps,
   Text,
 } from "@open-decision/design-system";
-import { InfoBox, InfoBoxProps } from "../../Notifications/InfoBox";
 import { ColorKeys } from "@open-decision/design-system";
 import {
   createVerifyLoginMachine,
@@ -89,7 +90,7 @@ export function VerifyLoginDialog({
         </Dialog.Description>
         <Form.Root state={formState} css={{ marginTop: "$4" }}>
           <EmailField name={formState.names.email} disabled />
-          <PasswordInput autoFocus name={formState.names.password} />
+          <PasswordInput name={formState.names.password} />
           {state.context.Error ? (
             <ErrorMessage
               css={{ marginTop: "$2" }}
