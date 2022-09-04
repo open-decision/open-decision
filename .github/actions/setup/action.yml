@@ -31,4 +31,4 @@ runs:
       shell: bash
       run: pnpm install
 
-    - uses: nrwl/nx-set-shas@v2
+    - uses: nrwl/nx-set-shas@v2.2.5

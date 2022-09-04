@@ -5,17 +5,15 @@
     "design-system",
     "interpreter",
     "api",
-    "renderer-app",
     "models",
     "api-client",
-    "e2e",
-    "ci/cd"
+    "e2e"
   ],
   "typescript.tsdk": "node_modules/typescript/lib",
   "todo-tree.general.tags": ["BUG", "HACK", "FIXME", "TODO", "SECURITY"],
   "rest-client.environmentVariables": {
     "$shared": {
-      "dev_email": "dev@open-decision.org"
+      "dev_email": "test@od.org"
     }
   },
   "conventionalCommits.gitmoji": false,

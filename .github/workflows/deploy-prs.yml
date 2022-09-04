@@ -62,7 +62,6 @@ jobs:
       - name: Setup environment
         uses: ./.github/actions/setup
       - name: Typecheck
-        if: always()
         uses: ./.github/actions/typecheck
 
   preview_api:
@@ -102,14 +101,20 @@ jobs:
       - name: Set api endpoint end var
         continue-on-error: true
         run: |
-          vercel env rm NEXT_PUBLIC_OD_API_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} --yes || true
-          echo ${{ env.NEXT_PUBLIC_OD_API_ENDPOINT }}|  vercel env add NEXT_PUBLIC_OD_API_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}}
+          vercel env rm NEXT_PUBLIC_OD_API_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} --yes || true || true
+          echo ${{ env.NEXT_PUBLIC_OD_API_ENDPOINT }} |  vercel env add NEXT_PUBLIC_OD_API_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} || true
+
+      - name: Set od app endpoint end var
+        continue-on-error: true
+        run: |
+          vercel env rm NEXT_PUBLIC_OD_BUILDER_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} --yes || true
+          echo ${{ env.NEXT_PUBLIC_OD_BUILDER_ENDPOINT }} |  vercel env add NEXT_PUBLIC_OD_BUILDER_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} || true
 
       - name: Set api websocket endpoint env var
         continue-on-error: true
         run: |
-          vercel env rm NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} --yes || true
-          echo ${{ env.NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT }} | vercel env add NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}}
+          vercel env rm NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} --yes || true || true
+          echo ${{ env.NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT }} | vercel env add NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} || true
 
       - name: Deploy to Vercel Action
         uses: PhilGarb/deploy-to-vercel-action@v1.9.8
@@ -143,12 +148,10 @@ jobs:
       - run: flyctl proxy 5432 -a od-preview-db &
       - run: pnpx playwright install --with-deps
       - name: Run tests
-        run: pnpm nx test:ci e2e
-      - name: Deploy Result to Github Pages
+        run: pnpm nx test e2e
+      - name: Upload test results
         if: always()
-        uses: JamesIves/github-pages-deploy-action@v4
+        uses: actions/upload-artifact@v2
         with:
-          folder: apps/e2e/playwright-report
-          clean: true
-          clean-exclude: |
-            vercel.json
+          name: playwright-report
+          path: apps/e2e/playwright-report

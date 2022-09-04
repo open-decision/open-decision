@@ -18,6 +18,7 @@ generated
 stats.html
 .vercel
 .cache
+tmp
 
 # misc
 .DS_Store
