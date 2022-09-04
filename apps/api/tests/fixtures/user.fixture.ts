@@ -1,13 +1,13 @@
 import { User } from "@open-decision/prisma";
 import prisma from "../../src/init-prisma-client";
-import faker from "faker";
+import { faker } from "@faker-js/faker";
 const password = "Th@t!shardToGuess";
 const hashedPassword =
   "$argon2id$v=19$m=15360,t=2,p=1$G6IkVa7e5SDHgeAGqcATfQ$HpzqEJ8IBkEQWWw2oKHjxlbxx8PQeYhNLh+DoLY8OOc";
 
 export const userOne: User = {
   id: faker.datatype.number(),
-  name: faker.name.findName(),
+  name: faker.name.fullName(),
   uuid: faker.datatype.uuid(),
   email: faker.internet.email().toLowerCase(),
   password,
@@ -17,7 +17,7 @@ export const userOne: User = {
 
 export const userTwo: User = {
   id: faker.datatype.number(),
-  name: faker.name.findName(),
+  name: faker.name.fullName(),
   uuid: faker.datatype.uuid(),
   email: "test@open-decision.org",
   password,
@@ -27,7 +27,7 @@ export const userTwo: User = {
 
 export const admin: User = {
   id: faker.datatype.number(),
-  name: faker.name.findName(),
+  name: faker.name.fullName(),
   uuid: faker.datatype.uuid(),
   email: faker.internet.email().toLowerCase(),
   password,
@@ -37,7 +37,7 @@ export const admin: User = {
 
 export const developer: User = {
   id: faker.datatype.number(),
-  name: faker.name.findName(),
+  name: faker.name.fullName(),
   uuid: faker.datatype.uuid(),
   email: faker.internet.email().toLowerCase(),
   password,

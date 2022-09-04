@@ -17,7 +17,7 @@ export const userOne: User = {
 
 export const userTwo: User = {
   id: faker.datatype.number(),
-  name: faker.name.findName(),
+  name: faker.name.fullName(),
   uuid: "170faab0-0e13-4432-9b48-b4e54baba597",
   email: faker.internet.email().toLowerCase(),
   password,
@@ -32,7 +32,7 @@ export const createUserFixture = (
 
   return {
     id: faker.datatype.number(),
-    name: faker.name.findName(),
+    name: faker.name.fullName(),
     uuid: faker.datatype.uuid(),
     email: faker.internet.email().toLowerCase(),
     password,
@@ -44,7 +44,7 @@ export const createUserFixture = (
 
 export const admin: User = {
   id: faker.datatype.number(),
-  name: faker.name.findName(),
+  name: faker.name.fullName(),
   uuid: "a1f13d33-d7c2-4af9-b9c1-c25b099c563e",
   email: faker.internet.email().toLowerCase(),
   password,
@@ -54,7 +54,7 @@ export const admin: User = {
 
 export const developer: User = {
   id: faker.datatype.number(),
-  name: faker.name.findName(),
+  name: faker.name.fullName(),
   uuid: "24e34d98-889e-4e3b-a574-af9ff5a844f9",
   email: faker.internet.email().toLowerCase(),
   password,
