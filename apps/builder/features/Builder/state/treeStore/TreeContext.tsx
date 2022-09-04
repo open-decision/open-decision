@@ -19,13 +19,15 @@ export const TreeProvider = ({ children }: Props) => {
     () => (id ? createTreeStore(id) : undefined),
     [id]
   );
+
   const [state, send] = useMachine(websocketMachine, { devTools: true });
 
-  if (state.matches("error"))
+  if (state.matches("error")) {
     throw new ODError({
       code: "WEBSOCKET_CONNECTION_FAILED",
       message: "Es konnte keine Websocket Verbindung hergestellt werden.",
     });
+  }
 
   React.useEffect(() => {
     if (id && treeStore && isClient) {
@@ -41,6 +43,8 @@ export const TreeProvider = ({ children }: Props) => {
         send({ type: "CLOSE" });
       };
     }
+
+    return () => undefined;
   }, [id, isClient, send, treeStore]);
 
   return id && treeStore ? (
@@ -50,12 +54,13 @@ export const TreeProvider = ({ children }: Props) => {
 
 export const useTreeContext = () => {
   const context = React.useContext(TreeContext);
-  useTreeSuspension(context?.tree as TTreeContext["tree"]);
 
   if (!context)
     throw new Error(
       `useTreeContext can only be used when nested inside of a TreeProvider`
     );
+
+  useTreeSuspension(context?.tree as TTreeContext["tree"]);
 
   return context;
 };

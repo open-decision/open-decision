@@ -8,6 +8,11 @@ import {
   TGetTreeOutput,
   TGetTreesOutput,
   TUpdateTreeInput,
+  TDeleteTreeOutput,
+  TUpdateTreeOutput,
+  TCreatePublishedTreeOutput,
+  TDeletePublishedTreeOutput,
+  TGetTreeDataOutput,
 } from "@open-decision/tree-api-specification";
 import { APIError, ODError, Tree } from "@open-decision/type-classes";
 import {
@@ -16,50 +21,118 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import * as Y from "yjs";
-import { IndexeddbPersistence } from "y-indexeddb";
-import { proxy } from "valtio";
-import { bindProxyAndYMap } from "valtio-yjs";
-import { proxiedOD } from "../Data/odClient";
-import { useNotificationStore } from "../Notifications/NotificationState";
-import { useTreeContext } from "../Builder/state/treeStore/TreeContext";
-import { useTranslations } from "next-intl";
+import { OD, proxiedOD } from "../Data/odClient";
 import { z } from "zod";
 import { useNotificationStore } from "../../config/notifications";
 import { createYjsDocumentIndexedDB } from "./utils/createYjsDocumentIndexedDB";
 
 export const treesQueryKey = ["Trees"] as const;
 export const treeQueryKey = (treeUuid: string) =>
-  ["Tree", ...treesQueryKey, treeUuid] as const;
+  [...treesQueryKey, treeUuid] as const;
+
+export const treeDataQueryKey = (treeUuid: string) =>
+  [treeUuid, "TreeData"] as const;
+
+export type useDeleteOptions = UseMutationOptions<
+  FetchReturn<TDeleteTreeOutput>,
+  APIError<void>,
+  TDeleteTreeInput
+>;
+
+export type useCreateOptions = UseMutationOptions<
+  FetchReturn<TCreateTreeOutput>,
+  APIError<TCreateTreeOutput>,
+  TCreateTreeInput
+>;
+
+export type useUpdateOptions = UseMutationOptions<
+  FetchReturn<TUpdateTreeOutput>,
+  APIError<void>,
+  TUpdateTreeInput
+>;
+
+export type useArchiveOptions = UseMutationOptions<
+  FetchReturn<TUpdateTreeOutput>,
+  APIError<void>,
+  Pick<TUpdateTreeInput, "params">
+>;
+
+export type usePublishOptions = UseMutationOptions<
+  FetchReturn<TCreatePublishedTreeOutput>,
+  APIError<void>,
+  TCreatePublishedTreeInput
+>;
+
+export type useUnpublishOptions = UseMutationOptions<
+  FetchReturn<TDeletePublishedTreeOutput>,
+  APIError<void>,
+  TDeletePublishedTreeInput
+>;
+
+export type useImportOptions = UseMutationOptions<
+  FetchReturn<TCreateTreeOutput>,
+  APIError<void>,
+  { event: ProgressEvent<FileReader> }
+>;
+
+export type useExportOptions = UseMutationOptions<
+  { fileUrl: string; file: File },
+  APIError<void>,
+  { name: string; fileName: string }
+>;
 
 export const useTreeAPI = () => {
-  const t = useTranslations("common");
   const queryClient = useQueryClient();
-  const { addNotification } = useNotificationStore();
+
+  const invalidateTrees = (uuid?: string) => {
+    uuid ? queryClient.invalidateQueries(treeQueryKey(uuid)) : null;
+    queryClient.invalidateQueries(treesQueryKey);
+  };
+
+  const { addNotificationFromTemplate } = useNotificationStore();
+  type notification = Parameters<typeof addNotificationFromTemplate>[0] | false;
 
   const useTreesQuery = <TData = FetchReturn<TGetTreesOutput>>(options?: {
+    staleTime?: number;
     select?: (data: FetchReturn<TGetTreesOutput>) => TData;
   }) => {
-    return useQuery(treesQueryKey, () => proxiedOD.trees.getCollection({}), {
-      staleTime: 5000,
-      ...options,
-    });
+    return useQuery(
+      treesQueryKey,
+      () => proxiedOD.trees.getCollection({}),
+      options
+    );
   };
 
   const useTreeQuery = <TData = FetchReturn<TGetTreeOutput>>(
     uuid: string,
-    options?: { select?: (data: FetchReturn<TGetTreeOutput>) => TData }
+    options?: {
+      select?: (data: FetchReturn<TGetTreeOutput>) => TData;
+      staleTime?: number;
+      enabled?: boolean;
+      initialData?: FetchReturn<TGetTreeOutput>;
+      onSuccess?: (data: TData) => void;
+    }
   ) =>
     useQuery(
       treeQueryKey(uuid),
-      () => {
-        return proxiedOD.trees.getSingle({ params: { uuid } });
-      },
-      {
-        staleTime: 5000,
-        ...options,
-      }
+      () => proxiedOD.trees.getSingle({ params: { uuid } }),
+      options
     );
+
+  const useTreeData = <TData = FetchReturn<TGetTreeDataOutput>>(
+    uuid: string,
+    options?: {
+      staleTime?: number;
+      select?: (data: FetchReturn<Tree.TTree>) => TData;
+      enabled?: boolean;
+    }
+  ) => {
+    return useQuery(
+      treeDataQueryKey(uuid),
+      () => OD.trees.data.get({ params: { uuid } }),
+      options
+    );
+  };
 
   const useCreate = ({
     onSuccess,
@@ -88,13 +161,13 @@ export const useTreeAPI = () => {
         return response;
       },
       {
-      ...options,
-      onSuccess: (...params) => {
+        ...options,
+        onSuccess: (...params) => {
           notification !== false
             ? addNotificationFromTemplate(notification ?? "createProject")
             : null;
           return onSuccess?.(...params);
-      },
+        },
         onSettled: (...params) => {
           invalidateTrees();
           return onSettled?.(...params);
@@ -103,121 +176,140 @@ export const useTreeAPI = () => {
     );
   };
 
-  const useDelete = (
-    options?: UseMutationOptions<unknown, APIError<void>, TDeleteTreeInput>
-  ) =>
-    useMutation(["deleteTree"], (data) => proxiedOD.trees.delete(data), {
-      ...options,
-      onSuccess: async (...params) => {
-        addNotification({
-          title: t("deleteTreeDialog.successNotification"),
-          variant: "success",
-        });
-        options?.onSuccess?.(...params);
-        return queryClient.invalidateQueries(treesQueryKey);
+  const useDelete = ({
+    onSuccess,
+    onSettled,
+    notification,
+    ...options
+  }: useDeleteOptions & { notification?: notification } = {}) =>
+    useMutation(
+      ["deleteTree"],
+      async (data) => {
+        return proxiedOD.trees.delete(data);
       },
-    });
+      {
+        ...options,
+        onSuccess: async (...params) => {
+          notification !== false
+            ? addNotificationFromTemplate(notification ?? "deleteProject")
+            : null;
+          return onSuccess?.(...params);
+        },
+        onSettled: async (...params) => {
+          invalidateTrees();
+          return onSettled?.(...params);
+        },
+      }
+    );
 
-  const useUpdate = (
-    options?: UseMutationOptions<unknown, APIError<void>, TUpdateTreeInput>
-  ) =>
+  const useUpdate = ({
+    notification,
+    onSuccess,
+    onSettled,
+    ...options
+  }: useUpdateOptions & {
+    notification?: notification;
+  } = {}) =>
     useMutation(["updateTree"], (data) => proxiedOD.trees.update(data), {
       ...options,
       onSuccess: (...params) => {
-        options?.onSuccess?.(...params);
-        queryClient.invalidateQueries(treeQueryKey(params[1].params.uuid));
-        queryClient.invalidateQueries(treesQueryKey);
-        addNotification({
-          title: t("updateTreeDialog.successNotification"),
-          variant: "success",
-        });
+        notification !== false
+          ? addNotificationFromTemplate(notification ?? "updateProject")
+          : null;
+        return onSuccess?.(...params);
+      },
+      onSettled: (...params) => {
+        invalidateTrees(params[2].params.uuid);
+        return onSettled?.(...params);
       },
     });
 
-  const useUnArchive = (
-    options?: UseMutationOptions<
-      unknown,
-      APIError<void>,
-      TUpdateTreeInput["params"]
-    >
-  ) =>
+  const useUnArchive = ({
+    notification,
+    onSuccess,
+    onSettled,
+    ...options
+  }: useArchiveOptions & { notification?: notification } = {}) =>
     useMutation(
       ["unarchiveTree"],
-      ({ uuid }) =>
+      ({ params }) =>
         proxiedOD.trees.update({
           body: { status: "ACTIVE" },
-          params: { uuid },
+          params,
         }),
       {
         ...options,
         onSuccess: (...params) => {
-          options?.onSuccess?.(...params);
-          queryClient.invalidateQueries(treesQueryKey);
-          addNotification({
-            title: t("successNotifications.unarchived"),
-            variant: "success",
-          });
+          notification !== false
+            ? addNotificationFromTemplate(notification ?? "unarchived")
+            : null;
+          return onSuccess?.(...params);
+        },
+        onSettled: (...params) => {
+          invalidateTrees(params[2].params.uuid);
+          return onSettled?.(...params);
         },
       }
     );
 
-  const useArchive = (
-    options?: UseMutationOptions<
-      unknown,
-      APIError<void>,
-      TUpdateTreeInput["params"]
-    >
-  ) =>
+  const useArchive = ({
+    notification,
+    onSuccess,
+    onSettled,
+    ...options
+  }: useArchiveOptions & { notification?: notification } = {}) =>
     useMutation(
       ["archiveTree"],
-      ({ uuid }) =>
+      ({ params }) =>
         proxiedOD.trees.update({
           body: { status: "ARCHIVED" },
-          params: { uuid },
+          params,
         }),
       {
         ...options,
         onSuccess: (...params) => {
-          options?.onSuccess?.(...params);
-          queryClient.invalidateQueries(treesQueryKey);
-          addNotification({
-            title: t("successNotifications.archived"),
-            variant: "success",
-          });
+          notification !== false
+            ? addNotificationFromTemplate(notification ?? "archived")
+            : null;
+          return onSuccess?.(...params);
+        },
+        onSettled: (...params) => {
+          invalidateTrees(params[2].params.uuid);
+          return onSettled?.(...params);
         },
       }
     );
 
-  const usePublish = (
-    options?: UseMutationOptions<
-      unknown,
-      APIError<void>,
-      TCreatePublishedTreeInput
-    >
-  ) =>
+  const usePublish = ({
+    notification,
+    onSuccess,
+    onSettled,
+    ...options
+  }: usePublishOptions & { notification?: notification } = {}) =>
     useMutation(
       ["publishTree"],
       (data) => proxiedOD.trees.publishedTrees.create(data),
       {
         ...options,
         onSuccess: (...params) => {
-          options?.onSuccess?.(...params);
-          queryClient.invalidateQueries(treesQueryKey);
-          addNotification({
-            title: t("successNotifications.published"),
-            variant: "success",
-          });
+          notification !== false
+            ? addNotificationFromTemplate(notification ?? "published")
+            : null;
+          return onSuccess?.(...params);
+        },
+        onSettled: (...params) => {
+          invalidateTrees(params[2].params.treeUuid);
+          return onSettled;
         },
       }
     );
 
-  const useUnPublish = (
-    options?: UseMutationOptions<
-      unknown,
-      APIError<void>,
-      TDeletePublishedTreeInput
-    >
-  ) =>
+  const useUnPublish = ({
+    notification,
+    onSuccess,
+    onSettled,
+    ...options
+  }: useUnpublishOptions & { notification?: notification } = {}) =>
     useMutation(
       ["unpublishTree"],
       (data) => {
@@ -226,17 +318,19 @@ export const useTreeAPI = () => {
       {
         ...options,
         onSuccess: (...params) => {
-          options?.onSuccess?.(...params);
-          queryClient.invalidateQueries(treesQueryKey);
-          addNotification({
-            title: t("successNotifications.unpublished"),
-            variant: "success",
-          });
+          notification !== false
+            ? addNotificationFromTemplate(notification ?? "unpublished")
+            : null;
+          return onSuccess?.(...params);
+        },
+        onSettled: (...params) => {
+          invalidateTrees(params[2].params.uuid);
+          return onSettled?.(...params);
         },
       }
     );
 
-  const TreeImportType = Tree.Type.extend({ name: z.string() });
+  const TreeImportType = z.object({ name: z.string(), treeData: Tree.Type });
 
   const useImport = ({
     onSuccess,
@@ -331,8 +425,10 @@ export const useTreeAPI = () => {
   return {
     treesQueryKey,
     treeQueryKey,
+    treeDataQueryKey,
     useTreesQuery,
     useTreeQuery,
+    useTreeData,
     useDelete,
     useCreate,
     useUpdate,
