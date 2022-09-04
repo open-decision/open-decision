@@ -60,7 +60,7 @@ import {
 import { isValidEdge } from "../validators";
 
 export const Type = z.object({
-  startNode: z.string().optional(),
+  startNode: z.string(),
   nodes: Node.Record.optional(),
   edges: Edge.Record.optional(),
   inputs: Input.Record.optional(),

@@ -59,24 +59,47 @@ export const useTreeAPI = () => {
       }
     );
 
-  const useCreate = (
-    options?: UseMutationOptions<
-      unknown,
-      APIError<TCreateTreeOutput>,
-      TCreateTreeInput
-    >
-  ) =>
-    useMutation(["createTree"], (data) => proxiedOD.trees.create(data), {
+  const useCreate = ({
+    onSuccess,
+    onSettled,
+    notification,
+    ...options
+  }: useCreateOptions & { notification?: notification } = {}) => {
+    return useMutation(
+      ["createTree"],
+      async (data) => {
+        const response = await proxiedOD.trees.create(data);
+
+        const newInput = Tree.createInput();
+        const newAnswer = Tree.createAnswer({ text: "" });
+
+        const newNode = Tree.createNode({
+          data: { inputs: [newInput.id], conditions: [] },
+        });
+
+        const store = createYjsDocumentIndexedDB({}, response.data.uuid);
+
+        Tree.addNode(store)(newNode);
+        Tree.addInput(store)(newInput);
+        Tree.addInputAnswer(store)(newInput.id, newAnswer);
+
+        return response;
+      },
+      {
       ...options,
       onSuccess: (...params) => {
-        options?.onSuccess?.(...params);
-        queryClient.invalidateQueries(treesQueryKey);
-        addNotification({
-          title: t("createTreeDialog.successNotification"),
-          variant: "success",
-        });
+          notification !== false
+            ? addNotificationFromTemplate(notification ?? "createProject")
+            : null;
+          return onSuccess?.(...params);
       },
-    });
+        onSettled: (...params) => {
+          invalidateTrees();
+          return onSettled?.(...params);
+        },
+      }
+    );
+  };
 
   const useDelete = (
     options?: UseMutationOptions<unknown, APIError<void>, TDeleteTreeInput>
