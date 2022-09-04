@@ -2,6 +2,8 @@
 import NextErrorComponent from "next/error";
 
 import * as Sentry from "@sentry/nextjs";
+import { convertToODError } from "@open-decision/type-classes";
+import { NextIntlProvider } from "next-intl";
 
 const MyError = ({ statusCode, hasGetInitialPropsRun, err }: any) => {
   if (!hasGetInitialPropsRun && err) {
@@ -12,7 +14,8 @@ const MyError = ({ statusCode, hasGetInitialPropsRun, err }: any) => {
     // Flushing is not required in this case as it only happens on the client
   }
 
-  return <NextErrorComponent statusCode={statusCode} />;
+      <FullPageErrorFallback error={convertToODError(err)} />
+    </NextIntlProvider>
 };
 
 MyError.getInitialProps = async (context: any) => {

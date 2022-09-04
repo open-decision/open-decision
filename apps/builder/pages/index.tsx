@@ -13,6 +13,7 @@ import { dehydrate, QueryClient } from "@tanstack/react-query";
 import { treesQueryKey } from "../features/Data/useTreeAPI";
 import TreeList from "../features/Dashboard/TreeList";
 import { safeFetch } from "@open-decision/api-helpers";
+import { convertToODError } from "@open-decision/type-classes";
 
 export const getServerSideProps: GetServerSideProps = async ({
   req,
@@ -55,11 +56,11 @@ export default function DashboardPage() {
       </Head>
       <BaseHeader css={{ gridColumn: "1 / -1" }} />
       <ErrorBoundary
-        fallback={
+        fallback={({ error }) => (
           <Stack center css={{ gridColumn: "2 / 4", gridRow: "2 / 4" }}>
-            <ErrorCard title={t("dashboard.treeList.fullError")} />
+            <ErrorCard error={convertToODError(error)} />
           </Stack>
-        }
+        )}
       >
         <Stack
           css={{

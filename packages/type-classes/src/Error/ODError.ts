@@ -81,4 +81,9 @@ export class ODValidationError<
 }
 export const isODError = (error: any): error is ODError => !!error?.code;
 
+export const convertToODError = (error: any) =>
+  isODError(error)
+    ? error
+    : new ODError({ ...error, code: "UNEXPECTED_ERROR" });
+
 export { ZodError } from "zod";

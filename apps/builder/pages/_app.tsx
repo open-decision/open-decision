@@ -6,6 +6,10 @@ import { NextPage } from "next";
 import { useUrlNotification } from "../features/Notifications/useUrlNotification";
 import { useQueryClient } from "../features/Data/useQueryClient";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { convertToODError } from "@open-decision/type-classes";
+import { ErrorBoundary } from "@sentry/nextjs";
+import { FullPageErrorFallback } from "../components/Error/FullPageErrorFallback";
+import { AnimatePresence, motion, Variants } from "framer-motion";
 import { useNotificationStore } from "../config/notifications";
 
 // ------------------------------------------------------------------
@@ -35,6 +39,11 @@ function App({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
   const queryClient = useQueryClient();
 
   return (
+    <ErrorBoundary
+      fallback={({ error }) => {
+        return <FullPageErrorFallback error={convertToODError(error)} />;
+      }}
+    >
     <QueryClientProvider client={queryClient}>
       <Hydrate state={pageProps.dehydratedState}>
         <Tooltip.Provider delayDuration={50}>
