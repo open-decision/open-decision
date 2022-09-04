@@ -9,7 +9,7 @@ export const linkStyles = css({
   display: "inline-flex",
   alignItems: "center",
   textDecoration: "none",
-  colorFallback: "$primary11",
+  color: "$primary11",
   borderRadius: "$sm",
   focusType: "outer",
 

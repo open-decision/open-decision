@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import * as React from "react";
 import { styled, VariantProps } from "../stitches";
 import { baseInputStyles, baseTextInputStyle } from "./shared/styles";
@@ -35,23 +34,11 @@ export type InputProps = {
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   function Input(
-    {
-      disabled,
-      size,
-      css,
-      Icon,
-      alignByContent,
-      onBlur,
-      onFocus,
-      className,
-      variant,
-      ...props
-    },
+    { disabled, size, css, Icon, alignByContent, className, variant, ...props },
     ref
   ) {
     const EnhancedIcon = React.isValidElement(Icon)
       ? React.cloneElement(Icon, {
-          // "data-active": hasFocus,
           css: {
             color: "$gray11",
             position: "absolute",
@@ -82,25 +69,6 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           }}
           {...props}
         />
-        {/* <Button
-          size="small"
-          variant="ghost"
-          type="button"
-          disabled={!inputValue}
-          square
-          css={{
-            focusType: "inner",
-            opacity: inputValue ? 1 : "0 !important",
-          }}
-          onClick={() => {
-            clearErrors(name);
-            return reset();
-          }}
-        >
-          <Icon label="Entferne die momentan ausgewählte Option">
-            <X />
-          </Icon>
-        </Button> */}
       </StyledBox>
     );
   }

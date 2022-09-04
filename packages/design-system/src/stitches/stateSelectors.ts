@@ -1,4 +1,5 @@
-export const focusSelector = "&:focus-visible, &[data-focus='true']";
+export const focusSelector =
+  "&:focus-visible, &[data-focus='true'], &[data-focus-visible]";
 export const focusSelectorWithin = `${focusSelector}, &:focus-within`;
 export const hoverSelector = "&:hover";
 export const intentSelector = "&:focus-visible, &[data-focus='true'], &:hover";
