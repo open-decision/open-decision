@@ -45,14 +45,6 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
         </Button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content css={{ groupColor: "$gray12" }}>
-        <DropdownMenu.Item asChild>
-          <PreviewLink initialNode={nodeId}>
-            <Icon>
-              <FileTextIcon />
-            </Icon>
-            {t("previewLabel")}
-          </PreviewLink>
-        </DropdownMenu.Item>
         {isStartNode ? (
           <Tooltip.Root>
             <Tooltip.Trigger style={{ all: "unset" }}>

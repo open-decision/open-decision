@@ -47,7 +47,7 @@ export function Navigation({ css }: Props) {
         disabled={!canGoForward}
         onClick={() => send("GO_FORWARD")}
       >
-        <Icon label="Weiter">
+        <Icon label="Vorwärts">
           <ChevronRightIcon />
         </Icon>
       </StyledButton>

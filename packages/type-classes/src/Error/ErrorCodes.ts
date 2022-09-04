@@ -45,6 +45,7 @@ export enum APIErrors {
   INVALID_EMAIL = 400,
   OFFLINE = 500,
   EMAIL_NOT_SEND = 500,
+  PREVIEW_NOT_ENABLED = 403,
 }
 
 export type ErrorCodes =
