@@ -68,16 +68,34 @@ export const buttonStyles = css(alignByContent, {
         color: "$white",
         focusType: "outer",
 
+        [`.${darkTheme} &`]: {
+          backgroundColor: "$colorScheme8",
+        },
+
         [`${intentSelector}`]: {
           backgroundColor: "$colorScheme10",
+
+          [`.${darkTheme} &`]: {
+            backgroundColor: "$colorScheme9",
+          },
         },
 
         [`${activeSelector}`]: {
           backgroundColor: "$colorScheme11",
+
+          [`.${darkTheme} &`]: {
+            backgroundColor: "$colorScheme10",
+          },
         },
 
         [`${disabledSelector}`]: {
-          backgroundColor: "$colorScheme9",
+          backgroundColor: "$gray6",
+          color: "$gray11",
+
+          [`.${darkTheme} &`]: {
+            backgroundColor: "$gray6",
+            color: "$gray11",
+          },
         },
       },
 
@@ -93,13 +111,16 @@ export const buttonStyles = css(alignByContent, {
           backgroundColor: "$colorScheme5",
 
           [`.${darkTheme} &`]: {
-            backgroundColor: "$colorScheme6",
-            color: "$colorScheme12",
+            backgroundColor: "$colorScheme5",
           },
         },
 
         [`${activeSelector}`]: {
           backgroundColor: "$colorScheme7",
+
+          [`.${darkTheme} &`]: {
+            backgroundColor: "$colorScheme6",
+          },
         },
 
         [`${disabledSelector}`]: {
@@ -137,17 +158,15 @@ export const buttonStyles = css(alignByContent, {
 
       neutral: {
         colorScheme: "gray",
-        color: "$colorScheme11",
+        color: "$colorScheme12",
         backgroundColor: "unset",
         focusType: "inner",
 
         [`${intentSelector}`]: {
           backgroundColor: "$colorScheme3",
-          color: "$colorScheme12",
         },
 
         [`${activeSelector}`]: {
-          color: "$colorScheme12",
           backgroundColor: "$colorScheme5",
         },
 
@@ -173,7 +192,7 @@ export const buttonStyles = css(alignByContent, {
 
     square: {
       true: {
-        $$paddingInline: "$$paddingBlock",
+        $$paddingInline: "$$paddingBlock !important",
         aspectRatio: "1 / 1",
       },
     },
@@ -182,7 +201,7 @@ export const buttonStyles = css(alignByContent, {
   defaultVariants: {
     variant: "primary",
     size: "medium",
-    pressable: true,
+    pressable: false,
   },
 });
 
