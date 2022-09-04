@@ -1,13 +1,12 @@
-import { TreeStatus } from "@open-decision/models";
+import { DecisionTreeModel } from "@open-decision/models";
 import { z } from "zod";
 
 export const updateTreeInput = z.object({
-  body: z
-    .object({
-      name: z.string(),
-      status: z.enum(TreeStatus),
-    })
-    .partial(),
+  body: DecisionTreeModel.pick({
+    name: true,
+    status: true,
+    hasPreview: true,
+  }).partial(),
   params: z.object({ uuid: z.string().uuid() }),
 });
 
