@@ -36,7 +36,7 @@ export const getServerSideProps = async (
 
   const OD = client({
     token: context.req.cookies["token"],
-    urlPrefix: `${process.env.NEXT_PUBLIC_OD_API_ENDPOINT}/v1`,
+    urlPrefix: `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1`,
     fetchFunction: safeFetch,
   });
   const queryClient = new QueryClient();
@@ -119,6 +119,8 @@ export default function SettingsPage() {
       </>
     );
   }
+
+  throw new Error("The user could not be found");
 }
 
 SettingsPage.getLayout = getDashboardLayout;

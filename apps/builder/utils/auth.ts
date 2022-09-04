@@ -34,11 +34,11 @@ export const setCookieHeaders = (
     serialize("refreshToken", loginResponse.access.refreshToken.token, {
       ...authCookieConfig,
       maxAge:
-        Number(process.env.JWT_REFRESH_EXPIRATION_DAYS ?? 7) * 86400 * 1000,
+        Number(process.env["JWT_REFRESH_EXPIRATION_DAYS"] ?? 7) * 86400 * 1000,
     }),
     serialize("token", loginResponse.access.token.token, {
       ...authCookieConfig,
-      maxAge: Number(process.env.JWT_ACCESS_EXPIRATION_MINUTES ?? 15) * 60,
+      maxAge: Number(process.env["JWT_ACCESS_EXPIRATION_MINUTES"] ?? 15) * 60,
     }),
   ]);
 };
@@ -51,7 +51,7 @@ export const refreshAuth = async (
   const refreshToken = req.cookies["refreshToken"];
 
   const OD = client({
-    urlPrefix: `${process.env.NEXT_PUBLIC_OD_API_ENDPOINT}/v1`,
+    urlPrefix: `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1`,
     fetchFunction: safeFetch,
   });
 

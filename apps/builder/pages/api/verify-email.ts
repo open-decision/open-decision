@@ -5,9 +5,9 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const token =
-    typeof req.query?.token === "string"
-      ? req.query?.token
-      : req.query?.token?.[0];
+    typeof req.query?.["token"] === "string"
+      ? req.query?.["token"]
+      : req.query?.["token"]?.[0];
 
   if (!token)
     return res
@@ -15,7 +15,7 @@ export default async function handler(
       .send({ error: "Missing email verification token in url" });
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_OD_API_ENDPOINT}/v1/auth/verify-email`,
+    `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1/auth/verify-email`,
     {
       method: "POST",
       body: JSON.stringify({ token }),

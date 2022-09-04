@@ -28,7 +28,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 
   const OD = client({
     token: req.cookies["token"],
-    urlPrefix: `${process.env.NEXT_PUBLIC_OD_API_ENDPOINT}/v1`,
+    urlPrefix: `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1`,
     fetchFunction: safeFetch,
   });
   const queryClient = new QueryClient();

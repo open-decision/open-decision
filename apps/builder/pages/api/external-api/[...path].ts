@@ -7,10 +7,9 @@ const SilentAuth: NextApiHandler = async (req, res) => {
   try {
     const refreshedToken = await refreshAuth(req, res);
 
-
     const path = req.url?.split("external-api")[1];
     const { status, data } = await safeFetch(
-      `${process.env.NEXT_PUBLIC_OD_API_ENDPOINT}/v1${path}`,
+      `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1${path}`,
       {
         body: req.method === "GET" ? undefined : req.body,
         headers: {

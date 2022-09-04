@@ -6,7 +6,7 @@ import { safeFetch } from "@open-decision/api-helpers";
 
 export const middleware: NextMiddleware = async (request) => {
   const OD = client({
-    urlPrefix: `${process.env.NEXT_PUBLIC_OD_API_ENDPOINT}/v1`,
+    urlPrefix: `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1`,
     fetchFunction: safeFetch,
   });
 
@@ -28,11 +28,13 @@ export const middleware: NextMiddleware = async (request) => {
       response.cookies.set("refreshToken", data.access.refreshToken.token, {
         ...authCookieConfig,
         maxAge:
-          Number(process.env.JWT_REFRESH_EXPIRATION_DAYS ?? 7) * 86400 * 1000,
+          Number(process.env["JWT_REFRESH_EXPIRATION_DAYS"] ?? 7) *
+          86400 *
+          1000,
       });
       response.cookies.set("token", data.access.token.token, {
         ...authCookieConfig,
-        maxAge: Number(process.env.JWT_ACCESS_EXPIRATION_MINUTES ?? 15) * 60,
+        maxAge: Number(process.env["JWT_ACCESS_EXPIRATION_MINUTES"] ?? 15) * 60,
       });
 
       return response;
