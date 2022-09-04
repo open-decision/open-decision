@@ -331,6 +331,7 @@ export const globalStyles = globalCss({
   },
   "html, body": {
     height: "100%",
+    overflowX: "hidden",
   },
   body: {
     lineHeight: "1.5",
@@ -348,6 +349,7 @@ export const globalStyles = globalCss({
   },
   "#root, #__next": {
     isolation: "isolate",
+    height: "100%",
   },
 });
 

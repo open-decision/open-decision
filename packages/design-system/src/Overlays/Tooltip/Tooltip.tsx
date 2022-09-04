@@ -1,33 +1,43 @@
 import * as React from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
-import { darkTheme, styled } from "../../stitches";
+import { darkTheme, keyframes, styled } from "../../stitches";
 import { overlayCss } from "../shared";
 import { Text } from "../../Text";
 import { Stack } from "../../Layout";
+
+const scaleIn = keyframes({
+  "0%": { opacity: 0, transform: "scale(0)" },
+  "100%": { opacity: 1, transform: "scale(1)" },
+});
 
 const StyledContent = styled(TooltipPrimitive.Content, Stack, overlayCss, {
   textAlign: "center",
   maxWidth: "200px",
   gap: "$1",
+  transformOrigin: "var(--radix-tooltip-content-transform-origin)",
+  animation: `${scaleIn} 0.1s ease-out`,
+  groupColor: "$gray12",
 });
 
-const Content = (props: TooltipContentProps) => (
-  <StyledContent sideOffset={10} className={darkTheme} mode="dark" {...props}>
-    {props.children}
-  </StyledContent>
+const Content = React.forwardRef(
+  (props: TooltipContentProps, ref: React.Ref<HTMLDivElement>) => (
+    <StyledContent sideOffset={10} className={darkTheme} ref={ref} {...props}>
+      {props.children}
+    </StyledContent>
+  )
 );
 
 const StyledArrow = styled(TooltipPrimitive.Arrow, {
   fill: "$$bgColor",
 });
 
-const StyledTrigger = styled(TooltipPrimitive.Trigger, {
-  backgroundColor: "transparent",
-});
+const StyledTrigger = styled(TooltipPrimitive.Trigger, {});
 
 const Body = styled(Text, {
   color: "$gray11",
 });
+
+const Portal = TooltipPrimitive.Portal;
 
 export const Tooltip = {
   Root: TooltipPrimitive.Root,
@@ -37,6 +47,7 @@ export const Tooltip = {
   Title: Text,
   Body,
   Provider: TooltipPrimitive.Provider,
+  Portal,
 };
 
 export type TooltipRootProps = TooltipPrimitive.TooltipProps;
