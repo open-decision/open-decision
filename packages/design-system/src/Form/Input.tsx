@@ -46,7 +46,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             marginLeft: "$$paddingInline",
             ...Icon.props.css,
           },
-        })
+        } as any)
       : Icon;
 
     return (
