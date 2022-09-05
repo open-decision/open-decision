@@ -1,5 +1,5 @@
 import * as React from "react";
-import { styled, VariantProps } from "../stitches";
+import { styled, StyleObject, VariantProps } from "../stitches";
 import { baseInputStyles, baseTextInputStyle } from "./shared/styles";
 import { Box } from "../Box";
 import { alignByContent } from "../shared/variants";
@@ -27,7 +27,7 @@ const StyledInput = styled(FormInput, {
 
 export type InputProps = {
   Buttons?: JSX.Element | JSX.Element[];
-  Icon?: React.ReactNode;
+  Icon?: (props: { css: StyleObject }) => JSX.Element;
   disabled?: boolean;
 } & VariantProps<typeof StyledBox> &
   Omit<React.ComponentProps<typeof StyledInput>, "size">;
@@ -37,18 +37,6 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     { disabled, size, css, Icon, alignByContent, className, variant, ...props },
     ref
   ) {
-    const EnhancedIcon = React.isValidElement(Icon)
-      ? React.cloneElement(Icon, {
-          css: {
-            color: "$gray11",
-            position: "absolute",
-            zIndex: "$10",
-            marginLeft: "$$paddingInline",
-            ...Icon.props.css,
-          },
-        } as any)
-      : Icon;
-
     return (
       <StyledBox
         css={{ $color: disabled ? "$gray8" : css?.color, ...css }}
@@ -58,14 +46,19 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         variant={variant}
         alignByContent={alignByContent}
       >
-        {EnhancedIcon}
+        {Icon?.({
+          css: {
+            color: "$gray11",
+            position: "absolute",
+            zIndex: "$10",
+            marginLeft: "$$paddingInline",
+          },
+        })}
         <StyledInput
           ref={ref}
           disabled={disabled}
           css={{
-            paddingLeft: EnhancedIcon
-              ? "calc($$paddingInline * 2 + 1em)"
-              : undefined,
+            paddingLeft: Icon ? "calc($$paddingInline * 2 + 1em)" : undefined,
           }}
           {...props}
         />

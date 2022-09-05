@@ -82,11 +82,11 @@ export const TreeList = () => {
           <Form.Input
             variant="lowered"
             name={formState.names.search}
-            Icon={
-              <Icon>
+            Icon={(props) => (
+              <Icon {...props}>
                 <MagnifyingGlassIcon />
               </Icon>
-            }
+            )}
             placeholder={t("treeList.search.placeholder")}
           />
         </Form.Field>

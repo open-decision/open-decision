@@ -70,11 +70,11 @@ export const NodeSearch = ({ css }: Props) => {
         state={combobox}
         placeholder={t("placeholder")}
         css={{ width: "400px", ...css }}
-        Icon={
-          <Icon>
+        Icon={(props) => (
+          <Icon {...props}>
             <MagnifyingGlassIcon />
           </Icon>
-        }
+        )}
       />
       {combobox.value ? (
         <Combobox.Popover state={combobox}>

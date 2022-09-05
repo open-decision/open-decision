@@ -105,17 +105,18 @@ function NodeEditingSidebarContent({ node, css }: Props) {
             updateNodeContent(node.id, editor.getJSON())
           }
           content={node.data.content}
-          Label={
+          Label={(props) => (
             <Label
               css={{
                 margin: 0,
                 marginBottom: "$3",
                 display: "block",
               }}
+              {...props}
             >
               {t("richTextEditor.label")}
             </Label>
-          }
+          )}
         />
       </Box>
       <Box as="section">
