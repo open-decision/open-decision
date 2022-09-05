@@ -5,7 +5,7 @@
   "sideEffects": false,
   "dependencies": {
     "@radix-ui/react-icons": "^1.1.1",
-    "remeda": "^0.0.32",
+    "remeda": "^1.1.0",
     "@open-decision/rich-text-editor": "workspace:*",
     "@open-decision/interpreter-react": "workspace:*",
     "@open-decision/type-classes": "workspace:*",

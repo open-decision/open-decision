@@ -15,16 +15,20 @@ import {
   TGetTreeOutput,
   TGetTreesOutput,
   updateTreeInput,
+  getTreeDataInput,
+  TGetTreeDataOutput,
 } from "@open-decision/tree-api-specification";
 import prisma from "../init-prisma-client";
 import { APIError } from "@open-decision/type-classes";
 import { publishDecisionTree } from "../models/publishedTree.model";
+import { getTreeWithUpdatedTreeData } from "../models/decisionTree.model";
 
 const prismaSelectionForTree = {
   publishedTrees: { select: { uuid: true } },
   createdAt: true,
   updatedAt: true,
   name: true,
+  hasPreview: true,
   status: true,
   uuid: true,
   ownerUuid: true,
@@ -77,6 +81,16 @@ const getDecisionTree = catchAsync(async (req: Request, res: Response) => {
   res.send(tree as Omit<TGetTreeOutput, "createdAt" | "updatedAt">);
 });
 
+const getCurrentTreeData = catchAsync(async (req: Request, res: Response) => {
+  const reqData = await validateRequest(getTreeDataInput)(req);
+
+  const tree = await getTreeWithUpdatedTreeData(reqData.params.uuid);
+
+  if (tree instanceof Error) throw tree;
+
+  res.send(tree.treeData as TGetTreeDataOutput);
+});
+
 const createDecisionTree = catchAsync(async (req: Request, res: Response) => {
   const reqData = await validateRequest(createTreeInput)(req);
 
@@ -114,10 +128,7 @@ const updateDecisionTree = catchAsync(async (req: Request, res: Response) => {
   const reqData = await validateRequest(updateTreeInput)(req);
 
   const updatedTree = await prisma.decisionTree.updateMany({
-    data: {
-      name: reqData.body.name,
-      status: reqData.body.status,
-    },
+    data: reqData.body,
     where: {
       ownerUuid: req.user.uuid,
       uuid: reqData.params.uuid,
@@ -171,6 +182,7 @@ const createPublishedTree = catchAsync(async (req: Request, res: Response) => {
 export const treeController = {
   getDecisionTrees,
   getDecisionTree,
+  getCurrentTreeData,
   createDecisionTree,
   deleteDecisionTree,
   updateDecisionTree,

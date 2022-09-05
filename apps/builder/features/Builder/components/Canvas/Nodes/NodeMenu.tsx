@@ -6,14 +6,12 @@ import {
   StyleObject,
 } from "@open-decision/design-system";
 import {
-  FileTextIcon,
   HamburgerMenuIcon,
   RocketIcon,
   TrashIcon,
 } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
 import { useTreeContext } from "../../../../../features/Builder/state/treeStore/TreeContext";
-import { PreviewLink } from "../../PreviewLink";
 
 type Props = {
   isStartNode?: boolean;
@@ -45,14 +43,6 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
         </Button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content css={{ groupColor: "$gray12" }}>
-        <DropdownMenu.Item asChild>
-          <PreviewLink initialNode={nodeId}>
-            <Icon>
-              <FileTextIcon />
-            </Icon>
-            {t("previewLabel")}
-          </PreviewLink>
-        </DropdownMenu.Item>
         {isStartNode ? (
           <Tooltip.Root>
             <Tooltip.Trigger style={{ all: "unset" }}>
@@ -67,7 +57,7 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
                 {t("deleteNode.label")}
               </DropdownMenu.Item>
             </Tooltip.Trigger>
-            <Tooltip.Content>
+            <Tooltip.Content side="bottom">
               <Tooltip.Title>
                 {t("deleteNode.disabledForStartNodeLabel")}
               </Tooltip.Title>

@@ -29,6 +29,7 @@ export type WebsocketService = Interpreter<Context, any, Events, any, any>;
 
 export const websocketMachine = createMachine(
   {
+    predictableActionArguments: true,
     tsTypes: {} as import("./websocket.machine.typegen").Typegen0,
     schema: {
       context: {} as Context,
@@ -47,7 +48,7 @@ export const websocketMachine = createMachine(
     context: {
       id: undefined,
       yDoc: undefined,
-      retryLimit: 3,
+      retryLimit: 10,
       retries: 0,
       onSync: undefined,
     },
@@ -55,6 +56,14 @@ export const websocketMachine = createMachine(
       unconnected: {
         on: {
           OPEN: { target: "authenticating", actions: "assignDataToContext" },
+        },
+      },
+      retry: {
+        after: {
+          retry_delay: {
+            target: "authenticating",
+            actions: "incrementRetries",
+          },
         },
       },
       authenticating: {
@@ -73,9 +82,8 @@ export const websocketMachine = createMachine(
         on: {
           "connection.error": [
             {
-              target: "connected",
+              target: "retry",
               cond: "underRetryLimit",
-              actions: "incrementRetries",
               internal: false,
             },
             { target: "error" },
@@ -101,21 +109,18 @@ export const websocketMachine = createMachine(
         return { token };
       },
       openWebsocket: (context) => (callback) => {
-        if (!process.env.NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT)
+        if (!process.env["NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT"])
           throw new ODProgrammerError({
             code: "MISSING_ENV_VARIABLE",
             message:
               "To run the builder the NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT needs to be set to a valid websocket endpoint.",
           });
 
-        // xstate invoked callbacks do not support async/await
-        // https://xstate.js.org/docs/guides/communication.html#invoking-callbacks
-
         if (!context.id || !context.yDoc || !context.token)
           return callback("connection.error");
 
         const websocket = new WebsocketProvider(
-          `${process.env.NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT}/v1/builder-sync`,
+          `${process.env["NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT"]}/v1/builder-sync`,
           context.id,
           context.yDoc,
           { params: { auth: context.token } }
@@ -145,13 +150,16 @@ export const websocketMachine = createMachine(
         yDoc: event.yDoc,
       })),
       assignTokenToContext: assign({
-        token: (context, event) => event.data.token,
+        token: (_context, event) => event.data.token,
       }),
-      incrementRetries: assign((context) => ({ retries: context.retries++ })),
+      incrementRetries: assign({ retries: (context) => context.retries + 1 }),
     },
     guards: {
       underRetryLimit: (context, _event) =>
-        context.retries > context.retryLimit,
+        context.retries < context.retryLimit,
+    },
+    delays: {
+      retry_delay: (context, _event) => Math.min(context.retries * 1000, 20000),
     },
   }
 );

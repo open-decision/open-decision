@@ -6,27 +6,27 @@ import {
   ToggleButton as SystemToggleButton,
   ToggleButtonProps,
 } from "../Button";
-import { hoverSelector } from "../stitches/stateSelectors";
 import { Separator as SystemSeparator } from "../Separator";
 import { linkStyles } from "../Link/Link";
 import * as SystemToggleGroup from "../Button/ToggleGroup";
 
-const buttonProps = {
-  size: "medium",
-  variant: "neutral",
-  square: true,
-  css: {
-    [`${hoverSelector}`]: {
-      backgroundColor: "$gray4",
-    },
-  },
-} as const;
-
 export const Root = RadixToolbar.Root;
 export type RootProps = RadixToolbar.ToolbarProps;
 
-export const Button = styled(RadixToolbar.Button, SystemButton);
-Button.defaultProps = buttonProps;
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ children, ...props }, ref) => (
+    <RadixToolbar.Button asChild {...props}>
+      <SystemButton
+        ref={ref}
+        css={{ colorScheme: "primary" }}
+        variant="neutral"
+        square
+      >
+        {children}
+      </SystemButton>
+    </RadixToolbar.Button>
+  )
+);
 export type ButtonProps = RadixToolbar.ToolbarButtonProps;
 
 export const Separator = styled(RadixToolbar.Separator, SystemSeparator);
@@ -35,13 +35,27 @@ export type SeparatorProps = RadixToolbar.SeparatorProps;
 export const Link = styled(RadixToolbar.Link, linkStyles);
 export type LinkProps = RadixToolbar.ToolbarLinkProps;
 
-export const ToggleGroup = styled(
-  RadixToolbar.ToggleGroup,
-  SystemToggleGroup.Root
-);
-ToggleGroup.defaultProps = { variant: "lowered" };
+export type ToggleGroupProps = React.ComponentProps<
+  typeof RadixToolbar.ToggleGroup
+> &
+  SystemToggleGroup.RootProps;
 
-export type ToggleGroupProps = RadixToolbar.ToggleGroupProps;
+export const ToggleGroup = React.forwardRef<HTMLDivElement, ToggleGroupProps>(
+  ({ children, layout, raised, css, ...props }, ref) => {
+    return (
+      <RadixToolbar.ToggleGroup ref={ref} asChild {...props}>
+        <SystemToggleGroup.Root
+          layout={layout}
+          raised={raised}
+          css={css}
+          type={props.type}
+        >
+          {children}
+        </SystemToggleGroup.Root>
+      </RadixToolbar.ToggleGroup>
+    );
+  }
+);
 
 export const ToggleItem = React.forwardRef<
   HTMLButtonElement,
@@ -49,7 +63,14 @@ export const ToggleItem = React.forwardRef<
 >(function ToggleItem({ children, ...props }, ref) {
   return (
     <RadixToolbar.ToggleItem asChild {...props}>
-      <SystemToggleButton ref={ref} {...buttonProps} {...props}>
+      <SystemToggleButton
+        ref={ref}
+        variant="neutral"
+        css={{ colorScheme: "primary" }}
+        square
+        size="medium"
+        {...props}
+      >
         {children}
       </SystemToggleButton>
     </RadixToolbar.ToggleItem>
@@ -64,7 +85,14 @@ export const ToggleButton = React.forwardRef<
 >(function ToggleButton({ children, ...props }, ref) {
   return (
     <RadixToolbar.Button asChild>
-      <SystemToggleButton ref={ref} {...buttonProps} {...props}>
+      <SystemToggleButton
+        ref={ref}
+        variant="neutral"
+        css={{ colorScheme: "primary" }}
+        square
+        size="medium"
+        {...props}
+      >
         {children}
       </SystemToggleButton>
     </RadixToolbar.Button>

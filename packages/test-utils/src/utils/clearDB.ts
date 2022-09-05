@@ -32,11 +32,23 @@ export async function clearUser(email: string) {
 }
 
 export async function clearDB() {
-  const deletePublishedTrees = prisma.publishedTree.deleteMany();
-  const deleteToken = prisma.token.deleteMany();
-  const deleteTree = prisma.decisionTree.deleteMany();
+  const testAccount = await prisma.user.findFirst({
+    where: { email: "test@od.org" },
+  });
+
+  const deletePublishedTrees = prisma.publishedTree.deleteMany({
+    where: { NOT: { ownerUuid: testAccount?.uuid } },
+  });
+  const deleteToken = prisma.token.deleteMany({
+    where: { NOT: { ownerUuid: testAccount?.uuid } },
+  });
+  const deleteTree = prisma.decisionTree.deleteMany({
+    where: { NOT: { ownerUuid: testAccount?.uuid } },
+  });
   const deleteManyWhitelistEntries = prisma.whitelistEntry.deleteMany();
-  const deleteUser = prisma.user.deleteMany();
+  const deleteUser = prisma.user.deleteMany({
+    where: { NOT: { email: "test@od.org" } },
+  });
 
   await prisma.$transaction([
     deletePublishedTrees,
@@ -45,19 +57,4 @@ export async function clearDB() {
     deleteManyWhitelistEntries,
     deleteUser,
   ]);
-  // const tablenames = await prisma.$queryRaw<
-  //   Array<{ tablename: string }>
-  // >`SELECT tablename FROM pg_tables WHERE schemaname='public'`;
-
-  // for (const { tablename } of tablenames) {
-  //   if (tablename !== "_prisma_migrations") {
-  //     try {
-  //       await prisma.$executeRawUnsafe(
-  //         `TRUNCATE TABLE "public"."${tablename}" CASCADE;`
-  //       );
-  //     } catch (error) {
-  //       console.log({ error });
-  //     }
-  //   }
-  // }
 }

@@ -1,73 +1,148 @@
 import * as React from "react";
-import { styled, darkTheme } from "../stitches";
-import { Button as SystemButton, ButtonProps } from "./Button";
+import { styled, StyleObject } from "../stitches";
+import { ButtonProps, buttonStyles } from "./Button";
 import * as ToggleGroupPrimitives from "@radix-ui/react-toggle-group";
-import { activeSelector } from "../stitches/stateSelectors";
+import { Box } from "../Box";
+import { ODProgrammerError } from "@open-decision/type-classes";
 
-export const Root = styled(ToggleGroupPrimitives.Root, {
-  display: "inline-flex",
+const StyledContainer = styled(Box, {
   borderRadius: "$md",
-  layer: "3",
+  layer: "4",
   padding: "$1",
-  gap: "$1",
-
-  [`.${darkTheme} &`]: {
-    layer: "4",
-  },
+  position: "relative",
+  isolation: "isolate",
 
   variants: {
-    variant: {
-      raised: {
+    raised: {
+      true: {
         boxShadow: "$1",
       },
-      lowered: {},
     },
   },
 
   defaultVariants: {
-    variant: "raised",
+    raised: false,
   },
 });
 
-export type RootProps = React.ComponentProps<typeof Root>;
+const StyledRoot = styled(ToggleGroupPrimitives.Root, {
+  display: "inline-flex",
+  gap: "$2",
+  zIndex: "$10",
 
-export type ToggleItemProps = ToggleGroupPrimitives.ToggleGroupItemProps;
+  variants: {
+    layout: {
+      vertical: { flexDirection: "column" },
+      horizontal: {},
+    },
+  },
+
+  defaultVariants: {
+    layout: "horizontal",
+  },
+});
+
+export type RootProps = React.ComponentProps<
+  typeof ToggleGroupPrimitives.Root
+> & { css?: StyleObject } & {
+  layout?: "vertical" | "horizontal";
+  raised?: boolean;
+};
+
+type assignActiveNode = (
+  itemValue: string
+) => (node: HTMLButtonElement | null) => void;
+const ToggleContext = React.createContext<null | {
+  assignActiveNode: assignActiveNode;
+}>(null);
+
+export const Root = React.forwardRef<HTMLDivElement, RootProps>(
+  ({ children, value, css, layout, raised, ...props }, ref) => {
+    const [activeNode, setActiveNode] =
+      React.useState<null | HTMLButtonElement>(null);
+
+    const assignActiveNode: assignActiveNode = (itemValue) => (node) => {
+      if (node && itemValue === value) {
+        setActiveNode(node);
+      } else if (value === "") {
+        setActiveNode(null);
+      }
+
+      return node;
+    };
+
+    return (
+      <ToggleContext.Provider value={{ assignActiveNode }}>
+        <StyledContainer ref={ref} css={css} raised={raised}>
+          <StyledRoot layout={layout} {...props}>
+            {children}
+          </StyledRoot>
+          {activeNode ? (
+            <Box
+              aria-hidden
+              css={{
+                position: "absolute",
+                width: activeNode.offsetWidth,
+                height: activeNode.offsetHeight,
+                left: activeNode.offsetLeft,
+                top: activeNode.offsetTop,
+                transition: "all 0.2s ease",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Box
+                css={{
+                  width: "22px",
+                  height: "22px",
+                  backgroundColor: "$white",
+                  borderRadius: "$md",
+                  boxShadow: "$2",
+                }}
+              />
+            </Box>
+          ) : null}
+        </StyledContainer>
+      </ToggleContext.Provider>
+    );
+  }
+);
+
+export type ToggleItemProps = React.ComponentProps<typeof StyledItem>;
 export type ToggleRootProps = React.ComponentProps<typeof Root>;
 export type ToggleButtonProps = ButtonProps;
 
-export const Item = ({ children, ...props }: ToggleItemProps) => {
-  return (
-    <ToggleGroupPrimitives.Item {...props}>
-      {children}
-    </ToggleGroupPrimitives.Item>
-  );
-};
+const StyledItem = styled(ToggleGroupPrimitives.Item, buttonStyles, {
+  color: "$gray11",
+  focusType: "outer",
+  backgroundColor: "transparent",
+});
 
-const ButtonImpl = (
-  { children, css, ...props }: ToggleButtonProps,
-  ref: React.Ref<HTMLButtonElement>
-) => (
-  <SystemButton
-    ref={ref}
-    variant="neutral"
-    pressable={false}
-    size="small"
-    css={{
-      fontSize: "$medium-text",
-      color: "$gray11",
-      colorScheme: "primary",
-      focusType: "outer",
+export const Item = React.forwardRef<HTMLButtonElement, ToggleItemProps>(
+  ({ children, value, ...props }, ref) => {
+    const context = React.useContext(ToggleContext);
 
-      [`${activeSelector}`]: {
-        color: "$white",
-        backgroundColor: "$colorScheme9",
-      },
-      ...css,
-    }}
-    {...props}
-  >
-    {children}
-  </SystemButton>
+    if (!context)
+      throw new ODProgrammerError({
+        code: "MISSING_CONTEXT_PROVIDER",
+        message: "The ToggleItem needs a ToggleRoot around it.",
+      });
+
+    return (
+      <StyledItem
+        variant="ghost"
+        size="small"
+        ref={(node) => {
+          context.assignActiveNode(value)(node);
+          if (typeof ref === "function") ref(node);
+          if (ref && typeof ref === "object") ref.current = node;
+        }}
+        value={value}
+        {...props}
+      >
+        {children}
+      </StyledItem>
+    );
+  }
 );
-
-export const Button = React.forwardRef(ButtonImpl);

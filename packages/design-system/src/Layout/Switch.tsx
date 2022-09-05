@@ -1,6 +1,5 @@
-import { OnlyString } from "@stitches/react/types/css";
 import * as React from "react";
-import { styled } from "../stitches";
+import { styled, StyleObject } from "../stitches";
 import { center } from "../shared/variants";
 
 const StyledSwitch = styled("div", center, {
@@ -15,7 +14,7 @@ const StyledSwitch = styled("div", center, {
 });
 
 export type SwitchProps = React.ComponentProps<typeof StyledSwitch> & {
-  threshold?: number | OnlyString;
+  threshold?: StyleObject["width"];
 };
 
 export const Switch = ({ css, ...props }: SwitchProps) => {

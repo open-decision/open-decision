@@ -9,23 +9,17 @@ export default {
     },
     noResults: "Keine Projekte gefunden",
     empty: {
-      title: "Sie haben noch kein Open-Decision-Projekt.",
-      callToAction: "Erstellen oder importieren Sie jetzt ihr erstes Projekt.",
-    },
-    cardMenu: {
-      hiddenLabel: "Projektmenü für {name}",
-      changeName: "Name ändern",
-      publish: "Veröffentlichen",
-      unpublish: "Unveröffentlichen",
-      archive: "Archivieren",
-      unarchive: "Unarchivieren",
-      deleteProject: "Projekt löschen",
+      title: "Du hast noch kein Open-Decision-Projekt.",
+      callToAction: "Erstelle oder importiere jetzt dein erstes Projekt.",
     },
     treeCard: {
       hiddenTitleLink: "Öffne das Projekt {name}",
       ACTIVE: "Aktiv",
       ARCHIVED: "Archiviert",
       published: "Veröffentlicht",
+      menu: {
+        hiddenLabel: "Projektmenü für {name}",
+      },
     },
   },
 } as const;

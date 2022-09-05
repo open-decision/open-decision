@@ -1,9 +1,7 @@
 import { Edge, Tree } from "@open-decision/type-classes";
-import { Required } from "utility-types";
 import { assign, createMachine, Interpreter, Sender } from "xstate";
 import {
   InvalidTreeError,
-  MissingStartNodeError,
   MissingEdgeForThruthyConditionException,
   NoTruthyConditionException,
 } from "./errors";
@@ -11,15 +9,16 @@ import { canGoBack, canGoForward } from "./methods";
 
 export function createInterpreter(
   json: Tree.TTree,
+  initialNode?: string,
   interpreterOptions?: InterpreterOptions
 ) {
   const decodedJSON = Tree.Type.safeParse(json);
 
   if (!decodedJSON.success) return new InvalidTreeError(decodedJSON.error);
-  if (!decodedJSON.data.startNode) return new MissingStartNodeError();
 
   return createInterpreterMachine(
-    decodedJSON.data as Required<Tree.TTree, "startNode">,
+    decodedJSON.data,
+    initialNode ?? decodedJSON.data.startNode,
     interpreterOptions
   );
 }
@@ -31,7 +30,7 @@ type ResolveEvents = {
 
 type ResolverEvents =
   | { type: "VALID_INTERPRETATION"; target: string }
-  | { type: "INVALID_INTERPRETATION"; exception: InterpreterErrors };
+  | { type: "INVALID_INTERPRETATION"; error: InterpreterErrors };
 
 const resolveConditions =
   (tree: Tree.TTree) =>
@@ -51,7 +50,7 @@ const resolveConditions =
         if (!edge)
           return callback({
             type: "INVALID_INTERPRETATION",
-            exception: new MissingEdgeForThruthyConditionException(),
+            error: new MissingEdgeForThruthyConditionException(),
           });
 
         return callback({
@@ -62,7 +61,7 @@ const resolveConditions =
     }
     callback({
       type: "INVALID_INTERPRETATION",
-      exception: new NoTruthyConditionException(),
+      error: new NoTruthyConditionException(),
     });
   };
 
@@ -94,22 +93,25 @@ export type InterpreterService = Interpreter<
 >;
 
 export type InterpreterOptions = {
-  onError?: (exception: InterpreterErrors) => void;
+  onError?: (error: InterpreterErrors) => void;
+  onSelectedNodeChange?: (nextNodeIs: string) => void;
 };
 
 export const createInterpreterMachine = (
-  tree: Required<Tree.TTree, "startNode">,
-  { onError: onException }: InterpreterOptions = {}
-) =>
-  createMachine(
+  tree: Tree.TTree,
+  initialNode: string,
+  { onError, onSelectedNodeChange }: InterpreterOptions = {}
+) => {
+  return createMachine(
     {
+      predictableActionArguments: true,
       tsTypes: {} as import("./interpreter.typegen").Typegen0,
       schema: {
         context: {} as InterpreterContext,
         events: {} as InterpreterEvents,
       },
       context: {
-        history: { nodes: [tree.startNode], position: 0 },
+        history: { nodes: [initialNode], position: 0 },
         answers: {},
       },
       id: "interpreter",
@@ -151,7 +153,7 @@ export const createInterpreterMachine = (
             },
             INVALID_INTERPRETATION: {
               target: "idle",
-              actions: "callOnException",
+              actions: "callOnError",
             },
           },
         },
@@ -159,12 +161,14 @@ export const createInterpreterMachine = (
     },
     {
       actions: {
-        assignAnswerToContext: assign((context, event) => ({
-          answers: { ...context.answers, [event.inputId]: event.answerId },
-          history: { ...context.history, position: 0 },
-        })),
+        assignAnswerToContext: assign({
+          answers: (context, event) => ({
+            ...context.answers,
+            [event.inputId]: event.answerId,
+          }),
+        }),
         resetToInitialContext: assign((_context, _event) => ({
-          history: { nodes: [tree.startNode], position: 0 },
+          history: { nodes: [initialNode], position: 0 },
           answers: {},
           Error: undefined,
         })),
@@ -175,6 +179,10 @@ export const createInterpreterMachine = (
           if (context.history.position === context.history.nodes.length - 1)
             return context;
 
+          onSelectedNodeChange?.(
+            context.history.nodes[context.history.position + 1]
+          );
+
           return {
             history: {
               position: context.history.position + 1,
@@ -184,6 +192,9 @@ export const createInterpreterMachine = (
         }),
         goForward: assign((context) => {
           if (context.history.position === 0) return context;
+          onSelectedNodeChange?.(
+            context.history.nodes[context.history.position - 1]
+          );
 
           return {
             history: {
@@ -192,13 +203,32 @@ export const createInterpreterMachine = (
             },
           };
         }),
-        callOnException: (_context, event) => onException?.(event.exception),
-        assignNewTarget: assign((context, event) => ({
-          history: {
-            position: context.history.position,
-            nodes: [event.target, ...context.history.nodes],
-          },
-        })),
+        callOnError: (_context, event) => onError?.(event.error),
+        assignNewTarget: assign((context, event) => {
+          onSelectedNodeChange?.(event.target);
+
+          if (context.history.position !== 0) {
+            return {
+              history: {
+                position: 0,
+                nodes: [
+                  event.target,
+                  ...context.history.nodes.slice(
+                    context.history.position,
+                    context.history.nodes.length
+                  ),
+                ],
+              },
+            };
+          }
+
+          return {
+            history: {
+              position: context.history.position,
+              nodes: [event.target, ...context.history.nodes],
+            },
+          };
+        }),
       },
       services: {
         resolveConditions: resolveConditions(tree),
@@ -209,3 +239,4 @@ export const createInterpreterMachine = (
       },
     }
   );
+};

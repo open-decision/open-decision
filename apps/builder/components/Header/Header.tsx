@@ -2,21 +2,26 @@ import React from "react";
 import {
   StyleObject,
   styled,
-  darkTheme,
   Box,
+  buttonStyles,
+  Icon,
+  Link,
 } from "@open-decision/design-system";
 import { UserMenu } from "./UserMenu";
+import NextLink from "next/link";
+import { DashboardIcon } from "@radix-ui/react-icons";
+import { useTranslations } from "next-intl";
 
 const Container = styled("div", {
   layer: "1",
-  paddingInline: "$4",
+  paddingInline: "$3",
+  borderBottom: "$border$layer",
 });
 
 const Content = styled("header", {
   display: "flex",
   alignItems: "center",
   gap: "$2",
-  groupColor: "$gray12",
   paddingBlock: "$3",
 });
 
@@ -31,9 +36,22 @@ export const BaseHeader = ({
   css,
   LogoSlot = <Box />,
 }: BaseHeaderProps) => {
+  const t = useTranslations("common.header");
   return (
-    <Container css={css} className={darkTheme}>
+    <Container css={css}>
       <Content>
+        <NextLink href="/" passHref>
+          <Link
+            className={buttonStyles({
+              variant: "neutral",
+              square: true,
+            })}
+          >
+            <Icon label={t("homeButtonHiddenLabel")}>
+              <DashboardIcon />
+            </Icon>
+          </Link>
+        </NextLink>
         {LogoSlot}
         {children}
         <UserMenu />

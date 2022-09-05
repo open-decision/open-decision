@@ -49,6 +49,7 @@ type focusTypes =
 
 export const designSystem = createStitches({
   theme: {
+    border: { layer: "1px solid $colors$gray5" },
     colors: {
       ...aliasColor("gray", slate, true),
       ...aliasColor("grayA", slateA, true),
@@ -330,6 +331,7 @@ export const globalStyles = globalCss({
   },
   "html, body": {
     height: "100%",
+    overflowX: "hidden",
   },
   body: {
     lineHeight: "1.5",
@@ -347,6 +349,7 @@ export const globalStyles = globalCss({
   },
   "#root, #__next": {
     isolation: "isolate",
+    height: "100%",
   },
 });
 

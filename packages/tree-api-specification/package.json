@@ -8,10 +8,11 @@
   "dependencies": {
     "@open-decision/api-helpers": "workspace:*",
     "@open-decision/models": "workspace:*",
+    "@open-decision/type-classes": "workspace:*",
     "validator": "^13.7.0",
     "zod": "^3"
   },
   "devDependencies": {
-    "vitest": "^0.15.1"
+    "vitest": "^0.23.0"
   }
 }

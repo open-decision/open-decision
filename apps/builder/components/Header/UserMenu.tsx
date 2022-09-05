@@ -1,10 +1,9 @@
 import {
-  darkTheme,
   DropdownMenu,
   Icon,
   Link as SystemLink,
 } from "@open-decision/design-system";
-import { ExitIcon, GearIcon, HomeIcon } from "@radix-ui/react-icons";
+import { ExitIcon, GearIcon } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useLogoutMutation } from "../../features/Auth/mutations/useLogoutMutation";
@@ -19,22 +18,7 @@ export function UserMenu() {
       <DropdownMenu.Trigger asChild>
         <MenuButton label={t("common.UserMenu.label")} />
       </DropdownMenu.Trigger>
-      <DropdownMenu.Content
-        sideOffset={15}
-        alignOffset={4}
-        className={darkTheme}
-        css={{ groupColor: "$gray12" }}
-      >
-        <Link href="/" passHref>
-          <DropdownMenu.Item asChild>
-            <SystemLink>
-              <Icon>
-                <HomeIcon />
-              </Icon>
-              Dashboard
-            </SystemLink>
-          </DropdownMenu.Item>
-        </Link>
+      <DropdownMenu.Content align="end" sideOffset={15}>
         <Link href="/settings#account" passHref>
           <DropdownMenu.Item asChild>
             <SystemLink>

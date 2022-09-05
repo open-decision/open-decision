@@ -13,12 +13,7 @@ export function createTreeStore(id: string) {
   const yDoc = new Y.Doc({ guid: id });
   const yMap = yDoc.getMap("tree");
 
-  const syncedStore = proxy<Tree.TTree>({
-    startNode: undefined,
-    nodes: undefined,
-    edges: undefined,
-    inputs: undefined,
-  });
+  const syncedStore = proxy<Tree.TTree>({} as Tree.TTree);
 
   let onSync = (_value: unknown) => {
     return;
@@ -33,7 +28,12 @@ export function createTreeStore(id: string) {
     }),
     selectedNodeIds: [] as string[],
     selectedEdgeIds: [] as string[],
+    selectedView: "editor",
   });
+
+  const updateSelectedView = (view: string) => {
+    nonSyncedStore.selectedView = view;
+  };
 
   const derivedNodeNames = derive({
     nodeNames: (get) => {
@@ -122,6 +122,7 @@ export function createTreeStore(id: string) {
     onSync,
     abortConnecting,
     startConnecting,
+    updateSelectedView,
     addSelectedNodes,
     replaceSelectedEdges,
     replaceSelectedNodes,

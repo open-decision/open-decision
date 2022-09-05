@@ -52,11 +52,6 @@ ENV NODE_ENV=production
 
 WORKDIR /app
 
-# RUN mkdir dist
-# RUN mkdir node_modules
-# RUN chmod a+rwx -R dist
-# RUN chmod a+rwx -R node_modules
-
 COPY --from=build /app .
 
 USER node

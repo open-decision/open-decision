@@ -61,6 +61,6 @@ export const ContextMenu = {
   Item: styled(ContextMenuPrimitives.Item, menuItemStyles),
   CheckboxItem,
   Label: styled(ContextMenuPrimitives.Label, menuLabelStyles),
-  TriggerItem: styled(ContextMenuPrimitives.TriggerItem, menuItemStyles),
+  TriggerItem: styled(ContextMenuPrimitives.SubTrigger, menuItemStyles),
   Separator: styled(ContextMenuPrimitives.Separator, menuSeparatorStyles),
 };

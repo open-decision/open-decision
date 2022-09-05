@@ -2,6 +2,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/api/src",
   "projectType": "application",
+  "implicitDependencies": ["prisma"],
   "targets": {
     "build": {
       "executor": "@nrwl/node:webpack",
@@ -18,20 +19,47 @@
         }
       ]
     },
-    "serve": {
-      "executor": "@nrwl/node:node",
+    "close:db": {
+      "executor": "@nrwl/workspace:run-commands",
       "options": {
-        "buildTarget": "api:build"
-      },
-      "watch": true
+        "commands": ["docker compose -f docker-compose.yml down"],
+        "cwd": "apps/api"
+      }
     },
-    "serve:test": {
+    "start:db": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          "docker compose -f apps/api/docker-compose.yml up -d --wait"
+        ]
+      }
+    },
+    "serve:api": {
       "executor": "@nrwl/node:node",
       "options": {
         "buildTarget": "api:build",
         "inspect": false
       },
       "watch": true
+    },
+    "serve": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          "nx migrate:dev prisma",
+          "nx seed:db api",
+          "nx serve:api api"
+        ],
+        "parallel": false
+      },
+      "dependsOn": [{ "target": "start:db", "projects": "self" }]
+    },
+    "seed:db": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": ["pnpm prisma db seed"],
+        "cwd": "apps/api"
+      }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",

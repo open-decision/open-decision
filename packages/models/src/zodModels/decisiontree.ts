@@ -14,6 +14,7 @@ export const DecisionTreeModel = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
   status: z.enum(TreeStatus),
+  hasPreview: z.boolean(),
   name: z.string(),
   yDocument: z.string().nullish(),
   ownerUuid: z.string().uuid(),

@@ -67,11 +67,6 @@ export const websocketUpgradeHandler = catchAsync(
 export const setupSyncBindings = () => {
   setPersistence({
     bindState: async (docName, ydoc) => {
-      // const persistedYdoc = await ldb.getYDoc(docName);
-      // Y.applyUpdate(ydoc, Y.encodeStateAsUpdate(persistedYdoc));
-      // ydoc.on("update", (update) => {
-      //   ldb.storeUpdate(docName, update);
-      // });
       const persistedDoc = await getYDocFromDatabase(docName); // retrieve the original Yjs doc here
       if (persistedDoc) {
         Y.applyUpdate(ydoc, persistedDoc as any);

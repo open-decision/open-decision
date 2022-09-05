@@ -13,10 +13,8 @@ type PreviewAnswerFormProps = {
 export function AnswersForm({ inputs, css }: PreviewAnswerFormProps) {
   const { send, getAnswer, getCurrentNode } = useInterpreter();
 
-  const defaultValues = mapValues(inputs, (input) => getAnswer(input.id) ?? "");
-
   const formState = Form.useFormState({
-    defaultValues,
+    defaultValues: mapValues(inputs, (input) => getAnswer(input.id) ?? ""),
   });
 
   formState.useSubmit(() => {
@@ -36,10 +34,10 @@ export function AnswersForm({ inputs, css }: PreviewAnswerFormProps) {
     });
   });
 
-  const options = Object.keys(defaultValues);
+  const options = Object.keys(formState.values);
 
   return (
-    <Form.Root state={formState} css={css}>
+    <Form.Root state={formState} css={css} resetOnSubmit={false}>
       {inputs ? (
         <>
           {options.map((inputId) => (

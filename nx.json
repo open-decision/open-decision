@@ -18,9 +18,6 @@
   "affected": {
     "defaultBase": "main"
   },
-  "cli": {
-    "defaultCollection": "@nrwl/js"
-  },
   "pluginsConfig": {
     "@nrwl/js": {
       "analyzeSourceFiles": true

@@ -9,6 +9,7 @@ const StyledCanvas = styled(Canvas, {
   display: "grid",
   gridTemplateColumns: `1fr ${sidebarWidth}px`,
   justifyItems: "center",
+  height: "100%",
   overflow: "hidden",
 });
 

@@ -1,24 +1,43 @@
 import * as React from "react";
 import * as Toggle from "@radix-ui/react-toggle";
 import { Button, ButtonProps } from "..";
+import { CheckIcon } from "@radix-ui/react-icons";
+import { Icon } from "../Icon/Icon";
 
-export type ToggleButtonProps = Toggle.ToggleProps & ButtonProps;
+export type ToggleButtonProps = Toggle.ToggleProps &
+  ButtonProps & {
+    withCheck?: boolean;
+  };
 
 export const ToggleButton = React.forwardRef<
   HTMLButtonElement,
   ToggleButtonProps
->(({ children, pressed, defaultPressed, onPressedChange, ...props }, ref) => {
-  return (
-    <Toggle.Root
-      ref={ref}
-      asChild
-      pressed={pressed}
-      defaultPressed={defaultPressed}
-      onPressedChange={onPressedChange}
-    >
-      <Button variant="neutral" size="small" {...props}>
-        {children}
-      </Button>
-    </Toggle.Root>
-  );
-});
+>(
+  (
+    {
+      children,
+      pressed,
+      defaultPressed,
+      onPressedChange,
+      withCheck = false,
+      variant = "neutral",
+      css,
+      ...props
+    },
+    ref
+  ) => {
+    return (
+      <Toggle.Root
+        asChild
+        pressed={pressed}
+        defaultPressed={defaultPressed}
+        onPressedChange={onPressedChange}
+      >
+        <Button variant={variant} css={css} size="small" ref={ref} {...props}>
+          {withCheck ? <Icon>{pressed ? <CheckIcon /> : null}</Icon> : null}
+          {children}
+        </Button>
+      </Toggle.Root>
+    );
+  }
+);

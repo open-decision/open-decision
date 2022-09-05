@@ -12,6 +12,7 @@ export const errorConverter = (
   _res: Response,
   next: NextFunction
 ) => {
+  console.error(err);
   let error = err;
   let code;
   if (!(error instanceof APIError)) {

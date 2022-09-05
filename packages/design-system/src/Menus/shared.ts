@@ -5,6 +5,8 @@ import {
   disabledSelector,
   intentSelector,
 } from "../stitches/stateSelectors";
+import { textStyles } from "../Text";
+import { Link } from "../Link/Link";
 
 const scaleIn = keyframes({
   "0%": { opacity: 0, transform: "scale(0)" },
@@ -22,52 +24,59 @@ export const menuContainerStyles = css({
   display: "flex",
   flexDirection: "column",
   gap: "$1",
+  border: "$border$layer",
 
   transformOrigin: "var(--radix-dropdown-menu-content-transform-origin)",
   animation: `${scaleIn} 0.1s ease-out`,
 });
 
-export const menuItemStyles = css({
-  all: "unset",
-  colorScheme: "primary",
-  textStyle: "medium-text",
-  focusType: "inner-intent",
-  userSelect: "none",
-  display: "flex",
-  gap: "$3",
-  marginInline: "$2",
-  paddingInline: "$3",
-  paddingBlock: "6px",
-  borderRadius: "$md",
-  minWidth: "200px",
-  alignItems: "center",
-  wordBreak: "break-word",
-  hyphens: "auto",
-  cursor: "pointer",
-  fontWeight: "500",
-  border: "1px solid transparent",
-  focusColor: "$colorScheme6",
-  textDecoration: "none !important",
-
-  [`.${darkTheme} &`]: {
-    focusColor: "$colorScheme8",
-  },
-
-  [`${intentSelector}, ${activeSelector}`]: {
-    backgroundColor: "$colorScheme2",
+export const menuItemStyles = css(
+  {
+    all: "unset",
+    colorScheme: "primary",
+    focusType: "inner",
+    userSelect: "none",
+    display: "flex",
+    gap: "$3",
+    marginInline: "$2",
+    paddingInline: "$3",
+    paddingBlock: "6px",
+    borderRadius: "$md",
+    minWidth: "200px",
+    wordBreak: "break-word",
+    hyphens: "auto",
+    cursor: "pointer",
+    "--fontWeights-medium-text": 500,
+    border: "1px solid transparent",
+    focusColor: "$colorScheme6",
+    textDecoration: "none !important",
+    alignItems: "center",
 
     [`.${darkTheme} &`]: {
-      backgroundColor: "$colorScheme4",
       focusColor: "$colorScheme8",
     },
-  },
 
-  [`${disabledSelector}`]: {
-    color: "$gray11",
-    colorScheme: "gray",
-    cursor: "not-allowed",
+    [`${intentSelector}, ${activeSelector}`]: {
+      backgroundColor: "$colorScheme2",
+
+      [`.${darkTheme} &`]: {
+        backgroundColor: "$colorScheme4",
+      },
+    },
+
+    [`${disabledSelector}`]: {
+      color: "$gray11",
+      colorScheme: "gray",
+      cursor: "not-allowed",
+    },
+
+    [`& ${Link}`]: {
+      color: "inherit",
+      focusType: "inner",
+    },
   },
-});
+  textStyles
+);
 
 export const menuLabelStyles = css(
   {

@@ -1,6 +1,7 @@
 import winston from "winston";
 import config from "./config";
 import SentryTransport from "winston-transport-sentry-node";
+
 const { timestamp, prettyPrint, colorize, errors } = winston.format;
 
 const enumerateErrorFormat = winston.format((info) => {
@@ -24,7 +25,6 @@ export const logger = winston.createLogger({
     new winston.transports.Console({
       stderrLevels: ["error", "debug", "info"],
     }),
-    new winston.transports.File({ filename: "test.log" }),
   ],
 });
 
@@ -44,3 +44,38 @@ if (config.SENTRY_DSN) {
     })
   );
 }
+
+// class PosthogTransport extends Transport {
+//   private client: PostHog;
+//   constructor(opts: PosthogTransportOptions) {
+//     super(opts);
+//     this.client = new PostHog(
+//       opts.posthog.apiKey,
+//       Object.values(opts.posthog).length > 1 ? { ...opts.posthog } : {}
+//     );
+//   }
+
+//   override log(info: any, callback) {
+//     this.client.capture({
+//       distinctId: "distinct id",
+//       event: "movie played",
+//       properties: {
+//         movieId: "123",
+//         category: "romcom",
+//       },
+//     });
+//     callback();
+//   }
+// }
+
+// interface PosthogTransportOptions extends TransportStreamOptions {
+//   posthog: {
+//     apiKey: string;
+//     host?: string;
+//     flushAt?: number;
+//     flushInterval?: number;
+//     personalApiKey?: string;
+//   };
+// }
+
+// interface PosthogLogInfo {}

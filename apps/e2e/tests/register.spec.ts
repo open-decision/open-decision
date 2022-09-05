@@ -77,7 +77,7 @@ test.describe("register with valid data", () => {
     ).toBeVisible();
 
     await fillWithCredentials(page, registerUser);
-    process.env.registerUser = JSON.stringify(registerUser);
+    process.env["registerUser"] = JSON.stringify(registerUser);
   });
 
   test("successfull register", async ({ page }) => {
@@ -114,19 +114,16 @@ test.describe("register with invalid credentials", () => {
     await page.goto("/auth/register");
   });
 
-  test("should show field error when data is missing and not send request", async ({
-    page,
-  }) => {
-    // Fail the test when a request to register is sent
-    await page.route("**/auth/register", () => test.fail());
+  test("should show field error when data is missing", async ({ page }) => {
     const { submitButton, emailInput } = getElements(page);
 
     // We assume that each input works on its own so we can check all errors at once
+    await emailInput.fill(registerUser.email);
     await submitButton.click();
     await expect(
       page.locator(`data-test=error-email`),
-      "should show error for input"
-    ).toBeVisible();
+      "should not show error for input"
+    ).not.toBeVisible();
     await expect(
       page.locator(`data-test=error-password`),
       "should show error for input"
@@ -142,14 +139,6 @@ test.describe("register with invalid credentials", () => {
       page.locator(`data-test=error-privacy`),
       "should show error for input"
     ).toBeVisible();
-
-    // We check that valid data does not cause an error
-    await emailInput.fill(registerUser.email);
-    await submitButton.click();
-    await expect(
-      page.locator(`data-test=error-email`),
-      "should not show error for input"
-    ).not.toBeVisible();
   });
 
   test("should show relevant error when register was unsucessfull", async ({

@@ -2,6 +2,7 @@ import {
   publishedTreesOfTreesCollection,
   treesCollection,
   treesSingle,
+  treesDataSingle,
 } from "@open-decision/tree-api-specification";
 import express from "express";
 import { treeController } from "../../controllers/tree.controller";
@@ -18,6 +19,10 @@ treeRouter
   .get(auth(), treeController.getDecisionTree)
   .patch(auth(), treeController.updateDecisionTree)
   .delete(auth(), treeController.deleteDecisionTree);
+
+treeRouter
+  .route(treesDataSingle(":uuid"))
+  .get(treeController.getCurrentTreeData);
 
 treeRouter
   .route(publishedTreesOfTreesCollection(":treeUuid"))

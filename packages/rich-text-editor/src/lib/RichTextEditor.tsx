@@ -18,7 +18,7 @@ const StyledEditorContent = styled(EditorContent, editorStyles, {
 type Props = {
   content?: Content;
   onUpdate: (props: EditorEvents["update"]) => void;
-  Label?: React.ReactNode;
+  Label?: (props: { onClick: () => void }) => JSX.Element;
 } & Omit<
   React.ComponentProps<typeof StyledEditorContent>,
   "editor" | "content"
@@ -36,13 +36,9 @@ export const RichTextEditor = ({
     onUpdate,
   });
 
-  const EnhancedLabel = React.isValidElement(Label)
-    ? React.cloneElement(Label, { onClick: () => editor?.commands.focus() })
-    : Label;
-
   return (
     <>
-      {EnhancedLabel}
+      {Label?.({ onClick: () => editor?.commands.focus() })}
       <Box
         css={{
           display: "grid",

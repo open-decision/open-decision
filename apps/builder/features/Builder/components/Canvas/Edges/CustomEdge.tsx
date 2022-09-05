@@ -18,6 +18,8 @@ export const CustomEdge = memo(
     targetY,
     targetPosition,
     selected: isSelected,
+    source,
+    target,
   }: EdgeProps) => {
     const d = getBezierPath({
       sourceX,
@@ -29,7 +31,10 @@ export const CustomEdge = memo(
     });
 
     return (
-      <g className="react-flow__connection">
+      <g
+        className="react-flow__connection"
+        data-test={`${source}_${target}_edge`}
+      >
         <StyledPath
           key={`${id}_${isSelected}`}
           id={id}

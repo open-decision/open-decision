@@ -1,6 +1,5 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import * as React from "react";
-import { styled, VariantProps } from "../stitches";
+import { styled, StyleObject, VariantProps } from "../stitches";
 import { baseInputStyles, baseTextInputStyle } from "./shared/styles";
 import { Box } from "../Box";
 import { alignByContent } from "../shared/variants";
@@ -28,40 +27,16 @@ const StyledInput = styled(FormInput, {
 
 export type InputProps = {
   Buttons?: JSX.Element | JSX.Element[];
-  Icon?: React.ReactNode;
+  Icon?: (props: { css: StyleObject }) => JSX.Element;
   disabled?: boolean;
 } & VariantProps<typeof StyledBox> &
   Omit<React.ComponentProps<typeof StyledInput>, "size">;
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   function Input(
-    {
-      disabled,
-      size,
-      css,
-      Icon,
-      alignByContent,
-      onBlur,
-      onFocus,
-      className,
-      variant,
-      ...props
-    },
+    { disabled, size, css, Icon, alignByContent, className, variant, ...props },
     ref
   ) {
-    const EnhancedIcon = React.isValidElement(Icon)
-      ? React.cloneElement(Icon, {
-          // "data-active": hasFocus,
-          css: {
-            color: "$gray11",
-            position: "absolute",
-            zIndex: "$10",
-            marginLeft: "$$paddingInline",
-            ...Icon.props.css,
-          },
-        })
-      : Icon;
-
     return (
       <StyledBox
         css={{ $color: disabled ? "$gray8" : css?.color, ...css }}
@@ -71,36 +46,22 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         variant={variant}
         alignByContent={alignByContent}
       >
-        {EnhancedIcon}
+        {Icon?.({
+          css: {
+            color: "$gray11",
+            position: "absolute",
+            zIndex: "$10",
+            marginLeft: "$$paddingInline",
+          },
+        })}
         <StyledInput
           ref={ref}
           disabled={disabled}
           css={{
-            paddingLeft: EnhancedIcon
-              ? "calc($$paddingInline * 2 + 1em)"
-              : undefined,
+            paddingLeft: Icon ? "calc($$paddingInline * 2 + 1em)" : undefined,
           }}
           {...props}
         />
-        {/* <Button
-          size="small"
-          variant="ghost"
-          type="button"
-          disabled={!inputValue}
-          square
-          css={{
-            focusType: "inner",
-            opacity: inputValue ? 1 : "0 !important",
-          }}
-          onClick={() => {
-            clearErrors(name);
-            return reset();
-          }}
-        >
-          <Icon label="Entferne die momentan ausgewählte Option">
-            <X />
-          </Icon>
-        </Button> */}
       </StyledBox>
     );
   }

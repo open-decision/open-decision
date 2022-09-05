@@ -7,7 +7,7 @@ import { APIError, isAPIError } from "@open-decision/type-classes";
 const verifyLogin: NextApiHandler = async (req, res) => {
   try {
     const authResponse = await safeFetch(
-      `${process.env.NEXT_PUBLIC_OD_API_ENDPOINT}/v1/auth/login`,
+      `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1/auth/login`,
       {
         body: req.body,
         method: req.method,

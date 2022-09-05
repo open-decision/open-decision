@@ -1,7 +1,6 @@
 import * as React from "react";
-import { IconProps } from "@radix-ui/react-icons/dist/types";
 
-export const NumberedList = React.forwardRef<SVGSVGElement, IconProps>(
+export const NumberedList = React.forwardRef<SVGSVGElement, { color?: string }>(
   ({ color = "currentColor", ...rest }, ref) => {
     return (
       <svg

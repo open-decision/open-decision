@@ -1,5 +1,18 @@
 export default {
   pageTitle: "Builder | OD",
+  header: {
+    prototypeButton: {
+      button: "Prototyp teilen",
+      popover: {
+        title: "Prototyp teilen",
+        description:
+          "Wenn der Prototyp aktiviert ist kann jeder mit dem Link den Projekt-Prototyp ansehen.",
+        checkbox: "Prototyp aktivieren",
+        newTabLink: "In neuem Tab öffnen",
+        copyLinkButton: "Link kopieren",
+      },
+    },
+  },
   nodeSearch: {
     placeholder: "Suche",
     selectBadge: "Auswählen",
@@ -47,12 +60,7 @@ export default {
     zoomInAndOut: {
       zoomIn: { hiddenLabel: "Zoom in" },
       zoomOut: { hiddenLabel: "Zoom out" },
+      fitView: { hiddenLabel: "Fokussiere das Projekt" },
     },
-  },
-  projectMenu: {
-    backToDashboard: "Zurück zum Dashboard",
-    changeName: "Namen ändern",
-    export: "Exportieren",
-    delete: "Projekt löschen",
   },
 } as const;

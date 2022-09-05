@@ -1,3 +1,4 @@
+import { ODError } from "../../Error";
 import { createEdge, NewEdgeData } from "../creators";
 import { Tree, Edge } from "../type-classes";
 
@@ -22,7 +23,7 @@ export const addEdge = (tree: Tree.TTree) => (edge: Edge.TEdge) => {
 export const createAndAddEdge = (tree: Tree.TTree) => (edge: NewEdgeData) => {
   const newEdge = createEdge(tree)(edge);
 
-  if (newEdge instanceof Error) return newEdge;
+  if (newEdge instanceof ODError) return newEdge;
 
   return addEdge(tree)(newEdge);
 };

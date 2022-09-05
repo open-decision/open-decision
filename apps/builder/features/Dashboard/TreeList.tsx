@@ -37,7 +37,10 @@ export const TreeList = () => {
     data: trees,
     isLoading,
     isFetching,
-  } = useTreeAPI().useTreesQuery({ select: ({ data }) => data });
+  } = useTreeAPI().useTreesQuery({
+    select: ({ data }) => data,
+    staleTime: 500,
+  });
 
   const hasTrees = trees && trees.length > 0;
 
@@ -58,7 +61,9 @@ export const TreeList = () => {
   return hasTrees ? (
     <>
       <Row css={{ justifyContent: "space-between", marginBlock: "$9 $7" }}>
-        <Heading size="large">{t("title")}</Heading>
+        <Heading as="h1" size="large">
+          {t("title")}
+        </Heading>
         <NewProjectDropdown />
       </Row>
       <Form.Root
@@ -77,11 +82,11 @@ export const TreeList = () => {
           <Form.Input
             variant="lowered"
             name={formState.names.search}
-            Icon={
-              <Icon>
+            Icon={(props) => (
+              <Icon {...props}>
                 <MagnifyingGlassIcon />
               </Icon>
-            }
+            )}
             placeholder={t("treeList.search.placeholder")}
           />
         </Form.Field>

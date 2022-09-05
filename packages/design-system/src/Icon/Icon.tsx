@@ -31,8 +31,6 @@ const IconImpl = (
   ref: React.Ref<HTMLSpanElement>
 ) => {
   return (
-    // FIXME Disable typecheck for now until @radix-ui/react-accessible-icon gets react 18 types
-    // @ts-expect-error - not yet using React 18 types
     <AccessibleIcon.Root label={label ?? ""}>
       <StyledIcon className="icon" ref={ref} {...props}>
         {children}

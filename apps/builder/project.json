@@ -22,8 +22,7 @@
         "production": {
           "dev": false,
           "buildTarget": "builder:build",
-          "hostname": "localhost",
-          "dependsOn": ["build"]
+          "hostname": "localhost"
         },
         "development": {
           "buildTarget": "builder:build",
@@ -32,14 +31,12 @@
         }
       }
     },
-    "serve:test": {
-      "executor": "@nrwl/next:server",
+    "serve:app": {
+      "executor": "@nrwl/workspace:run-commands",
       "options": {
-        "buildTarget": "builder:build",
-        "dev": true,
-        "hostname": "localhost",
-        "port": 4400
-      }
+        "command": "nx run-many --target=serve --projects=builder,api --parallel=2 --output-style=stream"
+      },
+      "dependsOn": [{ "target": "build", "projects": "dependencies" }]
     },
     "export": {
       "executor": "@nrwl/next:export",

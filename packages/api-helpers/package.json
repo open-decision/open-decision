@@ -8,8 +8,8 @@
   },
   "dependencies": {
     "@open-decision/type-classes": "workspace:*",
-    "@types/validator": "^13.7.0",
+    "@types/validator": "^13.7.6",
     "validator": "^13.7.0",
-    "zod": "^3.17.3"
+    "zod": "^3"
   }
 }

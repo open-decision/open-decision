@@ -1,18 +1,23 @@
 import * as React from "react";
-import { Tabs, Stack } from "@open-decision/design-system";
+import { StyleObject } from "@open-decision/design-system";
 import { Renderer } from "@open-decision/renderer";
 import { useTreeContext } from "../Builder/state/treeStore/TreeContext";
-import { useNotificationStore } from "../Notifications/NotificationState";
 import { useSnapshot } from "valtio";
+import { useNotificationStore } from "../../config/notifications";
 
-function VorschauPageImpl() {
-  const { tree } = useTreeContext();
-  const { syncedStore: treeSnapshot } = useSnapshot(tree);
+type Props = { css?: StyleObject };
+
+export function Preview({ css }: Props) {
+  const { tree, replaceSelectedNodes } = useTreeContext();
+  const { syncedStore: treeSnapshot, nonSyncedStore: userState } =
+    useSnapshot(tree);
   const { addNotification } = useNotificationStore();
 
   return (
     <Renderer.Root
       tree={treeSnapshot}
+      defaultNode={userState.selectedNodeIds[0]}
+      onSelectedNodeChange={(nextNodeId) => replaceSelectedNodes([nextNodeId])}
       onError={(error) =>
         addNotification({
           title: error.code,
@@ -21,32 +26,13 @@ function VorschauPageImpl() {
         })
       }
     >
-      <Tabs.Content value="desktop" asChild>
-        <Renderer.View
-          css={{
-            height: "100%",
-            gridColumn: 2,
-            paddingBlock: "$7",
-          }}
-        />
-      </Tabs.Content>
-      <Tabs.Content value="mobile" asChild>
-        <Stack center css={{ gridColumn: 2 }}>
-          <Renderer.View
-            css={{
-              width: "400px",
-              height: "700px",
-              layer: "2",
-              boxShadow: "$6",
-              border: "2px solid $gray7",
-              borderRadius: "$xl",
-              $$padding: "$space$5",
-            }}
-          />
-        </Stack>
-      </Tabs.Content>
+      <Renderer.View
+        css={{
+          height: "100%",
+          paddingBlock: "$7",
+          ...css,
+        }}
+      />
     </Renderer.Root>
   );
 }
-
-export default VorschauPageImpl;

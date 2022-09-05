@@ -26,6 +26,7 @@ export const overlayCss = css({
   borderRadius: "$md",
   boxShadow: "$7",
   padding: "$2",
+  border: "$border$layer",
 
   "@media (prefers-reduced-motion: no-preference)": {
     animationDuration: "400ms",
@@ -37,20 +38,5 @@ export const overlayCss = css({
       '&[data-side="bottom"]': { animationName: slideUpAndFade },
       '&[data-side="left"]': { animationName: slideRightAndFade },
     },
-  },
-
-  variants: {
-    mode: {
-      light: {
-        groupColor: "$black",
-      },
-      dark: {
-        groupColor: "$white",
-      },
-    },
-  },
-
-  defaultVariants: {
-    mode: "light",
   },
 });

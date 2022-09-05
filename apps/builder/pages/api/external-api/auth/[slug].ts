@@ -1,13 +1,13 @@
 import { safeFetch } from "@open-decision/api-helpers";
 import { loginOutput } from "@open-decision/auth-api-specification";
 import { setCookieHeaders } from "../../../../utils/auth";
-import { NextApiHandler } from "next";
+import type { NextApiHandler } from "next";
 import { APIError, isAPIError } from "@open-decision/type-classes";
 
 const authCatch: NextApiHandler = async (req, res) => {
   try {
     const authResponse = await safeFetch(
-      `${process.env.NEXT_PUBLIC_OD_API_ENDPOINT}/v1/auth/${req.query.slug}`,
+      `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1/auth/${req.query["slug"]}`,
       {
         body: req.body,
         method: req.method,

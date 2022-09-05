@@ -17,7 +17,10 @@ export type InterpreterErrors =
 export type BuilderErrors =
   | "AUTH_VALIDATION_FAILED"
   | "WEBSOCKET_CONNECTION_FAILED"
-  | "IMPORT_INVALID_FILE";
+  | "IMPORT_INVALID_FILE"
+  | "DUPLICATE_EDGE"
+  | "CIRCULAR_CONNECTION"
+  | "CONNECTED_TO_SELF";
 
 export enum APIErrors {
   NOT_FOUND = 404,
@@ -42,6 +45,7 @@ export enum APIErrors {
   INVALID_EMAIL = 400,
   OFFLINE = 500,
   EMAIL_NOT_SEND = 500,
+  PREVIEW_NOT_ENABLED = 403,
 }
 
 export type ErrorCodes =

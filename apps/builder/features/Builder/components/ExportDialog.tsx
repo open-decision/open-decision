@@ -16,92 +16,103 @@ import { useTranslations } from "next-intl";
 
 type Props = {
   open?: boolean;
-  setOpen?: (open: boolean) => void;
-  focusOnClose?: () => void;
+  onSuccess?: () => void;
+  onCancel?: () => void;
+  focusOnCancel?: () => void;
   className?: string;
   children?: DialogTriggerProps["children"];
   css?: StyleObject;
   treeId: string;
+  treeName?: string;
 };
 
 export function ExportDialog({
   children,
   open,
-  setOpen,
-  focusOnClose,
+  onSuccess,
+  onCancel,
+  focusOnCancel,
   className,
   css,
   treeId,
+  treeName,
 }: Props) {
   const t = useTranslations("common.exportDialog");
-  const [fileName, setFileName] = React.useState("");
-  const { data } = useTreeAPI().useTreeQuery(treeId, {
-    select: ({ data }) => data,
-  });
-  const { mutate, data: file, isLoading, reset } = useTreeAPI().useExport();
+  const { mutate, data, isLoading, isSuccess } = useTreeAPI().useExport(treeId);
 
   const formState = Form.useFormState({
     defaultValues: {
-      name: data?.name ? `${data?.name}_${readableDate(new Date())}` : "",
+      name: `${treeName ?? "Unbennant"}_${readableDate(new Date())}`,
     },
   });
 
   formState.useSubmit(() => {
-    setFileName(formState.values.name);
-    mutate({ name: fileName });
+    mutate({
+      name: treeName ?? "Unbennant",
+      fileName: formState.values.name,
+    });
   });
 
+  React.useEffect(() => {
+    return () => {
+      if (data?.fileUrl) URL.revokeObjectURL(data.fileUrl);
+    };
+  }, [data?.fileUrl]);
+
   return (
-    <Dialog.Root open={open} onOpenChange={setOpen}>
+    <Dialog.Root open={open} onOpenChange={onCancel}>
       {children ? <Dialog.Trigger asChild>{children}</Dialog.Trigger> : null}
-      <Dialog.Content
-        className={className}
-        css={css}
-        onCloseAutoFocus={focusOnClose}
-      >
-        <Dialog.Header>{t("title")}</Dialog.Header>
-        <ErrorBoundary fallback={ExportErrorFallback}>
-          {!file ? (
-            <>
-              <Dialog.Description asChild>
-                <Text css={{ marginTop: "$2" }}>
-                  {t("customization.description")}
-                </Text>
-              </Dialog.Description>
-              <Form.Root state={formState} css={{ marginTop: "$4" }}>
-                <Form.Field Label={t("customization.nameInput.label")}>
-                  <Form.Input name={formState.names.name} />
-                </Form.Field>
-                <Form.Submit
-                  isLoading={isLoading}
-                  css={{ marginTop: "$2", marginLeft: "auto" }}
+      <Dialog.Portal>
+        <Dialog.Content
+          className={className}
+          css={css}
+          onCloseAutoFocus={!isSuccess ? focusOnCancel : undefined}
+        >
+          <Dialog.Header>{t("title")}</Dialog.Header>
+          <ErrorBoundary fallback={ExportErrorFallback}>
+            {!data?.fileUrl ? (
+              <>
+                <Dialog.Description asChild>
+                  <Text css={{ marginTop: "$2" }}>
+                    {t("customization.description")}
+                  </Text>
+                </Dialog.Description>
+                <Form.Root
+                  state={formState}
+                  css={{ marginTop: "$4" }}
+                  resetOnSubmit={false}
                 >
-                  {t("customization.submit")}
-                </Form.Submit>
-              </Form.Root>
-            </>
-          ) : (
-            <Stack>
-              <Dialog.Description asChild>
-                <Text css={{ marginTop: "$2" }}>{t("save.description")}</Text>
-              </Dialog.Description>
-              <Link
-                className={buttonStyles({
-                  css: { marginTop: "$4", alignSelf: "flex-end" },
-                })}
-                download={`${fileName}.json`}
-                href={URL.createObjectURL(file)}
-                onClick={() => {
-                  reset();
-                  setOpen?.(false);
-                }}
-              >
-                {t("save.cta")}
-              </Link>
-            </Stack>
-          )}
-        </ErrorBoundary>
-      </Dialog.Content>
+                  <Form.Field Label={t("customization.nameInput.label")}>
+                    <Form.Input name={formState.names.name} />
+                  </Form.Field>
+                  <Form.Submit
+                    isLoading={isLoading}
+                    css={{ marginTop: "$2", marginLeft: "auto" }}
+                  >
+                    {t("customization.submit")}
+                  </Form.Submit>
+                </Form.Root>
+              </>
+            ) : (
+              <Stack>
+                <Dialog.Description asChild>
+                  <Text css={{ marginTop: "$2" }}>{t("save.description")}</Text>
+                </Dialog.Description>
+                <Link
+                  className={buttonStyles({
+                    css: { marginTop: "$4", alignSelf: "flex-end" },
+                  })}
+                  download={data.file.name}
+                  href={data.fileUrl}
+                  onClick={onSuccess}
+                >
+                  {t("save.cta")}
+                </Link>
+              </Stack>
+            )}
+          </ErrorBoundary>
+        </Dialog.Content>
+      </Dialog.Portal>
     </Dialog.Root>
   );
 }

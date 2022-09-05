@@ -8,8 +8,5 @@
         "@next/next/no-html-link-for-pages": ["error", "apps/builder/pages"]
       }
     }
-  ],
-  "env": {
-    "jest": true
-  }
+  ]
 }

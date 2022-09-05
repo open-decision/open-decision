@@ -1,9 +1,7 @@
-import { LoadingSpinner, Stack } from "@open-decision/design-system";
+import { ErrorCard, Stack } from "@open-decision/design-system";
 import { ErrorBoundary } from "@sentry/nextjs";
 import { BaseHeader } from "../components";
-// import { TreeList } from "../features/Dashboard/TreeList";
 import * as React from "react";
-import { ErrorCard } from "../components/Error/ErrorCard";
 import { getDashboardLayout } from "../features/Dashboard/DashboardLayout";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
@@ -13,6 +11,7 @@ import { dehydrate, QueryClient } from "@tanstack/react-query";
 import { treesQueryKey } from "../features/Data/useTreeAPI";
 import TreeList from "../features/Dashboard/TreeList";
 import { safeFetch } from "@open-decision/api-helpers";
+import { convertToODError } from "@open-decision/type-classes";
 
 export const getServerSideProps: GetServerSideProps = async ({
   req,
@@ -27,7 +26,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 
   const OD = client({
     token: req.cookies["token"],
-    urlPrefix: `${process.env.NEXT_PUBLIC_OD_API_ENDPOINT}/v1`,
+    urlPrefix: `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1`,
     fetchFunction: safeFetch,
   });
   const queryClient = new QueryClient();
@@ -55,11 +54,11 @@ export default function DashboardPage() {
       </Head>
       <BaseHeader css={{ gridColumn: "1 / -1" }} />
       <ErrorBoundary
-        fallback={
+        fallback={({ error }) => (
           <Stack center css={{ gridColumn: "2 / 4", gridRow: "2 / 4" }}>
-            <ErrorCard title={t("dashboard.treeList.fullError")} />
+            <ErrorCard error={convertToODError(error)} />
           </Stack>
-        }
+        )}
       >
         <Stack
           css={{
@@ -67,16 +66,7 @@ export default function DashboardPage() {
             gridRow: "2 / 4",
           }}
         >
-          <React.Suspense
-            fallback={
-              <LoadingSpinner
-                size="50px"
-                css={{ flex: 1, alignSelf: "center" }}
-              />
-            }
-          >
-            <TreeList />
-          </React.Suspense>
+          <TreeList />
         </Stack>
       </ErrorBoundary>
     </>

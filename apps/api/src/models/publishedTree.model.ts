@@ -12,8 +12,8 @@ export const publishDecisionTree = async (
   treeToPublish: string
 ) => {
   const treeWithUpdatedTreeData = await getTreeWithUpdatedTreeData(
-    userUuid,
-    treeToPublish
+    treeToPublish,
+    userUuid
   );
 
   if (treeWithUpdatedTreeData instanceof Error) return treeWithUpdatedTreeData;

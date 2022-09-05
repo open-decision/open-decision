@@ -1,6 +1,7 @@
 import { TContext, QueryConfig } from "@open-decision/api-helpers";
 import { treesSingle } from "../../../../urls";
 import { TDeleteTreeInput } from "./input";
+import { deleteTreeOutput } from "./output";
 
 export const deleteTree =
   (context: TContext) =>
@@ -19,6 +20,6 @@ export const deleteTree =
           ...context.headers,
         },
       },
-      {}
+      { validation: deleteTreeOutput }
     );
   };

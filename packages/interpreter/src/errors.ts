@@ -1,18 +1,8 @@
 import {
-  InterpreterError,
   ODError,
   ODValidationError,
   ODValidationErrorConstructorParameters,
 } from "@open-decision/type-classes";
-
-export class MissingStartNodeError extends InterpreterError {
-  constructor() {
-    super({
-      message: "The provided tree does not have a startNode",
-      code: "MISSING_STARTNODE",
-    });
-  }
-}
 
 export class InvalidTreeError extends ODValidationError {
   constructor(zodError: ODValidationErrorConstructorParameters["zodError"]) {

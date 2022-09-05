@@ -15,13 +15,13 @@ import { Edge, Input as InputType } from "@open-decision/type-classes";
 import { DragHandle } from "./DragHandle";
 import { Reorder, useDragControls } from "framer-motion";
 import { Crosshair2Icon, PlusIcon, TrashIcon } from "@radix-ui/react-icons";
-import { useNotificationStore } from "../../../../Notifications/NotificationState";
 import {
   useEdgesOfNode,
   useConditionsOfNode,
   useNode,
 } from "../../../state/treeStore/hooks";
 import { useTreeContext } from "../../../state/treeStore/TreeContext";
+import { useNotificationStore } from "../../../../../config/notifications";
 
 const StyledReorderGroup = styled(Reorder.Group, {
   listStyle: "none",
@@ -230,6 +230,7 @@ export function OptionTargetInput({
       dragListener={false}
       dragControls={controls}
       dragConstraints={groupRef}
+      key={answer.id}
     >
       <Form.Root
         state={formState}

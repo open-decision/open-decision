@@ -105,6 +105,7 @@ export function Toolbar({ css, editor, ...props }: Props) {
 
           return editor.chain().focus()[`toggle${value}`]?.().run();
         }}
+        css={{ layer: "3" }}
       >
         <SystemToolbar.ToggleItem value="BulletList">
           <Icon label="Erstelle eine unnumerierte Liste">
@@ -117,23 +118,6 @@ export function Toolbar({ css, editor, ...props }: Props) {
           </Icon>
         </SystemToolbar.ToggleItem>
       </SystemToolbar.ToggleGroup>
-      {/* <Separator
-        orientation="vertical"
-        decorative
-        css={{ alignSelf: "stretch" }}
-      />
-      <ToggleButton
-        size="medium"
-        square
-        pressed={editor.isActive("link")}
-        onClick={() =>
-          editor.chain().focus().toggleLink({ href: "www.google.com" }).run()
-        }
-      >
-        <Icon label="Erstelle einen Link">
-          <Link2Icon />
-        </Icon>
-      </ToggleButton> */}
     </StyledToolbar>
   );
 }

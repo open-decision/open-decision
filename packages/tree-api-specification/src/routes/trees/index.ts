@@ -4,3 +4,4 @@ export * from "./uuid/delete";
 export * from "./uuid/patch";
 export * from "./uuid/publishedTree";
 export * from "./uuid/get";
+export * from "./uuid/treeData/get";
