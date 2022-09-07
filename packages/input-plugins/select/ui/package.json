@@ -7,6 +7,6 @@
     "@open-decision/compare-condition-plugin": "workspace:*",
     "@open-decision/type-classes": "workspace:*",
     "@open-decision/select-input-plugin": "workspace:*",
-    "valtio": "^1.7.0"
+    "valtio": "^1.6.4"
   }
 }

@@ -439,7 +439,6 @@ importers:
       remeda: ^1.1.0
       spinners-react: ^1.0.7
       use-resize-observer: ^9.0.2
-      valtio: ^1.7.0
     dependencies:
       '@open-decision/type-classes': link:../type-classes
       '@radix-ui/colors': 0.1.8
@@ -466,7 +465,6 @@ importers:
       remeda: 1.1.0
       spinners-react: 1.0.7_c72tqnfmbdx3m4daksis2unsgm
       use-resize-observer: 9.0.2
-      valtio: 1.7.0
     devDependencies:
       '@fontsource/poppins': 4.5.9
       '@svgr/cli': 6.3.1
@@ -501,7 +499,7 @@ importers:
     specifiers:
       '@open-decision/compare-condition-plugin': workspace:*
       '@open-decision/type-classes': workspace:*
-      valtio: ^1.7.0
+      valtio: ^1.6.4
       zod: ^3
     dependencies:
       '@open-decision/compare-condition-plugin': link:../../../condition-plugins/compare
@@ -514,7 +512,7 @@ importers:
       '@open-decision/compare-condition-plugin': workspace:*
       '@open-decision/select-input-plugin': workspace:*
       '@open-decision/type-classes': workspace:*
-      valtio: ^1.7.0
+      valtio: ^1.6.4
       zod: ^3
     dependencies:
       '@open-decision/compare-condition-plugin': link:../../../condition-plugins/compare
