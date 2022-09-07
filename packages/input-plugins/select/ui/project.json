@@ -1,0 +1,35 @@
+{
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/input-plugins/select/ui/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/input-plugins/select",
+        "main": "packages/input-plugins/select/ui/src/index.ts",
+        "tsConfig": "packages/input-plugins/select/ui/tsconfig.lib.json",
+        "assets": ["packages/input-plugins/select/ui/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "packages/input-plugins/select/ui/**/*.{ts,tsx,js,jsx}"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/packages/input-plugins/select"],
+      "options": {
+        "jestConfig": "packages/input-plugins/select/ui/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  }
+}

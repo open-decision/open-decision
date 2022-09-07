@@ -1,17 +1,16 @@
+import { isEmpty } from "ramda";
 import { pick } from "remeda";
-import { Node, Tree } from "../type-classes";
+import { Tree } from "../type-classes";
 
 export const getNode = (tree: Tree.TTree) => (nodeId: string) => {
   return tree.nodes?.[nodeId];
 };
 
-export const getNodes =
-  (tree: Tree.TTree) =>
-  (nodeIds: string[]): Node.TNodesRecord | undefined => {
-    if (!tree.nodes) return undefined;
+export const getNodes = (tree: Tree.TTree) => (nodeIds: string[]) => {
+  if (!tree.nodes) return undefined;
 
-    const nodes = pick(tree.nodes, nodeIds);
-    if (!nodes) return undefined;
+  const nodes = pick(tree.nodes, nodeIds);
+  if (!nodes || isEmpty(nodes)) return undefined;
 
-    return nodes;
-  };
+  return nodes;
+};

@@ -13,7 +13,8 @@
   "dependencies": {
     "@open-decision/type-classes": "workspace:*",
     "remeda": "^1.1.0",
-    "xstate": "^4.33.5"
+    "xstate": "^4.33.5",
+    "@open-decision/tree-client": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18.2.0"

@@ -10,7 +10,6 @@ import {
   InterpreterProviderProps,
   useInterpreter,
 } from "@open-decision/interpreter-react";
-import { AnswersForm } from "./components/AnswersForm";
 import { RichTextRenderer } from "@open-decision/rich-text-editor";
 import { Navigation } from "./components/Navigation";
 
@@ -23,11 +22,11 @@ function RendererImpl(
   { css, ...props }: RendererProps,
   ref: React.Ref<HTMLDivElement>
 ) {
-  const { getCurrentNode, getInputsWithAnswers } = useInterpreter();
+  const { getCurrentNode } = useInterpreter();
   const node = getCurrentNode();
 
   if (!node) throw node;
-  const inputs = getInputsWithAnswers(node.data.inputs);
+  // const inputs = getInputsWithAnswers(node.data.inputs);
 
   return (
     <Stack
@@ -66,13 +65,13 @@ function RendererImpl(
             ) : null}
           </ScrollArea.Viewport>
         </ScrollArea.Root>
-        {inputs ? (
+        {/* {inputs ? (
           <AnswersForm
             inputs={inputs}
             key={`form_${node.id}`}
             css={{ paddingInline: "$$padding", marginTop: "$4" }}
           />
-        ) : null}
+        ) : null} */}
       </Stack>
       <Navigation css={{ alignSelf: "center", marginBottom: "$$padding" }} />
     </Stack>

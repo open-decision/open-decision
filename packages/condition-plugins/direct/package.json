@@ -1,0 +1,11 @@
+{
+  "name": "@open-decision/direct-condition-plugin",
+  "version": "0.0.1",
+  "main": "src/index.ts",
+  "dependencies": {
+    "zod": "^3",
+    "ramda": "0.28.0",
+    "@open-decision/type-classes": "workspace:*"
+  },
+  "devDependencies": {}
+}

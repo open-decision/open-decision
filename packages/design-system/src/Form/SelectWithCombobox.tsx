@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Select, Combobox } from ".";
 import { Badge } from "../Badge";
+import { StyleObject } from "../stitches";
 import { focusSelectorWithin } from "../stitches/stateSelectors";
 
 export type SelectWithComboboxProps = {
@@ -12,6 +13,7 @@ export type SelectWithComboboxProps = {
   value?: string;
   setValue?: (newValue: string) => void;
   defaultValue?: string;
+  css?: StyleObject;
 };
 
 export const SelectWithCombobox = React.forwardRef<
@@ -27,6 +29,7 @@ export const SelectWithCombobox = React.forwardRef<
     defaultValue,
     selectPlaceholder,
     comboboxPlaceholder,
+    css,
   },
   ref
 ) {
@@ -68,6 +71,7 @@ export const SelectWithCombobox = React.forwardRef<
             borderLeftColor: "$primary9",
             zIndex: "$10",
           },
+          ...css,
         }}
         ref={ref}
       >

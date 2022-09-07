@@ -1,6 +1,6 @@
 import { Tree } from "../type-classes";
 import { deleteConditions } from "./deleteConditions";
-import { removeInputFromNode } from "./removeInputFromNode";
+import { disconnectInputFromNode } from "./disconnectInputFromNode";
 
 export const deleteInputs = (tree: Tree.TTree) => (ids: string[]) => {
   ids.forEach((id) => {
@@ -8,7 +8,7 @@ export const deleteInputs = (tree: Tree.TTree) => (ids: string[]) => {
 
     // When an input is deleted it needs to be removed from all Nodes using it.
     for (const nodeId in tree.nodes) {
-      removeInputFromNode(tree)(nodeId, id);
+      disconnectInputFromNode(tree)(nodeId, id);
     }
 
     // When an Input is deleted all conditions using it need to be removed.

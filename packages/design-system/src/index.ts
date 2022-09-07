@@ -23,6 +23,7 @@ export * from "./Separator";
 export * as Toolbar from "./Toolbar/Toolbar";
 export * from "./Notifications";
 export * from "./Error";
+export * from "./TargetSelector";
 
 // Styling solutions
 export * from "./stitches";

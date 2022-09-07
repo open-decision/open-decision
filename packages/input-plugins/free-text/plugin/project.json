@@ -1,0 +1,35 @@
+{
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/input-plugins/free-text/plugin/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/input-plugins/free-text",
+        "main": "packages/input-plugins/free-text/plugin/src/index.ts",
+        "tsConfig": "packages/input-plugins/free-text/plugin/tsconfig.lib.json",
+        "assets": ["packages/input-plugins/free-text/plugin/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "packages/input-plugins/free-text/plugin/**/*.{ts,tsx,js,jsx}"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/packages/input-plugins/free-text"],
+      "options": {
+        "jestConfig": "packages/input-plugins/free-text/plugin/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  }
+}

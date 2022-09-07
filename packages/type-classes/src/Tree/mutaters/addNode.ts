@@ -1,7 +1,4 @@
 import { Tree, Node } from "../type-classes";
-import { pipe } from "remeda";
-import { addInput } from "./addInput";
-import { createInput, createNode, NewNodeData } from "../creators";
 
 /**
  * @description Always adds a new Node to the tree. There are no rules so this
@@ -15,15 +12,4 @@ export const addNode = (tree: Tree.TTree) => (node: Node.TNode) => {
 
   tree.nodes[node.id] = node;
   if (!tree.startNode) tree.startNode = node.id;
-};
-
-export const createAndAddNode = (tree: Tree.TTree) => (node: NewNodeData) => {
-  if (node.data.inputs.length === 0) {
-    const newInput = createInput();
-
-    node.data.inputs.push(newInput.id);
-    addInput(tree)(newInput);
-  }
-
-  return pipe(node, createNode, addNode(tree));
 };
