@@ -2,6 +2,7 @@ name: Deploy Preview
 on:
   pull_request:
     branches: [main]
+    types: [opened, reopened, synchronize]
 
 concurrency:
   group: ${{ github.head_ref || github.run_id }}
@@ -68,17 +69,40 @@ jobs:
     runs-on: ubuntu-latest
     name: "Deploy api"
 
-    outputs:
-      API_PREVIEW_URL: ${{ steps.deploy.outputs.url }}
+    env:
+      APP_NAME: ${{format('pr-{0}-open-decision', github.event.pull_request.number)}}
+      DB_NAME: ${{format('pr-{0}-open-decision-db', github.event.pull_request.number)}}
+      CONFIG: apps/api/fly.toml
 
     steps:
       - uses: actions/checkout@v2
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - name: Create App
+        continue-on-error: true
+        run: flyctl apps create --name ${{env.APP_NAME}}
+      - name: Set secrets for app
+        shell: bash
+        continue-on-error: true
+        run: |
+          flyctl secrets set NODE_ENV="test" PORT="$PORT" DATABASE_URL="$DATABASE_URL" ACCESS_TOKEN_SECRET="$ACCESS_TOKEN_SECRET" ADMIN_ACCOUNT_WHITELIST="$ADMIN_ACCOUNT_WHITELIST" DEV_ACCOUNT_WHITELIST="$DEV_ACCOUNT_WHITELIST" EMAIL_FROM_ADDRESS="$EMAIL_FROM_ADDRESS" FEATURE_WHITELIST="$FEATURE_WHITELIST" PUBLIC_API_DOCUMENTATION="$PUBLIC_API_DOCUMENTATION" REFRESH_TOKEN_SECRET="$REFRESH_TOKEN_SECRET" SMTP_HOST="$SMTP_HOST" SMTP_PASSWORD="$SMTP_PASSWORD" SMTP_PORT="$SMTP_PORT" SMTP_USERNAME="$SMTP_USERNAME" --app "$APP_NAME"
       - name: Deploy
         id: deploy
-        uses: PhilGarb/fly-pr-review-apps@2.5
+        run: flyctl deploy --config ${{env.CONFIG}} --app ${{env.APP_NAME}} --region ${{env.FLY_REGION}} --build-secret SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} --strategy immediate
+      - name: Create DB
+        continue-on-error: true
+        run: flyctl postgres create --name ${{env.DB_NAME}} --region ${{env.FLY_REGION}}
+      - name: Attach database
+        continue-on-error: true
+        run: flyctl postgres attach ${{env.DB_NAME}} --app ${{env.APP_NAME}}
+      - name: Sentry Release
+        uses: getsentry/action-release@v1.2.0
+        env:
+          SENTRY_ORG: open-legal-tech-ev
+          SENTRY_PROJECT: od-api
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         with:
-          config: apps/api/fly.toml
-          postgres: od-preview-db
+          environment: testing
+          sourcemaps: "dist/apps/api"
 
   preview_builder:
     runs-on: ubuntu-latest
