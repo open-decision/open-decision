@@ -6,6 +6,6 @@
     "zod": "^3",
     "@open-decision/compare-condition-plugin": "workspace:*",
     "@open-decision/type-classes": "workspace:*",
-    "valtio": "^1.6.4"
+    "valtio": "^1.7.0"
   }
 }
