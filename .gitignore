@@ -22,11 +22,8 @@ tmp
 
 # misc
 .DS_Store
-.env
-.env.development
-.env.test.local
-.env.production
-.env.js
+.env.local
+.local.env
 .next
 .sentryclirc
 *.log
