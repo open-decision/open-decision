@@ -1,5 +1,6 @@
 import { safeFetch } from "@open-decision/api-helpers";
 import { APIError, isAPIError } from "@open-decision/type-classes";
+import { withSentry } from "@sentry/nextjs";
 import { NextApiHandler } from "next";
 import { refreshAuth } from "../../../utils/auth";
 
@@ -34,4 +35,4 @@ const SilentAuth: NextApiHandler = async (req, res) => {
   }
 };
 
-export default SilentAuth;
+export default withSentry(SilentAuth);

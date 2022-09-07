@@ -1,9 +1,7 @@
+import { withSentry } from "@sentry/nextjs";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   const token =
     typeof req.query?.["token"] === "string"
       ? req.query?.["token"]
@@ -29,3 +27,5 @@ export default async function handler(
 
   return res.status(500).send({ error: response.statusText });
 }
+
+export default withSentry(handler);

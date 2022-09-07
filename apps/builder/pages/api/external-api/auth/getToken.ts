@@ -1,5 +1,6 @@
 import { refreshAuth } from "../../../../utils/auth";
 import { NextApiHandler } from "next";
+import { withSentry } from "@sentry/nextjs";
 
 const getToken: NextApiHandler = async (req, res) => {
   try {
@@ -11,4 +12,4 @@ const getToken: NextApiHandler = async (req, res) => {
   }
 };
 
-export default getToken;
+export default withSentry(getToken);
