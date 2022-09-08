@@ -21,8 +21,10 @@ jobs:
     steps:
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Remove API Deploy
+        continue-on-error: true
         run: flyctl apps destroy ${{env.APP_NAME}} --yes
       - name: Remove DB Deploy
+        continue-on-error: true
         run: flyctl apps destroy ${{env.DB_NAME}} --yes
 
   remove_builder_deploy:
@@ -35,6 +37,10 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: latest
+          run_install: false
       - name: Install Vercel CLI
         run: pnpm install -g vercel@latest
       - name: Remove Builder Deploy
