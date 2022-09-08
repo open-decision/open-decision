@@ -17,6 +17,9 @@ const nextConfig = {
   nx: {
     svgr: false,
   },
+  sentry: {
+    hideSourceMaps: true,
+  },
 };
 
 module.exports = withSentryConfig(withBundleAnalyzer(withNx(nextConfig)), {

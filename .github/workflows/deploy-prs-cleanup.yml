@@ -1,0 +1,41 @@
+name: Cleanup PR Deploys
+on:
+  pull_request:
+    types: [closed]
+
+env:
+  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  VERCEL_SCOPE: open-decision
+
+jobs:
+  remove_api_deploy:
+    runs-on: ubuntu-latest
+    name: Remove API Deploy
+
+    env:
+      APP_NAME: ${{format('pr-{0}-open-decision', github.event.pull_request.number)}}
+      DB_NAME: ${{format('pr-{0}-open-decision-db', github.event.pull_request.number)}}
+
+    steps:
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - name: Remove API Deploy
+        run: flyctl apps destroy ${{env.APP_NAME}} --yes
+      - name: Remove DB Deploy
+        run: flyctl apps destroy ${{env.DB_NAME}} --yes
+
+  remove_builder_deploy:
+    runs-on: ubuntu-latest
+    name: Remove Builder Deploy
+
+    env:
+      OD_BUILDER_ENDPOINT: ${{format('https://open-decision-{0}.vercel.app', github.event.pull_request.number)}}
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+      - name: Install Vercel CLI
+        run: pnpm install -g vercel@latest
+      - name: Remove Builder Deploy
+        run: vercel alias rm ${{env.OD_BUILDER_ENDPOINT}} --yes

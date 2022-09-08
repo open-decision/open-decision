@@ -3,6 +3,7 @@ import { loginOutput } from "@open-decision/auth-api-specification";
 import { setCookieHeaders } from "../../../../utils/auth";
 import { NextApiHandler } from "next";
 import { APIError, isAPIError } from "@open-decision/type-classes";
+import { withSentry } from "@sentry/nextjs";
 
 const verifyLogin: NextApiHandler = async (req, res) => {
   try {
@@ -33,4 +34,4 @@ const verifyLogin: NextApiHandler = async (req, res) => {
   }
 };
 
-export default verifyLogin;
+export default withSentry(verifyLogin);
