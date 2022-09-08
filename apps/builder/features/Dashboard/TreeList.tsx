@@ -39,7 +39,6 @@ export const TreeList = () => {
     isFetching,
   } = useTreeAPI().useTreesQuery({
     select: ({ data }) => data,
-    staleTime: 10,
   });
 
   const hasTrees = trees && trees.length > 0;
