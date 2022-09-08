@@ -137,7 +137,7 @@ jobs:
       - name: Set api websocket endpoint env var
         continue-on-error: true
         run: |
-          vercel env rm NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} --yes || true || true
+          vercel env rm NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} --yes || true
           echo ${{ env.NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT }} | vercel env add NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} || true
 
       - name: Deploy to Vercel Action
