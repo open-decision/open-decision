@@ -7,7 +7,6 @@ env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-  VERCEL_SCOPE: open-decision
 
 jobs:
   remove_api_deploy:
@@ -32,7 +31,7 @@ jobs:
     name: Remove Builder Deploy
 
     env:
-      OD_BUILDER_ENDPOINT: ${{format('https://open-decision-{0}.vercel.app', github.event.pull_request.number)}}
+      OD_BUILDER_ENDPOINT: ${{format('open-decision-{0}.vercel.app', github.event.pull_request.number)}}
 
     steps:
       - name: Check out Git repository
@@ -44,4 +43,4 @@ jobs:
       - name: Install Vercel CLI
         run: pnpm install -g vercel@latest
       - name: Remove Builder Deploy
-        run: vercel alias rm ${{env.OD_BUILDER_ENDPOINT}} --token ${{secrets.VERCEL_TOKEN}} --yes
+        run: vercel alias rm ${{env.OD_BUILDER_ENDPOINT}} --token ${{secrets.VERCEL_TOKEN}} --scope open-decision --yes
