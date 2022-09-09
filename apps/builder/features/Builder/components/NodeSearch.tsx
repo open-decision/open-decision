@@ -6,27 +6,21 @@ import {
   Icon,
 } from "@open-decision/design-system";
 import { useEditor } from "../state/useEditor";
-import { useTreeContext } from "../state/treeStore/TreeContext";
+import { useTreeClient, useTreeContext } from "../state/treeStore/TreeContext";
 import { useTranslations } from "next-intl";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { getNodeNames } from "@open-decision/type-classes";
 
 type Props = { css?: StyleObject };
 
 export const NodeSearch = ({ css }: Props) => {
   const t = useTranslations("builder.nodeSearch");
 
-  const {
-    createNode,
-    addNode,
-    getNode,
-    createInput,
-    createAnswer,
-    addInput,
-    replaceSelectedNodes,
-    getNodeNames,
-  } = useTreeContext();
+  const { tree } = useTreeContext();
+  const treeClient = useTreeClient();
+  const { replaceSelectedNodes } = useEditor();
 
-  const nodeNames = getNodeNames();
+  const nodeNames = getNodeNames(tree.syncedStore)();
 
   const { getCenter, zoomToNode } = useEditor();
   const combobox = Combobox.useComboboxState({
@@ -36,10 +30,10 @@ export const NodeSearch = ({ css }: Props) => {
   });
 
   function createHandler(label: string) {
-    const newAnswer = createAnswer({ text: "" });
-    const newInput = createInput({ answers: [newAnswer] });
+    const newAnswer = treeClient.input.select.createAnswer({ text: "" });
+    const newInput = treeClient.inputs.create({ answers: [newAnswer] });
 
-    const newNode = createNode({
+    const newNode = treeClient.nodes.create.node({
       position: getCenter(),
       data: {
         name: label,
@@ -48,8 +42,8 @@ export const NodeSearch = ({ css }: Props) => {
       },
     });
 
-    addNode(newNode);
-    addInput(newInput);
+    treeClient.nodes.add(newNode);
+    treeClient.inputs.add(newInput);
     replaceSelectedNodes([newNode.id]);
     zoomToNode(newNode);
 
@@ -58,7 +52,7 @@ export const NodeSearch = ({ css }: Props) => {
 
   function changeHandler(newSelectedItemId: string) {
     replaceSelectedNodes([newSelectedItemId]);
-    const node = getNode(newSelectedItemId);
+    const node = treeClient.nodes.get.single(newSelectedItemId);
 
     if (!node) return;
     zoomToNode(node);

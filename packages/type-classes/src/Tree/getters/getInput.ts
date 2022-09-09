@@ -1,13 +1,15 @@
 import { pick } from "remeda";
-import { Input, Tree } from "../type-classes";
+import { ValuesType } from "utility-types";
+import { Tree } from "../type-classes";
 
-export const getInput = (tree: Tree.TTree) => (inputId: string) => {
-  return tree.inputs?.[inputId];
-};
+export const getInput =
+  <TTree extends Tree.TTree>(tree: TTree) =>
+  (inputId: string) =>
+    tree.inputs?.[inputId] as ValuesType<TTree["inputs"]> | undefined;
 
 export const getInputs =
-  (tree: Tree.TTree) =>
-  (inputIds: string[]): Input.TInputsRecord | undefined => {
+  <TTree extends Tree.TTree>(tree: TTree) =>
+  (inputIds: string[]): TTree["inputs"] | undefined => {
     if (!tree.inputs) return undefined;
 
     const inputs = pick(tree.inputs, inputIds);

@@ -22,7 +22,7 @@ export class ConditionPlugin<
   declare treeClient: TBaseTreeClient;
   declare MergedType: ReturnType<typeof mergeTypes<TType, TTypeName>>;
   SpecificType: TType;
-  declare typeName: string;
+  declare typeName: TTypeName;
   pluginType = "condition" as const;
 
   constructor(treeClient: TBaseTreeClient, Type: TType, typeName: TTypeName) {

@@ -4,6 +4,7 @@ import { derive } from "valtio/utils";
 import { bindProxyAndYMap } from "valtio-yjs";
 import * as Y from "yjs";
 import { mapValues } from "remeda";
+import { createTreeClient } from "@open-decision/tree-client";
 
 declare module "valtio" {
   function useSnapshot<T extends object>(p: T): T;
@@ -31,10 +32,6 @@ export function createTreeStore(id: string) {
     selectedView: "editor",
   });
 
-  const updateSelectedView = (view: string) => {
-    nonSyncedStore.selectedView = view;
-  };
-
   const derivedNodeNames = derive({
     nodeNames: (get) => {
       const { nodes } = get(syncedStore);
@@ -51,87 +48,18 @@ export function createTreeStore(id: string) {
     nonSyncedStore,
   });
 
-  const methods = Tree.createTreeMethods(syncedStore);
-
   bindProxyAndYMap(syncedStore, yMap, {
     transactionOrigin: `valtio for ${id}`,
   });
 
-  // ------------------------------------------------------------------
-  // Connection
-
-  function startConnecting(sourceNodeId: string) {
-    const connectionOriginNode = methods.getNode(sourceNodeId);
-    if (!connectionOriginNode) return;
-
-    nonSyncedStore.connectionSourceNodeId = sourceNodeId;
-
-    const validConnections = methods.getConnectableNodes(
-      connectionOriginNode.id
-    );
-
-    nonSyncedStore.validConnections = validConnections;
-  }
-
-  function abortConnecting() {
-    nonSyncedStore.connectionSourceNodeId = "";
-    nonSyncedStore.validConnections = [];
-  }
-
-  function addSelectedNodes(nodeIds: string[]) {
-    nonSyncedStore.selectedNodeIds.push(...nodeIds);
-  }
-
-  function replaceSelectedNodes(nodeIds: string[]) {
-    nonSyncedStore.selectedNodeIds = nodeIds;
-  }
-
-  function removeSelectedNodes() {
-    nonSyncedStore.selectedNodeIds = [];
-  }
-
-  function removeSelectedNode(nodeId: string) {
-    const nodeIndex = nonSyncedStore.selectedNodeIds.findIndex(
-      (id) => id === nodeId
-    );
-    nonSyncedStore.selectedNodeIds.splice(nodeIndex, 1);
-  }
-  function addSelectedEdges(edgeIds: string[]) {
-    nonSyncedStore.selectedEdgeIds.push(...edgeIds);
-  }
-
-  function replaceSelectedEdges(edgeIds: string[]) {
-    nonSyncedStore.selectedEdgeIds = edgeIds;
-  }
-
-  function removeSelectedEdges() {
-    nonSyncedStore.selectedEdgeIds = [];
-  }
-
-  function removeSelectedEdge(edgeId: string) {
-    const edgeIndex = nonSyncedStore.selectedEdgeIds.findIndex(
-      (id) => id === edgeId
-    );
-    nonSyncedStore.selectedEdgeIds.splice(edgeIndex, 1);
-  }
+  const treeClient = createTreeClient(syncedStore);
 
   return {
     tree,
     derivedNodeNames,
     yDoc,
     onSync,
-    abortConnecting,
-    startConnecting,
-    updateSelectedView,
-    addSelectedNodes,
-    replaceSelectedEdges,
-    replaceSelectedNodes,
-    removeSelectedEdge,
-    removeSelectedEdges,
-    removeSelectedNode,
-    removeSelectedNodes,
-    addSelectedEdges,
     getTreeData: () => yMap.toJSON(),
-    ...methods,
+    treeClient,
   };
 }

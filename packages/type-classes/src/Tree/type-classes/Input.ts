@@ -26,7 +26,7 @@ export class InputPlugin<
   declare treeClient: TBaseTreeClient;
   declare MergedType: ReturnType<typeof mergeTypes<TType, TTypeName>>;
   SpecificType: TType;
-  declare typeName: string;
+  declare typeName: TTypeName;
   pluginType = "input" as const;
 
   constructor(treeClient: TBaseTreeClient, Type: TType, typeName: TTypeName) {

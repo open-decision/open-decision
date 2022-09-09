@@ -8,7 +8,10 @@ import {
   useRFNodes,
   useStartNodeId,
 } from "../../../../features/Builder/state/treeStore/hooks";
-import { useTreeContext } from "../../../../features/Builder/state/treeStore/TreeContext";
+import {
+  useTreeClient,
+  useTreeContext,
+} from "../../../../features/Builder/state/treeStore/TreeContext";
 import { ConnectionLine } from "./Edges/ConnectionLine";
 import { CustomEdge } from "./Edges/CustomEdge";
 import { useSnapshot } from "valtio";
@@ -54,20 +57,7 @@ function Nodes() {
   const t = useTranslations("common.errors");
   const nodes = useRFNodes();
   const edges = useRFEdges();
-  const {
-    abortConnecting,
-    createAndAddEdge,
-    deleteNodes,
-    startConnecting,
-    updateNodePosition,
-    getNode,
-    createAnswer,
-    addCondition,
-    relateConditionToNode,
-    createCondition,
-    addInputAnswer,
-    tree,
-  } = useTreeContext();
+  const { tree } = useTreeContext();
 
   const [dragging, setDragging] = React.useState(false);
   const {
@@ -75,14 +65,17 @@ function Nodes() {
   } = useSnapshot(tree);
   const startNodeId = useStartNodeId();
 
-  const { closeNodeEditingSidebar } = useEditor();
   const {
+    closeNodeEditingSidebar,
+    abortConnecting,
+    startConnecting,
     removeSelectedNodes,
     addSelectedNodes,
     removeSelectedNode,
     addSelectedEdges,
     removeSelectedEdge,
-  } = useTreeContext();
+  } = useEditor();
+  const treeClient = useTreeClient();
   const { addNotification } = useNotificationStore();
 
   return (
@@ -105,14 +98,14 @@ function Nodes() {
           switch (nodeChange.type) {
             case "remove":
               if (nodeChange.id !== startNodeId) {
-                deleteNodes([nodeChange.id]);
+                treeClient.nodes.delete([nodeChange.id]);
                 removeSelectedNodes();
               }
               break;
             case "position": {
               if (nodeChange.dragging) {
                 setDragging(true);
-                updateNodePosition(
+                treeClient.nodes.update.position(
                   nodeChange.id,
                   nodeChange.position ?? { x: 0, y: 0 }
                 );
@@ -153,31 +146,34 @@ function Nodes() {
         if (!validConnectEvent(event.target) || !event.target.dataset["nodeid"])
           return abortConnecting();
 
-        const sourceNode = getNode(tree.nonSyncedStore.connectionSourceNodeId);
+        const sourceNode = treeClient.nodes.get.single(
+          tree.nonSyncedStore.connectionSourceNodeId
+        );
         if (!sourceNode) return abortConnecting();
         const firstInputId = sourceNode?.data.inputs[0];
 
-        const newAnswer = createAnswer({ text: "" });
-        addInputAnswer(firstInputId, newAnswer);
-        const newCondition = createCondition({
+        const newAnswer = treeClient.input.select.createAnswer({ text: "" });
+        treeClient.input.select.addAnswer(firstInputId, newAnswer);
+        const newCondition = treeClient.conditions.create({
           inputId: firstInputId,
           answerId: newAnswer.id,
         });
-        const possibleEdge = createAndAddEdge({
+        const possibleEdge = treeClient.edges.create({
           source: tree.nonSyncedStore.connectionSourceNodeId,
           target: event.target.dataset["nodeid"],
           conditionId: newCondition.id,
         });
 
         if (possibleEdge instanceof ODError)
-          addNotification({
+          return addNotification({
             title: t(`${possibleEdge.code}.short`),
             content: t(`${possibleEdge.code}.long`),
             variant: "danger",
           });
 
-        addCondition(newCondition);
-        relateConditionToNode(
+        treeClient.edges.add(possibleEdge);
+        treeClient.conditions.add(newCondition);
+        treeClient.conditions.connect.toNode(
           tree.nonSyncedStore.connectionSourceNodeId,
           newCondition.id
         );

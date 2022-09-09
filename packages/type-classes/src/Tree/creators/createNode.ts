@@ -1,4 +1,4 @@
-import { Node } from "../type-classes";
+import { Node, Tree } from "../type-classes";
 import { v4 as uuid } from "uuid";
 
 export type NewNodeData = {
@@ -11,11 +11,11 @@ export type NewNodeData = {
   };
 };
 
-export function createNode({
+export const createNode = ({
   position = { x: 0, y: 0 },
   data: { name = "", inputs = [], conditions = [] } = {},
   ...node
-}: NewNodeData): Node.TNode {
+}: NewNodeData): Node.TNode => {
   return {
     id: uuid(),
     data: {
@@ -23,8 +23,7 @@ export function createNode({
       inputs,
       conditions,
     },
-    type: "customNode",
     position,
     ...node,
   };
-}
+};

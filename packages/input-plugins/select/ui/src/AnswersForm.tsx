@@ -2,7 +2,7 @@ import { StyleObject, Form } from "@open-decision/design-system";
 import { useInterpreter } from "@open-decision/interpreter-react";
 import { Answers } from "./Answers";
 import { mapValues } from "remeda";
-import { TSelectInput } from "../selectPlugin";
+import { TSelectInput } from "@open-decision/select-input-plugin";
 
 type PreviewAnswerFormProps = {
   inputs: Record<string, TSelectInput>;

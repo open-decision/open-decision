@@ -4,19 +4,15 @@ import {
   TargetSelector,
 } from "@open-decision/design-system";
 import { Tree } from "@open-decision/type-classes";
+import { useTreeClient } from "./useTree";
 
-type FreeTextInputConfiguratorProps = {
+type FreeTextProps = {
   nodeId: string;
   inputId: string;
   tree: Tree.TTree;
 } & Pick<NodeLinkProps, "onClick">;
 
-export const FreeTextInputConfigurator = ({
-  nodeId,
-  inputId,
-  tree,
-  onClick,
-}: FreeTextInputConfiguratorProps) => {
+export const FreeText = ({ nodeId, inputId, tree, onClick }: FreeTextProps) => {
   const treeClient = useTreeClient(tree);
   //FIXME I cannot just assume there is ony one edge
   const edge = treeClient.edges.get.byNode(nodeId)[0];

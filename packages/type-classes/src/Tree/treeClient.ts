@@ -40,8 +40,6 @@ import {
   updateEdgeTarget,
 } from "./mutaters";
 import { Tree } from "./type-classes";
-import { Type } from "./type-classes/Edge";
-import { TTree } from "./type-classes/Tree";
 import {
   getConnectableNodes,
   getChildren,
@@ -51,18 +49,18 @@ import {
 } from "./utils";
 import { isValidEdge } from "./validators";
 
-export type TBaseTreeClient = ReturnType<typeof createTreeClient>;
+export type TBaseTreeClient = ReturnType<typeof createTreeClient<Tree.TTree>>;
 
-export const createTreeClient = (tree: TTree) => {
+export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
   return {
     updateStartNode: updateStartNode(tree),
     get: () => tree,
-    validate: Type.safeParse,
+    validate: Tree.Type.safeParse,
     nodes: {
       get: {
         single: getNode(tree),
         collection: getNodes(tree),
-        all: () => tree.nodes,
+        all: () => tree.nodes as TTree["nodes"],
         connectableNodes: getConnectableNodes(tree),
         children: getChildren(tree),
         parents: getParents(tree),
@@ -95,7 +93,7 @@ export const createTreeClient = (tree: TTree) => {
       get: {
         single: getInput(tree),
         collection: getInputs(tree),
-        all: () => tree.inputs,
+        all: () => tree.inputs as TTree["inputs"],
         byNode: null,
         byCondition: null,
         byEdge: null,
@@ -113,15 +111,12 @@ export const createTreeClient = (tree: TTree) => {
         fromCondition: null,
         fromEdge: null,
       },
-      update: {
-        target: null,
-      },
     },
     conditions: {
       get: {
         single: getCondition(tree),
         collection: getConditions(tree),
-        all: () => tree.conditions,
+        all: () => tree.conditions as TTree["conditions"],
         byNode: getConditionsByNode(tree.nodes ?? {}, tree.conditions ?? {}),
         byInput: null,
         byEdge: null,

@@ -64,3 +64,10 @@ export const useTreeContext = () => {
 
   return context;
 };
+
+export const useTreeClient = () => {
+  const { treeClient } = useTreeContext();
+  // const snapshot = useSnapshot(syncedStore);
+
+  return treeClient;
+};

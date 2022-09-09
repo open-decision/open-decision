@@ -4,12 +4,8 @@ export const Type = z.object({
   id: z.string(),
   source: z.string(),
   target: z.string(),
-  type: z.enum(["default"]),
+  type: z.literal("default"),
   conditionId: z.string().optional(),
-
-  // data: z.object({
-  //   conditionId: z.string().optional(),
-  // }),
 });
 
 export const Record = z.record(Type);

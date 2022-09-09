@@ -11,7 +11,7 @@ import {
   TrashIcon,
 } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
-import { useTreeContext } from "../../../../../features/Builder/state/treeStore/TreeContext";
+import { useEditor } from "../../../state/useEditor";
 
 type Props = {
   isStartNode?: boolean;
@@ -22,8 +22,7 @@ type Props = {
 
 export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
   const t = useTranslations("builder.nodeEditingSidebar.menu");
-  const { deleteNodes, updateStartNode, removeSelectedNodes } =
-    useTreeContext();
+  const { treeClient, removeSelectedNodes } = useEditor();
 
   return (
     <DropdownMenu.Root>
@@ -47,7 +46,7 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
           <Tooltip.Root>
             <Tooltip.Trigger style={{ all: "unset" }}>
               <DropdownMenu.Item
-                onSelect={() => deleteNodes([nodeId])}
+                onSelect={() => treeClient.nodes.delete([nodeId])}
                 css={{ colorScheme: "danger" }}
                 disabled
               >
@@ -65,7 +64,9 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
           </Tooltip.Root>
         ) : (
           <>
-            <DropdownMenu.Item onSelect={() => updateStartNode(nodeId)}>
+            <DropdownMenu.Item
+              onSelect={() => treeClient.updateStartNode(nodeId)}
+            >
               <Icon css={{ $$paddingInline: 0 }}>
                 <RocketIcon />
               </Icon>
@@ -73,7 +74,7 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
             </DropdownMenu.Item>
             <DropdownMenu.Item
               onSelect={() => {
-                deleteNodes([nodeId]);
+                treeClient.nodes.delete([nodeId]);
                 removeSelectedNodes();
               }}
               css={{ colorScheme: "danger" }}

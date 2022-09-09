@@ -2,7 +2,7 @@ import { Condition, Edge, Node } from "@open-decision/type-classes";
 import { MarkerType } from "react-flow-renderer";
 import { pick } from "remeda";
 import { useSnapshot } from "valtio";
-import { useTreeContext } from "../TreeContext";
+import { useTreeClient, useTreeContext } from "../TreeContext";
 
 export function useSelectedNodes():
   | ["none", undefined]
@@ -46,6 +46,7 @@ export function useRFNodes() {
 
   return Object.values(nodes).map((node) => ({
     ...node,
+    type: "customNode",
     selected: selectedNodeIds.includes(node.id),
   }));
 }
@@ -133,11 +134,9 @@ export function useInput(id: string) {
 }
 
 export function useInputs(ids: string[]) {
-  const { tree } = useTreeContext();
-  const {
-    syncedStore: { inputs },
-  } = useSnapshot(tree);
+  const treeClient = useTreeClient();
 
+  const inputs = treeClient.inputs.get.all();
   if (!inputs) return {};
   if (ids) return pick(inputs, ids);
 
@@ -186,10 +185,11 @@ export function useTree() {
 }
 
 export function useParents(nodeId: string): { id: string; name?: string }[] {
-  const { getParents, derivedNodeNames } = useTreeContext();
+  const { derivedNodeNames } = useTreeContext();
+  const treeClient = useTreeClient();
   const { nodeNames } = useSnapshot(derivedNodeNames);
 
-  const parentIds = getParents(nodeId);
+  const parentIds = treeClient.nodes.get.parents(nodeId);
 
   return Object.values(nodeNames).filter((nodeName) =>
     parentIds.includes(nodeName.id)

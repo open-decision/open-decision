@@ -4,7 +4,87 @@ import { calculateCenterOfNode } from "../utilities/calculateCenterOfNode";
 import { sidebarWidth } from "../utilities/constants";
 import { Node, ODProgrammerError } from "@open-decision/type-classes";
 import shallow from "zustand/shallow";
-import { useTreeContext } from "./treeStore/TreeContext";
+import { useTreeClient, useTreeContext } from "./treeStore/TreeContext";
+
+const useSelection = () => {
+  const treeClient = useTreeClient();
+  const {
+    tree: { nonSyncedStore },
+  } = useTreeContext();
+
+  const updateSelectedView = (view: string) => {
+    nonSyncedStore.selectedView = view;
+  };
+
+  function startConnecting(sourceNodeId: string) {
+    const connectionOriginNode = treeClient.nodes.get.single(sourceNodeId);
+    if (!connectionOriginNode) return;
+
+    nonSyncedStore.connectionSourceNodeId = sourceNodeId;
+
+    const validConnections = treeClient.nodes.get.connectableNodes(
+      connectionOriginNode.id
+    );
+
+    nonSyncedStore.validConnections = validConnections;
+  }
+
+  function abortConnecting() {
+    nonSyncedStore.connectionSourceNodeId = "";
+    nonSyncedStore.validConnections = [];
+  }
+
+  function addSelectedNodes(nodeIds: string[]) {
+    nonSyncedStore.selectedNodeIds.push(...nodeIds);
+  }
+
+  function replaceSelectedNodes(nodeIds: string[]) {
+    nonSyncedStore.selectedNodeIds = nodeIds;
+  }
+
+  function removeSelectedNodes() {
+    nonSyncedStore.selectedNodeIds = [];
+  }
+
+  function removeSelectedNode(nodeId: string) {
+    const nodeIndex = nonSyncedStore.selectedNodeIds.findIndex(
+      (id) => id === nodeId
+    );
+    nonSyncedStore.selectedNodeIds.splice(nodeIndex, 1);
+  }
+  function addSelectedEdges(edgeIds: string[]) {
+    nonSyncedStore.selectedEdgeIds.push(...edgeIds);
+  }
+
+  function replaceSelectedEdges(edgeIds: string[]) {
+    nonSyncedStore.selectedEdgeIds = edgeIds;
+  }
+
+  function removeSelectedEdges() {
+    nonSyncedStore.selectedEdgeIds = [];
+  }
+
+  function removeSelectedEdge(edgeId: string) {
+    const edgeIndex = nonSyncedStore.selectedEdgeIds.findIndex(
+      (id) => id === edgeId
+    );
+    nonSyncedStore.selectedEdgeIds.splice(edgeIndex, 1);
+  }
+
+  return {
+    updateSelectedView,
+    abortConnecting,
+    startConnecting,
+    addSelectedNodes,
+    replaceSelectedEdges,
+    replaceSelectedNodes,
+    removeSelectedEdge,
+    removeSelectedEdges,
+    removeSelectedNode,
+    removeSelectedNodes,
+    addSelectedEdges,
+  };
+};
 
 type projectCoordinatesFn = (
   coordinates: Node.TCoordinates
@@ -20,7 +100,9 @@ type EditorState = {
   isConnecting: boolean;
 };
 
-export const EditorContext = React.createContext<EditorState | null>(null);
+export const EditorContext = React.createContext<
+  (EditorState & ReturnType<typeof useSelection>) | null
+>(null);
 
 type TreeProviderProps = Omit<
   React.ComponentProps<typeof EditorContext.Provider>,
@@ -38,7 +120,6 @@ export function EditorProvider({ children }: TreeProviderProps) {
   );
   const userSelectionActive = useStore((state) => state.userSelectionActive);
   const multiSelectionActive = useStore((state) => state.multiSelectionActive);
-  const { removeSelectedNodes } = useTreeContext();
 
   const { project, setCenter, getZoom } = useReactFlow();
 
@@ -73,14 +154,17 @@ export function EditorProvider({ children }: TreeProviderProps) {
     });
   }
 
+  const selectionFunctions = useSelection();
+
   return (
     <EditorContext.Provider
       value={{
         projectCoordinates,
         getCenter,
         reactFlowWrapperRef,
-        closeNodeEditingSidebar: () => removeSelectedNodes(),
+        closeNodeEditingSidebar: () => selectionFunctions.removeSelectedNodes(),
         zoomToNode,
+        ...selectionFunctions,
         ...connectionState,
       }}
     >

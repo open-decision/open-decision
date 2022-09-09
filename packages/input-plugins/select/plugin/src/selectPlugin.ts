@@ -160,18 +160,3 @@ export class SelectPlugin extends InputPlugin<typeof Type, "select"> {
     return filteredInputs;
   }
 }
-
-export const selectTreeClientConfig = createExtendedTreeClient(
-  (treeClient) => ({
-    input: {
-      select: new SelectPlugin(treeClient),
-    },
-    condition: {
-      compare: new ComparePlugin(treeClient),
-    },
-  })
-);
-
-export type TTreeClientConfig = typeof selectTreeClientConfig;
-
-export type TTreeClient = ReturnType<TTreeClientConfig>;

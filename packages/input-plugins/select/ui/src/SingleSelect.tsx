@@ -13,19 +13,17 @@ import { Edge, Tree } from "@open-decision/type-classes";
 import { DragHandle } from "./DragHandle";
 import { Reorder, useDragControls } from "framer-motion";
 import { PlusIcon, TrashIcon } from "@radix-ui/react-icons";
-import { TSelectInput } from "../../../plugin/src/selectPlugin";
-import { TAnswer } from "../../../plugin/src/types";
-import { useTreeClient } from "../../../plugin/src/utils/useTree";
+import { TSelectInput, TAnswer } from "@open-decision/select-input-plugin";
+import { useTreeClient } from "./useTree";
+import {
+  BuilderComponentProps,
+  BuilderPrimaryActionSlotProps,
+} from "@open-decision/input-plugin-helpers";
 
-type SharedProps = {
-  tree: Tree.TTree;
-};
-
-type AddOptionButtonProps = {
-  input: TSelectInput;
-} & SharedProps;
-
-export const AddOptionButton = ({ input, tree }: AddOptionButtonProps) => {
+export const AddOptionButton = ({
+  input,
+  tree,
+}: BuilderPrimaryActionSlotProps<TSelectInput>) => {
   const treeClient = useTreeClient(tree);
 
   return (
@@ -52,18 +50,12 @@ const StyledReorderGroup = styled(Reorder.Group, {
   gap: "$4",
 });
 
-type SingleSelectProps = {
-  nodeId: string;
-  input: TSelectInput;
-} & Pick<NodeLinkProps, "onClick"> &
-  SharedProps;
-
 export const SingleSelect = ({
   nodeId,
   input,
   onClick,
   tree,
-}: SingleSelectProps) => {
+}: BuilderComponentProps<TSelectInput>) => {
   const ref = React.useRef<HTMLDivElement | null>(null);
   const treeClient = useTreeClient(tree);
 
@@ -89,6 +81,7 @@ export const SingleSelect = ({
             inputId={input.id}
             key={answer.id}
             groupRef={ref}
+            input={input}
           />
         );
       })}
@@ -101,8 +94,7 @@ type SingleSelectInputProps = {
   nodeId: string;
   inputId: string;
   groupRef: React.MutableRefObject<HTMLDivElement | null>;
-} & Pick<NodeLinkProps, "onClick"> &
-  SharedProps;
+} & BuilderComponentProps<TSelectInput>;
 
 export const OptionTargetInput = ({
   answer,

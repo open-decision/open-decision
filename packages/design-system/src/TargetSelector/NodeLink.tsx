@@ -6,7 +6,7 @@ export type NodeLinkProps = {
   target?: string;
   onClick: (target: string) => void;
   nodeName?: Node.TNode["data"]["name"];
-} & Omit<ButtonProps, "label" | "Icon">;
+} & Omit<ButtonProps, "label" | "Icon" | "onClick">;
 
 export function NodeLink({
   target,

@@ -230,11 +230,14 @@ importers:
       '@open-decision/api-helpers': workspace:*
       '@open-decision/auth-api-specification': workspace:*
       '@open-decision/design-system': workspace:*
+      '@open-decision/free-text-input-ui': workspace:*
       '@open-decision/interpreter-react': workspace:*
       '@open-decision/renderer': workspace:*
       '@open-decision/rich-text-editor': workspace:*
+      '@open-decision/select-input-ui': workspace:*
       '@open-decision/translations': workspace:*
       '@open-decision/tree-api-specification': workspace:*
+      '@open-decision/tree-client': workspace:*
       '@open-decision/type-classes': workspace:*
       '@open-decision/user-api-specification': workspace:*
       '@radix-ui/react-icons': ^1.1.1
@@ -276,11 +279,14 @@ importers:
       '@open-decision/api-helpers': link:../../packages/api-helpers
       '@open-decision/auth-api-specification': link:../../packages/auth-api-specification
       '@open-decision/design-system': link:../../packages/design-system
+      '@open-decision/free-text-input-ui': link:../../packages/input-plugins/free-text/ui
       '@open-decision/interpreter-react': link:../../packages/interpreter-react
       '@open-decision/renderer': link:../../packages/renderer
       '@open-decision/rich-text-editor': link:../../packages/rich-text-editor
+      '@open-decision/select-input-ui': link:../../packages/input-plugins/select/ui
       '@open-decision/translations': link:../../packages/translations
       '@open-decision/tree-api-specification': link:../../packages/tree-api-specification
+      '@open-decision/tree-client': link:../../packages/tree-client
       '@open-decision/type-classes': link:../../packages/type-classes
       '@open-decision/user-api-specification': link:../../packages/user-api-specification
       '@radix-ui/react-icons': 1.1.1_react@18.2.0
@@ -495,6 +501,12 @@ importers:
       '@open-decision/type-classes': link:../../../type-classes
       zod: 3.18.0
 
+  packages/input-plugins/helpers:
+    specifiers:
+      '@open-decision/type-classes': workspace:*
+    dependencies:
+      '@open-decision/type-classes': link:../../type-classes
+
   packages/input-plugins/select/plugin:
     specifiers:
       '@open-decision/compare-condition-plugin': workspace:*
@@ -510,13 +522,17 @@ importers:
   packages/input-plugins/select/ui:
     specifiers:
       '@open-decision/compare-condition-plugin': workspace:*
+      '@open-decision/input-plugin-helpers': workspace:*
       '@open-decision/select-input-plugin': workspace:*
+      '@open-decision/tree-client': workspace:*
       '@open-decision/type-classes': workspace:*
       valtio: ^1.6.4
       zod: ^3
     dependencies:
       '@open-decision/compare-condition-plugin': link:../../../condition-plugins/compare
+      '@open-decision/input-plugin-helpers': link:../../helpers
       '@open-decision/select-input-plugin': link:../plugin
+      '@open-decision/tree-client': link:../../../tree-client
       '@open-decision/type-classes': link:../../../type-classes
       valtio: 1.7.0
       zod: 3.18.0

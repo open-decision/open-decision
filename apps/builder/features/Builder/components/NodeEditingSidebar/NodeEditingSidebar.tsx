@@ -5,6 +5,7 @@ import {
   Form,
   Label,
   Stack,
+  DropdownMenu,
 } from "@open-decision/design-system";
 import * as React from "react";
 import { Node } from "@open-decision/type-classes";
@@ -16,12 +17,80 @@ import {
   useStartNodeId,
 } from "../../state/treeStore/hooks";
 import { RichTextEditor } from "@open-decision/rich-text-editor";
-import { useTreeContext } from "../../state/treeStore/TreeContext";
+import {
+  useTreeClient,
+  useTreeContext,
+} from "../../state/treeStore/TreeContext";
 import { AnimatePresence, motion } from "framer-motion";
 import { ParentNodeSelector } from "./ParentNodeSelector";
 import { StartNodeLabel } from "../NodeLabels/StartNodeLabels";
-import { OptionTargetInputs } from "../InputConfigurators/OptionTargetInput/OptionTargetInput";
 import { useTranslations } from "next-intl";
+import { SingleSelectInput } from "@open-decision/select-input-ui";
+import { BuilderComponent } from "@open-decision/free-text-input-ui";
+import { useSnapshot } from "valtio";
+import { createTreeClient } from "@open-decision/tree-client";
+import { z } from "zod";
+import { useEditor } from "../../state/useEditor";
+
+type InputHeaderProps = {
+  children?: React.ReactNode;
+  inputType?: z.infer<
+    ReturnType<typeof createTreeClient>["inputs"]["Type"]
+  >["type"];
+  nodeId: string;
+};
+
+const InputHeader = ({ children, inputType, nodeId }: InputHeaderProps) => {
+  const treeClient = useTreeClient();
+
+  return (
+    <Box
+      css={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: "$2",
+        marginBottom: "$3",
+      }}
+    >
+      <Label as="h2" css={{ margin: 0, display: "block" }}>
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger asChild>
+            <DropdownMenu.Button
+              alignByContent="left"
+              variant="neutral"
+              size="small"
+              css={{ textStyle: "medium-text" }}
+            >
+              {/* FIXME missing input types */}
+              {inputType
+                ? inputType.charAt(0).toUpperCase() + inputType.slice(1)
+                : "Kein Input Typ ausgewählt"}
+            </DropdownMenu.Button>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content align="start">
+            {treeClient.inputs.types.map((type) => {
+              return (
+                <DropdownMenu.CheckboxItem
+                  key={type}
+                  checked={inputType === type}
+                  onClick={() => {
+                    const newInput = treeClient.input.select.create();
+                    treeClient.inputs.add(newInput);
+                    treeClient.inputs.connect.toNode(nodeId, newInput.id);
+                  }}
+                >
+                  {type.charAt(0).toUpperCase() + type.slice(1)}
+                </DropdownMenu.CheckboxItem>
+              );
+            })}
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
+      </Label>
+      {children}
+    </Box>
+  );
+};
 
 export function NodeEditingSidebar() {
   const [selectionType, selectedNode] = useSelectedNodes();
@@ -80,7 +149,13 @@ type Props = { node: Pick<Node.TNode, "id" | "data">; css?: StyleObject };
 
 function NodeEditingSidebarContent({ node, css }: Props) {
   const t = useTranslations("builder.nodeEditingSidebar");
-  const { updateNodeContent } = useTreeContext();
+  const inputs = useInputs(node.data.inputs);
+  const {
+    tree: { syncedStore },
+  } = useTreeContext();
+  const { replaceSelectedNodes } = useEditor();
+  const treeClient = useTreeClient();
+  const tree = useSnapshot(syncedStore);
 
   return (
     <Stack
@@ -100,7 +175,7 @@ function NodeEditingSidebarContent({ node, css }: Props) {
         <RichTextEditor
           data-test="richTextEditor"
           onUpdate={({ editor }) =>
-            updateNodeContent(node.id, editor.getJSON())
+            treeClient.nodes.update.content(node.id, editor.getJSON())
           }
           content={node.data.content}
           Label={(props) => (
@@ -118,13 +193,62 @@ function NodeEditingSidebarContent({ node, css }: Props) {
         />
       </Box>
       <Box as="section">
-        {Object.values(node.data.inputs).map((inputId) => (
-          <OptionTargetInputs
-            nodeId={node.id}
-            inputId={inputId}
-            key={inputId}
-          />
-        ))}
+        {inputs ? (
+          Object.values(inputs).map((input) =>
+            input.type ? (
+              <Box as="section" key={input.id}>
+                {(() => {
+                  switch (input.type) {
+                    case "select": {
+                      return (
+                        <>
+                          <InputHeader inputType={input.type} nodeId={node.id}>
+                            <SingleSelectInput.PrimaryActionSlot
+                              tree={tree}
+                              input={input}
+                            />
+                          </InputHeader>
+                          <SingleSelectInput.Component
+                            nodeId={node.id}
+                            onClick={(target) => replaceSelectedNodes([target])}
+                            input={input}
+                            key={input.id}
+                            tree={tree}
+                          />
+                        </>
+                      );
+                    }
+
+                    case "freeText": {
+                      return (
+                        <>
+                          <InputHeader
+                            inputType={input.type}
+                            nodeId={node.id}
+                          />
+                          <BuilderComponent.Component
+                            inputId={input.id}
+                            nodeId={node.id}
+                            onClick={() => null}
+                            key={input.id}
+                            tree={tree}
+                          />
+                        </>
+                      );
+                    }
+
+                    default:
+                      return null;
+                  }
+                })()}
+              </Box>
+            ) : (
+              <InputHeader nodeId={node.id} />
+            )
+          )
+        ) : (
+          <InputHeader nodeId={node.id} />
+        )}
       </Box>
     </Stack>
   );
@@ -135,14 +259,14 @@ type HeaderProps = { node: Pick<Node.TNode, "id" | "data"> };
 const Header = ({ node }: HeaderProps) => {
   const t = useTranslations("builder.nodeEditingSidebar");
   const startNodeId = useStartNodeId();
-  const { updateNodeName } = useTreeContext();
+  const treeClient = useTreeClient();
   const parentNodes = useParents(node.id);
   const isStartNode = node?.id === startNodeId;
 
   const formState = Form.useFormState({
     defaultValues: { name: node?.data.name ?? "" },
     setValues(values) {
-      updateNodeName(node.id, values.name);
+      treeClient.nodes.update.name(node.id, values.name);
     },
   });
 

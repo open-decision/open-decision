@@ -7,7 +7,7 @@ import {
 } from "@open-decision/design-system";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
-import { useTreeContext } from "../state/treeStore/TreeContext";
+import { useTreeClient } from "../state/treeStore/TreeContext";
 import { useEditor } from "../state/useEditor";
 import { sideMenuTooltipProps } from "./SideMenu/shared";
 
@@ -15,17 +15,10 @@ type Props = { css?: StyleObject };
 
 export function CreateNodeButton({ css }: Props) {
   const t = useTranslations("builder.createNodeButton");
-  const {
-    createInput,
-    createAnswer,
-    createNode,
-    addNode,
-    addInput,
-    addInputAnswer,
-  } = useTreeContext();
+  const treeClient = useTreeClient();
 
   const { getCenter, zoomToNode } = useEditor();
-  const { replaceSelectedNodes } = useTreeContext();
+  const { replaceSelectedNodes } = useEditor();
 
   return (
     <Tooltip.Root>
@@ -36,17 +29,14 @@ export function CreateNodeButton({ css }: Props) {
           square
           css={css}
           onClick={() => {
-            const newInput = createInput();
-            const newAnswer = createAnswer({ text: "" });
-
-            const newNode = createNode({
+            const newInput = treeClient.inputs.create({});
+            const newNode = treeClient.nodes.create.node({
               data: { inputs: [newInput.id], conditions: [] },
               position: getCenter(),
             });
 
-            addNode(newNode);
-            addInput(newInput);
-            addInputAnswer(newInput.id, newAnswer);
+            treeClient.inputs.add(newInput);
+            treeClient.nodes.add(newNode);
 
             replaceSelectedNodes([newNode.id]);
             zoomToNode(newNode);

@@ -4,13 +4,13 @@ import { getChildren } from "./getChildren";
 import { getPaths } from "./getPaths";
 
 export const getConnectableNodes =
-  (tree: Tree.TTree) =>
+  <TTree extends Tree.TTree>(tree: TTree) =>
   (nodeId: string): string[] => {
     const nodesOnPath = getPaths(tree)(nodeId).flatMap((path) => path);
     const nodesChildren = getChildren(tree)(nodeId);
 
     return pipe(
-      tree.nodes ?? [],
+      tree.nodes ?? {},
       Object.values,
       filter(
         (iteratedNode) =>
