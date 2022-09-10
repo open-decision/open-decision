@@ -4,6 +4,7 @@ import { TBaseTreeClient } from "../treeClient";
 
 const BaseType = z.object({
   id: z.string().uuid(),
+  type: z.string(),
 });
 
 const mergeTypes = <

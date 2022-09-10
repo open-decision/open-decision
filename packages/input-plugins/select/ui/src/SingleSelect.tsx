@@ -6,7 +6,6 @@ import {
   Form,
   focusSelectorWithin,
   TargetSelector,
-  NodeLinkProps,
 } from "@open-decision/design-system";
 import * as React from "react";
 import { Edge, Tree } from "@open-decision/type-classes";
@@ -88,6 +87,7 @@ export const SingleSelect = ({
     </StyledReorderGroup>
   );
 };
+
 type SingleSelectInputProps = {
   answer: TAnswer;
   edge?: Edge.TEdge;

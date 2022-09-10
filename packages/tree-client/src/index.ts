@@ -9,6 +9,8 @@ import { ComparePlugin } from "@open-decision/compare-condition-plugin";
 import { FreeTextPlugin } from "@open-decision/free-text-input-plugin";
 import { z } from "zod";
 import { DirectPlugin } from "@open-decision/direct-condition-plugin";
+import { updateInputType } from "./updateInputType";
+import { merge } from "remeda";
 
 export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
   const baseClient = createBaseTreeClient(tree);
@@ -44,7 +46,7 @@ export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
     tree as z.infer<typeof mergedTreeTypes>
   );
 
-  return {
+  const treeClientWithTypes = {
     ...extendedTreeClient,
     nodes: {
       ...extendedTreeClient.nodes,
@@ -69,4 +71,12 @@ export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
     input: { select },
     condition: { compare },
   };
+
+  return merge(treeClientWithTypes, {
+    inputs: {
+      update: {
+        type: updateInputType<typeof treeClientWithTypes.inputs.types>(tree),
+      },
+    },
+  });
 };
