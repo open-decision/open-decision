@@ -1,4 +1,4 @@
-import { Node, Tree } from "../type-classes";
+import { Node } from "../type-classes";
 import { v4 as uuid } from "uuid";
 
 export type NewNodeData = {
@@ -9,6 +9,7 @@ export type NewNodeData = {
     content?: any;
     conditions?: Node.TNodeData["conditions"];
   };
+  type: string;
 };
 
 export const createNode = ({

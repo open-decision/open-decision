@@ -1,19 +1,13 @@
-import {
-  Form,
-  NodeLinkProps,
-  TargetSelector,
-} from "@open-decision/design-system";
-import { Tree } from "@open-decision/type-classes";
-import { useTreeClient } from "./useTree";
+import { Form, TargetSelector } from "@open-decision/design-system";
+import { InputComponentProps } from "@open-decision/input-plugin-helpers";
+import { TFreeTextInput } from "@open-decision/free-text-input-plugin";
 
-type FreeTextProps = {
-  nodeId: string;
-  inputId: string;
-  tree: Tree.TTree;
-} & Pick<NodeLinkProps, "onClick">;
-
-export const FreeText = ({ nodeId, inputId, tree, onClick }: FreeTextProps) => {
-  const treeClient = useTreeClient(tree);
+export const FreeText = ({
+  nodeId,
+  input,
+  treeClient,
+  onClick,
+}: InputComponentProps<TFreeTextInput>) => {
   //FIXME I cannot just assume there is ony one edge
   const edge = treeClient.edges.get.byNode(nodeId)[0];
   const nodeOptions = treeClient.nodes.get.options(nodeId, edge);
@@ -32,7 +26,7 @@ export const FreeText = ({ nodeId, inputId, tree, onClick }: FreeTextProps) => {
         name={formState.names.target}
         edge={edge}
         onCreate={(value) =>
-          treeClient.input.freeText.createTargetNode(nodeId, inputId, {
+          treeClient.input.freeText.createTargetNode(nodeId, input.id, {
             name: value,
           })
         }
@@ -40,7 +34,7 @@ export const FreeText = ({ nodeId, inputId, tree, onClick }: FreeTextProps) => {
           treeClient.input.freeText.updateTarget({
             edgeId: edge?.id,
             nodeId,
-            inputId,
+            inputId: input.id,
             newItem,
           })
         }

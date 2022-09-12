@@ -1,9 +1,5 @@
 import { TAnswer, Type } from "./types";
-import {
-  createExtendedTreeClient,
-  InputPlugin,
-  TBaseTreeClient,
-} from "@open-decision/type-classes";
+import { InputPlugin, TBaseTreeClient } from "@open-decision/type-classes";
 import { z } from "zod";
 import {
   ComparePlugin,
@@ -114,6 +110,7 @@ export class SelectPlugin extends InputPlugin<typeof Type, "select"> {
     data: { name: string }
   ) {
     const childNode = this.treeClient.nodes.create.childNode(nodeId, {
+      type: "customNode",
       data: { inputs: [], ...data },
     });
 

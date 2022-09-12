@@ -8,23 +8,20 @@ import {
   TargetSelector,
 } from "@open-decision/design-system";
 import * as React from "react";
-import { Edge, Tree } from "@open-decision/type-classes";
+import { Edge } from "@open-decision/type-classes";
 import { DragHandle } from "./DragHandle";
 import { Reorder, useDragControls } from "framer-motion";
 import { PlusIcon, TrashIcon } from "@radix-ui/react-icons";
 import { TSelectInput, TAnswer } from "@open-decision/select-input-plugin";
-import { useTreeClient } from "./useTree";
 import {
-  BuilderComponentProps,
-  BuilderPrimaryActionSlotProps,
+  InputComponentProps,
+  InputPrimaryActionSlotProps,
 } from "@open-decision/input-plugin-helpers";
 
 export const AddOptionButton = ({
   input,
-  tree,
-}: BuilderPrimaryActionSlotProps<TSelectInput>) => {
-  const treeClient = useTreeClient(tree);
-
+  treeClient,
+}: InputPrimaryActionSlotProps<TSelectInput>) => {
   return (
     <Button
       size="small"
@@ -53,10 +50,9 @@ export const SingleSelect = ({
   nodeId,
   input,
   onClick,
-  tree,
-}: BuilderComponentProps<TSelectInput>) => {
+  treeClient,
+}: InputComponentProps<TSelectInput>) => {
   const ref = React.useRef<HTMLDivElement | null>(null);
-  const treeClient = useTreeClient(tree);
 
   return (
     <StyledReorderGroup
@@ -72,7 +68,6 @@ export const SingleSelect = ({
 
         return (
           <OptionTargetInput
-            tree={tree}
             onClick={onClick}
             nodeId={nodeId}
             answer={answer}
@@ -81,6 +76,7 @@ export const SingleSelect = ({
             key={answer.id}
             groupRef={ref}
             input={input}
+            treeClient={treeClient}
           />
         );
       })}
@@ -94,7 +90,7 @@ type SingleSelectInputProps = {
   nodeId: string;
   inputId: string;
   groupRef: React.MutableRefObject<HTMLDivElement | null>;
-} & BuilderComponentProps<TSelectInput>;
+} & InputComponentProps<TSelectInput>;
 
 export const OptionTargetInput = ({
   answer,
@@ -103,10 +99,9 @@ export const OptionTargetInput = ({
   nodeId,
   groupRef,
   onClick,
-  tree,
+  treeClient,
 }: SingleSelectInputProps) => {
   const controls = useDragControls();
-  const treeClient = useTreeClient(tree);
   const node = treeClient.nodes.get.single(nodeId);
   const nodeOptions = treeClient.nodes.get.options(nodeId);
 

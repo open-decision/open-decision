@@ -5,7 +5,9 @@ import { Tree } from "../type-classes";
 export const getCondition =
   <TTree extends Tree.TTree>(tree: TTree) =>
   (conditionId: string) => {
-    return tree.conditions?.[conditionId] as ValuesType<TTree["conditions"]>;
+    return tree.conditions?.[conditionId] as ValuesType<
+      NonNullable<TTree["conditions"]>
+    >;
   };
 
 export const getConditions =

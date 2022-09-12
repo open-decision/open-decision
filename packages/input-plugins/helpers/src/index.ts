@@ -1,14 +1,15 @@
-import { Tree } from "@open-decision/type-classes";
+import { TTreeClient } from "@open-decision/tree-client";
+import { Input } from "@open-decision/type-classes";
 
-export type BuilderComponentProps<TInput> = {
+export type InputComponentProps<TInput extends Input.TBaseInput> = {
   nodeId: string;
   input: TInput;
   onClick: (target: string) => void;
-  tree: Tree.TTree;
+  treeClient: TTreeClient;
 };
 
-export type BuilderPrimaryActionSlotProps<TInput> = {
-  tree: Tree.TTree;
+export type InputPrimaryActionSlotProps<TInput extends Input.TBaseInput> = {
+  treeClient: TTreeClient;
   input: TInput;
 };
 

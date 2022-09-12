@@ -5,7 +5,9 @@ import { Tree } from "../type-classes";
 export const getInput =
   <TTree extends Tree.TTree>(tree: TTree) =>
   (inputId: string) =>
-    tree.inputs?.[inputId] as ValuesType<TTree["inputs"]> | undefined;
+    tree.inputs?.[inputId] as
+      | ValuesType<NonNullable<TTree["inputs"]>>
+      | undefined;
 
 export const getInputs =
   <TTree extends Tree.TTree>(tree: TTree) =>

@@ -445,6 +445,7 @@ importers:
       remeda: ^1.1.0
       spinners-react: ^1.0.7
       use-resize-observer: ^9.0.2
+      valtio: ^1.6.4
     dependencies:
       '@open-decision/type-classes': link:../type-classes
       '@radix-ui/colors': 0.1.8
@@ -471,6 +472,7 @@ importers:
       remeda: 1.1.0
       spinners-react: 1.0.7_c72tqnfmbdx3m4daksis2unsgm
       use-resize-observer: 9.0.2
+      valtio: 1.6.4
     devDependencies:
       '@fontsource/poppins': 4.5.9
       '@svgr/cli': 6.3.1
@@ -493,18 +495,24 @@ importers:
     specifiers:
       '@open-decision/design-system': workspace:*
       '@open-decision/direct-condition-plugin': workspace:*
+      '@open-decision/free-text-input-plugin': workspace:*
+      '@open-decision/input-plugin-helpers': workspace:*
       '@open-decision/type-classes': workspace:*
       zod: ^3
     dependencies:
       '@open-decision/design-system': link:../../../design-system
       '@open-decision/direct-condition-plugin': link:../../../condition-plugins/direct
+      '@open-decision/free-text-input-plugin': link:../plugin
+      '@open-decision/input-plugin-helpers': link:../../helpers
       '@open-decision/type-classes': link:../../../type-classes
       zod: 3.18.0
 
   packages/input-plugins/helpers:
     specifiers:
+      '@open-decision/tree-client': workspace:*
       '@open-decision/type-classes': workspace:*
     dependencies:
+      '@open-decision/tree-client': link:../../tree-client
       '@open-decision/type-classes': link:../../type-classes
 
   packages/input-plugins/select/plugin:

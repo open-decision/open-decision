@@ -4,12 +4,12 @@ import { calculateCenterOfNode } from "../utilities/calculateCenterOfNode";
 import { sidebarWidth } from "../utilities/constants";
 import { Node, ODProgrammerError } from "@open-decision/type-classes";
 import shallow from "zustand/shallow";
-import { useTreeClient, useTreeContext } from "./treeStore/TreeContext";
+import { useTreeContext } from "./treeStore/TreeContext";
 
 const useSelection = () => {
-  const treeClient = useTreeClient();
   const {
     tree: { nonSyncedStore },
+    treeClient,
   } = useTreeContext();
 
   const updateSelectedView = (view: string) => {

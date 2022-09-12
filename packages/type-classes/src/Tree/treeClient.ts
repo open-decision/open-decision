@@ -1,5 +1,3 @@
-import { mergeDeepRight } from "ramda";
-import { merge } from "remeda";
 import {
   createNode,
   createChildNode,
@@ -38,6 +36,7 @@ import {
   deleteEdges,
   addEdge,
   updateEdgeTarget,
+  updateInput,
 } from "./mutaters";
 import { Tree } from "./type-classes";
 import {
@@ -51,11 +50,56 @@ import { isValidEdge } from "./validators";
 
 export type TBaseTreeClient = ReturnType<typeof createTreeClient<Tree.TTree>>;
 
-export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
+export const createTreeClient = <TTree extends Tree.TTree>(
+  tree: TTree,
+  treeSnapshot: TTree
+) => {
   return {
     updateStartNode: updateStartNode(tree),
     get: () => tree,
     validate: Tree.Type.safeParse,
+    subscribe: {
+      nodes: {
+        single: getNode(treeSnapshot),
+        collection: getNodes(treeSnapshot),
+        all: () => treeSnapshot.nodes as TTree["nodes"],
+        connectableNodes: getConnectableNodes(treeSnapshot),
+        children: getChildren(treeSnapshot),
+        parents: getParents(treeSnapshot),
+        paths: getPaths(treeSnapshot),
+        options: getNodeOptions(treeSnapshot),
+        byInput: null,
+        byCondition: null,
+        byEdge: null,
+      },
+      inputs: {
+        single: getInput(treeSnapshot),
+        collection: getInputs(treeSnapshot),
+        all: () => treeSnapshot.inputs as TTree["inputs"],
+        byNode: null,
+        byCondition: null,
+        byEdge: null,
+      },
+      conditions: {
+        single: getCondition(treeSnapshot),
+        collection: getConditions(treeSnapshot),
+        all: () => treeSnapshot.conditions as TTree["conditions"],
+        byNode: getConditionsByNode(
+          treeSnapshot.nodes ?? {},
+          treeSnapshot.conditions ?? {}
+        ),
+        byInput: null,
+        byEdge: null,
+      },
+      edges: {
+        single: getEdge(treeSnapshot),
+        collection: getEdges(treeSnapshot),
+        all: () => treeSnapshot.edges,
+        byNode: getEdgesByNode(treeSnapshot.edges ?? {}),
+        byInput: null,
+        byCondition: null,
+      },
+    },
     nodes: {
       get: {
         single: getNode(tree),
@@ -111,6 +155,7 @@ export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
         fromCondition: null,
         fromEdge: null,
       },
+      update: updateInput(tree),
     },
     conditions: {
       get: {
@@ -175,34 +220,3 @@ type PluginConfig = {
 
 export type Plugins<TPlugins extends PluginConfig> =
   TPlugins extends infer Plugins ? Plugins : never;
-
-export type createTreeClientConfig<TPlugins extends PluginConfig> = ReturnType<
-  typeof createExtendedTreeClient<Plugins<TPlugins>>
->;
-
-export const createExtendedTreeClient =
-  <
-    TPlugins extends PluginConfig,
-    TConditions = (keyof TPlugins["condition"])[],
-    TInputs = (keyof TPlugins["input"])[]
-  >(
-    plugins: (baseTreeClient: TBaseTreeClient) => TPlugins
-  ) =>
-  (tree: Tree.TTree) => {
-    const baseTreeClient = createTreeClient(tree);
-    const calledPlugins = plugins(baseTreeClient);
-    // This is not really a type safe way to do it. By the nature of JavaScript it can not be assured that
-    // the plugins object as not been modified. We do however assert that it has not, because of convenience.
-    const pluginsWithTypes = mergeDeepRight(calledPlugins, {
-      input: {
-        types: Object.keys(calledPlugins.input ?? {}) as unknown as TInputs,
-      },
-      condition: {
-        types: Object.keys(
-          calledPlugins.condition ?? {}
-        ) as unknown as TConditions,
-      },
-    });
-
-    return merge(baseTreeClient, pluginsWithTypes);
-  };

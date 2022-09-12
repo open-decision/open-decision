@@ -6,14 +6,17 @@ import { ODError } from "@open-decision/type-classes";
 import { useTreeSuspension } from "./hooks/useTreeSuspension";
 import { websocketMachine } from "../../../Data/websocket.machine";
 import { useMachine } from "@xstate/react";
+import { createTreeClient, TTreeClient } from "@open-decision/tree-client";
+import { useSnapshot } from "valtio";
 
 export type TTreeContext = ReturnType<typeof createTreeStore>;
 
-const TreeContext = React.createContext<TTreeContext | null>(null);
+const TreeContext = React.createContext<
+  (TTreeContext & { treeClient: TTreeClient }) | null
+>(null);
 
 type Props = { children: React.ReactNode };
-export const TreeProvider = ({ children }: Props) => {
-  const isClient = typeof window != "undefined";
+const TreeProvider = ({ children }: Props) => {
   const id = useTreeId();
   const treeStore = React.useMemo(
     () => (id ? createTreeStore(id) : undefined),
@@ -30,7 +33,7 @@ export const TreeProvider = ({ children }: Props) => {
   }
 
   React.useEffect(() => {
-    if (id && treeStore && isClient) {
+    if (id && treeStore) {
       new IndexeddbPersistence(id, treeStore.yDoc);
       send({
         type: "OPEN",
@@ -45,12 +48,22 @@ export const TreeProvider = ({ children }: Props) => {
     }
 
     return () => undefined;
-  }, [id, isClient, send, treeStore]);
+  }, [id, send, treeStore]);
+
+  const snapshot = useSnapshot(treeStore?.tree.syncedStore ?? {});
+  const treeClient = createTreeClient(
+    treeStore?.tree.syncedStore ?? {},
+    snapshot
+  );
 
   return id && treeStore ? (
-    <TreeContext.Provider value={treeStore}>{children}</TreeContext.Provider>
+    <TreeContext.Provider value={{ ...treeStore, treeClient }}>
+      {children}
+    </TreeContext.Provider>
   ) : null;
 };
+
+export default TreeProvider;
 
 export const useTreeContext = () => {
   const context = React.useContext(TreeContext);
@@ -63,11 +76,4 @@ export const useTreeContext = () => {
   useTreeSuspension(context?.tree as TTreeContext["tree"]);
 
   return context;
-};
-
-export const useTreeClient = () => {
-  const { treeClient } = useTreeContext();
-  // const snapshot = useSnapshot(syncedStore);
-
-  return treeClient;
 };

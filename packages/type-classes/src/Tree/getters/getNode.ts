@@ -6,7 +6,9 @@ import { Tree } from "../type-classes";
 export const getNode =
   <TTree extends Tree.TTree>(tree: TTree) =>
   (nodeId: string) => {
-    return tree.nodes?.[nodeId] as ValuesType<TTree["nodes"]> | undefined;
+    return tree.nodes?.[nodeId] as
+      | ValuesType<NonNullable<TTree["nodes"]>>
+      | undefined;
   };
 
 export const getNodes =

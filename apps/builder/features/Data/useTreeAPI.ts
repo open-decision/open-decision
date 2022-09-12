@@ -25,6 +25,7 @@ import { OD, proxiedOD } from "../Data/odClient";
 import { z } from "zod";
 import { useNotificationStore } from "../../config/notifications";
 import { createYjsDocumentIndexedDB } from "./utils/createYjsDocumentIndexedDB";
+import { createTreeClient } from "@open-decision/tree-client";
 
 export const treesQueryKey = ["Trees"] as const;
 export const treeQueryKey = (treeUuid: string) =>
@@ -144,19 +145,18 @@ export const useTreeAPI = () => {
       ["createTree"],
       async (data) => {
         const response = await proxiedOD.trees.create(data);
+        const store = createYjsDocumentIndexedDB({}, response.data.uuid);
+        const tempTreeClient = createTreeClient(store, store);
 
-        const newInput = Tree.createInput();
-        const newAnswer = Tree.createAnswer({ text: "" });
+        const newInput = tempTreeClient.input.select.create();
 
-        const newNode = Tree.createNode({
+        const newNode = tempTreeClient.nodes.create.node({
+          type: "customNode",
           data: { inputs: [newInput.id], conditions: [] },
         });
 
-        const store = createYjsDocumentIndexedDB({}, response.data.uuid);
-
-        Tree.addNode(store)(newNode);
-        Tree.addInput(store)(newInput);
-        Tree.addInputAnswer(store)(newInput.id, newAnswer);
+        tempTreeClient.nodes.add(newNode);
+        tempTreeClient.inputs.add(newInput);
 
         return response;
       },

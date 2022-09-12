@@ -6,7 +6,7 @@ import {
   Icon,
 } from "@open-decision/design-system";
 import { useEditor } from "../state/useEditor";
-import { useTreeClient, useTreeContext } from "../state/treeStore/TreeContext";
+import { useTreeContext } from "../state/treeStore/TreeContext";
 import { useTranslations } from "next-intl";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { getNodeNames } from "@open-decision/type-classes";
@@ -16,8 +16,7 @@ type Props = { css?: StyleObject };
 export const NodeSearch = ({ css }: Props) => {
   const t = useTranslations("builder.nodeSearch");
 
-  const { tree } = useTreeContext();
-  const treeClient = useTreeClient();
+  const { tree, treeClient } = useTreeContext();
   const { replaceSelectedNodes } = useEditor();
 
   const nodeNames = getNodeNames(tree.syncedStore)();

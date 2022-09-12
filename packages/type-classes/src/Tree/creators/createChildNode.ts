@@ -4,7 +4,7 @@ import { createNode, NewNodeData } from "./createNode";
 
 export const createChildNode =
   (tree: Tree.TTree) =>
-  (nodeId: string, newNode?: NewNodeData): Node.TNode | Error => {
+  (nodeId: string, newNode: NewNodeData): Node.TNode | Error => {
     const node = getNode(tree)(nodeId);
     if (!node)
       return new Error(`The parent node of id ${nodeId} could not be found.`);

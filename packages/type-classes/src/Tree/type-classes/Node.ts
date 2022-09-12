@@ -27,7 +27,6 @@ export const Coordinates = z.object({ x: z.number(), y: z.number() });
 export const Type = z.object({
   id: z.string().uuid(),
   position: Coordinates,
-  // type: z.literal("customNode"),
   type: z.string(),
   data: z.object({
     name: z.string().optional(),

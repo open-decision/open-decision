@@ -1,12 +1,12 @@
 import { Box, DropdownMenu } from "@open-decision/design-system";
 import { useTranslations } from "next-intl";
-import { useTreeContext } from "../../state/treeStore/TreeContext";
+import { useEditor } from "../../state/useEditor";
 
 type Props = { parentNodes: { id: string; name?: string }[] };
 
 export function ParentNodeSelector({ parentNodes }: Props) {
   const t = useTranslations("builder.nodeEditingSidebar.parentNodeSelector");
-  const { replaceSelectedNodes } = useTreeContext();
+  const { replaceSelectedNodes } = useEditor();
 
   return (
     <Box as="section">

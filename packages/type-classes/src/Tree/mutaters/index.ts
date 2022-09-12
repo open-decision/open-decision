@@ -15,3 +15,4 @@ export * from "./updateNodeContent";
 export * from "./updateNodeName";
 export * from "./updateNodePosition";
 export * from "./updateStartNode";
+export * from "./updateInput";

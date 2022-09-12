@@ -85,14 +85,14 @@ export const treeMock: Required<Tree.TTree, "startNode"> = {
 export const emptyTreeMock: Tree.TTree = {
   startNode: "e35ba071-6c5f-414f-98b1-a898305e038c",
   nodes: {
-    "e35ba071-6c5f-414f-98b1-a898305e038c": {
-      id: "e35ba071-6c5f-414f-98b1-a898305e038c",
-      position: { x: 0, y: 0 },
-      data: {
-        inputs: [],
-        name: "",
-        conditions: [],
-      },
-    },
+    // "e35ba071-6c5f-414f-98b1-a898305e038c": {
+    //   id: "e35ba071-6c5f-414f-98b1-a898305e038c",
+    //   position: { x: 0, y: 0 },
+    //   data: {
+    //     inputs: [],
+    //     name: "",
+    //     conditions: [],
+    //   },
+    // },
   },
 };

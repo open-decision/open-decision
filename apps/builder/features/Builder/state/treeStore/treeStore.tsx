@@ -4,7 +4,6 @@ import { derive } from "valtio/utils";
 import { bindProxyAndYMap } from "valtio-yjs";
 import * as Y from "yjs";
 import { mapValues } from "remeda";
-import { createTreeClient } from "@open-decision/tree-client";
 
 declare module "valtio" {
   function useSnapshot<T extends object>(p: T): T;
@@ -52,14 +51,11 @@ export function createTreeStore(id: string) {
     transactionOrigin: `valtio for ${id}`,
   });
 
-  const treeClient = createTreeClient(syncedStore);
-
   return {
     tree,
     derivedNodeNames,
     yDoc,
     onSync,
     getTreeData: () => yMap.toJSON(),
-    treeClient,
   };
 }

@@ -2,18 +2,24 @@ import {
   Tree,
   createTreeClient as createBaseTreeClient,
   Node,
-  ODError,
+  ODValidationError,
 } from "@open-decision/type-classes";
 import { SelectPlugin } from "@open-decision/select-input-plugin";
 import { ComparePlugin } from "@open-decision/compare-condition-plugin";
 import { FreeTextPlugin } from "@open-decision/free-text-input-plugin";
 import { z } from "zod";
 import { DirectPlugin } from "@open-decision/direct-condition-plugin";
-import { updateInputType } from "./updateInputType";
-import { merge } from "remeda";
+import { mergeDeepRight } from "ramda";
 
-export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
-  const baseClient = createBaseTreeClient(tree);
+export const createTreeClient = <
+  TExtendedTree extends Omit<Tree.TTree, "startNode" | "edge">
+>(
+  staticTree: Omit<Tree.TTree, "inputs" | "nodes" | "conditions"> &
+    TExtendedTree,
+  treeSnapshot: Omit<Tree.TTree, "inputs" | "nodes" | "conditions"> &
+    TExtendedTree
+) => {
+  const baseClient = createBaseTreeClient(staticTree, treeSnapshot);
 
   const select = new SelectPlugin(baseClient);
   const freeText = new FreeTextPlugin(baseClient);
@@ -36,17 +42,23 @@ export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
     })
   );
 
-  const extendedTree = mergedTreeTypes.safeParse(tree);
+  const extendedTree = mergedTreeTypes.safeParse(staticTree);
 
   if (!extendedTree.success) {
-    throw new ODError({ code: "INVALID_DATA" });
+    console.error(extendedTree.error);
+    throw new ODValidationError({
+      code: "INVALID_DATA",
+      zodError: extendedTree.error,
+    });
   }
 
   const extendedTreeClient = createBaseTreeClient(
-    tree as z.infer<typeof mergedTreeTypes>
+    staticTree as z.infer<typeof mergedTreeTypes>,
+    treeSnapshot as z.infer<typeof mergedTreeTypes>
   );
 
   const treeClientWithTypes = {
+    Type: mergedTreeTypes,
     ...extendedTreeClient,
     nodes: {
       ...extendedTreeClient.nodes,
@@ -68,15 +80,31 @@ export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
         direct.MergedType,
       ]),
     },
-    input: { select },
-    condition: { compare },
+    input: { select, freeText },
+    condition: { compare, direct },
   };
 
-  return merge(treeClientWithTypes, {
+  return mergeDeepRight(treeClientWithTypes, {
     inputs: {
       update: {
-        type: updateInputType<typeof treeClientWithTypes.inputs.types>(tree),
+        type: (
+          inputId: string,
+          newType: typeof treeClientWithTypes.inputs.types[number]
+        ) => {
+          const input = staticTree.inputs?.[inputId];
+          if (!input) return;
+
+          const newInput = treeClientWithTypes.input[newType].create();
+          treeClientWithTypes.inputs.update(input.id, newInput);
+        },
       },
     },
   });
 };
+
+export type TTreeClient = ReturnType<typeof createTreeClient<Tree.TTree>>;
+export type TTree = z.infer<TTreeClient["Type"]>;
+
+export type TCreateTreeClient<
+  TTree extends Omit<Tree.TTree, "startNode" | "edge">
+> = ReturnType<typeof createTreeClient<TTree>>;
