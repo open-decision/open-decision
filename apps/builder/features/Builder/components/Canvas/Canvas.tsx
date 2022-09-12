@@ -8,7 +8,10 @@ import {
   useRFNodes,
   useStartNodeId,
 } from "../../../../features/Builder/state/treeStore/hooks";
-import { useTreeContext } from "../../../../features/Builder/state/treeStore/TreeContext";
+import {
+  useTreeClient,
+  useTreeContext,
+} from "../../../../features/Builder/state/treeStore/TreeContext";
 import { ConnectionLine } from "./Edges/ConnectionLine";
 import { CustomEdge } from "./Edges/CustomEdge";
 import { useSnapshot } from "valtio";
@@ -72,7 +75,7 @@ function Nodes() {
     addSelectedEdges,
     removeSelectedEdge,
   } = useEditor();
-  const { treeClient } = useTreeContext();
+  const treeClient = useTreeClient();
   const { addNotification } = useNotificationStore();
 
   return (

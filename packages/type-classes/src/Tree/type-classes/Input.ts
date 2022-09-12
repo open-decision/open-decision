@@ -75,10 +75,9 @@ export class InputPlugin<
 
   //FIXME Return type is not proper
   create(
-    data?: Omit<z.infer<typeof this.SpecificType>, "type">
+    data: Omit<z.infer<typeof this.SpecificType>, "type">
   ): z.infer<typeof this.MergedType> {
     return this.treeClient.inputs.create({
-      answers: [],
       ...data,
       type: this.typeName,
     }) as z.infer<typeof this.MergedType>;

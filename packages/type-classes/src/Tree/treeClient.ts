@@ -50,56 +50,12 @@ import { isValidEdge } from "./validators";
 
 export type TBaseTreeClient = ReturnType<typeof createTreeClient<Tree.TTree>>;
 
-export const createTreeClient = <TTree extends Tree.TTree>(
-  tree: TTree,
-  treeSnapshot: TTree
-) => {
+export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
   return {
     updateStartNode: updateStartNode(tree),
     get: () => tree,
     validate: Tree.Type.safeParse,
-    subscribe: {
-      nodes: {
-        single: getNode(treeSnapshot),
-        collection: getNodes(treeSnapshot),
-        all: () => treeSnapshot.nodes as TTree["nodes"],
-        connectableNodes: getConnectableNodes(treeSnapshot),
-        children: getChildren(treeSnapshot),
-        parents: getParents(treeSnapshot),
-        paths: getPaths(treeSnapshot),
-        options: getNodeOptions(treeSnapshot),
-        byInput: null,
-        byCondition: null,
-        byEdge: null,
-      },
-      inputs: {
-        single: getInput(treeSnapshot),
-        collection: getInputs(treeSnapshot),
-        all: () => treeSnapshot.inputs as TTree["inputs"],
-        byNode: null,
-        byCondition: null,
-        byEdge: null,
-      },
-      conditions: {
-        single: getCondition(treeSnapshot),
-        collection: getConditions(treeSnapshot),
-        all: () => treeSnapshot.conditions as TTree["conditions"],
-        byNode: getConditionsByNode(
-          treeSnapshot.nodes ?? {},
-          treeSnapshot.conditions ?? {}
-        ),
-        byInput: null,
-        byEdge: null,
-      },
-      edges: {
-        single: getEdge(treeSnapshot),
-        collection: getEdges(treeSnapshot),
-        all: () => treeSnapshot.edges,
-        byNode: getEdgesByNode(treeSnapshot.edges ?? {}),
-        byInput: null,
-        byCondition: null,
-      },
-    },
+
     nodes: {
       get: {
         single: getNode(tree),

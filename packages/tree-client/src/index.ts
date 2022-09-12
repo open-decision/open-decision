@@ -14,12 +14,9 @@ import { mergeDeepRight } from "ramda";
 export const createTreeClient = <
   TExtendedTree extends Omit<Tree.TTree, "startNode" | "edge">
 >(
-  staticTree: Omit<Tree.TTree, "inputs" | "nodes" | "conditions"> &
-    TExtendedTree,
-  treeSnapshot: Omit<Tree.TTree, "inputs" | "nodes" | "conditions"> &
-    TExtendedTree
+  tree: Omit<Tree.TTree, "inputs" | "nodes" | "conditions"> & TExtendedTree
 ) => {
-  const baseClient = createBaseTreeClient(staticTree, treeSnapshot);
+  const baseClient = createBaseTreeClient(tree);
 
   const select = new SelectPlugin(baseClient);
   const freeText = new FreeTextPlugin(baseClient);
@@ -42,7 +39,7 @@ export const createTreeClient = <
     })
   );
 
-  const extendedTree = mergedTreeTypes.safeParse(staticTree);
+  const extendedTree = mergedTreeTypes.safeParse(tree);
 
   if (!extendedTree.success) {
     console.error(extendedTree.error);
@@ -53,8 +50,7 @@ export const createTreeClient = <
   }
 
   const extendedTreeClient = createBaseTreeClient(
-    staticTree as z.infer<typeof mergedTreeTypes>,
-    treeSnapshot as z.infer<typeof mergedTreeTypes>
+    tree as z.infer<typeof mergedTreeTypes>
   );
 
   const treeClientWithTypes = {
@@ -91,11 +87,8 @@ export const createTreeClient = <
           inputId: string,
           newType: typeof treeClientWithTypes.inputs.types[number]
         ) => {
-          const input = staticTree.inputs?.[inputId];
-          if (!input) return;
-
           const newInput = treeClientWithTypes.input[newType].create();
-          treeClientWithTypes.inputs.update(input.id, newInput);
+          treeClientWithTypes.inputs.update(inputId, newInput);
         },
       },
     },

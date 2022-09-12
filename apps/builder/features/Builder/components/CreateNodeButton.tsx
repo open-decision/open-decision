@@ -7,7 +7,7 @@ import {
 } from "@open-decision/design-system";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
-import { useTreeContext } from "../state/treeStore/TreeContext";
+import { useTreeClient } from "../state/treeStore/TreeContext";
 import { useEditor } from "../state/useEditor";
 import { sideMenuTooltipProps } from "./SideMenu/shared";
 
@@ -15,7 +15,7 @@ type Props = { css?: StyleObject };
 
 export function CreateNodeButton({ css }: Props) {
   const t = useTranslations("builder.createNodeButton");
-  const { treeClient } = useTreeContext();
+  const treeClient = useTreeClient();
 
   const { getCenter, zoomToNode } = useEditor();
   const { replaceSelectedNodes } = useEditor();

@@ -6,14 +6,12 @@ import { ODError } from "@open-decision/type-classes";
 import { useTreeSuspension } from "./hooks/useTreeSuspension";
 import { websocketMachine } from "../../../Data/websocket.machine";
 import { useMachine } from "@xstate/react";
-import { createTreeClient, TTreeClient } from "@open-decision/tree-client";
+import { createTreeClient } from "@open-decision/tree-client";
 import { useSnapshot } from "valtio";
 
 export type TTreeContext = ReturnType<typeof createTreeStore>;
 
-const TreeContext = React.createContext<
-  (TTreeContext & { treeClient: TTreeClient }) | null
->(null);
+const TreeContext = React.createContext<TTreeContext | null>(null);
 
 type Props = { children: React.ReactNode };
 const TreeProvider = ({ children }: Props) => {
@@ -50,16 +48,8 @@ const TreeProvider = ({ children }: Props) => {
     return () => undefined;
   }, [id, send, treeStore]);
 
-  const snapshot = useSnapshot(treeStore?.tree.syncedStore ?? {});
-  const treeClient = createTreeClient(
-    treeStore?.tree.syncedStore ?? {},
-    snapshot
-  );
-
   return id && treeStore ? (
-    <TreeContext.Provider value={{ ...treeStore, treeClient }}>
-      {children}
-    </TreeContext.Provider>
+    <TreeContext.Provider value={treeStore}>{children}</TreeContext.Provider>
   ) : null;
 };
 
@@ -76,4 +66,18 @@ export const useTreeContext = () => {
   useTreeSuspension(context?.tree as TTreeContext["tree"]);
 
   return context;
+};
+
+export const useTreeClient = () => {
+  const context = useTreeContext();
+
+  const treeClient = createTreeClient(context.tree.syncedStore);
+  return treeClient;
+};
+
+export const useTreeData = () => {
+  const {
+    tree: { syncedStore },
+  } = useTreeContext();
+  return useSnapshot(syncedStore);
 };

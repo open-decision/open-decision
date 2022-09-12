@@ -4,14 +4,13 @@ import { calculateCenterOfNode } from "../utilities/calculateCenterOfNode";
 import { sidebarWidth } from "../utilities/constants";
 import { Node, ODProgrammerError } from "@open-decision/type-classes";
 import shallow from "zustand/shallow";
-import { useTreeContext } from "./treeStore/TreeContext";
+import { useTreeClient, useTreeContext } from "./treeStore/TreeContext";
+import { TTreeClient } from "@open-decision/tree-client";
 
-const useSelection = () => {
-  const {
-    tree: { nonSyncedStore },
-    treeClient,
-  } = useTreeContext();
-
+const createSelectionMethods = (
+  treeClient: TTreeClient,
+  nonSyncedStore: ReturnType<typeof useTreeContext>["tree"]["nonSyncedStore"]
+) => {
   const updateSelectedView = (view: string) => {
     nonSyncedStore.selectedView = view;
   };
@@ -101,7 +100,7 @@ type EditorState = {
 };
 
 export const EditorContext = React.createContext<
-  (EditorState & ReturnType<typeof useSelection>) | null
+  (EditorState & ReturnType<typeof createSelectionMethods>) | null
 >(null);
 
 type TreeProviderProps = Omit<
@@ -154,7 +153,14 @@ export function EditorProvider({ children }: TreeProviderProps) {
     });
   }
 
-  const selectionFunctions = useSelection();
+  const treeClient = useTreeClient();
+  const {
+    tree: { nonSyncedStore },
+  } = useTreeContext();
+
+  const selectionFunctions = React.useMemo(() => {
+    return createSelectionMethods(treeClient, nonSyncedStore);
+  }, [nonSyncedStore, treeClient]);
 
   return (
     <EditorContext.Provider

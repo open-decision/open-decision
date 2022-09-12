@@ -6,7 +6,7 @@ import {
   NoTruthyConditionException,
 } from "./errors";
 import { canGoBack, canGoForward } from "./methods";
-import { TCreateTreeClient, TTreeClient } from "@open-decision/tree-client";
+import { createTreeClient, TTreeClient } from "@open-decision/tree-client";
 
 export function createInterpreter(
   json: Tree.TTree,

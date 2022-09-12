@@ -25,7 +25,7 @@ import { SingleSelectInput } from "@open-decision/select-input-ui";
 import { BuilderComponent } from "@open-decision/free-text-input-ui";
 import { useEditor } from "../../state/useEditor";
 import { TTreeClient } from "@open-decision/tree-client";
-import { useTreeContext } from "../../state/treeStore/TreeContext";
+import { useTreeClient } from "../../state/treeStore/TreeContext";
 
 type InputHeaderProps = {
   children?: React.ReactNode;
@@ -34,7 +34,7 @@ type InputHeaderProps = {
 };
 
 const InputHeader = ({ children, currentType, inputId }: InputHeaderProps) => {
-  const { treeClient } = useTreeContext();
+  const treeClient = useTreeClient();
 
   return (
     <Box
@@ -140,7 +140,7 @@ function NodeEditingSidebarContent({ node, css }: Props) {
   const t = useTranslations("builder.nodeEditingSidebar");
   const inputs = useInputs(node.data.inputs);
   const { replaceSelectedNodes } = useEditor();
-  const { treeClient } = useTreeContext();
+  const treeClient = useTreeClient();
 
   return (
     <Stack
@@ -180,7 +180,6 @@ function NodeEditingSidebarContent({ node, css }: Props) {
       <Box as="section">
         {inputs ? (
           Object.values(inputs).map((input) => {
-            console.log(input);
             return input.type ? (
               <Box as="section" key={input.id}>
                 {(() => {
@@ -248,7 +247,7 @@ type HeaderProps = { node: Pick<Node.TNode, "id" | "data"> };
 const Header = ({ node }: HeaderProps) => {
   const t = useTranslations("builder.nodeEditingSidebar");
   const startNodeId = useStartNodeId();
-  const { treeClient } = useTreeContext();
+  const treeClient = useTreeClient();
   const parentNodes = useParents(node.id);
   const isStartNode = node?.id === startNodeId;
 

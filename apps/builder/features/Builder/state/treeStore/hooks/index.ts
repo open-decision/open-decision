@@ -1,8 +1,9 @@
 import { Condition, Edge, Node } from "@open-decision/type-classes";
+import { getInputs } from "packages/type-classes/src/Tree/getters";
 import { MarkerType } from "react-flow-renderer";
 import { pick } from "remeda";
 import { useSnapshot } from "valtio";
-import { useTreeContext } from "../TreeContext";
+import { useTreeClient, useTreeContext, useTreeData } from "../TreeContext";
 
 export function useSelectedNodes():
   | ["none", undefined]
@@ -134,13 +135,9 @@ export function useInput(id: string) {
 }
 
 export function useInputs(ids: string[]) {
-  const { treeClient } = useTreeContext();
+  const treeData = useTreeData();
 
-  const inputs = treeClient.subscribe.inputs.all();
-  if (!inputs) return {};
-  if (ids) return pick(inputs, ids);
-
-  return inputs;
+  return getInputs(treeData)(ids);
 }
 
 export function useEdgesOfNode(nodeId: string) {
@@ -186,10 +183,10 @@ export function useTree() {
 
 export function useParents(nodeId: string): { id: string; name?: string }[] {
   const { derivedNodeNames } = useTreeContext();
-  const { treeClient } = useTreeContext();
+  const treeClient = useTreeClient();
   const { nodeNames } = useSnapshot(derivedNodeNames);
 
-  const parentIds = treeClient.subscribe.nodes.parents(nodeId);
+  const parentIds = treeClient.nodes.get.parents(nodeId);
 
   return Object.values(nodeNames).filter((nodeName) =>
     parentIds.includes(nodeName.id)
