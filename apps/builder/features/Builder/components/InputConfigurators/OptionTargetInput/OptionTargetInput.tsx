@@ -11,7 +11,7 @@ import {
   focusSelectorWithin,
 } from "@open-decision/design-system";
 import * as React from "react";
-import { Edge, Input as InputType } from "@open-decision/type-classes";
+import { Input as InputType } from "@open-decision/type-classes";
 import { DragHandle } from "./DragHandle";
 import { Reorder, useDragControls } from "framer-motion";
 import { Crosshair2Icon, PlusIcon, TrashIcon } from "@radix-ui/react-icons";
@@ -19,6 +19,7 @@ import {
   useEdgesOfNode,
   useConditionsOfNode,
   useNode,
+  useInput,
 } from "../../../state/treeStore/hooks";
 import { useTreeContext } from "../../../state/treeStore/TreeContext";
 import { useNotificationStore } from "../../../../../config/notifications";
@@ -32,15 +33,16 @@ const StyledReorderGroup = styled(Reorder.Group, {
 
 type SingleSelectProps = {
   nodeId: string;
-  input: InputType.TInput;
+  inputId: string;
 };
 
-export function OptionTargetInputs({ nodeId, input }: SingleSelectProps) {
+export function OptionTargetInputs({ nodeId, inputId }: SingleSelectProps) {
   const { addInputAnswer, createAnswer, updateInputAnswerOrder } =
     useTreeContext();
+  const input = useInput(inputId);
   const ref = React.useRef<HTMLDivElement | null>(null);
-  const edges = useEdgesOfNode(nodeId);
-  const conditions = useConditionsOfNode(nodeId);
+
+  if (!input) throw new Error("Input not found");
 
   return (
     <>
@@ -78,32 +80,21 @@ export function OptionTargetInputs({ nodeId, input }: SingleSelectProps) {
           return updateInputAnswerOrder(input.id, newOrder);
         }}
       >
-        {input.answers.map((answer) => {
-          const edge = Object.values(edges).find((edge) => {
-            if (!edge.conditionId || !conditions) return false;
-            const condition = conditions[edge.conditionId];
-
-            return condition.answerId === answer.id;
-          });
-
-          return (
-            <OptionTargetInput
-              nodeId={nodeId}
-              answer={answer}
-              edge={edge}
-              inputId={input.id}
-              key={answer.id}
-              groupRef={ref}
-            />
-          );
-        })}
+        {input.answers.map((answer) => (
+          <OptionTargetInput
+            nodeId={nodeId}
+            answer={answer}
+            inputId={input.id}
+            key={answer.id}
+            groupRef={ref}
+          />
+        ))}
       </StyledReorderGroup>
     </>
   );
 }
 type SingleSelectInputProps = {
   answer: InputType.TAnswer;
-  edge?: Edge.TEdge;
   nodeId: string;
   inputId: string;
   groupRef: React.MutableRefObject<HTMLDivElement | null>;
@@ -111,11 +102,20 @@ type SingleSelectInputProps = {
 
 export function OptionTargetInput({
   answer,
-  edge,
   inputId,
   nodeId,
   groupRef,
 }: SingleSelectInputProps) {
+  const conditions = useConditionsOfNode(nodeId);
+  const edges = useEdgesOfNode(nodeId);
+
+  const edge = Object.values(edges).find((edge) => {
+    if (!edge.conditionId || !conditions) return false;
+    const condition = conditions[edge.conditionId];
+
+    return condition.answerId === answer.id;
+  });
+
   const node = useNode(nodeId);
   const {
     deleteInputAnswer,
@@ -224,6 +224,13 @@ export function OptionTargetInput({
     if (edge?.target && newItem) updateEdgeTarget(edge.id, newItem);
   };
 
+  const handler = React.useCallback(
+    (event: React.FocusEvent<HTMLInputElement, Element>) => {
+      updateInputAnswer(inputId, answer.id, event.target.value);
+    },
+    [answer.id, inputId, updateInputAnswer]
+  );
+
   return (
     <Reorder.Item
       value={answer}
@@ -253,9 +260,7 @@ export function OptionTargetInput({
         >
           <Form.Input
             name={formState.names.answer}
-            onChange={(event) =>
-              updateInputAnswer(inputId, answer.id, event.target.value)
-            }
+            onChange={handler}
             placeholder="Antwort"
             css={{
               borderRadius: "0",
