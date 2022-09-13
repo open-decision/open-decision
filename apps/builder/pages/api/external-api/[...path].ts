@@ -27,14 +27,14 @@ const ProxyAPI: NextApiHandler = async (req, res) => {
     return res.status(status).json(data);
   } catch (error) {
     console.error(error);
-    if (isAPIError(error)) return res.status(error.statusCode).json(error);
-
-    return res.status(500).json(
-      new APIError({
+    const errorToReturn = isAPIError(error)
+      ? error
+      : new APIError({
         code: "UNEXPECTED_ERROR",
         message: "An unexpected error occurred.",
-      })
-    );
+        });
+
+    return res.status(errorToReturn.statusCode).json(errorToReturn);
   }
 };
 
