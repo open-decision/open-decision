@@ -15,7 +15,6 @@ export function useQueryClient() {
       new QueryClient({
         defaultOptions: {
           queries: {
-            retry: 0,
             useErrorBoundary: (_, query) => {
               // When we already have data we assume a background query failed. This should
               // not be thrown but handled in the respective component by default.
