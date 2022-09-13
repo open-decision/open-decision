@@ -103,7 +103,7 @@ export const websocketMachine = createMachine(
         } = await safeFetch(
           "/api/external-api/auth/getToken",
           {},
-          { validation: z.object({ token: z.string() }) }
+          { validation: z.object({ token: z.string() }), retry: 3 }
         );
 
         return { token };

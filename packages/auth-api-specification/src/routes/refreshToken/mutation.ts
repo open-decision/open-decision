@@ -19,6 +19,7 @@ export const refreshToken =
       },
       {
         validation: refreshTokenOutput.passthrough(),
+        ...context.config,
       }
     );
   };

@@ -18,6 +18,7 @@ const verifyLogin: NextApiHandler = async (req, res) => {
 
     setCookieHeaders(req, res, authResponse.data);
 
+    res.setHeader("Cache-Control", "no-store");
     return res.status(200).json({ success: true });
   } catch (error) {
     console.error(error);
@@ -35,3 +36,9 @@ const verifyLogin: NextApiHandler = async (req, res) => {
 };
 
 export default withSentry(verifyLogin);
+
+export const config = {
+  api: {
+    externalResolver: true,
+  },
+};

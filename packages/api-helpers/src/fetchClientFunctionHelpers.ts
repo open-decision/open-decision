@@ -27,6 +27,7 @@ export const Context = z.object({
 
 type Config<TValidation extends z.ZodTypeAny> = {
   validation?: TValidation;
+  retry?: number;
 };
 
 export type FetchFunction = <TValidation extends z.ZodTypeAny = z.ZodTypeAny>(
@@ -38,12 +39,13 @@ export type FetchFunction = <TValidation extends z.ZodTypeAny = z.ZodTypeAny>(
   }: Omit<RequestInit, "body"> & {
     body?: Record<string, any>;
   },
-  { validation }: Config<TValidation>
+  { validation, retry }: Config<TValidation>
 ) => Promise<{ data: z.output<TValidation>; status: number }>;
 
 export type TContext = z.infer<typeof Context> & {
   headers?: HeadersInit;
   fetchFunction: FetchFunction;
+  config?: Pick<Config<any>, "retry">;
 };
 
 export type QueryConfig = TContext;

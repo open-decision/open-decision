@@ -8,6 +8,7 @@ export const middleware: NextMiddleware = async (request) => {
   const OD = client({
     urlPrefix: `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1`,
     fetchFunction: safeFetch,
+    config: { retry: 3 },
   });
 
   try {

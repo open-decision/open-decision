@@ -18,6 +18,7 @@ const authCatch: NextApiHandler = async (req, res) => {
 
     setCookieHeaders(req, res, authResponse.data);
 
+    res.setHeader("Cache-Control", "no-store");
     return res.status(authResponse.status).json(authResponse.data.user);
   } catch (error) {
     console.error(error);
@@ -35,3 +36,9 @@ const authCatch: NextApiHandler = async (req, res) => {
 };
 
 export default withSentry(authCatch);
+
+export const config = {
+  api: {
+    externalResolver: true,
+  },
+};
