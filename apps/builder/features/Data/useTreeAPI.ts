@@ -347,14 +347,17 @@ export const useTreeAPI = () => {
           if (!result || !(typeof result === "string")) throw result;
           const parsedResult = JSON.parse(result);
           const validatedResult = TreeImportType.safeParse(parsedResult);
-          if (!validatedResult.success) throw validatedResult;
+          if (!validatedResult.success) {
+            console.error(validatedResult.error);
+            throw validatedResult;
+          }
           const data = validatedResult.data;
 
           const response = await proxiedOD.trees.create({
             body: { name: data.name },
           });
 
-          createYjsDocumentIndexedDB(data, response.data.uuid);
+          createYjsDocumentIndexedDB(data.treeData, response.data.uuid);
 
           queryClient.invalidateQueries(treesQueryKey);
           return response;
