@@ -33,11 +33,7 @@ const filters = {
 export const TreeList = () => {
   const t = useTranslations("dashboard");
 
-  const {
-    data: trees,
-    isLoading,
-    isFetching,
-  } = useTreeAPI().useTreesQuery({
+  const { data: trees, isLoading } = useTreeAPI().useTreesQuery({
     select: ({ data }) => data,
     staleTime: 500,
   });
@@ -93,7 +89,6 @@ export const TreeList = () => {
         <Row css={{ gap: "$2", alignItems: "center" }}>
           <FilterButton />
           <SortButton />
-          <LoadingSpinner isLoading={isFetching} />
         </Row>
       </Form.Root>
       <Stack
