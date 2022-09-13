@@ -24,7 +24,9 @@ wss.on("connection", (websocket, request) => {
 export const websocketUpgradeHandler = catchAsync(
   async (request: http.IncomingMessage, socket: net.Socket, head: Buffer) => {
     wsAuth(request, async function next(err, client) {
-      logger.info(`${socket.remoteAddress}:wss ${request.url} upgrade`);
+      logger.info(
+        `${socket.remoteAddress}:wss ${request.url?.split("?auth")[0]} upgrade`
+      );
 
       if (!request.url?.startsWith("/v1/builder-sync/")) {
         socket.write("HTTP/1.1 404 Not found\r\n\r\n");
