@@ -405,7 +405,7 @@ test.describe("project menu", () => {
       page.locator(`a >> text=${de.common.exportDialog.save.cta}`).click(),
     ]);
 
-    await expect(download.suggestedFilename()).toBe("Export Name");
+    await expect(download.suggestedFilename()).toBe("Export Name.json");
     await expect(
       page.locator(`text=${de.common.notifications.export.title}`)
     ).toBeVisible();
