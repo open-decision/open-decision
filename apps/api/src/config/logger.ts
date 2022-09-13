@@ -10,8 +10,8 @@ const enumerateErrorFormat = winston.format((info) => {
 
 export const logger = winston.createLogger({
   // This means that in development all logs will be printed to the console, while in other environments
-  // only logs from info and below are logged.
-  level: config.NODE_ENV === "development" ? "debug" : "info",
+  // only logs from http and below are logged.
+  level: config.NODE_ENV === "development" ? "debug" : "http",
   format: winston.format.combine(
     enumerateErrorFormat(),
     config.NODE_ENV === "development"
@@ -22,7 +22,7 @@ export const logger = winston.createLogger({
   ),
   transports: [
     new winston.transports.Console({
-      stderrLevels: ["error", "debug", "info"],
+      stderrLevels: ["error", "debug"],
     }),
   ],
 });
