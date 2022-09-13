@@ -2,7 +2,7 @@ import { tokenService, userService } from ".";
 import { TokenType } from "@open-decision/prisma";
 import UserHandler from "../models/user.model";
 import { tokenHandler } from "../models/token.model";
-import { APIError } from "@open-decision/type-classes";
+import { APIError, isAPIError } from "@open-decision/type-classes";
 /**
  * Login with username and password
  * @param {string} email
@@ -52,6 +52,8 @@ const refreshAuth = async (refreshToken: string) => {
   try {
     return await tokenService.refreshTokens(refreshToken);
   } catch (error) {
+    if (isAPIError(error)) throw error;
+
     throw new APIError({
       code: "UNAUTHENTICATED",
       message: "Please authenticate",
