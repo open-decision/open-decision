@@ -472,7 +472,7 @@ importers:
       remeda: 1.1.0
       spinners-react: 1.0.7_c72tqnfmbdx3m4daksis2unsgm
       use-resize-observer: 9.0.2
-      valtio: 1.6.4
+      valtio: 1.7.0
     devDependencies:
       '@fontsource/poppins': 4.5.9
       '@svgr/cli': 6.3.1

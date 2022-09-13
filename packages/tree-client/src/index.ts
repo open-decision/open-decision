@@ -85,9 +85,8 @@ export const createTreeClient = <
       update: {
         type: (
           inputId: string,
-          newType: typeof treeClientWithTypes.inputs.types[number]
+          newInput: z.infer<typeof treeClientWithTypes.inputs.Type>
         ) => {
-          const newInput = treeClientWithTypes.input[newType].create();
           treeClientWithTypes.inputs.update(inputId, newInput);
         },
       },

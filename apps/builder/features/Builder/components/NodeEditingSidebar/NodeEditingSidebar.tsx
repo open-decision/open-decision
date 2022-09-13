@@ -12,6 +12,7 @@ import { Node } from "@open-decision/type-classes";
 import { nodeNameMaxLength } from "../../utilities/constants";
 import { NodeMenu } from "../Canvas/Nodes/NodeMenu";
 import {
+  useInputs,
   useParents,
   useSelectedNodes,
   useStartNodeId,
@@ -67,7 +68,10 @@ const InputHeader = ({ children, currentType, inputId }: InputHeaderProps) => {
                 <DropdownMenu.CheckboxItem
                   key={type}
                   checked={currentType === type}
-                  onClick={() => treeClient.inputs.update.type(inputId, type)}
+                  onClick={() => {
+                    const newInput = treeClient.input[type].create({});
+                    return treeClient.inputs.update.type(inputId, newInput);
+                  }}
                 >
                   {type.charAt(0).toUpperCase() + type.slice(1)}
                 </DropdownMenu.CheckboxItem>

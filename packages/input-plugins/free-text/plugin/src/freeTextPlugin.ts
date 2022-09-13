@@ -13,6 +13,16 @@ export class FreeTextPlugin extends InputPlugin<typeof Type, "freeText"> {
     this.directConditionPlugin = new DirectPlugin(treeClient);
   }
 
+  //FIXME Return type is not proper
+  create(
+    data: Omit<z.infer<typeof this.SpecificType>, "type">
+  ): z.infer<typeof this.MergedType> {
+    return this.treeClient.inputs.create({
+      ...data,
+      type: this.typeName,
+    }) as z.infer<typeof this.MergedType>;
+  }
+
   createTargetNode(nodeId: string, inputId: string, data: { name: string }) {
     const childNode = this.treeClient.nodes.create.childNode(nodeId, {
       type: "customNode",

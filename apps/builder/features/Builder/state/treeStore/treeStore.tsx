@@ -1,9 +1,9 @@
-import { Tree } from "@open-decision/type-classes";
 import { proxy } from "valtio";
 import { derive } from "valtio/utils";
 import { bindProxyAndYMap } from "valtio-yjs";
 import * as Y from "yjs";
 import { mapValues } from "remeda";
+import { TTree } from "@open-decision/tree-client";
 
 declare module "valtio" {
   function useSnapshot<T extends object>(p: T): T;
@@ -13,7 +13,7 @@ export function createTreeStore(id: string) {
   const yDoc = new Y.Doc({ guid: id });
   const yMap = yDoc.getMap("tree");
 
-  const syncedStore = proxy<Tree.TTree>({} as Tree.TTree);
+  const syncedStore = proxy<TTree>({} as TTree);
 
   let onSync = (_value: unknown) => {
     return;

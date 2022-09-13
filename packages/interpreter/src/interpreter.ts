@@ -36,45 +36,40 @@ type ResolverEvents =
   | { type: "INVALID_INTERPRETATION"; error: InterpreterErrors };
 
 const resolveConditions =
-  //FIXME no anys
+  (treeClient: TTreeClient) =>
+  (context: InterpreterContext, event: ResolveEvents) =>
+  (callback: Sender<ResolverEvents>) => {
+    const conditions = treeClient.conditions.get.collection(event.conditionIds);
 
+    for (const conditionId in conditions) {
+      const condition = conditions[conditionId];
+      // FIXME conditions have not yet implemented resolvers
+      return;
 
-    (treeClient: TTreeClient<any>) =>
-    (context: InterpreterContext, event: ResolveEvents) =>
-    (callback: Sender<ResolverEvents>) => {
-      const conditions = treeClient.conditions.get.collection(
-        event.conditionIds
-      );
+      // const existingAnswerId = context.answers[condition.inputId];
 
-      for (const conditionId in conditions) {
-        const condition = conditions[conditionId];
-        // FIXME conditions have not yet implemented resolvers
-        return;
+      // if (condition.answerId === existingAnswerId) {
+      //   const edge = Object.values<Edge.TEdge>(tree.edges ?? {}).find(
+      //     (edge) => edge.conditionId === condition.id
+      //   );
 
-        // const existingAnswerId = context.answers[condition.inputId];
+      //   if (!edge)
+      //     return callback({
+      //       type: "INVALID_INTERPRETATION",
+      //       error: new MissingEdgeForThruthyConditionException(),
+      //     });
 
-        // if (condition.answerId === existingAnswerId) {
-        //   const edge = Object.values<Edge.TEdge>(tree.edges ?? {}).find(
-        //     (edge) => edge.conditionId === condition.id
-        //   );
-
-        //   if (!edge)
-        //     return callback({
-        //       type: "INVALID_INTERPRETATION",
-        //       error: new MissingEdgeForThruthyConditionException(),
-        //     });
-
-        //   return callback({
-        //     type: "VALID_INTERPRETATION",
-        //     target: edge.target,
-        //   });
-        // }
-      }
-      callback({
-        type: "INVALID_INTERPRETATION",
-        error: new NoTruthyConditionException(),
-      });
-    };
+      //   return callback({
+      //     type: "VALID_INTERPRETATION",
+      //     target: edge.target,
+      //   });
+      // }
+    }
+    callback({
+      type: "INVALID_INTERPRETATION",
+      error: new NoTruthyConditionException(),
+    });
+  };
 
 export type InterpreterErrors =
   | MissingEdgeForThruthyConditionException
@@ -109,8 +104,7 @@ export type InterpreterOptions = {
 };
 
 export const createInterpreterMachine = (
-  //FIXME no anys
-  treeClient: TTreeClient<any>,
+  treeClient: TTreeClient,
   initialNode: string,
   { onError, onSelectedNodeChange }: InterpreterOptions = {}
 ) => {

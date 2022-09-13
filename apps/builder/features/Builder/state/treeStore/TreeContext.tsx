@@ -79,5 +79,6 @@ export const useTreeData = () => {
   const {
     tree: { syncedStore },
   } = useTreeContext();
+
   return useSnapshot(syncedStore);
 };

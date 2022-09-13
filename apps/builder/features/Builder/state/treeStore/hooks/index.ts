@@ -1,5 +1,4 @@
 import { Condition, Edge, Node } from "@open-decision/type-classes";
-import { getInputs } from "packages/type-classes/src/Tree/getters";
 import { MarkerType } from "react-flow-renderer";
 import { pick } from "remeda";
 import { useSnapshot } from "valtio";
@@ -137,7 +136,11 @@ export function useInput(id: string) {
 export function useInputs(ids: string[]) {
   const treeData = useTreeData();
 
-  return getInputs(treeData)(ids);
+  if (!treeData.inputs) return undefined;
+  const inputs = pick(treeData.inputs, ids);
+  if (!inputs) return undefined;
+
+  return inputs;
 }
 
 export function useEdgesOfNode(nodeId: string) {

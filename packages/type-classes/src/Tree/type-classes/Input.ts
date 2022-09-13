@@ -72,14 +72,4 @@ export class InputPlugin<
       this.returnOnlyWhenRecordOfType
     );
   }
-
-  //FIXME Return type is not proper
-  create(
-    data: Omit<z.infer<typeof this.SpecificType>, "type">
-  ): z.infer<typeof this.MergedType> {
-    return this.treeClient.inputs.create({
-      ...data,
-      type: this.typeName,
-    }) as z.infer<typeof this.MergedType>;
-  }
 }

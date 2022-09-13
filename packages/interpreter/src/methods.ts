@@ -1,6 +1,6 @@
 import { Tree } from "@open-decision/type-classes";
 import { InterpreterContext } from "./interpreter";
-import { TCreateTreeClient } from "@open-decision/tree-client";
+import { createTreeClient } from "@open-decision/tree-client";
 
 export const canGoBack = (interpreterContext: InterpreterContext) =>
   interpreterContext.history.nodes.length > 1 &&
