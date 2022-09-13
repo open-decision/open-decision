@@ -76,9 +76,9 @@ export type useImportOptions = UseMutationOptions<
 >;
 
 export type useExportOptions = UseMutationOptions<
-  { fileUrl: string; file: File },
+  string,
   APIError<void>,
-  { name: string; fileName: string }
+  { name: string }
 >;
 
 export const useTreeAPI = () => {
@@ -391,25 +391,23 @@ export const useTreeAPI = () => {
       ...options
     }: useExportOptions & { notification?: notification } = {}
   ) => {
-    const { data: tree } = useTreeData(uuid);
+    const { data: treeData } = useTreeData(uuid);
 
-    function createFile(data: object, name: string) {
-      return new File([JSON.stringify(data)], name, {
-        type: "application/json",
-      });
+    function createFile(data: object) {
+      return new Blob([JSON.stringify(data)], { type: "application/json" });
     }
 
     return useMutation(
       ["exportTree"],
       (data) => {
-        return new Promise<{ fileUrl: string; file: File }>((resolve) => {
+        return new Promise<string>((resolve) => {
           return setTimeout(() => {
-            const file = createFile(
-              { name: data?.name, ...tree?.data },
-              data.fileName
-            );
+            const file = createFile({
+              name: data?.name,
+              treeData: treeData?.data,
+            });
 
-            return resolve({ fileUrl: URL.createObjectURL(file), file });
+            return resolve(URL.createObjectURL(file));
           }, 2000);
         });
       },

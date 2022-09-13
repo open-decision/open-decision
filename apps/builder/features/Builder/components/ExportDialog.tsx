@@ -38,7 +38,12 @@ export function ExportDialog({
   treeName,
 }: Props) {
   const t = useTranslations("common.exportDialog");
-  const { mutate, data, isLoading, isSuccess } = useTreeAPI().useExport(treeId);
+  const {
+    mutate,
+    data: fileUrl,
+    isLoading,
+    isSuccess,
+  } = useTreeAPI().useExport(treeId);
 
   const formState = Form.useFormState({
     defaultValues: {
@@ -49,15 +54,8 @@ export function ExportDialog({
   formState.useSubmit(() => {
     mutate({
       name: treeName ?? "Unbennant",
-      fileName: formState.values.name,
     });
   });
-
-  React.useEffect(() => {
-    return () => {
-      if (data?.fileUrl) URL.revokeObjectURL(data.fileUrl);
-    };
-  }, [data?.fileUrl]);
 
   return (
     <Dialog.Root open={open} onOpenChange={onCancel}>
@@ -70,7 +68,7 @@ export function ExportDialog({
         >
           <Dialog.Header>{t("title")}</Dialog.Header>
           <ErrorBoundary fallback={ExportErrorFallback}>
-            {!data?.fileUrl ? (
+            {!fileUrl ? (
               <>
                 <Dialog.Description asChild>
                   <Text css={{ marginTop: "$2" }}>
@@ -102,8 +100,8 @@ export function ExportDialog({
                   className={buttonStyles({
                     css: { marginTop: "$4", alignSelf: "flex-end" },
                   })}
-                  download={data.file.name}
-                  href={data.fileUrl}
+                  download={`${formState.values.name}.json`}
+                  href={fileUrl}
                   onClick={onSuccess}
                 >
                   {t("save.cta")}

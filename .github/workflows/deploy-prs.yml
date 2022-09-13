@@ -79,12 +79,14 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Create App
         continue-on-error: true
-        run: flyctl apps create --name ${{env.APP_NAME}} --region ${{env.FLY_REGION}}
+        run: flyctl apps create --name ${{env.APP_NAME}}
       - name: Set secrets for app
         shell: bash
         continue-on-error: true
         run: |
           flyctl secrets set NODE_ENV="test" PORT="$PORT" DATABASE_URL="$DATABASE_URL" ACCESS_TOKEN_SECRET="$ACCESS_TOKEN_SECRET" ADMIN_ACCOUNT_WHITELIST="$ADMIN_ACCOUNT_WHITELIST" DEV_ACCOUNT_WHITELIST="$DEV_ACCOUNT_WHITELIST" EMAIL_FROM_ADDRESS="$EMAIL_FROM_ADDRESS" FEATURE_WHITELIST="$FEATURE_WHITELIST" PUBLIC_API_DOCUMENTATION="$PUBLIC_API_DOCUMENTATION" REFRESH_TOKEN_SECRET="$REFRESH_TOKEN_SECRET" SMTP_HOST="$SMTP_HOST" SMTP_PASSWORD="$SMTP_PASSWORD" SMTP_PORT="$SMTP_PORT" SMTP_USERNAME="$SMTP_USERNAME" --app "$APP_NAME"
+      - name: Set regions for deploy
+        run: flyctl regions set fra ams --app ${{env.APP_NAME}}
       - name: Deploy
         id: deploy
         run: flyctl deploy --config ${{env.CONFIG}} --app ${{env.APP_NAME}} --region ${{env.FLY_REGION}} --build-secret SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} --strategy immediate
