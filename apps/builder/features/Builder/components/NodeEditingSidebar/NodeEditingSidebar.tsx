@@ -11,7 +11,6 @@ import { Node } from "@open-decision/type-classes";
 import { nodeNameMaxLength } from "../../utilities/constants";
 import { NodeMenu } from "../Canvas/Nodes/NodeMenu";
 import {
-  useInputs,
   useParents,
   useSelectedNodes,
   useStartNodeId,
@@ -81,7 +80,6 @@ type Props = { node: Pick<Node.TNode, "id" | "data">; css?: StyleObject };
 
 function NodeEditingSidebarContent({ node, css }: Props) {
   const t = useTranslations("builder.nodeEditingSidebar");
-  const inputs = useInputs(node.data.inputs);
   const { updateNodeContent } = useTreeContext();
 
   return (
@@ -120,8 +118,12 @@ function NodeEditingSidebarContent({ node, css }: Props) {
         />
       </Box>
       <Box as="section">
-        {Object.values(inputs).map((input) => (
-          <OptionTargetInputs nodeId={node.id} input={input} key={input.id} />
+        {Object.values(node.data.inputs).map((inputId) => (
+          <OptionTargetInputs
+            nodeId={node.id}
+            inputId={inputId}
+            key={inputId}
+          />
         ))}
       </Box>
     </Stack>

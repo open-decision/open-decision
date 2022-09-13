@@ -88,12 +88,9 @@ jobs:
       - name: Deploy
         id: deploy
         run: flyctl deploy --config ${{env.CONFIG}} --app ${{env.APP_NAME}} --region ${{env.FLY_REGION}} --build-secret SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} --strategy immediate
-      - name: Create DB
-        continue-on-error: true
-        run: flyctl postgres create --name ${{env.DB_NAME}} --region ${{env.FLY_REGION}}
       - name: Attach database
         continue-on-error: true
-        run: flyctl postgres attach ${{env.DB_NAME}} --app ${{env.APP_NAME}}
+        run: flyctl postgres attach od-preview-db --app ${{env.APP_NAME}}
       - name: Sentry Release
         uses: getsentry/action-release@v1.2.0
         env:
