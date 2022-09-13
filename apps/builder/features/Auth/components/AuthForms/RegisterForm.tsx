@@ -99,20 +99,22 @@ function RegisterForm({ email }: { email?: string }) {
     mutate: register,
     error,
     isLoading,
-    reset,
     isError,
   } = useRegisterMutation({
     onSuccess: () => router.push("/"),
     onError: (error) => {
+      const passwordFieldError = error?.errors?.body?.password
+        ?._errors[0] as keyof typeof APIErrors;
+      const emailFieldError = error?.errors?.body?.email
+        ?._errors[0] as keyof typeof APIErrors;
+
       formState.setErrors({
-        password: t(
-          `common.errors.${
-            error?.errors?.body?.password?._errors[0] as keyof typeof APIErrors
-          }.long`
-        ),
-        email: `common.errors.${
-          error?.errors?.body?.email?._errors[0] as keyof typeof APIErrors
-        }.long`,
+        password: passwordFieldError
+          ? t(`common.errors.${passwordFieldError}.long`)
+          : undefined,
+        email: emailFieldError
+          ? t(`common.errors.${emailFieldError}.long`)
+          : undefined,
       });
     },
   });
