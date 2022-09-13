@@ -23,6 +23,7 @@ const ProxyAPI: NextApiHandler = async (req, res) => {
       {}
     );
 
+    res.setHeader("Cache-Control", "no-store");
     return res.status(status).json(data);
   } catch (error) {
     console.error(error);
