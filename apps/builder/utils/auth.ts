@@ -1,9 +1,9 @@
 import { client } from "@open-decision/api-client";
 import { safeFetch } from "@open-decision/api-helpers";
 import { TLoginOutput } from "@open-decision/auth-api-specification";
-import { APIError, ODError } from "@open-decision/type-classes";
+import { APIError, isAPIError } from "@open-decision/type-classes";
 import { serialize } from "cookie";
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 
 export const authCookieConfig = {
   secure: process.env.NODE_ENV === "production" ? true : false,
@@ -43,38 +43,48 @@ export const setCookieHeaders = (
   ]);
 };
 
-export const refreshAuth = async (
-  req: NextApiRequest,
-  res: NextApiResponse
-) => {
-  const token = req.cookies["token"];
-  const refreshToken = req.cookies["refreshToken"];
+const OD = client({
+  urlPrefix: `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1`,
+  fetchFunction: safeFetch,
+});
 
-  const OD = client({
-    urlPrefix: `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1`,
-    fetchFunction: safeFetch,
-  });
+export const withAuthRefresh =
+  (next: NextApiHandler) =>
+  async (req: NextApiRequest, res: NextApiResponse) => {
+    const token = req.cookies["token"];
+    const refreshToken = req.cookies["refreshToken"];
 
-  // When the token is still valid we don't need to refresh it and just return it
-  if (token) {
-    return token;
-  }
+    // When the token is still valid we don't need to refresh it and just return it
+    if (token) {
+      return next(req, res);
+    }
 
-  // When there is a valid refreshToken we can use it to refresh the token
-  if (refreshToken) {
-    const { data: authData } = await OD.auth.refreshToken({
-      body: { refreshToken },
+    // When there is a valid refreshToken we can use it to refresh the token
+    if (refreshToken) {
+      try {
+        const { data: authData } = await OD.auth.refreshToken({
+          body: { refreshToken },
+        });
+
+        setCookieHeaders(req, res, authData);
+        req.cookies["token"] = authData.access.token.token;
+        req.cookies["refreshToken"] = authData.access.refreshToken.token;
+
+        return next(req, res);
+      } catch (error) {
+        if (isAPIError(error)) {
+          throw error;
+        }
+
+        throw new APIError({
+          code: "UNAUTHENTICATED",
+          message: "The user is not authenticated",
+        });
+      }
+    }
+
+    throw new APIError({
+      code: "UNAUTHENTICATED",
+      message: "The user is not authenticated",
     });
-
-    if (authData instanceof ODError) throw authData;
-
-    setCookieHeaders(req, res, authData);
-
-    return authData.access.token.token;
-  }
-
-  throw new APIError({
-    code: "UNAUTHENTICATED",
-    message: "The user is not authenticated",
-  });
-};
+  };

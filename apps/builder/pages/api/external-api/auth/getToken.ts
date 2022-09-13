@@ -1,15 +1,12 @@
 import { refreshAuth } from "../../../../utils/auth";
 import { NextApiHandler } from "next";
 import { withSentry } from "@sentry/nextjs";
+import { NextApiHandler } from "next";
+import { withAuthRefresh } from "../../../../utils/auth";
 
 const getToken: NextApiHandler = async (req, res) => {
-  try {
-    const refreshedToken = await refreshAuth(req, res);
-    return res.status(200).json({ token: refreshedToken });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json(error);
-  }
+  const token = req.cookies["token"];
+  return res.json({ token });
 };
 
-export default withSentry(getToken);
+export default withSentry(withAuthRefresh(getToken));

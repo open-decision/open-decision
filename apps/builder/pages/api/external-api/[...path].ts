@@ -2,9 +2,11 @@ import { safeFetch } from "@open-decision/api-helpers";
 import { APIError, isAPIError } from "@open-decision/type-classes";
 import { withSentry } from "@sentry/nextjs";
 import { NextApiHandler } from "next";
-import { refreshAuth } from "../../../utils/auth";
+import { withAuthRefresh } from "../../../utils/auth";
 
-const SilentAuth: NextApiHandler = async (req, res) => {
+const ProxyAPI: NextApiHandler = async (req, res) => {
+  const token = req.cookies["token"];
+
   try {
     const refreshedToken = await refreshAuth(req, res);
 
@@ -14,7 +16,7 @@ const SilentAuth: NextApiHandler = async (req, res) => {
       {
         body: req.method === "GET" ? undefined : req.body,
         headers: {
-          authorization: `Bearer ${refreshedToken}`,
+          authorization: `Bearer ${token}`,
         },
         method: req.method,
       },
@@ -35,4 +37,4 @@ const SilentAuth: NextApiHandler = async (req, res) => {
   }
 };
 
-export default withSentry(SilentAuth);
+export default withSentry(withAuthRefresh(ProxyAPI));
