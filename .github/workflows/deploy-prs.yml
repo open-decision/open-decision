@@ -79,7 +79,7 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Create App
         continue-on-error: true
-        run: flyctl apps create --name ${{env.APP_NAME}} --region ${{env.FLY_REGION}}
+        run: flyctl apps create --name ${{env.APP_NAME}}
       - name: Set secrets for app
         shell: bash
         continue-on-error: true
