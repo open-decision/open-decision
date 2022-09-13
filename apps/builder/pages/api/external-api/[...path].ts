@@ -8,8 +8,6 @@ const ProxyAPI: NextApiHandler = async (req, res) => {
   const token = req.cookies["token"];
 
   try {
-    const refreshedToken = await refreshAuth(req, res);
-
     const path = req.url?.split("external-api")[1];
     const { status, data } = await safeFetch(
       `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1${path}`,
@@ -30,8 +28,8 @@ const ProxyAPI: NextApiHandler = async (req, res) => {
     const errorToReturn = isAPIError(error)
       ? error
       : new APIError({
-        code: "UNEXPECTED_ERROR",
-        message: "An unexpected error occurred.",
+          code: "UNEXPECTED_ERROR",
+          message: "An unexpected error occurred.",
         });
 
     return res.status(errorToReturn.statusCode).json(errorToReturn);
@@ -39,3 +37,9 @@ const ProxyAPI: NextApiHandler = async (req, res) => {
 };
 
 export default withSentry(withAuthRefresh(ProxyAPI));
+
+export const config = {
+  api: {
+    externalResolver: true,
+  },
+};

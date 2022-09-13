@@ -17,3 +17,9 @@ const logout: NextApiHandler = async (req, res) => {
 };
 
 export default withSentry(logout);
+
+export const config = {
+  api: {
+    externalResolver: true,
+  },
+};

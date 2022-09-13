@@ -36,3 +36,9 @@ const verifyLogin: NextApiHandler = async (req, res) => {
 };
 
 export default withSentry(verifyLogin);
+
+export const config = {
+  api: {
+    externalResolver: true,
+  },
+};

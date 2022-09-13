@@ -36,3 +36,9 @@ const authCatch: NextApiHandler = async (req, res) => {
 };
 
 export default withSentry(authCatch);
+
+export const config = {
+  api: {
+    externalResolver: true,
+  },
+};
