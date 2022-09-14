@@ -1,6 +1,6 @@
 import * as React from "react";
 import { v4 as uuidV4 } from "uuid";
-import { proxy } from "valtio";
+import { proxy, useSnapshot } from "valtio";
 
 export type notificationVariants = "success" | "danger" | "info" | "warning";
 
@@ -26,3 +26,9 @@ export const notificationState = proxy({
 });
 
 export type NotificationState = typeof notificationState;
+
+export const useNotificationSnapshot = () => {
+  const { notifications } = useSnapshot(notificationState);
+
+  return notifications;
+};
