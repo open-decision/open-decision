@@ -1,12 +1,15 @@
-import { Notification, notificationState } from "@open-decision/design-system";
+import {
+  Notification,
+  notificationState,
+  useNotificationSnapshot,
+} from "@open-decision/design-system";
 import { useTranslations } from "next-intl";
-import { useSnapshot } from "valtio";
 import { useMessages } from "./messagesContext";
 
 export const useNotificationStore = () => {
   const messages = useMessages();
   const t = useTranslations("common");
-  const notificationSnapshot = useSnapshot(notificationState);
+  const notifications = useNotificationSnapshot();
 
   const addNotificationFromTemplate = (
     notification: keyof Omit<
@@ -14,7 +17,7 @@ export const useNotificationStore = () => {
       "general"
     >
   ) => {
-    notificationSnapshot.addNotification({
+    notificationState.addNotification({
       duration: Number(t(`notifications.${notification}.duration`)),
       title: t(`notifications.${notification}.title`),
       content: t(`notifications.${notification}.content`),
@@ -24,5 +27,5 @@ export const useNotificationStore = () => {
     });
   };
 
-  return { ...notificationSnapshot, addNotificationFromTemplate };
+  return { ...notificationState, notifications, addNotificationFromTemplate };
 };
