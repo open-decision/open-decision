@@ -21,6 +21,8 @@ const openTree = async (page: Page, context: BrowserContext) => {
     page.locator(`text=${de.common.projectMenu.publish.open}`).click(),
   ]);
 
+  await newPage.waitForSelector("text=Willkommen");
+
   await expect(await newPage.title()).toEqual(de.renderer.pageTitle);
   await expect(newPage.locator(`text=Willkommen`)).toBeVisible();
 

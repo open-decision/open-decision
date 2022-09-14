@@ -16,17 +16,12 @@ import { getDashboardLayout } from "../features/Dashboard/DashboardLayout";
 import { ChangeEmail } from "../features/Settings/ChangeEmail";
 import { ChangePassword } from "../features/Settings/ChangePassword";
 import { DeleteAccount } from "../features/Settings/DeleteAccount";
-import { GetServerSidePropsContext } from "next";
-import { client } from "@open-decision/api-client";
+import { GetStaticProps } from "next";
 import Head from "next/head";
-import { dehydrate, QueryClient } from "@tanstack/react-query";
 import { useUser } from "../features/Auth/useUserQuery";
 import { useTranslations } from "next-intl";
-import { safeFetch } from "@open-decision/api-helpers";
 
-export const getServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const messages = await import(`@open-decision/translations`).then(
     (translations) => ({
       common: translations.de.common,
@@ -34,19 +29,10 @@ export const getServerSideProps = async (
     })
   );
 
-  const OD = client({
-    token: context.req.cookies["token"],
-    urlPrefix: `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1`,
-    fetchFunction: safeFetch,
-  });
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(["user"], () => OD.user.getUser({}));
-
   return {
     props: {
-      dehydratedState: dehydrate(queryClient),
       messages,
-      locale: context.locale,
+      locale,
       now: new Date().toISOString(),
     },
   };
