@@ -1,23 +1,16 @@
 import * as React from "react";
-import { client } from "@open-decision/api-client";
-import { safeFetch } from "@open-decision/api-helpers";
 import { LoadingSpinner, Stack } from "@open-decision/design-system";
 import { Renderer } from "@open-decision/renderer";
-import { dehydrate, QueryClient } from "@tanstack/react-query";
 import { GetServerSideProps } from "next";
 import { useTranslations } from "next-intl";
 import Head from "next/head";
-import {
-  publicTreeQueryKey,
-  usePublicTree,
-} from "../../features/Data/usePublicTree";
+import { usePublicTree } from "../../features/Data/usePublicTree";
 import { FullPageErrorFallback } from "../../components/Error/FullPageErrorFallback";
 import { ODError } from "@open-decision/type-classes";
 import { Layout } from "../../components";
 import { useNotificationStore } from "../../config/notifications";
 
 export const getServerSideProps: GetServerSideProps = async ({
-  req,
   params,
   locale,
 }) => {
@@ -32,22 +25,8 @@ export const getServerSideProps: GetServerSideProps = async ({
     })
   );
 
-  const OD = client({
-    token: req.cookies["token"],
-    urlPrefix: `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1`,
-    fetchFunction: safeFetch,
-  });
-
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(publicTreeQueryKey(id), () =>
-    OD.publishedTrees.getSingle({
-      params: { uuid: id },
-    })
-  );
-
   return {
     props: {
-      dehydratedState: dehydrate(queryClient),
       messages,
       locale,
       now: new Date().toISOString(),

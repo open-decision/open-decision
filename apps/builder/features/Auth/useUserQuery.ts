@@ -12,7 +12,6 @@ export const useUser = () => {
 
   const useUserQuery = () =>
     useQuery(userQueryKey, () => proxiedOD.user.getUser(), {
-      suspense: true,
       staleTime: Infinity,
       select(response) {
         return response.data;
