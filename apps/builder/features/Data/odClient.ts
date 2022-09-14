@@ -11,7 +11,7 @@ export const OD = client({
 
 export const proxiedOD = client({
   requestOrigin: "client",
-  urlPrefix: `/api/external-api`,
+  urlPrefix: `${process.env["NEXT_PUBLIC_OD_BUILDER_ENDPOINT"]}/api/external-api`,
   fetchFunction: safeFetch,
   headers: {
     credentials: "include",
