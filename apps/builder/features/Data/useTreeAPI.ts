@@ -15,7 +15,12 @@ import {
   TGetTreeDataOutput,
   TGetTreePreviewOutput,
 } from "@open-decision/tree-api-specification";
-import { APIError, ODError, Tree } from "@open-decision/type-classes";
+import {
+  APIError,
+  isAPIError,
+  ODError,
+  Tree,
+} from "@open-decision/type-classes";
 import {
   useMutation,
   UseMutationOptions,
@@ -146,7 +151,15 @@ export const useTreeAPI = () => {
     return useQuery(
       treeDataQueryKey(uuid),
       () => OD.trees.data.getPreview({ params: { uuid } }),
-      options
+      {
+        ...options,
+        retry: (failureCount, error) => {
+          if (isAPIError(error) && error.code === "PREVIEW_NOT_ENABLED") {
+            return false;
+          }
+          return failureCount < 3;
+        },
+      }
     );
   };
 
