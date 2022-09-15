@@ -532,7 +532,6 @@ importers:
       '@open-decision/compare-condition-plugin': workspace:*
       '@open-decision/input-plugin-helpers': workspace:*
       '@open-decision/select-input-plugin': workspace:*
-      '@open-decision/tree-client': workspace:*
       '@open-decision/type-classes': workspace:*
       valtio: ^1.6.4
       zod: ^3
@@ -540,7 +539,6 @@ importers:
       '@open-decision/compare-condition-plugin': link:../../../condition-plugins/compare
       '@open-decision/input-plugin-helpers': link:../../helpers
       '@open-decision/select-input-plugin': link:../plugin
-      '@open-decision/tree-client': link:../../../tree-client
       '@open-decision/type-classes': link:../../../type-classes
       valtio: 1.7.0
       zod: 3.18.0
