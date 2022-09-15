@@ -145,7 +145,10 @@ export const useTreeAPI = () => {
       ["createTree"],
       async (data) => {
         const response = await proxiedOD.trees.create(data);
-        const store = createYjsDocumentIndexedDB({}, response.data.uuid);
+        const store = createYjsDocumentIndexedDB(
+          { startNode: "" },
+          response.data.uuid
+        );
         const tempTreeClient = createTreeClient(store);
 
         const newInput = tempTreeClient.input.select.create({ answers: [] });

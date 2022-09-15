@@ -72,6 +72,7 @@ export const useTreeClient = () => {
   const context = useTreeContext();
 
   const treeClient = createTreeClient(context.tree.syncedStore);
+
   return treeClient;
 };
 
