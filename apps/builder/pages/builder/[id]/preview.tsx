@@ -5,7 +5,6 @@ import { GetServerSideProps } from "next";
 import { Renderer } from "@open-decision/renderer";
 import { useTranslations } from "next-intl";
 import { useTreeAPI } from "../../../features/Data/useTreeAPI";
-import { APIError } from "@open-decision/type-classes";
 
 export const getServerSideProps: GetServerSideProps<
   any,
@@ -41,24 +40,12 @@ type PageProps = { treeId: string };
 export default function VorschauPage({ treeId }: PageProps) {
   const t = useTranslations("renderer.preview");
 
-  const { data: hasPreview, error: previewEnabledError } =
-    useTreeAPI().useTreeQuery(treeId, {
-      select: (result) => {
-        if (!result.data.hasPreview)
-          throw new APIError({ code: "PREVIEW_NOT_ENABLED" });
-
-        return result.data.hasPreview;
-      },
-    });
-
   const { isLoading, isPaused, data, error, isSuccess } =
-    useTreeAPI().useTreeData(treeId, {
+    useTreeAPI().useTreePreview(treeId, {
       select: (result) => result.data,
       staleTime: Infinity,
-      enabled: hasPreview,
     });
 
-  if (previewEnabledError) throw previewEnabledError;
   if (isPaused || isLoading) return <LoadingSpinner />;
   if (!isSuccess) throw error;
 

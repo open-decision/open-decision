@@ -3,8 +3,11 @@ export const treesCollection = "/trees";
 export const treesSingle = (treeUuid: string) =>
   `${treesCollection}/${treeUuid}`;
 
-export const treesDataSingle = (treeUuid: string) =>
+export const treeDataSingle = (treeUuid: string) =>
   `${treesSingle(treeUuid)}/data`;
+
+export const treePreview = (treeUuid: string) =>
+  `${treesSingle(treeUuid)}/preview`;
 
 export const publishedTreesCollection = "/publishedTrees";
 export const publishedTreesSingle = (publishedTreesUuid: string) =>

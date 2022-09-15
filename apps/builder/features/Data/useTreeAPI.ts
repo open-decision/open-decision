@@ -13,8 +13,14 @@ import {
   TCreatePublishedTreeOutput,
   TDeletePublishedTreeOutput,
   TGetTreeDataOutput,
+  TGetTreePreviewOutput,
 } from "@open-decision/tree-api-specification";
-import { APIError, ODError, Tree } from "@open-decision/type-classes";
+import {
+  APIError,
+  isAPIError,
+  ODError,
+  Tree,
+} from "@open-decision/type-classes";
 import {
   useMutation,
   UseMutationOptions,
@@ -131,6 +137,29 @@ export const useTreeAPI = () => {
       treeDataQueryKey(uuid),
       () => OD.trees.data.get({ params: { uuid } }),
       options
+    );
+  };
+
+  const useTreePreview = <TData = FetchReturn<TGetTreePreviewOutput>>(
+    uuid: string,
+    options?: {
+      staleTime?: number;
+      select?: (data: FetchReturn<Tree.TTree>) => TData;
+      enabled?: boolean;
+    }
+  ) => {
+    return useQuery(
+      treeDataQueryKey(uuid),
+      () => OD.trees.data.getPreview({ params: { uuid } }),
+      {
+        ...options,
+        retry: (failureCount, error) => {
+          if (isAPIError(error) && error.code === "PREVIEW_NOT_ENABLED") {
+            return false;
+          }
+          return failureCount < 3;
+        },
+      }
     );
   };
 
@@ -439,5 +468,6 @@ export const useTreeAPI = () => {
     useUnPublish,
     useImport,
     useExport,
+    useTreePreview,
   };
 };
