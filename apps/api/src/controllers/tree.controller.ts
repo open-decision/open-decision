@@ -17,11 +17,22 @@ import {
   updateTreeInput,
   getTreeDataInput,
   TGetTreeDataOutput,
+  TGetTreePreviewOutput,
 } from "@open-decision/tree-api-specification";
 import prisma from "../init-prisma-client";
 import { APIError } from "@open-decision/type-classes";
 import { publishDecisionTree } from "../models/publishedTree.model";
 import { getTreeWithUpdatedTreeData } from "../models/decisionTree.model";
+
+const getTreeData = async (req: Request) => {
+  const reqData = await validateRequest(getTreeDataInput)(req);
+
+  const tree = await getTreeWithUpdatedTreeData(reqData.params.uuid);
+
+  if (tree instanceof Error) throw tree;
+
+  return tree;
+};
 
 const prismaSelectionForTree = {
   publishedTrees: { select: { uuid: true } },
@@ -82,13 +93,21 @@ const getDecisionTree = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getCurrentTreeData = catchAsync(async (req: Request, res: Response) => {
-  const reqData = await validateRequest(getTreeDataInput)(req);
-
-  const tree = await getTreeWithUpdatedTreeData(reqData.params.uuid);
-
-  if (tree instanceof Error) throw tree;
+  const tree = await getTreeData(req);
 
   res.send(tree.treeData as TGetTreeDataOutput);
+});
+
+const getTreePreview = catchAsync(async (req: Request, res: Response) => {
+  const tree = await getTreeData(req);
+
+  if (!tree.hasPreview)
+    throw new APIError({
+      code: "PREVIEW_NOT_ENABLED",
+      message: "Preview is not enabled for this tree.",
+    });
+
+  res.send(tree.treeData as TGetTreePreviewOutput);
 });
 
 const createDecisionTree = catchAsync(async (req: Request, res: Response) => {
@@ -183,6 +202,7 @@ export const treeController = {
   getDecisionTrees,
   getDecisionTree,
   getCurrentTreeData,
+  getTreePreview,
   createDecisionTree,
   deleteDecisionTree,
   updateDecisionTree,
