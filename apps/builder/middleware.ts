@@ -56,5 +56,5 @@ export const middleware: NextMiddleware = async (request) => {
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: ["/settings", "/", "/builder/:path"],
+  matcher: ["/settings", "/", "/builder/:path?"],
 };
