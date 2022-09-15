@@ -13,6 +13,7 @@ import {
   getTree,
   getTrees,
   updateTree,
+  getTreePreview,
 } from "@open-decision/tree-api-specification";
 import {
   login,
@@ -48,6 +49,7 @@ export const client = (context: TContext) => {
       update: updateTree(context),
       data: {
         get: getTreeData(context),
+        getPreview: getTreePreview(context),
       },
       publishedTrees: {
         get: getPublishedTreesOfTree(context),
