@@ -42,7 +42,7 @@ export function OptionTargetInputs({ nodeId, inputId }: SingleSelectProps) {
   const input = useInput(inputId);
   const ref = React.useRef<HTMLDivElement | null>(null);
 
-  if (!input) throw new Error("Input not found");
+  if (!input) return null;
 
   return (
     <>
