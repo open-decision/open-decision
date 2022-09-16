@@ -13,9 +13,9 @@ import {
   useTreeContext,
 } from "@open-decision/tree-sync";
 import { z } from "zod";
-import { SingleSelectInput } from "@open-decision/select-input-plugin";
-import { InputComponentProps } from "@open-decision/input-plugin-helpers";
-import { FreeTextInput } from "@open-decision/free-text-input-plugin";
+import { SingleSelectInput } from "@open-decision/input-plugins-select";
+import { InputComponentProps } from "@open-decision/input-plugins-helpers";
+import { FreeTextInput } from "@open-decision/input-plugins-free-text";
 
 type InputHeaderProps = {
   children?: React.ReactNode;

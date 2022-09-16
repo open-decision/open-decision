@@ -655,6 +655,7 @@ importers:
       '@open-decision/design-system': workspace:*
       '@open-decision/direct-condition-plugin': workspace:*
       '@open-decision/input-plugins-free-text': workspace:*
+      '@open-decision/input-plugins-helpers': workspace:*
       '@open-decision/input-plugins-select': workspace:*
       '@open-decision/tree-sync': workspace:*
       '@open-decision/type-classes': workspace:*
@@ -664,6 +665,7 @@ importers:
       '@open-decision/design-system': link:../design-system
       '@open-decision/direct-condition-plugin': link:../condition-plugins/direct
       '@open-decision/input-plugins-free-text': link:../input-plugins/free-text
+      '@open-decision/input-plugins-helpers': link:../input-plugins/helpers
       '@open-decision/input-plugins-select': link:../input-plugins/select
       '@open-decision/tree-sync': link:../tree-sync
       '@open-decision/type-classes': link:../type-classes

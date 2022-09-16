@@ -47,15 +47,6 @@
       "@open-decision/type-classes": ["packages/type-classes/src/index.ts"],
       "@open-decision/user-api-specification": [
         "packages/user-api-specification/src/index.ts"
-      ],
-      "@open-decision/select-input-plugin": [
-        "packages/input-plugins/select/src/index.ts"
-      ],
-      "@open-decision/free-text-input-plugin": [
-        "packages/input-plugins/free-text/src/index.ts"
-      ],
-      "@open-decision/input-plugin-helpers": [
-        "packages/input-plugins/helpers/src/index.ts"
       ]
     }
   },
