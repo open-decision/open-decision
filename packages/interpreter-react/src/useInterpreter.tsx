@@ -1,7 +1,7 @@
 import { ODProgrammerError, Tree } from "@open-decision/type-classes";
 import * as React from "react";
 import {
-  createInterpreter,
+  createInterpreterMachine,
   InterpreterService,
   createInterpreterMethods,
   InterpreterEvents,
@@ -21,20 +21,20 @@ const MachineContext = React.createContext<{
 export type InterpreterProviderProps = {
   children: React.ReactNode;
   tree: Tree.TTree;
-  defaultNode?: string;
   config?: XStateInterpreteOptions &
     UseMachineOptions<InterpreterContext, InterpreterEvents>;
+  resolver: Parameters<typeof createInterpreterMachine>[2];
 } & InterpreterOptions;
 
 export function InterpreterProvider({
   children,
   tree,
   config,
-  defaultNode,
+  resolver,
   ...options
 }: InterpreterProviderProps) {
   const [[interpreterMachine]] = React.useState(
-    React.useState(createInterpreter(tree, defaultNode, options))
+    React.useState(createInterpreterMachine(tree, Tree.Type, resolver, options))
   );
 
   if (interpreterMachine instanceof Error)

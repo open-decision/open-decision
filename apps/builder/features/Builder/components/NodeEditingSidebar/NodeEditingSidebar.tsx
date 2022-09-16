@@ -6,9 +6,10 @@ import {
   Label,
   Stack,
   DropdownMenu,
+  Heading,
 } from "@open-decision/design-system";
 import * as React from "react";
-import { Node } from "@open-decision/type-classes";
+import { createTreeClient, Node } from "@open-decision/type-classes";
 import { nodeNameMaxLength } from "../../utilities/constants";
 import { NodeMenu } from "../Canvas/Nodes/NodeMenu";
 import {
@@ -22,11 +23,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ParentNodeSelector } from "./ParentNodeSelector";
 import { StartNodeLabel } from "../NodeLabels/StartNodeLabels";
 import { useTranslations } from "next-intl";
-import { SingleSelectInput } from "@open-decision/select-input-ui";
-import { BuilderComponent } from "@open-decision/free-text-input-ui";
+import { SingleSelectInput } from "@open-decision/select-input-plugin";
+import { FreeTextInput } from "@open-decision/free-text-input-plugin";
 import { useEditor } from "../../state/useEditor";
 import { TTreeClient } from "@open-decision/tree-client";
-import { useTreeClient } from "../../state/treeStore/TreeContext";
+import {
+  useTreeClient,
+  useTreeContext,
+} from "../../state/treeStore/TreeContext";
 
 type InputHeaderProps = {
   children?: React.ReactNode;
@@ -144,7 +148,10 @@ function NodeEditingSidebarContent({ node, css }: Props) {
   const t = useTranslations("builder.nodeEditingSidebar");
   const inputs = useInputs(node.data.inputs);
   const { replaceSelectedNodes } = useEditor();
-  const treeClient = useTreeClient();
+  const {
+    tree: { syncedStore },
+  } = useTreeContext();
+  const treeClient = createTreeClient(syncedStore);
 
   return (
     <Stack
@@ -184,7 +191,7 @@ function NodeEditingSidebarContent({ node, css }: Props) {
       <Box as="section">
         {inputs ? (
           Object.values(inputs).map((input) => {
-            return input.type ? (
+            return (
               <Box as="section" key={input.id}>
                 {(() => {
                   switch (input.type) {
@@ -196,8 +203,8 @@ function NodeEditingSidebarContent({ node, css }: Props) {
                             inputId={input.id}
                           >
                             <SingleSelectInput.PrimaryActionSlot
-                              treeClient={treeClient}
                               input={input}
+                              treeClient={treeClient}
                             />
                           </InputHeader>
                           <SingleSelectInput.Component
@@ -218,7 +225,7 @@ function NodeEditingSidebarContent({ node, css }: Props) {
                             currentType={input.type}
                             inputId={input.id}
                           />
-                          <BuilderComponent.Component
+                          <FreeTextInput.Component
                             input={input}
                             nodeId={node.id}
                             onClick={() => null}
@@ -234,12 +241,12 @@ function NodeEditingSidebarContent({ node, css }: Props) {
                   }
                 })()}
               </Box>
-            ) : (
-              <InputHeader inputId={input.id} key={input.id} />
             );
           })
         ) : (
-          <InputHeader inputId={input.id} />
+          <Stack>
+            <Heading>Eingabe erstellen</Heading>
+          </Stack>
         )}
       </Box>
     </Stack>

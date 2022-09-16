@@ -4,9 +4,9 @@ import {
   Node,
   ODValidationError,
 } from "@open-decision/type-classes";
-import { SelectPlugin } from "@open-decision/select-input-plugin";
+import { SelectPlugin } from "@open-decision/input-plugins-select";
 import { ComparePlugin } from "@open-decision/compare-condition-plugin";
-import { FreeTextPlugin } from "@open-decision/free-text-input-plugin";
+import { FreeTextPlugin } from "@open-decision/input-plugins-free-text";
 import { z } from "zod";
 import { DirectPlugin } from "@open-decision/direct-condition-plugin";
 import { mergeDeepRight } from "ramda";

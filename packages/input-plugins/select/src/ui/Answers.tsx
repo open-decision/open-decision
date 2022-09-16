@@ -7,7 +7,7 @@ import {
   innerFocusStyle,
 } from "@open-decision/design-system";
 import * as React from "react";
-import { TSelectInput } from "@open-decision/select-input-plugin";
+import { TSelectInput } from "../selectPlugin";
 
 const StyledLabel = styled(Label, {
   border: "1px solid $gray7",

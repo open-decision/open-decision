@@ -1,5 +1,5 @@
 {
-  "name": "@open-decision/free-text-input-ui",
+  "name": "@open-decision/input-plugins-free-text",
   "version": "0.0.1",
   "main": "src/index.ts",
   "dependencies": {
@@ -7,7 +7,6 @@
     "@open-decision/type-classes": "workspace:*",
     "@open-decision/direct-condition-plugin": "workspace:*",
     "@open-decision/design-system": "workspace:*",
-    "@open-decision/input-plugin-helpers": "workspace:*",
-    "@open-decision/free-text-input-plugin": "workspace:*"
+    "@open-decision/input-plugins-helpers": "workspace:*"
   }
 }

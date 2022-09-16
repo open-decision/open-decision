@@ -1,9 +1,8 @@
 {
-  "name": "@open-decision/input-plugin-helpers",
+  "name": "@open-decision/input-plugins-helpers",
   "version": "0.0.1",
   "main": "src/index.ts",
   "dependencies": {
-    "@open-decision/type-classes": "workspace:*",
-    "@open-decision/tree-client": "workspace:*"
+    "@open-decision/type-classes": "workspace:*"
   }
 }

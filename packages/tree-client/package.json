@@ -5,9 +5,9 @@
   "dependencies": {
     "zod": "^3",
     "@open-decision/type-classes": "workspace:*",
-    "@open-decision/select-input-plugin": "workspace:*",
+    "@open-decision/input-plugins-select": "workspace:*",
     "@open-decision/compare-condition-plugin": "workspace:*",
-    "@open-decision/free-text-input-plugin": "workspace:*",
+    "@open-decision/input-plugins-free-text": "workspace:*",
     "@open-decision/direct-condition-plugin": "workspace:*"
   }
 }

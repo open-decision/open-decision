@@ -6,25 +6,7 @@ import {
   NoTruthyConditionException,
 } from "./errors";
 import { canGoBack, canGoForward } from "./methods";
-import { createTreeClient, TTreeClient } from "@open-decision/tree-client";
-
-export function createInterpreter(
-  json: Tree.TTree,
-  initialNode?: string,
-  interpreterOptions?: InterpreterOptions
-) {
-  const decodedJSON = Tree.Type.safeParse(json);
-
-  if (!decodedJSON.success) return new InvalidTreeError(decodedJSON.error);
-
-  const treeClient = createTreeClient(decodedJSON.data);
-
-  return createInterpreterMachine(
-    treeClient,
-    initialNode ?? decodedJSON.data.startNode,
-    interpreterOptions
-  );
-}
+import { z } from "zod";
 
 type ResolveEvents = {
   type: "EVALUATE_NODE_CONDITIONS";
@@ -34,42 +16,6 @@ type ResolveEvents = {
 type ResolverEvents =
   | { type: "VALID_INTERPRETATION"; target: string }
   | { type: "INVALID_INTERPRETATION"; error: InterpreterErrors };
-
-const resolveConditions =
-  (treeClient: TTreeClient) =>
-  (context: InterpreterContext, event: ResolveEvents) =>
-  (callback: Sender<ResolverEvents>) => {
-    const conditions = treeClient.conditions.get.collection(event.conditionIds);
-
-    for (const conditionId in conditions) {
-      const condition = conditions[conditionId];
-      // FIXME conditions have not yet implemented resolvers
-      return;
-
-      // const existingAnswerId = context.answers[condition.inputId];
-
-      // if (condition.answerId === existingAnswerId) {
-      //   const edge = Object.values<Edge.TEdge>(tree.edges ?? {}).find(
-      //     (edge) => edge.conditionId === condition.id
-      //   );
-
-      //   if (!edge)
-      //     return callback({
-      //       type: "INVALID_INTERPRETATION",
-      //       error: new MissingEdgeForThruthyConditionException(),
-      //     });
-
-      //   return callback({
-      //     type: "VALID_INTERPRETATION",
-      //     target: edge.target,
-      //   });
-      // }
-    }
-    callback({
-      type: "INVALID_INTERPRETATION",
-      error: new NoTruthyConditionException(),
-    });
-  };
 
 export type InterpreterErrors =
   | MissingEdgeForThruthyConditionException
@@ -101,13 +47,24 @@ export type InterpreterService = Interpreter<
 export type InterpreterOptions = {
   onError?: (error: InterpreterErrors) => void;
   onSelectedNodeChange?: (nextNodeIs: string) => void;
+  initialNode?: string;
 };
 
 export const createInterpreterMachine = (
-  treeClient: TTreeClient,
-  initialNode: string,
-  { onError, onSelectedNodeChange }: InterpreterOptions = {}
+  json: Tree.TTree,
+  TreeType: z.ZodType<Tree.TTree>,
+  resolver: (
+    context: InterpreterContext,
+    event: ResolveEvents
+  ) => (callback: Sender<ResolverEvents>) => void,
+  { onError, onSelectedNodeChange, initialNode }: InterpreterOptions = {}
 ) => {
+  const decodedJSON = TreeType.safeParse(json);
+
+  if (!decodedJSON.success) return new InvalidTreeError(decodedJSON.error);
+
+  const startNode = initialNode ?? decodedJSON.data.startNode;
+
   return createMachine(
     {
       predictableActionArguments: true,
@@ -117,7 +74,10 @@ export const createInterpreterMachine = (
         events: {} as InterpreterEvents,
       },
       context: {
-        history: { nodes: [initialNode], position: 0 },
+        history: {
+          nodes: [startNode],
+          position: 0,
+        },
         answers: {},
       },
       id: "interpreter",
@@ -174,7 +134,7 @@ export const createInterpreterMachine = (
           }),
         }),
         resetToInitialContext: assign((_context, _event) => ({
-          history: { nodes: [initialNode], position: 0 },
+          history: { nodes: [startNode], position: 0 },
           answers: {},
           Error: undefined,
         })),
@@ -237,7 +197,7 @@ export const createInterpreterMachine = (
         }),
       },
       services: {
-        resolveConditions: resolveConditions(treeClient),
+        resolveConditions: resolver,
       },
       guards: {
         canGoBack,

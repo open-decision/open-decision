@@ -12,23 +12,27 @@ import { Edge } from "@open-decision/type-classes";
 import { DragHandle } from "./DragHandle";
 import { Reorder, useDragControls } from "framer-motion";
 import { PlusIcon, TrashIcon } from "@radix-ui/react-icons";
-import { TSelectInput, TAnswer } from "@open-decision/select-input-plugin";
 import {
   InputComponentProps,
   InputPrimaryActionSlotProps,
-} from "@open-decision/input-plugin-helpers";
+} from "@open-decision/input-plugins-helpers";
+import { SelectPlugin, TSelectInput } from "../selectPlugin";
+import { TAnswer } from "../types";
+import { ComparePlugin } from "@open-decision/compare-condition-plugin";
 
 export const AddOptionButton = ({
   input,
   treeClient,
 }: InputPrimaryActionSlotProps<TSelectInput>) => {
+  const Select = new SelectPlugin(treeClient);
+
   return (
     <Button
       size="small"
       variant="secondary"
       onClick={() => {
-        const newAnswer = treeClient.input.select.createAnswer({ text: "" });
-        treeClient.input.select.addAnswer(input.id, newAnswer);
+        const newAnswer = Select.createAnswer({ text: "" });
+        Select.addAnswer(input.id, newAnswer);
       }}
     >
       <Icon label="Neue Antwortmöglichkeit hinzufügen">
@@ -54,17 +58,20 @@ export const SingleSelect = ({
 }: InputComponentProps<TSelectInput>) => {
   const ref = React.useRef<HTMLDivElement | null>(null);
 
+  const Select = new SelectPlugin(treeClient);
+  const Compare = new ComparePlugin(treeClient);
+
   return (
     <StyledReorderGroup
       ref={ref}
       axis="y"
       values={input?.answers}
       onReorder={(newOrder) => {
-        return treeClient.input.select.reorderAnswers(input)?.(newOrder);
+        return Select.reorderAnswers(input)?.(newOrder);
       }}
     >
       {input.answers.map((answer) => {
-        const edge = treeClient.condition.compare.getBy.answer(answer.id);
+        const edge = Compare.getBy.answer(answer.id);
 
         return (
           <OptionTargetInput
@@ -101,6 +108,8 @@ export const OptionTargetInput = ({
   onClick,
   treeClient,
 }: SingleSelectInputProps) => {
+  const Select = new SelectPlugin(treeClient);
+
   const controls = useDragControls();
   const node = treeClient.nodes.get.single(nodeId);
   const nodeOptions = treeClient.nodes.get.options(nodeId);
@@ -143,11 +152,7 @@ export const OptionTargetInput = ({
           <Form.Input
             name={formState.names.answer}
             onChange={(event) =>
-              treeClient.input.select.updateAnswer(
-                inputId,
-                answer.id,
-                event.target.value
-              )
+              Select.updateAnswer(inputId, answer.id, event.target.value)
             }
             placeholder="Antwort"
             css={{
@@ -172,15 +177,10 @@ export const OptionTargetInput = ({
               formState.setValue(formState.names.target, newValue)
             }
             onCreate={(name) =>
-              treeClient.input.select.createTargetNode(
-                nodeId,
-                inputId,
-                answer.id,
-                { name }
-              )
+              Select.createTargetNode(nodeId, inputId, answer.id, { name })
             }
             onSelect={(newItem) =>
-              treeClient.input.select.updateTarget({
+              Select.updateTarget({
                 edgeId: edge?.id,
                 nodeId,
                 inputId,
@@ -213,9 +213,7 @@ export const OptionTargetInput = ({
             variant="neutral"
             type="button"
             square
-            onClick={() =>
-              treeClient.input.select.deleteAnswer(inputId, answer.id)
-            }
+            onClick={() => Select.deleteAnswer(inputId, answer.id)}
           >
             <Icon label="Entferne den Input">
               <TrashIcon />

@@ -1,6 +1,6 @@
 {
-  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/input-plugins/free-text/plugin/src",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/input-plugins/free-text/src",
   "projectType": "library",
   "tags": [],
   "targets": {
@@ -9,9 +9,9 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/input-plugins/free-text",
-        "main": "packages/input-plugins/free-text/plugin/src/index.ts",
-        "tsConfig": "packages/input-plugins/free-text/plugin/tsconfig.lib.json",
-        "assets": ["packages/input-plugins/free-text/plugin/*.md"]
+        "main": "packages/input-plugins/free-text/src/index.ts",
+        "tsConfig": "packages/input-plugins/free-text/tsconfig.lib.json",
+        "assets": ["packages/input-plugins/free-text/*.md"]
       }
     },
     "lint": {
@@ -19,7 +19,7 @@
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": [
-          "packages/input-plugins/free-text/plugin/**/*.{ts,tsx,js,jsx}"
+          "packages/input-plugins/free-text/**/*.{ts,tsx,js,jsx}"
         ]
       }
     },
@@ -27,7 +27,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/packages/input-plugins/free-text"],
       "options": {
-        "jestConfig": "packages/input-plugins/free-text/plugin/jest.config.ts",
+        "jestConfig": "packages/input-plugins/free-text/jest.config.ts",
         "passWithNoTests": true
       }
     }

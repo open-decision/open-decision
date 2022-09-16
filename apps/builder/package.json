@@ -31,8 +31,6 @@
     "@open-decision/type-classes": "workspace:*",
     "@open-decision/user-api-specification": "workspace:*",
     "@open-decision/tree-client": "workspace:*",
-    "@open-decision/select-input-ui": "workspace:*",
-    "@open-decision/free-text-input-ui": "workspace:*",
     "@radix-ui/react-icons": "^1.1.1",
     "@sentry/nextjs": "^7.12.1",
     "@sentry/tracing": "^7.12.1",
