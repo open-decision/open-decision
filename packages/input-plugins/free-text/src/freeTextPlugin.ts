@@ -1,4 +1,4 @@
-import { InputPlugin, TBaseTreeClient } from "@open-decision/type-classes";
+import { InputPlugin, TTreeClient } from "@open-decision/type-classes";
 import { Type } from "./types";
 import { DirectPlugin } from "@open-decision/direct-condition-plugin";
 import { z } from "zod";
@@ -7,7 +7,7 @@ export type TFreeTextInput = z.infer<FreeTextPlugin["MergedType"]>;
 
 export class FreeTextPlugin extends InputPlugin<typeof Type, "freeText"> {
   declare directConditionPlugin: DirectPlugin;
-  constructor(treeClient: TBaseTreeClient) {
+  constructor(treeClient: TTreeClient) {
     super(treeClient, Type, "freeText");
 
     this.directConditionPlugin = new DirectPlugin(treeClient);

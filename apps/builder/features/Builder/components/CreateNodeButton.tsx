@@ -7,7 +7,7 @@ import {
 } from "@open-decision/design-system";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
-import { useTreeClient } from "../state/treeStore/TreeContext";
+import { useTreeClient } from "@open-decision/tree-sync";
 import { useEditor } from "../state/useEditor";
 import { sideMenuTooltipProps } from "./SideMenu/shared";
 

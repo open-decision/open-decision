@@ -2,72 +2,84 @@ import * as React from "react";
 import { useReactFlow, useStore } from "react-flow-renderer";
 import { calculateCenterOfNode } from "../utilities/calculateCenterOfNode";
 import { sidebarWidth } from "../utilities/constants";
-import { Node, ODProgrammerError } from "@open-decision/type-classes";
+import {
+  Node,
+  ODProgrammerError,
+  TTreeClient,
+} from "@open-decision/type-classes";
 import shallow from "zustand/shallow";
-import { useTreeClient, useTreeContext } from "./treeStore/TreeContext";
-import { TTreeClient } from "@open-decision/tree-client";
+import { proxy } from "valtio";
+import { useTreeClient } from "@open-decision/tree-sync";
+
+const editorInitialStore = {
+  connectionSourceNodeId: "",
+  validConnections: [] as string[],
+  selectedNodeIds: [] as string[],
+  selectedEdgeIds: [] as string[],
+  selectedView: "editor",
+};
 
 const createSelectionMethods = (
   treeClient: TTreeClient,
-  nonSyncedStore: ReturnType<typeof useTreeContext>["tree"]["nonSyncedStore"]
+  editorStore: typeof editorInitialStore
 ) => {
   const updateSelectedView = (view: string) => {
-    nonSyncedStore.selectedView = view;
+    editorStore.selectedView = view;
   };
 
   function startConnecting(sourceNodeId: string) {
     const connectionOriginNode = treeClient.nodes.get.single(sourceNodeId);
     if (!connectionOriginNode) return;
 
-    nonSyncedStore.connectionSourceNodeId = sourceNodeId;
+    editorStore.connectionSourceNodeId = sourceNodeId;
 
     const validConnections = treeClient.nodes.get.connectableNodes(
       connectionOriginNode.id
     );
 
-    nonSyncedStore.validConnections = validConnections;
+    editorStore.validConnections = validConnections;
   }
 
   function abortConnecting() {
-    nonSyncedStore.connectionSourceNodeId = "";
-    nonSyncedStore.validConnections = [];
+    editorStore.connectionSourceNodeId = "";
+    editorStore.validConnections = [];
   }
 
   function addSelectedNodes(nodeIds: string[]) {
-    nonSyncedStore.selectedNodeIds.push(...nodeIds);
+    editorStore.selectedNodeIds.push(...nodeIds);
   }
 
   function replaceSelectedNodes(nodeIds: string[]) {
-    nonSyncedStore.selectedNodeIds = nodeIds;
+    editorStore.selectedNodeIds = nodeIds;
   }
 
   function removeSelectedNodes() {
-    nonSyncedStore.selectedNodeIds = [];
+    editorStore.selectedNodeIds = [];
   }
 
   function removeSelectedNode(nodeId: string) {
-    const nodeIndex = nonSyncedStore.selectedNodeIds.findIndex(
+    const nodeIndex = editorStore.selectedNodeIds.findIndex(
       (id) => id === nodeId
     );
-    nonSyncedStore.selectedNodeIds.splice(nodeIndex, 1);
+    editorStore.selectedNodeIds.splice(nodeIndex, 1);
   }
   function addSelectedEdges(edgeIds: string[]) {
-    nonSyncedStore.selectedEdgeIds.push(...edgeIds);
+    editorStore.selectedEdgeIds.push(...edgeIds);
   }
 
   function replaceSelectedEdges(edgeIds: string[]) {
-    nonSyncedStore.selectedEdgeIds = edgeIds;
+    editorStore.selectedEdgeIds = edgeIds;
   }
 
   function removeSelectedEdges() {
-    nonSyncedStore.selectedEdgeIds = [];
+    editorStore.selectedEdgeIds = [];
   }
 
   function removeSelectedEdge(edgeId: string) {
-    const edgeIndex = nonSyncedStore.selectedEdgeIds.findIndex(
+    const edgeIndex = editorStore.selectedEdgeIds.findIndex(
       (id) => id === edgeId
     );
-    nonSyncedStore.selectedEdgeIds.splice(edgeIndex, 1);
+    editorStore.selectedEdgeIds.splice(edgeIndex, 1);
   }
 
   return {
@@ -100,7 +112,9 @@ type EditorState = {
 };
 
 export const EditorContext = React.createContext<
-  (EditorState & ReturnType<typeof createSelectionMethods>) | null
+  | ((EditorState & ReturnType<typeof createSelectionMethods>) &
+      typeof editorInitialStore)
+  | null
 >(null);
 
 type TreeProviderProps = Omit<
@@ -108,6 +122,8 @@ type TreeProviderProps = Omit<
   "value"
 >;
 export function EditorProvider({ children }: TreeProviderProps) {
+  const editorStore = proxy(editorInitialStore);
+
   const reactFlowWrapperRef = React.useRef<HTMLDivElement | null>(null);
   const reactFlowBounds = reactFlowWrapperRef.current?.getBoundingClientRect();
   const connectionState = useStore(
@@ -154,13 +170,10 @@ export function EditorProvider({ children }: TreeProviderProps) {
   }
 
   const treeClient = useTreeClient();
-  const {
-    tree: { nonSyncedStore },
-  } = useTreeContext();
 
   const selectionFunctions = React.useMemo(() => {
-    return createSelectionMethods(treeClient, nonSyncedStore);
-  }, [nonSyncedStore, treeClient]);
+    return createSelectionMethods(treeClient, editorStore);
+  }, [treeClient, editorStore]);
 
   return (
     <EditorContext.Provider
@@ -172,6 +185,7 @@ export function EditorProvider({ children }: TreeProviderProps) {
         zoomToNode,
         ...selectionFunctions,
         ...connectionState,
+        ...editorStore,
       }}
     >
       {children}

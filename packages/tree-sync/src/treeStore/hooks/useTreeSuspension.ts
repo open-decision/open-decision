@@ -3,6 +3,6 @@ import { TTreeContext } from "../TreeContext";
 
 export function useTreeSuspension(tree: TTreeContext["tree"]) {
   const {
-    nonSyncedStore: { synced: _ },
+    supensionProxy: { synced: _ },
   } = useSnapshot(tree);
 }

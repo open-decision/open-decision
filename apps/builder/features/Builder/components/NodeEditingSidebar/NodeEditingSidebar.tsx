@@ -5,89 +5,24 @@ import {
   Form,
   Label,
   Stack,
-  DropdownMenu,
-  Heading,
 } from "@open-decision/design-system";
 import * as React from "react";
-import { createTreeClient, Node } from "@open-decision/type-classes";
+import { Node } from "@open-decision/type-classes";
 import { nodeNameMaxLength } from "../../utilities/constants";
 import { NodeMenu } from "../Canvas/Nodes/NodeMenu";
 import {
-  useInputs,
   useParents,
-  useSelectedNodes,
   useStartNodeId,
-} from "../../state/treeStore/hooks";
+  useTreeClient,
+} from "@open-decision/tree-sync";
 import { RichTextEditor } from "@open-decision/rich-text-editor";
 import { AnimatePresence, motion } from "framer-motion";
 import { ParentNodeSelector } from "./ParentNodeSelector";
 import { StartNodeLabel } from "../NodeLabels/StartNodeLabels";
 import { useTranslations } from "next-intl";
-import { SingleSelectInput } from "@open-decision/select-input-plugin";
-import { FreeTextInput } from "@open-decision/free-text-input-plugin";
 import { useEditor } from "../../state/useEditor";
-import { TTreeClient } from "@open-decision/tree-client";
-import {
-  useTreeClient,
-  useTreeContext,
-} from "../../state/treeStore/TreeContext";
-
-type InputHeaderProps = {
-  children?: React.ReactNode;
-  currentType?: TTreeClient["inputs"]["types"][number];
-  inputId: string;
-};
-
-const InputHeader = ({ children, currentType, inputId }: InputHeaderProps) => {
-  const treeClient = useTreeClient();
-
-  return (
-    <Box
-      css={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        gap: "$2",
-        marginBottom: "$3",
-      }}
-    >
-      <Label as="h2" css={{ margin: 0, display: "block" }}>
-        <DropdownMenu.Root>
-          <DropdownMenu.Trigger asChild>
-            <DropdownMenu.Button
-              alignByContent="left"
-              variant="neutral"
-              size="small"
-              css={{ textStyle: "medium-text" }}
-            >
-              {/* FIXME missing input types */}
-              {currentType
-                ? currentType.charAt(0).toUpperCase() + currentType.slice(1)
-                : "Kein Input Typ ausgewählt"}
-            </DropdownMenu.Button>
-          </DropdownMenu.Trigger>
-          <DropdownMenu.Content align="start">
-            {treeClient.inputs.types.map((type) => {
-              return (
-                <DropdownMenu.CheckboxItem
-                  key={type}
-                  checked={currentType === type}
-                  onClick={() => {
-                    const newInput = treeClient.input[type].create({});
-                    return treeClient.inputs.update.type(inputId, newInput);
-                  }}
-                >
-                  {type.charAt(0).toUpperCase() + type.slice(1)}
-                </DropdownMenu.CheckboxItem>
-              );
-            })}
-          </DropdownMenu.Content>
-        </DropdownMenu.Root>
-      </Label>
-      {children}
-    </Box>
-  );
-};
+import { useSelectedNodes } from "../../state/useSelectedNodes";
+import { InputPluginComponent } from "@open-decision/tree-client";
 
 export function NodeEditingSidebar() {
   const [selectionType, selectedNode] = useSelectedNodes();
@@ -146,12 +81,8 @@ type Props = { node: Pick<Node.TNode, "id" | "data">; css?: StyleObject };
 
 function NodeEditingSidebarContent({ node, css }: Props) {
   const t = useTranslations("builder.nodeEditingSidebar");
-  const inputs = useInputs(node.data.inputs);
   const { replaceSelectedNodes } = useEditor();
-  const {
-    tree: { syncedStore },
-  } = useTreeContext();
-  const treeClient = createTreeClient(syncedStore);
+  const treeClient = useTreeClient();
 
   return (
     <Stack
@@ -188,67 +119,11 @@ function NodeEditingSidebarContent({ node, css }: Props) {
           )}
         />
       </Box>
-      <Box as="section">
-        {inputs ? (
-          Object.values(inputs).map((input) => {
-            return (
-              <Box as="section" key={input.id}>
-                {(() => {
-                  switch (input.type) {
-                    case "select": {
-                      return (
-                        <>
-                          <InputHeader
-                            currentType={input.type}
-                            inputId={input.id}
-                          >
-                            <SingleSelectInput.PrimaryActionSlot
-                              input={input}
-                              treeClient={treeClient}
-                            />
-                          </InputHeader>
-                          <SingleSelectInput.Component
-                            nodeId={node.id}
-                            onClick={(target) => replaceSelectedNodes([target])}
-                            input={input}
-                            key={input.id}
-                            treeClient={treeClient}
-                          />
-                        </>
-                      );
-                    }
-
-                    case "freeText": {
-                      return (
-                        <>
-                          <InputHeader
-                            currentType={input.type}
-                            inputId={input.id}
-                          />
-                          <FreeTextInput.Component
-                            input={input}
-                            nodeId={node.id}
-                            onClick={() => null}
-                            key={input.id}
-                            treeClient={treeClient}
-                          />
-                        </>
-                      );
-                    }
-
-                    default:
-                      return null;
-                  }
-                })()}
-              </Box>
-            );
-          })
-        ) : (
-          <Stack>
-            <Heading>Eingabe erstellen</Heading>
-          </Stack>
-        )}
-      </Box>
+      <InputPluginComponent
+        onClick={(target) => replaceSelectedNodes([target])}
+        inputIds={node.data.inputs}
+        nodeId={node.id}
+      />
     </Stack>
   );
 }

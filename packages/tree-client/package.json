@@ -8,6 +8,12 @@
     "@open-decision/input-plugins-select": "workspace:*",
     "@open-decision/compare-condition-plugin": "workspace:*",
     "@open-decision/input-plugins-free-text": "workspace:*",
-    "@open-decision/direct-condition-plugin": "workspace:*"
+    "@open-decision/direct-condition-plugin": "workspace:*",
+    "@open-decision/design-system": "workspace:*",
+    "@open-decision/tree-sync": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   }
 }

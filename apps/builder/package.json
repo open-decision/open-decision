@@ -31,6 +31,7 @@
     "@open-decision/type-classes": "workspace:*",
     "@open-decision/user-api-specification": "workspace:*",
     "@open-decision/tree-client": "workspace:*",
+    "@open-decision/tree-sync": "workspace:*",
     "@radix-ui/react-icons": "^1.1.1",
     "@sentry/nextjs": "^7.12.1",
     "@sentry/tracing": "^7.12.1",
@@ -50,11 +51,7 @@
     "typescript": "^4.8.2",
     "uuid": "^8.3.2",
     "valtio": "^1.6.4",
-    "valtio-yjs": "^0.3.1",
-    "xstate": "^4.33.5",
-    "y-indexeddb": "^9.0.9",
-    "y-websocket": "^1.4.4",
-    "yjs": "^13.5.41",
+    "xstate": "^4.33.6",
     "zod": "^3",
     "zustand": "4.1.1"
   }

@@ -6,7 +6,7 @@
   "sideEffects": false,
   "dependencies": {
     "@xstate/react": "^3.0.1",
-    "xstate": "^4.33.5",
+    "xstate": "^4.33.6",
     "@open-decision/interpreter": "workspace:*",
     "@open-decision/type-classes": "workspace:*",
     "@open-decision/design-system": "workspace:*"

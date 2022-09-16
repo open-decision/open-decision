@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { TBaseTreeClient } from "../treeClient";
+import { TTreeClient } from "../treeClient";
 import { pipe } from "remeda";
 
 export const BaseType = z.object({
@@ -19,13 +19,13 @@ export class ConditionPlugin<
   TType extends z.ZodObject<z.ZodRawShape, any, any>,
   TTypeName extends string
 > {
-  declare treeClient: TBaseTreeClient;
+  declare treeClient: TTreeClient;
   declare MergedType: ReturnType<typeof mergeTypes<TType, TTypeName>>;
   SpecificType: TType;
   declare typeName: TTypeName;
   pluginType = "condition" as const;
 
-  constructor(treeClient: TBaseTreeClient, Type: TType, typeName: TTypeName) {
+  constructor(treeClient: TTreeClient, Type: TType, typeName: TTypeName) {
     this.treeClient = treeClient;
     this.MergedType = mergeTypes(Type, typeName);
     this.SpecificType = Type;

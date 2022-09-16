@@ -3,21 +3,15 @@ import { useEditor } from "../../../../features/Builder/state/useEditor";
 import ReactFlow from "react-flow-renderer";
 import { styled, StyleObject } from "@open-decision/design-system";
 import { Node } from "./Nodes/Node";
-import {
-  useRFEdges,
-  useRFNodes,
-  useStartNodeId,
-} from "../../../../features/Builder/state/treeStore/hooks";
-import {
-  useTreeClient,
-  useTreeContext,
-} from "../../../../features/Builder/state/treeStore/TreeContext";
+
 import { ConnectionLine } from "./Edges/ConnectionLine";
 import { CustomEdge } from "./Edges/CustomEdge";
-import { useSnapshot } from "valtio";
 import { useNotificationStore } from "../../../../config/notifications";
 import { useTranslations } from "next-intl";
 import { ODError } from "@open-decision/type-classes";
+import { useRFNodes } from "../../state/useRFNodes";
+import { useRFEdges } from "../../state/useRFEdges";
+import { useStartNodeId, useTreeClient } from "@open-decision/tree-sync";
 
 const validConnectEvent = (
   target: MouseEvent["target"]
@@ -57,12 +51,9 @@ function Nodes() {
   const t = useTranslations("common.errors");
   const nodes = useRFNodes();
   const edges = useRFEdges();
-  const { tree } = useTreeContext();
+  const { selectedNodeIds, connectionSourceNodeId } = useEditor();
 
   const [dragging, setDragging] = React.useState(false);
-  const {
-    nonSyncedStore: { selectedNodeIds },
-  } = useSnapshot(tree);
   const startNodeId = useStartNodeId();
 
   const {
@@ -143,40 +134,35 @@ function Nodes() {
         }
       }}
       onConnectEnd={(event) => {
-        if (!validConnectEvent(event.target) || !event.target.dataset["nodeid"])
-          return abortConnecting();
-
-        const sourceNode = treeClient.nodes.get.single(
-          tree.nonSyncedStore.connectionSourceNodeId
-        );
-        if (!sourceNode) return abortConnecting();
-        const firstInputId = sourceNode?.data.inputs[0];
-
-        const newAnswer = treeClient.input.select.createAnswer({ text: "" });
-        treeClient.input.select.addAnswer(firstInputId, newAnswer);
-        const newCondition = treeClient.conditions.create({
-          inputId: firstInputId,
-          answerId: newAnswer.id,
-        });
-        const possibleEdge = treeClient.edges.create({
-          source: tree.nonSyncedStore.connectionSourceNodeId,
-          target: event.target.dataset["nodeid"],
-          conditionId: newCondition.id,
-        });
-
-        if (possibleEdge instanceof ODError)
-          return addNotification({
-            title: t(`${possibleEdge.code}.short`),
-            content: t(`${possibleEdge.code}.long`),
-            variant: "danger",
-          });
-
-        treeClient.edges.add(possibleEdge);
-        treeClient.conditions.add(newCondition);
-        treeClient.conditions.connect.toNode(
-          tree.nonSyncedStore.connectionSourceNodeId,
-          newCondition.id
-        );
+        // FIXME How to handle the connection with multiple input types?
+        // if (!validConnectEvent(event.target) || !event.target.dataset["nodeid"])
+        //   return abortConnecting();
+        // const sourceNode = treeClient.nodes.get.single(connectionSourceNodeId);
+        // if (!sourceNode) return abortConnecting();
+        // const firstInputId = sourceNode?.data.inputs[0];
+        // const newAnswer = treeClient.input.select.createAnswer({ text: "" });
+        // treeClient.input.select.addAnswer(firstInputId, newAnswer);
+        // const newCondition = treeClient.conditions.create({
+        //   inputId: firstInputId,
+        //   answerId: newAnswer.id,
+        // });
+        // const possibleEdge = treeClient.edges.create({
+        //   source: connectionSourceNodeId,
+        //   target: event.target.dataset["nodeid"],
+        //   conditionId: newCondition.id,
+        // });
+        // if (possibleEdge instanceof ODError)
+        //   return addNotification({
+        //     title: t(`${possibleEdge.code}.short`),
+        //     content: t(`${possibleEdge.code}.long`),
+        //     variant: "danger",
+        //   });
+        // treeClient.edges.add(possibleEdge);
+        // treeClient.conditions.add(newCondition);
+        // treeClient.conditions.connect.toNode(
+        //   connectionSourceNodeId,
+        //   newCondition.id
+        // );
       }}
       style={{
         gridColumn: "1 / -1",

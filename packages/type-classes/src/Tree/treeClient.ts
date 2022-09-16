@@ -48,7 +48,7 @@ import {
 } from "./utils";
 import { isValidEdge } from "./validators";
 
-export type TBaseTreeClient = ReturnType<typeof createTreeClient<Tree.TTree>>;
+export type TTreeClient = ReturnType<typeof createTreeClient<Tree.TTree>>;
 
 export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
   return {
@@ -168,11 +168,3 @@ export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
     },
   };
 };
-
-type PluginConfig = {
-  condition?: Record<string, any>;
-  input?: Record<string, any>;
-};
-
-export type Plugins<TPlugins extends PluginConfig> =
-  TPlugins extends infer Plugins ? Plugins : never;

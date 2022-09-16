@@ -1,0 +1,21 @@
+{
+  "name": "@open-decision/tree-sync",
+  "version": "0.0.1",
+  "main": "src/index.ts",
+  "dependencies": {
+    "zod": "^3",
+    "@open-decision/type-classes": "workspace:*",
+    "xstate": "^4.33.6",
+    "yjs": "^13.5.41",
+    "y-websocket": "^1.4.5",
+    "y-indexeddb": "^9.0.9",
+    "valtio": "^1.7.0",
+    "valtio-yjs": "^0.3.1",
+    "@xstate/react": "^3.0.1",
+    "remeda": "^1.1.0"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}

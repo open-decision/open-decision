@@ -19,10 +19,9 @@ import { PrototypButton } from "../../../features/Builder/components/PrototypBut
 import { CreateNodeButton } from "../../../features/Builder/components/CreateNodeButton";
 import dynamic from "next/dynamic";
 
-const TreeProvider = dynamic(
-  () => import("../../../features/Builder/state/treeStore/TreeContext"),
-  { ssr: false }
-);
+const TreeProvider = dynamic(() => import("@open-decision/tree-sync"), {
+  ssr: false,
+});
 
 export const getServerSideProps: GetServerSideProps<
   any,
@@ -81,7 +80,7 @@ export default function BuilderPage({ treeId }: PageProps) {
         onValueChange={setSelectedView}
         asChild
       >
-        <TreeProvider>
+        <TreeProvider id={treeId}>
           <Layout
             css={{
               layer: "3",

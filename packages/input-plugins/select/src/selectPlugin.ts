@@ -1,5 +1,5 @@
 import { TAnswer, Type } from "./types";
-import { InputPlugin, TBaseTreeClient } from "@open-decision/type-classes";
+import { InputPlugin, TTreeClient } from "@open-decision/type-classes";
 import { z } from "zod";
 import {
   ComparePlugin,
@@ -11,7 +11,7 @@ export type TSelectInput = z.infer<SelectPlugin["MergedType"]>;
 
 export class SelectPlugin extends InputPlugin<typeof Type, "select"> {
   comparePlugin = new ComparePlugin(this.treeClient);
-  constructor(treeClient: TBaseTreeClient) {
+  constructor(treeClient: TTreeClient) {
     super(treeClient, Type, "select");
   }
 

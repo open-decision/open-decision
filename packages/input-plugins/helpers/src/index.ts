@@ -1,14 +1,14 @@
-import { Input, TBaseTreeClient } from "@open-decision/type-classes";
+import { Input, TTreeClient } from "@open-decision/type-classes";
 
 export type InputComponentProps<TInput extends Input.TBaseInput> = {
   nodeId: string;
   input: TInput;
   onClick: (target: string) => void;
-  treeClient: TBaseTreeClient;
+  treeClient: TTreeClient;
 };
 
 export type InputPrimaryActionSlotProps<TInput extends Input.TBaseInput> = {
-  treeClient: TBaseTreeClient;
+  treeClient: TTreeClient;
   input: TInput;
 };
 

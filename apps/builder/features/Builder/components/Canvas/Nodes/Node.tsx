@@ -4,12 +4,10 @@ import { NodeProps, Position } from "react-flow-renderer";
 import { nodeHeight, nodeWidth } from "../../../utilities/constants";
 import { useEditor } from "../../../../../features/Builder/state/useEditor";
 import { SourcePort, TargetPort } from "./Port";
-import { useStartNodeId } from "../../../../../features/Builder/state/treeStore/hooks";
-import { useSnapshot } from "valtio";
 import { Node as NodeType } from "@open-decision/type-classes";
-import { useTreeContext } from "../../../../../features/Builder/state/treeStore/TreeContext";
 import { StartNodeLabel } from "../../NodeLabels/StartNodeLabels";
 import { useTranslations } from "next-intl";
+import { useStartNodeId } from "@open-decision/tree-sync";
 
 const NodeContainer = styled(Stack, {
   layer: "1",
@@ -34,9 +32,8 @@ const NodeContainer = styled(Stack, {
 export const Node = memo(
   ({ id, data, selected: isSelected }: NodeProps<NodeType.TNodeData>) => {
     const t = useTranslations("builder.canvas.questionNode");
-    const { tree } = useTreeContext();
+    const { validConnections } = useEditor();
     const { isConnecting, connectingNodeId } = useEditor();
-    const { validConnections } = useSnapshot(tree.nonSyncedStore);
     const startNodeId = useStartNodeId();
 
     const validConnectionTarget = React.useMemo(

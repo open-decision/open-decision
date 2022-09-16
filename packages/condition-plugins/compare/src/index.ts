@@ -1,9 +1,9 @@
-import { ConditionPlugin, TBaseTreeClient } from "@open-decision/type-classes";
+import { ConditionPlugin, TTreeClient } from "@open-decision/type-classes";
 import { Type } from "./types";
 import { z } from "zod";
 
 export class ComparePlugin extends ConditionPlugin<typeof Type, "compare"> {
-  constructor(treeClient: TBaseTreeClient) {
+  constructor(treeClient: TTreeClient) {
     super(treeClient, Type, "compare");
   }
 

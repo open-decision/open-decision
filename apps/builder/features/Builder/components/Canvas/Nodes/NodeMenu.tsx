@@ -11,6 +11,7 @@ import {
   TrashIcon,
 } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
+import { useTreeClient } from "@open-decision/tree-sync";
 import { useEditor } from "../../../state/useEditor";
 
 type Props = {
@@ -22,7 +23,8 @@ type Props = {
 
 export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
   const t = useTranslations("builder.nodeEditingSidebar.menu");
-  const { treeClient, removeSelectedNodes } = useEditor();
+  const { removeSelectedNodes } = useEditor();
+  const treeClient = useTreeClient();
 
   return (
     <DropdownMenu.Root>
