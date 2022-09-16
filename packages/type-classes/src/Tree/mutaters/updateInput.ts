@@ -10,7 +10,5 @@ export const updateInput =
 
     if (!inputs) return;
 
-    inputs[inputId] = { id: inputId, ...newInput };
-
-    console.log(inputs);
+    inputs[inputId] = { ...newInput, id: inputId };
   };
