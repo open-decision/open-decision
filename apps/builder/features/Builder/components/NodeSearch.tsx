@@ -6,45 +6,41 @@ import {
   Icon,
 } from "@open-decision/design-system";
 import { useEditor } from "../state/useEditor";
-import { useTreeClient, useTreeContext } from "../state/treeStore/TreeContext";
+import { useNodeNames, useTreeClient } from "@open-decision/tree-sync";
 import { useTranslations } from "next-intl";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { getNodeNames } from "@open-decision/type-classes";
 
 type Props = { css?: StyleObject };
 
 export const NodeSearch = ({ css }: Props) => {
   const t = useTranslations("builder.nodeSearch");
 
-  const { tree } = useTreeContext();
   const treeClient = useTreeClient();
   const { replaceSelectedNodes } = useEditor();
-
-  const nodeNames = getNodeNames(tree.syncedStore)();
+  const nodeNames = useNodeNames();
 
   const { getCenter, zoomToNode } = useEditor();
   const combobox = Combobox.useComboboxState({
     gutter: 8,
     sameWidth: true,
-    list: nodeNames.map((nodeName) => nodeName.name) ?? [],
+    list:
+      Object.values(nodeNames).map(
+        (nodeName) => nodeName.name ?? "Kein Name"
+      ) ?? [],
   });
 
   function createHandler(label: string) {
-    const newAnswer = treeClient.input.select.createAnswer({ text: "" });
-    const newInput = treeClient.inputs.create({ answers: [newAnswer] });
-
     const newNode = treeClient.nodes.create.node({
       type: "customNode",
       position: getCenter(),
       data: {
         name: label,
-        inputs: [newInput.id],
+        inputs: [],
         conditions: [],
       },
     });
 
     treeClient.nodes.add(newNode);
-    treeClient.inputs.add(newInput);
     replaceSelectedNodes([newNode.id]);
     zoomToNode(newNode);
 
@@ -75,7 +71,7 @@ export const NodeSearch = ({ css }: Props) => {
         <Combobox.Popover state={combobox}>
           {combobox.matches.length ? (
             combobox.matches.map((item) => {
-              const id = nodeNames.find(
+              const id = Object.values(nodeNames).find(
                 (nodeName) => nodeName.name === item
               )?.id;
               return id ? (

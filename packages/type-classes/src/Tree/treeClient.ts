@@ -55,7 +55,6 @@ export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
     updateStartNode: updateStartNode(tree),
     get: () => tree,
     validate: Tree.Type.safeParse,
-
     nodes: {
       get: {
         single: getNode(tree),

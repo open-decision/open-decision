@@ -1,24 +1,28 @@
 import * as React from "react";
 import { StyleObject } from "@open-decision/design-system";
 import { Renderer } from "@open-decision/renderer";
-import { useTreeContext } from "../Builder/state/treeStore/TreeContext";
-import { useSnapshot } from "valtio";
+import { useFullTree } from "@open-decision/tree-sync";
 import { useNotificationStore } from "../../config/notifications";
 import { useEditor } from "../Builder/state/useEditor";
+import { useSelectedNodeIds } from "../Builder/state/useSelectedNodes";
 
 type Props = { css?: StyleObject };
 
 export function Preview({ css }: Props) {
-  const { tree } = useTreeContext();
   const { replaceSelectedNodes } = useEditor();
-  const { syncedStore: treeSnapshot, nonSyncedStore: userState } =
-    useSnapshot(tree);
+  const tree = useFullTree();
+  const selectedNodeIds = useSelectedNodeIds();
+
   const { addNotification } = useNotificationStore();
 
   return (
     <Renderer.Root
-      tree={treeSnapshot}
-      defaultNode={userState.selectedNodeIds[0]}
+      // FIXME this needs to be a proper resolver
+      resolver={() => () => {
+        null;
+      }}
+      tree={tree}
+      initialNode={selectedNodeIds[0]}
       onSelectedNodeChange={(nextNodeId) => replaceSelectedNodes([nextNodeId])}
       onError={(error) =>
         addNotification({

@@ -1,20 +1,20 @@
-import { Node } from "@open-decision/type-classes";
 import { useEditor } from "./useEditor";
 import { pick } from "remeda";
+import { useNodes } from "@open-decision/tree-sync";
+import { useSnapshot } from "valtio";
 
-export function useSelectedNodes():
-  | ["none", undefined]
-  | ["single", Node.TNode]
-  | ["multi", Node.TNode[]] {
+export function useSelectedNodes() {
   const nodes = useNodes();
-  const { selectedNodeIds } = useEditor();
+  const selectedNodeIds = useSelectedNodeIds();
 
-  if (!nodes) return ["none", undefined];
+  if (!nodes) return undefined;
 
-  const selectedNodes = Object.values(pick(nodes, selectedNodeIds));
+  return Object.values(pick(nodes, selectedNodeIds));
+}
 
-  if (selectedNodeIds.length === 1) return ["single", selectedNodes[0]];
-  if (selectedNodeIds.length > 1) return ["multi", selectedNodes];
+export function useSelectedNodeIds() {
+  const { editorStore } = useEditor();
+  const { selectedNodeIds } = useSnapshot(editorStore);
 
-  return ["none", undefined];
+  return selectedNodeIds;
 }

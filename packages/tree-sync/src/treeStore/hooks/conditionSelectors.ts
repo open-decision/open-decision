@@ -2,6 +2,7 @@ import { useSnapshot } from "valtio";
 import { useTreeContext } from "../TreeContext";
 import { pick } from "remeda";
 import { Condition } from "@open-decision/type-classes";
+import { isEmpty } from "ramda";
 
 export function useCondition(id: string) {
   const { tree } = useTreeContext();
@@ -20,7 +21,7 @@ export function useConditions(ids?: string[]) {
     tree: { conditions },
   } = useSnapshot(tree);
 
-  if (!conditions) return {};
+  if (!conditions || isEmpty(conditions) || isEmpty(ids)) return undefined;
   if (ids) return pick(conditions, ids);
 
   return conditions;

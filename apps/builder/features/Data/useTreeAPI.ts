@@ -14,7 +14,12 @@ import {
   TDeletePublishedTreeOutput,
   TGetTreeDataOutput,
 } from "@open-decision/tree-api-specification";
-import { APIError, ODError, Tree } from "@open-decision/type-classes";
+import {
+  APIError,
+  createTreeClient,
+  ODError,
+  Tree,
+} from "@open-decision/type-classes";
 import {
   useMutation,
   UseMutationOptions,
@@ -25,7 +30,6 @@ import { OD, proxiedOD } from "../Data/odClient";
 import { z } from "zod";
 import { useNotificationStore } from "../../config/notifications";
 import { createYjsDocumentIndexedDB } from "./utils/createYjsDocumentIndexedDB";
-import { createTreeClient } from "@open-decision/tree-client";
 
 export const treesQueryKey = ["Trees"] as const;
 export const treeQueryKey = (treeUuid: string) =>
@@ -149,17 +153,15 @@ export const useTreeAPI = () => {
           { startNode: "" },
           response.data.uuid
         );
+        console.log(store);
         const tempTreeClient = createTreeClient(store);
-
-        const newInput = tempTreeClient.input.select.create({ answers: [] });
 
         const newNode = tempTreeClient.nodes.create.node({
           type: "customNode",
-          data: { inputs: [newInput.id], conditions: [] },
+          data: { inputs: [], conditions: [] },
         });
 
         tempTreeClient.nodes.add(newNode);
-        tempTreeClient.inputs.add(newInput);
 
         return response;
       },

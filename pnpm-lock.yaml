@@ -263,9 +263,12 @@ importers:
       remeda: ^1.1.0
       typescript: ^4.8.2
       uuid: ^8.3.2
-      valtio: ^1.6.4
+      valtio: ^1.7.0
+      valtio-yjs: ^0.3.1
       ws: ^8.8.1
       xstate: ^4.33.6
+      y-indexeddb: ^9.0.9
+      yjs: ^13.5.41
       zod: ^3
       zustand: 4.1.1
     dependencies:
@@ -302,7 +305,10 @@ importers:
       typescript: 4.8.2
       uuid: 8.3.2
       valtio: 1.7.0_react@18.2.0
+      valtio-yjs: 0.3.1_valtio@1.7.0+yjs@13.5.41
       xstate: 4.33.6
+      y-indexeddb: 9.0.9_yjs@13.5.41
+      yjs: 13.5.41
       zod: 3.18.0
       zustand: 4.1.1_react@18.2.0
     devDependencies:

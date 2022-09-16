@@ -1,9 +1,9 @@
 import { useNodes } from "@open-decision/tree-sync";
-import { useEditor } from "./useEditor";
+import { useSelectedNodeIds } from "./useSelectedNodes";
 
 export function useRFNodes() {
   const nodes = useNodes();
-  const { selectedNodeIds } = useEditor();
+  const selectedNodeIds = useSelectedNodeIds();
 
   if (!nodes) return [];
 

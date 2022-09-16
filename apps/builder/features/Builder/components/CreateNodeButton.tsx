@@ -29,14 +29,12 @@ export function CreateNodeButton({ css }: Props) {
           square
           css={css}
           onClick={() => {
-            const newInput = treeClient.input.select.create();
             const newNode = treeClient.nodes.create.node({
               type: "customNode",
-              data: { inputs: [newInput.id], conditions: [] },
+              data: { inputs: [], conditions: [] },
               position: getCenter(),
             });
 
-            treeClient.inputs.add(newInput);
             treeClient.nodes.add(newNode);
 
             replaceSelectedNodes([newNode.id]);

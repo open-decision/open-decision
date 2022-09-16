@@ -1,6 +1,7 @@
 import { useSnapshot } from "valtio";
 import { useTreeContext } from "../TreeContext";
 import { pick } from "remeda";
+import { isEmpty } from "ramda";
 
 export function useInput(id: string) {
   const { tree } = useTreeContext();
@@ -17,7 +18,7 @@ export function useInputs(ids: string[]) {
     tree: { inputs },
   } = useSnapshot(tree);
 
-  if (!inputs) return undefined;
+  if (!inputs || isEmpty(inputs) || isEmpty(ids)) return undefined;
 
   if (ids) return pick(inputs, ids);
 

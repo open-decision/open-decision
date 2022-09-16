@@ -4,7 +4,7 @@ import { isValidEdge } from "../validators";
 import { ODError } from "../../Error";
 
 export type NewEdgeData = Partial<Edge.TEdge> &
-  Required<Pick<Edge.TEdge, "source" | "target" | "conditionId">>;
+  Required<Pick<Edge.TEdge, "source" | "target">>;
 
 export const createEdge =
   (tree: Tree.TTree) =>

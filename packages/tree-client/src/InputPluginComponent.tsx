@@ -1,12 +1,6 @@
 import * as React from "react";
 import { createTreeClient, TTreeClient } from "./createTreeClient";
-import {
-  DropdownMenu,
-  Box,
-  Label,
-  Heading,
-  Stack,
-} from "@open-decision/design-system";
+import { DropdownMenu, Box, Label } from "@open-decision/design-system";
 import {
   useInputs,
   useTreeClient,
@@ -17,19 +11,64 @@ import { SingleSelectInput } from "@open-decision/input-plugins-select";
 import { InputComponentProps } from "@open-decision/input-plugins-helpers";
 import { FreeTextInput } from "@open-decision/input-plugins-free-text";
 
-type InputHeaderProps = {
-  children?: React.ReactNode;
+type InputDropdownProps = {
   currentType?: TTreeClient["inputs"]["types"][number];
-  inputId: string;
   treeClient: TTreeClient;
+  inputId?: string;
+  nodeId: string;
 };
 
-const InputHeader = ({
-  children,
+const InputDropdown = ({
   currentType,
-  inputId,
   treeClient,
-}: InputHeaderProps) => {
+  inputId,
+  nodeId,
+}: InputDropdownProps) => {
+  return (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild>
+        <DropdownMenu.Button
+          alignByContent="left"
+          variant="neutral"
+          size="small"
+          css={{ textStyle: "medium-text" }}
+        >
+          {/* FIXME missing input types */}
+          {currentType
+            ? currentType.charAt(0).toUpperCase() + currentType.slice(1)
+            : "Kein Input Typ ausgewählt"}
+        </DropdownMenu.Button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content align="start">
+        {treeClient.inputs.types.map((type) => {
+          return (
+            <DropdownMenu.CheckboxItem
+              key={type}
+              checked={currentType === type}
+              onClick={() => {
+                const newInput = treeClient.input[type].create({});
+                if (!inputId) {
+                  treeClient.inputs.add(newInput);
+                  return treeClient.inputs.connect.toNode(nodeId, newInput.id);
+                }
+
+                return treeClient.inputs.update.type(inputId, newInput);
+              }}
+            >
+              {type.charAt(0).toUpperCase() + type.slice(1)}
+            </DropdownMenu.CheckboxItem>
+          );
+        })}
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+  );
+};
+
+type InputHeaderProps = {
+  children?: React.ReactNode;
+} & InputDropdownProps;
+
+const InputHeader = ({ children, ...props }: InputHeaderProps) => {
   return (
     <Box
       css={{
@@ -41,37 +80,7 @@ const InputHeader = ({
       }}
     >
       <Label as="h2" css={{ margin: 0, display: "block" }}>
-        <DropdownMenu.Root>
-          <DropdownMenu.Trigger asChild>
-            <DropdownMenu.Button
-              alignByContent="left"
-              variant="neutral"
-              size="small"
-              css={{ textStyle: "medium-text" }}
-            >
-              {/* FIXME missing input types */}
-              {currentType
-                ? currentType.charAt(0).toUpperCase() + currentType.slice(1)
-                : "Kein Input Typ ausgewählt"}
-            </DropdownMenu.Button>
-          </DropdownMenu.Trigger>
-          <DropdownMenu.Content align="start">
-            {treeClient.inputs.types.map((type) => {
-              return (
-                <DropdownMenu.CheckboxItem
-                  key={type}
-                  checked={currentType === type}
-                  onClick={() => {
-                    const newInput = treeClient.input[type].create({});
-                    return treeClient.inputs.update.type(inputId, newInput);
-                  }}
-                >
-                  {type.charAt(0).toUpperCase() + type.slice(1)}
-                </DropdownMenu.CheckboxItem>
-              );
-            })}
-          </DropdownMenu.Content>
-        </DropdownMenu.Root>
+        <InputDropdown {...props} />
       </Label>
       {children}
     </Box>
@@ -112,6 +121,7 @@ export function InputPluginComponent({
                     return (
                       <>
                         <InputHeader
+                          nodeId={nodeId}
                           currentType={input.type}
                           inputId={input.id}
                           treeClient={extendedTreeClient}
@@ -136,6 +146,7 @@ export function InputPluginComponent({
                     return (
                       <>
                         <InputHeader
+                          nodeId={nodeId}
                           currentType={input.type}
                           inputId={input.id}
                           treeClient={extendedTreeClient}
@@ -159,9 +170,7 @@ export function InputPluginComponent({
           );
         })
       ) : (
-        <Stack>
-          <Heading>Eingabe erstellen</Heading>
-        </Stack>
+        <InputHeader nodeId={nodeId} treeClient={extendedTreeClient} />
       )}
     </Box>
   );

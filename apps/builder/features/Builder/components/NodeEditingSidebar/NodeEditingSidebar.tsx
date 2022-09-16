@@ -5,12 +5,14 @@ import {
   Form,
   Label,
   Stack,
+  Badge,
 } from "@open-decision/design-system";
 import * as React from "react";
 import { Node } from "@open-decision/type-classes";
 import { nodeNameMaxLength } from "../../utilities/constants";
 import { NodeMenu } from "../Canvas/Nodes/NodeMenu";
 import {
+  useChildren,
   useParents,
   useStartNodeId,
   useTreeClient,
@@ -25,14 +27,14 @@ import { useSelectedNodes } from "../../state/useSelectedNodes";
 import { InputPluginComponent } from "@open-decision/tree-client";
 
 export function NodeEditingSidebar() {
-  const [selectionType, selectedNode] = useSelectedNodes();
+  const selectedNodes = useSelectedNodes();
+  const singleNodeSelected = selectedNodes && selectedNodes.length === 1;
 
   return (
     <AnimatePresence>
-      {selectionType === "single" ? (
+      {singleNodeSelected ? (
         <motion.aside
           layout
-          key={selectionType}
           initial={{ x: "100%" }}
           animate={{
             x: 0,
@@ -56,21 +58,19 @@ export function NodeEditingSidebar() {
             width: "100%",
           }}
         >
-          {selectionType === "single" ? (
-            <NodeEditingSidebarContent
-              key={selectedNode.id}
-              css={{
-                gridRow: "1 / -1",
-                gridColumn: "2",
-                zIndex: "$10",
-                height: "100%",
-                overflow: "hidden scroll",
-                groupColor: "$gray11",
-                borderLeft: "$border$layer",
-              }}
-              node={{ id: selectedNode.id, data: selectedNode.data }}
-            />
-          ) : null}
+          <NodeEditingSidebarContent
+            key={selectedNodes[0].id}
+            css={{
+              gridRow: "1 / -1",
+              gridColumn: "2",
+              zIndex: "$10",
+              height: "100%",
+              overflow: "hidden scroll",
+              groupColor: "$gray11",
+              borderLeft: "$border$layer",
+            }}
+            node={{ id: selectedNodes[0].id, data: selectedNodes[0].data }}
+          />
         </motion.aside>
       ) : null}
     </AnimatePresence>
@@ -83,6 +83,7 @@ function NodeEditingSidebarContent({ node, css }: Props) {
   const t = useTranslations("builder.nodeEditingSidebar");
   const { replaceSelectedNodes } = useEditor();
   const treeClient = useTreeClient();
+  const childNodes = useChildren(node.id);
 
   return (
     <Stack
@@ -118,6 +119,14 @@ function NodeEditingSidebarContent({ node, css }: Props) {
             </Label>
           )}
         />
+      </Box>
+      <Box as="section">
+        <Label as="h2">Nicht zugewiesene Ziele</Label>
+        <Row css={{ marginTop: "$2", gap: "$2" }}>
+          {Object.values(childNodes).map((childNode) => (
+            <Badge key={childNode.id}>{childNode.name}</Badge>
+          ))}
+        </Row>
       </Box>
       <InputPluginComponent
         onClick={(target) => replaceSelectedNodes([target])}

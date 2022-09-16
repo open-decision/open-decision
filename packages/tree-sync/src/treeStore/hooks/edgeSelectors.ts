@@ -2,6 +2,7 @@ import { useSnapshot } from "valtio";
 import { useTreeContext } from "../TreeContext";
 import { pick } from "remeda";
 import { Edge } from "@open-decision/type-classes";
+import { isEmpty } from "ramda";
 
 export function useEdge(id: string) {
   const { tree } = useTreeContext();
@@ -20,7 +21,7 @@ export function useEdges(ids?: string[]) {
     tree: { edges },
   } = useSnapshot(tree);
 
-  if (!edges) return {};
+  if (!edges || isEmpty(edges) || isEmpty(ids)) return undefined;
   if (ids) return pick(edges, ids);
 
   return edges;

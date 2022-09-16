@@ -5,7 +5,9 @@ import { useTreeContext } from "../TreeContext";
  * tree is changed. If possible a more specific hook should be used.
  */
 export function useFullTree() {
-  const { tree } = useTreeContext();
+  const {
+    tree: { tree },
+  } = useTreeContext();
 
   return useSnapshot(tree);
 }

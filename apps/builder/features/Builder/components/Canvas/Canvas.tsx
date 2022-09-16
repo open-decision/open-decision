@@ -12,6 +12,7 @@ import { ODError } from "@open-decision/type-classes";
 import { useRFNodes } from "../../state/useRFNodes";
 import { useRFEdges } from "../../state/useRFEdges";
 import { useStartNodeId, useTreeClient } from "@open-decision/tree-sync";
+import { useSelectedNodeIds } from "../../state/useSelectedNodes";
 
 const validConnectEvent = (
   target: MouseEvent["target"]
@@ -51,7 +52,11 @@ function Nodes() {
   const t = useTranslations("common.errors");
   const nodes = useRFNodes();
   const edges = useRFEdges();
-  const { selectedNodeIds, connectionSourceNodeId } = useEditor();
+  const {
+    editorStore: { connectionSourceNodeId },
+  } = useEditor();
+
+  const selectedNodeIds = useSelectedNodeIds();
 
   const [dragging, setDragging] = React.useState(false);
   const startNodeId = useStartNodeId();
@@ -135,34 +140,25 @@ function Nodes() {
       }}
       onConnectEnd={(event) => {
         // FIXME How to handle the connection with multiple input types?
-        // if (!validConnectEvent(event.target) || !event.target.dataset["nodeid"])
-        //   return abortConnecting();
-        // const sourceNode = treeClient.nodes.get.single(connectionSourceNodeId);
-        // if (!sourceNode) return abortConnecting();
-        // const firstInputId = sourceNode?.data.inputs[0];
-        // const newAnswer = treeClient.input.select.createAnswer({ text: "" });
-        // treeClient.input.select.addAnswer(firstInputId, newAnswer);
-        // const newCondition = treeClient.conditions.create({
-        //   inputId: firstInputId,
-        //   answerId: newAnswer.id,
-        // });
-        // const possibleEdge = treeClient.edges.create({
-        //   source: connectionSourceNodeId,
-        //   target: event.target.dataset["nodeid"],
-        //   conditionId: newCondition.id,
-        // });
-        // if (possibleEdge instanceof ODError)
-        //   return addNotification({
-        //     title: t(`${possibleEdge.code}.short`),
-        //     content: t(`${possibleEdge.code}.long`),
-        //     variant: "danger",
-        //   });
-        // treeClient.edges.add(possibleEdge);
-        // treeClient.conditions.add(newCondition);
-        // treeClient.conditions.connect.toNode(
-        //   connectionSourceNodeId,
-        //   newCondition.id
-        // );
+        if (!validConnectEvent(event.target) || !event.target.dataset["nodeid"])
+          return abortConnecting();
+
+        const sourceNode = treeClient.nodes.get.single(connectionSourceNodeId);
+        if (!sourceNode) return abortConnecting();
+
+        const possibleEdge = treeClient.edges.create({
+          source: connectionSourceNodeId,
+          target: event.target.dataset["nodeid"],
+        });
+
+        if (possibleEdge instanceof ODError)
+          return addNotification({
+            title: t(`${possibleEdge.code}.short`),
+            content: t(`${possibleEdge.code}.long`),
+            variant: "danger",
+          });
+
+        treeClient.edges.add(possibleEdge);
       }}
       style={{
         gridColumn: "1 / -1",

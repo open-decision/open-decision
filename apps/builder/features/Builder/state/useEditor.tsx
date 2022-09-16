@@ -112,8 +112,9 @@ type EditorState = {
 };
 
 export const EditorContext = React.createContext<
-  | ((EditorState & ReturnType<typeof createSelectionMethods>) &
-      typeof editorInitialStore)
+  | ((EditorState & ReturnType<typeof createSelectionMethods>) & {
+      editorStore: typeof editorInitialStore;
+    })
   | null
 >(null);
 
@@ -185,7 +186,7 @@ export function EditorProvider({ children }: TreeProviderProps) {
         zoomToNode,
         ...selectionFunctions,
         ...connectionState,
-        ...editorStore,
+        editorStore,
       }}
     >
       {children}
