@@ -6,9 +6,9 @@
     "zod": "^3",
     "@open-decision/type-classes": "workspace:*",
     "@open-decision/input-plugins-select": "workspace:*",
-    "@open-decision/compare-condition-plugin": "workspace:*",
+    "@open-decision/condition-plugins-compare": "workspace:*",
     "@open-decision/input-plugins-free-text": "workspace:*",
-    "@open-decision/direct-condition-plugin": "workspace:*",
+    "@open-decision/condition-plugin-direct": "workspace:*",
     "@open-decision/design-system": "workspace:*",
     "@open-decision/tree-sync": "workspace:*",
     "@open-decision/input-plugins-helpers": "workspace:*"

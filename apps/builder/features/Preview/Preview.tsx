@@ -5,6 +5,7 @@ import { useFullTree } from "@open-decision/tree-sync";
 import { useNotificationStore } from "../../config/notifications";
 import { useEditor } from "../Builder/state/useEditor";
 import { useSelectedNodeIds } from "../Builder/state/useSelectedNodes";
+import { interpreterPlugin } from "@open-decision/tree-client";
 
 type Props = { css?: StyleObject };
 
@@ -18,9 +19,7 @@ export function Preview({ css }: Props) {
   return (
     <Renderer.Root
       // FIXME this needs to be a proper resolver
-      resolver={() => () => {
-        null;
-      }}
+      resolver={interpreterPlugin}
       tree={tree}
       initialNode={selectedNodeIds[0]}
       onSelectedNodeChange={(nextNodeId) => replaceSelectedNodes([nextNodeId])}

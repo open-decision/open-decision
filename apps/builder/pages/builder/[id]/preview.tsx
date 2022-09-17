@@ -6,6 +6,7 @@ import { Renderer } from "@open-decision/renderer";
 import { useTranslations } from "next-intl";
 import { useTreeAPI } from "../../../features/Data/useTreeAPI";
 import { APIError } from "@open-decision/type-classes";
+import { interpreterPlugin } from "@open-decision/tree-client";
 
 export const getServerSideProps: GetServerSideProps<
   any,
@@ -67,7 +68,7 @@ export default function VorschauPage({ treeId }: PageProps) {
       <Head>
         <title>{t("pageTitle")}</title>
       </Head>
-      <Renderer.Root tree={data}>
+      <Renderer.Root tree={data} resolver={interpreterPlugin}>
         <Stack center css={{ layer: "2", height: "100%" }}>
           <Renderer.View
             css={{

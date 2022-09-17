@@ -5,6 +5,7 @@ import { pipe } from "remeda";
 export const BaseType = z.object({
   id: z.string().uuid(),
   inputId: z.string().uuid().optional(),
+  type: z.string(),
 });
 
 const mergeTypes = <

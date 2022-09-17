@@ -1,5 +1,5 @@
 {
-  "name": "@open-decision/compare-condition-plugin",
+  "name": "@open-decision/condition-plugins-compare",
   "version": "0.0.1",
   "main": "src/index.ts",
   "dependencies": {

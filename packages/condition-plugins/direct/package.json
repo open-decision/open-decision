@@ -1,5 +1,5 @@
 {
-  "name": "@open-decision/direct-condition-plugin",
+  "name": "@open-decision/condition-plugins-direct",
   "version": "0.0.1",
   "main": "src/index.ts",
   "dependencies": {

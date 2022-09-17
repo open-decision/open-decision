@@ -16,6 +16,7 @@ import {
   getEdges,
 } from "./getters";
 import { getConditionsByNode } from "./getters/getConditionsByNode";
+import { getEdgesByCondition } from "./getters/getEdgesByCondition";
 import { getEdgesByNode } from "./getters/getEdgesByNode";
 import { getNodeOptions } from "./getters/getNodeOptions";
 import {
@@ -142,7 +143,7 @@ export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
         all: () => tree.edges,
         byNode: getEdgesByNode(tree.edges ?? {}),
         byInput: null,
-        byCondition: null,
+        byCondition: getEdgesByCondition(tree.edges ?? {}),
       },
       delete: deleteEdges(tree),
       create: createEdge(tree),

@@ -1,3 +1,4 @@
+import { isEmpty } from "ramda";
 import { Edge } from "../..";
 
 export const getEdgesByNode =
@@ -11,6 +12,8 @@ export const getEdgesByNode =
         if (edge.source === nodeId) nodesEdges[key] = edge;
       }
     }
+
+    if (isEmpty(nodesEdges)) return undefined;
 
     return nodesEdges;
   };

@@ -8,9 +8,17 @@ import {
 import { canGoBack, canGoForward } from "./methods";
 import { z } from "zod";
 
-type ResolveEvents = {
+export type Resolver = (
+  tree: Tree.TTree
+) => (
+  context: InterpreterContext,
+  event: EVALUATE_NODE_CONDITIONS
+) => (callback: Sender<ResolverEvents>) => void;
+
+export type EVALUATE_NODE_CONDITIONS = {
   type: "EVALUATE_NODE_CONDITIONS";
   conditionIds: string[];
+  nodeId: string;
 };
 
 type ResolverEvents =
@@ -28,13 +36,12 @@ export type InterpreterContext = {
 
 export type InterpreterEvents =
   | { type: "ADD_USER_ANSWER"; inputId: string; answerId: string }
-  | { type: "EVALUATE_NODE_CONDITIONS"; conditionIds: string[] }
   | { type: "RESET" }
   | { type: "GO_BACK" }
   | { type: "GO_FORWARD" }
   | { type: "RECOVER" }
   | ResolverEvents
-  | ResolveEvents;
+  | EVALUATE_NODE_CONDITIONS;
 
 export type InterpreterService = Interpreter<
   InterpreterContext,
@@ -53,10 +60,7 @@ export type InterpreterOptions = {
 export const createInterpreterMachine = (
   json: Tree.TTree,
   TreeType: z.ZodType<Tree.TTree>,
-  resolver: (
-    context: InterpreterContext,
-    event: ResolveEvents
-  ) => (callback: Sender<ResolverEvents>) => void,
+  resolver: Resolver,
   { onError, onSelectedNodeChange, initialNode }: InterpreterOptions = {}
 ) => {
   const decodedJSON = TreeType.safeParse(json);
@@ -197,7 +201,7 @@ export const createInterpreterMachine = (
         }),
       },
       services: {
-        resolveConditions: resolver,
+        resolveConditions: resolver(decodedJSON.data),
       },
       guards: {
         canGoBack,

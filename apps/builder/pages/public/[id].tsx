@@ -15,6 +15,7 @@ import { FullPageErrorFallback } from "../../components/Error/FullPageErrorFallb
 import { ODError } from "@open-decision/type-classes";
 import { Layout } from "../../components";
 import { useNotificationStore } from "../../config/notifications";
+import { interpreterPlugin } from "@open-decision/tree-client";
 
 export const getServerSideProps: GetServerSideProps = async ({
   req,
@@ -77,6 +78,7 @@ export default function Page({ treeId }: PageProps) {
       </Head>
       <Layout>
         <Renderer.Root
+          resolver={interpreterPlugin}
           tree={data}
           onError={(error) =>
             addNotification({
