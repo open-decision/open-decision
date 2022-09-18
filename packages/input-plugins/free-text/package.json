@@ -5,7 +5,7 @@
   "dependencies": {
     "zod": "^3",
     "@open-decision/type-classes": "workspace:*",
-    "@open-decision/direct-condition-plugin": "workspace:*",
+    "@open-decision/condition-plugins-direct": "workspace:*",
     "@open-decision/design-system": "workspace:*",
     "@open-decision/input-plugins-helpers": "workspace:*"
   }

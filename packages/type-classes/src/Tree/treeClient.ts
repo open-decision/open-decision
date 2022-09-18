@@ -18,6 +18,7 @@ import {
 import { getConditionsByNode } from "./getters/getConditionsByNode";
 import { getEdgesByCondition } from "./getters/getEdgesByCondition";
 import { getEdgesByNode } from "./getters/getEdgesByNode";
+import { getInputsByNode } from "./getters/getInputsByNode";
 import { getNodeOptions } from "./getters/getNodeOptions";
 import {
   updateStartNode,
@@ -94,7 +95,7 @@ export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
         single: getInput(tree),
         collection: getInputs(tree),
         all: () => tree.inputs as TTree["inputs"],
-        byNode: null,
+        byNode: getInputsByNode(tree),
         byCondition: null,
         byEdge: null,
       },

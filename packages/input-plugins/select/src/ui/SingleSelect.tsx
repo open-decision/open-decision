@@ -18,7 +18,7 @@ import {
 } from "@open-decision/input-plugins-helpers";
 import { SelectPlugin, TSelectInput } from "../selectPlugin";
 import { TAnswer } from "../types";
-import { ComparePlugin } from "@open-decision/compare-condition-plugin";
+import { ComparePlugin } from "@open-decision/condition-plugins-compare";
 
 export const AddOptionButton = ({
   input,

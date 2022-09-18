@@ -4,7 +4,7 @@ import { z } from "zod";
 import {
   ComparePlugin,
   TCompareCondition,
-} from "@open-decision/compare-condition-plugin";
+} from "@open-decision/condition-plugins-compare";
 import { v4 as uuid } from "uuid";
 
 export type TSelectInput = z.infer<SelectPlugin["MergedType"]>;
@@ -69,7 +69,7 @@ export class SelectPlugin extends InputPlugin<typeof Type, "select"> {
     this.treeClient.conditions.delete(
       Object.values(this.treeClient.conditions.get.all() ?? {})
         .filter<TCompareCondition>(this.comparePlugin.isType)
-        .filter((condition) => condition.valueId === answerId)
+        .filter((condition) => condition.answerId === answerId)
         .map((condition) => condition.id)
     );
   }
@@ -92,7 +92,7 @@ export class SelectPlugin extends InputPlugin<typeof Type, "select"> {
     if (!edge?.target && newItem) {
       const newCondition = this.comparePlugin.create({
         inputId,
-        valueId: answerId,
+        answerId,
       });
 
       this.treeClient.conditions.add(newCondition);
@@ -116,7 +116,7 @@ export class SelectPlugin extends InputPlugin<typeof Type, "select"> {
   createTargetNode(
     nodeId: string,
     inputId: string,
-    valueId: string,
+    answerId: string,
     data: { name: string }
   ) {
     const childNode = this.treeClient.nodes.create.childNode(nodeId, {
@@ -128,7 +128,7 @@ export class SelectPlugin extends InputPlugin<typeof Type, "select"> {
 
     const newCondition = this.comparePlugin.create({
       inputId,
-      valueId,
+      answerId,
     });
 
     const newEdge = this.treeClient.edges.create({

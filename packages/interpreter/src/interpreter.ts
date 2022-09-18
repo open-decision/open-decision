@@ -2,8 +2,8 @@ import { Tree } from "@open-decision/type-classes";
 import { assign, createMachine, Interpreter, Sender } from "xstate";
 import {
   InvalidTreeError,
-  MissingEdgeForThruthyConditionException,
-  NoTruthyConditionException,
+  MissingEdgeForThruthyConditionError,
+  NoTruthyConditionError,
 } from "./errors";
 import { canGoBack, canGoForward } from "./methods";
 import { z } from "zod";
@@ -26,8 +26,8 @@ type ResolverEvents =
   | { type: "INVALID_INTERPRETATION"; error: InterpreterErrors };
 
 export type InterpreterErrors =
-  | MissingEdgeForThruthyConditionException
-  | NoTruthyConditionException;
+  | MissingEdgeForThruthyConditionError
+  | NoTruthyConditionError;
 
 export type InterpreterContext = {
   history: { nodes: string[]; position: number };
@@ -35,7 +35,7 @@ export type InterpreterContext = {
 };
 
 export type InterpreterEvents =
-  | { type: "ADD_USER_ANSWER"; inputId: string; answerId: string }
+  | { type: "ADD_USER_ANSWER"; inputId: string; answer: string }
   | { type: "RESET" }
   | { type: "GO_BACK" }
   | { type: "GO_FORWARD" }
@@ -134,7 +134,7 @@ export const createInterpreterMachine = (
         assignAnswerToContext: assign({
           answers: (context, event) => ({
             ...context.answers,
-            [event.inputId]: event.answerId,
+            [event.inputId]: event.answer,
           }),
         }),
         resetToInitialContext: assign((_context, _event) => ({

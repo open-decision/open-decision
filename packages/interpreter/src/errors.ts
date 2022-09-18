@@ -1,5 +1,5 @@
 import {
-  ODError,
+  InterpreterError,
   ODValidationError,
   ODValidationErrorConstructorParameters,
 } from "@open-decision/type-classes";
@@ -14,7 +14,7 @@ export class InvalidTreeError extends ODValidationError {
   }
 }
 
-export class MissingEdgeForThruthyConditionException extends ODError {
+export class MissingEdgeForThruthyConditionError extends InterpreterError {
   constructor() {
     super({
       message: "There is no Edge for this condition.",
@@ -23,7 +23,7 @@ export class MissingEdgeForThruthyConditionException extends ODError {
   }
 }
 
-export class NoTruthyConditionException extends ODError {
+export class NoTruthyConditionError extends InterpreterError {
   constructor() {
     super({
       message: "No thruthy condition has been found.",

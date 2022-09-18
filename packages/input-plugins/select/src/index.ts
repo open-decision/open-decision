@@ -10,6 +10,4 @@ export const SingleSelectInput = {
   PrimaryActionSlot: AddOptionButton,
 };
 
-export const RendererComponents = {
-  Component: AnswersForm,
-};
+export const RendererComponent = AnswersForm;

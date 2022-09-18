@@ -6,7 +6,7 @@
     "zod": "^3",
     "remeda": "^1.1.0",
     "framer-motion": "^7.3.5",
-    "@open-decision/compare-condition-plugin": "workspace:*",
+    "@open-decision/condition-plugins-compare": "workspace:*",
     "@open-decision/type-classes": "workspace:*",
     "@open-decision/input-plugins-helpers": "workspace:*",
     "@open-decision/design-system": "workspace:*"

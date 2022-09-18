@@ -1,14 +1,13 @@
 import { StyleObject, Form } from "@open-decision/design-system";
 import { useInterpreter } from "@open-decision/interpreter-react";
-import { Answers } from "./Answers";
-import { TSelectInput } from "../selectPlugin";
+import { TFreeTextInput } from "./freeTextPlugin";
 
 type PreviewAnswerFormProps = {
-  input: TSelectInput;
+  input: TFreeTextInput;
   css?: StyleObject;
 };
 
-export function AnswersForm({ input, css }: PreviewAnswerFormProps) {
+export function FreeTextForm({ input, css }: PreviewAnswerFormProps) {
   const { send, getAnswer, getCurrentNode } = useInterpreter();
 
   const formState = Form.useFormState({
@@ -35,27 +34,9 @@ export function AnswersForm({ input, css }: PreviewAnswerFormProps) {
     });
   });
 
-  const options = Object.keys(formState.values);
-
   return (
     <Form.Root state={formState} css={css} resetOnSubmit={false}>
-      {options.map((inputId) => (
-        <Answers
-          name={input.id}
-          input={input}
-          key={inputId}
-          activeValue={formState.values[inputId]}
-        />
-      ))}
-      <Form.Submit
-        css={{
-          alignSelf: "end",
-          marginTop: "$2",
-          fontWeight: "$large-text",
-        }}
-      >
-        Weiter
-      </Form.Submit>
+      Free Text Input
     </Form.Root>
   );
 }

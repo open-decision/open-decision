@@ -1,8 +1,8 @@
 import {
   InterpreterContext,
   EVALUATE_NODE_CONDITIONS,
-  MissingEdgeForThruthyConditionException,
-  NoTruthyConditionException,
+  MissingEdgeForThruthyConditionError,
+  NoTruthyConditionError,
 } from "@open-decision/interpreter";
 import { TTreeClient } from "@open-decision/type-classes";
 import { TCompareCondition } from "./plugin";
@@ -25,8 +25,8 @@ export const resolver =
 
       if (edge) return edge.target;
 
-      return new MissingEdgeForThruthyConditionException();
+      return new MissingEdgeForThruthyConditionError();
     }
 
-    return new NoTruthyConditionException();
+    return new NoTruthyConditionError();
   };

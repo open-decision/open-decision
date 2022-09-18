@@ -477,14 +477,14 @@ importers:
 
   packages/input-plugins/free-text:
     specifiers:
+      '@open-decision/condition-plugins-direct': workspace:*
       '@open-decision/design-system': workspace:*
-      '@open-decision/direct-condition-plugin': workspace:*
       '@open-decision/input-plugins-helpers': workspace:*
       '@open-decision/type-classes': workspace:*
       zod: ^3
     dependencies:
+      '@open-decision/condition-plugins-direct': link:../../condition-plugins/direct
       '@open-decision/design-system': link:../../design-system
-      '@open-decision/direct-condition-plugin': link:../../condition-plugins/direct
       '@open-decision/input-plugins-helpers': link:../helpers
       '@open-decision/type-classes': link:../../type-classes
       zod: 3.18.0
@@ -497,7 +497,7 @@ importers:
 
   packages/input-plugins/select:
     specifiers:
-      '@open-decision/compare-condition-plugin': workspace:*
+      '@open-decision/condition-plugins-compare': workspace:*
       '@open-decision/design-system': workspace:*
       '@open-decision/input-plugins-helpers': workspace:*
       '@open-decision/type-classes': workspace:*
@@ -505,7 +505,7 @@ importers:
       remeda: ^1.1.0
       zod: ^3
     dependencies:
-      '@open-decision/compare-condition-plugin': link:../../condition-plugins/compare
+      '@open-decision/condition-plugins-compare': link:../../condition-plugins/compare
       '@open-decision/design-system': link:../../design-system
       '@open-decision/input-plugins-helpers': link:../helpers
       '@open-decision/type-classes': link:../../type-classes
@@ -518,11 +518,11 @@ importers:
       '@open-decision/type-classes': workspace:*
       remeda: ^1.1.0
       vitest: ^0.23.0
-      xstate: ^4.33.5
+      xstate: ^4.33.6
     dependencies:
       '@open-decision/type-classes': link:../type-classes
       remeda: 1.1.0
-      xstate: 4.33.5
+      xstate: 4.33.6
     devDependencies:
       vitest: 0.23.0
 
@@ -563,6 +563,7 @@ importers:
       '@open-decision/design-system': workspace:*
       '@open-decision/interpreter-react': workspace:*
       '@open-decision/rich-text-editor': workspace:*
+      '@open-decision/tree-client': workspace:*
       '@open-decision/type-classes': workspace:*
       '@radix-ui/react-icons': ^1.1.1
       remeda: ^1.1.0
@@ -570,6 +571,7 @@ importers:
       '@open-decision/design-system': link:../design-system
       '@open-decision/interpreter-react': link:../interpreter-react
       '@open-decision/rich-text-editor': link:../rich-text-editor
+      '@open-decision/tree-client': link:../tree-client
       '@open-decision/type-classes': link:../type-classes
       '@radix-ui/react-icons': 1.1.1
       remeda: 1.1.0
@@ -657,9 +659,9 @@ importers:
 
   packages/tree-client:
     specifiers:
-      '@open-decision/compare-condition-plugin': workspace:*
+      '@open-decision/condition-plugins-compare': workspace:*
+      '@open-decision/condition-plugins-direct': workspace:*
       '@open-decision/design-system': workspace:*
-      '@open-decision/direct-condition-plugin': workspace:*
       '@open-decision/input-plugins-free-text': workspace:*
       '@open-decision/input-plugins-helpers': workspace:*
       '@open-decision/input-plugins-select': workspace:*
@@ -667,9 +669,9 @@ importers:
       '@open-decision/type-classes': workspace:*
       zod: ^3
     dependencies:
-      '@open-decision/compare-condition-plugin': link:../condition-plugins/compare
+      '@open-decision/condition-plugins-compare': link:../condition-plugins/compare
+      '@open-decision/condition-plugins-direct': link:../condition-plugins/direct
       '@open-decision/design-system': link:../design-system
-      '@open-decision/direct-condition-plugin': link:../condition-plugins/direct
       '@open-decision/input-plugins-free-text': link:../input-plugins/free-text
       '@open-decision/input-plugins-helpers': link:../input-plugins/helpers
       '@open-decision/input-plugins-select': link:../input-plugins/select
@@ -17138,10 +17140,6 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
-
-  /xstate/4.33.5:
-    resolution: {integrity: sha512-C8WGBeQC+dNMp4MmQX359BUkJCv2VPAH/CGRnhtgri5JZ7wVEX7fsbfcqznAgnKyD0m9Hd3cGhg/wuzIjnfT4A==}
-    dev: false
 
   /xstate/4.33.6:
     resolution: {integrity: sha512-A5R4fsVKADWogK2a43ssu8Fz1AF077SfrKP1ZNyDBD8lNa/l4zfR//Luofp5GSWehOQr36Jp0k2z7b+sH2ivyg==}

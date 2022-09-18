@@ -1,11 +1,12 @@
 import { Resolver } from "@open-decision/interpreter";
-import { resolver as directResolver } from "@open-decision/direct-condition-plugin";
-import { resolver as compareResolver } from "@open-decision/compare-condition-plugin";
+import { resolver as directResolver } from "@open-decision/condition-plugins-direct";
+import { resolver as compareResolver } from "@open-decision/condition-plugins-compare";
 import { createTreeClient } from "./createTreeClient";
 import {
   Tree,
   createTreeClient as createBaseTreeClient,
   ODProgrammerError,
+  InterpreterError,
 } from "@open-decision/type-classes";
 import { z } from "zod";
 
@@ -39,7 +40,7 @@ export const interpreterPlugin: Resolver =
 
       const result = conditionResolver(context, event);
 
-      if (result instanceof Error)
+      if (result instanceof InterpreterError)
         return callback({ type: "INVALID_INTERPRETATION", error: result });
 
       callback({ type: "VALID_INTERPRETATION", target: result });

@@ -1,4 +1,8 @@
-import { createTreeClient, Tree } from "@open-decision/type-classes";
+import {
+  createTreeClient,
+  ODProgrammerError,
+  Tree,
+} from "@open-decision/type-classes";
 import { InterpreterContext } from "./interpreter";
 
 export const canGoBack = (interpreterContext: InterpreterContext) =>
@@ -16,10 +20,20 @@ export function createInterpreterMethods(
   const treeClient = createTreeClient(tree);
 
   return {
-    getCurrentNode: () =>
-      treeClient.nodes.get.single(
+    getCurrentNode: () => {
+      const currentNode = treeClient.nodes.get.single(
         interpreterContext.history.nodes[interpreterContext.history.position]
-      ),
+      );
+
+      if (!currentNode)
+        throw new ODProgrammerError({
+          code: "INTERPRETER_WITHOUT_CURRENT_NODE",
+          message:
+            "The interpreter ended up in an invalid state without a current node.",
+        });
+
+      return currentNode;
+    },
     getAnswer: (inputId: string) => {
       const maybeAnswer = interpreterContext.answers[inputId];
       if (!maybeAnswer) return undefined;

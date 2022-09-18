@@ -5,10 +5,10 @@ import {
   ODValidationError,
 } from "@open-decision/type-classes";
 import { SelectPlugin } from "@open-decision/input-plugins-select";
-import { ComparePlugin } from "@open-decision/compare-condition-plugin";
+import { ComparePlugin } from "@open-decision/condition-plugins-compare";
 import { FreeTextPlugin } from "@open-decision/input-plugins-free-text";
 import { z } from "zod";
-import { DirectPlugin } from "@open-decision/direct-condition-plugin";
+import { DirectPlugin } from "@open-decision/condition-plugins-direct";
 import { mergeDeepRight } from "ramda";
 
 export const createTreeClient = <

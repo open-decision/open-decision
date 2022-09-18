@@ -44,10 +44,7 @@ export function InterpreterProvider({
       </Stack>
     );
 
-  const service = useInterpret(interpreterMachine, {
-    ...config,
-    devTools: true,
-  });
+  const service = useInterpret(interpreterMachine, config);
 
   return (
     <MachineContext.Provider

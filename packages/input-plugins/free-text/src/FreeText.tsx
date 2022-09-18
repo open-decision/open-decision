@@ -11,7 +11,7 @@ export const FreeText = ({
   const FreeText = new FreeTextPlugin(treeClient);
 
   //FIXME I cannot just assume there is ony one edge
-  const edge = treeClient.edges.get.byNode(nodeId)[0];
+  const edge = treeClient.edges.get.byNode(nodeId)?.[0];
   const nodeOptions = treeClient.nodes.get.options(nodeId, edge);
 
   const formState = Form.useFormState({

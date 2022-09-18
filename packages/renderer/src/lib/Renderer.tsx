@@ -12,6 +12,7 @@ import {
 } from "@open-decision/interpreter-react";
 import { RichTextRenderer } from "@open-decision/rich-text-editor";
 import { Navigation } from "./components/Navigation";
+import { RendererPlugin } from "@open-decision/tree-client";
 
 export type RendererProps = {
   css?: StyleObject;
@@ -24,9 +25,6 @@ function RendererImpl(
 ) {
   const { getCurrentNode } = useInterpreter();
   const node = getCurrentNode();
-
-  if (!node) throw node;
-  // const inputs = getInputsWithAnswers(node.data.inputs);
 
   return (
     <Stack
@@ -65,13 +63,10 @@ function RendererImpl(
             ) : null}
           </ScrollArea.Viewport>
         </ScrollArea.Root>
-        {/* {inputs ? (
-          <AnswersForm
-            inputs={inputs}
-            key={`form_${node.id}`}
-            css={{ paddingInline: "$$padding", marginTop: "$4" }}
-          />
-        ) : null} */}
+        <RendererPlugin
+          inputIds={node.data.inputs}
+          css={{ paddingInline: "$$padding", marginTop: "$4" }}
+        />
       </Stack>
       <Navigation css={{ alignSelf: "center", marginBottom: "$$padding" }} />
     </Stack>

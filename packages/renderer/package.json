@@ -9,7 +9,8 @@
     "@open-decision/rich-text-editor": "workspace:*",
     "@open-decision/interpreter-react": "workspace:*",
     "@open-decision/type-classes": "workspace:*",
-    "@open-decision/design-system": "workspace:*"
+    "@open-decision/design-system": "workspace:*",
+    "@open-decision/tree-client": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18.2.0",
