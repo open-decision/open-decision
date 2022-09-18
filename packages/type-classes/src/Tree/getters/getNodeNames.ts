@@ -8,12 +8,12 @@ const nodeWithName = (
 };
 
 export const getNodeNames =
-  (tree: Tree.TTree) =>
+  (nodes: Tree.TTree["nodes"]) =>
   (ids?: string[]): { id: string; name: string }[] => {
-    if (!tree.nodes) return [];
+    if (!nodes) return [];
 
     return pipe(
-      tree.nodes,
+      nodes,
       Object.values,
       filter((node) =>
         ids ? ids.includes(node.id) && nodeWithName(node) : nodeWithName(node)

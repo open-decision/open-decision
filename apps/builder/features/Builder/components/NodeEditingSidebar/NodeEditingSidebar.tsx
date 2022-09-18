@@ -13,6 +13,7 @@ import { nodeNameMaxLength } from "../../utilities/constants";
 import { NodeMenu } from "../Canvas/Nodes/NodeMenu";
 import {
   useChildren,
+  useNodeOptions,
   useParents,
   useStartNodeId,
   useTreeClient,
@@ -84,6 +85,11 @@ function NodeEditingSidebarContent({ node, css }: Props) {
   const { replaceSelectedNodes } = useEditor();
   const treeClient = useTreeClient();
   const childNodes = useChildren(node.id);
+  const nodeOptions = useNodeOptions(node.id);
+
+  const unconnectedNodeOptions = nodeOptions
+    ? childNodes.filter((option) => !nodeOptions.includes(option.id))
+    : childNodes;
 
   return (
     <Stack
@@ -123,7 +129,7 @@ function NodeEditingSidebarContent({ node, css }: Props) {
       <Box as="section">
         <Label as="h2">Nicht zugewiesene Ziele</Label>
         <Row css={{ marginTop: "$2", gap: "$2" }}>
-          {Object.values(childNodes).map((childNode) => (
+          {Object.values(unconnectedNodeOptions).map((childNode) => (
             <Badge key={childNode.id}>{childNode.name}</Badge>
           ))}
         </Row>

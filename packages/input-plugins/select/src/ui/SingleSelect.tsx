@@ -8,7 +8,12 @@ import {
   TargetSelector,
 } from "@open-decision/design-system";
 import * as React from "react";
-import { Edge } from "@open-decision/type-classes";
+import {
+  Edge,
+  getNode,
+  getNodeNames,
+  getNodeOptions,
+} from "@open-decision/type-classes";
 import { DragHandle } from "./DragHandle";
 import { Reorder, useDragControls } from "framer-motion";
 import { PlusIcon, TrashIcon } from "@radix-ui/react-icons";
@@ -19,6 +24,8 @@ import {
 import { SelectPlugin, TSelectInput } from "../selectPlugin";
 import { TAnswer } from "../types";
 import { ComparePlugin } from "@open-decision/condition-plugins-compare";
+import { useTree } from "@open-decision/tree-sync";
+import { pipe } from "remeda";
 
 export const AddOptionButton = ({
   input,
@@ -111,8 +118,11 @@ export const OptionTargetInput = ({
   const Select = new SelectPlugin(treeClient);
 
   const controls = useDragControls();
-  const node = treeClient.nodes.get.single(nodeId);
-  const nodeOptions = treeClient.nodes.get.options(nodeId);
+  const node = useTree(({ nodes }) => getNode(nodes)(nodeId));
+  const nodeOptions = useTree((tree) => {
+    const nodeOptions = getNodeOptions(tree)(nodeId);
+    return getNodeNames(tree.nodes)(nodeOptions);
+  });
 
   const ref = React.useRef<HTMLDivElement | null>(null);
 

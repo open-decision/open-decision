@@ -2,6 +2,7 @@ import { useSnapshot } from "valtio";
 import { useTreeClient, useTreeContext } from "../TreeContext";
 import { mapValues, pick } from "remeda";
 import { isEmpty } from "ramda";
+import { getChildren, getNodeOptions } from "@open-decision/type-classes";
 
 export function useNode(id: string) {
   const { tree } = useTreeContext();
@@ -27,10 +28,7 @@ export function useNodes(ids?: string[]) {
 }
 
 export function useNodeNames() {
-  const {
-    tree: { tree },
-  } = useTreeContext();
-  const { nodes } = useSnapshot(tree);
+  const nodes = useNodes();
 
   return mapValues(nodes ?? {}, (node) => ({
     id: node.id,
@@ -53,12 +51,24 @@ export function useParents(nodeId: string): { id: string; name?: string }[] {
 }
 
 export function useChildren(nodeId: string) {
-  const treeClient = useTreeClient();
+  const {
+    tree: { tree },
+  } = useTreeContext();
   const nodeNames = useNodeNames();
+  const treeSnapshot = useSnapshot(tree);
 
-  const childIds = treeClient.nodes.get.children(nodeId);
+  const childIds = getChildren(treeSnapshot)(nodeId);
 
   return Object.values(nodeNames).filter((nodeName) =>
     childIds.includes(nodeName.id)
   );
+}
+
+export function useNodeOptions(nodeId: string) {
+  const {
+    tree: { tree },
+  } = useTreeContext();
+  const treeSnapshot = useSnapshot(tree);
+
+  return getNodeOptions(treeSnapshot)(nodeId);
 }

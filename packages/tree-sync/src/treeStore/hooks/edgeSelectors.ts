@@ -1,8 +1,8 @@
 import { useSnapshot } from "valtio";
 import { useTreeContext } from "../TreeContext";
 import { pick } from "remeda";
-import { Edge } from "@open-decision/type-classes";
 import { isEmpty } from "ramda";
+import { getEdgesByNode } from "@open-decision/type-classes";
 
 export function useEdge(id: string) {
   const { tree } = useTreeContext();
@@ -33,15 +33,7 @@ export function useEdgesOfNode(nodeId: string) {
     tree: { edges },
   } = useSnapshot(tree);
 
-  const nodesEdges: Edge.TEdgesRecord = {};
+  if (!edges) return undefined;
 
-  if (edges) {
-    for (const key in edges) {
-      const edge = edges[key];
-
-      if (edge.source === nodeId) nodesEdges[key] = edge;
-    }
-  }
-
-  return nodesEdges;
+  return getEdgesByNode(edges)(nodeId);
 }

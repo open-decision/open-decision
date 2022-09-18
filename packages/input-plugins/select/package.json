@@ -9,6 +9,7 @@
     "@open-decision/condition-plugins-compare": "workspace:*",
     "@open-decision/type-classes": "workspace:*",
     "@open-decision/input-plugins-helpers": "workspace:*",
-    "@open-decision/design-system": "workspace:*"
+    "@open-decision/design-system": "workspace:*",
+    "@open-decision/tree-sync": "workspace:*"
   }
 }

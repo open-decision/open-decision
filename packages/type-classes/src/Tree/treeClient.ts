@@ -14,12 +14,12 @@ import {
   getConditions,
   getEdge,
   getEdges,
+  getConditionsByNode,
+  getEdgesByCondition,
+  getEdgesByNode,
+  getInputsByNode,
+  getNodeOptions,
 } from "./getters";
-import { getConditionsByNode } from "./getters/getConditionsByNode";
-import { getEdgesByCondition } from "./getters/getEdgesByCondition";
-import { getEdgesByNode } from "./getters/getEdgesByNode";
-import { getInputsByNode } from "./getters/getInputsByNode";
-import { getNodeOptions } from "./getters/getNodeOptions";
 import {
   updateStartNode,
   deleteNodes,

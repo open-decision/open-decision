@@ -4,9 +4,9 @@ import { ValuesType } from "utility-types";
 import { Tree } from "../type-classes";
 
 export const getNode =
-  <TTree extends Tree.TTree>(tree: TTree) =>
+  <TTree extends Tree.TTree>(nodes: TTree["nodes"]) =>
   (nodeId: string) => {
-    return tree.nodes?.[nodeId] as
+    return nodes?.[nodeId] as
       | ValuesType<NonNullable<TTree["nodes"]>>
       | undefined;
   };

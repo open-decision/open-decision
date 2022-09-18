@@ -480,12 +480,14 @@ importers:
       '@open-decision/condition-plugins-direct': workspace:*
       '@open-decision/design-system': workspace:*
       '@open-decision/input-plugins-helpers': workspace:*
+      '@open-decision/tree-sync': workspace:*
       '@open-decision/type-classes': workspace:*
       zod: ^3
     dependencies:
       '@open-decision/condition-plugins-direct': link:../../condition-plugins/direct
       '@open-decision/design-system': link:../../design-system
       '@open-decision/input-plugins-helpers': link:../helpers
+      '@open-decision/tree-sync': link:../../tree-sync
       '@open-decision/type-classes': link:../../type-classes
       zod: 3.18.0
 
@@ -500,6 +502,7 @@ importers:
       '@open-decision/condition-plugins-compare': workspace:*
       '@open-decision/design-system': workspace:*
       '@open-decision/input-plugins-helpers': workspace:*
+      '@open-decision/tree-sync': workspace:*
       '@open-decision/type-classes': workspace:*
       framer-motion: ^7.3.5
       remeda: ^1.1.0
@@ -508,6 +511,7 @@ importers:
       '@open-decision/condition-plugins-compare': link:../../condition-plugins/compare
       '@open-decision/design-system': link:../../design-system
       '@open-decision/input-plugins-helpers': link:../helpers
+      '@open-decision/tree-sync': link:../../tree-sync
       '@open-decision/type-classes': link:../../type-classes
       framer-motion: 7.3.5
       remeda: 1.1.0

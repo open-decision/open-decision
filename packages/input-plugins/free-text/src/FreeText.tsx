@@ -1,6 +1,12 @@
 import { Form, TargetSelector } from "@open-decision/design-system";
 import { InputComponentProps } from "@open-decision/input-plugins-helpers";
 import { FreeTextPlugin, TFreeTextInput } from "./freeTextPlugin";
+import { useTree } from "@open-decision/tree-sync";
+import {
+  getEdgesByNode,
+  getNodeNames,
+  getNodeOptions,
+} from "@open-decision/type-classes";
 
 export const FreeText = ({
   nodeId,
@@ -10,14 +16,19 @@ export const FreeText = ({
 }: InputComponentProps<TFreeTextInput>) => {
   const FreeText = new FreeTextPlugin(treeClient);
 
-  //FIXME I cannot just assume there is ony one edge
-  const edge = treeClient.edges.get.byNode(nodeId)?.[0];
-  const nodeOptions = treeClient.nodes.get.options(nodeId, edge);
+  const edge = useTree(
+    ({ edges }) => Object.values(getEdgesByNode(edges)(nodeId) ?? {})?.[0]
+  );
+
+  const nodeNames = useTree((tree) => {
+    const options = getNodeOptions(tree)(nodeId);
+    return getNodeNames(tree.nodes)(options);
+  });
 
   const formState = Form.useFormState({
     defaultValues: {
       target:
-        nodeOptions.find((nodeOption) => nodeOption.id === edge?.target)
+        Object.values(nodeNames ?? {}).find((node) => node.id === edge?.target)
           ?.name ?? "",
     },
   });
@@ -45,7 +56,7 @@ export const FreeText = ({
         setValue={(newValue) =>
           formState.setValue(formState.names.target, newValue)
         }
-        selectOptions={nodeOptions}
+        selectOptions={nodeNames}
       />
     </Form.Root>
   );

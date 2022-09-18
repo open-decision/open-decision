@@ -2,7 +2,7 @@ import { isEmpty } from "ramda";
 import { Edge } from "../..";
 
 export const getEdgesByNode =
-  (edges: Edge.TEdgesRecord) => (nodeId: string) => {
+  (edges?: Edge.TEdgesRecord) => (nodeId: string) => {
     const nodesEdges: Edge.TEdgesRecord = {};
 
     if (edges) {
@@ -15,5 +15,6 @@ export const getEdgesByNode =
 
     if (isEmpty(nodesEdges)) return undefined;
 
+    console.log(nodesEdges);
     return nodesEdges;
   };

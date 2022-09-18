@@ -5,3 +5,5 @@ export * from "./nodeSelectors";
 export * from "./useFullTree";
 export * from "./useStartNode";
 export * from "./useTreeSuspension";
+
+export * from "./useTree";

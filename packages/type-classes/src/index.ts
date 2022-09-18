@@ -7,3 +7,8 @@ export type { TTreeClient } from "./Tree/treeClient";
 
 export { InputPlugin } from "./Tree/type-classes/Input";
 export { ConditionPlugin } from "./Tree/type-classes/Condition";
+
+export * from "./Tree/creators";
+export * from "./Tree/getters";
+export * from "./Tree/mutaters";
+export * from "./Tree/utils";
