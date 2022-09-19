@@ -1,4 +1,4 @@
-import { ODError } from "../../Error";
+import { ODError } from "@open-decision/type-classes";
 import { createEdge, NewEdgeData } from "../creators";
 import { Tree, Edge } from "../type-classes";
 

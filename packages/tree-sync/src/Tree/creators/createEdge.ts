@@ -1,7 +1,7 @@
 import { Edge, Tree } from "../type-classes";
 import { v4 as uuid } from "uuid";
 import { isValidEdge } from "../validators";
-import { ODError } from "../../Error";
+import { ODError } from "@open-decision/type-classes";
 
 export type NewEdgeData = Partial<Edge.TEdge> &
   Required<Pick<Edge.TEdge, "source" | "target">>;

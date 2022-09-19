@@ -7,8 +7,10 @@ export const getEdge = (tree: Tree.TTree) => (edgeId: string) => {
 
 export const getEdges =
   (tree: Tree.TTree) =>
-  (edgeIds: string[]): Edge.TEdgesRecord | undefined => {
+  (edgeIds?: string[]): Edge.TEdgesRecord | undefined => {
     if (!tree.edges) return undefined;
+
+    if (!edgeIds) return tree.edges;
 
     const edges = pick(tree.edges, edgeIds);
     if (!edges) return undefined;

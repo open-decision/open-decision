@@ -9,3 +9,4 @@ export * from "./getNode";
 export * from "./getNodeNames";
 export * from "./getNodeOptions";
 export * from "./getTree";
+export * from "./getStartNode";

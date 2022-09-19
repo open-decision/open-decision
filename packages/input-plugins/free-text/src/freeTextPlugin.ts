@@ -1,7 +1,10 @@
-import { InputPlugin, TTreeClient } from "@open-decision/type-classes";
+import { TTreeClient } from "@open-decision/tree-sync";
+import { InputPlugin } from "@open-decision/input-plugins-helpers";
 import { Type } from "./types";
 import { DirectPlugin } from "@open-decision/condition-plugins-direct";
 import { z } from "zod";
+
+export const Type = z.object({ type: z.literal("freeText") });
 
 export type TFreeTextInput = z.infer<FreeTextPlugin["MergedType"]>;
 

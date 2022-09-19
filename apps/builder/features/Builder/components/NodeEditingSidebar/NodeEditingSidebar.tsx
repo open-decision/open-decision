@@ -5,17 +5,16 @@ import {
   Form,
   Label,
   Stack,
-  Badge,
 } from "@open-decision/design-system";
 import * as React from "react";
-import { Node } from "@open-decision/type-classes";
 import { nodeNameMaxLength } from "../../utilities/constants";
 import { NodeMenu } from "../Canvas/Nodes/NodeMenu";
 import {
-  useChildren,
-  useNodeOptions,
-  useParents,
-  useStartNodeId,
+  getNodeNames,
+  getParents,
+  getStartNodeId,
+  Node,
+  useTree,
   useTreeClient,
 } from "@open-decision/tree-sync";
 import { RichTextEditor } from "@open-decision/rich-text-editor";
@@ -84,12 +83,6 @@ function NodeEditingSidebarContent({ node, css }: Props) {
   const t = useTranslations("builder.nodeEditingSidebar");
   const { replaceSelectedNodes } = useEditor();
   const treeClient = useTreeClient();
-  const childNodes = useChildren(node.id);
-  const nodeOptions = useNodeOptions(node.id);
-
-  const unconnectedNodeOptions = nodeOptions
-    ? childNodes.filter((option) => !nodeOptions.includes(option.id))
-    : childNodes;
 
   return (
     <Stack
@@ -126,14 +119,6 @@ function NodeEditingSidebarContent({ node, css }: Props) {
           )}
         />
       </Box>
-      <Box as="section">
-        <Label as="h2">Nicht zugewiesene Ziele</Label>
-        <Row css={{ marginTop: "$2", gap: "$2" }}>
-          {Object.values(unconnectedNodeOptions).map((childNode) => (
-            <Badge key={childNode.id}>{childNode.name}</Badge>
-          ))}
-        </Row>
-      </Box>
       <InputPluginComponent
         onClick={(target) => replaceSelectedNodes([target])}
         inputIds={node.data.inputs}
@@ -147,9 +132,15 @@ type HeaderProps = { node: Pick<Node.TNode, "id" | "data"> };
 
 const Header = ({ node }: HeaderProps) => {
   const t = useTranslations("builder.nodeEditingSidebar");
-  const startNodeId = useStartNodeId();
   const treeClient = useTreeClient();
-  const parentNodes = useParents(node.id);
+
+  const startNodeId = useTree((tree) => getStartNodeId(tree));
+
+  const parentNodes = useTree((tree) => {
+    const parentNodeIds = getParents(tree)(node.id);
+    return getNodeNames(tree)(parentNodeIds);
+  });
+
   const isStartNode = node?.id === startNodeId;
 
   const formState = Form.useFormState({

@@ -28,6 +28,7 @@ importers:
       dotenv: ^16.0.2
       eslint: ^8.23.1
       eslint-plugin-unused-imports: ^2.0.0
+      i: ^0.3.7
       next: 12.3.0
       nx: 14.7.5
       prettier: ^2.7.1
@@ -53,6 +54,7 @@ importers:
       dotenv: 16.0.2
       eslint: 8.23.1
       eslint-plugin-unused-imports: 2.0.0_aycu25ebzxq3ptk7zxntnrmsdq
+      i: 0.3.7
       next: 12.3.0_@babel+core@7.19.1
       nx: 14.7.5_@swc+core@1.3.1
       prettier: 2.7.1
@@ -392,22 +394,44 @@ importers:
 
   packages/condition-plugins/compare:
     specifiers:
+      '@open-decision/condition-plugins-helpers': workspace:*
+      '@open-decision/tree-sync': workspace:*
       '@open-decision/type-classes': workspace:*
       ramda: 0.28.0
       zod: ^3
     dependencies:
+      '@open-decision/condition-plugins-helpers': link:../helpers
+      '@open-decision/tree-sync': link:../../tree-sync
       '@open-decision/type-classes': link:../../type-classes
       ramda: 0.28.0
       zod: 3.18.0
 
   packages/condition-plugins/direct:
     specifiers:
+      '@open-decision/condition-plugins-helpers': workspace:*
+      '@open-decision/tree-sync': workspace:*
       '@open-decision/type-classes': workspace:*
       ramda: 0.28.0
       zod: ^3
     dependencies:
+      '@open-decision/condition-plugins-helpers': link:../helpers
+      '@open-decision/tree-sync': link:../../tree-sync
       '@open-decision/type-classes': link:../../type-classes
       ramda: 0.28.0
+      zod: 3.18.0
+
+  packages/condition-plugins/helpers:
+    specifiers:
+      '@open-decision/tree-sync': workspace:*
+      '@open-decision/type-classes': workspace:*
+      ramda: 0.28.0
+      remeda: ^1.1.0
+      zod: ^3
+    dependencies:
+      '@open-decision/tree-sync': link:../../tree-sync
+      '@open-decision/type-classes': link:../../type-classes
+      ramda: 0.28.0
+      remeda: 1.1.0
       zod: 3.18.0
 
   packages/design-system:
@@ -493,9 +517,15 @@ importers:
 
   packages/input-plugins/helpers:
     specifiers:
+      '@open-decision/tree-sync': workspace:*
       '@open-decision/type-classes': workspace:*
+      remeda: ^1.1.0
+      zod: ^3.19.1
     dependencies:
+      '@open-decision/tree-sync': link:../../tree-sync
       '@open-decision/type-classes': link:../../type-classes
+      remeda: 1.1.0
+      zod: 3.19.1
 
   packages/input-plugins/select:
     specifiers:
@@ -11321,6 +11351,11 @@ packages:
     resolution: {integrity: sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==}
     engines: {node: '>=10.17.0'}
 
+  /i/0.3.7:
+    resolution: {integrity: sha512-FYz4wlXgkQwIPqhzC5TdNMLSE5+GS1IIDJZY/1ZiEPCT2S3COUVZeT5OW4BmW4r5LHLQuOosSwsvnroG9GR59Q==}
+    engines: {node: '>=0.4'}
+    dev: false
+
   /iconv-lite/0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
     engines: {node: '>=0.10.0'}
@@ -17281,6 +17316,10 @@ packages:
 
   /zod/3.18.0:
     resolution: {integrity: sha512-gwTm8RfUCe8l9rDwN5r2A17DkAa8Ez4Yl4yXqc5VqeGaXaJahzYYXbTwvhroZi0SNBqTwh/bKm2N0mpCzuw4bA==}
+    dev: false
+
+  /zod/3.19.1:
+    resolution: {integrity: sha512-LYjZsEDhCdYET9ikFu6dVPGp2YH9DegXjdJToSzD9rO6fy4qiRYFoyEYwps88OseJlPyl2NOe2iJuhEhL7IpEA==}
     dev: false
 
   /zustand/3.7.2_react@18.2.0:

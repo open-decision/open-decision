@@ -1,4 +1,5 @@
-import { ConditionPlugin, TTreeClient } from "@open-decision/type-classes";
+import { TTreeClient } from "@open-decision/tree-sync";
+import { ConditionPlugin } from "@open-decision/condition-plugins-helpers";
 import { z } from "zod";
 
 export const type = "compare" as const;

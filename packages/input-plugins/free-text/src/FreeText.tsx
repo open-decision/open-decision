@@ -6,7 +6,7 @@ import {
   getEdgesByNode,
   getNodeNames,
   getNodeOptions,
-} from "@open-decision/type-classes";
+} from "@open-decision/tree-sync";
 
 export const FreeText = ({
   nodeId,

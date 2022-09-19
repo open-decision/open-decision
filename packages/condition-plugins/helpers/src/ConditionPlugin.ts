@@ -1,12 +1,6 @@
+import { Condition, TTreeClient } from "@open-decision/tree-sync";
 import { z } from "zod";
-import { TTreeClient } from "../treeClient";
 import { pipe } from "remeda";
-
-export const BaseType = z.object({
-  id: z.string().uuid(),
-  inputId: z.string().uuid().optional(),
-  type: z.string(),
-});
 
 const mergeTypes = <
   TType extends z.ZodObject<z.ZodRawShape, any, any>,
@@ -14,7 +8,7 @@ const mergeTypes = <
 >(
   Type: TType,
   typeName: TTypeName
-) => BaseType.merge(Type).extend({ type: z.literal(typeName) });
+) => Condition.Type.merge(Type).extend({ type: z.literal(typeName) });
 
 export class ConditionPlugin<
   TType extends z.ZodObject<z.ZodRawShape, any, any>,
@@ -78,8 +72,3 @@ export class ConditionPlugin<
     }) as z.infer<typeof this.MergedType>;
   }
 }
-
-export const Record = z.record(BaseType);
-
-export type TCondition = z.infer<typeof BaseType>;
-export type TRecord = z.infer<typeof Record>;

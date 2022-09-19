@@ -1,11 +1,21 @@
-import { TAnswer, Type } from "./types";
-import { InputPlugin, TTreeClient } from "@open-decision/type-classes";
+import { TTreeClient } from "@open-decision/tree-sync";
 import { z } from "zod";
 import {
   ComparePlugin,
   TCompareCondition,
 } from "@open-decision/condition-plugins-compare";
 import { v4 as uuid } from "uuid";
+import { InputPlugin } from "@open-decision/input-plugins-helpers";
+
+export const type = "select" as const;
+export const Answer = z.object({ id: z.string().uuid(), text: z.string() });
+
+export const Type = z.object({
+  type: z.literal("select"),
+  answers: z.array(Answer),
+});
+
+export type TAnswer = z.infer<typeof Answer>;
 
 export type TSelectInput = z.infer<SelectPlugin["MergedType"]>;
 

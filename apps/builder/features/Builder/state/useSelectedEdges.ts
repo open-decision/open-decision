@@ -1,10 +1,10 @@
 import { useEditor } from "./useEditor";
 import { pick } from "remeda";
-import { useEdges } from "@open-decision/tree-sync";
 import { useSnapshot } from "valtio";
+import { getEdges, useTree } from "@open-decision/tree-sync";
 
 export function useSelectedEdges() {
-  const edges = useEdges();
+  const edges = useTree((tree) => getEdges(tree)());
   const selectedEdgeIds = useSelectedEdgeIds();
 
   if (!edges) return undefined;

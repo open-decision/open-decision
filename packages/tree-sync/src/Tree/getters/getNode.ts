@@ -4,17 +4,19 @@ import { ValuesType } from "utility-types";
 import { Tree } from "../type-classes";
 
 export const getNode =
-  <TTree extends Tree.TTree>(nodes: TTree["nodes"]) =>
+  <TTree extends Tree.TTree>(tree: TTree) =>
   (nodeId: string) => {
-    return nodes?.[nodeId] as
+    return tree.nodes?.[nodeId] as
       | ValuesType<NonNullable<TTree["nodes"]>>
       | undefined;
   };
 
 export const getNodes =
   <TTree extends Tree.TTree>(tree: TTree) =>
-  (nodeIds: string[]): TTree["nodes"] | undefined => {
+  (nodeIds?: string[]) => {
     if (!tree.nodes) return undefined;
+
+    if (!nodeIds) return tree.nodes;
 
     const nodes = pick(tree.nodes, nodeIds);
     if (!nodes || isEmpty(nodes)) return undefined;

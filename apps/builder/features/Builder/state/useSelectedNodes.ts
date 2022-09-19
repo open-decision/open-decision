@@ -1,10 +1,10 @@
 import { useEditor } from "./useEditor";
 import { pick } from "remeda";
-import { useNodes } from "@open-decision/tree-sync";
+import { getNodes, useTree } from "@open-decision/tree-sync";
 import { useSnapshot } from "valtio";
 
 export function useSelectedNodes() {
-  const nodes = useNodes();
+  const nodes = useTree((tree) => getNodes(tree)());
   const selectedNodeIds = useSelectedNodeIds();
 
   if (!nodes) return undefined;

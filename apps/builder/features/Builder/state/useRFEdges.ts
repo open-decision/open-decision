@@ -1,4 +1,4 @@
-import { useEdges } from "@open-decision/tree-sync";
+import { getEdges, useTree } from "@open-decision/tree-sync";
 import { MarkerType } from "react-flow-renderer";
 import { useSelectedEdgeIds } from "./useSelectedEdges";
 
@@ -14,7 +14,7 @@ const staticEdgeData = {
 };
 
 export function useRFEdges() {
-  const edges = useEdges();
+  const edges = useTree((tree) => getEdges(tree)());
   const selectedEdgeIds = useSelectedEdgeIds();
 
   if (!edges) return [];

@@ -3,7 +3,7 @@ import { getConnectableNodes } from "../utils";
 import { getNode } from "./getNode";
 
 export const getNodeOptions = (tree: Tree.TTree) => (nodeId: string) => {
-  const node = getNode(tree)(nodeId);
+  const node = getNode(tree.nodes)(nodeId);
 
   if (!node) return undefined;
 

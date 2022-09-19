@@ -1,11 +1,6 @@
+import { Input, TTreeClient } from "@open-decision/tree-sync";
 import { z } from "zod";
 import { pipe } from "remeda";
-import { TTreeClient } from "../treeClient";
-
-const BaseType = z.object({
-  id: z.string().uuid(),
-  type: z.string(),
-});
 
 const mergeTypes = <
   TType extends z.ZodObject<z.ZodRawShape, any, any>,
@@ -13,12 +8,7 @@ const mergeTypes = <
 >(
   Type: TType,
   typeName: TTypeName
-) => BaseType.merge(Type).extend({ type: z.literal(typeName) });
-
-export const Record = z.record(BaseType);
-
-export type TBaseInput = z.infer<typeof BaseType>;
-export type TInputsRecord = z.infer<typeof Record>;
+) => Input.Type.merge(Type).extend({ type: z.literal(typeName) });
 
 export class InputPlugin<
   TType extends z.ZodObject<z.ZodRawShape, any, any>,

@@ -1,13 +1,13 @@
 import { isEmpty } from "ramda";
-import { Edge } from "../..";
+import { Edge, Tree } from "../type-classes";
 
 export const getEdgesByCondition =
-  (edges: Edge.TEdgesRecord) => (conditionId: string) => {
+  (tree: Tree.TTree) => (conditionId: string) => {
     const conditionEdges: Edge.TEdgesRecord = {};
 
-    if (edges) {
-      for (const key in edges) {
-        const edge = edges[key];
+    if (tree.edges) {
+      for (const key in tree.edges) {
+        const edge = tree.edges[key];
 
         if (edge.conditionId && edge.conditionId === conditionId)
           conditionEdges[key] = edge;

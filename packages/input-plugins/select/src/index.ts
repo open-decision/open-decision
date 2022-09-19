@@ -1,7 +1,7 @@
 import { AnswersForm } from "./ui/AnswersForm";
 import { SingleSelect, AddOptionButton } from "./ui/SingleSelect";
 
-export { SelectPlugin } from "./selectPlugin";
+export * from "./selectPlugin";
 export type { TSelectInput } from "./selectPlugin";
 export type { TAnswer } from "./types";
 

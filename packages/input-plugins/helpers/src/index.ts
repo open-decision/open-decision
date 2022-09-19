@@ -1,4 +1,4 @@
-import { Input, TTreeClient } from "@open-decision/type-classes";
+import { Input, TTreeClient } from "@open-decision/tree-sync";
 
 export type InputComponentProps<TInput extends Input.TBaseInput> = {
   nodeId: string;
@@ -16,3 +16,5 @@ export type RendererComponentProps<TInput> = {
   inputs: Record<string, TInput>;
   onSubmit: (values: Record<string, string>) => void;
 };
+
+export * from "./InputPlugin";

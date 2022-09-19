@@ -1,6 +1,6 @@
 import { isCircular } from "../utils";
 import { Tree, Edge } from "../type-classes";
-import { ODError } from "../../Error";
+import { ODError } from "@open-decision/type-classes";
 
 export const isValidEdge =
   (tree: Tree.TTree) =>

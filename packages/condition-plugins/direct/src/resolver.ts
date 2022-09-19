@@ -3,7 +3,7 @@ import {
   EVALUATE_NODE_CONDITIONS,
   MissingEdgeForThruthyConditionError,
 } from "@open-decision/interpreter";
-import { TTreeClient } from "@open-decision/type-classes";
+import { TTreeClient } from "@open-decision/tree-sync";
 import { TDirectCondition } from "./plugin";
 
 export const resolver =
