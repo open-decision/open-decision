@@ -2,7 +2,7 @@ import * as React from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { editorStyles, extensions } from "./shared";
 import { styled, StyleObject } from "@open-decision/design-system";
-import { Node } from "@open-decision/type-classes";
+import { Node } from "@open-decision/tree-sync";
 
 const StyledEditorContent = styled(EditorContent, editorStyles);
 

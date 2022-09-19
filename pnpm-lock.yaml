@@ -440,6 +440,7 @@ importers:
   packages/design-system:
     specifiers:
       '@fontsource/poppins': ^4.5.9
+      '@open-decision/tree-sync': workspace:*
       '@open-decision/type-classes': workspace:*
       '@radix-ui/colors': ^0.1.8
       '@radix-ui/react-accessible-icon': ^1.0.0
@@ -470,6 +471,7 @@ importers:
       use-resize-observer: ^9.0.2
       valtio: ^1.6.4
     dependencies:
+      '@open-decision/tree-sync': link:../tree-sync
       '@open-decision/type-classes': link:../type-classes
       '@radix-ui/colors': 0.1.8
       '@radix-ui/react-accessible-icon': 1.0.0
@@ -552,11 +554,13 @@ importers:
 
   packages/interpreter:
     specifiers:
+      '@open-decision/tree-sync': workspace:*
       '@open-decision/type-classes': workspace:*
       remeda: ^1.1.0
       vitest: ^0.23.0
       xstate: ^4.33.6
     dependencies:
+      '@open-decision/tree-sync': link:../tree-sync
       '@open-decision/type-classes': link:../type-classes
       remeda: 1.1.0
       xstate: 4.33.6
@@ -567,12 +571,14 @@ importers:
     specifiers:
       '@open-decision/design-system': workspace:*
       '@open-decision/interpreter': workspace:*
+      '@open-decision/tree-sync': workspace:*
       '@open-decision/type-classes': workspace:*
       '@xstate/react': ^3.0.1
       xstate: ^4.33.6
     dependencies:
       '@open-decision/design-system': link:../design-system
       '@open-decision/interpreter': link:../interpreter
+      '@open-decision/tree-sync': link:../tree-sync
       '@open-decision/type-classes': link:../type-classes
       '@xstate/react': 3.0.1_xstate@4.33.6
       xstate: 4.33.6
@@ -616,6 +622,7 @@ importers:
   packages/rich-text-editor:
     specifiers:
       '@open-decision/design-system': workspace:*
+      '@open-decision/tree-sync': workspace:*
       '@open-decision/type-classes': workspace:*
       '@radix-ui/react-icons': ^1.1.1
       '@tiptap/core': ^2.0.0-beta.183
@@ -636,6 +643,7 @@ importers:
       '@tiptap/react': ^2.0.0-beta.115
     dependencies:
       '@open-decision/design-system': link:../design-system
+      '@open-decision/tree-sync': link:../tree-sync
       '@open-decision/type-classes': link:../type-classes
       '@radix-ui/react-icons': 1.1.1
       '@tiptap/core': 2.0.0-beta.183
@@ -681,6 +689,7 @@ importers:
     specifiers:
       '@open-decision/api-helpers': workspace:*
       '@open-decision/models': workspace:*
+      '@open-decision/tree-sync': workspace:*
       '@open-decision/type-classes': workspace:*
       validator: ^13.7.0
       vitest: ^0.23.0
@@ -688,6 +697,7 @@ importers:
     dependencies:
       '@open-decision/api-helpers': link:../api-helpers
       '@open-decision/models': link:../models
+      '@open-decision/tree-sync': link:../tree-sync
       '@open-decision/type-classes': link:../type-classes
       validator: 13.7.0
       zod: 3.19.1

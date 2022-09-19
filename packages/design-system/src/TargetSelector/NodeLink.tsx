@@ -1,5 +1,5 @@
 import { ButtonProps, Button, Icon } from "@open-decision/design-system";
-import { Node } from "@open-decision/type-classes";
+import { Node } from "@open-decision/tree-sync";
 import { Crosshair2Icon } from "@radix-ui/react-icons";
 
 export type NodeLinkProps = {

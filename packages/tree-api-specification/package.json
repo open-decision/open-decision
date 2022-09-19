@@ -9,6 +9,7 @@
     "@open-decision/api-helpers": "workspace:*",
     "@open-decision/models": "workspace:*",
     "@open-decision/type-classes": "workspace:*",
+    "@open-decision/tree-sync": "workspace:*",
     "validator": "^13.7.0",
     "zod": "^3"
   },

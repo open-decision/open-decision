@@ -12,6 +12,7 @@
   "scripts": {},
   "dependencies": {
     "@open-decision/type-classes": "workspace:*",
+    "@open-decision/tree-sync": "workspace:*",
     "remeda": "^1.1.0",
     "xstate": "^4.33.6"
   },

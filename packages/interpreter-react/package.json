@@ -9,7 +9,8 @@
     "xstate": "^4.33.6",
     "@open-decision/interpreter": "workspace:*",
     "@open-decision/type-classes": "workspace:*",
-    "@open-decision/design-system": "workspace:*"
+    "@open-decision/design-system": "workspace:*",
+    "@open-decision/tree-sync": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18.2.0",

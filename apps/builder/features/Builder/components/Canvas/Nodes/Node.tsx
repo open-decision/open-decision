@@ -4,10 +4,13 @@ import { NodeProps, Position } from "react-flow-renderer";
 import { nodeHeight, nodeWidth } from "../../../utilities/constants";
 import { useEditor } from "../../../../../features/Builder/state/useEditor";
 import { SourcePort, TargetPort } from "./Port";
-import { Node as NodeType } from "@open-decision/type-classes";
 import { StartNodeLabel } from "../../NodeLabels/StartNodeLabels";
 import { useTranslations } from "next-intl";
-import { useStartNodeId } from "@open-decision/tree-sync";
+import {
+  useTree,
+  Node as NodeType,
+  getStartNodeId,
+} from "@open-decision/tree-sync";
 
 const NodeContainer = styled(Stack, {
   layer: "1",
@@ -34,7 +37,7 @@ export const Node = memo(
     const t = useTranslations("builder.canvas.questionNode");
     const { validConnections } = useEditor();
     const { isConnecting, connectingNodeId } = useEditor();
-    const startNodeId = useStartNodeId();
+    const startNodeId = useTree(getStartNodeId);
 
     const validConnectionTarget = React.useMemo(
       () => !isConnecting || (isConnecting && validConnections?.includes(id)),

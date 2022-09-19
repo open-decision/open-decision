@@ -1,4 +1,4 @@
-import { Tree } from "@open-decision/type-classes";
+import { Tree } from "@open-decision/tree-sync";
 import { assign, createMachine, Interpreter, Sender } from "xstate";
 import {
   InvalidTreeError,

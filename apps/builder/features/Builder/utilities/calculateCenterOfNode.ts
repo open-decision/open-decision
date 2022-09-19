@@ -1,4 +1,4 @@
-import { Node } from "@open-decision/type-classes";
+import { Node } from "@open-decision/tree-sync";
 import { nodeHeight, nodeWidth } from "./constants";
 
 export function calculateCenterOfNode(

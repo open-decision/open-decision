@@ -1,5 +1,5 @@
-import { Tree } from "@open-decision/type-classes";
 import { useSnapshot } from "valtio";
+import { Tree } from "../../Tree/type-classes";
 import { useTreeContext } from "../TreeContext";
 
 export const useTree = <TReturn>(selector: (tree: Tree.TTree) => TReturn) => {

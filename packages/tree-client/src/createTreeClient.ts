@@ -1,9 +1,9 @@
+import { ODValidationError } from "@open-decision/type-classes";
 import {
   Tree,
   createTreeClient as createBaseTreeClient,
   Node,
-  ODValidationError,
-} from "@open-decision/type-classes";
+} from "@open-decision/tree-sync";
 import { SelectPlugin } from "@open-decision/input-plugins-select";
 import { ComparePlugin } from "@open-decision/condition-plugins-compare";
 import { FreeTextPlugin } from "@open-decision/input-plugins-free-text";
