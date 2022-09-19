@@ -58,6 +58,9 @@
         "react",
         "react-dom"
       ]
+    },
+    "overrides": {
+      "zod": "^3.19.1"
     }
   }
 }

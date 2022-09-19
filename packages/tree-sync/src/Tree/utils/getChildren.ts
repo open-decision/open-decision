@@ -5,8 +5,10 @@ import { Tree } from "../type-classes";
  * Get the immediate Children of the node with the provided id.
  */
 export const getChildren = (tree: Tree.TTree) => (nodeId: string) => {
+  if (!tree.edges) return [];
+
   return pipe(
-    tree.edges ?? {},
+    tree.edges,
     values,
     // Filter out relations without targets
     filter((edge) => edge.source === nodeId),

@@ -4,19 +4,8 @@ import { getCondition, getInput } from "../getters";
 export const connectInputAndCondition =
   (tree: Tree.TTree) => (conditionId: string, inputId: string) => {
     const condition = getCondition(tree)(conditionId);
-    const input = getInput(tree)(inputId);
-
-    if (!condition)
-      return new Error(
-        `The condition with id ${conditionId} could not be found. Nothing has been changed.`
-      );
-
-    if (!input)
-      return new Error(
-        `The input with id ${inputId} could not be found. Nothing has been changed.`
-      );
+    // We get the input just to validate that it exists.
+    getInput(tree)(inputId);
 
     condition.inputId = inputId;
-
-    return true;
   };

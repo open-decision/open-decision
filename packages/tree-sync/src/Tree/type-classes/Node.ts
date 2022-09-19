@@ -42,7 +42,7 @@ export const Record = z.record(Type);
 // Types
 
 export type TNode = z.infer<typeof Type>;
-export type TNodesRecord = z.infer<typeof Record>;
+export type TRecord = z.infer<typeof Record>;
 export type TNodeData = TNode["data"];
 export type TCoordinates = z.infer<typeof Coordinates>;
 export type TRichText = z.infer<typeof RichText>;

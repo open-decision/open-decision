@@ -1,8 +1,8 @@
 import { treeMock } from "../mocks/tree.mock";
-import { disconnectInputFromNode } from "./disconnectInputFromNode";
+import { disconnectInputAndNode } from "./disconnectInputFromNode";
 import { expect, test } from "vitest";
 
-disconnectInputFromNode(treeMock)(
+disconnectInputAndNode(treeMock)(
   "65f93264-6354-4e0b-86c1-3cc9e85db77a",
   "50b7733c-c7ab-4035-b26f-801ea8eca9fe"
 );

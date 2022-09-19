@@ -1,11 +1,12 @@
 import { Tree } from "../type-classes";
 import { getConnectableNodes } from "../utils";
-import { getNode } from "./getNode";
+import { getNodeNames } from "./getNodeNames";
 
+/**
+ * Get the possible connectable options for a node.
+ */
 export const getNodeOptions = (tree: Tree.TTree) => (nodeId: string) => {
-  const node = getNode(tree.nodes)(nodeId);
+  const connectableNodes = getConnectableNodes(tree)(nodeId);
 
-  if (!node) return undefined;
-
-  return getConnectableNodes(tree)(nodeId);
+  return getNodeNames(tree)(connectableNodes);
 };

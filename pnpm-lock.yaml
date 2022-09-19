@@ -1,5 +1,8 @@
 lockfileVersion: 5.4
 
+overrides:
+  zod: ^3.19.1
+
 importers:
 
   .:
@@ -149,7 +152,7 @@ importers:
       ws: ^8.8.1
       y-websocket: ^1.4.4
       yjs: ^13.5.41
-      zod: ^3
+      zod: ^3.19.1
     dependencies:
       '@faker-js/faker': 7.5.0
       '@open-decision/api-helpers': link:../../packages/api-helpers
@@ -192,7 +195,7 @@ importers:
       ws: 8.8.1
       y-websocket: 1.4.4_yjs@13.5.41
       yjs: 13.5.41
-      zod: 3.18.0
+      zod: 3.19.1
     devDependencies:
       '@sentry/webpack-plugin': 1.19.0
       '@types/compression': 1.7.2
@@ -271,7 +274,7 @@ importers:
       xstate: ^4.33.6
       y-indexeddb: ^9.0.9
       yjs: ^13.5.41
-      zod: ^3
+      zod: ^3.19.1
       zustand: 4.1.1
     dependencies:
       '@fontsource/poppins': 4.5.9
@@ -311,7 +314,7 @@ importers:
       xstate: 4.33.6
       y-indexeddb: 9.0.9_yjs@13.5.41
       yjs: 13.5.41
-      zod: 3.18.0
+      zod: 3.19.1
       zustand: 4.1.1_react@18.2.0
     devDependencies:
       '@babel/core': 7.18.13
@@ -360,12 +363,12 @@ importers:
       '@open-decision/type-classes': workspace:*
       '@types/validator': ^13.7.6
       validator: ^13.7.0
-      zod: ^3
+      zod: ^3.19.1
     dependencies:
       '@open-decision/type-classes': link:../type-classes
       '@types/validator': 13.7.6
       validator: 13.7.0
-      zod: 3.18.0
+      zod: 3.19.1
 
   packages/auth-api-specification:
     specifiers:
@@ -378,7 +381,7 @@ importers:
       '@zxcvbn-ts/language-en': ^2.0.1
       jose: ^4.9.2
       validator: ^13.7.0
-      zod: ^3
+      zod: ^3.19.1
     dependencies:
       '@open-decision/api-helpers': link:../api-helpers
       '@open-decision/type-classes': link:../type-classes
@@ -388,7 +391,7 @@ importers:
       '@zxcvbn-ts/language-en': 2.0.1
       jose: 4.9.2
       validator: 13.7.0
-      zod: 3.18.0
+      zod: 3.19.1
     devDependencies:
       '@types/validator': 13.7.6
 
@@ -398,13 +401,13 @@ importers:
       '@open-decision/tree-sync': workspace:*
       '@open-decision/type-classes': workspace:*
       ramda: 0.28.0
-      zod: ^3
+      zod: ^3.19.1
     dependencies:
       '@open-decision/condition-plugins-helpers': link:../helpers
       '@open-decision/tree-sync': link:../../tree-sync
       '@open-decision/type-classes': link:../../type-classes
       ramda: 0.28.0
-      zod: 3.18.0
+      zod: 3.19.1
 
   packages/condition-plugins/direct:
     specifiers:
@@ -412,13 +415,13 @@ importers:
       '@open-decision/tree-sync': workspace:*
       '@open-decision/type-classes': workspace:*
       ramda: 0.28.0
-      zod: ^3
+      zod: ^3.19.1
     dependencies:
       '@open-decision/condition-plugins-helpers': link:../helpers
       '@open-decision/tree-sync': link:../../tree-sync
       '@open-decision/type-classes': link:../../type-classes
       ramda: 0.28.0
-      zod: 3.18.0
+      zod: 3.19.1
 
   packages/condition-plugins/helpers:
     specifiers:
@@ -426,13 +429,13 @@ importers:
       '@open-decision/type-classes': workspace:*
       ramda: 0.28.0
       remeda: ^1.1.0
-      zod: ^3
+      zod: ^3.19.1
     dependencies:
       '@open-decision/tree-sync': link:../../tree-sync
       '@open-decision/type-classes': link:../../type-classes
       ramda: 0.28.0
       remeda: 1.1.0
-      zod: 3.18.0
+      zod: 3.19.1
 
   packages/design-system:
     specifiers:
@@ -506,14 +509,14 @@ importers:
       '@open-decision/input-plugins-helpers': workspace:*
       '@open-decision/tree-sync': workspace:*
       '@open-decision/type-classes': workspace:*
-      zod: ^3
+      zod: ^3.19.1
     dependencies:
       '@open-decision/condition-plugins-direct': link:../../condition-plugins/direct
       '@open-decision/design-system': link:../../design-system
       '@open-decision/input-plugins-helpers': link:../helpers
       '@open-decision/tree-sync': link:../../tree-sync
       '@open-decision/type-classes': link:../../type-classes
-      zod: 3.18.0
+      zod: 3.19.1
 
   packages/input-plugins/helpers:
     specifiers:
@@ -536,7 +539,7 @@ importers:
       '@open-decision/type-classes': workspace:*
       framer-motion: ^7.3.5
       remeda: ^1.1.0
-      zod: ^3
+      zod: ^3.19.1
     dependencies:
       '@open-decision/condition-plugins-compare': link:../../condition-plugins/compare
       '@open-decision/design-system': link:../../design-system
@@ -545,7 +548,7 @@ importers:
       '@open-decision/type-classes': link:../../type-classes
       framer-motion: 7.3.5
       remeda: 1.1.0
-      zod: 3.18.0
+      zod: 3.19.1
 
   packages/interpreter:
     specifiers:
@@ -576,21 +579,21 @@ importers:
 
   packages/models:
     specifiers:
-      zod: ^3
+      zod: ^3.19.1
     dependencies:
-      zod: 3.18.0
+      zod: 3.19.1
 
   packages/prisma:
     specifiers:
       '@prisma/client': ~4.3.1
       encoding: ^0.1.13
       prisma: ~4.3.1
-      zod: ^3
+      zod: ^3.19.1
     dependencies:
       '@prisma/client': 4.3.1_prisma@4.3.1
       encoding: 0.1.13
       prisma: 4.3.1
-      zod: 3.18.0
+      zod: 3.19.1
 
   packages/renderer:
     specifiers:
@@ -681,13 +684,13 @@ importers:
       '@open-decision/type-classes': workspace:*
       validator: ^13.7.0
       vitest: ^0.23.0
-      zod: ^3
+      zod: ^3.19.1
     dependencies:
       '@open-decision/api-helpers': link:../api-helpers
       '@open-decision/models': link:../models
       '@open-decision/type-classes': link:../type-classes
       validator: 13.7.0
-      zod: 3.18.0
+      zod: 3.19.1
     devDependencies:
       vitest: 0.23.0
 
@@ -701,7 +704,7 @@ importers:
       '@open-decision/input-plugins-select': workspace:*
       '@open-decision/tree-sync': workspace:*
       '@open-decision/type-classes': workspace:*
-      zod: ^3
+      zod: ^3.19.1
     dependencies:
       '@open-decision/condition-plugins-compare': link:../condition-plugins/compare
       '@open-decision/condition-plugins-direct': link:../condition-plugins/direct
@@ -711,7 +714,7 @@ importers:
       '@open-decision/input-plugins-select': link:../input-plugins/select
       '@open-decision/tree-sync': link:../tree-sync
       '@open-decision/type-classes': link:../type-classes
-      zod: 3.18.0
+      zod: 3.19.1
 
   packages/tree-sync:
     specifiers:
@@ -724,7 +727,7 @@ importers:
       y-indexeddb: ^9.0.9
       y-websocket: ^1.4.5
       yjs: ^13.5.41
-      zod: ^3
+      zod: ^3.19.1
     dependencies:
       '@open-decision/type-classes': link:../type-classes
       '@xstate/react': 3.0.1_xstate@4.33.6
@@ -735,7 +738,7 @@ importers:
       y-indexeddb: 9.0.9_yjs@13.5.41
       y-websocket: 1.4.5_yjs@13.5.41
       yjs: 13.5.41
-      zod: 3.18.0
+      zod: 3.19.1
 
   packages/type-classes:
     specifiers:
@@ -747,12 +750,12 @@ importers:
       tslib: ^2.4.0
       uuid: ^8.3.2
       vitest: ^0.23.0
-      zod: ^3
+      zod: ^3.19.1
     dependencies:
       ramda: 0.28.0
       remeda: 1.1.0
       uuid: 8.3.2
-      zod: 3.18.0
+      zod: 3.19.1
     devDependencies:
       '@tiptap/core': 2.0.0-beta.183
       '@types/ramda': 0.28.15
@@ -765,12 +768,12 @@ importers:
       '@open-decision/api-helpers': workspace:*
       '@open-decision/auth-api-specification': workspace:*
       '@open-decision/models': workspace:*
-      zod: ^3
+      zod: ^3.19.1
     dependencies:
       '@open-decision/api-helpers': link:../api-helpers
       '@open-decision/auth-api-specification': link:../auth-api-specification
       '@open-decision/models': link:../models
-      zod: 3.18.0
+      zod: 3.19.1
 
 packages:
 
@@ -17312,10 +17315,6 @@ packages:
       validator: 13.7.0
     optionalDependencies:
       commander: 2.20.3
-    dev: false
-
-  /zod/3.18.0:
-    resolution: {integrity: sha512-gwTm8RfUCe8l9rDwN5r2A17DkAa8Ez4Yl4yXqc5VqeGaXaJahzYYXbTwvhroZi0SNBqTwh/bKm2N0mpCzuw4bA==}
     dev: false
 
   /zod/3.19.1:

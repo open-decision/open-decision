@@ -1,13 +1,13 @@
 import { Input, TTreeClient } from "@open-decision/tree-sync";
 
-export type InputComponentProps<TInput extends Input.TBaseInput> = {
+export type InputComponentProps<TInput extends Input.TInput> = {
   nodeId: string;
   input: TInput;
   onClick: (target: string) => void;
   treeClient: TTreeClient;
 };
 
-export type InputPrimaryActionSlotProps<TInput extends Input.TBaseInput> = {
+export type InputPrimaryActionSlotProps<TInput extends Input.TInput> = {
   treeClient: TTreeClient;
   input: TInput;
 };

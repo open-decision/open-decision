@@ -19,6 +19,14 @@ import {
   getEdgesByNode,
   getInputsByNode,
   getNodeOptions,
+  getNodesByInput,
+  getNodesByCondition,
+  getNodesByEdge,
+  getInputByCondition,
+  getInputByEdge,
+  getConditionsByInput,
+  getConditionsByEdge,
+  getEdgesByInput,
 } from "./getters";
 import {
   updateStartNode,
@@ -26,7 +34,7 @@ import {
   addNode,
   connectConditionAndNode,
   connectInputAndNode,
-  disconnectInputFromNode,
+  disconnectInputAndNode,
   updateNodeContent,
   updateNodeName,
   updateNodePosition,
@@ -39,6 +47,11 @@ import {
   addEdge,
   updateEdgeTarget,
   updateInput,
+  disconnectConditionAndNode,
+  disconnectInputAndCondition,
+  connectEdgeAndCondition,
+  disconnectEdgeAndCondition,
+  updateEdgeSource,
 } from "./mutaters";
 import { Tree } from "./type-classes";
 import {
@@ -67,9 +80,9 @@ export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
         parents: getParents(tree),
         paths: getPaths(tree),
         options: getNodeOptions(tree),
-        byInput: null,
-        byCondition: null,
-        byEdge: null,
+        byInput: getNodesByInput(tree),
+        byCondition: getNodesByCondition(tree),
+        byEdge: getNodesByEdge(tree),
       },
       delete: deleteNodes(tree),
       create: { node: createNode, childNode: createChildNode(tree) },
@@ -77,12 +90,19 @@ export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
       connect: {
         toCondition: connectConditionAndNode(tree),
         toInput: connectInputAndNode(tree),
-        toEdge: null,
+        toEdgeAsTarget: updateEdgeTarget(tree),
+        toEdgeAsSource: updateEdgeSource(tree),
       },
       disconnect: {
-        fromInput: disconnectInputFromNode(tree),
-        fromCondition: null,
-        fromEdge: null,
+        fromInput: disconnectInputAndNode(tree),
+        fromCondition: disconnectConditionAndNode(tree),
+        /**
+         * Disconnecting from an Edge is equivalent to deleting it, because there cannot be
+         * an Edge without source and target. If you want to update the connection
+         * use nodes.connect.toEdgeAsTarget or edges.connect.toEdgeAsSource.
+         */
+        fromEdgeAsTarget: (id: string) => deleteEdges(tree)([id]),
+        fromEdgeAsSource: (id: string) => deleteEdges(tree)([id]),
       },
       update: {
         content: updateNodeContent(tree),
@@ -96,8 +116,8 @@ export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
         collection: getInputs(tree),
         all: () => tree.inputs as TTree["inputs"],
         byNode: getInputsByNode(tree),
-        byCondition: null,
-        byEdge: null,
+        byCondition: getInputByCondition(tree),
+        byEdge: getInputByEdge(tree),
       },
       delete: deleteInputs(tree),
       create: createInput,
@@ -105,11 +125,17 @@ export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
       connect: {
         toNode: connectInputAndNode(tree),
         toCondition: connectInputAndCondition(tree),
+        /**
+         * Edges are not connectable to inputs in the normal way, but through conditions.
+         */
         toEdge: null,
       },
       disconnect: {
-        fromNode: disconnectInputFromNode(tree),
-        fromCondition: null,
+        fromNode: disconnectInputAndNode(tree),
+        fromCondition: disconnectInputAndCondition(tree),
+        /**
+         * Edges are not connectable to inputs in the normal way, but through conditions.
+         */
         fromEdge: null,
       },
       update: updateInput(tree),
@@ -119,9 +145,9 @@ export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
         single: getCondition(tree),
         collection: getConditions(tree),
         all: () => tree.conditions as TTree["conditions"],
-        byNode: getConditionsByNode(tree.nodes ?? {}, tree.conditions ?? {}),
-        byInput: null,
-        byEdge: null,
+        byNode: getConditionsByNode(tree),
+        byInput: getConditionsByInput(tree),
+        byEdge: getConditionsByEdge(tree),
       },
       delete: deleteConditions(tree),
       create: createCondition,
@@ -129,12 +155,12 @@ export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
       connect: {
         toNode: connectConditionAndNode(tree),
         toInput: connectInputAndCondition(tree),
-        toEdge: null,
+        toEdge: connectEdgeAndCondition(tree),
       },
       disconnect: {
-        fromNode: null,
-        fromInput: null,
-        fromEdge: null,
+        fromNode: disconnectConditionAndNode(tree),
+        fromInput: disconnectInputAndCondition(tree),
+        fromEdge: disconnectEdgeAndCondition(tree),
       },
     },
     edges: {
@@ -142,29 +168,36 @@ export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
         single: getEdge(tree),
         collection: getEdges(tree),
         all: () => tree.edges,
-        byNode: getEdgesByNode(tree.edges ?? {}),
-        byInput: null,
-        byCondition: getEdgesByCondition(tree.edges ?? {}),
+        byNode: getEdgesByNode(tree),
+        byInput: getEdgesByInput(tree),
+        byCondition: getEdgesByCondition(tree),
       },
       delete: deleteEdges(tree),
       create: createEdge(tree),
       add: addEdge(tree),
-      update: {
-        target: updateEdgeTarget(tree),
-      },
       rules: {
         isCircular: isCircular(tree),
         isValid: isValidEdge(tree),
       },
       connect: {
-        toNode: null,
-        toInput: null,
-        toCondition: null,
+        toTargetNode: updateEdgeTarget(tree),
+        toSourceNode: updateEdgeSource(tree),
+        toCondition: connectEdgeAndCondition(tree),
       },
       disconnect: {
-        fromNode: null,
-        fromInput: null,
-        fromCondition: null,
+        /**
+         * Disconnecting an Edge is equivalent to deleting it, because there cannot be
+         * an Edge without source and target. If you want to update the connection
+         * use edges.connect.toTargetNode or edges.connect.toSourceNode.
+         */
+        fromTargetNode: (id: string) => deleteEdges(tree)([id]),
+        /**
+         * Disconnecting an Edge is equivalent to deleting it, because there cannot be
+         * an Edge without source and target. If you want to update the connection
+         * use edges.connect.toTargetNode or edges.connect.toSourceNode.
+         */
+        fromSourceNode: (id: string) => deleteEdges(tree)([id]),
+        fromCondition: disconnectEdgeAndCondition(tree),
       },
     },
   };

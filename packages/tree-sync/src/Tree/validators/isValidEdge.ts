@@ -2,11 +2,16 @@ import { isCircular } from "../utils";
 import { Tree, Edge } from "../type-classes";
 import { ODError } from "@open-decision/type-classes";
 
+/**
+ * Validates an edge object based on the full tree.
+ * An Edge cannot be:
+ * 1. A duplicate
+ * 2. A circular connection
+ * @param tree the full tree
+ */
 export const isValidEdge =
   (tree: Tree.TTree) =>
-  ({ source, target }: Omit<Edge.TEdge, "id">): Error | true => {
-    if (!target) return true;
-
+  ({ source, target }: Omit<Edge.TEdge, "id">) => {
     // Only validate edges with targets.
     // Make sure the edge does not already exist based on the combination of source and target.
     if (

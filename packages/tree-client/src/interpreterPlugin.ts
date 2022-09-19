@@ -5,6 +5,8 @@ import { createTreeClient } from "./createTreeClient";
 import {
   Tree,
   createTreeClient as createBaseTreeClient,
+} from "@open-decision/tree-sync";
+import {
   ODProgrammerError,
   InterpreterError,
 } from "@open-decision/type-classes";

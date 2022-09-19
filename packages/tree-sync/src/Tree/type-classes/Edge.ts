@@ -11,4 +11,4 @@ export const Type = z.object({
 export const Record = z.record(Type);
 
 export type TEdge = z.infer<typeof Type>;
-export type TEdgesRecord = z.infer<typeof Record>;
+export type TRecord = z.infer<typeof Record>;

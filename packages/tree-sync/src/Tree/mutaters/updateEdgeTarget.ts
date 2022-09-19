@@ -5,7 +5,5 @@ export const updateEdgeTarget =
   (tree: Tree.TTree) => (edgeId: string, newTarget: string) => {
     const edge = getEdge(tree)(edgeId);
 
-    if (!edge) return;
-
     edge.target = newTarget;
   };

@@ -6,24 +6,28 @@ import { ODError } from "@open-decision/type-classes";
 export type NewEdgeData = Partial<Edge.TEdge> &
   Required<Pick<Edge.TEdge, "source" | "target">>;
 
-export const createEdge =
-  (tree: Tree.TTree) =>
-  (edge: NewEdgeData): ODError | Edge.TEdge => {
-    if (edge.source === edge.target)
-      return new ODError({
-        code: "CONNECTED_TO_SELF",
-        message: "Ein Knoten kann nicht mit sich selbst verbunden werden.",
-      });
+/**
+ * Used to create a valid new edge. This needs the full tree to make sure the edge is valid.
+ */
+export const createEdge = (tree: Tree.TTree) => (edge: NewEdgeData) => {
+  // Make sure the edge does not connect the node to itself.
+  if (edge.source === edge.target)
+    return new ODError({
+      code: "CONNECTED_TO_SELF",
+      message: "A node cannot connect to itself",
+    });
 
-    const newEdge: Edge.TEdge = {
-      id: uuid(),
-      type: "default",
-      ...edge,
-    };
-
-    const isEdgeValid = isValidEdge(tree)(newEdge);
-
-    if (isEdgeValid instanceof ODError) return isEdgeValid;
-
-    return newEdge;
+  // Create the edge object
+  const newEdge: Edge.TEdge = {
+    id: uuid(),
+    type: "default",
+    ...edge,
   };
+
+  // Validate the created edge object, based on the rest of the tree.
+  const isEdgeValid = isValidEdge(tree)(newEdge);
+
+  if (isEdgeValid instanceof ODError) return isEdgeValid;
+
+  return newEdge;
+};

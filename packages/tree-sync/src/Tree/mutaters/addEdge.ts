@@ -1,6 +1,6 @@
-import { ODError } from "@open-decision/type-classes";
-import { createEdge, NewEdgeData } from "../creators";
+import { ODProgrammerError } from "@open-decision/type-classes";
 import { Tree, Edge } from "../type-classes";
+import { isValidEdge } from "../validators";
 
 /**
  * @summary Adds an edge to the tree under certain conditions.
@@ -10,20 +10,17 @@ import { Tree, Edge } from "../type-classes";
  * - Edge does not already exist
  * - The Edge would not result in a circularly connected tree
  *
- * @param edge - Accepts a partial or full Edge. A partial Edge is used to create a new Edge,
- * while a full Edge is directly added to the Tree.
+ * @param edge to be added to the tree
  */
 export const addEdge = (tree: Tree.TTree) => (edge: Edge.TEdge) => {
-  // If there is no edges array yet assign it.
   if (!tree.edges) tree.edges = {};
 
+  if (!isValidEdge(tree)(edge))
+    throw new ODProgrammerError({
+      code: "TRYED_ADDING_INVALID_EDGE",
+      message:
+        "The edge you are trying to add is invalid. Make sure that the edge is created with the createEdge function",
+    });
+
   tree.edges[edge.id] = edge;
-};
-
-export const createAndAddEdge = (tree: Tree.TTree) => (edge: NewEdgeData) => {
-  const newEdge = createEdge(tree)(edge);
-
-  if (newEdge instanceof ODError) return newEdge;
-
-  return addEdge(tree)(newEdge);
 };
