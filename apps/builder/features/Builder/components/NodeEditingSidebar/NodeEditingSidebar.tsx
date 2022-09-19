@@ -138,7 +138,7 @@ const Header = ({ node }: HeaderProps) => {
 
   const parentNodes = useTree((tree) => {
     const parentNodeIds = getParents(tree)(node.id);
-    return getNodeNames(tree)(parentNodeIds);
+    return Object.values(getNodeNames(tree)(parentNodeIds));
   });
 
   const isStartNode = node?.id === startNodeId;

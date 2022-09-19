@@ -15,17 +15,6 @@ export class ComparePlugin extends ConditionPlugin<typeof Type, "compare"> {
     super(treeClient, Type, "compare");
   }
 
-  override create = ({
-    inputId,
-    answerId,
-  }: {
-    inputId: string;
-    answerId: string;
-  }): TCompareCondition => {
-    const newCondition = this.treeClient.conditions.create();
-    return { type: "compare", inputId, answerId, ...newCondition };
-  };
-
   getBy = {
     node: (nodeId: string) => {
       const conditions = this.treeClient.conditions.get.byNode(nodeId);

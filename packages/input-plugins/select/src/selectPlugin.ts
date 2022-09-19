@@ -25,16 +25,6 @@ export class SelectPlugin extends InputPlugin<typeof Type, "select"> {
     super(treeClient, Type, "select");
   }
 
-  create(
-    data: Partial<Omit<z.infer<typeof this.SpecificType>, "type">>
-  ): z.infer<typeof this.MergedType> {
-    return this.treeClient.inputs.create({
-      answers: [],
-      ...data,
-      type: this.typeName,
-    }) as z.infer<typeof this.MergedType>;
-  }
-
   createAnswer(answer: Pick<TAnswer, "text">) {
     return { id: uuid(), ...answer };
   }
@@ -120,7 +110,7 @@ export class SelectPlugin extends InputPlugin<typeof Type, "select"> {
     }
 
     if (edge?.target && newItem)
-      this.treeClient.edges.update.target(edge.id, newItem);
+      this.treeClient.edges.connect.toTargetNode(edge.id, newItem);
   }
 
   createTargetNode(

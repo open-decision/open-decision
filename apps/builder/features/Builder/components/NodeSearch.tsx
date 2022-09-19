@@ -6,7 +6,7 @@ import {
   Icon,
 } from "@open-decision/design-system";
 import { useEditor } from "../state/useEditor";
-import { useNodeNames, useTreeClient } from "@open-decision/tree-sync";
+import { getNodeNames, useTree, useTreeClient } from "@open-decision/tree-sync";
 import { useTranslations } from "next-intl";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 
@@ -17,7 +17,7 @@ export const NodeSearch = ({ css }: Props) => {
 
   const treeClient = useTreeClient();
   const { replaceSelectedNodes } = useEditor();
-  const nodeNames = useNodeNames();
+  const nodeNames = useTree(getNodeNames);
 
   const { getCenter, zoomToNode } = useEditor();
   const combobox = Combobox.useComboboxState({

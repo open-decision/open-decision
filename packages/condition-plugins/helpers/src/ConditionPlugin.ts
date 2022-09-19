@@ -27,6 +27,15 @@ export class ConditionPlugin<
     this.typeName = typeName;
   }
 
+  create(
+    data?: Omit<Partial<z.infer<typeof this.MergedType>>, "type" | "id">
+  ): z.infer<typeof this.MergedType> {
+    return this.treeClient.conditions.create({
+      ...data,
+      type: this.typeName,
+    }) as z.infer<typeof this.MergedType>;
+  }
+
   isType(input: any): input is z.infer<typeof this.MergedType> {
     return this.MergedType.safeParse(input).success;
   }
@@ -61,14 +70,5 @@ export class ConditionPlugin<
       this.treeClient.conditions.get.collection,
       this.returnOnlyWhenRecordOfType
     );
-  }
-
-  create(
-    data?: Partial<z.infer<typeof this.SpecificType>>
-  ): z.infer<typeof this.MergedType> {
-    return this.treeClient.conditions.create({
-      ...data,
-      type: this.typeName,
-    }) as z.infer<typeof this.MergedType>;
   }
 }

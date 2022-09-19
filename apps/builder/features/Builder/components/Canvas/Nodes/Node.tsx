@@ -35,7 +35,9 @@ const NodeContainer = styled(Stack, {
 export const Node = memo(
   ({ id, data, selected: isSelected }: NodeProps<NodeType.TNodeData>) => {
     const t = useTranslations("builder.canvas.questionNode");
-    const { validConnections } = useEditor();
+    const {
+      editorStore: { validConnections },
+    } = useEditor();
     const { isConnecting, connectingNodeId } = useEditor();
     const startNodeId = useTree(getStartNodeId);
 

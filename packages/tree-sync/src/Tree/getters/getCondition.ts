@@ -23,10 +23,12 @@ export const getCondition =
 
 export const getConditions =
   <TTree extends Tree.TTree>(tree: TTree) =>
-  (conditionIds?: string[]) => {
+  (conditionIds?: string[]): TTree["conditions"] | undefined => {
     if (!tree.conditions) return undefined;
 
-    const conditions = pick(tree.conditions, conditionIds);
+    const conditions = conditionIds
+      ? pick(tree.conditions, conditionIds)
+      : tree.conditions;
     if (!conditions) return undefined;
 
     return conditions;

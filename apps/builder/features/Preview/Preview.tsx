@@ -1,7 +1,7 @@
 import * as React from "react";
 import { StyleObject } from "@open-decision/design-system";
 import { Renderer } from "@open-decision/renderer";
-import { useFullTree } from "@open-decision/tree-sync";
+import { getTree, useTree } from "@open-decision/tree-sync";
 import { useNotificationStore } from "../../config/notifications";
 import { useEditor } from "../Builder/state/useEditor";
 import { useSelectedNodeIds } from "../Builder/state/useSelectedNodes";
@@ -11,7 +11,7 @@ type Props = { css?: StyleObject };
 
 export function Preview({ css }: Props) {
   const { replaceSelectedNodes } = useEditor();
-  const tree = useFullTree();
+  const tree = useTree((tree) => getTree(tree)());
   const selectedNodeIds = useSelectedNodeIds();
 
   const { addNotification } = useNotificationStore();

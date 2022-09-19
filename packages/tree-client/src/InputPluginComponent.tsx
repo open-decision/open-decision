@@ -2,7 +2,8 @@ import * as React from "react";
 import { createTreeClient, TTreeClient } from "./createTreeClient";
 import { DropdownMenu, Box, Label } from "@open-decision/design-system";
 import {
-  useInputs,
+  getInputs,
+  useTree,
   useTreeClient,
   useTreeContext,
 } from "@open-decision/tree-sync";
@@ -97,10 +98,9 @@ export function InputPluginComponent({
   onClick,
   nodeId,
 }: InputPluginComponentProps) {
-  const inputs = useInputs(inputIds) as unknown as Record<
-    string,
-    z.infer<TTreeClient["inputs"]["Type"]>
-  >;
+  const inputs = useTree((tree) =>
+    getInputs(tree)(inputIds)
+  ) as unknown as Record<string, z.infer<TTreeClient["inputs"]["Type"]>>;
 
   const baseTreeClient = useTreeClient();
   const {

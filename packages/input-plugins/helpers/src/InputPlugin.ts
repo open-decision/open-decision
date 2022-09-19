@@ -27,6 +27,16 @@ export class InputPlugin<
     this.typeName = typeName;
   }
 
+  create(
+    data: Partial<Omit<z.infer<typeof this.SpecificType>, "type" | "id">>
+  ): z.infer<typeof this.MergedType> {
+    return this.treeClient.inputs.create({
+      answers: [],
+      ...data,
+      type: this.typeName,
+    }) as z.infer<typeof this.MergedType>;
+  }
+
   isType(input: any): input is z.infer<typeof this.MergedType> {
     return this.MergedType.safeParse(input).success;
   }

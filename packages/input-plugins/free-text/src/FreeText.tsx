@@ -2,11 +2,7 @@ import { Form, TargetSelector } from "@open-decision/design-system";
 import { InputComponentProps } from "@open-decision/input-plugins-helpers";
 import { FreeTextPlugin, TFreeTextInput } from "./freeTextPlugin";
 import { useTree } from "@open-decision/tree-sync";
-import {
-  getEdgesByNode,
-  getNodeNames,
-  getNodeOptions,
-} from "@open-decision/tree-sync";
+import { getEdgesByNode, getNodeOptions } from "@open-decision/tree-sync";
 
 export const FreeText = ({
   nodeId,
@@ -17,13 +13,12 @@ export const FreeText = ({
   const FreeText = new FreeTextPlugin(treeClient);
 
   const edge = useTree(
-    ({ edges }) => Object.values(getEdgesByNode(edges)(nodeId) ?? {})?.[0]
+    (tree) => Object.values(getEdgesByNode(tree)(nodeId) ?? {})?.[0]
   );
 
-  const nodeNames = useTree((tree) => {
-    const options = getNodeOptions(tree)(nodeId);
-    return getNodeNames(tree.nodes)(options);
-  });
+  const nodeNames = useTree((tree) =>
+    Object.values(getNodeOptions(tree)(nodeId))
+  );
 
   const formState = Form.useFormState({
     defaultValues: {

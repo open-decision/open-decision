@@ -16,7 +16,7 @@ import {
   InputComponentProps,
   InputPrimaryActionSlotProps,
 } from "@open-decision/input-plugins-helpers";
-import { SelectPlugin, TSelectInput } from "../selectPlugin";
+import { SelectPlugin, TAnswer, TSelectInput } from "../selectPlugin";
 import { ComparePlugin } from "@open-decision/condition-plugins-compare";
 import {
   useTree,
@@ -117,11 +117,10 @@ export const OptionTargetInput = ({
   const Select = new SelectPlugin(treeClient);
 
   const controls = useDragControls();
-  const node = useTree(({ nodes }) => getNode(nodes)(nodeId));
-  const nodeOptions = useTree((tree) => {
-    const nodeOptions = getNodeOptions(tree)(nodeId);
-    return getNodeNames(tree.nodes)(nodeOptions);
-  });
+  const node = useTree((tree) => getNode(tree)(nodeId));
+  const nodeOptions = useTree((tree) =>
+    Object.values(getNodeOptions(tree)(nodeId))
+  );
 
   const ref = React.useRef<HTMLDivElement | null>(null);
 

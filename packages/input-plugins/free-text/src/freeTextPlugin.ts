@@ -1,6 +1,5 @@
 import { TTreeClient } from "@open-decision/tree-sync";
 import { InputPlugin } from "@open-decision/input-plugins-helpers";
-import { Type } from "./types";
 import { DirectPlugin } from "@open-decision/condition-plugins-direct";
 import { z } from "zod";
 
@@ -14,16 +13,6 @@ export class FreeTextPlugin extends InputPlugin<typeof Type, "freeText"> {
     super(treeClient, Type, "freeText");
 
     this.directConditionPlugin = new DirectPlugin(treeClient);
-  }
-
-  //FIXME Return type is not proper
-  create(
-    data: Omit<z.infer<typeof this.SpecificType>, "type">
-  ): z.infer<typeof this.MergedType> {
-    return this.treeClient.inputs.create({
-      ...data,
-      type: this.typeName,
-    }) as z.infer<typeof this.MergedType>;
   }
 
   createTargetNode(nodeId: string, inputId: string, data: { name: string }) {
@@ -88,6 +77,6 @@ export class FreeTextPlugin extends InputPlugin<typeof Type, "freeText"> {
     }
 
     if (edge?.target && newItem)
-      this.treeClient.edges.update.target(edge.id, newItem);
+      this.treeClient.edges.connect.toTargetNode(edge.id, newItem);
   }
 }

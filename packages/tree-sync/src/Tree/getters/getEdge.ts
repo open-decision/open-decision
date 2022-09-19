@@ -1,6 +1,6 @@
 import { ODProgrammerError } from "@open-decision/type-classes";
 import { pick } from "remeda";
-import { Edge, Tree } from "../type-classes";
+import { Tree } from "../type-classes";
 
 /**
  * Returns a single edge from the tree.
@@ -20,8 +20,8 @@ export const getEdge = (tree: Tree.TTree) => (edgeId: string) => {
 };
 
 export const getEdges =
-  (tree: Tree.TTree) =>
-  (edgeIds?: string[]): Edge.TEdgesRecord | undefined => {
+  <TTree extends Tree.TTree>(tree: TTree) =>
+  (edgeIds?: string[]): TTree["edges"] | undefined => {
     if (!tree.edges) return undefined;
 
     if (!edgeIds) return tree.edges;

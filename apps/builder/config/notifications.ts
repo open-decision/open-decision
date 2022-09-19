@@ -1,6 +1,9 @@
-import { Notification, notificationState } from "@open-decision/design-system";
+import {
+  useNotificationSnapshot,
+  Notification,
+  notificationState,
+} from "@open-decision/design-system";
 import { useTranslations } from "next-intl";
-import { useNotificationSnapshot } from "packages/design-system/src/Notifications/NotificationState";
 import { useMessages } from "./messagesContext";
 
 export const useNotificationStore = () => {
