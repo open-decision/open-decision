@@ -1,13 +1,14 @@
-import { StyleObject, Form } from "@open-decision/design-system";
+import { Form } from "@open-decision/design-system";
 import { useInterpreter } from "@open-decision/interpreter-react";
+import { RendererComponentProps } from "@open-decision/input-plugins-helpers";
 import { TFreeTextInput } from "./freeTextPlugin";
 
-type PreviewAnswerFormProps = {
-  input: TFreeTextInput;
-  css?: StyleObject;
-};
-
-export function FreeTextForm({ input, css }: PreviewAnswerFormProps) {
+export function FreeTextForm({
+  input,
+  css,
+  children,
+  onSubmit,
+}: RendererComponentProps<TFreeTextInput>) {
   const { send, getAnswer, getCurrentNode } = useInterpreter();
 
   const formState = Form.useFormState({
@@ -32,11 +33,16 @@ export function FreeTextForm({ input, css }: PreviewAnswerFormProps) {
       conditionIds: currentNode?.data.conditions ?? [],
       nodeId: currentNode?.id,
     });
+
+    onSubmit?.(formState.values);
   });
 
   return (
     <Form.Root state={formState} css={css} resetOnSubmit={false}>
-      Free Text Input
+      <Form.Field Label={input.label ?? "Eingabe"}>
+        <Form.Input name={formState.names[input.id]} />
+      </Form.Field>
+      {children}
     </Form.Root>
   );
 }

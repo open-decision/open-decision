@@ -534,12 +534,14 @@ importers:
 
   packages/input-plugins/helpers:
     specifiers:
+      '@open-decision/design-system': workspace:*
       '@open-decision/tree-sync': workspace:*
       '@open-decision/tree-type': workspace:*
       '@open-decision/type-classes': workspace:*
       remeda: ^1.1.0
       zod: ^3.19.1
     dependencies:
+      '@open-decision/design-system': link:../../design-system
       '@open-decision/tree-sync': link:../../tree/sync
       '@open-decision/tree-type': link:../../tree/type
       '@open-decision/type-classes': link:../../type-classes

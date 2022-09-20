@@ -2,13 +2,14 @@ import { StyleObject, Form } from "@open-decision/design-system";
 import { useInterpreter } from "@open-decision/interpreter-react";
 import { Answers } from "./Answers";
 import { TSelectInput } from "../selectPlugin";
+import { RendererComponentProps } from "@open-decision/input-plugins-helpers";
 
-type PreviewAnswerFormProps = {
-  input: TSelectInput;
-  css?: StyleObject;
-};
-
-export function AnswersForm({ input, css }: PreviewAnswerFormProps) {
+export function AnswersForm({
+  input,
+  css,
+  children,
+  onSubmit,
+}: RendererComponentProps<TSelectInput>) {
   const { send, getAnswer, getCurrentNode } = useInterpreter();
 
   const formState = Form.useFormState({
@@ -33,6 +34,8 @@ export function AnswersForm({ input, css }: PreviewAnswerFormProps) {
       conditionIds: currentNode?.data.conditions ?? [],
       nodeId: currentNode?.id,
     });
+
+    onSubmit?.(formState.values);
   });
 
   const options = Object.keys(formState.values);
@@ -47,15 +50,7 @@ export function AnswersForm({ input, css }: PreviewAnswerFormProps) {
           activeValue={formState.values[inputId]}
         />
       ))}
-      <Form.Submit
-        css={{
-          alignSelf: "end",
-          marginTop: "$2",
-          fontWeight: "$large-text",
-        }}
-      >
-        Weiter
-      </Form.Submit>
+      {children}
     </Form.Root>
   );
 }

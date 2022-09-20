@@ -2,7 +2,7 @@ import { useTree } from "@open-decision/tree-sync";
 import { getInputs } from "@open-decision/tree-type";
 import { RendererComponent as SelectRendererComponent } from "@open-decision/input-plugins-select";
 import { RendererComponent as FreeTextRendererComponent } from "@open-decision/input-plugins-free-text";
-import { StyleObject } from "@open-decision/design-system";
+import { Form, StyleObject } from "@open-decision/design-system";
 import { z } from "zod";
 import { TTreeClient } from "./createTreeClient";
 
@@ -18,10 +18,34 @@ export function RendererPlugin({ inputIds, css }: RendererPluginProps) {
       {Object.values(inputs ?? {}).map((input) => {
         switch (input.type) {
           case "select":
-            return <SelectRendererComponent css={css} input={input} />;
+            return (
+              <SelectRendererComponent key={input.id} css={css} input={input}>
+                <Form.Submit
+                  css={{
+                    alignSelf: "end",
+                    marginTop: "$2",
+                    fontWeight: "$large-text",
+                  }}
+                >
+                  Weiter
+                </Form.Submit>
+              </SelectRendererComponent>
+            );
 
           case "freeText":
-            return <FreeTextRendererComponent css={css} input={input} />;
+            return (
+              <FreeTextRendererComponent key={input.id} css={css} input={input}>
+                <Form.Submit
+                  css={{
+                    alignSelf: "end",
+                    marginTop: "$2",
+                    fontWeight: "$large-text",
+                  }}
+                >
+                  Weiter
+                </Form.Submit>
+              </FreeTextRendererComponent>
+            );
 
           default:
             return null;

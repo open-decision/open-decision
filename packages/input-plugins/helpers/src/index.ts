@@ -1,4 +1,5 @@
 import { Input, TTreeClient } from "@open-decision/tree-type";
+import { StyleObject } from "@open-decision/design-system";
 
 export type InputComponentProps<TInput extends Input.TInput> = {
   nodeId: string;
@@ -13,8 +14,10 @@ export type InputPrimaryActionSlotProps<TInput extends Input.TInput> = {
 };
 
 export type RendererComponentProps<TInput> = {
-  inputs: Record<string, TInput>;
-  onSubmit: (values: Record<string, string>) => void;
+  input: TInput;
+  onSubmit?: (values: Record<string, string>) => void;
+  css?: StyleObject;
+  children: React.ReactNode;
 };
 
 export * from "./InputPlugin";

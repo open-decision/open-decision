@@ -3,7 +3,10 @@ import { InputPlugin } from "@open-decision/input-plugins-helpers";
 import { DirectPlugin } from "@open-decision/condition-plugins-direct";
 import { z } from "zod";
 
-export const Type = z.object({ type: z.literal("freeText") });
+export const Type = z.object({
+  type: z.literal("freeText"),
+  label: z.string().optional(),
+});
 
 export type TFreeTextInput = z.infer<FreeTextPlugin["MergedType"]>;
 
