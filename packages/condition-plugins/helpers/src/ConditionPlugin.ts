@@ -1,6 +1,7 @@
 import { Condition, TTreeClient } from "@open-decision/tree-type";
 import { z } from "zod";
 import { pipe } from "remeda";
+import { ODProgrammerError } from "@open-decision/type-classes";
 
 const mergeTypes = <
   TType extends z.ZodObject<z.ZodRawShape, any, any>,
@@ -30,10 +31,21 @@ export class ConditionPlugin<
   create(
     data?: Omit<Partial<z.infer<typeof this.MergedType>>, "type" | "id">
   ): z.infer<typeof this.MergedType> {
-    return this.treeClient.conditions.create({
+    const newCondition = this.treeClient.conditions.create({
       ...data,
       type: this.typeName,
     }) as z.infer<typeof this.MergedType>;
+
+    const parsedCondition = this.MergedType.safeParse(newCondition);
+
+    if (!parsedCondition.success)
+      throw new ODProgrammerError({
+        code: "INVALID_ENTITY_CREATION",
+        message:
+          "The condition could not be created. Please check that the data is correct.",
+      });
+
+    return parsedCondition.data;
   }
 
   isType(input: any): input is z.infer<typeof this.MergedType> {

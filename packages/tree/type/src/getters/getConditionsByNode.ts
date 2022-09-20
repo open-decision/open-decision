@@ -1,22 +1,30 @@
-import { pick } from "remeda";
 import { isEmpty } from "ramda";
-import { Tree } from "../type-classes";
+import { Condition, Tree } from "../type-classes";
+import { getInputsByNode } from "./getInputsByNode";
+import { getNode } from "./getNode";
 
 /**
  * Provide a node id and receive the conditions that are related to it.
  * Returns undefined if there are no conditions.
  */
 export const getConditionsByNode = (tree: Tree.TTree) => (nodeId: string) => {
-  const node = tree.nodes?.[nodeId];
+  const node = getNode(tree)(nodeId);
+  const inputs = Object.values(getInputsByNode(tree)(node.id) ?? {}).map(
+    (input) => input.id
+  );
 
-  if (tree.conditions && node) {
-    const conditions = pick(tree.conditions, node.data.conditions);
+  // We loop over the conditions and check if the input is present on the condition.
+  const relatedConditions: Condition.TRecord = {};
+  for (const key in tree.conditions) {
+    const condition = tree.conditions[key];
 
-    // Instead of returning an empty object, return undefined. This is more meaningful and
-    // easier to handle downstream.
-    if (isEmpty(conditions)) return undefined;
-    return conditions;
+    if (condition.inputId && inputs.includes(condition.inputId))
+      relatedConditions[key] = condition;
   }
 
-  return undefined;
+  // If the resulting conditions are empty we return undefined, because it is more meaningful and
+  // easier to handle downstream.
+  if (isEmpty(relatedConditions)) return undefined;
+
+  return relatedConditions;
 };

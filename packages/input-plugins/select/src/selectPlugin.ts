@@ -96,7 +96,7 @@ export class SelectPlugin extends InputPlugin<typeof Type, "select"> {
       });
 
       this.treeClient.conditions.add(newCondition);
-      this.treeClient.nodes.connect.toCondition(nodeId, newCondition.id);
+      this.treeClient.conditions.connect.toInput(newCondition.id, inputId);
 
       const newEdge = this.treeClient.edges.create({
         source: nodeId,
@@ -140,7 +140,7 @@ export class SelectPlugin extends InputPlugin<typeof Type, "select"> {
     if (newEdge instanceof Error) return newEdge;
 
     this.treeClient.conditions.add(newCondition);
-    this.treeClient.nodes.connect.toCondition(nodeId, newCondition.id);
+    this.treeClient.conditions.connect.toInput(nodeId, newCondition.id);
     this.treeClient.edges.add(newEdge);
 
     this.treeClient.nodes.add(childNode);

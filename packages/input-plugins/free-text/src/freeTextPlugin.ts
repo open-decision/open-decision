@@ -39,7 +39,7 @@ export class FreeTextPlugin extends InputPlugin<typeof Type, "freeText"> {
     if (newEdge instanceof Error) return newEdge;
 
     this.treeClient.conditions.add(newCondition);
-    this.treeClient.nodes.connect.toCondition(nodeId, newCondition.id);
+    this.treeClient.conditions.connect.toInput(newCondition.id, inputId);
     this.treeClient.edges.add(newEdge);
 
     this.treeClient.nodes.add(childNode);
@@ -66,7 +66,7 @@ export class FreeTextPlugin extends InputPlugin<typeof Type, "freeText"> {
       });
 
       this.treeClient.conditions.add(newCondition);
-      this.treeClient.nodes.connect.toCondition(nodeId, newCondition.id);
+      this.treeClient.conditions.connect.toInput(newCondition.id, inputId);
 
       const newEdge = this.treeClient.edges.create({
         source: nodeId,

@@ -10,7 +10,8 @@ export type ProgrammerErrors =
   | "INTERPRETER_WITHOUT_CURRENT_NODE"
   | "ENTITY_NOT_FOUND"
   | "TRYED_ADDING_INVALID_EDGE"
-  | "INVALID_ENTITY_CREATION";
+  | "INVALID_ENTITY_CREATION"
+  | "INVALID_CONDITIONS";
 
 export type InterpreterErrors =
   | "INVALID_TREE"

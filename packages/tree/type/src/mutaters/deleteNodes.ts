@@ -1,6 +1,5 @@
 import { Tree } from "../type-classes";
 import { getNode } from "../getters";
-import { deleteConditions } from "./deleteConditions";
 import { deleteEdges } from "./deleteEdges";
 import { deleteInputs } from "./deleteInputs";
 
@@ -22,11 +21,6 @@ export const deleteNodes = (tree: Tree.TTree) => (ids: string[]) => {
     // When a Node is deleted all its Inputs should also be deleted.
     if (node?.data.inputs) {
       deleteInputs(tree)(node?.data.inputs);
-    }
-
-    // When a Node is deleted all its Condition should also be deleted.
-    if (node?.data.conditions) {
-      deleteConditions(tree)(node.data.conditions);
     }
   });
 };

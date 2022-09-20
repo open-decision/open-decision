@@ -2,6 +2,8 @@ import { Form } from "@open-decision/design-system";
 import { useInterpreter } from "@open-decision/interpreter-react";
 import { RendererComponentProps } from "@open-decision/input-plugins-helpers";
 import { TFreeTextInput } from "./freeTextPlugin";
+import { useTreeClient } from "@open-decision/tree-sync";
+import { InterpreterError } from "@open-decision/type-classes";
 
 export function FreeTextForm({
   input,
@@ -10,6 +12,7 @@ export function FreeTextForm({
   onSubmit,
 }: RendererComponentProps<TFreeTextInput>) {
   const { send, getAnswer, getCurrentNode } = useInterpreter();
+  const treeClient = useTreeClient();
 
   const formState = Form.useFormState({
     defaultValues: { [input.id]: getAnswer(input.id) ?? "" },
@@ -27,10 +30,17 @@ export function FreeTextForm({
     }
 
     const currentNode = getCurrentNode();
+    const conditions = treeClient.conditions.get.byNode(currentNode.id);
+
+    if (!conditions)
+      throw new InterpreterError({
+        code: "NO_TRUTHY_CONDITION",
+        message: `The node with id ${currentNode.id} has no conditions`,
+      });
 
     send({
       type: "EVALUATE_NODE_CONDITIONS",
-      conditionIds: currentNode?.data.conditions ?? [],
+      conditions,
       nodeId: currentNode?.id,
     });
 

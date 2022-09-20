@@ -32,7 +32,6 @@ import {
   updateStartNode,
   deleteNodes,
   addNode,
-  connectConditionAndNode,
   connectInputAndNode,
   disconnectInputAndNode,
   updateNodeContent,
@@ -47,7 +46,6 @@ import {
   addEdge,
   updateEdgeTarget,
   updateInput,
-  disconnectConditionAndNode,
   disconnectInputAndCondition,
   connectEdgeAndCondition,
   disconnectEdgeAndCondition,
@@ -88,14 +86,12 @@ export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
       create: { node: createNode, childNode: createChildNode(tree) },
       add: addNode(tree),
       connect: {
-        toCondition: connectConditionAndNode(tree),
         toInput: connectInputAndNode(tree),
         toEdgeAsTarget: updateEdgeTarget(tree),
         toEdgeAsSource: updateEdgeSource(tree),
       },
       disconnect: {
         fromInput: disconnectInputAndNode(tree),
-        fromCondition: disconnectConditionAndNode(tree),
         /**
          * Disconnecting from an Edge is equivalent to deleting it, because there cannot be
          * an Edge without source and target. If you want to update the connection
@@ -153,12 +149,10 @@ export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
       create: createCondition,
       add: addCondition(tree),
       connect: {
-        toNode: connectConditionAndNode(tree),
         toInput: connectInputAndCondition(tree),
         toEdge: connectEdgeAndCondition(tree),
       },
       disconnect: {
-        fromNode: disconnectConditionAndNode(tree),
         fromInput: disconnectInputAndCondition(tree),
         fromEdge: disconnectEdgeAndCondition(tree),
       },

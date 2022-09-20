@@ -16,7 +16,16 @@ export const interpreterPlugin: Resolver =
   (tree: Tree.TTree) => (context, event) => (callback) => {
     const treeClient = createTreeClient(tree);
     const baseTreeClient = createBaseTreeClient(tree);
-    const conditions = treeClient.conditions.get.collection(event.conditionIds);
+    const validConditions = z
+      .record(treeClient.conditions.Type)
+      .safeParse(event.conditions);
+
+    if (!validConditions.success)
+      throw new ODProgrammerError({
+        code: "INVALID_CONDITIONS",
+        message:
+          "The conditions provided to the interpreter are not valid for the configured plugins.",
+      });
 
     const resolver = (
       condition: z.infer<typeof treeClient.conditions.Type>
@@ -35,8 +44,8 @@ export const interpreterPlugin: Resolver =
       }
     };
 
-    for (const conditionId in conditions) {
-      const condition = conditions[conditionId];
+    for (const conditionId in validConditions.data) {
+      const condition = validConditions.data[conditionId];
 
       const conditionResolver = resolver(condition);
 
