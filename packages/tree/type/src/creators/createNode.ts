@@ -20,7 +20,7 @@ export type NewNodeData = {
  */
 export const createNode = ({
   position = { x: 0, y: 0 },
-  data: { name, inputs = [], conditions = [], ...data } = {},
+  data: { inputs = [], conditions = [], ...data } = {},
   // FIXME remove when node plugins are implemented
   type = "customNode",
 }: NewNodeData): Node.TNode => {
@@ -29,7 +29,6 @@ export const createNode = ({
     id: uuid(),
     // the data needs to include a name and the relational properties for inputs and conditions
     data: {
-      name,
       inputs,
       conditions,
       ...data,

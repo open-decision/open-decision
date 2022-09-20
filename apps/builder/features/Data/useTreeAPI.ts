@@ -26,6 +26,7 @@ import { z } from "zod";
 import { useNotificationStore } from "../../config/notifications";
 import { createYjsDocumentIndexedDB } from "./utils/createYjsDocumentIndexedDB";
 import { Tree, createTreeClient } from "@open-decision/tree-type";
+import { bindProxyAndYMap } from "valtio-yjs";
 
 export const treesQueryKey = ["Trees"] as const;
 export const treeQueryKey = (treeUuid: string) =>
@@ -145,11 +146,13 @@ export const useTreeAPI = () => {
       ["createTree"],
       async (data) => {
         const response = await proxiedOD.trees.create(data);
-        const store = createYjsDocumentIndexedDB(
+        const [store, yMap] = createYjsDocumentIndexedDB(
           { startNode: "" },
           response.data.uuid
         );
-        console.log(store);
+
+        bindProxyAndYMap(store, yMap);
+
         const tempTreeClient = createTreeClient(store);
 
         const newNode = tempTreeClient.nodes.create.node({
