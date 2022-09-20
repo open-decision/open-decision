@@ -5,7 +5,7 @@ import { createTreeClient } from "./createTreeClient";
 import {
   Tree,
   createTreeClient as createBaseTreeClient,
-} from "@open-decision/tree-sync";
+} from "@open-decision/tree-type";
 import {
   ODProgrammerError,
   InterpreterError,

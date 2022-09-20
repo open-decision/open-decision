@@ -1,4 +1,4 @@
-import { Condition, TTreeClient } from "@open-decision/tree-sync";
+import { Condition, TTreeClient } from "@open-decision/tree-type";
 import { z } from "zod";
 import { pipe } from "remeda";
 

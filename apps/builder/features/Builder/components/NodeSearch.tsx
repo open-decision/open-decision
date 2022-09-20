@@ -6,7 +6,8 @@ import {
   Icon,
 } from "@open-decision/design-system";
 import { useEditor } from "../state/useEditor";
-import { getNodeNames, useTree, useTreeClient } from "@open-decision/tree-sync";
+import { useTree, useTreeClient } from "@open-decision/tree-sync";
+import { getNodeNames } from "@open-decision/tree-type";
 import { useTranslations } from "next-intl";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 

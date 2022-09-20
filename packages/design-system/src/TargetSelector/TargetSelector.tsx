@@ -1,4 +1,4 @@
-import { Edge } from "@open-decision/tree-sync";
+import { Edge } from "@open-decision/tree-type";
 import { Form, SelectWithCombobox, SelectWithComboboxProps } from "../Form";
 import { Row } from "../Layout";
 import { StyleObject } from "../stitches";

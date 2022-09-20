@@ -1,4 +1,5 @@
-import { getInputs, useTree } from "@open-decision/tree-sync";
+import { useTree } from "@open-decision/tree-sync";
+import { getInputs } from "@open-decision/tree-type";
 import { RendererComponent as SelectRendererComponent } from "@open-decision/input-plugins-select";
 import { RendererComponent as FreeTextRendererComponent } from "@open-decision/input-plugins-free-text";
 import { StyleObject } from "@open-decision/design-system";

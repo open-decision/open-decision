@@ -1,4 +1,5 @@
-import { getNodes, useTree } from "@open-decision/tree-sync";
+import { useTree } from "@open-decision/tree-sync";
+import { getNodes } from "@open-decision/tree-type";
 import { useSelectedNodeIds } from "./useSelectedNodes";
 
 export function useRFNodes() {

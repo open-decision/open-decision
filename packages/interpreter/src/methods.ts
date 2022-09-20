@@ -1,5 +1,5 @@
 import { ODProgrammerError } from "@open-decision/type-classes";
-import { createTreeClient, Tree } from "@open-decision/tree-sync";
+import { createTreeClient, Tree } from "@open-decision/tree-type";
 import { InterpreterContext } from "./interpreter";
 
 export const canGoBack = (interpreterContext: InterpreterContext) =>

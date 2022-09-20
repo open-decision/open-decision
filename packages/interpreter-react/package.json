@@ -10,7 +10,8 @@
     "@open-decision/interpreter": "workspace:*",
     "@open-decision/type-classes": "workspace:*",
     "@open-decision/design-system": "workspace:*",
-    "@open-decision/tree-sync": "workspace:*"
+    "@open-decision/tree-sync": "workspace:*",
+    "@open-decision/tree-type": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18.2.0",

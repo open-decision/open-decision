@@ -1,4 +1,4 @@
-import { TTreeClient } from "@open-decision/tree-sync";
+import { TTreeClient } from "@open-decision/tree-type";
 import { ConditionPlugin } from "@open-decision/condition-plugins-helpers";
 import { z } from "zod";
 

@@ -1,7 +1,8 @@
 import * as React from "react";
 import { StyleObject } from "@open-decision/design-system";
 import { Renderer } from "@open-decision/renderer";
-import { getTree, useTree } from "@open-decision/tree-sync";
+import { getTree } from "@open-decision/tree-type";
+import { useTree } from "@open-decision/tree-sync";
 import { useNotificationStore } from "../../config/notifications";
 import { useEditor } from "../Builder/state/useEditor";
 import { useSelectedNodeIds } from "../Builder/state/useSelectedNodes";

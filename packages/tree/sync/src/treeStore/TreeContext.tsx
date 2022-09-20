@@ -2,7 +2,7 @@ import * as React from "react";
 import { createTreeStore } from "./treeStore";
 import { IndexeddbPersistence } from "y-indexeddb";
 import { ODError } from "@open-decision/type-classes";
-import { createTreeClient } from "../Tree/treeClient";
+import { createTreeClient } from "@open-decision/tree-type";
 import { useTreeSuspension } from "./hooks/useTreeSuspension";
 import { websocketMachine } from "../websocket.machine";
 import { useMachine } from "@xstate/react";

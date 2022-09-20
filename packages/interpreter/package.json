@@ -13,6 +13,7 @@
   "dependencies": {
     "@open-decision/type-classes": "workspace:*",
     "@open-decision/tree-sync": "workspace:*",
+    "@open-decision/tree-type": "workspace:*",
     "remeda": "^1.1.0",
     "xstate": "^4.33.6"
   },

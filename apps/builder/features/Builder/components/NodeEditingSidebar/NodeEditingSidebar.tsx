@@ -14,9 +14,8 @@ import {
   getParents,
   getStartNodeId,
   Node,
-  useTree,
-  useTreeClient,
-} from "@open-decision/tree-sync";
+} from "@open-decision/tree-type";
+import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { RichTextEditor } from "@open-decision/rich-text-editor";
 import { AnimatePresence, motion } from "framer-motion";
 import { ParentNodeSelector } from "./ParentNodeSelector";

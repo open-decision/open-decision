@@ -12,7 +12,7 @@ import { useActor, useInterpret } from "@xstate/react";
 import { InterpreterOptions as XStateInterpreteOptions } from "xstate";
 import { UseMachineOptions } from "@xstate/react/lib/types";
 import { ErrorCard, Stack } from "@open-decision/design-system";
-import { Tree } from "@open-decision/tree-sync";
+import { Tree } from "@open-decision/tree-type";
 
 const MachineContext = React.createContext<{
   service: InterpreterService;

@@ -3,7 +3,7 @@ import {
   Tree,
   createTreeClient as createBaseTreeClient,
   Node,
-} from "@open-decision/tree-sync";
+} from "@open-decision/tree-type";
 import { SelectPlugin } from "@open-decision/input-plugins-select";
 import { ComparePlugin } from "@open-decision/condition-plugins-compare";
 import { FreeTextPlugin } from "@open-decision/input-plugins-free-text";

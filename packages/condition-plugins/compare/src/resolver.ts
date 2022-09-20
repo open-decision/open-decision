@@ -4,7 +4,7 @@ import {
   MissingEdgeForThruthyConditionError,
   NoTruthyConditionError,
 } from "@open-decision/interpreter";
-import { TTreeClient } from "@open-decision/tree-sync";
+import { TTreeClient } from "@open-decision/tree-type";
 import { TCompareCondition } from "./plugin";
 
 export const resolver =

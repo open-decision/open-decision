@@ -1,8 +1,8 @@
 import * as React from "react";
 import { createTreeClient, TTreeClient } from "./createTreeClient";
 import { DropdownMenu, Box, Label } from "@open-decision/design-system";
+import { getInputs } from "@open-decision/tree-type";
 import {
-  getInputs,
   useTree,
   useTreeClient,
   useTreeContext,

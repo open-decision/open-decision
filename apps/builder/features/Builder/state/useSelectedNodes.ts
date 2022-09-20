@@ -1,6 +1,7 @@
 import { useEditor } from "./useEditor";
 import { pick } from "remeda";
-import { getNodes, useTree } from "@open-decision/tree-sync";
+import { useTree } from "@open-decision/tree-sync";
+import { getNodes } from "@open-decision/tree-type";
 import { useSnapshot } from "valtio";
 
 export function useSelectedNodes() {

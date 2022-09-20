@@ -6,11 +6,8 @@ import { useEditor } from "../../../../../features/Builder/state/useEditor";
 import { SourcePort, TargetPort } from "./Port";
 import { StartNodeLabel } from "../../NodeLabels/StartNodeLabels";
 import { useTranslations } from "next-intl";
-import {
-  useTree,
-  Node as NodeType,
-  getStartNodeId,
-} from "@open-decision/tree-sync";
+import { useTree } from "@open-decision/tree-sync";
+import { Node as NodeType, getStartNodeId } from "@open-decision/tree-type";
 
 const NodeContainer = styled(Stack, {
   layer: "1",

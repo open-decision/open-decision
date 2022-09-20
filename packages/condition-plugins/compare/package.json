@@ -7,6 +7,7 @@
     "ramda": "0.28.0",
     "@open-decision/type-classes": "workspace:*",
     "@open-decision/tree-sync": "workspace:*",
+    "@open-decision/tree-type": "workspace:*",
     "@open-decision/condition-plugins-helpers": "workspace:*"
   },
   "devDependencies": {}

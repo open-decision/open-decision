@@ -3,7 +3,7 @@ import { useReactFlow, useStore } from "react-flow-renderer";
 import { calculateCenterOfNode } from "../utilities/calculateCenterOfNode";
 import { sidebarWidth } from "../utilities/constants";
 import { ODProgrammerError } from "@open-decision/type-classes";
-import { Node, TTreeClient } from "@open-decision/tree-sync";
+import { Node, TTreeClient } from "@open-decision/tree-type";
 import shallow from "zustand/shallow";
 import { proxy } from "valtio";
 import { useTreeClient } from "@open-decision/tree-sync";

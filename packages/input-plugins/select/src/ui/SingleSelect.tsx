@@ -18,13 +18,8 @@ import {
 } from "@open-decision/input-plugins-helpers";
 import { SelectPlugin, TAnswer, TSelectInput } from "../selectPlugin";
 import { ComparePlugin } from "@open-decision/condition-plugins-compare";
-import {
-  useTree,
-  Edge,
-  getNode,
-  getNodeNames,
-  getNodeOptions,
-} from "@open-decision/tree-sync";
+import { useTree } from "@open-decision/tree-sync";
+import { Edge, getNode, getNodeOptions } from "@open-decision/tree-type";
 
 export const AddOptionButton = ({
   input,

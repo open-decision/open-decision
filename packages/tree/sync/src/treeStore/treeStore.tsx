@@ -1,7 +1,7 @@
 import { proxy } from "valtio";
 import { bindProxyAndYMap } from "valtio-yjs";
 import * as Y from "yjs";
-import { Tree } from "../Tree/type-classes";
+import { Tree } from "@open-decision/tree-type";
 
 declare module "valtio" {
   function useSnapshot<T extends object>(p: T): T;

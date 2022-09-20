@@ -1,0 +1,33 @@
+{
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/tree/sync/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/tree/sync",
+        "main": "packages/tree/sync/src/index.ts",
+        "tsConfig": "packages/tree/sync/tsconfig.lib.json",
+        "assets": ["packages/tree/sync/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/tree/sync/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/packages/tree/sync"],
+      "options": {
+        "jestConfig": "packages/tree/sync/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  }
+}

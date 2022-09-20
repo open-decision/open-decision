@@ -25,7 +25,7 @@ import { OD, proxiedOD } from "../Data/odClient";
 import { z } from "zod";
 import { useNotificationStore } from "../../config/notifications";
 import { createYjsDocumentIndexedDB } from "./utils/createYjsDocumentIndexedDB";
-import { Tree, createTreeClient } from "@open-decision/tree-sync";
+import { Tree, createTreeClient } from "@open-decision/tree-type";
 
 export const treesQueryKey = ["Trees"] as const;
 export const treeQueryKey = (treeUuid: string) =>

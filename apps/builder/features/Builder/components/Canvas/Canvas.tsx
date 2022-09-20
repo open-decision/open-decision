@@ -11,11 +11,8 @@ import { useTranslations } from "next-intl";
 import { ODError } from "@open-decision/type-classes";
 import { useRFNodes } from "../../state/useRFNodes";
 import { useRFEdges } from "../../state/useRFEdges";
-import {
-  getStartNodeId,
-  useTree,
-  useTreeClient,
-} from "@open-decision/tree-sync";
+import { getStartNodeId } from "@open-decision/tree-type";
+import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { useSelectedNodeIds } from "../../state/useSelectedNodes";
 
 const validConnectEvent = (

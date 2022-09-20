@@ -1,4 +1,4 @@
-import { Input, TTreeClient } from "@open-decision/tree-sync";
+import { Input, TTreeClient } from "@open-decision/tree-type";
 
 export type InputComponentProps<TInput extends Input.TInput> = {
   nodeId: string;

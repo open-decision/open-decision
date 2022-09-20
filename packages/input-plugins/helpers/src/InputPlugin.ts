@@ -1,4 +1,4 @@
-import { Input, TTreeClient } from "@open-decision/tree-sync";
+import { Input, TTreeClient } from "@open-decision/tree-type";
 import { z } from "zod";
 import { pipe } from "remeda";
 

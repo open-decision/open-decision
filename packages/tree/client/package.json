@@ -11,7 +11,8 @@
     "@open-decision/condition-plugins-direct": "workspace:*",
     "@open-decision/design-system": "workspace:*",
     "@open-decision/tree-sync": "workspace:*",
-    "@open-decision/input-plugins-helpers": "workspace:*"
+    "@open-decision/input-plugins-helpers": "workspace:*",
+    "@open-decision/tree-type": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18.2.0",

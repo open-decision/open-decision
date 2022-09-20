@@ -1,4 +1,4 @@
-import { Tree } from "@open-decision/tree-sync";
+import { Tree } from "@open-decision/tree-type";
 
 export const getTreeDataOutput = Tree.Type;
 

@@ -2,7 +2,7 @@ import { Form, TargetSelector } from "@open-decision/design-system";
 import { InputComponentProps } from "@open-decision/input-plugins-helpers";
 import { FreeTextPlugin, TFreeTextInput } from "./freeTextPlugin";
 import { useTree } from "@open-decision/tree-sync";
-import { getEdgesByNode, getNodeOptions } from "@open-decision/tree-sync";
+import { getEdgesByNode, getNodeOptions } from "@open-decision/tree-type";
 
 export const FreeText = ({
   nodeId,
