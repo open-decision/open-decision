@@ -48,6 +48,7 @@ const InputDropdown = ({
               checked={currentType === type}
               onClick={() => {
                 const newInput = treeClient.input[type].create({});
+
                 if (!inputId) {
                   treeClient.inputs.add(newInput);
                   return treeClient.inputs.connect.toNode(nodeId, newInput.id);
@@ -101,6 +102,8 @@ export function InputPluginComponent({
   const inputs = useTree((tree) =>
     getInputs(tree)(inputIds)
   ) as unknown as Record<string, z.infer<TTreeClient["inputs"]["Type"]>>;
+
+  console.log(inputs);
 
   const baseTreeClient = useTreeClient();
   const {

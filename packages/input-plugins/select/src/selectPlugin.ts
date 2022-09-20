@@ -12,7 +12,7 @@ export const Answer = z.object({ id: z.string().uuid(), text: z.string() });
 
 export const Type = z.object({
   type: z.literal("select"),
-  answers: z.array(Answer),
+  answers: z.array(Answer).default([]),
 });
 
 export type TAnswer = z.infer<typeof Answer>;

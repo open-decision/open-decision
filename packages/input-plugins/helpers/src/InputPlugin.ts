@@ -1,6 +1,7 @@
 import { Input, TTreeClient } from "@open-decision/tree-type";
 import { z } from "zod";
 import { pipe } from "remeda";
+import { ODProgrammerError } from "@open-decision/type-classes";
 
 const mergeTypes = <
   TType extends z.ZodObject<z.ZodRawShape, any, any>,
@@ -30,11 +31,21 @@ export class InputPlugin<
   create(
     data: Partial<Omit<z.infer<typeof this.SpecificType>, "type" | "id">>
   ): z.infer<typeof this.MergedType> {
-    return this.treeClient.inputs.create({
-      answers: [],
+    const newInput = this.treeClient.inputs.create({
       ...data,
       type: this.typeName,
     }) as z.infer<typeof this.MergedType>;
+
+    const parsedInput = this.MergedType.safeParse(newInput);
+
+    if (!parsedInput.success)
+      throw new ODProgrammerError({
+        code: "INVALID_ENTITY_CREATION",
+        message:
+          "The input could not be created. Please check that the data is correct.",
+      });
+
+    return parsedInput.data;
   }
 
   isType(input: any): input is z.infer<typeof this.MergedType> {

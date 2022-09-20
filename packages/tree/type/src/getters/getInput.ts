@@ -1,5 +1,6 @@
 import { ODProgrammerError } from "@open-decision/type-classes";
 import { pick } from "remeda";
+import { isEmpty } from "ramda";
 import { Tree } from "../type-classes";
 
 /**
@@ -27,7 +28,7 @@ export const getInputs =
     if (!tree.inputs) return undefined;
 
     const inputs = pick(tree.inputs, inputIds);
-    if (!inputs) return undefined;
+    if (isEmpty(inputs)) return undefined;
 
     return inputs;
   };
