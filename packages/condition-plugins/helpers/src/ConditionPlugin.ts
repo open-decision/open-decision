@@ -3,16 +3,16 @@ import { z } from "zod";
 import { pipe } from "remeda";
 import { ODProgrammerError } from "@open-decision/type-classes";
 
-const mergeTypes = <
-  TType extends z.ZodObject<z.ZodRawShape, any, any>,
-  TTypeName extends string
->(
+const mergeTypes = <TType extends z.ZodType, TTypeName extends string>(
   Type: TType,
   typeName: TTypeName
-) => Condition.Type.merge(Type).extend({ type: z.literal(typeName) });
+) =>
+  Condition.Type.merge(z.object({ data: Type })).extend({
+    type: z.literal(typeName),
+  });
 
 export class ConditionPlugin<
-  TType extends z.ZodObject<z.ZodRawShape, any, any>,
+  TType extends z.ZodType,
   TTypeName extends string
 > {
   declare treeClient: TTreeClient;
@@ -28,24 +28,20 @@ export class ConditionPlugin<
     this.typeName = typeName;
   }
 
-  create(
-    data?: Omit<Partial<z.infer<typeof this.MergedType>>, "type" | "id">
-  ): z.infer<typeof this.MergedType> {
+  create(inputId: string, data: z.infer<TType>) {
     const newCondition = this.treeClient.conditions.create({
-      ...data,
+      data,
+      inputId,
       type: this.typeName,
-    }) as z.infer<typeof this.MergedType>;
+    });
 
-    const parsedCondition = this.MergedType.safeParse(newCondition);
+    if (this.isType(newCondition)) return newCondition;
 
-    if (!parsedCondition.success)
-      throw new ODProgrammerError({
-        code: "INVALID_ENTITY_CREATION",
-        message:
-          "The condition could not be created. Please check that the data is correct.",
-      });
-
-    return parsedCondition.data;
+    throw new ODProgrammerError({
+      code: "INVALID_ENTITY_CREATION",
+      message:
+        "The condition could not be created. Please check that the data is correct.",
+    });
   }
 
   isType(input: any): input is z.infer<typeof this.MergedType> {

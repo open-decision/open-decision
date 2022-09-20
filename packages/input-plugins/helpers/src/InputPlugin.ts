@@ -3,18 +3,15 @@ import { z } from "zod";
 import { pipe } from "remeda";
 import { ODProgrammerError } from "@open-decision/type-classes";
 
-const mergeTypes = <
-  TType extends z.ZodObject<z.ZodRawShape, any, any>,
-  TTypeName extends string
->(
+const mergeTypes = <TType extends z.ZodType, TTypeName extends string>(
   Type: TType,
   typeName: TTypeName
-) => Input.Type.merge(Type).extend({ type: z.literal(typeName) });
+) =>
+  Input.Type.merge(z.object({ data: Type })).extend({
+    type: z.literal(typeName),
+  });
 
-export class InputPlugin<
-  TType extends z.ZodObject<z.ZodRawShape, any, any>,
-  TTypeName extends string
-> {
+export class InputPlugin<TType extends z.ZodType, TTypeName extends string> {
   declare treeClient: TTreeClient;
   declare MergedType: ReturnType<typeof mergeTypes<TType, TTypeName>>;
   SpecificType: TType;
@@ -28,24 +25,19 @@ export class InputPlugin<
     this.typeName = typeName;
   }
 
-  create(
-    data: Partial<Omit<z.infer<typeof this.SpecificType>, "type" | "id">>
-  ): z.infer<typeof this.MergedType> {
+  create(data: z.infer<TType>) {
     const newInput = this.treeClient.inputs.create({
-      ...data,
+      data,
       type: this.typeName,
-    }) as z.infer<typeof this.MergedType>;
+    });
 
-    const parsedInput = this.MergedType.safeParse(newInput);
+    if (this.isType(newInput)) return newInput;
 
-    if (!parsedInput.success)
-      throw new ODProgrammerError({
-        code: "INVALID_ENTITY_CREATION",
-        message:
-          "The input could not be created. Please check that the data is correct.",
-      });
-
-    return parsedInput.data;
+    throw new ODProgrammerError({
+      code: "INVALID_ENTITY_CREATION",
+      message:
+        "The input could not be created. Please check that the data is correct.",
+    });
   }
 
   isType(input: any): input is z.infer<typeof this.MergedType> {

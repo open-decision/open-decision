@@ -2,7 +2,7 @@ import { TTreeClient } from "@open-decision/tree-type";
 import { ConditionPlugin } from "@open-decision/condition-plugins-helpers";
 import { z } from "zod";
 
-export const Type = z.object({ type: z.literal("direct") });
+export const Type = z.void();
 
 export class DirectPlugin extends ConditionPlugin<typeof Type, "direct"> {
   constructor(treeClient: TTreeClient) {

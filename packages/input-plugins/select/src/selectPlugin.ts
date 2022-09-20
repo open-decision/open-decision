@@ -11,7 +11,6 @@ export const type = "select" as const;
 export const Answer = z.object({ id: z.string().uuid(), text: z.string() });
 
 export const Type = z.object({
-  type: z.literal("select"),
   answers: z.array(Answer).default([]),
 });
 
@@ -20,9 +19,11 @@ export type TAnswer = z.infer<typeof Answer>;
 export type TSelectInput = z.infer<SelectPlugin["MergedType"]>;
 
 export class SelectPlugin extends InputPlugin<typeof Type, "select"> {
-  comparePlugin = new ComparePlugin(this.treeClient);
+  declare comparePlugin: ComparePlugin;
   constructor(treeClient: TTreeClient) {
     super(treeClient, Type, "select");
+
+    this.comparePlugin = new ComparePlugin(treeClient);
   }
 
   createAnswer(answer: Pick<TAnswer, "text">) {
@@ -30,7 +31,7 @@ export class SelectPlugin extends InputPlugin<typeof Type, "select"> {
   }
 
   getAnswer(input: z.infer<typeof this.MergedType>, answerId: string) {
-    return input.answers.find(({ id }) => id === answerId);
+    return input.data.answers.find(({ id }) => id === answerId);
   }
 
   addAnswer(inputId: string, answer: TAnswer) {
@@ -38,7 +39,7 @@ export class SelectPlugin extends InputPlugin<typeof Type, "select"> {
 
     if (!input) return;
 
-    input.answers.push(answer);
+    input.data.answers.push(answer);
   }
 
   updateAnswer(inputId: string, answerId: string, newValue: string) {
@@ -53,7 +54,7 @@ export class SelectPlugin extends InputPlugin<typeof Type, "select"> {
   }
 
   reorderAnswers = (input: TSelectInput) => (newAnswers: TAnswer[]) => {
-    input.answers = newAnswers;
+    input.data.answers = newAnswers;
   };
 
   deleteAnswer(inputId: string, answerId: string) {
@@ -61,15 +62,17 @@ export class SelectPlugin extends InputPlugin<typeof Type, "select"> {
 
     if (!input) return;
 
-    const answerIndex = input.answers.findIndex(({ id }) => id === answerId);
+    const answerIndex = input.data.answers.findIndex(
+      ({ id }) => id === answerId
+    );
 
-    input.answers.splice(answerIndex, 1);
+    input.data.answers.splice(answerIndex, 1);
 
     // When an Input is deleted all conditions using it need to be removed.
     this.treeClient.conditions.delete(
       Object.values(this.treeClient.conditions.get.all() ?? {})
         .filter<TCompareCondition>(this.comparePlugin.isType)
-        .filter((condition) => condition.answerId === answerId)
+        .filter((condition) => condition.data.answerId === answerId)
         .map((condition) => condition.id)
     );
   }
@@ -90,8 +93,7 @@ export class SelectPlugin extends InputPlugin<typeof Type, "select"> {
     const edge = edgeId ? this.treeClient.edges.get.single(edgeId) : undefined;
 
     if (!edge?.target && newItem) {
-      const newCondition = this.comparePlugin.create({
-        inputId,
+      const newCondition = this.comparePlugin.create(inputId, {
         answerId,
       });
 
@@ -126,8 +128,7 @@ export class SelectPlugin extends InputPlugin<typeof Type, "select"> {
 
     if (childNode instanceof Error) return childNode;
 
-    const newCondition = this.comparePlugin.create({
-      inputId,
+    const newCondition = this.comparePlugin.create(inputId, {
       answerId,
     });
 
@@ -155,7 +156,7 @@ export class SelectPlugin extends InputPlugin<typeof Type, "select"> {
 
     const filteredInputs = Object.values(inputs).reduce(
       function filterInputsWithoutAnswer(previousValue, input) {
-        if (input.answers?.length > 0) previousValue[input.id] = input;
+        if (input.data.answers?.length > 0) previousValue[input.id] = input;
 
         return previousValue;
       },

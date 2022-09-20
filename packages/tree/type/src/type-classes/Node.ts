@@ -28,11 +28,10 @@ export const Type = z.object({
   id: z.string().uuid(),
   position: Coordinates,
   type: z.string(),
-  data: z.object({
-    name: z.string().optional(),
-    content: RichText.optional(),
-    inputs: z.array(z.string()),
-  }),
+  name: z.string().optional(),
+  content: RichText.optional(),
+  inputs: z.array(z.string()),
+  data: z.any(),
 });
 
 export const Record = z.record(Type);

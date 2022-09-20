@@ -5,8 +5,6 @@ import { z } from "zod";
 export const type = "compare" as const;
 
 export const Type = z.object({
-  type: z.literal("compare"),
-  inputId: z.string().uuid(),
   answerId: z.string().uuid(),
 });
 
@@ -51,7 +49,7 @@ export class ComparePlugin extends ConditionPlugin<typeof Type, "compare"> {
 
         if (!this.isType(condition)) return false;
 
-        return condition.answerId === answerId;
+        return condition.data.answerId === answerId;
       });
 
       return edge;

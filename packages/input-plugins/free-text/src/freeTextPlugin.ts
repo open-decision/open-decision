@@ -4,7 +4,6 @@ import { DirectPlugin } from "@open-decision/condition-plugins-direct";
 import { z } from "zod";
 
 export const Type = z.object({
-  type: z.literal("freeText"),
   label: z.string().optional(),
 });
 
@@ -26,9 +25,7 @@ export class FreeTextPlugin extends InputPlugin<typeof Type, "freeText"> {
 
     if (childNode instanceof Error) return childNode;
 
-    const newCondition = this.directConditionPlugin.create({
-      inputId,
-    });
+    const newCondition = this.directConditionPlugin.create(inputId);
 
     const newEdge = this.treeClient.edges.create({
       source: nodeId,
@@ -61,9 +58,7 @@ export class FreeTextPlugin extends InputPlugin<typeof Type, "freeText"> {
     const edge = edgeId ? this.treeClient.edges.get.single(edgeId) : undefined;
 
     if (!edge?.target && newItem) {
-      const newCondition = this.directConditionPlugin.create({
-        inputId,
-      });
+      const newCondition = this.directConditionPlugin.create(inputId);
 
       this.treeClient.conditions.add(newCondition);
       this.treeClient.conditions.connect.toInput(newCondition.id, inputId);

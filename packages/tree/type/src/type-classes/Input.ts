@@ -3,6 +3,7 @@ import { z } from "zod";
 export const Type = z.object({
   id: z.string().uuid(),
   type: z.string(),
+  data: z.any(),
 });
 
 export const Record = z.record(Type);
