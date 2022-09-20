@@ -32,7 +32,6 @@ export const Type = z.object({
     name: z.string().optional(),
     content: RichText.optional(),
     inputs: z.array(z.string()),
-    conditions: z.array(z.string()),
   }),
 });
 

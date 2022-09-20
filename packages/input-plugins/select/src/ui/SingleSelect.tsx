@@ -114,7 +114,7 @@ export const OptionTargetInput = ({
   const controls = useDragControls();
   const node = useTree((tree) => getNode(tree)(nodeId));
   const nodeOptions = useTree((tree) =>
-    Object.values(getNodeOptions(tree)(nodeId))
+    Object.values(getNodeOptions(tree)(nodeId, "Ohne Name"))
   );
 
   const ref = React.useRef<HTMLDivElement | null>(null);

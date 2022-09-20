@@ -17,7 +17,7 @@ export const FreeText = ({
   );
 
   const nodeNames = useTree((tree) =>
-    Object.values(getNodeOptions(tree)(nodeId))
+    Object.values(getNodeOptions(tree)(nodeId, "Ohne Name"))
   );
 
   const formState = Form.useFormState({

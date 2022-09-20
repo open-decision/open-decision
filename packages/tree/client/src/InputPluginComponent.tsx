@@ -103,8 +103,6 @@ export function InputPluginComponent({
     getInputs(tree)(inputIds)
   ) as unknown as Record<string, z.infer<TTreeClient["inputs"]["Type"]>>;
 
-  console.log(inputs);
-
   const baseTreeClient = useTreeClient();
   const {
     tree: { tree },

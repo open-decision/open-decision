@@ -25,8 +25,9 @@ export const getNodeNames =
     }));
 
     // Filter out all the nodes without a name.
-    const nodesWithNames = omitBy(nodes, (node) =>
-      nodeWithName(node)
+    const nodesWithNames = omitBy(
+      nodes,
+      (node) => !nodeWithName(node)
     ) as Record<string, { id: string; name: string }>;
 
     // If no ids are provided, return all the nodes with names.
