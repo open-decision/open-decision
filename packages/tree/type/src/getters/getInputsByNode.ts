@@ -10,7 +10,7 @@ export const getInputsByNode = (tree: Tree.TTree) => (nodeId: string) => {
   const node = tree.nodes?.[nodeId];
 
   if (node && tree.inputs) {
-    const inputs = pick(tree.inputs, node.data.inputs);
+    const inputs = pick(tree.inputs, node.inputs);
 
     // Instead of returning an empty object, return undefined. This is more meaningful and
     // easier to handle downstream.

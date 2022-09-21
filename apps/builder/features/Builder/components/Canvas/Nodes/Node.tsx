@@ -8,6 +8,7 @@ import { StartNodeLabel } from "../../NodeLabels/StartNodeLabels";
 import { useTranslations } from "next-intl";
 import { useTree } from "@open-decision/tree-sync";
 import { Node as NodeType, getStartNodeId } from "@open-decision/tree-type";
+import { RFNode } from "../../../state/useRFNodes";
 
 const NodeContainer = styled(Stack, {
   layer: "1",
@@ -30,7 +31,7 @@ const NodeContainer = styled(Stack, {
 });
 
 export const Node = memo(
-  ({ id, data, selected: isSelected }: NodeProps<NodeType.TNodeData>) => {
+  ({ id, data, selected: isSelected }: NodeProps<RFNode["data"]>) => {
     const t = useTranslations("builder.canvas.questionNode");
     const {
       editorStore: { validConnections },

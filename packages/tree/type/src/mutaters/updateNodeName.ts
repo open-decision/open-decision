@@ -5,5 +5,5 @@ export const updateNodeName =
   (tree: Tree.TTree) => (nodeId: string, name: string) => {
     const node = getNode(tree)(nodeId);
 
-    node.data.name = name;
+    node.name = name;
   };

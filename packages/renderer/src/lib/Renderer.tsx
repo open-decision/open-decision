@@ -55,16 +55,16 @@ function RendererImpl(
           ref={ref}
         >
           <ScrollArea.Viewport css={{ minHeight: 0 }}>
-            {node.data.content ? (
+            {node.content ? (
               <>
-                <RichTextRenderer content={node.data.content} key={node.id} />
+                <RichTextRenderer content={node.content} key={node.id} />
                 <ScrollArea.Scrollbar />
               </>
             ) : null}
           </ScrollArea.Viewport>
         </ScrollArea.Root>
         <RendererPlugin
-          inputIds={node.data.inputs}
+          inputIds={node.inputs}
           css={{ paddingInline: "$$padding", marginTop: "$4" }}
         />
       </Stack>

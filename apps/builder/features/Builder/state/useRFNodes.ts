@@ -9,13 +9,12 @@ export function useRFNodes() {
   if (!nodes) return [];
 
   return Object.values(nodes).map(
-    ({ id, inputs, position, type, content, data, name }) => ({
+    ({ id, inputs, position, type, content, name }) => ({
       type,
       selected: selectedNodeIds.includes(id),
       id,
       position,
       data: {
-        ...data,
         name,
         content,
         inputs,
@@ -23,3 +22,5 @@ export function useRFNodes() {
     })
   );
 }
+
+export type RFNode = ReturnType<typeof useRFNodes>[number];

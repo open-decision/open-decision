@@ -5,7 +5,7 @@ import { Crosshair2Icon } from "@radix-ui/react-icons";
 export type NodeLinkProps = {
   target?: string;
   onClick: (target: string) => void;
-  nodeName?: Node.TNode["data"]["name"];
+  nodeName?: Node.TNode["name"];
 } & Omit<ButtonProps, "label" | "Icon" | "onClick">;
 
 export function NodeLink({

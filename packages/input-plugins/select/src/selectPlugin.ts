@@ -123,6 +123,7 @@ export class SelectPlugin extends InputPlugin<typeof Type, "select"> {
   ) {
     const childNode = this.treeClient.nodes.create.childNode(nodeId, {
       type: "customNode",
+      name: data.name,
       data: { inputs: [], ...data },
     });
 
@@ -141,12 +142,12 @@ export class SelectPlugin extends InputPlugin<typeof Type, "select"> {
     if (newEdge instanceof Error) return newEdge;
 
     this.treeClient.conditions.add(newCondition);
-    this.treeClient.conditions.connect.toInput(nodeId, newCondition.id);
+    this.treeClient.conditions.connect.toInput(newCondition.id, inputId);
     this.treeClient.edges.add(newEdge);
 
     this.treeClient.nodes.add(childNode);
 
-    return { id: childNode.id, label: childNode.data.name };
+    return { id: childNode.id, label: childNode.name };
   }
 
   getInputsWithAnswers(

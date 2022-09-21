@@ -21,7 +21,7 @@ export const getNodeNames =
     // map all the nodes into the desired shape. If the node does not have a name, use the fallback.
     const nodes = mapValues(tree.nodes, (node) => ({
       id: node.id,
-      name: node.data.name ?? fallbackName,
+      name: node.name ?? fallbackName,
     }));
 
     // Filter out all the nodes without a name.

@@ -45,7 +45,7 @@ export const NodeSearch = ({ css }: Props) => {
     replaceSelectedNodes([newNode.id]);
     zoomToNode(newNode);
 
-    return { id: newNode.id, label: newNode.data.name };
+    return { id: newNode.id, label: newNode.name };
   }
 
   function changeHandler(newSelectedItemId: string) {

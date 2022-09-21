@@ -4,7 +4,7 @@ export const Type = z.object({
   id: z.string().uuid(),
   inputId: z.string().uuid().optional(),
   type: z.string(),
-  data: z.any(),
+  data: z.unknown(),
 });
 
 export const Record = z.record(Type);

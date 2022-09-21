@@ -103,7 +103,7 @@ function NodeEditingSidebarContent({ node, css }: Props) {
           onUpdate={({ editor }) =>
             treeClient.nodes.update.content(node.id, editor.getJSON())
           }
-          content={node.data.content}
+          content={node.content}
           Label={(props) => (
             <Label
               css={{
@@ -120,7 +120,7 @@ function NodeEditingSidebarContent({ node, css }: Props) {
       </Box>
       <InputPluginComponent
         onClick={(target) => replaceSelectedNodes([target])}
-        inputIds={node.data.inputs}
+        inputIds={node.inputs}
         nodeId={node.id}
       />
     </Stack>

@@ -171,7 +171,7 @@ export const OptionTargetInput = ({
             }}
           />
           <TargetSelector
-            nodeName={node?.data?.name}
+            nodeName={node.name}
             onClick={onClick}
             edge={edge}
             name={formState.names.target}

@@ -41,7 +41,7 @@ export class FreeTextPlugin extends InputPlugin<typeof Type, "freeText"> {
 
     this.treeClient.nodes.add(childNode);
 
-    return { id: childNode.id, label: childNode.data.name };
+    return { id: childNode.id, label: childNode.name };
   }
 
   updateTarget({

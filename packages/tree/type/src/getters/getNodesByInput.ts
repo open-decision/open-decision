@@ -15,7 +15,7 @@ export const getNodesByInput = (tree: Tree.TTree) => (inputId: string) => {
   for (const key in tree.nodes) {
     const node = tree.nodes[key];
 
-    if (node.data.inputs.includes(inputId)) {
+    if (node.inputs.includes(inputId)) {
       relatedNodes[key] = node;
     }
   }

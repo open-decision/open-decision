@@ -31,7 +31,7 @@ export const Type = z.object({
   name: z.string().optional(),
   content: RichText.optional(),
   inputs: z.array(z.string()),
-  data: z.any(),
+  data: z.unknown(),
 });
 
 export const Record = z.record(Type);

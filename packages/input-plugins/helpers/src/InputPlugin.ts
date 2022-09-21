@@ -31,13 +31,17 @@ export class InputPlugin<TType extends z.ZodType, TTypeName extends string> {
       type: this.typeName,
     });
 
-    if (this.isType(newInput)) return newInput;
+    const parsedInput = this.MergedType.safeParse(newInput);
 
-    throw new ODProgrammerError({
-      code: "INVALID_ENTITY_CREATION",
-      message:
-        "The input could not be created. Please check that the data is correct.",
-    });
+    if (!parsedInput.success) {
+      throw new ODProgrammerError({
+        code: "INVALID_ENTITY_CREATION",
+        message:
+          "The input could not be created. Please check that the data is correct.",
+      });
+    }
+
+    return parsedInput.data;
   }
 
   isType(input: any): input is z.infer<typeof this.MergedType> {

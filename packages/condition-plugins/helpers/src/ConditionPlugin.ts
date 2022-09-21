@@ -35,13 +35,16 @@ export class ConditionPlugin<
       type: this.typeName,
     });
 
-    if (this.isType(newCondition)) return newCondition;
+    const parsedCondition = this.MergedType.safeParse(newCondition);
 
-    throw new ODProgrammerError({
-      code: "INVALID_ENTITY_CREATION",
-      message:
-        "The condition could not be created. Please check that the data is correct.",
-    });
+    if (!parsedCondition.success) {
+      throw new ODProgrammerError({
+        code: "INVALID_ENTITY_CREATION",
+        message:
+          "The condition could not be created. Please check that the data is correct.",
+      });
+    }
+    return parsedCondition.data;
   }
 
   isType(input: any): input is z.infer<typeof this.MergedType> {
