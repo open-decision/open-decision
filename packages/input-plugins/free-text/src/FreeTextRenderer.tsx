@@ -49,7 +49,7 @@ export function FreeTextForm({
 
   return (
     <Form.Root state={formState} css={css} resetOnSubmit={false}>
-      <Form.Field Label={input.label ?? "Eingabe"}>
+      <Form.Field Label={input.data.label ?? "Eingabe"}>
         <Form.Input name={formState.names[input.id]} />
       </Form.Field>
       {children}

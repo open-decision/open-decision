@@ -22,6 +22,13 @@
           "packages/input-plugins/helpers/**/*.{ts,tsx,js,jsx}"
         ]
       }
+    },
+    "typecheck": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "tsc -p tsconfig.lib.json",
+        "cwd": "packages/input-plugins/helpers"
+      }
     }
   }
 }

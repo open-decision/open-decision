@@ -7,5 +7,5 @@ export const connectInputAndNode =
     // We get the input just to validate that it exists.
     getInput(tree)(inputId);
 
-    node.data.inputs.push(inputId);
+    node.inputs.push(inputId);
   };

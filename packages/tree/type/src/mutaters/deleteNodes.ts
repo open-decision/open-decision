@@ -19,8 +19,8 @@ export const deleteNodes = (tree: Tree.TTree) => (ids: string[]) => {
     );
 
     // When a Node is deleted all its Inputs should also be deleted.
-    if (node?.data.inputs) {
-      deleteInputs(tree)(node?.data.inputs);
+    if (node.inputs) {
+      deleteInputs(tree)(node.inputs);
     }
   });
 };

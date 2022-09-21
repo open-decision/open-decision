@@ -2,8 +2,9 @@ import { clone } from "remeda";
 import { treeMock } from "../mocks/tree.mock";
 import { deleteNodes } from "./deleteNodes";
 import { expect, test, beforeEach } from "vitest";
+import { Tree } from "../type-classes";
 
-let currentTreeMock;
+let currentTreeMock: Tree.TTree;
 beforeEach(() => {
   currentTreeMock = clone(treeMock);
 });
@@ -19,28 +20,15 @@ test("deleteNodes should properly delete the node", () => {
 test("deleteNodes should remove all edges using the node as a source or target", () => {
   deleteNodes(currentTreeMock)(["65f93264-6354-4e0b-86c1-3cc9e85db77a"]);
 
-  expect(currentTreeMock.edges).toMatchInlineSnapshot("{}");
+  expect(currentTreeMock.edges).not.toHaveProperty(
+    "3abeee1c-9662-4af5-a232-037228949002"
+  );
 });
 
 test("deleteNodes should remove all inputs related to the node", () => {
   deleteNodes(currentTreeMock)(["65f93264-6354-4e0b-86c1-3cc9e85db77a"]);
 
-  expect(currentTreeMock.inputs).toMatchInlineSnapshot(`
-    {
-      "7adcfc07-cefd-45a8-ba42-c19860eb26c5": {
-        "answers": [
-          {
-            "id": "3c5827b3-2565-4623-850b-de463a5ee946",
-            "text": "Nein",
-          },
-          {
-            "id": "dfec1b30-fc51-43a6-9e6f-db71933a8274",
-            "text": "Vielleicht",
-          },
-        ],
-        "id": "7adcfc07-cefd-45a8-ba42-c19860eb26c5",
-        "type": "select",
-      },
-    }
-  `);
+  expect(currentTreeMock.inputs).not.toHaveProperty(
+    "50b7733c-c7ab-4035-b26f-801ea8eca9fe"
+  );
 });

@@ -25,8 +25,14 @@ import { OD, proxiedOD } from "../Data/odClient";
 import { z } from "zod";
 import { useNotificationStore } from "../../config/notifications";
 import { createYjsDocumentIndexedDB } from "./utils/createYjsDocumentIndexedDB";
-import { Tree, createTreeClient } from "@open-decision/tree-type";
-import { bindProxyAndYMap } from "valtio-yjs";
+import {
+  Tree,
+  createTreeClient,
+  createNode,
+  Node,
+} from "@open-decision/tree-type";
+import * as Y from "yjs";
+import { IndexeddbPersistence } from "y-indexeddb";
 
 export const treesQueryKey = ["Trees"] as const;
 export const treeQueryKey = (treeUuid: string) =>
@@ -146,21 +152,15 @@ export const useTreeAPI = () => {
       ["createTree"],
       async (data) => {
         const response = await proxiedOD.trees.create(data);
-        const [store, yMap] = createYjsDocumentIndexedDB(
-          { startNode: "" },
-          response.data.uuid
-        );
+        const yDoc = new Y.Doc();
+        new IndexeddbPersistence(response.data.uuid, yDoc);
 
-        bindProxyAndYMap(store, yMap);
+        const yMap = yDoc.getMap("tree");
+        const node = createNode();
+        const yNodes = new Y.Map<Node.TRecord>([[node.id, node]]);
 
-        const tempTreeClient = createTreeClient(store);
-
-        const newNode = tempTreeClient.nodes.create.node({
-          type: "customNode",
-          data: { inputs: [], conditions: [] },
-        });
-
-        tempTreeClient.nodes.add(newNode);
+        yMap.set("startNode", node.id);
+        yMap.set("nodes", yNodes);
 
         return response;
       },

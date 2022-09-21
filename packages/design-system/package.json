@@ -36,7 +36,7 @@
     "remeda": "^1.1.0",
     "spinners-react": "^1.0.7",
     "use-resize-observer": "^9.0.2",
-    "valtio": "^1.6.4"
+    "valtio": "^1.7.0"
   },
   "peerDependencies": {
     "@fontsource/poppins": "^4.5.0",

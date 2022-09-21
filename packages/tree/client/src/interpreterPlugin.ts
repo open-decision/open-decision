@@ -51,6 +51,13 @@ export const interpreterPlugin: Resolver =
 
       const result = conditionResolver(context, event);
 
+      // If the result is false the condtion was not true and we
+      // can continue with the next condition.
+      if (!result) continue;
+
+      // If the result is an error we fail the interpretation, because
+      // we can not resolve the tree correctly.
+      // See the error message for what went wrong.
       if (result instanceof InterpreterError)
         return callback({ type: "INVALID_INTERPRETATION", error: result });
 

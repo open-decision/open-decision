@@ -8,9 +8,18 @@ export function useRFNodes() {
 
   if (!nodes) return [];
 
-  return Object.values(nodes).map((node) => ({
-    ...node,
-    type: "customNode",
-    selected: selectedNodeIds.includes(node.id),
-  }));
+  return Object.values(nodes).map(
+    ({ id, inputs, position, type, content, data, name }) => ({
+      type,
+      selected: selectedNodeIds.includes(id),
+      id,
+      position,
+      data: {
+        ...data,
+        name,
+        content,
+        inputs,
+      },
+    })
+  );
 }

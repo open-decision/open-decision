@@ -25,7 +25,7 @@ export class InputPlugin<TType extends z.ZodType, TTypeName extends string> {
     this.typeName = typeName;
   }
 
-  create(data: z.infer<TType>) {
+  create(data: Partial<z.infer<TType>>) {
     const newInput = this.treeClient.inputs.create({
       data,
       type: this.typeName,

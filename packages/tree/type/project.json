@@ -22,11 +22,17 @@
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/packages/tree/type"],
+      "executor": "@nrwl/workspace:run-commands",
       "options": {
-        "jestConfig": "packages/tree/type/jest.config.ts",
-        "passWithNoTests": true
+        "command": "vitest",
+        "cwd": "packages/tree/type"
+      }
+    },
+    "typecheck": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "tsc -p tsconfig.lib.json",
+        "cwd": "packages/tree/type"
       }
     }
   }

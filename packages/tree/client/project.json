@@ -28,6 +28,13 @@
         "jestConfig": "packages/tree/client/jest.config.ts",
         "passWithNoTests": true
       }
+    },
+    "typecheck": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "tsc -p tsconfig.lib.json",
+        "cwd": "packages/tree/client"
+      }
     }
   }
 }

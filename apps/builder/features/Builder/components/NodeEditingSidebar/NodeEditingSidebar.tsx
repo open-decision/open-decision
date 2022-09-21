@@ -68,7 +68,7 @@ export function NodeEditingSidebar() {
               groupColor: "$gray11",
               borderLeft: "$border$layer",
             }}
-            node={{ id: selectedNodes[0].id, data: selectedNodes[0].data }}
+            node={selectedNodes[0]}
           />
         </motion.aside>
       ) : null}
@@ -76,7 +76,7 @@ export function NodeEditingSidebar() {
   );
 }
 
-type Props = { node: Pick<Node.TNode, "id" | "data">; css?: StyleObject };
+type Props = { node: Node.TNode; css?: StyleObject };
 
 function NodeEditingSidebarContent({ node, css }: Props) {
   const t = useTranslations("builder.nodeEditingSidebar");
@@ -96,7 +96,7 @@ function NodeEditingSidebarContent({ node, css }: Props) {
         ...css,
       }}
     >
-      <Header node={node} />
+      <Header nodeName={node.name} nodeId={node.id} />
       <Box as="section">
         <RichTextEditor
           data-test="richTextEditor"
@@ -127,25 +127,25 @@ function NodeEditingSidebarContent({ node, css }: Props) {
   );
 }
 
-type HeaderProps = { node: Pick<Node.TNode, "id" | "data"> };
+type HeaderProps = { nodeName: Node.TNode["name"]; nodeId: Node.TNode["id"] };
 
-const Header = ({ node }: HeaderProps) => {
+const Header = ({ nodeName = "", nodeId }: HeaderProps) => {
   const t = useTranslations("builder.nodeEditingSidebar");
   const treeClient = useTreeClient();
 
   const startNodeId = useTree((tree) => getStartNodeId(tree));
 
   const parentNodes = useTree((tree) => {
-    const parentNodeIds = getParents(tree)(node.id);
+    const parentNodeIds = getParents(tree)(nodeId);
     return Object.values(getNodeNames(tree)(parentNodeIds));
   });
 
-  const isStartNode = node?.id === startNodeId;
+  const isStartNode = nodeId === startNodeId;
 
   const formState = Form.useFormState({
-    defaultValues: { name: node?.data.name ?? "" },
+    defaultValues: { name: nodeName },
     setValues(values) {
-      treeClient.nodes.update.name(node.id, values.name);
+      treeClient.nodes.update.name(nodeId, values.name);
     },
   });
 
@@ -169,11 +169,7 @@ const Header = ({ node }: HeaderProps) => {
           {isStartNode ? (
             <StartNodeLabel css={{ colorScheme: "success" }} />
           ) : null}
-          <NodeMenu
-            name={node.data.name ?? ""}
-            nodeId={node.id}
-            isStartNode={isStartNode}
-          />
+          <NodeMenu name={nodeName} nodeId={nodeId} isStartNode={isStartNode} />
         </Row>
       </Row>
       <Form.Input

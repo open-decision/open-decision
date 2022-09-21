@@ -30,6 +30,13 @@
         "jestConfig": "packages/input-plugins/free-text/jest.config.ts",
         "passWithNoTests": true
       }
+    },
+    "typecheck": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "tsc -p tsconfig.lib.json",
+        "cwd": "packages/input-plugins/free-text"
+      }
     }
   }
 }

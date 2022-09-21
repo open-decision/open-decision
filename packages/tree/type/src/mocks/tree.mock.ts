@@ -34,9 +34,13 @@ export const treeMock: Required<Tree.TTree, "startNode"> = {
       type: "select",
     },
     "ff9accd5-a509-4071-a503-a2ae6e2d3d7c": {
-      id: "9c07e4c3-a67f-4c76-8c14-9a0a302b5d99",
+      id: "ff9accd5-a509-4071-a503-a2ae6e2d3d7c",
       inputId: "7adcfc07-cefd-45a8-ba42-c19860eb26c5",
       data: { answerId: "dfec1b30-fc51-43a6-9e6f-db71933a8274" },
+      type: "select",
+    },
+    "5a3c055f-b0df-4dda-a1fb-12fef66e3c8f": {
+      id: "5a3c055f-b0df-4dda-a1fb-12fef66e3c8f",
       type: "select",
     },
   },

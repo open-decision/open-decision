@@ -66,12 +66,12 @@ export const SingleSelect = ({
     <StyledReorderGroup
       ref={ref}
       axis="y"
-      values={input?.answers}
+      values={input.data.answers}
       onReorder={(newOrder) => {
         return Select.reorderAnswers(input)?.(newOrder);
       }}
     >
-      {input.answers.map((answer) => {
+      {input.data?.answers.map((answer) => {
         const edge = Compare.getBy.answer(answer.id);
 
         return (

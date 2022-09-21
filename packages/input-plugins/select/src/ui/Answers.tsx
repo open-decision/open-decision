@@ -36,12 +36,12 @@ export const Answers = React.forwardRef<HTMLDivElement, Props>(function Answers(
   { input, name, activeValue },
   ref
 ) {
-  const hasAnswers = input.answers.length > 0;
+  const hasAnswers = input.data.answers.length > 0;
 
   return (
     <Form.RadioGroup ref={ref} css={{ gap: "$1" }}>
       {hasAnswers
-        ? input.answers.map((answer) => (
+        ? input.data.answers.map((answer) => (
             <RadioElement
               answer={answer}
               key={answer.id}
