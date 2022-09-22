@@ -14,8 +14,8 @@ test("isCircular finds a circular edge.", () => {
 test("isCircular finds a circular edge.", () => {
   expect(
     isCircular(treeMock)({
-      target: "65f93264-6354-4e0b-86c1-3cc9e85db77a",
-      source: "72444c0f-8838-43f6-b395-bf3207386ac2",
+      target: "8edc4369-3906-4dbc-be29-b560c742a806",
+      source: "53118f18-a522-4f1d-b2b5-78b306a97651",
     })
   ).toBeFalsy();
 });

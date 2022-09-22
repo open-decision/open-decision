@@ -9,7 +9,7 @@ export const getEdgesByInput = (tree: Tree.TTree) => (inputId: string) => {
   const relatedEdges: Edge.TRecord = {};
   for (const key in tree.edges) {
     const edge = tree.edges[key];
-    if (!edge.conditionId) break;
+    if (!edge.conditionId) continue;
 
     const condition = getCondition(tree)(edge.conditionId);
 

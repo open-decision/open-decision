@@ -24,8 +24,8 @@ import {
   getNodesByEdge,
   getInputByCondition,
   getInputByEdge,
-  getConditionsByInput,
-  getConditionsByEdge,
+  getConditionByInput,
+  getConditionByEdge,
   getEdgesByInput,
 } from "./getters";
 import {
@@ -142,8 +142,8 @@ export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
         collection: getConditions(tree),
         all: () => tree.conditions as TTree["conditions"],
         byNode: getConditionsByNode(tree),
-        byInput: getConditionsByInput(tree),
-        byEdge: getConditionsByEdge(tree),
+        byInput: getConditionByInput(tree),
+        byEdge: getConditionByEdge(tree),
       },
       delete: deleteConditions(tree),
       create: createCondition,

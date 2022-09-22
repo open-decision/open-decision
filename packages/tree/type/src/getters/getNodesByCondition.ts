@@ -11,5 +11,5 @@ export const getNodesByCondition =
     const input = getInputByCondition(tree)(conditionId);
     if (!input) return undefined;
 
-    return getNodesByInput(tree)(input);
+    return getNodesByInput(tree)(input.id);
   };

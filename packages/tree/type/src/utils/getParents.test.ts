@@ -15,7 +15,7 @@ test("getParents returns empty array when the passed nodeId is not found", () =>
 });
 
 test("getParents return empty array when no parents are found", () => {
-  expect(getParents(treeMock)("e35ba071-6c5f-414f-98b1-a898305e038c")).toEqual(
+  expect(getParents(treeMock)("8edc4369-3906-4dbc-be29-b560c742a806")).toEqual(
     []
   );
 });

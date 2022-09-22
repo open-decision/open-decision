@@ -1,4 +1,4 @@
-import { getConditionsByInput } from "../getters";
+import { getConditionByInput } from "../getters";
 import { Input, Tree } from "../type-classes";
 import { deleteConditions } from "./deleteConditions";
 
@@ -13,7 +13,7 @@ export const updateInput =
 
     inputs[inputId] = { ...newInput, id: inputId };
 
-    const condition = getConditionsByInput(tree)(inputId);
+    const condition = getConditionByInput(tree)(inputId);
 
     if (condition)
       deleteConditions(tree)(

@@ -1,9 +1,9 @@
 import { test, expect } from "vitest";
 import { treeMock } from "../mocks";
-import { getConditionsByInput } from "./getConditionByInput";
+import { getConditionByInput } from "./getConditionByInput";
 
 test("should get condition when provided an input id", () => {
-  const condition = getConditionsByInput(treeMock)(
+  const condition = getConditionByInput(treeMock)(
     "50b7733c-c7ab-4035-b26f-801ea8eca9fe"
   );
 
@@ -11,7 +11,7 @@ test("should get condition when provided an input id", () => {
 });
 
 test("should return undefined when no condition corresponds to the input", () => {
-  const condition = getConditionsByInput(treeMock)(
+  const condition = getConditionByInput(treeMock)(
     "5a3c055f-b0df-4dda-a1fb-12fef66e3c8f"
   );
 

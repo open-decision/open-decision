@@ -6,7 +6,7 @@ import { getConditions } from "./getCondition";
  * Provide an input id and receive the conditions that are related to it.
  * Returns undefined if there are no conditions.
  */
-export const getConditionsByInput = (tree: Tree.TTree) => (inputId: string) => {
+export const getConditionByInput = (tree: Tree.TTree) => (inputId: string) => {
   const conditions = getConditions(tree)();
 
   if (!conditions) return undefined;

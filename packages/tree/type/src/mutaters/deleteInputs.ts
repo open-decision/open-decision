@@ -1,6 +1,6 @@
 import { Tree } from "../type-classes";
 import { deleteConditions } from "./deleteConditions";
-import { disconnectInputAndNode } from "./disconnectInputFromNode";
+import { disconnectInputAndNode } from "./disconnectInputAndNode";
 
 export const deleteInputs = (tree: Tree.TTree) => (ids: string[]) => {
   ids.forEach((id) => {
