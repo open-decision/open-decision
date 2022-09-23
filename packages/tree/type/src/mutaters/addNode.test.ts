@@ -48,7 +48,6 @@ test("addNode should mutably add a provided Node to the provided tree", () => {
 
 test("addNode should assign the first created Node as the startNode", () => {
   const newNode = createNode();
-  console.log(newNode);
   const emptyTree = { startNode: "", nodes: {} };
   addNode(emptyTree)(newNode);
 
