@@ -1,25 +1,29 @@
 import { TTreeClient } from "@open-decision/tree-type";
 import { InputPlugin } from "@open-decision/input-plugins-helpers";
-import { DirectPlugin } from "@open-decision/condition-plugins-direct";
+import { DirectConditionPlugin } from "@open-decision/condition-plugins-direct";
 import { z } from "zod";
 
-export const Type = z.object({
+export const typeName = "freeText" as const;
+
+export const DataType = z.object({
   label: z.string().optional(),
 });
 
-export type TFreeTextInput = z.infer<FreeTextPlugin["MergedType"]>;
+export type TFreeTextInput = z.infer<FreeTextInputPlugin["Type"]>;
 
-export class FreeTextPlugin extends InputPlugin<typeof Type, "freeText"> {
-  declare directConditionPlugin: DirectPlugin;
+export class FreeTextInputPlugin extends InputPlugin<
+  typeof DataType,
+  typeof typeName
+> {
+  declare directConditionPlugin: DirectConditionPlugin;
   constructor(treeClient: TTreeClient) {
-    super(treeClient, Type, "freeText");
+    super(treeClient, DataType, typeName);
 
-    this.directConditionPlugin = new DirectPlugin(treeClient);
+    this.directConditionPlugin = new DirectConditionPlugin(treeClient);
   }
 
   createTargetNode(nodeId: string, inputId: string, data: { name: string }) {
     const childNode = this.treeClient.nodes.create.childNode(nodeId, {
-      type: "customNode",
       data: { inputs: [], ...data },
     });
 

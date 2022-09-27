@@ -4,11 +4,12 @@ import {
   createTreeClient as createBaseTreeClient,
   Node,
 } from "@open-decision/tree-type";
-import { SelectPlugin } from "@open-decision/input-plugins-select";
-import { ComparePlugin } from "@open-decision/condition-plugins-compare";
-import { FreeTextPlugin } from "@open-decision/input-plugins-free-text";
+import { SelectInputPlugin } from "@open-decision/input-plugins-select";
+import { CompareConditionPlugin } from "@open-decision/condition-plugins-compare";
+import { FreeTextInputPlugin } from "@open-decision/input-plugins-free-text";
 import { z } from "zod";
-import { DirectPlugin } from "@open-decision/condition-plugins-direct";
+import { DirectConditionPlugin } from "@open-decision/condition-plugins-direct";
+import { QuestionNodePlugin } from "@open-decision/node-plugins-question";
 import { mergeDeepRight } from "ramda";
 
 export const createTreeClient = <
@@ -18,24 +19,23 @@ export const createTreeClient = <
 ) => {
   const baseClient = createBaseTreeClient(tree);
 
-  const select = new SelectPlugin(baseClient);
-  const freeText = new FreeTextPlugin(baseClient);
+  const select = new SelectInputPlugin(baseClient);
+  const freeText = new FreeTextInputPlugin(baseClient);
 
-  const compare = new ComparePlugin(baseClient);
-  const direct = new DirectPlugin(baseClient);
+  const compare = new CompareConditionPlugin(baseClient);
+  const direct = new DirectConditionPlugin(baseClient);
+
+  const question = new QuestionNodePlugin(baseClient);
 
   const mergedTreeTypes = Tree.Type.merge(
     z.object({
       inputs: z
-        .record(
-          z.discriminatedUnion("type", [select.MergedType, freeText.MergedType])
-        )
+        .record(z.discriminatedUnion("type", [select.Type, freeText.Type]))
         .optional(),
       conditions: z
-        .record(
-          z.discriminatedUnion("type", [compare.MergedType, direct.MergedType])
-        )
+        .record(z.discriminatedUnion("type", [compare.Type, direct.Type]))
         .optional(),
+      nodes: z.record(question.Type).optional(),
     })
   );
 
@@ -63,18 +63,12 @@ export const createTreeClient = <
     inputs: {
       ...extendedTreeClient.inputs,
       types: [select.typeName, freeText.typeName] as const,
-      Type: z.discriminatedUnion("type", [
-        select.MergedType,
-        freeText.MergedType,
-      ]),
+      Type: z.discriminatedUnion("type", [select.Type, freeText.Type]),
     },
     conditions: {
       ...extendedTreeClient.conditions,
       types: [compare.typeName, direct.typeName] as const,
-      Type: z.discriminatedUnion("type", [
-        compare.MergedType,
-        direct.MergedType,
-      ]),
+      Type: z.discriminatedUnion("type", [compare.Type, direct.Type]),
     },
     input: { select, freeText },
     condition: { compare, direct },

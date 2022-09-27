@@ -2,13 +2,16 @@ import { TTreeClient } from "@open-decision/tree-type";
 import { ConditionPlugin } from "@open-decision/condition-plugins-helpers";
 import { z } from "zod";
 
-export const type = "compare" as const;
+export const typeName = "compare" as const;
 
 export const Type = z.object({
   answerId: z.string().uuid(),
 });
 
-export class ComparePlugin extends ConditionPlugin<typeof Type, "compare"> {
+export class CompareConditionPlugin extends ConditionPlugin<
+  typeof Type,
+  "compare"
+> {
   constructor(treeClient: TTreeClient) {
     super(treeClient, Type, "compare");
   }
@@ -57,4 +60,4 @@ export class ComparePlugin extends ConditionPlugin<typeof Type, "compare"> {
   };
 }
 
-export type TCompareCondition = z.infer<ComparePlugin["MergedType"]>;
+export type TCompareCondition = z.infer<CompareConditionPlugin["Type"]>;

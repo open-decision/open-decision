@@ -1,6 +1,6 @@
 import { Form, TargetSelector } from "@open-decision/design-system";
 import { InputComponentProps } from "@open-decision/input-plugins-helpers";
-import { FreeTextPlugin, TFreeTextInput } from "./freeTextPlugin";
+import { FreeTextInputPlugin, TFreeTextInput } from "./freeTextPlugin";
 import { useTree } from "@open-decision/tree-sync";
 import { getEdgesByNode, getNodeOptions } from "@open-decision/tree-type";
 
@@ -10,7 +10,7 @@ export const FreeText = ({
   treeClient,
   onClick,
 }: InputComponentProps<TFreeTextInput>) => {
-  const FreeText = new FreeTextPlugin(treeClient);
+  const FreeText = new FreeTextInputPlugin(treeClient);
 
   const edge = useTree(
     (tree) => Object.values(getEdgesByNode(tree)(nodeId) ?? {})?.[0]

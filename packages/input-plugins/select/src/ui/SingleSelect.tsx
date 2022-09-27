@@ -16,7 +16,7 @@ import {
   InputComponentProps,
   InputPrimaryActionSlotProps,
 } from "@open-decision/input-plugins-helpers";
-import { SelectPlugin, TAnswer, TSelectInput } from "../selectPlugin";
+import { SelectInputPlugin, TAnswer, TSelectInput } from "../selectPlugin";
 import { ComparePlugin } from "@open-decision/condition-plugins-compare";
 import { useTree } from "@open-decision/tree-sync";
 import { Edge, getNode, getNodeOptions } from "@open-decision/tree-type";
@@ -25,7 +25,7 @@ export const AddOptionButton = ({
   input,
   treeClient,
 }: InputPrimaryActionSlotProps<TSelectInput>) => {
-  const Select = new SelectPlugin(treeClient);
+  const Select = new SelectInputPlugin(treeClient);
 
   return (
     <Button
@@ -59,7 +59,7 @@ export const SingleSelect = ({
 }: InputComponentProps<TSelectInput>) => {
   const ref = React.useRef<HTMLDivElement | null>(null);
 
-  const Select = new SelectPlugin(treeClient);
+  const Select = new SelectInputPlugin(treeClient);
   const Compare = new ComparePlugin(treeClient);
 
   return (
@@ -109,7 +109,7 @@ export const OptionTargetInput = ({
   onClick,
   treeClient,
 }: SingleSelectInputProps) => {
-  const Select = new SelectPlugin(treeClient);
+  const Select = new SelectInputPlugin(treeClient);
 
   const controls = useDragControls();
   const node = useTree((tree) => getNode(tree)(nodeId));

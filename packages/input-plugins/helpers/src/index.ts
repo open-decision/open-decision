@@ -1,5 +1,6 @@
 import { Input, TTreeClient } from "@open-decision/tree-type";
 import { StyleObject } from "@open-decision/design-system";
+import { z } from "zod";
 
 export type InputComponentProps<TInput extends Input.TInput> = {
   nodeId: string;
@@ -21,3 +22,11 @@ export type RendererComponentProps<TInput> = {
 };
 
 export * from "./InputPlugin";
+
+export const mergeTypes = <
+  TDataType extends z.ZodType,
+  TTypeName extends string
+>(
+  DataType: TDataType,
+  typeName: TTypeName
+) => Input.Type.extend({ data: DataType, type: z.literal(typeName) });

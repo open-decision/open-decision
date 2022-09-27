@@ -10,3 +10,5 @@ export * from "./utils";
 export * from "./validators";
 
 export * from "./treeClient";
+
+export * from "./plugin/Plugin";

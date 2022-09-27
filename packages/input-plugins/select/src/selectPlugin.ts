@@ -1,4 +1,4 @@
-import { TTreeClient } from "@open-decision/tree-type";
+import { Plugin, TTreeClient } from "@open-decision/tree-type";
 import { z } from "zod";
 import {
   ComparePlugin,
@@ -7,21 +7,24 @@ import {
 import { v4 as uuid } from "uuid";
 import { InputPlugin } from "@open-decision/input-plugins-helpers";
 
-export const type = "select" as const;
+export const typeName = "select" as const;
 export const Answer = z.object({ id: z.string().uuid(), text: z.string() });
 
-export const Type = z.object({
+export const DataType = z.object({
   answers: z.array(Answer).default([]),
 });
 
 export type TAnswer = z.infer<typeof Answer>;
 
-export type TSelectInput = z.infer<SelectPlugin["MergedType"]>;
+export type TSelectInput = z.infer<SelectInputPlugin["Type"]>;
 
-export class SelectPlugin extends InputPlugin<typeof Type, "select"> {
+export class SelectInputPlugin extends InputPlugin<
+  typeof DataType,
+  typeof typeName
+> {
   declare comparePlugin: ComparePlugin;
   constructor(treeClient: TTreeClient) {
-    super(treeClient, Type, "select");
+    super(treeClient, DataType, typeName);
 
     this.comparePlugin = new ComparePlugin(treeClient);
   }
@@ -30,7 +33,7 @@ export class SelectPlugin extends InputPlugin<typeof Type, "select"> {
     return { id: uuid(), ...answer };
   }
 
-  getAnswer(input: z.infer<typeof this.MergedType>, answerId: string) {
+  getAnswer(input: z.infer<typeof this.Type>, answerId: string) {
     return input.data.answers.find(({ id }) => id === answerId);
   }
 
@@ -122,7 +125,6 @@ export class SelectPlugin extends InputPlugin<typeof Type, "select"> {
     data: { name: string }
   ) {
     const childNode = this.treeClient.nodes.create.childNode(nodeId, {
-      type: "customNode",
       name: data.name,
       data: { inputs: [], ...data },
     });

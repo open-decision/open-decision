@@ -2,11 +2,16 @@ import { TTreeClient } from "@open-decision/tree-type";
 import { ConditionPlugin } from "@open-decision/condition-plugins-helpers";
 import { z } from "zod";
 
+export const typeName = "direct" as const;
+
 export const Type = z.void();
 
-export class DirectPlugin extends ConditionPlugin<typeof Type, "direct"> {
+export class DirectConditionPlugin extends ConditionPlugin<
+  typeof Type,
+  typeof typeName
+> {
   constructor(treeClient: TTreeClient) {
-    super(treeClient, Type, "direct");
+    super(treeClient, Type, typeName);
   }
 
   getBy = {
@@ -30,4 +35,4 @@ export class DirectPlugin extends ConditionPlugin<typeof Type, "direct"> {
   };
 }
 
-export type TDirectCondition = z.infer<DirectPlugin["MergedType"]>;
+export type TDirectCondition = z.infer<DirectConditionPlugin["Type"]>;

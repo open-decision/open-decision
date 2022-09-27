@@ -614,6 +614,38 @@ importers:
     dependencies:
       zod: 3.19.1
 
+  packages/node-plugins/helpers:
+    specifiers:
+      '@open-decision/design-system': workspace:*
+      '@open-decision/tree-sync': workspace:*
+      '@open-decision/tree-type': workspace:*
+      '@open-decision/type-classes': workspace:*
+      remeda: ^1.1.0
+      zod: ^3.19.1
+    dependencies:
+      '@open-decision/design-system': link:../../design-system
+      '@open-decision/tree-sync': link:../../tree/sync
+      '@open-decision/tree-type': link:../../tree/type
+      '@open-decision/type-classes': link:../../type-classes
+      remeda: 1.1.0
+      zod: 3.19.1
+
+  packages/node-plugins/question:
+    specifiers:
+      '@open-decision/design-system': workspace:*
+      '@open-decision/node-plugins-helpers': workspace:*
+      '@open-decision/tree-sync': workspace:*
+      '@open-decision/tree-type': workspace:*
+      '@open-decision/type-classes': workspace:*
+      zod: ^3.19.1
+    dependencies:
+      '@open-decision/design-system': link:../../design-system
+      '@open-decision/node-plugins-helpers': link:../helpers
+      '@open-decision/tree-sync': link:../../tree/sync
+      '@open-decision/tree-type': link:../../tree/type
+      '@open-decision/type-classes': link:../../type-classes
+      zod: 3.19.1
+
   packages/prisma:
     specifiers:
       '@prisma/client': ~4.3.1
@@ -741,6 +773,7 @@ importers:
       '@open-decision/input-plugins-free-text': workspace:*
       '@open-decision/input-plugins-helpers': workspace:*
       '@open-decision/input-plugins-select': workspace:*
+      '@open-decision/node-plugins-question': workspace:*
       '@open-decision/tree-sync': workspace:*
       '@open-decision/tree-type': workspace:*
       '@open-decision/type-classes': workspace:*
@@ -752,6 +785,7 @@ importers:
       '@open-decision/input-plugins-free-text': link:../../input-plugins/free-text
       '@open-decision/input-plugins-helpers': link:../../input-plugins/helpers
       '@open-decision/input-plugins-select': link:../../input-plugins/select
+      '@open-decision/node-plugins-question': link:../../node-plugins/question
       '@open-decision/tree-sync': link:../sync
       '@open-decision/tree-type': link:../type
       '@open-decision/type-classes': link:../../type-classes
