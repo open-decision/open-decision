@@ -239,6 +239,8 @@ importers:
       '@open-decision/auth-api-specification': workspace:*
       '@open-decision/design-system': workspace:*
       '@open-decision/interpreter-react': workspace:*
+      '@open-decision/node-editor': workspace:*
+      '@open-decision/node-plugins-adapter': workspace:*
       '@open-decision/renderer': workspace:*
       '@open-decision/rich-text-editor': workspace:*
       '@open-decision/translations': workspace:*
@@ -287,6 +289,8 @@ importers:
       '@open-decision/auth-api-specification': link:../../packages/auth-api-specification
       '@open-decision/design-system': link:../../packages/design-system
       '@open-decision/interpreter-react': link:../../packages/interpreter-react
+      '@open-decision/node-editor': link:../../packages/node-editor
+      '@open-decision/node-plugins-adapter': link:../../packages/node-plugins/adapter
       '@open-decision/renderer': link:../../packages/renderer
       '@open-decision/rich-text-editor': link:../../packages/rich-text-editor
       '@open-decision/translations': link:../../packages/translations
@@ -399,6 +403,22 @@ importers:
       zod: 3.19.1
     devDependencies:
       '@types/validator': 13.7.6
+
+  packages/condition-plugins/adapter:
+    specifiers:
+      '@open-decision/condition-plugins-compare': workspace:*
+      '@open-decision/condition-plugins-direct': workspace:*
+      '@open-decision/interpreter': workspace:*
+      '@open-decision/tree-client': workspace:*
+      '@open-decision/tree-type': workspace:*
+      '@open-decision/type-classes': workspace:*
+    dependencies:
+      '@open-decision/condition-plugins-compare': link:../compare
+      '@open-decision/condition-plugins-direct': link:../direct
+      '@open-decision/interpreter': link:../../interpreter
+      '@open-decision/tree-client': link:../../tree/client
+      '@open-decision/tree-type': link:../../tree/type
+      '@open-decision/type-classes': link:../../type-classes
 
   packages/condition-plugins/compare:
     specifiers:
@@ -517,6 +537,22 @@ importers:
       '@types/react': 18.0.20
       '@types/react-dom': 18.0.6
 
+  packages/input-plugins/adapter:
+    specifiers:
+      '@open-decision/input-plugins-free-text': workspace:*
+      '@open-decision/input-plugins-helpers': workspace:*
+      '@open-decision/input-plugins-select': workspace:*
+      '@open-decision/tree-client': workspace:*
+      '@open-decision/tree-sync': workspace:*
+      '@open-decision/tree-type': workspace:*
+    dependencies:
+      '@open-decision/input-plugins-free-text': link:../free-text
+      '@open-decision/input-plugins-helpers': link:../helpers
+      '@open-decision/input-plugins-select': link:../select
+      '@open-decision/tree-client': link:../../tree/client
+      '@open-decision/tree-sync': link:../../tree/sync
+      '@open-decision/tree-type': link:../../tree/type
+
   packages/input-plugins/free-text:
     specifiers:
       '@open-decision/condition-plugins-direct': workspace:*
@@ -614,25 +650,65 @@ importers:
     dependencies:
       zod: 3.19.1
 
-  packages/node-plugins/helpers:
+  packages/node-editor:
     specifiers:
       '@open-decision/design-system': workspace:*
+      '@open-decision/node-plugins-adapter': workspace:*
       '@open-decision/tree-sync': workspace:*
       '@open-decision/tree-type': workspace:*
       '@open-decision/type-classes': workspace:*
+      react-flow-renderer: ^10.3.17
+      zod: ^3.19.1
+    dependencies:
+      '@open-decision/design-system': link:../design-system
+      '@open-decision/node-plugins-adapter': link:../node-plugins/adapter
+      '@open-decision/tree-sync': link:../tree/sync
+      '@open-decision/tree-type': link:../tree/type
+      '@open-decision/type-classes': link:../type-classes
+      react-flow-renderer: 10.3.17
+      zod: 3.19.1
+
+  packages/node-plugins/adapter:
+    specifiers:
+      '@open-decision/node-editor': workspace:*
+      '@open-decision/node-plugins-question': workspace:*
+      '@open-decision/tree-client': workspace:*
+      '@open-decision/tree-sync': workspace:*
+      '@open-decision/tree-type': workspace:*
+    dependencies:
+      '@open-decision/node-editor': link:../../node-editor
+      '@open-decision/node-plugins-question': link:../question
+      '@open-decision/tree-client': link:../../tree/client
+      '@open-decision/tree-sync': link:../../tree/sync
+      '@open-decision/tree-type': link:../../tree/type
+
+  packages/node-plugins/helpers:
+    specifiers:
+      '@open-decision/design-system': workspace:*
+      '@open-decision/node-editor': workspace:*
+      '@open-decision/rich-text-editor': workspace:*
+      '@open-decision/tree-sync': workspace:*
+      '@open-decision/tree-type': workspace:*
+      '@open-decision/type-classes': workspace:*
+      react-flow-renderer: ^10.3.17
       remeda: ^1.1.0
       zod: ^3.19.1
     dependencies:
       '@open-decision/design-system': link:../../design-system
+      '@open-decision/node-editor': link:../../node-editor
+      '@open-decision/rich-text-editor': link:../../rich-text-editor
       '@open-decision/tree-sync': link:../../tree/sync
       '@open-decision/tree-type': link:../../tree/type
       '@open-decision/type-classes': link:../../type-classes
+      react-flow-renderer: 10.3.17
       remeda: 1.1.0
       zod: 3.19.1
 
   packages/node-plugins/question:
     specifiers:
       '@open-decision/design-system': workspace:*
+      '@open-decision/input-plugins-adapter': workspace:*
+      '@open-decision/node-editor': workspace:*
       '@open-decision/node-plugins-helpers': workspace:*
       '@open-decision/tree-sync': workspace:*
       '@open-decision/tree-type': workspace:*
@@ -640,6 +716,8 @@ importers:
       zod: ^3.19.1
     dependencies:
       '@open-decision/design-system': link:../../design-system
+      '@open-decision/input-plugins-adapter': link:../../input-plugins/adapter
+      '@open-decision/node-editor': link:../../node-editor
       '@open-decision/node-plugins-helpers': link:../helpers
       '@open-decision/tree-sync': link:../../tree/sync
       '@open-decision/tree-type': link:../../tree/type
@@ -12782,6 +12860,28 @@ packages:
       react: 18.2.0
       scheduler: 0.23.0
 
+  /react-flow-renderer/10.3.17:
+    resolution: {integrity: sha512-bywiqVErlh5kCDqw3x0an5Ur3mT9j9CwJsDwmhmz4i1IgYM1a0SPqqEhClvjX+s5pU4nHjmVaGXWK96pwsiGcQ==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      react: 16 || 17 || 18
+      react-dom: 16 || 17 || 18
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.19.0
+      '@types/d3': 7.4.0
+      '@types/resize-observer-browser': 0.1.7
+      classcat: 5.0.4
+      d3-drag: 3.0.0
+      d3-selection: 3.0.0
+      d3-zoom: 3.0.0
+      zustand: 3.7.2
+    dev: false
+
   /react-flow-renderer/10.3.17_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-bywiqVErlh5kCDqw3x0an5Ur3mT9j9CwJsDwmhmz4i1IgYM1a0SPqqEhClvjX+s5pU4nHjmVaGXWK96pwsiGcQ==}
     engines: {node: '>=14'}
@@ -15160,6 +15260,16 @@ packages:
 
   /zod/3.19.1:
     resolution: {integrity: sha512-LYjZsEDhCdYET9ikFu6dVPGp2YH9DegXjdJToSzD9rO6fy4qiRYFoyEYwps88OseJlPyl2NOe2iJuhEhL7IpEA==}
+    dev: false
+
+  /zustand/3.7.2:
+    resolution: {integrity: sha512-PIJDIZKtokhof+9+60cpockVOq05sJzHCriyvaLBmEJixseQ1a5Kdov6fWZfWOu5SK9c+FhH1jU0tntLxRJYMA==}
+    engines: {node: '>=12.7.0'}
+    peerDependencies:
+      react: '>=16.8'
+    peerDependenciesMeta:
+      react:
+        optional: true
     dev: false
 
   /zustand/3.7.2_react@18.2.0:

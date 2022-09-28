@@ -24,6 +24,7 @@ export * as Toolbar from "./Toolbar/Toolbar";
 export * from "./Notifications";
 export * from "./Error";
 export * from "./TargetSelector";
+export * from "./Overlays/Sidebar/Sidebar";
 
 // Styling solutions
 export * from "./stitches";

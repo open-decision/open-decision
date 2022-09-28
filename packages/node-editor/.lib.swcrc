@@ -28,6 +28,8 @@
     ".*.config.ts?$",
     ".*.spec.tsx?$",
     ".*.test.tsx?$",
+    "./src/jest-setup.ts$",
+    "./**/jest-setup.ts$",
     ".*.js$",
     "node_modules"
   ]

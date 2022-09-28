@@ -8,6 +8,8 @@
     "@open-decision/design-system": "workspace:*",
     "@open-decision/tree-sync": "workspace:*",
     "@open-decision/tree-type": "workspace:*",
-    "@open-decision/node-plugins-helpers": "workspace:*"
+    "@open-decision/node-plugins-helpers": "workspace:*",
+    "@open-decision/node-editor": "workspace:*",
+    "@open-decision/input-plugins-adapter": "workspace:*"
   }
 }

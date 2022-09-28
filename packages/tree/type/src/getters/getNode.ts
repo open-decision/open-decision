@@ -26,7 +26,6 @@ export const getNodes =
   <TTree extends Tree.TTree>(tree: TTree) =>
   (nodeIds?: string[]): TTree["nodes"] | undefined => {
     if (!tree.nodes) return undefined;
-
     if (!nodeIds) return tree.nodes;
 
     const nodes = pick(tree.nodes, nodeIds);

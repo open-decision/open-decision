@@ -1,0 +1,12 @@
+{
+  "name": "@open-decision/node-plugins-adapter",
+  "version": "0.0.1",
+  "main": "src/index.tsx",
+  "dependencies": {
+    "@open-decision/tree-type": "workspace:*",
+    "@open-decision/tree-sync": "workspace:*",
+    "@open-decision/node-plugins-question": "workspace:*",
+    "@open-decision/node-editor": "workspace:*",
+    "@open-decision/tree-client": "workspace:*"
+  }
+}

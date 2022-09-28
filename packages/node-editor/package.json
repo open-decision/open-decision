@@ -1,0 +1,13 @@
+{
+  "name": "@open-decision/node-editor",
+  "version": "0.0.1",
+  "main": "src/index.ts",
+  "dependencies": {
+    "zod": "^3",
+    "@open-decision/design-system": "workspace:*",
+    "react-flow-renderer": "^10.3.17",
+    "@open-decision/type-classes": "workspace:*",
+    "@open-decision/tree-sync": "workspace:*",
+    "@open-decision/tree-type": "workspace:*"
+  }
+}

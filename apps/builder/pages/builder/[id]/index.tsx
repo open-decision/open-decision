@@ -1,6 +1,5 @@
 import * as React from "react";
-import { NodeEditor } from "../../../features/Builder/NodeEditor";
-import { EditorProvider } from "../../../features/Builder/state/useEditor";
+import { EditorProvider, NodeEditor } from "@open-decision/node-editor";
 import { ReactFlowProvider } from "react-flow-renderer";
 import { EditorHeader } from "../../../features/Builder/components/EditorHeader";
 import { SideMenu } from "../../../features/Builder/components/SideMenu/SideMenu";
@@ -18,6 +17,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import { PrototypButton } from "../../../features/Builder/components/PrototypButton";
 import { CreateNodeButton } from "../../../features/Builder/components/CreateNodeButton";
 import dynamic from "next/dynamic";
+import {
+  NodeSidebarPlugin,
+  nodeTypes,
+} from "@open-decision/node-plugins-adapter";
 
 const TreeProvider = dynamic(() => import("@open-decision/tree-sync"), {
   ssr: false,
@@ -151,7 +154,10 @@ export default function BuilderPage({ treeId }: PageProps) {
                           ease: "easeInOut",
                         }}
                       >
-                        <NodeEditor />
+                        <NodeEditor
+                          NodeSidebarPlugin={<NodeSidebarPlugin node={} />}
+                          nodeTypes={nodeTypes}
+                        />
                       </motion.div>
                     </Tabs.Content>
                   ) : null}

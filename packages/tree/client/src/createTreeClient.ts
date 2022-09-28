@@ -27,15 +27,18 @@ export const createTreeClient = <
 
   const question = new QuestionNodePlugin(baseClient);
 
+  const InputType = z.discriminatedUnion("type", [select.Type, freeText.Type]);
+  const ConditionType = z.discriminatedUnion("type", [
+    compare.Type,
+    direct.Type,
+  ]);
+  const NodeType = question.Type;
+
   const mergedTreeTypes = Tree.Type.merge(
     z.object({
-      inputs: z
-        .record(z.discriminatedUnion("type", [select.Type, freeText.Type]))
-        .optional(),
-      conditions: z
-        .record(z.discriminatedUnion("type", [compare.Type, direct.Type]))
-        .optional(),
-      nodes: z.record(question.Type).optional(),
+      inputs: z.record(InputType).optional(),
+      conditions: z.record(ConditionType).optional(),
+      nodes: z.record(NodeType).optional(),
     })
   );
 
@@ -58,17 +61,17 @@ export const createTreeClient = <
     ...extendedTreeClient,
     nodes: {
       ...extendedTreeClient.nodes,
-      Type: Node.Type,
+      Type: NodeType,
     },
     inputs: {
       ...extendedTreeClient.inputs,
       types: [select.typeName, freeText.typeName] as const,
-      Type: z.discriminatedUnion("type", [select.Type, freeText.Type]),
+      Type: InputType,
     },
     conditions: {
       ...extendedTreeClient.conditions,
       types: [compare.typeName, direct.typeName] as const,
-      Type: z.discriminatedUnion("type", [compare.Type, direct.Type]),
+      Type: ConditionType,
     },
     input: { select, freeText },
     condition: { compare, direct },
@@ -94,3 +97,7 @@ export type TTree = z.infer<TTreeClient["Type"]>;
 export type TCreateTreeClient<
   TTree extends Omit<Tree.TTree, "startNode" | "edge">
 > = ReturnType<typeof createTreeClient<TTree>>;
+
+export type TNodesType = z.infer<TTreeClient["nodes"]["Type"]>;
+export type TInputsType = z.infer<TTreeClient["inputs"]["Type"]>;
+export type TConditionsType = z.infer<TTreeClient["conditions"]["Type"]>;

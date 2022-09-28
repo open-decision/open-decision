@@ -33,6 +33,8 @@
     "@open-decision/tree-client": "workspace:*",
     "@open-decision/tree-sync": "workspace:*",
     "@open-decision/tree-type": "workspace:*",
+    "@open-decision/node-editor": "workspace:*",
+    "@open-decision/node-plugins-adapter": "workspace:*",
     "@radix-ui/react-icons": "^1.1.1",
     "@sentry/nextjs": "^7.12.1",
     "@sentry/tracing": "^7.12.1",

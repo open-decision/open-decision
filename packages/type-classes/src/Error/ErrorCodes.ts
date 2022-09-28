@@ -11,7 +11,9 @@ export type ProgrammerErrors =
   | "ENTITY_NOT_FOUND"
   | "TRYED_ADDING_INVALID_EDGE"
   | "INVALID_ENTITY_CREATION"
-  | "INVALID_CONDITIONS";
+  | "INVALID_CONDITIONS"
+  | "UNKNOWN_INPUT_TYPE"
+  | "UNKNOWN_NODE_TYPE";
 
 export type InterpreterErrors =
   | "INVALID_TREE"

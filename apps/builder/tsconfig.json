@@ -11,6 +11,13 @@
     "incremental": true,
     "types": ["node"]
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "next-env.d.ts"],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx",
+    "next-env.d.ts",
+    "../../packages/node-editor/src/NodeEditor.tsx"
+  ],
   "exclude": ["node_modules"]
 }
