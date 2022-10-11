@@ -1,5 +1,4 @@
 export * from "./getCondition";
-export * from "./getConditionsByNode";
 export * from "./getEdge";
 export * from "./getEdgesByCondition";
 export * from "./getEdgesByNode";
@@ -9,7 +8,6 @@ export * from "./getNodeNames";
 export * from "./getNodeOptions";
 export * from "./getTree";
 export * from "./getStartNode";
-export * from "./getNodesByCondition";
 export * from "./getNodesByEdge";
 export * from "./getInputByCondition";
 export * from "./getInputByEdge";
