@@ -6,34 +6,7 @@ export const mietminderungTreeMock: Required<Tree.TTree, "startNode"> = {
   nodes: {
     "ba80a8f1-f2bb-4636-b936-9b343903b060": {
       id: "ba80a8f1-f2bb-4636-b936-9b343903b060",
-      inputs: ["cbca524c-4b3d-4a99-a85c-68f8d57487c2"],
       name: "Start",
-      content: {
-        type: "doc",
-        content: [
-          {
-            type: "heading",
-            attrs: {
-              level: 1,
-            },
-            content: [
-              {
-                type: "text",
-                text: "Willkommen! ",
-              },
-            ],
-          },
-          {
-            type: "paragraph",
-            content: [
-              {
-                type: "text",
-                text: "Dieser Entscheidungsbaum dient dazu, eine erste grobe Einschätzung zu erhalten, ob Ihnen womöglich eine Mietminderung zusteht.",
-              },
-            ],
-          },
-        ],
-      },
       type: "customNode",
       position: {
         x: -162,
@@ -43,30 +16,6 @@ export const mietminderungTreeMock: Required<Tree.TTree, "startNode"> = {
     "2ccf5f67-3149-4434-a5d6-51760b48fe2f": {
       id: "2ccf5f67-3149-4434-a5d6-51760b48fe2f",
       name: "Wirksamer Mietvertrag",
-      inputs: ["49f7bbaa-f58c-4310-9137-b19fd89d4848"],
-      content: {
-        type: "doc",
-        content: [
-          {
-            type: "paragraph",
-            content: [
-              {
-                type: "text",
-                text: "Existiert ein wirksamer Mietvertrag zwischen Ihnen und dem Vermieter?",
-              },
-            ],
-          },
-          {
-            type: "paragraph",
-            content: [
-              {
-                type: "text",
-                text: "Dies ist beispielsweise nicht der Fall, wenn der Mietvertrag in der Vergangenheit wirksam gekündigt wurde.",
-              },
-            ],
-          },
-        ],
-      },
       type: "customNode",
       position: {
         x: -162,
@@ -76,100 +25,7 @@ export const mietminderungTreeMock: Required<Tree.TTree, "startNode"> = {
     "71b50b99-60fb-488f-a26d-a261b16292b5": {
       id: "71b50b99-60fb-488f-a26d-a261b16292b5",
       name: "Mangel",
-      inputs: ["1f0b7346-76d2-4b80-9365-3bdd563e5371"],
-      content: {
-        type: "doc",
-        content: [
-          {
-            type: "paragraph",
-            content: [
-              {
-                type: "text",
-                text: "An dieser Stelle geht es darum, herauszufinden ",
-              },
-              {
-                type: "text",
-                marks: [
-                  {
-                    type: "bold",
-                  },
-                ],
-                text: "welche Art von Mangel an der Mietsache",
-              },
-              {
-                type: "text",
-                text: " womöglich besteht. Es wird dabei zwischen zwei verschiedenen Arten unterschieden:",
-              },
-            ],
-          },
-          {
-            type: "paragraph",
-            content: [
-              {
-                type: "text",
-                text: "Einerseits gibt es den ",
-              },
-              {
-                type: "text",
-                marks: [
-                  {
-                    type: "bold",
-                  },
-                ],
-                text: "Sachmangel",
-              },
-              {
-                type: "text",
-                text: ". Dieser zeichnet sich vereinfacht gesagt dadurch aus, dass mit der Wohnung selbst etwas nicht stimmt, wie zum Beispiel bei Schimmelbefall, undichten Stellen und so weiter.",
-              },
-            ],
-          },
-          {
-            type: "paragraph",
-            content: [
-              {
-                type: "text",
-                text: "Andererseits gibt es den ",
-              },
-              {
-                type: "text",
-                marks: [
-                  {
-                    type: "bold",
-                  },
-                ],
-                text: "Rechtsmangel",
-              },
-              {
-                type: "text",
-                text: ". Hier ist die Wohnung an sich vollkommen in Ordnung, jedoch bestehen rechtliche Hindernisse. Diese liegen meist darin, dass irgendwelche Dritte - also weder der Vermieter noch Sie als Mieter - Ansprüche geltend machen, die ihr Mietverhältnis stören. Zum Beispiel besteht ein Rechtsmangel, wenn die Wohnung vom Vermieter mehrmals zur selben Zeit vermietet wurde und er nun die Übergabe der Wohnung verweigert oder auch von Ihnen die Räumung verlangt.",
-              },
-            ],
-          },
-          {
-            type: "paragraph",
-            content: [
-              {
-                type: "text",
-                text: "Als Sonderfall ist noch die sogenannte ",
-              },
-              {
-                type: "text",
-                marks: [
-                  {
-                    type: "bold",
-                  },
-                ],
-                text: "Zusicherung",
-              },
-              {
-                type: "text",
-                text: " zu nennen. Hier hat ihr Vermieter Ihnen ausdrücklich eine bestimmte Eigenschaft der Wohnung zugesichert. Wenn diese Eigenschaft, dann jedoch nicht vorliegt oder später weg fällt, liegt ebenso ein Mangel vor.",
-              },
-            ],
-          },
-        ],
-      },
+
       type: "customNode",
       position: {
         x: -158,
@@ -179,7 +35,6 @@ export const mietminderungTreeMock: Required<Tree.TTree, "startNode"> = {
     "6d373a6f-0448-44da-b692-b5330d9e1bdc": {
       id: "6d373a6f-0448-44da-b692-b5330d9e1bdc",
       name: "Keine Mietminderung",
-      inputs: ["c4c439ef-cecd-48d6-abca-0e3caf1b8a4e"],
       type: "customNode",
       position: {
         x: -714,
@@ -189,7 +44,6 @@ export const mietminderungTreeMock: Required<Tree.TTree, "startNode"> = {
     "01370a54-f55b-4700-b070-37c7763e37ba": {
       id: "01370a54-f55b-4700-b070-37c7763e37ba",
       name: "Kontaktvermittlung",
-      inputs: ["0226a6a7-67d2-4190-a7e3-dad27ab32d65"],
       type: "customNode",
       position: {
         x: 445,
@@ -199,7 +53,6 @@ export const mietminderungTreeMock: Required<Tree.TTree, "startNode"> = {
     "8c3b1ce7-67a6-4fa4-bdca-e93836f66f97": {
       id: "8c3b1ce7-67a6-4fa4-bdca-e93836f66f97",
       name: "Sachmangel",
-      inputs: ["a2392479-0a12-471d-a437-82068345220f"],
       type: "customNode",
       position: {
         x: 70,
@@ -209,7 +62,6 @@ export const mietminderungTreeMock: Required<Tree.TTree, "startNode"> = {
     "b4440776-e6c8-4c3a-90bf-0644a3be5d2e": {
       id: "b4440776-e6c8-4c3a-90bf-0644a3be5d2e",
       name: "Rechtmangel",
-      inputs: ["d030cdfa-01ca-4401-9e55-ec76984363ae"],
       type: "customNode",
       position: {
         x: -149,
@@ -219,7 +71,6 @@ export const mietminderungTreeMock: Required<Tree.TTree, "startNode"> = {
     "99672d90-3fbd-4f74-ac1b-7e70f7030149": {
       id: "99672d90-3fbd-4f74-ac1b-7e70f7030149",
       name: "Zusicherung",
-      inputs: ["0dac8ba5-8c5f-4345-ab64-19a9830f7da2"],
       type: "customNode",
       position: {
         x: -364,

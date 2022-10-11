@@ -17,9 +17,7 @@ import {
   getConditionsByNode,
   getEdgesByCondition,
   getEdgesByNode,
-  getInputsByNode,
   getNodeOptions,
-  getNodesByInput,
   getNodesByCondition,
   getNodesByEdge,
   getInputByCondition,
@@ -32,9 +30,6 @@ import {
   updateStartNode,
   deleteNodes,
   addNode,
-  connectInputAndNode,
-  disconnectInputAndNode,
-  updateNodeContent,
   updateNodeName,
   updateNodePosition,
   deleteInputs,
@@ -78,7 +73,6 @@ export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
         parents: getParents(tree),
         paths: getPaths(tree),
         options: getNodeOptions(tree),
-        byInput: getNodesByInput(tree),
         byCondition: getNodesByCondition(tree),
         byEdge: getNodesByEdge(tree),
       },
@@ -86,12 +80,10 @@ export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
       create: { node: createNode, childNode: createChildNode(tree) },
       add: addNode(tree),
       connect: {
-        toInput: connectInputAndNode(tree),
         toEdgeAsTarget: updateEdgeTarget(tree),
         toEdgeAsSource: updateEdgeSource(tree),
       },
       disconnect: {
-        fromInput: disconnectInputAndNode(tree),
         /**
          * Disconnecting from an Edge is equivalent to deleting it, because there cannot be
          * an Edge without source and target. If you want to update the connection
@@ -101,7 +93,6 @@ export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
         fromEdgeAsSource: (id: string) => deleteEdges(tree)([id]),
       },
       update: {
-        content: updateNodeContent(tree),
         name: updateNodeName(tree),
         position: updateNodePosition(tree),
       },
@@ -111,7 +102,6 @@ export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
         single: getInput(tree),
         collection: getInputs(tree),
         all: () => tree.inputs as TTree["inputs"],
-        byNode: getInputsByNode(tree),
         byCondition: getInputByCondition(tree),
         byEdge: getInputByEdge(tree),
       },
@@ -119,7 +109,6 @@ export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
       create: createInput,
       add: addInput(tree),
       connect: {
-        toNode: connectInputAndNode(tree),
         toCondition: connectInputAndCondition(tree),
         /**
          * Edges are not connectable to inputs in the normal way, but through conditions.
@@ -127,7 +116,6 @@ export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
         toEdge: null,
       },
       disconnect: {
-        fromNode: disconnectInputAndNode(tree),
         fromCondition: disconnectInputAndCondition(tree),
         /**
          * Edges are not connectable to inputs in the normal way, but through conditions.

@@ -1,19 +1,19 @@
 import { Form, TargetSelector } from "@open-decision/design-system";
 import { InputComponentProps } from "@open-decision/input-plugins-helpers";
-import { FreeTextInputPlugin, TFreeTextInput } from "./freeTextPlugin";
+import { TextInputPlugin, TTextInput } from "./plugin";
 import { useTree } from "@open-decision/tree-sync";
 import { getEdgesByNode, getNodeOptions } from "@open-decision/tree-type";
 
-export const FreeText = ({
+export const BuilderComponent = ({
   nodeId,
   input,
   treeClient,
   onClick,
-}: InputComponentProps<TFreeTextInput>) => {
-  const FreeText = new FreeTextInputPlugin(treeClient);
+}: InputComponentProps<TTextInput>) => {
+  const FreeText = new TextInputPlugin(treeClient);
 
   const edge = useTree(
-    (tree) => Object.values(getEdgesByNode(tree)(nodeId) ?? {})?.[0]
+    (tree) => Object.values(getEdgesByNode(tree)(nodeId)?.source ?? {})?.[0]
   );
 
   const nodeNames = useTree((tree) =>
@@ -40,7 +40,7 @@ export const FreeText = ({
         }
         onSelect={(newItem) =>
           FreeText.updateTarget({
-            edgeId: edge?.id,
+            edgeId: edge?.["id"],
             nodeId,
             inputId: input.id,
             newItem,

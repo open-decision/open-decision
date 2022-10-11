@@ -10,21 +10,26 @@ import {
   InterpreterProviderProps,
   useInterpreter,
 } from "@open-decision/interpreter-react";
-import { RichTextRenderer } from "@open-decision/rich-text-editor";
 import { Navigation } from "./components/Navigation";
-import { RendererPlugin } from "@open-decision/tree-client";
+import { InputPluginObject } from "@open-decision/input-plugins-helpers";
+import { NodePluginObject } from "@open-decision/node-editor";
 
 export type RendererProps = {
   css?: StyleObject;
   nodeId?: string;
+  nodePlugins: Record<string, NodePluginObject<any, any, any>>;
+  inputPlugins: Record<string, InputPluginObject<any, any, any>>;
 } & StackProps;
 
 function RendererImpl(
-  { css, ...props }: RendererProps,
+  { css, nodePlugins, inputPlugins, ...props }: RendererProps,
   ref: React.Ref<HTMLDivElement>
 ) {
   const { getCurrentNode } = useInterpreter();
   const node = getCurrentNode();
+  const Node = nodePlugins[node.type].Renderer;
+
+  if (!Node) return null;
 
   return (
     <Stack
@@ -55,18 +60,17 @@ function RendererImpl(
           ref={ref}
         >
           <ScrollArea.Viewport css={{ minHeight: 0 }}>
-            {node.content ? (
-              <>
-                <RichTextRenderer content={node.content} key={node.id} />
-                <ScrollArea.Scrollbar />
-              </>
-            ) : null}
+            <Node.Content node={node} />
+            <ScrollArea.Scrollbar />
           </ScrollArea.Viewport>
         </ScrollArea.Root>
-        <RendererPlugin
-          inputIds={node.inputs}
-          css={{ paddingInline: "$$padding", marginTop: "$4" }}
-        />
+        {Node.Actions ? (
+          <Node.Actions
+            css={{ paddingInline: "$$padding", marginTop: "$4" }}
+            inputPlugins={inputPlugins}
+            node={node}
+          />
+        ) : null}
       </Stack>
       <Navigation css={{ alignSelf: "center", marginBottom: "$$padding" }} />
     </Stack>

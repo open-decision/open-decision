@@ -1,9 +1,9 @@
 import { useTreeContext } from "@open-decision/tree-sync";
 import { createTreeClient } from "@open-decision/tree-client";
 import { createQuestionNodePlugin } from "@open-decision/node-plugins-question";
-import { SelectInputPlugin } from "@open-decision/input-plugins-select";
+import { createSelectInputPlugin } from "@open-decision/input-plugins-select";
 import { createCompareConditionPlugin } from "@open-decision/condition-plugins-compare";
-import { FreeTextInputPlugin } from "@open-decision/input-plugins-free-text";
+import { createTextInputPlugin } from "@open-decision/input-plugins-free-text";
 import { createDirectConditionPlugin } from "@open-decision/condition-plugins-direct";
 import { createTreeClient as createBaseTreeClient } from "@open-decision/tree-type";
 import { z } from "zod";
@@ -20,11 +20,11 @@ export const useTreeClient = () => {
   const QuestionNode = createQuestionNodePlugin(baseTreeClient);
   const NodeType = QuestionNode.plugin.Type;
 
-  const SingleSelectInput = new SelectInputPlugin(baseTreeClient);
-  const FreeTextInput = new FreeTextInputPlugin(baseTreeClient);
+  const SelectInput = createSelectInputPlugin(baseTreeClient);
+  const TextInput = createTextInputPlugin(baseTreeClient);
   const InputType = z.discriminatedUnion("type", [
-    SingleSelectInput.Type,
-    FreeTextInput.Type,
+    SelectInput.plugin.Type,
+    TextInput.plugin.Type,
   ]);
 
   const CompareCondition = createCompareConditionPlugin(baseTreeClient);
@@ -37,7 +37,10 @@ export const useTreeClient = () => {
   const treeClient = createTreeClient(
     {
       nodes: [{ question: QuestionNode.plugin }, NodeType],
-      inputs: [{ select: SingleSelectInput, text: FreeTextInput }, InputType],
+      inputs: [
+        { select: SelectInput.plugin, text: TextInput.plugin },
+        InputType,
+      ],
       conditions: [
         { compare: CompareCondition.plugin, direct: DirectCondition.plugin },
         ConditionType,
@@ -101,5 +104,6 @@ export const useTreeClient = () => {
     treeClient,
     nodePlugins: { QuestionNode },
     interpreterResolver: resolver,
+    inputPlugins: { SelectInput, TextInput },
   };
 };

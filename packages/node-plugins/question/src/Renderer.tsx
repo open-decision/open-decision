@@ -1,25 +1,31 @@
+import { Form } from "@open-decision/design-system";
+import {
+  RendererNodeActions,
+  RendererNodeContent,
+} from "@open-decision/node-editor";
+import { RichTextRenderer } from "@open-decision/rich-text-editor";
 import { useTree } from "@open-decision/tree-sync";
 import { getInputs } from "@open-decision/tree-type";
-import { Form, StyleObject } from "@open-decision/design-system";
-import { InputPluginObject } from "@open-decision/input-plugins-helpers";
+import { TQuestionNode } from "./plugin";
 
-type RendererPluginProps = {
-  inputIds: string[];
-  css: StyleObject;
-  inputPlugins: Record<string, InputPluginObject<any, any, any>>;
+export const Content: RendererNodeContent<TQuestionNode> = ({ node }) => {
+  if (!node.data.content) return null;
+
+  return <RichTextRenderer content={node.data.content} key={node.id} />;
 };
 
-export function RendererPlugin({
-  inputIds,
+export const Actions: RendererNodeActions<TQuestionNode> = ({
+  node,
   css,
   inputPlugins,
-}: RendererPluginProps) {
-  const inputs = useTree((tree) => getInputs(tree)(inputIds));
+}) => {
+  const inputs = useTree((tree) => getInputs(tree)(node.data.inputs));
 
   return (
     <>
       {Object.values(inputs ?? {}).map((input) => {
         const Input = inputPlugins[input.type];
+
         return (
           <Input.RendererComponent input={input} css={css}>
             <Form.Submit
@@ -36,4 +42,4 @@ export function RendererPlugin({
       })}
     </>
   );
-}
+};

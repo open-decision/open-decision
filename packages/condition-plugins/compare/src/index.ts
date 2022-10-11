@@ -3,7 +3,7 @@ import { ConditionPluginObject } from "@open-decision/condition-plugins-helpers"
 import { CompareConditionPlugin, DataType, TCompareCondition } from "./plugin";
 import { resolver } from "./resolver";
 
-const createCompareConditionPlugin = (
+export const createCompareConditionPlugin = (
   treeClient: TTreeClient
 ): ConditionPluginObject<typeof DataType, "compare", TCompareCondition> => {
   return {
@@ -16,5 +16,3 @@ const createCompareConditionPlugin = (
 export { CompareConditionPlugin };
 export type { TCompareCondition };
 export { resolver };
-
-export default createCompareConditionPlugin;

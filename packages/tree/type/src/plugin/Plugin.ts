@@ -1,6 +1,4 @@
 import { z } from "zod";
-import { pipe } from "remeda";
-import { ODProgrammerError } from "@open-decision/type-classes";
 import { TTreeClient } from "../treeClient";
 
 export class Plugin<
@@ -30,31 +28,5 @@ export class Plugin<
     inputs: any
   ): inputs is z.infer<z.ZodRecord<z.ZodString, typeof this.Type>> {
     return z.record(this.Type).safeParse(inputs).success;
-  }
-
-  private returnOnlyWhenType = (x: any) => {
-    if (!this.isType(x)) return undefined;
-    return x;
-  };
-
-  private returnOnlyWhenRecordOfType = (x: any) => {
-    if (!this.isRecordOfType(x)) return undefined;
-    return x;
-  };
-
-  get(inputId: string) {
-    return pipe(
-      inputId,
-      this.treeClient.inputs.get.single,
-      this.returnOnlyWhenType
-    );
-  }
-
-  getN(inputIds: string[]) {
-    return pipe(
-      inputIds,
-      this.treeClient.inputs.get.collection,
-      this.returnOnlyWhenRecordOfType
-    );
   }
 }

@@ -5,15 +5,12 @@
   "dependencies": {
     "zod": "^3",
     "@open-decision/type-classes": "workspace:*",
-    "@open-decision/input-plugins-select": "workspace:*",
-    "@open-decision/condition-plugins-compare": "workspace:*",
-    "@open-decision/input-plugins-free-text": "workspace:*",
-    "@open-decision/condition-plugins-direct": "workspace:*",
     "@open-decision/design-system": "workspace:*",
     "@open-decision/tree-sync": "workspace:*",
     "@open-decision/input-plugins-helpers": "workspace:*",
     "@open-decision/tree-type": "workspace:*",
-    "@open-decision/node-plugins-question": "workspace:*"
+    "@open-decision/condition-plugins-helpers": "workspace:*",
+    "@open-decision/node-editor": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18.2.0",

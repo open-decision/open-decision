@@ -3,15 +3,15 @@ import { InputPlugin } from "@open-decision/input-plugins-helpers";
 import { DirectConditionPlugin } from "@open-decision/condition-plugins-direct";
 import { z } from "zod";
 
-export const typeName = "freeText" as const;
+export const typeName = "text" as const;
 
 export const DataType = z.object({
   label: z.string().optional(),
 });
 
-export type TFreeTextInput = z.infer<FreeTextInputPlugin["Type"]>;
+export type TTextInput = z.infer<TextInputPlugin["Type"]>;
 
-export class FreeTextInputPlugin extends InputPlugin<
+export class TextInputPlugin extends InputPlugin<
   typeof DataType,
   typeof typeName
 > {

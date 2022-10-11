@@ -2,43 +2,34 @@ import { ODValidationError } from "@open-decision/type-classes";
 import {
   Tree,
   createTreeClient as createBaseTreeClient,
-  Node,
 } from "@open-decision/tree-type";
-import { SelectInputPlugin } from "@open-decision/input-plugins-select";
-import { CompareConditionPlugin } from "@open-decision/condition-plugins-compare";
-import { FreeTextInputPlugin } from "@open-decision/input-plugins-free-text";
 import { z } from "zod";
-import { DirectConditionPlugin } from "@open-decision/condition-plugins-direct";
-import { QuestionNodePlugin } from "@open-decision/node-plugins-question";
 import { mergeDeepRight } from "ramda";
+import { InputPlugin } from "@open-decision/input-plugins-helpers";
+import { ConditionPlugin } from "@open-decision/condition-plugins-helpers";
+import { NodePlugin } from "@open-decision/node-editor";
 
 export const createTreeClient = <
-  TExtendedTree extends Omit<Tree.TTree, "startNode" | "edge">
+  TExtendedTree extends Omit<Tree.TTree, "startNode" | "edge">,
+  InputPlugins extends Record<string, InputPlugin<any, any>>,
+  NodePlugins extends Record<string, NodePlugin<any, any>>,
+  ConditionPlugins extends Record<string, ConditionPlugin<any, any>>,
+  InputType extends z.ZodType,
+  NodeType extends z.ZodType,
+  ConditionType extends z.ZodType
 >(
+  plugins: {
+    inputs: [InputPlugins, InputType];
+    nodes: [NodePlugins, NodeType];
+    conditions: [ConditionPlugins, ConditionType];
+  },
   tree: Omit<Tree.TTree, "inputs" | "nodes" | "conditions"> & TExtendedTree
 ) => {
-  const baseClient = createBaseTreeClient(tree);
-
-  const select = new SelectInputPlugin(baseClient);
-  const freeText = new FreeTextInputPlugin(baseClient);
-
-  const compare = new CompareConditionPlugin(baseClient);
-  const direct = new DirectConditionPlugin(baseClient);
-
-  const question = new QuestionNodePlugin(baseClient);
-
-  const InputType = z.discriminatedUnion("type", [select.Type, freeText.Type]);
-  const ConditionType = z.discriminatedUnion("type", [
-    compare.Type,
-    direct.Type,
-  ]);
-  const NodeType = question.Type;
-
   const mergedTreeTypes = Tree.Type.merge(
     z.object({
-      inputs: z.record(InputType).optional(),
-      conditions: z.record(ConditionType).optional(),
-      nodes: z.record(NodeType).optional(),
+      inputs: z.record(plugins.inputs[1]).optional(),
+      conditions: z.record(plugins.conditions[1]).optional(),
+      nodes: z.record(plugins.nodes[1]).optional(),
     })
   );
 
@@ -61,20 +52,19 @@ export const createTreeClient = <
     ...extendedTreeClient,
     nodes: {
       ...extendedTreeClient.nodes,
-      Type: NodeType,
+      Type: plugins.nodes[1],
     },
     inputs: {
       ...extendedTreeClient.inputs,
-      types: [select.typeName, freeText.typeName] as const,
-      Type: InputType,
+      Type: plugins.inputs[1],
     },
     conditions: {
       ...extendedTreeClient.conditions,
-      types: [compare.typeName, direct.typeName] as const,
-      Type: ConditionType,
+      Type: plugins.conditions[1],
     },
-    input: { select, freeText },
-    condition: { compare, direct },
+    input: plugins.inputs[0],
+    condition: plugins.conditions[0],
+    node: plugins.nodes[0],
   };
 
   return mergeDeepRight(treeClientWithTypes, {
@@ -91,13 +81,4 @@ export const createTreeClient = <
   });
 };
 
-export type TTreeClient = ReturnType<typeof createTreeClient<Tree.TTree>>;
-export type TTree = z.infer<TTreeClient["Type"]>;
-
-export type TCreateTreeClient<
-  TTree extends Omit<Tree.TTree, "startNode" | "edge">
-> = ReturnType<typeof createTreeClient<TTree>>;
-
-export type TNodesType = z.infer<TTreeClient["nodes"]["Type"]>;
-export type TInputsType = z.infer<TTreeClient["inputs"]["Type"]>;
-export type TConditionsType = z.infer<TTreeClient["conditions"]["Type"]>;
+export type TTreeClient = ReturnType<typeof createTreeClient>;

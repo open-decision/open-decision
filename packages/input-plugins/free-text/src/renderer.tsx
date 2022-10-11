@@ -1,16 +1,16 @@
 import { Form } from "@open-decision/design-system";
 import { useInterpreter } from "@open-decision/interpreter-react";
 import { RendererComponentProps } from "@open-decision/input-plugins-helpers";
-import { TFreeTextInput } from "./freeTextPlugin";
+import { TTextInput } from "./plugin";
 import { useTreeClient } from "@open-decision/tree-sync";
 import { InterpreterError } from "@open-decision/type-classes";
 
-export function FreeTextForm({
+export function RendererComponent({
   input,
   css,
   children,
   onSubmit,
-}: RendererComponentProps<TFreeTextInput>) {
+}: RendererComponentProps<TTextInput>) {
   const { send, getAnswer, getCurrentNode } = useInterpreter();
   const treeClient = useTreeClient();
 

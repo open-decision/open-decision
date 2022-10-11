@@ -1,8 +1,9 @@
 import { TTreeClient } from "@open-decision/tree-type";
-import { NodePluginObject } from "@open-decision/node-plugins-helpers";
+import { NodePluginObject } from "@open-decision/node-editor";
 import { QuestionNode } from "./CanvasNode";
 import { DataType, QuestionNodePlugin, TQuestionNode } from "./plugin";
 import { QuestionNodeSidebar } from "./Sidebar";
+import { Content, Actions } from "./Renderer";
 
 export * from "./plugin";
 export { QuestionNode } from "./CanvasNode";
@@ -19,6 +20,7 @@ export const createQuestionNodePlugin = (
     plugin: new QuestionNodePlugin(treeClient),
     Node: QuestionNode,
     Sidebar: QuestionNodeSidebar,
+    Renderer: { Content, Actions },
     type: "question",
   };
 };
