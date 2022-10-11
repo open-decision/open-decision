@@ -1,4 +1,4 @@
-import { Condition, Plugin, TTreeClient } from "@open-decision/tree-type";
+import { Node, Plugin, TTreeClient } from "@open-decision/tree-type";
 import { ODProgrammerError } from "@open-decision/type-classes";
 import { z } from "zod";
 import { pipe } from "remeda";
@@ -6,9 +6,9 @@ import { pipe } from "remeda";
 const mergeTypes = <TType extends z.ZodType, TTypeName extends string>(
   Type: TType,
   typeName: TTypeName
-) => Condition.Type.extend({ data: Type, type: z.literal(typeName) });
+) => Node.Type.extend({ data: Type, type: z.literal(typeName) });
 
-export class ConditionPlugin<
+export class NodePlugin<
   TType extends z.ZodType,
   TTypeName extends string
 > extends Plugin<
@@ -18,7 +18,7 @@ export class ConditionPlugin<
 > {
   declare treeClient: TTreeClient;
   declare typeName: TTypeName;
-  pluginType = "condition" as const;
+  pluginType = "node" as const;
 
   constructor(treeClient: TTreeClient, Type: TType, typeName: TTypeName) {
     super(treeClient, mergeTypes(Type, typeName));
@@ -36,33 +36,36 @@ export class ConditionPlugin<
     return x;
   };
 
-  get(conditionId: string) {
+  get(nodeId: string) {
     return pipe(
-      conditionId,
-      this.treeClient.conditions.get.single,
+      nodeId,
+      this.treeClient.nodes.get.single,
       this.returnOnlyWhenType
     );
   }
 
-  getN(conditionIds?: string[]) {
+  getN(nodeIds?: string[]) {
     return pipe(
-      conditionIds
-        ? this.treeClient.conditions.get.collection(conditionIds)
-        : this.treeClient.conditions.get.all(),
+      nodeIds
+        ? this.treeClient.nodes.get.collection(nodeIds)
+        : this.treeClient.nodes.get.all(),
       this.returnOnlyWhenRecordOfType
     );
   }
 
-  create(inputId: string, data: z.infer<TType>) {
-    const newCondition = this.treeClient.conditions.create({
-      inputId,
-      data,
+  create(
+    data: Omit<Node.TNode, "data" | "type" | "id">,
+    pluginData: z.infer<TType>
+  ) {
+    const newNode = this.treeClient.nodes.create.node({
+      data: pluginData,
       type: this.typeName,
+      ...data,
     });
 
-    const parsedCondition = this.Type.safeParse(newCondition);
+    const parsedNode = this.Type.safeParse(newNode);
 
-    if (!parsedCondition.success) {
+    if (!parsedNode.success) {
       throw new ODProgrammerError({
         code: "INVALID_ENTITY_CREATION",
         message:
@@ -70,6 +73,6 @@ export class ConditionPlugin<
       });
     }
 
-    return parsedCondition.data;
+    return parsedNode.data;
   }
 }

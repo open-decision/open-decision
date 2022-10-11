@@ -1,6 +1,7 @@
 import { Input, Plugin, TTreeClient } from "@open-decision/tree-type";
 import { z } from "zod";
 import { ODProgrammerError } from "@open-decision/type-classes";
+import { pipe } from "remeda";
 
 const mergeTypes = <TType extends z.ZodType, TTypeName extends string>(
   Type: TType,
@@ -23,6 +24,33 @@ export class InputPlugin<
     super(treeClient, mergeTypes(Type, typeName));
 
     this.typeName = typeName;
+  }
+
+  private returnOnlyWhenType = (x: any) => {
+    if (!this.isType(x)) return undefined;
+    return x;
+  };
+
+  private returnOnlyWhenRecordOfType = (x: any) => {
+    if (!this.isRecordOfType(x)) return undefined;
+    return x;
+  };
+
+  get(inputId: string) {
+    return pipe(
+      inputId,
+      this.treeClient.inputs.get.single,
+      this.returnOnlyWhenType
+    );
+  }
+
+  getN(inputIds?: string[]) {
+    return pipe(
+      inputIds
+        ? this.treeClient.inputs.get.collection(inputIds)
+        : this.treeClient.inputs.get.all(),
+      this.returnOnlyWhenRecordOfType
+    );
   }
 
   create(data: z.infer<TType>) {

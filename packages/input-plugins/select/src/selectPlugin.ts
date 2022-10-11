@@ -1,7 +1,7 @@
-import { Plugin, TTreeClient } from "@open-decision/tree-type";
+import { TTreeClient } from "@open-decision/tree-type";
 import { z } from "zod";
 import {
-  ComparePlugin,
+  CompareConditionPlugin,
   TCompareCondition,
 } from "@open-decision/condition-plugins-compare";
 import { v4 as uuid } from "uuid";
@@ -22,11 +22,11 @@ export class SelectInputPlugin extends InputPlugin<
   typeof DataType,
   typeof typeName
 > {
-  declare comparePlugin: ComparePlugin;
+  declare comparePlugin: CompareConditionPlugin;
   constructor(treeClient: TTreeClient) {
     super(treeClient, DataType, typeName);
 
-    this.comparePlugin = new ComparePlugin(treeClient);
+    this.comparePlugin = new CompareConditionPlugin(treeClient);
   }
 
   createAnswer(answer: Pick<TAnswer, "text">) {

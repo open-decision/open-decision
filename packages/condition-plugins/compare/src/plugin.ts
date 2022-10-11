@@ -4,16 +4,16 @@ import { z } from "zod";
 
 export const typeName = "compare" as const;
 
-export const Type = z.object({
+export const DataType = z.object({
   answerId: z.string().uuid(),
 });
 
 export class CompareConditionPlugin extends ConditionPlugin<
-  typeof Type,
+  typeof DataType,
   "compare"
 > {
   constructor(treeClient: TTreeClient) {
-    super(treeClient, Type, "compare");
+    super(treeClient, DataType, "compare");
   }
 
   getBy = {

@@ -17,7 +17,7 @@ import {
   InputPrimaryActionSlotProps,
 } from "@open-decision/input-plugins-helpers";
 import { SelectInputPlugin, TAnswer, TSelectInput } from "../selectPlugin";
-import { ComparePlugin } from "@open-decision/condition-plugins-compare";
+import { CompareConditionPlugin } from "@open-decision/condition-plugins-compare";
 import { useTree } from "@open-decision/tree-sync";
 import { Edge, getNode, getNodeOptions } from "@open-decision/tree-type";
 
@@ -60,7 +60,7 @@ export const SingleSelect = ({
   const ref = React.useRef<HTMLDivElement | null>(null);
 
   const Select = new SelectInputPlugin(treeClient);
-  const Compare = new ComparePlugin(treeClient);
+  const Compare = new CompareConditionPlugin(treeClient);
 
   return (
     <StyledReorderGroup

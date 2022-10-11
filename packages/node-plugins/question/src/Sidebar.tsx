@@ -16,18 +16,20 @@ import {
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { RichTextEditor } from "@open-decision/rich-text-editor";
 import { useTranslations } from "next-intl";
-import { ParentNodeSelector, useEditor } from "@open-decision/node-editor";
-import { StartNodeLabel } from "@open-decision/node-plugins-helpers/src/components/StartNodeLabels";
-import { TQuestionNode } from "./plugin";
-import { InputPluginComponent } from "@open-decision/input-plugins-adapter";
 import {
+  ParentNodeSelector,
+  useEditor,
   NodeMenu,
   nodeNameMaxLength,
-} from "@open-decision/node-plugins-helpers";
+  NodeSidebar,
+  StartNodeLabel,
+} from "@open-decision/node-editor";
+import { QuestionNodePlugin, TQuestionNode } from "./plugin";
 
-type QuestionNodeSidebarProps = { node: TQuestionNode; open: boolean };
-
-export function QuestionNodeSidebar({ node, open }: QuestionNodeSidebarProps) {
+export const QuestionNodeSidebar: NodeSidebar<TQuestionNode> = ({
+  node,
+  open,
+}) => {
   return (
     <Sidebar open={open}>
       <Content
@@ -44,7 +46,7 @@ export function QuestionNodeSidebar({ node, open }: QuestionNodeSidebarProps) {
       />
     </Sidebar>
   );
-}
+};
 
 type Props = { node: TQuestionNode; css?: StyleObject };
 
@@ -52,6 +54,8 @@ function Content({ node, css }: Props) {
   const t = useTranslations("builder.nodeEditingSidebar");
   const { replaceSelectedNodes } = useEditor();
   const treeClient = useTreeClient();
+
+  const QuestionNode = new QuestionNodePlugin(treeClient);
 
   return (
     <Stack
@@ -71,7 +75,7 @@ function Content({ node, css }: Props) {
         <RichTextEditor
           data-test="richTextEditor"
           onUpdate={({ editor }) =>
-            treeClient.nodes.update.content(node.id, editor.getJSON())
+            QuestionNode.updateNodeContent(node.id, editor.getJSON())
           }
           content={node.data.content}
           Label={(props) => (
@@ -88,11 +92,11 @@ function Content({ node, css }: Props) {
           )}
         />
       </Box>
-      <InputPluginComponent
+      {/* <InputPluginComponent
         onClick={(target) => replaceSelectedNodes([target])}
         inputIds={node.data.inputs}
         nodeId={node.id}
-      />
+      /> */}
     </Stack>
   );
 }

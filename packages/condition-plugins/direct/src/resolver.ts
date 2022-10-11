@@ -1,23 +1,17 @@
-import {
-  InterpreterContext,
-  EVALUATE_NODE_CONDITIONS,
-  MissingEdgeForThruthyConditionError,
-} from "@open-decision/interpreter";
-import { TTreeClient } from "@open-decision/tree-type";
+import { MissingEdgeForThruthyConditionError } from "@open-decision/interpreter";
+import { ConditionResolver } from "@open-decision/condition-plugins-helpers";
 import { TDirectCondition } from "./plugin";
 
-export const resolver =
-  (treeClient: TTreeClient) =>
-  (condition: TDirectCondition) =>
-  (_context: InterpreterContext, event: EVALUATE_NODE_CONDITIONS) => {
-    const edges = treeClient.edges.get.byNode(event.nodeId);
+export const resolver: ConditionResolver<TDirectCondition> =
+  (treeClient) => (condition) => (_context, event) => {
+    const sourceEdges = treeClient.edges.get.byNode(event.nodeId)?.source;
 
     // On the edges of the provided node we expect to find an edge with this conditionId
-    const edge = Object.values(edges ?? {}).find(
+    const edge = Object.values(sourceEdges ?? {}).find(
       (edge) => edge.conditionId === condition.id
     );
 
-    if (edge) return edge.target;
+    if (edge) return { state: "success", result: edge.target };
 
-    return new MissingEdgeForThruthyConditionError();
+    return { state: "error", error: new MissingEdgeForThruthyConditionError() };
   };

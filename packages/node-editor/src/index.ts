@@ -9,5 +9,10 @@ export {
   EditorProvider,
 } from "./state";
 export { ParentNodeSelector } from "./ParentNodeSelector";
+export * from "./Node";
+export * from "./NodeLabels";
+export * from "./utils/constants";
+export * from "./types/NodePluginObject";
+export { NodePlugin } from "./plugin/NodePlugin";
 
 export type { NodePluginData } from "./state";

@@ -8,8 +8,8 @@ import {
 import { PlusIcon } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
 import { useTreeClient } from "@open-decision/tree-sync";
-import { useEditor } from "../state/useEditor";
 import { sideMenuTooltipProps } from "./SideMenu/shared";
+import { useEditor } from "@open-decision/node-editor";
 
 type Props = { css?: StyleObject };
 
@@ -17,8 +17,7 @@ export function CreateNodeButton({ css }: Props) {
   const t = useTranslations("builder.createNodeButton");
   const treeClient = useTreeClient();
 
-  const { getCenter, zoomToNode } = useEditor();
-  const { replaceSelectedNodes } = useEditor();
+  const { getCenter, zoomToNode, replaceSelectedNodes } = useEditor();
 
   return (
     <Tooltip.Root>

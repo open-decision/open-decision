@@ -4,14 +4,14 @@ import { z } from "zod";
 
 export const typeName = "direct" as const;
 
-export const Type = z.void();
+export const DataType = z.void();
 
 export class DirectConditionPlugin extends ConditionPlugin<
-  typeof Type,
+  typeof DataType,
   typeof typeName
 > {
   constructor(treeClient: TTreeClient) {
-    super(treeClient, Type, typeName);
+    super(treeClient, DataType, typeName);
   }
 
   getBy = {

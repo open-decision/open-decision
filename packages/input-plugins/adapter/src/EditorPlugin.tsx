@@ -1,12 +1,8 @@
 import * as React from "react";
-import { createTreeClient, TTreeClient } from "@open-decision/tree-client";
+import { TTreeClient } from "@open-decision/tree-client";
 import { DropdownMenu, Box, Label } from "@open-decision/design-system";
 import { getInputs } from "@open-decision/tree-type";
-import {
-  useTree,
-  useTreeClient,
-  useTreeContext,
-} from "@open-decision/tree-sync";
+import { useTree } from "@open-decision/tree-sync";
 import { z } from "zod";
 import { SingleSelectInput } from "@open-decision/input-plugins-select";
 import { InputComponentProps } from "@open-decision/input-plugins-helpers";
@@ -14,7 +10,7 @@ import { FreeTextInput } from "@open-decision/input-plugins-free-text";
 import { ODProgrammerError } from "@open-decision/type-classes";
 
 type InputDropdownProps = {
-  currentType?: TTreeClient["inputs"]["types"][number];
+  currentType?: string;
   treeClient: TTreeClient;
   inputId?: string;
   nodeId: string;
@@ -103,23 +99,16 @@ const InputHeader = ({ children, ...props }: InputHeaderProps) => {
 type InputPluginComponentProps = {
   inputIds: string[];
   nodeId: string;
+  treeClient: TTreeClient;
 } & Pick<InputComponentProps<any>, "onClick">;
 
 export function InputPluginComponent({
   inputIds,
   onClick,
   nodeId,
+  treeClient,
 }: InputPluginComponentProps) {
-  const inputs = useTree((tree) =>
-    getInputs(tree)(inputIds)
-  ) as unknown as Record<string, z.infer<TTreeClient["inputs"]["Type"]>>;
-
-  const baseTreeClient = useTreeClient();
-  const {
-    tree: { tree },
-  } = useTreeContext();
-
-  const extendedTreeClient = createTreeClient(tree);
+  const inputs = useTree((tree) => getInputs(tree)(inputIds));
 
   return (
     <Box as="section">
@@ -136,11 +125,11 @@ export function InputPluginComponent({
                           nodeId={nodeId}
                           currentType={input.type}
                           inputId={input.id}
-                          treeClient={extendedTreeClient}
+                          treeClient={treeClient}
                         >
                           <SingleSelectInput.PrimaryActionSlot
                             input={input}
-                            treeClient={baseTreeClient}
+                            treeClient={treeClient}
                           />
                         </InputHeader>
                         <SingleSelectInput.Component

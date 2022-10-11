@@ -17,10 +17,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { PrototypButton } from "../../../features/Builder/components/PrototypButton";
 import { CreateNodeButton } from "../../../features/Builder/components/CreateNodeButton";
 import dynamic from "next/dynamic";
-import {
-  NodeSidebarPlugin,
-  nodeTypes,
-} from "@open-decision/node-plugins-adapter";
+import { useTreeClient } from "../../../features/Builder/components/TreeClient";
 
 const TreeProvider = dynamic(() => import("@open-decision/tree-sync"), {
   ssr: false,
@@ -69,6 +66,7 @@ export const getServerSideProps: GetServerSideProps<
 type PageProps = { treeId: string };
 
 export default function BuilderPage({ treeId }: PageProps) {
+  const { nodePlugins } = useTreeClient();
   const [selectedView, setSelectedView] = React.useState("editor");
 
   const t = useTranslations("builder");
@@ -154,10 +152,7 @@ export default function BuilderPage({ treeId }: PageProps) {
                           ease: "easeInOut",
                         }}
                       >
-                        <NodeEditor
-                          NodeSidebarPlugin={<NodeSidebarPlugin node={} />}
-                          nodeTypes={nodeTypes}
-                        />
+                        <NodeEditor nodePlugins={nodePlugins} />
                       </motion.div>
                     </Tabs.Content>
                   ) : null}

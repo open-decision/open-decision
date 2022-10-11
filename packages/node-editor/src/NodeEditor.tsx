@@ -2,7 +2,9 @@ import { styled, StyleObject } from "@open-decision/design-system";
 import { Canvas } from "./Canvas/Canvas";
 import { sidebarWidth } from "./utils/constants";
 import { ZoomInOut } from "./Canvas/ZoomInOut";
-import { NodeTypes } from "react-flow-renderer";
+import { mapValues } from "remeda";
+import { useSelectedNodes } from "./state";
+import { NodePluginObject } from "./types/NodePluginObject";
 
 const StyledCanvas = styled(Canvas, {
   display: "grid",
@@ -14,19 +16,35 @@ const StyledCanvas = styled(Canvas, {
 
 type NodeEditorProps = {
   css?: StyleObject;
-  NodeSidebarPlugin: React.ReactNode;
-  nodeTypes: NodeTypes;
+  nodePlugins: Record<string, NodePluginObject<any, any, any>>;
 };
 
-export const NodeEditor = ({
-  css,
-  NodeSidebarPlugin,
-  nodeTypes,
-}: NodeEditorProps) => {
+export const NodeEditor = ({ css, nodePlugins }: NodeEditorProps) => {
   return (
-    <StyledCanvas css={css} nodeTypes={nodeTypes}>
+    <StyledCanvas
+      css={css}
+      nodeTypes={mapValues(nodePlugins, (plugin) => plugin.Node)}
+    >
       <ZoomInOut css={{ position: "absolute", bottom: 10, left: 10 }} />
-      {NodeSidebarPlugin}
+      <Sidebar nodePlugins={nodePlugins} />
     </StyledCanvas>
   );
 };
+
+type SidebarProps = {
+  nodePlugins: Record<string, NodePluginObject<any, any, any>>;
+};
+
+export function Sidebar({ nodePlugins }: SidebarProps) {
+  const Sidebars = mapValues(nodePlugins, (plugin) => plugin.Sidebar);
+
+  const selectedNodes = useSelectedNodes();
+
+  if (selectedNodes && Object.keys(selectedNodes).length === 1) {
+    const Sidebar = Sidebars[selectedNodes[0].type];
+
+    return <Sidebar node={selectedNodes[0]} open={true} />;
+  }
+
+  return null;
+}

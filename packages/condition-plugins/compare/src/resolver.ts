@@ -1,33 +1,35 @@
 import {
-  InterpreterContext,
-  EVALUATE_NODE_CONDITIONS,
+  MissingAnswerOnInterpreterContextError,
   MissingEdgeForThruthyConditionError,
+  MissingInputForConditionError,
 } from "@open-decision/interpreter";
-import { TTreeClient } from "@open-decision/tree-type";
+import { ConditionResolver } from "@open-decision/condition-plugins-helpers";
 import { TCompareCondition } from "./plugin";
 
-export const resolver =
-  (treeClient: TTreeClient) =>
-  (condition: TCompareCondition) =>
-  (context: InterpreterContext, event: EVALUATE_NODE_CONDITIONS) => {
-    const edges = treeClient.edges.get.byNode(event.nodeId);
+export const resolver: ConditionResolver<TCompareCondition> =
+  (treeClient) => (condition) => (context, event) => {
+    // We only care about the edges where the node of of the event is the source node.
+    const sourceEdges = treeClient.edges.get.byNode(event.nodeId)?.source;
 
-    if (!condition.inputId) return false;
+    if (!condition.inputId)
+      return { state: "error", error: new MissingInputForConditionError() };
 
     // Get a possibly existing answer from the interpreter context
     const existingAnswerId = context.answers[condition.inputId];
 
     // We expect there to be an answer on the interpreter context.
-    if (condition.data.answerId === existingAnswerId) {
-      // On the edges of the provided node we expect to find an edge with this conditionId
-      const edge = Object.values(edges ?? {}).find(
-        (edge) => edge.conditionId === condition.id
-      );
+    // Not finding an answer on the interpreter context is a programmer error.
+    if (!(condition.data.answerId === existingAnswerId))
+      throw new MissingAnswerOnInterpreterContextError();
 
-      if (edge) return edge.target;
+    // On the edges of the provided node we expect to find an edge with this conditionId
+    const edge = Object.values(sourceEdges ?? {}).find(
+      (edge) => edge["conditionId"] === condition.id
+    );
 
-      return new MissingEdgeForThruthyConditionError();
-    }
+    if (edge) return { state: "success", target: edge.target };
 
-    return false;
+    // If we could not find an edge for this condition, we return an error, because the
+    // condition is thruthy but cannot be resolved without a valid edge.
+    return { state: "error", error: new MissingEdgeForThruthyConditionError() };
   };

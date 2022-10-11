@@ -9,8 +9,6 @@ import { canGoBack, canGoForward } from "./methods";
 import { z } from "zod";
 
 export type Resolver = (
-  tree: Tree.TTree
-) => (
   context: InterpreterContext,
   event: EVALUATE_NODE_CONDITIONS
 ) => (callback: Sender<ResolverEvents>) => void;
@@ -201,7 +199,7 @@ export const createInterpreterMachine = (
         }),
       },
       services: {
-        resolveConditions: resolver(decodedJSON.data),
+        resolveConditions: resolver,
       },
       guards: {
         canGoBack,
