@@ -5,7 +5,7 @@ import { nodeHeight, nodeWidth } from "../utils/constants";
 import { SourcePort, TargetPort } from "./Port";
 import { useTranslations } from "next-intl";
 import { useTree } from "@open-decision/tree-sync";
-import { getStartNodeId } from "@open-decision/tree-type";
+import { getStartNodeId, Node } from "@open-decision/tree-type";
 import { StartNodeLabel } from "./StartNodeLabels";
 import { NodePluginData, useEditor } from "@open-decision/node-editor";
 
@@ -29,17 +29,21 @@ const StyledNodeContainer = styled(Stack, {
   },
 });
 
-type NodePluginProps = NodeProps<NodePluginData>;
+type NodePluginProps<TNode extends Node.TNode> = NodeProps<
+  NodePluginData<TNode>
+>;
 
-export type CanvasNodePlugin = (props: NodePluginProps) => JSX.Element;
+export type CanvasNodePlugin<TNode extends Node.TNode> = (
+  props: NodePluginProps<TNode>
+) => JSX.Element;
 
-export const CanvasNodeContainer = ({
+export const CanvasNodeContainer = <TNode extends Node.TNode>({
   id,
   data,
   selected: isSelected,
   children,
   ...props
-}: NodePluginProps & {
+}: NodePluginProps<TNode> & {
   children: React.ReactNode;
 }) => {
   const t = useTranslations("builder.canvas.questionNode");

@@ -1,5 +1,5 @@
 import { InputPluginObject } from "@open-decision/input-plugins-helpers";
-import { TTreeClient } from "packages/tree/type/src";
+import { TTreeClient } from "@open-decision/tree-type";
 import { BuilderComponent } from "./builder";
 import { DataType, TTextInput, TextInputPlugin } from "./plugin";
 import { RendererComponent } from "./renderer";

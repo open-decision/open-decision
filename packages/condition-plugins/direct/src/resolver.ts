@@ -11,7 +11,7 @@ export const resolver: ConditionResolver<TDirectCondition> =
       (edge) => edge.conditionId === condition.id
     );
 
-    if (edge) return { state: "success", result: edge.target };
+    if (edge) return { state: "success", target: edge.target };
 
     return { state: "error", error: new MissingEdgeForThruthyConditionError() };
   };

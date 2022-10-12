@@ -17,8 +17,8 @@ export class CompareConditionPlugin extends ConditionPlugin<
   }
 
   getBy = {
-    node: (nodeId: string) => {
-      const conditions = this.treeClient.conditions.get.byNode(nodeId);
+    input: (inputId: string) => {
+      const conditions = this.treeClient.conditions.get.byInput(inputId);
 
       if (!conditions) return undefined;
 
@@ -35,13 +35,13 @@ export class CompareConditionPlugin extends ConditionPlugin<
       return compareConditions;
     },
 
-    answer: (answerId: string, nodeId?: string) => {
-      const conditions = nodeId
-        ? this.getBy.node(nodeId)
+    answer: (answerId: string, inputId?: string) => {
+      const conditions = inputId
+        ? this.getBy.input(inputId)
         : this.treeClient.conditions.get.all();
 
-      const edges = nodeId
-        ? this.treeClient.edges.get.single(nodeId)
+      const edges = inputId
+        ? this.treeClient.edges.get.single(inputId)
         : this.treeClient.edges.get.all();
 
       if (!edges || !conditions) return undefined;

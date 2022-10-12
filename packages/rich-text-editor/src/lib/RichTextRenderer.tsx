@@ -2,11 +2,11 @@ import * as React from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { editorStyles, extensions } from "./shared";
 import { styled, StyleObject } from "@open-decision/design-system";
-import { Node } from "@open-decision/tree-type";
+import { TRichText } from "./types";
 
 const StyledEditorContent = styled(EditorContent, editorStyles);
 
-type Props = { content: Node.TRichText; css?: StyleObject } & Omit<
+type Props = { content: TRichText; css?: StyleObject } & Omit<
   React.ComponentProps<typeof StyledEditorContent>,
   "editor" | "content"
 >;

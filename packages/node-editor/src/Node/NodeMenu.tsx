@@ -12,7 +12,7 @@ import {
 } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
 import { useTreeClient } from "@open-decision/tree-sync";
-import { useEditor } from "@open-decision/node-editor/src/state/useEditor";
+import { useEditor } from "../state";
 
 type Props = {
   isStartNode?: boolean;

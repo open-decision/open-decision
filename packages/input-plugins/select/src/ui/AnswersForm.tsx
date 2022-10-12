@@ -31,7 +31,8 @@ export function AnswersForm({
     }
 
     const currentNode = getCurrentNode();
-    const conditions = treeClient.conditions.get.byNode(currentNode.id);
+
+    const conditions = treeClient.conditions.get.byInput(input.id);
 
     if (!conditions)
       throw new InterpreterError({

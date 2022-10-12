@@ -3,17 +3,17 @@ import { TTreeClient } from "@open-decision/tree-client";
 import { DropdownMenu, Box, Label } from "@open-decision/design-system";
 import { getInputs } from "@open-decision/tree-type";
 import { useTree } from "@open-decision/tree-sync";
-import { z } from "zod";
-import { SingleSelectInput } from "@open-decision/input-plugins-select";
-import { InputComponentProps } from "@open-decision/input-plugins-helpers";
-import { FreeTextInput } from "@open-decision/input-plugins-free-text";
-import { ODProgrammerError } from "@open-decision/type-classes";
+import {
+  InputComponentProps,
+  InputPluginObject,
+} from "@open-decision/input-plugins-helpers";
 
 type InputDropdownProps = {
   currentType?: string;
   treeClient: TTreeClient;
   inputId?: string;
   nodeId: string;
+  inputPlugins: Record<string, InputPluginObject<any, string, any>>;
 };
 
 const InputDropdown = ({
@@ -21,6 +21,7 @@ const InputDropdown = ({
   treeClient,
   inputId,
   nodeId,
+  inputPlugins,
 }: InputDropdownProps) => {
   return (
     <DropdownMenu.Root>
@@ -37,24 +38,13 @@ const InputDropdown = ({
         </DropdownMenu.Button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content align="start">
-        {treeClient.inputs.types.map((type) => {
+        {Object.values(inputPlugins).map((plugin) => {
           return (
             <DropdownMenu.CheckboxItem
-              key={type}
-              checked={currentType === type}
+              key={plugin.type}
+              checked={currentType === plugin.type}
               onClick={() => {
-                let newInput: z.infer<TTreeClient["inputs"]["Type"]>;
-
-                switch (type) {
-                  case "freeText":
-                    newInput = treeClient.input.freeText.create({});
-                    break;
-                  case "select":
-                    newInput = treeClient.input.select.create({ answers: [] });
-                    break;
-                  default:
-                    throw new ODProgrammerError({ code: "UNKNOWN_INPUT_TYPE" });
-                }
+                const newInput = plugin.plugin.create({});
 
                 if (!inputId) {
                   treeClient.inputs.add(newInput);
@@ -64,7 +54,7 @@ const InputDropdown = ({
                 return treeClient.inputs.update.type(inputId, newInput);
               }}
             >
-              {type.charAt(0).toUpperCase() + type.slice(1)}
+              {plugin.type.charAt(0).toUpperCase() + plugin.type.slice(1)}
             </DropdownMenu.CheckboxItem>
           );
         })}
@@ -100,6 +90,7 @@ type InputPluginComponentProps = {
   inputIds: string[];
   nodeId: string;
   treeClient: TTreeClient;
+  inputPlugins: Record<string, InputPluginObject<any, any, any>>;
 } & Pick<InputComponentProps<any>, "onClick">;
 
 export function InputPluginComponent({
@@ -107,6 +98,7 @@ export function InputPluginComponent({
   onClick,
   nodeId,
   treeClient,
+  inputPlugins,
 }: InputPluginComponentProps) {
   const inputs = useTree((tree) => getInputs(tree)(inputIds));
 
@@ -114,64 +106,40 @@ export function InputPluginComponent({
     <Box as="section">
       {inputs ? (
         Object.values(inputs).map((input) => {
+          const PluginComponents = inputPlugins[input.type].BuilderComponent;
+
           return (
             <Box as="section" key={input.id}>
-              {(() => {
-                switch (input.type) {
-                  case "select": {
-                    return (
-                      <>
-                        <InputHeader
-                          nodeId={nodeId}
-                          currentType={input.type}
-                          inputId={input.id}
-                          treeClient={treeClient}
-                        >
-                          <SingleSelectInput.PrimaryActionSlot
-                            input={input}
-                            treeClient={treeClient}
-                          />
-                        </InputHeader>
-                        <SingleSelectInput.Component
-                          nodeId={nodeId}
-                          onClick={onClick}
-                          input={input}
-                          key={input.id}
-                          treeClient={baseTreeClient}
-                        />
-                      </>
-                    );
-                  }
-
-                  case "freeText": {
-                    return (
-                      <>
-                        <InputHeader
-                          nodeId={nodeId}
-                          currentType={input.type}
-                          inputId={input.id}
-                          treeClient={extendedTreeClient}
-                        />
-                        <FreeTextInput.Component
-                          input={input}
-                          nodeId={nodeId}
-                          onClick={() => null}
-                          key={input.id}
-                          treeClient={baseTreeClient}
-                        />
-                      </>
-                    );
-                  }
-
-                  default:
-                    return null;
-                }
-              })()}
+              <InputHeader
+                nodeId={nodeId}
+                currentType={input.type}
+                inputId={input.id}
+                treeClient={treeClient}
+                inputPlugins={inputPlugins}
+              >
+                {PluginComponents.PrimaryActionSlot ? (
+                  <PluginComponents.PrimaryActionSlot
+                    input={input}
+                    treeClient={treeClient}
+                  />
+                ) : null}
+              </InputHeader>
+              <PluginComponents.InputConfigurator
+                nodeId={nodeId}
+                onClick={onClick}
+                input={input}
+                key={input.id}
+                treeClient={treeClient}
+              />
             </Box>
           );
         })
       ) : (
-        <InputHeader nodeId={nodeId} treeClient={extendedTreeClient} />
+        <InputHeader
+          nodeId={nodeId}
+          treeClient={treeClient}
+          inputPlugins={inputPlugins}
+        />
       )}
     </Box>
   );
