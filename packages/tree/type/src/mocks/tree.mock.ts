@@ -44,45 +44,17 @@ export const treeMock: Required<Tree.TTree, "startNode"> = {
   conditions: {
     "9c07e4c3-a67f-4c76-8c14-9a0a302b5d99": {
       id: "9c07e4c3-a67f-4c76-8c14-9a0a302b5d99",
-      inputId: "50b7733c-c7ab-4035-b26f-801ea8eca9fe",
       data: { answerId: "3b923bd4-f9f9-4309-bc04-9fafd5c1b2f4" },
       type: "select",
     },
     "ff9accd5-a509-4071-a503-a2ae6e2d3d7c": {
       id: "ff9accd5-a509-4071-a503-a2ae6e2d3d7c",
-      inputId: "7adcfc07-cefd-45a8-ba42-c19860eb26c5",
       data: { answerId: "dfec1b30-fc51-43a6-9e6f-db71933a8274" },
       type: "select",
     },
     "5a3c055f-b0df-4dda-a1fb-12fef66e3c8f": {
       id: "5a3c055f-b0df-4dda-a1fb-12fef66e3c8f",
       type: "select",
-    },
-  },
-  inputs: {
-    "50b7733c-c7ab-4035-b26f-801ea8eca9fe": {
-      id: "50b7733c-c7ab-4035-b26f-801ea8eca9fe",
-      type: "select",
-      data: {
-        answers: [{ id: "3b923bd4-f9f9-4309-bc04-9fafd5c1b2f4", text: "Ja" }],
-      },
-    },
-    "8b394f09-3fbb-4dfa-81e4-aea570e5d4cc": {
-      id: "8b394f09-3fbb-4dfa-81e4-aea570e5d4cc",
-      type: "select",
-      data: {
-        answers: [{ id: "3b923bd4-f9f9-4309-bc04-9fafd5c1b2f4", text: "Ja" }],
-      },
-    },
-    "7adcfc07-cefd-45a8-ba42-c19860eb26c5": {
-      id: "7adcfc07-cefd-45a8-ba42-c19860eb26c5",
-      type: "select",
-      data: {
-        answers: [
-          { id: "3c5827b3-2565-4623-850b-de463a5ee946", text: "Nein" },
-          { id: "dfec1b30-fc51-43a6-9e6f-db71933a8274", text: "Vielleicht" },
-        ],
-      },
     },
   },
   edges: {

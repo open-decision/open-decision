@@ -1,15 +1,12 @@
 import {
   createNode,
   createChildNode,
-  createInput,
   createCondition,
   createEdge,
 } from "./creators";
 import {
   getNode,
   getNodes,
-  getInput,
-  getInputs,
   getCondition,
   getConditions,
   getEdge,
@@ -18,11 +15,11 @@ import {
   getEdgesByNode,
   getNodeOptions,
   getNodesByEdge,
-  getInputByCondition,
-  getInputByEdge,
-  getConditionByInput,
   getConditionByEdge,
-  getEdgesByInput,
+  getPluginEntity,
+  getPluginEntities,
+  getEntirePluginEntity,
+  getConditionByNode,
 } from "./getters";
 import {
   updateStartNode,
@@ -30,19 +27,16 @@ import {
   addNode,
   updateNodeName,
   updateNodePosition,
-  deleteInputs,
-  addInput,
-  connectInputAndCondition,
   deleteConditions,
   addCondition,
   deleteEdges,
   addEdge,
   updateEdgeTarget,
-  updateInput,
-  disconnectInputAndCondition,
   connectEdgeAndCondition,
   disconnectEdgeAndCondition,
   updateEdgeSource,
+  addPluginEntity,
+  deletePluginEntity,
 } from "./mutaters";
 import { Tree } from "./type-classes";
 import {
@@ -56,11 +50,19 @@ import { isValidEdge } from "./validators";
 
 export type TTreeClient = ReturnType<typeof createTreeClient<Tree.TTree>>;
 
-export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
+export function createTreeClient<TTree extends Tree.TTree>(tree: TTree) {
   return {
     updateStartNode: updateStartNode(tree),
+    pluginEntity: {
+      add: addPluginEntity(tree),
+      delete: deletePluginEntity(tree),
+      get: {
+        single: getPluginEntity(tree),
+        all: getEntirePluginEntity(tree),
+        collection: getPluginEntities(tree),
+      },
+    },
     get: () => tree,
-    validate: Tree.Type.safeParse,
     nodes: {
       get: {
         single: getNode(tree),
@@ -94,50 +96,21 @@ export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
         position: updateNodePosition(tree),
       },
     },
-    inputs: {
-      get: {
-        single: getInput(tree),
-        collection: getInputs(tree),
-        all: () => tree.inputs as TTree["inputs"],
-        byCondition: getInputByCondition(tree),
-        byEdge: getInputByEdge(tree),
-      },
-      delete: deleteInputs(tree),
-      create: createInput,
-      add: addInput(tree),
-      connect: {
-        toCondition: connectInputAndCondition(tree),
-        /**
-         * Edges are not connectable to inputs in the normal way, but through conditions.
-         */
-        toEdge: null,
-      },
-      disconnect: {
-        fromCondition: disconnectInputAndCondition(tree),
-        /**
-         * Edges are not connectable to inputs in the normal way, but through conditions.
-         */
-        fromEdge: null,
-      },
-      update: updateInput(tree),
-    },
     conditions: {
       get: {
         single: getCondition(tree),
         collection: getConditions(tree),
         all: () => tree.conditions as TTree["conditions"],
-        byInput: getConditionByInput(tree),
         byEdge: getConditionByEdge(tree),
+        byNode: getConditionByNode(tree),
       },
       delete: deleteConditions(tree),
       create: createCondition,
       add: addCondition(tree),
       connect: {
-        toInput: connectInputAndCondition(tree),
         toEdge: connectEdgeAndCondition(tree),
       },
       disconnect: {
-        fromInput: disconnectInputAndCondition(tree),
         fromEdge: disconnectEdgeAndCondition(tree),
       },
     },
@@ -147,7 +120,6 @@ export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
         collection: getEdges(tree),
         all: () => tree.edges,
         byNode: getEdgesByNode(tree),
-        byInput: getEdgesByInput(tree),
         byCondition: getEdgesByCondition(tree),
       },
       delete: deleteEdges(tree),
@@ -179,4 +151,4 @@ export const createTreeClient = <TTree extends Tree.TTree>(tree: TTree) => {
       },
     },
   };
-};
+}

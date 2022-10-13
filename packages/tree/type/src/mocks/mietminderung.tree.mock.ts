@@ -78,152 +78,55 @@ export const mietminderungTreeMock: Required<Tree.TTree, "startNode"> = {
       },
     },
   },
-  inputs: {
-    "cbca524c-4b3d-4a99-a85c-68f8d57487c2": {
-      id: "cbca524c-4b3d-4a99-a85c-68f8d57487c2",
-      type: "select",
-      data: {
-        answers: [
-          {
-            id: "9675cc27-b1a3-4dfe-a759-0eff5e7a2cf3",
-            text: "Verstanden",
-          },
-        ],
-      },
-    },
-    "49f7bbaa-f58c-4310-9137-b19fd89d4848": {
-      id: "49f7bbaa-f58c-4310-9137-b19fd89d4848",
-      type: "select",
-      data: {
-        answers: [
-          {
-            id: "28032f85-5c88-4a5e-80af-9d8862df66b2",
-            text: "Ja",
-          },
-          {
-            id: "8d0946ab-5934-4bb7-8203-d1cb41b73aba",
-            text: "Nein",
-          },
-          {
-            id: "6085a6da-0b8c-4d6c-a3ff-e0c691679b78",
-            text: "Ich bin mir nicht sicher",
-          },
-        ],
-      },
-    },
-    "1f0b7346-76d2-4b80-9365-3bdd563e5371": {
-      id: "1f0b7346-76d2-4b80-9365-3bdd563e5371",
-      type: "select",
-      data: {
-        answers: [
-          {
-            id: "a84af454-b401-428e-8654-a7916bb1c7ad",
-            text: "Ich glaube, dass ein Sachmangel vorliegt",
-          },
-          {
-            id: "c2ab6b42-914d-466d-ab18-2ec618b435b0",
-            text: "Ich glaube, dass ein Rechtsmangel vorliegt",
-          },
-          {
-            id: "9c31892f-23d6-46b8-943f-ce11e6ef7d18",
-            text: "Mein Vermieter hat mir eine Eigenschaft zugesichert",
-          },
-          {
-            id: "9bd056ce-a79e-42e1-8d27-8aa5ff80c7c6",
-            text: "Ich glaube, es liegt kein Mangel vor",
-          },
-          {
-            id: "b60aa953-7058-4982-a4ed-32586a71c433",
-            text: "Ich bin mir nicht sicher",
-          },
-        ],
-      },
-    },
-    "c4c439ef-cecd-48d6-abca-0e3caf1b8a4e": {
-      id: "c4c439ef-cecd-48d6-abca-0e3caf1b8a4e",
-      type: "select",
-      data: { answers: [] },
-    },
-    "0226a6a7-67d2-4190-a7e3-dad27ab32d65": {
-      id: "0226a6a7-67d2-4190-a7e3-dad27ab32d65",
-      type: "select",
-      data: { answers: [] },
-    },
-    "a2392479-0a12-471d-a437-82068345220f": {
-      id: "a2392479-0a12-471d-a437-82068345220f",
-      type: "select",
-      data: { answers: [] },
-    },
-    "d030cdfa-01ca-4401-9e55-ec76984363ae": {
-      id: "d030cdfa-01ca-4401-9e55-ec76984363ae",
-      type: "select",
-      data: { answers: [] },
-    },
-    "0dac8ba5-8c5f-4345-ab64-19a9830f7da2": {
-      id: "0dac8ba5-8c5f-4345-ab64-19a9830f7da2",
-      type: "select",
-      data: { answers: [] },
-    },
-  },
   conditions: {
     "c0df5a50-7ab9-4232-97d3-40923b850dda": {
       id: "c0df5a50-7ab9-4232-97d3-40923b850dda",
       type: "compare",
-      inputId: "cbca524c-4b3d-4a99-a85c-68f8d57487c2",
       data: { answerId: "9675cc27-b1a3-4dfe-a759-0eff5e7a2cf3" },
     },
     "998e7030-7ac4-4064-8996-d01f3c3d52bb": {
       id: "998e7030-7ac4-4064-8996-d01f3c3d52bb",
       type: "compare",
-      inputId: "49f7bbaa-f58c-4310-9137-b19fd89d4848",
       data: { answerId: "28032f85-5c88-4a5e-80af-9d8862df66b2" },
     },
     "6faeec82-e4c2-4c19-82a0-fa7d3f7965ec": {
       id: "6faeec82-e4c2-4c19-82a0-fa7d3f7965ec",
       type: "compare",
-      inputId: "49f7bbaa-f58c-4310-9137-b19fd89d4848",
       data: { answerId: "8d0946ab-5934-4bb7-8203-d1cb41b73aba" },
     },
     "a5c1d893-82be-4b68-95e5-3228e546e44a": {
       id: "a5c1d893-82be-4b68-95e5-3228e546e44a",
       type: "compare",
-      inputId: "49f7bbaa-f58c-4310-9137-b19fd89d4848",
       data: { answerId: "6085a6da-0b8c-4d6c-a3ff-e0c691679b78" },
     },
     "d57c833f-7139-4943-94ef-f05998512c95": {
       id: "d57c833f-7139-4943-94ef-f05998512c95",
       type: "compare",
-      inputId: "1f0b7346-76d2-4b80-9365-3bdd563e5371",
       data: { answerId: "b60aa953-7058-4982-a4ed-32586a71c433" },
     },
     "baf2c3b8-13c6-4b10-a32b-63ab7fdb01df": {
       id: "baf2c3b8-13c6-4b10-a32b-63ab7fdb01df",
       type: "compare",
-      inputId: "1f0b7346-76d2-4b80-9365-3bdd563e5371",
       data: { answerId: "a84af454-b401-428e-8654-a7916bb1c7ad" },
     },
     "a1bbb537-6539-4b2b-8d02-d80827d5b58b": {
       id: "a1bbb537-6539-4b2b-8d02-d80827d5b58b",
       type: "compare",
-      inputId: "1f0b7346-76d2-4b80-9365-3bdd563e5371",
       data: { answerId: "c2ab6b42-914d-466d-ab18-2ec618b435b0" },
     },
     "65943f1c-06cd-44a0-9a58-deee5628cef1": {
       id: "65943f1c-06cd-44a0-9a58-deee5628cef1",
       type: "compare",
-      inputId: "1f0b7346-76d2-4b80-9365-3bdd563e5371",
       data: { answerId: "9c31892f-23d6-46b8-943f-ce11e6ef7d18" },
     },
     "8c79a315-fd90-47e8-b448-46b81b788e76": {
       id: "8c79a315-fd90-47e8-b448-46b81b788e76",
       type: "compare",
-      inputId: "1f0b7346-76d2-4b80-9365-3bdd563e5371",
       data: { answerId: "9bd056ce-a79e-42e1-8d27-8aa5ff80c7c6" },
     },
     "c4b6d455-ee56-4f4c-b0cd-8bab29ea58ad": {
       id: "c4b6d455-ee56-4f4c-b0cd-8bab29ea58ad",
       type: "compare",
-      inputId: "1f0b7346-76d2-4b80-9365-3bdd563e5371",
       data: { answerId: "9c31892f-23d6-46b8-943f-ce11e6ef7d18" },
     },
   },

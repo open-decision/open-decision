@@ -16,7 +16,7 @@ const StyledCanvas = styled(Canvas, {
 
 type NodeEditorProps = {
   css?: StyleObject;
-  nodePlugins: Record<string, NodePluginObject<any, any, any>>;
+  nodePlugins: Record<string, NodePluginObject>;
 };
 
 export const NodeEditor = ({ css, nodePlugins }: NodeEditorProps) => {
@@ -32,7 +32,7 @@ export const NodeEditor = ({ css, nodePlugins }: NodeEditorProps) => {
 };
 
 type SidebarProps = {
-  nodePlugins: Record<string, NodePluginObject<any, any, any>>;
+  nodePlugins: Record<string, NodePluginObject>;
 };
 
 export function Sidebar({ nodePlugins }: SidebarProps) {

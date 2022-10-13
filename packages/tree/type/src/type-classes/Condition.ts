@@ -2,7 +2,6 @@ import { z } from "zod";
 
 export const Type = z.object({
   id: z.string().uuid(),
-  inputId: z.string().uuid().optional(),
   type: z.string(),
   data: z.unknown(),
 });

@@ -42,9 +42,10 @@ export type RendererNodeActions<TNode extends Node.TNode> = (
 ) => JSX.Element;
 
 export type NodePluginObject<
-  TType extends z.ZodType,
-  TTypeName extends string,
-  TNode extends Node.TNode
+  TType extends z.ZodType = any,
+  TTypeName extends string = string,
+  TNode extends Node.TNode = any,
+  TPluginEntities extends z.ZodRawShape = any
 > = {
   plugin: NodePlugin<TType, TTypeName>;
   Node: CanvasNode<TNode>;
@@ -54,4 +55,5 @@ export type NodePluginObject<
     Actions?: RendererNodeActions<TNode>;
   };
   type: string;
+  pluginEntities: TPluginEntities;
 };

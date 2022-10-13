@@ -37,7 +37,7 @@
     "@open-decision/node-plugins-question": "workspace:*",
     "@open-decision/input-plugins-select": "workspace:*",
     "@open-decision/condition-plugins-compare": "workspace:*",
-    "@open-decision/input-plugins-free-text": "workspace:*",
+    "@open-decision/input-plugins-text": "workspace:*",
     "@open-decision/condition-plugins-direct": "workspace:*",
     "@radix-ui/react-icons": "^1.1.1",
     "@sentry/nextjs": "^7.12.1",

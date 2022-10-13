@@ -1,9 +1,7 @@
 import { useTreeContext } from "@open-decision/tree-sync";
 import { createTreeClient } from "@open-decision/tree-client";
 import { createQuestionNodePlugin } from "@open-decision/node-plugins-question";
-import { createSelectInputPlugin } from "@open-decision/input-plugins-select";
 import { createCompareConditionPlugin } from "@open-decision/condition-plugins-compare";
-import { createTextInputPlugin } from "@open-decision/input-plugins-free-text";
 import { createDirectConditionPlugin } from "@open-decision/condition-plugins-direct";
 import { createTreeClient as createBaseTreeClient } from "@open-decision/tree-type";
 import { z } from "zod";
@@ -20,14 +18,9 @@ export const useTreeClient = () => {
   const QuestionNode = createQuestionNodePlugin(baseTreeClient);
   const NodeType = QuestionNode.plugin.Type;
 
-  const SelectInput = createSelectInputPlugin(baseTreeClient);
-  const TextInput = createTextInputPlugin(baseTreeClient);
-  const InputType = z.discriminatedUnion("type", [
-    SelectInput.plugin.Type,
-    TextInput.plugin.Type,
-  ]);
-
-  const CompareCondition = createCompareConditionPlugin(baseTreeClient);
+  const CompareCondition = createCompareConditionPlugin(
+    QuestionNode.treeClient
+  );
   const DirectCondition = createDirectConditionPlugin(baseTreeClient);
   const ConditionType = z.discriminatedUnion("type", [
     CompareCondition.plugin.Type,
@@ -37,14 +30,11 @@ export const useTreeClient = () => {
   const treeClient = createTreeClient(
     {
       nodes: [{ question: QuestionNode.plugin }, NodeType],
-      inputs: [
-        { select: SelectInput.plugin, text: TextInput.plugin },
-        InputType,
-      ],
       conditions: [
         { compare: CompareCondition.plugin, direct: DirectCondition.plugin },
         ConditionType,
       ],
+      pluginEntities: z.object(QuestionNode.pluginEntities),
     },
     tree
   );
@@ -104,6 +94,5 @@ export const useTreeClient = () => {
     treeClient,
     nodePlugins: { QuestionNode },
     interpreterResolver: resolver,
-    inputPlugins: { SelectInput, TextInput },
   };
 };
