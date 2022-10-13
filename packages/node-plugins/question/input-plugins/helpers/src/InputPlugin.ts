@@ -9,11 +9,12 @@ import {
   updateInput,
   getInput,
   getInputs,
-  getConditionByInput,
   addInput,
-  connectInputAndCondition,
-  disconnectInputAndCondition,
 } from "./utils/";
+
+export const BaseVariableType = z.object({
+  id: z.string().uuid(),
+});
 
 const mergeTypes = <TType extends z.ZodType, TTypeName extends string>(
   Type: TType,
@@ -22,7 +23,8 @@ const mergeTypes = <TType extends z.ZodType, TTypeName extends string>(
 
 export class InputPlugin<
   TType extends z.ZodType,
-  TTypeName extends string
+  TTypeName extends string,
+  TVariableType extends typeof BaseVariableType
 > extends Plugin<
   TTypeName,
   TType,
@@ -30,12 +32,19 @@ export class InputPlugin<
 > {
   declare treeClient: TTreeClient;
   declare typeName: TTypeName;
+  declare VariableType: TVariableType;
   pluginType = "input" as const;
 
-  constructor(treeClient: TTreeClient, Type: TType, typeName: TTypeName) {
+  constructor(
+    treeClient: TTreeClient,
+    Type: TType,
+    typeName: TTypeName,
+    VariableType: TVariableType
+  ) {
     super(treeClient, mergeTypes(Type, typeName));
 
     this.typeName = typeName;
+    this.VariableType = VariableType;
   }
 
   /**
@@ -71,9 +80,10 @@ export class InputPlugin<
 
   deleteInput = deleteInput(this.treeClient);
 
-  getConditionByInput = getConditionByInput(this.treeClient);
-
-  connectInputAndCondition = connectInputAndCondition(this.treeClient);
-
-  disconnectInputAndCondition = disconnectInputAndCondition(this.treeClient);
+  getVariable(input: z.infer<typeof this.Type>): z.infer<TVariableType> {
+    return {
+      id: input.id,
+      type: this.typeName,
+    };
+  }
 }

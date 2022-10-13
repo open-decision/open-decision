@@ -1,5 +1,8 @@
 import { TTreeClient } from "@open-decision/tree-type";
-import { InputPlugin } from "@open-decision/input-plugins-helpers";
+import {
+  BaseVariableType,
+  InputPlugin,
+} from "@open-decision/input-plugins-helpers";
 import { DirectConditionPlugin } from "@open-decision/condition-plugins-direct";
 import { z } from "zod";
 
@@ -9,15 +12,21 @@ export const DataType = z.object({
   label: z.string().optional(),
 });
 
+export const VariableType = BaseVariableType.extend({
+  type: z.literal(typeName),
+  value: z.string().optional(),
+});
+
 export type TTextInput = z.infer<TextInputPlugin["Type"]>;
 
 export class TextInputPlugin extends InputPlugin<
   typeof DataType,
-  typeof typeName
+  typeof typeName,
+  typeof VariableType
 > {
   declare directConditionPlugin: DirectConditionPlugin;
   constructor(treeClient: TTreeClient) {
-    super(treeClient, DataType, typeName);
+    super(treeClient, DataType, typeName, VariableType);
 
     this.directConditionPlugin = new DirectConditionPlugin(treeClient);
   }
@@ -80,5 +89,12 @@ export class TextInputPlugin extends InputPlugin<
 
     if (edge?.target && newItem)
       this.treeClient.edges.connect.toTargetNode(edge.id, newItem);
+  }
+
+  override getVariable(input: TTextInput) {
+    return {
+      id: input.id,
+      type: this.typeName,
+    };
   }
 }

@@ -6,9 +6,7 @@ import { RendererComponent } from "./renderer";
 
 export * from "./plugin";
 
-export const createTextInputPlugin = (
-  treeClient: TTreeClient
-): InputPluginObject<typeof DataType, "text", TTextInput> => {
+export const createTextInputPlugin = (treeClient: TTreeClient) => {
   return {
     plugin: new TextInputPlugin(treeClient),
     type: "text",

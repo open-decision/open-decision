@@ -5,7 +5,10 @@ import {
   TCompareCondition,
 } from "@open-decision/condition-plugins-compare";
 import { v4 as uuid } from "uuid";
-import { InputPlugin } from "@open-decision/input-plugins-helpers";
+import {
+  BaseVariableType,
+  InputPlugin,
+} from "@open-decision/input-plugins-helpers";
 
 export const typeName = "select" as const;
 export const Answer = z.object({ id: z.string().uuid(), text: z.string() });
@@ -14,17 +17,23 @@ export const DataType = z.object({
   answers: z.array(Answer).default([]).optional(),
 });
 
+export const VariableType = BaseVariableType.extend({
+  type: z.literal(typeName),
+  values: z.array(Answer).default([]),
+});
+
 export type TAnswer = z.infer<typeof Answer>;
 
 export type TSelectInput = z.infer<SelectInputPlugin["Type"]>;
 
 export class SelectInputPlugin extends InputPlugin<
   typeof DataType,
-  typeof typeName
+  typeof typeName,
+  typeof VariableType
 > {
   declare comparePlugin: CompareConditionPlugin;
   constructor(treeClient: TTreeClient) {
-    super(treeClient, DataType, typeName);
+    super(treeClient, DataType, typeName, VariableType);
 
     this.comparePlugin = new CompareConditionPlugin(treeClient);
   }
@@ -174,5 +183,13 @@ export class SelectInputPlugin extends InputPlugin<
     if (Object.values(filteredInputs).length === 0) return undefined;
 
     return filteredInputs;
+  }
+
+  override getVariable(input: TSelectInput) {
+    return {
+      id: input.id,
+      type: this.typeName,
+      values: input.data.answers ?? [],
+    };
   }
 }

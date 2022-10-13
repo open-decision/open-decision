@@ -1,6 +1,6 @@
 import { StyleObject } from "@open-decision/design-system";
 import { z } from "zod";
-import { InputPlugin } from "./InputPlugin";
+import { BaseVariableType, InputPlugin } from "./InputPlugin";
 import * as Input from "./Input";
 
 export { Input };
@@ -47,9 +47,10 @@ export type RendererComponent<TInput extends Input.TInput> = (
 export type InputPluginObject<
   TType extends z.ZodType,
   TTypeName extends string,
-  TInput extends Input.TInput
+  TInput extends Input.TInput,
+  TVariableType extends typeof BaseVariableType
 > = {
-  plugin: InputPlugin<TType, TTypeName>;
+  plugin: InputPlugin<TType, TTypeName, TVariableType>;
   type: string;
   BuilderComponent: {
     InputConfigurator: BuilderComponent<TInput>;

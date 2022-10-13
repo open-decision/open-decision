@@ -7,9 +7,7 @@ import { DataType, SelectInputPlugin, TSelectInput } from "./selectPlugin";
 export * from "./selectPlugin";
 export type { TSelectInput } from "./selectPlugin";
 
-export const createSelectInputPlugin = (
-  treeClient: TTreeClient
-): InputPluginObject<typeof DataType, "select", TSelectInput> => {
+export const createSelectInputPlugin = (treeClient: TTreeClient) => {
   return {
     plugin: new SelectInputPlugin(treeClient),
     type: "select",
