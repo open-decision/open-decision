@@ -1,0 +1,9 @@
+{
+  "name": "@open-decision/variable-plugins-helpers",
+  "version": "0.0.1",
+  "main": "src/index.ts",
+  "dependencies": {
+    "zod": "^3"
+  },
+  "devDependencies": {}
+}

@@ -1,0 +1,35 @@
+{
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/plugins/condition-plugins/compare/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/plugins/condition-plugins/compare",
+        "main": "packages/plugins/condition-plugins/compare/src/index.ts",
+        "tsConfig": "packages/plugins/condition-plugins/compare/tsconfig.lib.json",
+        "assets": ["packages/plugins/condition-plugins/compare/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "packages/plugins/condition-plugins/compare/**/*.{ts,tsx,js,jsx}"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/packages/plugins/condition-plugins/compare"],
+      "options": {
+        "jestConfig": "packages/plugins/condition-plugins/compare/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  }
+}

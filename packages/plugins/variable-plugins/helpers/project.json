@@ -1,0 +1,35 @@
+{
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/plugins/variable-plugins/helpers/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/plugins/variable-plugins/helpers",
+        "main": "packages/plugins/variable-plugins/helpers/src/index.ts",
+        "tsConfig": "packages/plugins/variable-plugins/helpers/tsconfig.lib.json",
+        "assets": ["packages/plugins/variable-plugins/helpers/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "packages/plugins/variable-plugins/helpers/**/*.{ts,tsx,js,jsx}"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/packages/plugins/variable-plugins/helpers"],
+      "options": {
+        "jestConfig": "packages/plugins/variable-plugins/helpers/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  }
+}

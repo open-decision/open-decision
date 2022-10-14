@@ -291,14 +291,14 @@ importers:
       '@open-decision/api-client': link:../../packages/api-client
       '@open-decision/api-helpers': link:../../packages/api-helpers
       '@open-decision/auth-api-specification': link:../../packages/auth-api-specification
-      '@open-decision/condition-plugins-compare': link:../../packages/condition-plugins/compare
-      '@open-decision/condition-plugins-direct': link:../../packages/condition-plugins/direct
+      '@open-decision/condition-plugins-compare': link:../../packages/plugins/condition-plugins/compare
+      '@open-decision/condition-plugins-direct': link:../../packages/plugins/condition-plugins/direct
       '@open-decision/design-system': link:../../packages/design-system
-      '@open-decision/input-plugins-select': link:../../packages/node-plugins/question/input-plugins/select
-      '@open-decision/input-plugins-text': link:../../packages/node-plugins/question/input-plugins/text
+      '@open-decision/input-plugins-select': link:../../packages/plugins/node-plugins/question/input-plugins/select
+      '@open-decision/input-plugins-text': link:../../packages/plugins/node-plugins/question/input-plugins/text
       '@open-decision/interpreter-react': link:../../packages/interpreter-react
       '@open-decision/node-editor': link:../../packages/node-editor
-      '@open-decision/node-plugins-question': link:../../packages/node-plugins/question/node
+      '@open-decision/node-plugins-question': link:../../packages/plugins/node-plugins/question/node
       '@open-decision/renderer': link:../../packages/renderer
       '@open-decision/rich-text-editor': link:../../packages/rich-text-editor
       '@open-decision/translations': link:../../packages/translations
@@ -411,54 +411,6 @@ importers:
       zod: 3.19.1
     devDependencies:
       '@types/validator': 13.7.6
-
-  packages/condition-plugins/compare:
-    specifiers:
-      '@open-decision/condition-plugins-helpers': workspace:*
-      '@open-decision/tree-sync': workspace:*
-      '@open-decision/tree-type': workspace:*
-      '@open-decision/type-classes': workspace:*
-      ramda: 0.28.0
-      zod: ^3.19.1
-    dependencies:
-      '@open-decision/condition-plugins-helpers': link:../helpers
-      '@open-decision/tree-sync': link:../../tree/sync
-      '@open-decision/tree-type': link:../../tree/type
-      '@open-decision/type-classes': link:../../type-classes
-      ramda: 0.28.0
-      zod: 3.19.1
-
-  packages/condition-plugins/direct:
-    specifiers:
-      '@open-decision/condition-plugins-helpers': workspace:*
-      '@open-decision/tree-sync': workspace:*
-      '@open-decision/tree-type': workspace:*
-      '@open-decision/type-classes': workspace:*
-      ramda: 0.28.0
-      zod: ^3.19.1
-    dependencies:
-      '@open-decision/condition-plugins-helpers': link:../helpers
-      '@open-decision/tree-sync': link:../../tree/sync
-      '@open-decision/tree-type': link:../../tree/type
-      '@open-decision/type-classes': link:../../type-classes
-      ramda: 0.28.0
-      zod: 3.19.1
-
-  packages/condition-plugins/helpers:
-    specifiers:
-      '@open-decision/tree-sync': workspace:*
-      '@open-decision/tree-type': workspace:*
-      '@open-decision/type-classes': workspace:*
-      ramda: 0.28.0
-      remeda: ^1.1.0
-      zod: ^3.19.1
-    dependencies:
-      '@open-decision/tree-sync': link:../../tree/sync
-      '@open-decision/tree-type': link:../../tree/type
-      '@open-decision/type-classes': link:../../type-classes
-      ramda: 0.28.0
-      remeda: 1.1.0
-      zod: 3.19.1
 
   packages/design-system:
     specifiers:
@@ -581,14 +533,62 @@ importers:
       zod: ^3.19.1
     dependencies:
       '@open-decision/design-system': link:../design-system
-      '@open-decision/input-plugins-helpers': link:../node-plugins/question/input-plugins/helpers
+      '@open-decision/input-plugins-helpers': link:../plugins/node-plugins/question/input-plugins/helpers
       '@open-decision/tree-sync': link:../tree/sync
       '@open-decision/tree-type': link:../tree/type
       '@open-decision/type-classes': link:../type-classes
       react-flow-renderer: 10.3.17
       zod: 3.19.1
 
-  packages/node-plugins/helpers:
+  packages/plugins/condition-plugins/compare:
+    specifiers:
+      '@open-decision/condition-plugins-helpers': workspace:*
+      '@open-decision/tree-sync': workspace:*
+      '@open-decision/tree-type': workspace:*
+      '@open-decision/type-classes': workspace:*
+      ramda: 0.28.0
+      zod: ^3.19.1
+    dependencies:
+      '@open-decision/condition-plugins-helpers': link:../helpers
+      '@open-decision/tree-sync': link:../../../tree/sync
+      '@open-decision/tree-type': link:../../../tree/type
+      '@open-decision/type-classes': link:../../../type-classes
+      ramda: 0.28.0
+      zod: 3.19.1
+
+  packages/plugins/condition-plugins/direct:
+    specifiers:
+      '@open-decision/condition-plugins-helpers': workspace:*
+      '@open-decision/tree-sync': workspace:*
+      '@open-decision/tree-type': workspace:*
+      '@open-decision/type-classes': workspace:*
+      ramda: 0.28.0
+      zod: ^3.19.1
+    dependencies:
+      '@open-decision/condition-plugins-helpers': link:../helpers
+      '@open-decision/tree-sync': link:../../../tree/sync
+      '@open-decision/tree-type': link:../../../tree/type
+      '@open-decision/type-classes': link:../../../type-classes
+      ramda: 0.28.0
+      zod: 3.19.1
+
+  packages/plugins/condition-plugins/helpers:
+    specifiers:
+      '@open-decision/tree-sync': workspace:*
+      '@open-decision/tree-type': workspace:*
+      '@open-decision/type-classes': workspace:*
+      ramda: 0.28.0
+      remeda: ^1.1.0
+      zod: ^3.19.1
+    dependencies:
+      '@open-decision/tree-sync': link:../../../tree/sync
+      '@open-decision/tree-type': link:../../../tree/type
+      '@open-decision/type-classes': link:../../../type-classes
+      ramda: 0.28.0
+      remeda: 1.1.0
+      zod: 3.19.1
+
+  packages/plugins/node-plugins/helpers:
     specifiers:
       '@open-decision/design-system': workspace:*
       '@open-decision/node-editor': workspace:*
@@ -600,33 +600,35 @@ importers:
       remeda: ^1.1.0
       zod: ^3.19.1
     dependencies:
-      '@open-decision/design-system': link:../../design-system
-      '@open-decision/node-editor': link:../../node-editor
-      '@open-decision/rich-text-editor': link:../../rich-text-editor
-      '@open-decision/tree-sync': link:../../tree/sync
-      '@open-decision/tree-type': link:../../tree/type
-      '@open-decision/type-classes': link:../../type-classes
+      '@open-decision/design-system': link:../../../design-system
+      '@open-decision/node-editor': link:../../../node-editor
+      '@open-decision/rich-text-editor': link:../../../rich-text-editor
+      '@open-decision/tree-sync': link:../../../tree/sync
+      '@open-decision/tree-type': link:../../../tree/type
+      '@open-decision/type-classes': link:../../../type-classes
       react-flow-renderer: 10.3.17
       remeda: 1.1.0
       zod: 3.19.1
 
-  packages/node-plugins/question/input-plugins/helpers:
+  packages/plugins/node-plugins/question/input-plugins/helpers:
     specifiers:
       '@open-decision/design-system': workspace:*
       '@open-decision/tree-sync': workspace:*
       '@open-decision/tree-type': workspace:*
       '@open-decision/type-classes': workspace:*
+      '@open-decision/variable-plugins-helpers': workspace:*
       remeda: ^1.1.0
       zod: ^3.19.1
     dependencies:
-      '@open-decision/design-system': link:../../../../design-system
-      '@open-decision/tree-sync': link:../../../../tree/sync
-      '@open-decision/tree-type': link:../../../../tree/type
-      '@open-decision/type-classes': link:../../../../type-classes
+      '@open-decision/design-system': link:../../../../../design-system
+      '@open-decision/tree-sync': link:../../../../../tree/sync
+      '@open-decision/tree-type': link:../../../../../tree/type
+      '@open-decision/type-classes': link:../../../../../type-classes
+      '@open-decision/variable-plugins-helpers': link:../../../../variable-plugins/helpers
       remeda: 1.1.0
       zod: 3.19.1
 
-  packages/node-plugins/question/input-plugins/select:
+  packages/plugins/node-plugins/question/input-plugins/select:
     specifiers:
       '@open-decision/condition-plugins-compare': workspace:*
       '@open-decision/design-system': workspace:*
@@ -634,21 +636,23 @@ importers:
       '@open-decision/tree-sync': workspace:*
       '@open-decision/tree-type': workspace:*
       '@open-decision/type-classes': workspace:*
+      '@open-decision/variable-plugins-select': workspace:*
       framer-motion: ^7.3.5
       remeda: ^1.1.0
       zod: ^3.19.1
     dependencies:
       '@open-decision/condition-plugins-compare': link:../../../../condition-plugins/compare
-      '@open-decision/design-system': link:../../../../design-system
+      '@open-decision/design-system': link:../../../../../design-system
       '@open-decision/input-plugins-helpers': link:../helpers
-      '@open-decision/tree-sync': link:../../../../tree/sync
-      '@open-decision/tree-type': link:../../../../tree/type
-      '@open-decision/type-classes': link:../../../../type-classes
+      '@open-decision/tree-sync': link:../../../../../tree/sync
+      '@open-decision/tree-type': link:../../../../../tree/type
+      '@open-decision/type-classes': link:../../../../../type-classes
+      '@open-decision/variable-plugins-select': link:../../../../variable-plugins/select
       framer-motion: 7.3.6
       remeda: 1.1.0
       zod: 3.19.1
 
-  packages/node-plugins/question/input-plugins/text:
+  packages/plugins/node-plugins/question/input-plugins/text:
     specifiers:
       '@open-decision/condition-plugins-direct': workspace:*
       '@open-decision/design-system': workspace:*
@@ -656,17 +660,19 @@ importers:
       '@open-decision/tree-sync': workspace:*
       '@open-decision/tree-type': workspace:*
       '@open-decision/type-classes': workspace:*
+      '@open-decision/variable-plugins-text': workspace:*
       zod: ^3.19.1
     dependencies:
       '@open-decision/condition-plugins-direct': link:../../../../condition-plugins/direct
-      '@open-decision/design-system': link:../../../../design-system
+      '@open-decision/design-system': link:../../../../../design-system
       '@open-decision/input-plugins-helpers': link:../helpers
-      '@open-decision/tree-sync': link:../../../../tree/sync
-      '@open-decision/tree-type': link:../../../../tree/type
-      '@open-decision/type-classes': link:../../../../type-classes
+      '@open-decision/tree-sync': link:../../../../../tree/sync
+      '@open-decision/tree-type': link:../../../../../tree/type
+      '@open-decision/type-classes': link:../../../../../type-classes
+      '@open-decision/variable-plugins-text': link:../../../../variable-plugins/text
       zod: 3.19.1
 
-  packages/node-plugins/question/node:
+  packages/plugins/node-plugins/question/node:
     specifiers:
       '@open-decision/design-system': workspace:*
       '@open-decision/input-plugins-helpers': workspace:*
@@ -680,16 +686,38 @@ importers:
       ts-pattern: ^4.0.5
       zod: ^3.19.1
     dependencies:
-      '@open-decision/design-system': link:../../../design-system
+      '@open-decision/design-system': link:../../../../design-system
       '@open-decision/input-plugins-helpers': link:../input-plugins/helpers
       '@open-decision/input-plugins-select': link:../input-plugins/select
       '@open-decision/input-plugins-text': link:../input-plugins/text
-      '@open-decision/node-editor': link:../../../node-editor
-      '@open-decision/rich-text-editor': link:../../../rich-text-editor
-      '@open-decision/tree-sync': link:../../../tree/sync
-      '@open-decision/tree-type': link:../../../tree/type
-      '@open-decision/type-classes': link:../../../type-classes
+      '@open-decision/node-editor': link:../../../../node-editor
+      '@open-decision/rich-text-editor': link:../../../../rich-text-editor
+      '@open-decision/tree-sync': link:../../../../tree/sync
+      '@open-decision/tree-type': link:../../../../tree/type
+      '@open-decision/type-classes': link:../../../../type-classes
       ts-pattern: 4.0.5
+      zod: 3.19.1
+
+  packages/plugins/variable-plugins/helpers:
+    specifiers:
+      zod: ^3.19.1
+    dependencies:
+      zod: 3.19.1
+
+  packages/plugins/variable-plugins/select:
+    specifiers:
+      '@open-decision/variable-plugins-helpers': workspace:*
+      zod: ^3.19.1
+    dependencies:
+      '@open-decision/variable-plugins-helpers': link:../helpers
+      zod: 3.19.1
+
+  packages/plugins/variable-plugins/text:
+    specifiers:
+      '@open-decision/variable-plugins-helpers': workspace:*
+      zod: ^3.19.1
+    dependencies:
+      '@open-decision/variable-plugins-helpers': link:../helpers
       zod: 3.19.1
 
   packages/prisma:
@@ -720,10 +748,10 @@ importers:
       remeda: ^1.1.0
     dependencies:
       '@open-decision/design-system': link:../design-system
-      '@open-decision/input-plugins-helpers': link:../node-plugins/question/input-plugins/helpers
+      '@open-decision/input-plugins-helpers': link:../plugins/node-plugins/question/input-plugins/helpers
       '@open-decision/interpreter-react': link:../interpreter-react
       '@open-decision/node-editor': link:../node-editor
-      '@open-decision/node-plugins-helpers': link:../node-plugins/helpers
+      '@open-decision/node-plugins-helpers': link:../plugins/node-plugins/helpers
       '@open-decision/rich-text-editor': link:../rich-text-editor
       '@open-decision/tree-client': link:../tree/client
       '@open-decision/tree-sync': link:../tree/sync
@@ -832,9 +860,9 @@ importers:
       '@open-decision/type-classes': workspace:*
       zod: ^3.19.1
     dependencies:
-      '@open-decision/condition-plugins-helpers': link:../../condition-plugins/helpers
+      '@open-decision/condition-plugins-helpers': link:../../plugins/condition-plugins/helpers
       '@open-decision/design-system': link:../../design-system
-      '@open-decision/input-plugins-helpers': link:../../node-plugins/question/input-plugins/helpers
+      '@open-decision/input-plugins-helpers': link:../../plugins/node-plugins/question/input-plugins/helpers
       '@open-decision/node-editor': link:../../node-editor
       '@open-decision/tree-sync': link:../sync
       '@open-decision/tree-type': link:../type

@@ -1,0 +1,14 @@
+{
+  "name": "@open-decision/input-plugins-helpers",
+  "version": "0.0.1",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@open-decision/type-classes": "workspace:*",
+    "@open-decision/tree-sync": "workspace:*",
+    "@open-decision/tree-type": "workspace:*",
+    "@open-decision/design-system": "workspace:*",
+    "zod": "^3",
+    "remeda": "^1.1.0",
+    "@open-decision/variable-plugins-helpers": "workspace:*"
+  }
+}

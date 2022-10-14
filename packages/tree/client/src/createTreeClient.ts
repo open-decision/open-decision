@@ -6,7 +6,6 @@ import {
 import { z } from "zod";
 import { ConditionPlugin } from "@open-decision/condition-plugins-helpers";
 import { NodePlugin } from "@open-decision/node-editor";
-import { mergeDeepRight } from "ramda";
 
 export const createTreeClient = <
   TExtendedTree extends Omit<Tree.TTree, "startNode" | "edge">,
