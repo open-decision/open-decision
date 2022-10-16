@@ -1,4 +1,4 @@
-import { Condition, Tree } from "@open-decision/tree-type";
+import { Tree } from "@open-decision/tree-type";
 import { assign, createMachine, Interpreter, Sender } from "xstate";
 import {
   InvalidTreeError,
@@ -15,8 +15,6 @@ export type Resolver = (
 
 export type EVALUATE_NODE_CONDITIONS = {
   type: "EVALUATE_NODE_CONDITIONS";
-  conditions: Condition.TRecord;
-  nodeId: string;
 };
 
 type ResolverEvents =

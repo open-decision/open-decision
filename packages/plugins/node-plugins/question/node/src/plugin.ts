@@ -132,47 +132,6 @@ export class QuestionNodePlugin extends NodePlugin<
     return undefined;
   }
 
-  // /**
-  //  * Provide a condition id and receive the nodes that are related to it.
-  //  * Returns undefined if there are no nodes.
-  //  */
-  // getNodesByCondition(conditionId: string) {
-  //   const input = getInputByCondition(
-  //     this.treeClient,
-  //     this.inputType
-  //   )(conditionId);
-  //   if (!input) return undefined;
-
-  //   return this.getNodesByInput(input.id);
-  // }
-
-  // /**
-  //  * Provide a node id and receive the conditions that are related to it.
-  //  * Returns undefined if there are no conditions.
-  //  */
-  // getConditionsByNode(nodeId: string) {
-  //   const node = this.treeClient.nodes.get.single(nodeId);
-  //   const inputs = Object.values(this.getInputsByNode(node.id) ?? {}).map(
-  //     (input) => input.id
-  //   );
-  //   const conditions = this.treeClient.conditions.get.all();
-
-  //   // We loop over the conditions and check if the input is present on the condition.
-  //   const relatedConditions: Condition.TRecord = {};
-  //   for (const key in conditions) {
-  //     const condition = conditions[key];
-
-  //     if (condition.inputId && inputs.includes(condition.inputId))
-  //       relatedConditions[key] = condition;
-  //   }
-
-  //   // If the resulting conditions are empty we return undefined, because it is more meaningful and
-  //   // easier to handle downstream.
-  //   if (isEmpty(relatedConditions)) return undefined;
-
-  //   return relatedConditions;
-  // }
-
   getVariable(node: TQuestionNode) {
     const inputs = this.getInputsByNode(node.id);
 

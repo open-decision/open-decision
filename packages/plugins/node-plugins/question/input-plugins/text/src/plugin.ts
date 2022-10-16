@@ -1,6 +1,5 @@
 import { TTreeClient } from "@open-decision/tree-type";
 import { InputPlugin } from "@open-decision/input-plugins-helpers";
-import { DirectConditionPlugin } from "@open-decision/condition-plugins-direct";
 import { z } from "zod";
 import { TextVariable } from "@open-decision/variable-plugins-text";
 
@@ -17,11 +16,8 @@ export class TextInputPlugin extends InputPlugin<
   typeof typeName,
   typeof TextVariable
 > {
-  declare directConditionPlugin: DirectConditionPlugin;
   constructor(treeClient: TTreeClient) {
     super(treeClient, DataType, typeName, TextVariable);
-
-    this.directConditionPlugin = new DirectConditionPlugin(treeClient);
   }
 
   createTargetNode(nodeId: string, inputId: string, data: { name: string }) {
@@ -31,18 +27,13 @@ export class TextInputPlugin extends InputPlugin<
 
     if (childNode instanceof Error) return childNode;
 
-    const newCondition = this.directConditionPlugin.create(inputId);
-
     const newEdge = this.treeClient.edges.create({
       source: nodeId,
       target: childNode.id,
-      conditionId: newCondition.id,
     });
 
     if (newEdge instanceof Error) return newEdge;
 
-    this.treeClient.conditions.add(newCondition);
-    this.treeClient.conditions.connect.toInput(newCondition.id, inputId);
     this.treeClient.edges.add(newEdge);
 
     this.treeClient.nodes.add(childNode);
@@ -64,15 +55,9 @@ export class TextInputPlugin extends InputPlugin<
     const edge = edgeId ? this.treeClient.edges.get.single(edgeId) : undefined;
 
     if (!edge?.target && newItem) {
-      const newCondition = this.directConditionPlugin.create(inputId);
-
-      this.treeClient.conditions.add(newCondition);
-      this.treeClient.conditions.connect.toInput(newCondition.id, inputId);
-
       const newEdge = this.treeClient.edges.create({
         source: nodeId,
         target: newItem,
-        conditionId: newCondition.id,
       });
 
       if (newEdge instanceof Error) return;

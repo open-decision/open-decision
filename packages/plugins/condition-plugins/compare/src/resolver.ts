@@ -1,25 +1,23 @@
 import {
+  getCurrentNode,
   MissingAnswerOnInterpreterContextError,
   MissingEdgeForThruthyConditionError,
-  MissingInputForConditionError,
 } from "@open-decision/interpreter";
 import { ConditionResolver } from "@open-decision/condition-plugins-helpers";
 import { TCompareCondition } from "./plugin";
 
 export const resolver: ConditionResolver<TCompareCondition> =
-  (treeClient) => (condition) => (context, event) => {
+  (treeClient) => (condition) => (context) => {
+    const currentNode = getCurrentNode(treeClient, context);
     // We only care about the edges where the node of of the event is the source node.
-    const sourceEdges = treeClient.edges.get.byNode(event.nodeId)?.source;
-
-    if (!condition.inputId)
-      return { state: "error", error: new MissingInputForConditionError() };
+    const sourceEdges = treeClient.edges.get.byNode(currentNode.id)?.source;
 
     // Get a possibly existing answer from the interpreter context
-    const existingAnswerId = context.answers[condition.inputId];
+    const existingAnswerId = context.answers[condition.data.variableId];
 
     // We expect there to be an answer on the interpreter context.
     // Not finding an answer on the interpreter context is a programmer error.
-    if (!(condition.data.answerId === existingAnswerId))
+    if (!(condition.data.valueId === existingAnswerId))
       throw new MissingAnswerOnInterpreterContextError();
 
     // On the edges of the provided node we expect to find an edge with this conditionId

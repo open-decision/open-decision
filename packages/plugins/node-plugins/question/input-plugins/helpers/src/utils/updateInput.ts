@@ -1,5 +1,5 @@
 import { TTreeClient } from "@open-decision/tree-type";
-import { Input, getConditionByInput } from "..";
+import { Input } from "..";
 
 export const updateInput =
   (treeClient: TTreeClient) =>
@@ -11,11 +11,4 @@ export const updateInput =
     if (!inputs) return;
 
     inputs[inputId] = { ...newInput, id: inputId };
-
-    const condition = getConditionByInput(treeClient)(inputId);
-
-    if (condition)
-      treeClient.conditions.delete(
-        Object.values(condition).map((condition) => condition.id)
-      );
   };

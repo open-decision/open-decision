@@ -24,11 +24,8 @@ export class SelectInputPlugin extends InputPlugin<
   typeof typeName,
   typeof SelectVariable
 > {
-  declare comparePlugin: CompareConditionPlugin;
   constructor(treeClient: TTreeClient) {
     super(treeClient, DataType, typeName, SelectVariable);
-
-    this.comparePlugin = new CompareConditionPlugin(treeClient);
   }
 
   createAnswer(answer: Pick<TAnswer, "text">) {
@@ -76,43 +73,23 @@ export class SelectInputPlugin extends InputPlugin<
     if (!answerIndex) return;
 
     input.data.answers?.splice(answerIndex, 1);
-
-    // When an Input is deleted all conditions using it need to be removed.
-    this.treeClient.conditions.delete(
-      Object.values(this.treeClient.conditions.get.all() ?? {})
-        .filter<TCompareCondition>(this.comparePlugin.isType)
-        .filter((condition) => condition.data.answerId === answerId)
-        .map((condition) => condition.id)
-    );
   }
 
   updateTarget({
     nodeId,
-    inputId,
-    answerId,
     newItem,
     edgeId,
   }: {
     nodeId: string;
-    inputId: string;
-    answerId: string;
     newItem: string;
     edgeId?: string;
   }) {
     const edge = edgeId ? this.treeClient.edges.get.single(edgeId) : undefined;
 
     if (!edge?.target && newItem) {
-      const newCondition = this.comparePlugin.create(inputId, {
-        answerId,
-      });
-
-      this.treeClient.conditions.add(newCondition);
-      this.connectInputAndCondition(newCondition.id, inputId);
-
       const newEdge = this.treeClient.edges.create({
         source: nodeId,
         target: newItem,
-        conditionId: newCondition.id,
       });
 
       if (newEdge instanceof Error) return;
@@ -124,12 +101,7 @@ export class SelectInputPlugin extends InputPlugin<
       this.treeClient.edges.connect.toTargetNode(edge.id, newItem);
   }
 
-  createTargetNode(
-    nodeId: string,
-    inputId: string,
-    answerId: string,
-    data: { name: string }
-  ) {
+  createTargetNode(nodeId: string, data: { name: string }) {
     const childNode = this.treeClient.nodes.create.childNode(nodeId, {
       name: data.name,
       data: { inputs: [], ...data },
@@ -137,20 +109,13 @@ export class SelectInputPlugin extends InputPlugin<
 
     if (childNode instanceof Error) return childNode;
 
-    const newCondition = this.comparePlugin.create(inputId, {
-      answerId,
-    });
-
     const newEdge = this.treeClient.edges.create({
       source: nodeId,
       target: childNode.id,
-      conditionId: newCondition.id,
     });
 
     if (newEdge instanceof Error) return newEdge;
 
-    this.treeClient.conditions.add(newCondition);
-    this.connectInputAndCondition(newCondition.id, inputId);
     this.treeClient.edges.add(newEdge);
 
     this.treeClient.nodes.add(childNode);

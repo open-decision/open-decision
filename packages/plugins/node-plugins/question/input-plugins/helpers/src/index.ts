@@ -1,7 +1,8 @@
 import { StyleObject } from "@open-decision/design-system";
 import { z } from "zod";
-import { BaseVariableType, InputPlugin } from "./InputPlugin";
+import { InputPlugin } from "./InputPlugin";
 import * as Input from "./Input";
+import { BaseVariableType } from "@open-decision/variable-plugins-helpers";
 
 export { Input };
 
