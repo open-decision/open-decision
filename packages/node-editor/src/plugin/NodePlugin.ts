@@ -54,12 +54,13 @@ export class NodePlugin<
   }
 
   create(
-    data: Omit<Node.TNode, "data" | "type" | "id">,
+    { position, ...data }: Partial<Omit<Node.TNode, "data" | "type" | "id">>,
     pluginData: z.infer<TType>
   ) {
     const newNode = this.treeClient.nodes.create.node({
       data: pluginData,
       type: this.typeName,
+      position: position ?? { x: 0, y: 0 },
       ...data,
     });
 

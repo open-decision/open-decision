@@ -3,6 +3,8 @@ import { InputComponentProps } from "@open-decision/input-plugins-helpers";
 import { TextInputPlugin, TTextInput } from "./plugin";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { getEdgesByNode, getNodeOptions } from "@open-decision/tree-type";
+import { createTargetNode } from "@open-decision/node-plugins-helpers";
+import { DirectConditionPlugin } from "@open-decision/condition-plugins-direct";
 
 export const BuilderComponent = ({
   nodeId,
@@ -11,6 +13,7 @@ export const BuilderComponent = ({
 }: InputComponentProps<TTextInput>) => {
   const treeClient = useTreeClient();
   const FreeText = new TextInputPlugin(treeClient);
+  const DirectCondition = new DirectConditionPlugin(treeClient);
 
   const edge = useTree(
     (tree) => Object.values(getEdgesByNode(tree)(nodeId)?.source ?? {})?.[0]
@@ -33,11 +36,16 @@ export const BuilderComponent = ({
       <TargetSelector
         name={formState.names.target}
         edge={edge}
-        onCreate={(value) =>
-          FreeText.createTargetNode(nodeId, input.id, {
-            name: value,
-          })
-        }
+        onCreate={(value) => {
+          const condition = DirectCondition.create();
+          return createTargetNode(treeClient)(
+            nodeId,
+            condition.id,
+            treeClient.nodes.create.node({
+              name: value,
+            })
+          );
+        }}
         onSelect={(newItem) =>
           FreeText.updateTarget({
             edgeId: edge?.["id"],

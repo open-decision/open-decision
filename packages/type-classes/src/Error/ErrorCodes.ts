@@ -22,8 +22,7 @@ export type InterpreterErrors =
   | "MISSING_STARTNODE"
   | "NO_CURRENT_NODE"
   | "NO_EDGE_FOR_THRUTHY_CONDITION"
-  | "NO_TRUTHY_CONDITION"
-  | "NO_INPUT_FOR_CONDITION";
+  | "NO_TRUTHY_CONDITION";
 
 export type BuilderErrors =
   | "AUTH_VALIDATION_FAILED"

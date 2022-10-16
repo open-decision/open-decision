@@ -35,7 +35,7 @@ export function createInterpreterMethods(
   const treeClient = createTreeClient(tree);
 
   return {
-    getCurrentNode: getCurrentNode(treeClient, interpreterContext),
+    getCurrentNode: () => getCurrentNode(treeClient, interpreterContext),
     getAnswer: (inputId: string) => {
       const maybeAnswer = interpreterContext.answers[inputId];
       if (!maybeAnswer) return undefined;

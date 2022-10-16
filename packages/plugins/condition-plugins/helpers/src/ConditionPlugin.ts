@@ -53,9 +53,8 @@ export class ConditionPlugin<
     );
   }
 
-  create(inputId: string, data: z.infer<TType>) {
+  create(data: z.infer<TType>) {
     const newCondition = this.treeClient.conditions.create({
-      inputId,
       data,
       type: this.typeName,
     });

@@ -27,19 +27,6 @@ export class MissingEdgeForThruthyConditionError extends InterpreterError {
   }
 }
 
-/**
- * This error is thrown when the interpreter is unable to find an input for a condition.
- * Since the input answer is required to resolve a condition, this error is thrown when the inputId is missing.
- */
-export class MissingInputForConditionError extends InterpreterError {
-  constructor() {
-    super({
-      message: "There is no input for this condition.",
-      code: "NO_INPUT_FOR_CONDITION",
-    });
-  }
-}
-
 export class NoTruthyConditionError extends InterpreterError {
   constructor() {
     super({

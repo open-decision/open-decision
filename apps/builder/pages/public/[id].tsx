@@ -15,7 +15,7 @@ import { FullPageErrorFallback } from "../../components/Error/FullPageErrorFallb
 import { ODError } from "@open-decision/type-classes";
 import { Layout } from "../../components";
 import { useNotificationStore } from "../../config/notifications";
-import { interpreterPlugin } from "@open-decision/tree-client";
+import { useTreeClient } from "../../features/Builder/components/TreeClient";
 
 export const getServerSideProps: GetServerSideProps = async ({
   req,
@@ -66,6 +66,7 @@ export default function Page({ treeId }: PageProps) {
     select: (result) => result.data.treeData,
     staleTime: Infinity,
   });
+  const { interpreterResolver, nodePlugins } = useTreeClient();
 
   if (isLoading) return <LoadingSpinner />;
   if (!isSuccess)
@@ -78,7 +79,7 @@ export default function Page({ treeId }: PageProps) {
       </Head>
       <Layout>
         <Renderer.Root
-          resolver={interpreterPlugin}
+          resolver={interpreterResolver}
           tree={data}
           onError={(error) =>
             addNotification({
@@ -101,6 +102,8 @@ export default function Page({ treeId }: PageProps) {
                   marginBlock: "$4",
                 },
               }}
+              inputPlugins={nodePlugins.QuestionNode.plugin.inputPlugins}
+              nodePlugins={nodePlugins}
             />
           </Stack>
         </Renderer.Root>

@@ -12,6 +12,7 @@
     "@open-decision/tree-sync": "workspace:*",
     "@open-decision/tree-type": "workspace:*",
     "@open-decision/type-classes": "workspace:*",
+    "@open-decision/node-plugins-helpers": "workspace:*",
     "ts-pattern": "^4.0.5",
     "zod": "^3"
   }

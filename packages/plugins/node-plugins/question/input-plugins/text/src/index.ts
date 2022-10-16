@@ -11,6 +11,7 @@ export const createTextInputPlugin = (treeClient: TTreeClient) => {
     plugin: new TextInputPlugin(treeClient),
     type: "text",
     BuilderComponent: {
+      PrimaryActionSlot: undefined,
       InputConfigurator: BuilderComponent,
     },
     RendererComponent,

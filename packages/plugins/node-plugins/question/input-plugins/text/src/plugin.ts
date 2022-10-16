@@ -20,27 +20,6 @@ export class TextInputPlugin extends InputPlugin<
     super(treeClient, DataType, typeName, TextVariable);
   }
 
-  createTargetNode(nodeId: string, inputId: string, data: { name: string }) {
-    const childNode = this.treeClient.nodes.create.childNode(nodeId, {
-      data: { inputs: [], ...data },
-    });
-
-    if (childNode instanceof Error) return childNode;
-
-    const newEdge = this.treeClient.edges.create({
-      source: nodeId,
-      target: childNode.id,
-    });
-
-    if (newEdge instanceof Error) return newEdge;
-
-    this.treeClient.edges.add(newEdge);
-
-    this.treeClient.nodes.add(childNode);
-
-    return { id: childNode.id, label: childNode.name };
-  }
-
   updateTarget({
     nodeId,
     inputId,

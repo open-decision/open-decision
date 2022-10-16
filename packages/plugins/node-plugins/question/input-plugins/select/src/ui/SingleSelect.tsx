@@ -19,6 +19,7 @@ import { SelectInputPlugin, TAnswer, TSelectInput } from "../selectPlugin";
 import { CompareConditionPlugin } from "@open-decision/condition-plugins-compare";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { Edge, getNode, getNodeOptions } from "@open-decision/tree-type";
+import { createTargetNode } from "@open-decision/node-plugins-helpers";
 
 export const AddOptionButton = ({
   input,
@@ -108,6 +109,7 @@ export const OptionTargetInput = ({
 }: SingleSelectInputProps) => {
   const treeClient = useTreeClient();
   const Select = new SelectInputPlugin(treeClient);
+  const Compare = new CompareConditionPlugin(treeClient);
 
   const controls = useDragControls();
   const node = useTree((tree) => getNode(tree)(nodeId));
@@ -177,15 +179,25 @@ export const OptionTargetInput = ({
             setValue={(newValue) =>
               formState.setValue(formState.names.target, newValue)
             }
-            onCreate={(name) =>
-              Select.createTargetNode(nodeId, inputId, answer.id, { name })
-            }
+            onCreate={(value) => {
+              const input = Select.getInput(inputId);
+              const variable = Select.getVariable(input);
+              const condition = Compare.create({
+                variableId: variable.id,
+                valueId: answer.id,
+              });
+
+              treeClient.conditions.add(condition);
+              return createTargetNode(treeClient)(
+                nodeId,
+                condition.id,
+                treeClient.nodes.create.node({ name: value })
+              );
+            }}
             onSelect={(newItem) =>
               Select.updateTarget({
                 edgeId: edge?.id,
                 nodeId,
-                inputId,
-                answerId: answer.id,
                 newItem,
               })
             }

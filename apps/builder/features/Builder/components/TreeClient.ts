@@ -5,7 +5,7 @@ import { createCompareConditionPlugin } from "@open-decision/condition-plugins-c
 import { createDirectConditionPlugin } from "@open-decision/condition-plugins-direct";
 import { createTreeClient as createBaseTreeClient } from "@open-decision/tree-type";
 import { z } from "zod";
-import { Resolver } from "@open-decision/interpreter";
+import { getCurrentNode, Resolver } from "@open-decision/interpreter";
 import { ODProgrammerError } from "@open-decision/type-classes";
 
 export const useTreeClient = () => {
@@ -55,9 +55,12 @@ export const useTreeClient = () => {
   };
 
   const resolver: Resolver = (context, event) => (callback) => {
+    const currentNode = getCurrentNode(treeClient, context);
+    const conditions = treeClient.conditions.get.byNode(currentNode.id);
+
     const validConditions = z
       .record(treeClient.conditions.Type)
-      .safeParse(event.conditions);
+      .safeParse(conditions);
 
     if (!validConditions.success)
       throw new ODProgrammerError({

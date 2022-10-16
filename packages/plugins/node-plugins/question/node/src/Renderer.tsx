@@ -5,8 +5,9 @@ import {
 } from "@open-decision/node-editor";
 import { RichTextRenderer } from "@open-decision/rich-text-editor";
 import { useTree } from "@open-decision/tree-sync";
-import { getInputs } from "@open-decision/tree-type";
+import { getInputs, Input } from "@open-decision/input-plugins-helpers";
 import { TQuestionNode } from "./plugin";
+import { createTreeClient } from "@open-decision/tree-type";
 
 export const Content: RendererNodeContent<TQuestionNode> = ({ node }) => {
   if (!node.data.content) return null;
@@ -19,7 +20,10 @@ export const Actions: RendererNodeActions<TQuestionNode> = ({
   css,
   inputPlugins,
 }) => {
-  const inputs = useTree((tree) => getInputs(tree)(node.data.inputs));
+  const inputs = useTree((tree) => {
+    const treeClient = createTreeClient(tree);
+    return getInputs(treeClient, Input.Type)(node.data.inputs);
+  });
 
   return (
     <>

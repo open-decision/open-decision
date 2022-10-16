@@ -633,6 +633,7 @@ importers:
       '@open-decision/condition-plugins-compare': workspace:*
       '@open-decision/design-system': workspace:*
       '@open-decision/input-plugins-helpers': workspace:*
+      '@open-decision/node-plugins-helpers': workspace:*
       '@open-decision/tree-sync': workspace:*
       '@open-decision/tree-type': workspace:*
       '@open-decision/type-classes': workspace:*
@@ -644,6 +645,7 @@ importers:
       '@open-decision/condition-plugins-compare': link:../../../../condition-plugins/compare
       '@open-decision/design-system': link:../../../../../design-system
       '@open-decision/input-plugins-helpers': link:../helpers
+      '@open-decision/node-plugins-helpers': link:../../../helpers
       '@open-decision/tree-sync': link:../../../../../tree/sync
       '@open-decision/tree-type': link:../../../../../tree/type
       '@open-decision/type-classes': link:../../../../../type-classes
@@ -657,6 +659,7 @@ importers:
       '@open-decision/condition-plugins-direct': workspace:*
       '@open-decision/design-system': workspace:*
       '@open-decision/input-plugins-helpers': workspace:*
+      '@open-decision/node-plugins-helpers': workspace:*
       '@open-decision/tree-sync': workspace:*
       '@open-decision/tree-type': workspace:*
       '@open-decision/type-classes': workspace:*
@@ -666,6 +669,7 @@ importers:
       '@open-decision/condition-plugins-direct': link:../../../../condition-plugins/direct
       '@open-decision/design-system': link:../../../../../design-system
       '@open-decision/input-plugins-helpers': link:../helpers
+      '@open-decision/node-plugins-helpers': link:../../../helpers
       '@open-decision/tree-sync': link:../../../../../tree/sync
       '@open-decision/tree-type': link:../../../../../tree/type
       '@open-decision/type-classes': link:../../../../../type-classes
@@ -679,6 +683,7 @@ importers:
       '@open-decision/input-plugins-select': workspace:*
       '@open-decision/input-plugins-text': workspace:*
       '@open-decision/node-editor': workspace:*
+      '@open-decision/node-plugins-helpers': workspace:*
       '@open-decision/rich-text-editor': workspace:*
       '@open-decision/tree-sync': workspace:*
       '@open-decision/tree-type': workspace:*
@@ -691,6 +696,7 @@ importers:
       '@open-decision/input-plugins-select': link:../input-plugins/select
       '@open-decision/input-plugins-text': link:../input-plugins/text
       '@open-decision/node-editor': link:../../../../node-editor
+      '@open-decision/node-plugins-helpers': link:../../helpers
       '@open-decision/rich-text-editor': link:../../../../rich-text-editor
       '@open-decision/tree-sync': link:../../../../tree/sync
       '@open-decision/tree-type': link:../../../../tree/type

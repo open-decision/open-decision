@@ -6,7 +6,7 @@ import { Renderer } from "@open-decision/renderer";
 import { useTranslations } from "next-intl";
 import { useTreeAPI } from "../../../features/Data/useTreeAPI";
 import { APIError } from "@open-decision/type-classes";
-import { interpreterPlugin } from "@open-decision/tree-client";
+import { useTreeClient } from "../../../features/Builder/components/TreeClient";
 
 export const getServerSideProps: GetServerSideProps<
   any,
@@ -41,6 +41,7 @@ type PageProps = { treeId: string };
 
 export default function VorschauPage({ treeId }: PageProps) {
   const t = useTranslations("renderer.preview");
+  const { interpreterResolver, nodePlugins } = useTreeClient();
 
   const { data: hasPreview, error: previewEnabledError } =
     useTreeAPI().useTreeQuery(treeId, {
@@ -68,7 +69,7 @@ export default function VorschauPage({ treeId }: PageProps) {
       <Head>
         <title>{t("pageTitle")}</title>
       </Head>
-      <Renderer.Root tree={data} resolver={interpreterPlugin}>
+      <Renderer.Root tree={data} resolver={interpreterResolver}>
         <Stack center css={{ layer: "2", height: "100%" }}>
           <Renderer.View
             css={{
@@ -82,6 +83,8 @@ export default function VorschauPage({ treeId }: PageProps) {
                 marginBlock: "$4",
               },
             }}
+            inputPlugins={nodePlugins.QuestionNode.plugin.inputPlugins}
+            nodePlugins={nodePlugins}
           />
         </Stack>
       </Renderer.Root>

@@ -101,28 +101,6 @@ export class SelectInputPlugin extends InputPlugin<
       this.treeClient.edges.connect.toTargetNode(edge.id, newItem);
   }
 
-  createTargetNode(nodeId: string, data: { name: string }) {
-    const childNode = this.treeClient.nodes.create.childNode(nodeId, {
-      name: data.name,
-      data: { inputs: [], ...data },
-    });
-
-    if (childNode instanceof Error) return childNode;
-
-    const newEdge = this.treeClient.edges.create({
-      source: nodeId,
-      target: childNode.id,
-    });
-
-    if (newEdge instanceof Error) return newEdge;
-
-    this.treeClient.edges.add(newEdge);
-
-    this.treeClient.nodes.add(childNode);
-
-    return { id: childNode.id, label: childNode.name };
-  }
-
   getInputsWithAnswers(
     inputs: TSelectInput[]
   ): Record<string, TSelectInput> | undefined {

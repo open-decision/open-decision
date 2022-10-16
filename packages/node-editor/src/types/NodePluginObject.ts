@@ -34,7 +34,7 @@ export type RendererNodeContent<TNode extends Node.TNode> = (
 export type RendererNodeActionsProps<TNode extends Node.TNode> = {
   node: TNode;
   css?: StyleObject;
-  inputPlugins: Record<string, InputPluginObject<any, any, any>>;
+  inputPlugins: Record<string, InputPluginObject>;
 };
 
 export type RendererNodeActions<TNode extends Node.TNode> = (

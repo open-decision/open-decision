@@ -1,9 +1,10 @@
 import { getNode } from "../getters";
-import { Tree } from "../type-classes";
-import { createNode, NewNodeData } from "./createNode";
+import { Node, Tree } from "../type-classes";
+import { createNode } from "./createNode";
 
 export const createChildNode =
-  (tree: Tree.TTree) => (nodeId: string, newNode: NewNodeData) => {
+  (tree: Tree.TTree) =>
+  <TNodeType extends Node.TNode>(nodeId: string, newNode: TNodeType) => {
     // Get the node we want the children for
     const node = getNode(tree)(nodeId);
 

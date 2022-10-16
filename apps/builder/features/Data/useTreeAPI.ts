@@ -25,12 +25,7 @@ import { OD, proxiedOD } from "../Data/odClient";
 import { z } from "zod";
 import { useNotificationStore } from "../../config/notifications";
 import { createYjsDocumentIndexedDB } from "./utils/createYjsDocumentIndexedDB";
-import {
-  Tree,
-  createTreeClient,
-  createNode,
-  Node,
-} from "@open-decision/tree-type";
+import { Tree, createNode, Node } from "@open-decision/tree-type";
 import * as Y from "yjs";
 import { IndexeddbPersistence } from "y-indexeddb";
 
@@ -156,7 +151,7 @@ export const useTreeAPI = () => {
         new IndexeddbPersistence(response.data.uuid, yDoc);
 
         const yMap = yDoc.getMap("tree");
-        const node = createNode();
+        const node = createNode({});
         const yNodes = new Y.Map<Node.TRecord>([[node.id, node]]);
 
         yMap.set("startNode", node.id);

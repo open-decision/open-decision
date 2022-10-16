@@ -4,8 +4,13 @@ import {
   CanvasNodePlugin,
 } from "@open-decision/node-plugins-helpers";
 import { useEditor } from "@open-decision/node-editor";
+import { TQuestionNode } from "./plugin";
 
-export const QuestionNode: CanvasNodePlugin = ({ id, data, ...props }) => {
+export const QuestionNode: CanvasNodePlugin<TQuestionNode> = ({
+  id,
+  data,
+  ...props
+}) => {
   const { isConnecting } = useEditor();
 
   return (

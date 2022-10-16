@@ -5,18 +5,19 @@ import {
   Badge,
   Icon,
 } from "@open-decision/design-system";
-import { useEditor } from "../state/useEditor";
-import { useTree, useTreeClient } from "@open-decision/tree-sync";
+import { useTree } from "@open-decision/tree-sync";
 import { getNodeNames } from "@open-decision/tree-type";
 import { useTranslations } from "next-intl";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { useEditor } from "@open-decision/node-editor";
+import { useTreeClient } from "./TreeClient";
 
 type Props = { css?: StyleObject };
 
 export const NodeSearch = ({ css }: Props) => {
   const t = useTranslations("builder.nodeSearch");
 
-  const treeClient = useTreeClient();
+  const { treeClient } = useTreeClient();
   const { replaceSelectedNodes } = useEditor();
   const nodeNames = useTree(getNodeNames);
 
@@ -31,15 +32,15 @@ export const NodeSearch = ({ css }: Props) => {
   });
 
   function createHandler(label: string) {
-    const newNode = treeClient.nodes.create.node({
-      type: "customNode",
-      position: getCenter(),
-      data: {
+    // Currently we are always creating question nodes, because we do not have any
+    // other node types yet.
+    const newNode = treeClient.node.question.create(
+      {
         name: label,
-        inputs: [],
-        conditions: [],
+        position: getCenter(),
       },
-    });
+      { inputs: [], content: [] }
+    );
 
     treeClient.nodes.add(newNode);
     replaceSelectedNodes([newNode.id]);

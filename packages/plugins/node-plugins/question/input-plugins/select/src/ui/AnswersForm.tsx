@@ -2,12 +2,8 @@ import { Form } from "@open-decision/design-system";
 import { useInterpreter } from "@open-decision/interpreter-react";
 import { Answers } from "./Answers";
 import { TSelectInput } from "../selectPlugin";
-import {
-  getConditionByInput,
-  RendererComponentProps,
-} from "@open-decision/input-plugins-helpers";
+import { RendererComponentProps } from "@open-decision/input-plugins-helpers";
 import { useTreeClient } from "@open-decision/tree-sync";
-import { InterpreterError } from "@open-decision/type-classes";
 
 export function AnswersForm({
   input,
@@ -33,21 +29,7 @@ export function AnswersForm({
       });
     }
 
-    const currentNode = getCurrentNode();
-
-    const conditions = getConditionByInput(treeClient)(input.id);
-
-    if (!conditions)
-      throw new InterpreterError({
-        code: "NO_TRUTHY_CONDITION",
-        message: `The node with id ${currentNode.id} has no conditions`,
-      });
-
-    send({
-      type: "EVALUATE_NODE_CONDITIONS",
-      conditions,
-      nodeId: currentNode?.id,
-    });
+    send("EVALUATE_NODE_CONDITIONS");
 
     onSubmit?.(formState.values);
   });

@@ -12,6 +12,7 @@
     "@open-decision/design-system": "workspace:*",
     "@open-decision/tree-sync": "workspace:*",
     "@open-decision/tree-type": "workspace:*",
-    "@open-decision/variable-plugins-select": "workspace:*"
+    "@open-decision/variable-plugins-select": "workspace:*",
+    "@open-decision/node-plugins-helpers": "workspace:*"
   }
 }

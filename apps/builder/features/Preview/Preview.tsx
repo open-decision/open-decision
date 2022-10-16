@@ -14,7 +14,7 @@ export function Preview({ css }: Props) {
   const tree = useTree((tree) => getTree(tree)());
   const selectedNodeIds = useSelectedNodeIds();
   const { addNotification } = useNotificationStore();
-  const { interpreterResolver } = useTreeClient();
+  const { nodePlugins, interpreterResolver } = useTreeClient();
 
   return (
     <Renderer.Root
@@ -36,6 +36,8 @@ export function Preview({ css }: Props) {
           paddingBlock: "$7",
           ...css,
         }}
+        nodePlugins={nodePlugins}
+        inputPlugins={nodePlugins.QuestionNode.plugin.inputPlugins}
       />
     </Renderer.Root>
   );

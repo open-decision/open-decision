@@ -46,10 +46,10 @@ export type RendererComponent<TInput extends Input.TInput> = (
 ) => JSX.Element;
 
 export type InputPluginObject<
-  TType extends z.ZodType,
-  TTypeName extends string,
-  TInput extends Input.TInput,
-  TVariableType extends typeof BaseVariableType
+  TType extends z.ZodType = any,
+  TTypeName extends string = string,
+  TInput extends Input.TInput = any,
+  TVariableType extends typeof BaseVariableType = any
 > = {
   plugin: InputPlugin<TType, TTypeName, TVariableType>;
   type: string;
