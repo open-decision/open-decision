@@ -23,21 +23,11 @@ export const createTreeClient = <
 ) => {
   const mergedTreeTypes = Tree.Type.merge(
     z.object({
-      conditions: z.record(plugins.conditions[1]).optional(),
-      nodes: z.record(plugins.nodes[1]).optional(),
+      conditions: z.record(plugins.conditions[1]),
+      nodes: z.record(plugins.nodes[1]),
       pluginEntities: plugins.pluginEntities ? plugins.pluginEntities : z.any(),
     })
   );
-
-  const extendedTree = mergedTreeTypes.safeParse(tree);
-
-  if (!extendedTree.success) {
-    console.error(extendedTree.error);
-    throw new ODValidationError({
-      code: "INVALID_DATA",
-      zodError: extendedTree.error,
-    });
-  }
 
   const extendedTreeClient = createBaseTreeClient(tree);
 

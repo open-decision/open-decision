@@ -9,17 +9,17 @@ export type NewNodeData = Partial<Omit<Node.TNode, "id">>;
  * @param data must include the base properties of a node
  * @returns the data merged with a unique id
  */
-export const createNode = ({
+export const createNode = <TNodeType extends Node.TNode>({
   position = { x: 0, y: 0 },
   type = "customNode",
-  ...rest
-}: NewNodeData): Node.TNode => {
-  // create the node object
+  data,
+  name,
+}: Partial<Omit<TNodeType, "id">>) => {
   return {
     id: uuid(),
-    // the position is used to place the node on the canvas
     position,
     type,
-    ...rest,
-  };
+    data: data ?? {},
+    name,
+  } as TNodeType;
 };

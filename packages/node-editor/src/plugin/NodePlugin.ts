@@ -1,5 +1,4 @@
 import { Node, Plugin, TTreeClient } from "@open-decision/tree-type";
-import { ODProgrammerError } from "@open-decision/type-classes";
 import { z } from "zod";
 import { pipe } from "remeda";
 
@@ -51,29 +50,5 @@ export class NodePlugin<
         : this.treeClient.nodes.get.all(),
       this.returnOnlyWhenRecordOfType
     );
-  }
-
-  create(
-    { position, ...data }: Partial<Omit<Node.TNode, "data" | "type" | "id">>,
-    pluginData: z.infer<TType>
-  ) {
-    const newNode = this.treeClient.nodes.create.node({
-      data: pluginData,
-      type: this.typeName,
-      position: position ?? { x: 0, y: 0 },
-      ...data,
-    });
-
-    const parsedNode = this.Type.safeParse(newNode);
-
-    if (!parsedNode.success) {
-      throw new ODProgrammerError({
-        code: "INVALID_ENTITY_CREATION",
-        message:
-          "The condition could not be created. Please check that the data is correct.",
-      });
-    }
-
-    return parsedNode.data;
   }
 }

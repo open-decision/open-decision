@@ -11,7 +11,7 @@ import { dehydrate, QueryClient } from "@tanstack/react-query";
 import { client } from "@open-decision/api-client";
 import { treeQueryKey } from "../../../features/Data/useTreeAPI";
 import { safeFetch } from "@open-decision/api-helpers";
-import { Tabs } from "@open-decision/design-system";
+import { LoadingSpinner, Stack, Tabs } from "@open-decision/design-system";
 import { Preview } from "../../../features/Preview/Preview";
 import { AnimatePresence, motion } from "framer-motion";
 import { PrototypButton } from "../../../features/Builder/components/PrototypButton";
@@ -65,10 +65,126 @@ export const getServerSideProps: GetServerSideProps<
 
 type PageProps = { treeId: string };
 
-export default function BuilderPage({ treeId }: PageProps) {
-  const { nodePlugins } = useTreeClient();
+const Content = ({ treeId }: PageProps) => {
   const [selectedView, setSelectedView] = React.useState("editor");
+  const { nodePlugins } = useTreeClient();
 
+  return (
+    <Tabs.Root defaultValue={selectedView} onValueChange={setSelectedView}>
+      <Layout
+        css={{
+          layer: "3",
+          display: "grid",
+          gridTemplateColumns: `max-content 1fr`,
+          gridTemplateRows: "max-content 1fr",
+        }}
+      >
+        <ReactFlowProvider>
+          <EditorProvider>
+            <EditorHeader
+              treeId={treeId}
+              css={{
+                gridColumn: "1 / -1",
+                gridRow: "1",
+                zIndex: "$20",
+              }}
+            >
+              <PrototypButton treeId={treeId} />
+            </EditorHeader>
+            <SideMenu
+              selectedView={selectedView}
+              css={{
+                gridRow: "2",
+                gridColumn: "1",
+                layer: "1",
+                gap: "$2",
+                zIndex: "$10",
+              }}
+            >
+              <AnimatePresence>
+                {selectedView === "editor" ? (
+                  <motion.span
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{
+                      duration: 0.15,
+                      ease: "easeOut",
+                    }}
+                  >
+                    <CreateNodeButton />
+                  </motion.span>
+                ) : null}
+              </AnimatePresence>
+            </SideMenu>
+            <AnimatePresence mode="wait" initial={false}>
+              {selectedView === "editor" ? (
+                <Tabs.Content
+                  forceMount
+                  key="editor"
+                  value="editor"
+                  css={{
+                    gridColumn: "2 / 3",
+                    gridRow: "2",
+                    height: "100%",
+                    overflow: "hidden",
+                  }}
+                  asChild
+                >
+                  <motion.div
+                    key="editor"
+                    initial={{ opacity: 0, x: "-10%" }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: "-10%" }}
+                    transition={{
+                      duration: 0.2,
+                      ease: "easeInOut",
+                    }}
+                  >
+                    <NodeEditor nodePlugins={nodePlugins} />
+                  </motion.div>
+                </Tabs.Content>
+              ) : null}
+              {selectedView === "preview" ? (
+                <Tabs.Content
+                  forceMount
+                  key="preview"
+                  value="preview"
+                  css={{
+                    gridColum: "2 / 3",
+                    gridRow: "2",
+                  }}
+                  asChild
+                >
+                  <motion.div
+                    key="preview"
+                    initial={{ opacity: 0, x: "10%" }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: "10%" }}
+                    transition={{ duration: 0.2, ease: "easeInOut" }}
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Preview
+                      css={{
+                        flex: "1 1 700px",
+                        maxWidth: "700px",
+                      }}
+                    />
+                  </motion.div>
+                </Tabs.Content>
+              ) : null}
+            </AnimatePresence>
+          </EditorProvider>
+        </ReactFlowProvider>
+      </Layout>
+    </Tabs.Root>
+  );
+};
+
+export default function BuilderPage({ treeId }: PageProps) {
   const t = useTranslations("builder");
 
   return (
@@ -76,123 +192,17 @@ export default function BuilderPage({ treeId }: PageProps) {
       <Head>
         <title>{t("pageTitle")}</title>
       </Head>
-      <Tabs.Root
-        defaultValue={selectedView}
-        onValueChange={setSelectedView}
-        asChild
-      >
-        <TreeProvider id={treeId}>
-          <Layout
-            css={{
-              layer: "3",
-              display: "grid",
-              gridTemplateColumns: `max-content 1fr`,
-              gridTemplateRows: "max-content 1fr",
-            }}
-          >
-            <ReactFlowProvider>
-              <EditorProvider>
-                <EditorHeader
-                  treeId={treeId}
-                  css={{
-                    gridColumn: "1 / -1",
-                    gridRow: "1",
-                    zIndex: "$20",
-                  }}
-                >
-                  <PrototypButton treeId={treeId} />
-                </EditorHeader>
-                <SideMenu
-                  selectedView={selectedView}
-                  css={{
-                    gridRow: "2",
-                    gridColumn: "1",
-                    layer: "1",
-                    gap: "$2",
-                    zIndex: "$10",
-                  }}
-                >
-                  <AnimatePresence>
-                    {selectedView === "editor" ? (
-                      <motion.span
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{
-                          duration: 0.15,
-                          ease: "easeOut",
-                        }}
-                      >
-                        <CreateNodeButton />
-                      </motion.span>
-                    ) : null}
-                  </AnimatePresence>
-                </SideMenu>
-                <AnimatePresence mode="wait" initial={false}>
-                  {selectedView === "editor" ? (
-                    <Tabs.Content
-                      forceMount
-                      key="editor"
-                      value="editor"
-                      css={{
-                        gridColumn: "2 / 3",
-                        gridRow: "2",
-                        height: "100%",
-                        overflow: "hidden",
-                      }}
-                      asChild
-                    >
-                      <motion.div
-                        key="editor"
-                        initial={{ opacity: 0, x: "-10%" }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: "-10%" }}
-                        transition={{
-                          duration: 0.2,
-                          ease: "easeInOut",
-                        }}
-                      >
-                        <NodeEditor nodePlugins={nodePlugins} />
-                      </motion.div>
-                    </Tabs.Content>
-                  ) : null}
-                  {selectedView === "preview" ? (
-                    <Tabs.Content
-                      forceMount
-                      key="preview"
-                      value="preview"
-                      css={{
-                        gridColum: "2 / 3",
-                        gridRow: "2",
-                      }}
-                      asChild
-                    >
-                      <motion.div
-                        key="preview"
-                        initial={{ opacity: 0, x: "10%" }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: "10%" }}
-                        transition={{ duration: 0.2, ease: "easeInOut" }}
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Preview
-                          css={{
-                            flex: "1 1 700px",
-                            maxWidth: "700px",
-                          }}
-                        />
-                      </motion.div>
-                    </Tabs.Content>
-                  ) : null}
-                </AnimatePresence>
-              </EditorProvider>
-            </ReactFlowProvider>
-          </Layout>
-        </TreeProvider>
-      </Tabs.Root>
+      <TreeProvider id={treeId}>
+        <React.Suspense
+          fallback={
+            <Stack center css={{ height: "100%" }}>
+              <LoadingSpinner size={50} />
+            </Stack>
+          }
+        >
+          <Content treeId={treeId} />
+        </React.Suspense>
+      </TreeProvider>
     </>
   );
 }

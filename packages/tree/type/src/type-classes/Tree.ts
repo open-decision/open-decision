@@ -5,10 +5,10 @@ import * as Node from "./Node";
 
 export const Type = z.object({
   startNode: z.string(),
-  nodes: Node.Record.optional(),
-  edges: Edge.Record.optional(),
-  conditions: Condition.Record.optional(),
-  pluginEntities: z.any().optional(),
+  nodes: Node.Record,
+  edges: Edge.Record,
+  conditions: Condition.Record,
+  pluginEntities: z.record(z.any()),
 });
 
 export type TTree = z.infer<typeof Type>;

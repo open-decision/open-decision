@@ -1,16 +1,18 @@
 import { RichText } from "@open-decision/rich-text-editor";
-import { Condition, TTreeClient } from "@open-decision/tree-type";
+import { TTreeClient } from "@open-decision/tree-type";
 import { z } from "zod";
 import { NodePlugin } from "@open-decision/node-editor";
 import { isEmpty } from "ramda";
 import { createInputPlugins } from "./createinputPlugins";
 import { deleteInput, getInput } from "@open-decision/input-plugins-helpers";
-import { match, P } from "ts-pattern";
+import { match } from "ts-pattern";
+import { ODProgrammerError } from "@open-decision/type-classes";
+import { DeepPartial } from "utility-types";
 
 export const typeName = "question" as const;
 
 export const DataType = z.object({
-  content: RichText.optional(),
+  content: RichText,
   inputs: z.array(z.string()),
 });
 
@@ -27,6 +29,32 @@ export class QuestionNodePlugin extends NodePlugin<
     const inputPlugins = createInputPlugins(treeClient);
     this.inputPlugins = inputPlugins[0];
     this.inputType = inputPlugins[1];
+  }
+
+  create(nodeData: Partial<Omit<z.infer<typeof this.Type>, "id" | "type">>) {
+    const newNode = this.treeClient.nodes.create.node<
+      z.infer<typeof this.Type>
+    >({
+      ...nodeData,
+      type: this.typeName,
+      data: {
+        content: nodeData.data?.content ?? {},
+        inputs: nodeData.data?.inputs ?? [],
+      },
+    });
+
+    const parsedNode = this.Type.safeParse(newNode);
+
+    if (!parsedNode.success) {
+      console.error(parsedNode.error);
+      throw new ODProgrammerError({
+        code: "INVALID_ENTITY_CREATION",
+        message:
+          "The question node could not be created. Please check that the data is correct.",
+      });
+    }
+
+    return parsedNode.data;
   }
 
   updateNodeContent(

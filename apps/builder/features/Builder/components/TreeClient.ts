@@ -7,12 +7,9 @@ import { createTreeClient as createBaseTreeClient } from "@open-decision/tree-ty
 import { z } from "zod";
 import { getCurrentNode, Resolver } from "@open-decision/interpreter";
 import { ODProgrammerError } from "@open-decision/type-classes";
+import { Tree } from "@open-decision/tree-type";
 
-export const useTreeClient = () => {
-  const {
-    tree: { tree },
-  } = useTreeContext();
-
+export const createTreeClientWithPlugins = (tree: Tree.TTree) => {
   const baseTreeClient = createBaseTreeClient(tree);
 
   const QuestionNode = createQuestionNodePlugin(baseTreeClient);
@@ -98,4 +95,12 @@ export const useTreeClient = () => {
     nodePlugins: { QuestionNode },
     interpreterResolver: resolver,
   };
+};
+
+export const useTreeClient = () => {
+  const {
+    tree: { tree },
+  } = useTreeContext();
+
+  return createTreeClientWithPlugins(tree);
 };
