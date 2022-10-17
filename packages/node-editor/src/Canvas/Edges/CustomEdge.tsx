@@ -1,6 +1,6 @@
 import { styled } from "@open-decision/design-system";
 import { memo } from "react";
-import { getBezierPath, EdgeProps } from "react-flow-renderer";
+import { getBezierPath, EdgeProps } from "reactflow";
 
 const StyledPath = styled("path", {
   fill: "none",
@@ -38,7 +38,7 @@ export const CustomEdge = memo(
         <StyledPath
           key={`${id}_${isSelected}`}
           id={id}
-          d={d}
+          d={d[0]}
           markerEnd={"url(#color=#c1c8cd&type=arrowclosed)"}
           css={{
             stroke: "$colors$gray8",

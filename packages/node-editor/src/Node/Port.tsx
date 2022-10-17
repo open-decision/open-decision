@@ -1,5 +1,5 @@
 import { styled } from "@open-decision/design-system";
-import { Handle } from "react-flow-renderer";
+import { Handle } from "reactflow";
 
 const portWidth = 18;
 

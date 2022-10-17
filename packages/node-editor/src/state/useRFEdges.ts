@@ -1,6 +1,6 @@
 import { useTree } from "@open-decision/tree-sync";
 import { getEdges } from "@open-decision/tree-type";
-import { MarkerType } from "react-flow-renderer";
+import { MarkerType } from "reactflow";
 import { useSelectedEdgeIds } from "./useSelectedEdges";
 
 const staticEdgeData = {

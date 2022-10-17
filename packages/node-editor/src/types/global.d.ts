@@ -1,7 +1,7 @@
-import "react-flow-renderer";
+import "reactflow";
 import type { NodePluginData } from "../state/useRFNodes";
 
-declare module "react-flow-renderer" {
+declare module "reactflow" {
   interface Connection {
     source: string;
     target: string;

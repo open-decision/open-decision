@@ -3,6 +3,7 @@ import { Required } from "utility-types";
 
 export const mietminderungTreeMock: Required<Tree.TTree, "startNode"> = {
   startNode: "ba80a8f1-f2bb-4636-b936-9b343903b060",
+  pluginEntities: {},
   nodes: {
     "ba80a8f1-f2bb-4636-b936-9b343903b060": {
       id: "ba80a8f1-f2bb-4636-b936-9b343903b060",

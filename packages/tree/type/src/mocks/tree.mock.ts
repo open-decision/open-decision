@@ -93,6 +93,7 @@ export const treeMock: Required<Tree.TTree, "startNode"> = {
       conditionId: "9c07e4c3-a67f-4c76-8c14-9a0a302b5d99",
     },
   },
+  pluginEntities: {},
 };
 
 export const emptyTreeMock: Tree.TTree = {
@@ -105,4 +106,7 @@ export const emptyTreeMock: Tree.TTree = {
       name: "",
     },
   },
+  conditions: {},
+  edges: {},
+  pluginEntities: {},
 };

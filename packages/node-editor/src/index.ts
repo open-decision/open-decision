@@ -1,5 +1,6 @@
 export { NodeEditor } from "./NodeEditor";
-export type { NodeTypes } from "react-flow-renderer";
+export type { NodeTypes } from "reactflow";
+export { ReactFlowProvider } from "reactflow";
 export {
   useEditor,
   useSelectedEdgeIds,

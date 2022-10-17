@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useReactFlow, useStore } from "react-flow-renderer";
+import { useReactFlow, useStore } from "reactflow";
 import { calculateCenterOfNode } from "../utils/calculateCenterOfNode";
 import { sidebarWidth } from "../utils/constants";
 import { ODProgrammerError } from "@open-decision/type-classes";

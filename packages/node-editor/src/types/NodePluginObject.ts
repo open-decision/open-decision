@@ -1,7 +1,7 @@
 import { Node } from "@open-decision/tree-type";
 import { NodePlugin } from "../plugin/NodePlugin";
 import { z } from "zod";
-import { NodeProps } from "react-flow-renderer";
+import { NodeProps } from "reactflow";
 import { NodePluginData } from "../state";
 import { StyleObject } from "@open-decision/design-system";
 import { InputPluginObject } from "@open-decision/input-plugins-helpers";

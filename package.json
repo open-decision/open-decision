@@ -62,7 +62,7 @@
     },
     "overrides": {
       "zod": "^3.19.1",
-      "valtio": "1.6.4"
+      "valtio": "1.7.4"
     }
   },
   "volta": {

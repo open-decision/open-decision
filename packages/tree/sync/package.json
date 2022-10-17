@@ -10,7 +10,7 @@
     "yjs": "^13.5.41",
     "y-websocket": "^1.4.5",
     "y-indexeddb": "^9.0.9",
-    "valtio": "^1.7.0",
+    "valtio": "^1.7.4",
     "valtio-yjs": "^0.3.1",
     "@xstate/react": "^3.0.1",
     "remeda": "^1.1.0"

@@ -11,7 +11,7 @@ import {
   EnterFullScreenIcon,
 } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
-import { useReactFlow } from "react-flow-renderer";
+import { useReactFlow } from "reactflow";
 
 const Container = styled(Row, {
   layer: "1",

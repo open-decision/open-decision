@@ -1,5 +1,5 @@
 import * as React from "react";
-import ReactFlow, { NodeTypes } from "react-flow-renderer";
+import ReactFlow, { NodeTypes } from "reactflow";
 import { styled, StyleObject } from "@open-decision/design-system";
 import { ConnectionLine } from "./Edges/ConnectionLine";
 import { CustomEdge } from "./Edges/CustomEdge";

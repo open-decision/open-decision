@@ -5,6 +5,7 @@ import { ZoomInOut } from "./Canvas/ZoomInOut";
 import { mapValues } from "remeda";
 import { useSelectedNodes } from "./state";
 import { NodePluginObject } from "./types/NodePluginObject";
+import "reactflow/dist/style.css";
 
 const StyledCanvas = styled(Canvas, {
   display: "grid",

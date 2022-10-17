@@ -1,24 +1,14 @@
 import { theme } from "@open-decision/design-system";
-import {
-  ConnectionLineComponentProps,
-  getBezierPath,
-} from "react-flow-renderer";
+import { ConnectionLineComponentProps, getBezierPath } from "reactflow";
 
-export function ConnectionLine({
-  sourceX,
-  sourceY,
-  sourcePosition,
-  targetX,
-  targetY,
-  targetPosition,
-}: ConnectionLineComponentProps) {
+export function ConnectionLine(props: ConnectionLineComponentProps) {
   const path = getBezierPath({
-    sourceX,
-    sourceY,
-    sourcePosition,
-    targetX,
-    targetY,
-    targetPosition,
+    sourceX: props.fromX,
+    sourceY: props.fromY,
+    sourcePosition: props.fromPosition,
+    targetX: props.toX,
+    targetY: props.toY,
+    targetPosition: props.toPosition,
   });
 
   return (
@@ -28,11 +18,11 @@ export function ConnectionLine({
         stroke={theme.colors.primary9.value}
         strokeWidth={1.5}
         className="animated"
-        d={path}
+        d={path[0]}
       />
       <circle
-        cx={targetX}
-        cy={targetY}
+        cx={props.toX}
+        cy={props.toY}
         fill="#fff"
         r={3}
         stroke="#222"

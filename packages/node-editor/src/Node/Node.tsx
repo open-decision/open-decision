@@ -1,6 +1,6 @@
 import { styled, Stack } from "@open-decision/design-system";
 import * as React from "react";
-import { Position } from "react-flow-renderer";
+import { Position } from "reactflow";
 import { SourcePort, TargetPort } from "./Port";
 import { useTranslations } from "next-intl";
 import { useTree } from "@open-decision/tree-sync";
