@@ -44,19 +44,20 @@ export class InputPlugin<
     this.VariableType = VariableType;
   }
 
-  /**
-   * You almost certainly do not want to use this directly, but use a plugin instead.
-   * This is a low-level function that is used by plugins to create a new node.
-   * @param data can be anything as long as it includes a type property
-   * @returns the data merged with a unique id
-   */
+  create(data?: Omit<z.infer<typeof this.Type>, "id" | "type">) {
+    const newInput = merge(data, {
+      id: uuid(),
+      type: this.typeName,
+    });
 
-  create(data: z.infer<TType>) {
-    const newInput = merge(data, { id: uuid() });
+    return this.parse(newInput);
+  }
 
-    const parsedInput = this.Type.safeParse(newInput);
+  parse(input: unknown) {
+    const parsedInput = this.Type.safeParse(input);
 
     if (!parsedInput.success) {
+      console.error(parsedInput.error);
       throw new ODProgrammerError({
         code: "INVALID_ENTITY_CREATION",
         message:

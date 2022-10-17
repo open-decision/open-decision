@@ -1,6 +1,7 @@
 import { Node, Plugin, TTreeClient } from "@open-decision/tree-type";
 import { z } from "zod";
 import { pipe } from "remeda";
+import { ODProgrammerError } from "@open-decision/type-classes";
 
 const mergeTypes = <TType extends z.ZodType, TTypeName extends string>(
   Type: TType,
@@ -50,5 +51,20 @@ export class NodePlugin<
         : this.treeClient.nodes.get.all(),
       this.returnOnlyWhenRecordOfType
     );
+  }
+
+  safeParse(node: unknown) {
+    const parsedNode = this.Type.safeParse(node);
+
+    if (!parsedNode.success) {
+      console.error(parsedNode.error);
+      throw new ODProgrammerError({
+        code: "INVALID_ENTITY_CREATION",
+        message:
+          "The node could not be created. Please check that the data is correct.",
+      });
+    }
+
+    return parsedNode.data;
   }
 }

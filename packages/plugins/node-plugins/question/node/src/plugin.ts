@@ -7,12 +7,11 @@ import { createInputPlugins } from "./createinputPlugins";
 import { deleteInput, getInput } from "@open-decision/input-plugins-helpers";
 import { match } from "ts-pattern";
 import { ODProgrammerError } from "@open-decision/type-classes";
-import { DeepPartial } from "utility-types";
 
 export const typeName = "question" as const;
 
 export const DataType = z.object({
-  content: RichText,
+  content: RichText.optional(),
   inputs: z.array(z.string()),
 });
 
@@ -38,23 +37,12 @@ export class QuestionNodePlugin extends NodePlugin<
       ...nodeData,
       type: this.typeName,
       data: {
-        content: nodeData.data?.content ?? {},
+        content: nodeData.data?.content,
         inputs: nodeData.data?.inputs ?? [],
       },
     });
 
-    const parsedNode = this.Type.safeParse(newNode);
-
-    if (!parsedNode.success) {
-      console.error(parsedNode.error);
-      throw new ODProgrammerError({
-        code: "INVALID_ENTITY_CREATION",
-        message:
-          "The question node could not be created. Please check that the data is correct.",
-      });
-    }
-
-    return parsedNode.data;
+    return this.safeParse(newNode);
   }
 
   updateNodeContent(

@@ -28,13 +28,13 @@ import {
 } from "@open-decision/node-editor";
 import { QuestionNodePlugin, TQuestionNode } from "./plugin";
 import {
-  InputPluginObject,
   InputComponentProps,
   addInput,
   updateInput,
   getInputs,
-  Input,
 } from "@open-decision/input-plugins-helpers";
+import { match } from "ts-pattern";
+import { z } from "zod";
 
 export const QuestionNodeSidebar: NodeSidebar<TQuestionNode> = ({
   node,
@@ -208,7 +208,7 @@ const InputDropdown = ({
               key={plugin.type}
               checked={currentType === plugin.type}
               onClick={() => {
-                const newInput = plugin.plugin.create({});
+                const newInput = plugin.plugin.create();
 
                 if (!inputId) {
                   addInput(treeClient)(newInput);
@@ -264,7 +264,10 @@ export function InputPluginComponent({
 }: InputPluginComponentProps) {
   const inputs = useTree((tree) => {
     const treeClient = createTreeClient(tree);
-    return getInputs(treeClient, QuestionNodePlugin.inputType)(inputIds);
+    return getInputs(
+      treeClient,
+      z.record(QuestionNodePlugin.inputType)
+    )(inputIds);
   });
 
   return (
@@ -281,10 +284,16 @@ export function InputPluginComponent({
                 currentType={input.type}
                 inputId={input.id}
               >
-                {PluginComponents.PrimaryActionSlot ? (
-                  //@ts-ignore TODO: fix this
-                  <PluginComponents.PrimaryActionSlot input={input} />
-                ) : null}
+                {PluginComponents.PrimaryActionSlot
+                  ? match(input)
+                      .with({ type: "text" }, () => null)
+                      .with({ type: "select" }, (input) => (
+                        <QuestionNodePlugin.inputPlugins.select.BuilderComponent.PrimaryActionSlot
+                          input={input}
+                        />
+                      ))
+                      .exhaustive()
+                  : null}
               </InputHeader>
               <PluginComponents.InputConfigurator
                 nodeId={nodeId}

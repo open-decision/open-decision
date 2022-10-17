@@ -5,9 +5,11 @@ import { TextVariable } from "@open-decision/variable-plugins-text";
 
 export const typeName = "text" as const;
 
-export const DataType = z.object({
-  label: z.string().optional(),
-});
+export const DataType = z
+  .object({
+    label: z.string().optional(),
+  })
+  .default({});
 
 export type TTextInput = z.infer<TextInputPlugin["Type"]>;
 

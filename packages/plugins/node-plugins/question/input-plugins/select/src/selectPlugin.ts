@@ -1,9 +1,5 @@
 import { TTreeClient } from "@open-decision/tree-type";
 import { z } from "zod";
-import {
-  CompareConditionPlugin,
-  TCompareCondition,
-} from "@open-decision/condition-plugins-compare";
 import { v4 as uuid } from "uuid";
 import { InputPlugin } from "@open-decision/input-plugins-helpers";
 import { SelectVariable } from "@open-decision/variable-plugins-select";
@@ -11,9 +7,11 @@ import { SelectVariable } from "@open-decision/variable-plugins-select";
 export const typeName = "select" as const;
 export const Answer = z.object({ id: z.string().uuid(), text: z.string() });
 
-export const DataType = z.object({
-  answers: z.array(Answer).default([]).optional(),
-});
+export const DataType = z
+  .object({
+    answers: z.array(Answer),
+  })
+  .default({ answers: [] });
 
 export type TAnswer = z.infer<typeof Answer>;
 
