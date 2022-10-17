@@ -1,6 +1,6 @@
 import { styled, Stack } from "@open-decision/design-system";
 import * as React from "react";
-import { NodeProps, Position } from "react-flow-renderer";
+import { NodeProps, Position } from "reactflow";
 import { nodeHeight, nodeWidth } from "../utils/constants";
 import { SourcePort, TargetPort } from "./Port";
 import { useTranslations } from "next-intl";
@@ -42,7 +42,7 @@ export const CanvasNodeContainer = <TNode extends Node.TNode>({
   data,
   selected: isSelected,
   children,
-  ...props
+  zIndex,
 }: NodePluginProps<TNode> & {
   children: React.ReactNode;
 }) => {
@@ -78,9 +78,9 @@ export const CanvasNodeContainer = <TNode extends Node.TNode>({
         border: isSelected ? "2px solid $primary9" : "1px solid $gray8",
         padding: isSelected ? "calc($5 - 1px)" : "$5",
         opacity: validConnectionTarget ? 1 : 0.5,
+        zIndex,
       }}
       center
-      {...props}
     >
       {isStartNode ? (
         <StartNodeLabel

@@ -73,7 +73,11 @@ const Content = ({ treeId }: PageProps) => {
   const { nodePlugins } = useTreeClient();
 
   return (
-    <Tabs.Root defaultValue={selectedView} onValueChange={setSelectedView}>
+    <Tabs.Root
+      asChild
+      defaultValue={selectedView}
+      onValueChange={setSelectedView}
+    >
       <Layout
         css={{
           layer: "3",
@@ -143,7 +147,10 @@ const Content = ({ treeId }: PageProps) => {
                     ease: "easeInOut",
                   }}
                 >
-                  <NodeEditor nodePlugins={nodePlugins} />
+                  <NodeEditor
+                    nodePlugins={nodePlugins}
+                    css={{ height: "100%" }}
+                  />
                 </motion.div>
               </Tabs.Content>
             ) : null}

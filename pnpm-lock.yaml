@@ -596,7 +596,7 @@ importers:
       '@open-decision/tree-sync': workspace:*
       '@open-decision/tree-type': workspace:*
       '@open-decision/type-classes': workspace:*
-      react-flow-renderer: ^10.3.17
+      reactflow: ^11.1.1
       remeda: ^1.1.0
       zod: ^3.19.1
     dependencies:
@@ -606,7 +606,7 @@ importers:
       '@open-decision/tree-sync': link:../../../tree/sync
       '@open-decision/tree-type': link:../../../tree/type
       '@open-decision/type-classes': link:../../../type-classes
-      react-flow-renderer: 10.3.17
+      reactflow: 11.1.1
       remeda: 1.1.0
       zod: 3.19.1
 
@@ -6077,10 +6077,6 @@ packages:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.2
       csstype: 3.1.1
-
-  /@types/resize-observer-browser/0.1.7:
-    resolution: {integrity: sha512-G9eN0Sn0ii9PWQ3Vl72jDPgeJwRWhv2Qk/nQkJuWmRmOB4HX3/BhD5SE1dZs/hzPZL/WKnvF0RHdTSG54QJFyg==}
-    dev: false
 
   /@types/resolve/1.17.1:
     resolution: {integrity: sha512-yy7HuzQhj0dhGpD8RLXSZWEkLsV9ibvxvi6EiJ3bkqLAO1RGo0WbkWQiwpRlSFymTJRz0d3k5LM3kkx8ArDbLw==}
@@ -12946,28 +12942,6 @@ packages:
       react: 18.2.0
       scheduler: 0.23.0
 
-  /react-flow-renderer/10.3.17:
-    resolution: {integrity: sha512-bywiqVErlh5kCDqw3x0an5Ur3mT9j9CwJsDwmhmz4i1IgYM1a0SPqqEhClvjX+s5pU4nHjmVaGXWK96pwsiGcQ==}
-    engines: {node: '>=14'}
-    peerDependencies:
-      react: 16 || 17 || 18
-      react-dom: 16 || 17 || 18
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
-    dependencies:
-      '@babel/runtime': 7.19.0
-      '@types/d3': 7.4.0
-      '@types/resize-observer-browser': 0.1.7
-      classcat: 5.0.4
-      d3-drag: 3.0.0
-      d3-selection: 3.0.0
-      d3-zoom: 3.0.0
-      zustand: 3.7.2
-    dev: false
-
   /react-hook-form/7.36.0:
     resolution: {integrity: sha512-2PmRhTDH90/G1XWbUGpfuFBf7wxj9kYvzPqoZCv4wUGBIfuac0fK3up9sbeoz0ghpLYcFFXRVDKMUXgMutLXTw==}
     engines: {node: '>=12.22.0'}
@@ -15345,16 +15319,6 @@ packages:
 
   /zod/3.19.1:
     resolution: {integrity: sha512-LYjZsEDhCdYET9ikFu6dVPGp2YH9DegXjdJToSzD9rO6fy4qiRYFoyEYwps88OseJlPyl2NOe2iJuhEhL7IpEA==}
-    dev: false
-
-  /zustand/3.7.2:
-    resolution: {integrity: sha512-PIJDIZKtokhof+9+60cpockVOq05sJzHCriyvaLBmEJixseQ1a5Kdov6fWZfWOu5SK9c+FhH1jU0tntLxRJYMA==}
-    engines: {node: '>=12.7.0'}
-    peerDependencies:
-      react: '>=16.8'
-    peerDependenciesMeta:
-      react:
-        optional: true
     dev: false
 
   /zustand/4.1.1:

@@ -92,7 +92,7 @@ export const createTreeClientWithPlugins = (tree: Tree.TTree) => {
 
   return {
     treeClient,
-    nodePlugins: { QuestionNode },
+    nodePlugins: { question: QuestionNode },
     interpreterResolver: resolver,
   };
 };
