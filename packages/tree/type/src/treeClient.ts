@@ -19,7 +19,7 @@ import {
   getPluginEntity,
   getPluginEntities,
   getEntirePluginEntity,
-  getConditionByNode,
+  getConditionsByNode,
 } from "./getters";
 import {
   updateStartNode,
@@ -102,7 +102,7 @@ export function createTreeClient<TTree extends Tree.TTree>(tree: TTree) {
         collection: getConditions(tree),
         all: () => tree.conditions as TTree["conditions"],
         byEdge: getConditionByEdge(tree),
-        byNode: getConditionByNode(tree),
+        byNode: getConditionsByNode(tree),
       },
       delete: deleteConditions(tree),
       create: createCondition,

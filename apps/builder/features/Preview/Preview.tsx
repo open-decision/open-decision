@@ -37,7 +37,7 @@ export function Preview({ css }: Props) {
           ...css,
         }}
         nodePlugins={nodePlugins}
-        inputPlugins={nodePlugins.QuestionNode.plugin.inputPlugins}
+        inputPlugins={nodePlugins.question.plugin.inputPlugins}
       />
     </Renderer.Root>
   );

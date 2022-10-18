@@ -29,17 +29,17 @@ export const createTreeClient = <
     })
   );
 
-  const extendedTreeClient = createBaseTreeClient(tree);
+  const treeClient = createBaseTreeClient(tree);
 
   const treeClientWithTypes = {
     Type: mergedTreeTypes,
-    ...extendedTreeClient,
+    ...treeClient,
     nodes: {
-      ...extendedTreeClient.nodes,
+      ...treeClient.nodes,
       Type: plugins.nodes[1],
     },
     conditions: {
-      ...extendedTreeClient.conditions,
+      ...treeClient.conditions,
       Type: plugins.conditions[1],
     },
     condition: plugins.conditions[0],

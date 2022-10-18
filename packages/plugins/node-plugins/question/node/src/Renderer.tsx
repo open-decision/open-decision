@@ -31,7 +31,7 @@ export const Actions: RendererNodeActions<TQuestionNode> = ({
         const Input = inputPlugins[input.type];
 
         return (
-          <Input.RendererComponent input={input} css={css}>
+          <Input.RendererComponent input={input} css={css} key={input.id}>
             <Form.Submit
               css={{
                 alignSelf: "end",

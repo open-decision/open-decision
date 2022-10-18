@@ -1,8 +1,9 @@
 import { Tree } from "../type-classes";
 import { getConditions } from "./getCondition";
 import { getEdges } from "./getEdge";
+import { omitBy } from "remeda";
 
-export const getConditionByNode = (tree: Tree.TTree) => (nodeId: string) => {
+export const getConditionsByNode = (tree: Tree.TTree) => (nodeId: string) => {
   const edges = getEdges(tree)();
   const conditions = getConditions(tree)();
 
@@ -10,7 +11,9 @@ export const getConditionByNode = (tree: Tree.TTree) => (nodeId: string) => {
     (edge) => edge.source === nodeId
   );
 
-  return Object.values(conditions ?? {}).find((condition) =>
-    edgesOfNode.find((edge) => edge.conditionId === condition.id)
+  return omitBy(
+    conditions ?? {},
+    (condition) =>
+      !edgesOfNode.find((edge) => edge.conditionId === condition.id)
   );
 };

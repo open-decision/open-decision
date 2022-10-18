@@ -11,8 +11,7 @@ export function AnswersForm({
   children,
   onSubmit,
 }: RendererComponentProps<TSelectInput>) {
-  const { send, getAnswer, getCurrentNode } = useInterpreter();
-  const treeClient = useTreeClient();
+  const { send, getAnswer } = useInterpreter();
 
   const formState = Form.useFormState({
     defaultValues: { [input.id]: getAnswer(input.id) ?? "" },

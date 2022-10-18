@@ -59,12 +59,14 @@ export const createTreeClientWithPlugins = (tree: Tree.TTree) => {
       .record(treeClient.conditions.Type)
       .safeParse(conditions);
 
-    if (!validConditions.success)
+    if (!validConditions.success) {
+      console.error(validConditions.error);
       throw new ODProgrammerError({
         code: "INVALID_CONDITIONS",
         message:
           "The conditions provided to the interpreter are not valid for the configured plugins.",
       });
+    }
 
     for (const conditionId in validConditions.data) {
       const condition = validConditions.data[conditionId];

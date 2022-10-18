@@ -15,6 +15,8 @@ export const resolver: ConditionResolver<TCompareCondition> =
     // Get a possibly existing answer from the interpreter context
     const existingAnswerId = context.answers[condition.data.variableId];
 
+    console.log({ condition, existingAnswerId });
+
     // We expect there to be an answer on the interpreter context.
     // Not finding an answer on the interpreter context is a programmer error.
     if (!(condition.data.valueId === existingAnswerId))
