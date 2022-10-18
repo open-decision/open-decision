@@ -41,6 +41,7 @@ export const QuestionNodeSidebar: NodeSidebar<TQuestionNode> = ({
   return (
     <Sidebar open={open}>
       <Content
+        key={node.id}
         css={{
           gridRow: "1 / -1",
           gridColumn: "2",
