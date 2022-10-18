@@ -54,7 +54,8 @@ const StyledReorderGroup = styled(Reorder.Group, {
 export const SingleSelect = ({
   nodeId,
   input,
-  onClick,
+  onTargetSelect,
+  onNodeCreate,
 }: InputComponentProps<TSelectInput>) => {
   const treeClient = useTreeClient();
   const ref = React.useRef<HTMLDivElement | null>(null);
@@ -76,7 +77,7 @@ export const SingleSelect = ({
 
         return (
           <OptionTargetInput
-            onClick={onClick}
+            onTargetSelect={onTargetSelect}
             nodeId={nodeId}
             answer={answer}
             edge={edge}
@@ -84,6 +85,7 @@ export const SingleSelect = ({
             key={answer.id}
             groupRef={ref}
             input={input}
+            onNodeCreate={onNodeCreate}
           />
         );
       })}
@@ -105,7 +107,8 @@ export const OptionTargetInput = ({
   inputId,
   nodeId,
   groupRef,
-  onClick,
+  onTargetSelect,
+  onNodeCreate,
 }: SingleSelectInputProps) => {
   const treeClient = useTreeClient();
   const Select = new SelectInputPlugin(treeClient);
@@ -172,7 +175,7 @@ export const OptionTargetInput = ({
           />
           <TargetSelector
             nodeName={node.name}
-            onClick={onClick}
+            onClick={onTargetSelect}
             edge={edge}
             name={formState.names.target}
             value={formState.values.target}
@@ -188,10 +191,11 @@ export const OptionTargetInput = ({
               });
 
               treeClient.conditions.add(condition);
+              const newNode = onNodeCreate({ name: value });
               return createTargetNode(treeClient)(
                 nodeId,
                 condition.id,
-                treeClient.nodes.create.node({ name: value })
+                newNode
               );
             }}
             onSelect={(newItem) =>

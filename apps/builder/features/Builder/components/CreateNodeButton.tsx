@@ -7,15 +7,15 @@ import {
 } from "@open-decision/design-system";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
-import { useTreeClient } from "@open-decision/tree-sync";
 import { sideMenuTooltipProps } from "./SideMenu/shared";
 import { useEditor } from "@open-decision/node-editor";
+import { useTreeClient } from "./TreeClient";
 
 type Props = { css?: StyleObject };
 
 export function CreateNodeButton({ css }: Props) {
   const t = useTranslations("builder.createNodeButton");
-  const treeClient = useTreeClient();
+  const { treeClient } = useTreeClient();
 
   const { getCenter, zoomToNode, replaceSelectedNodes } = useEditor();
 
@@ -28,9 +28,7 @@ export function CreateNodeButton({ css }: Props) {
           square
           css={css}
           onClick={() => {
-            const newNode = treeClient.nodes.create.node({
-              type: "customNode",
-              data: { inputs: [], conditions: [] },
+            const newNode = treeClient.node.question.create({
               position: getCenter(),
             });
 

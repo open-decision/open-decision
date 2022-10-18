@@ -3,13 +3,17 @@ import { z } from "zod";
 import { InputPlugin } from "./InputPlugin";
 import * as Input from "./Input";
 import { BaseVariableType } from "@open-decision/variable-plugins-helpers";
+import { Node } from "@open-decision/tree-type";
 
 export { Input };
 
 export type InputComponentProps<TInput extends Input.TInput> = {
   nodeId: string;
   input: TInput;
-  onClick: (target: string) => void;
+  onTargetSelect: (target: string) => void;
+  onNodeCreate: <TNodeType extends Omit<Node.TNode, "id" | "data" | "type">>(
+    nodeData: Partial<TNodeType>
+  ) => Node.TNode;
 };
 
 export type InputPrimaryActionSlotProps<TInput extends Input.TInput> = {

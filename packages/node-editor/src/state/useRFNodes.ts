@@ -13,11 +13,10 @@ export function useRFNodes<TNode extends Node.TNode>() {
     selected: selectedNodeIds.includes(id),
     id,
     position,
-    name,
-    data: data as TNode,
+    data: { data: data as TNode["data"], name },
   }));
 }
 
 export type NodePluginData<TNode extends Node.TNode> = ReturnType<
   typeof useRFNodes<TNode>
->[number];
+>[number]["data"];

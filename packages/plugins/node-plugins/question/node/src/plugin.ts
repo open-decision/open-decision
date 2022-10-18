@@ -5,6 +5,7 @@ import { NodePlugin } from "@open-decision/node-editor";
 import { isEmpty } from "ramda";
 import { createInputPlugins } from "./createinputPlugins";
 import {
+  addInput,
   deleteInput,
   getInput,
   updateInput,
@@ -49,6 +50,7 @@ export class QuestionNodePlugin extends NodePlugin<
   }
 
   updateInput = updateInput(this.treeClient);
+  addInput = addInput(this.treeClient);
 
   updateNodeContent(
     nodeId: string,

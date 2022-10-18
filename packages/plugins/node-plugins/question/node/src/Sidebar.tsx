@@ -29,11 +29,10 @@ import {
 import { QuestionNodePlugin, TQuestionNode } from "./plugin";
 import {
   InputComponentProps,
-  addInput,
-  updateInput,
   getInputs,
 } from "@open-decision/input-plugins-helpers";
 import { match } from "ts-pattern";
+import { isEmpty } from "ramda";
 
 export const QuestionNodeSidebar: NodeSidebar<TQuestionNode> = ({
   node,
@@ -105,10 +104,10 @@ function Content({ node, css }: Props) {
         />
       </Box>
       <InputPluginComponent
-        onClick={(target) => replaceSelectedNodes([target])}
+        onTargetSelect={(target) => replaceSelectedNodes([target])}
         inputIds={node.data.inputs}
         nodeId={node.id}
-        QuestionNodePlugin={QuestionNode}
+        QuestionNode={QuestionNode}
       />
     </Stack>
   );
@@ -176,16 +175,15 @@ type InputDropdownProps = {
   currentType?: string;
   inputId?: string;
   nodeId: string;
+  QuestionNode: QuestionNodePlugin;
 };
 
 const InputDropdown = ({
   currentType,
   inputId,
   nodeId,
+  QuestionNode,
 }: InputDropdownProps) => {
-  const treeClient = useTreeClient();
-  const QuestionNode = new QuestionNodePlugin(treeClient);
-
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
@@ -210,7 +208,7 @@ const InputDropdown = ({
                 const newInput = plugin.plugin.create();
 
                 if (!inputId) {
-                  addInput(treeClient)(newInput);
+                  QuestionNode.addInput(newInput);
                   return QuestionNode.connectInputAndNode(nodeId, newInput.id);
                 }
 
@@ -252,26 +250,26 @@ const InputHeader = ({ children, ...props }: InputHeaderProps) => {
 type InputPluginComponentProps = {
   inputIds: string[];
   nodeId: string;
-  QuestionNodePlugin: QuestionNodePlugin;
-} & Pick<InputComponentProps<any>, "onClick">;
+  QuestionNode: QuestionNodePlugin;
+} & Pick<InputComponentProps<any>, "onTargetSelect">;
 
 export function InputPluginComponent({
   inputIds,
-  onClick,
+  onTargetSelect,
   nodeId,
-  QuestionNodePlugin,
+  QuestionNode,
 }: InputPluginComponentProps) {
   const inputs = useTree((tree) => {
     const treeClient = createTreeClient(tree);
-    return getInputs(treeClient, QuestionNodePlugin.inputType)(inputIds);
+    return getInputs(treeClient, QuestionNode.inputType)(inputIds);
   });
 
   return (
     <Box as="section">
-      {inputs ? (
+      {inputs && !isEmpty(inputs) ? (
         Object.values(inputs).map((input) => {
           const PluginComponents =
-            QuestionNodePlugin.inputPlugins[input.type].BuilderComponent;
+            QuestionNode.inputPlugins[input.type].BuilderComponent;
 
           return (
             <Box as="section" key={input.id}>
@@ -279,12 +277,13 @@ export function InputPluginComponent({
                 nodeId={nodeId}
                 currentType={input.type}
                 inputId={input.id}
+                QuestionNode={QuestionNode}
               >
                 {PluginComponents.PrimaryActionSlot
                   ? match(input)
                       .with({ type: "text" }, () => null)
                       .with({ type: "select" }, (input) => (
-                        <QuestionNodePlugin.inputPlugins.select.BuilderComponent.PrimaryActionSlot
+                        <QuestionNode.inputPlugins.select.BuilderComponent.PrimaryActionSlot
                           input={input}
                         />
                       ))
@@ -293,7 +292,10 @@ export function InputPluginComponent({
               </InputHeader>
               <PluginComponents.InputConfigurator
                 nodeId={nodeId}
-                onClick={onClick}
+                onTargetSelect={onTargetSelect}
+                onNodeCreate={({ name, position }) =>
+                  QuestionNode.create({ name, position })
+                }
                 //@ts-ignore TODO: fix this
                 input={input}
                 key={input.id}
@@ -302,7 +304,7 @@ export function InputPluginComponent({
           );
         })
       ) : (
-        <InputHeader nodeId={nodeId} />
+        <InputHeader nodeId={nodeId} QuestionNode={QuestionNode} />
       )}
     </Box>
   );
