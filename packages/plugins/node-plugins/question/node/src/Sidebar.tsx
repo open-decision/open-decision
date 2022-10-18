@@ -264,10 +264,7 @@ export function InputPluginComponent({
 }: InputPluginComponentProps) {
   const inputs = useTree((tree) => {
     const treeClient = createTreeClient(tree);
-    return getInputs(
-      treeClient,
-      z.record(QuestionNodePlugin.inputType)
-    )(inputIds);
+    return getInputs(treeClient, QuestionNodePlugin.inputType)(inputIds);
   });
 
   return (

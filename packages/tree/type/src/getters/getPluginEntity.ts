@@ -14,11 +14,13 @@ export const getPluginEntity =
 
     const parsedEntity = type.safeParse(tree.pluginEntities[entityKey][id]);
 
-    if (!parsedEntity.success)
+    if (!parsedEntity.success) {
+      console.error(parsedEntity.error);
       throw new ODProgrammerError({
         code: "INVALID_REQUESTED_PLUGIN_ENTITY",
         message: "The requested plugin entity is not of the provided type.",
       });
+    }
 
     return parsedEntity.data;
   };
