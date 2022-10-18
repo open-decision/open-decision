@@ -34,7 +34,6 @@ import {
   getInputs,
 } from "@open-decision/input-plugins-helpers";
 import { match } from "ts-pattern";
-import { z } from "zod";
 
 export const QuestionNodeSidebar: NodeSidebar<TQuestionNode> = ({
   node,
@@ -215,7 +214,7 @@ const InputDropdown = ({
                   return QuestionNode.connectInputAndNode(nodeId, newInput.id);
                 }
 
-                return updateInput(treeClient)(inputId, newInput);
+                return QuestionNode.updateInput(inputId, newInput);
               }}
             >
               {plugin.type.charAt(0).toUpperCase() + plugin.type.slice(1)}

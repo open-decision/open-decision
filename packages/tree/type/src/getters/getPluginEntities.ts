@@ -9,13 +9,13 @@ export const getPluginEntities =
     entityKey: string,
     ids: string[],
     type: TType
-  ): Record<string, z.infer<TType>> | undefined => {
+  ) => {
     if (!tree.pluginEntities) return undefined;
     if (!tree.pluginEntities[entityKey]) return undefined;
 
-    const entities = pick(tree.pluginEntities[entityKey], ids);
+    const data = pick(tree.pluginEntities[entityKey], ids);
 
-    const parsedEntities = z.record(type).safeParse(entities);
+    const parsedEntities = z.record(type).safeParse(data);
 
     if (!parsedEntities.success) {
       console.error(parsedEntities.error);
@@ -25,5 +25,5 @@ export const getPluginEntities =
       });
     }
 
-    return parsedEntities.data;
+    return data as Record<string, z.infer<TType>>;
   };

@@ -4,14 +4,10 @@ import { ODProgrammerError } from "@open-decision/type-classes";
 
 export const getEntirePluginEntity =
   (tree: Tree.TTree) =>
-  <TType extends z.ZodTypeAny>(
-    entityKey: string,
-    type: TType
-  ): Record<string, z.infer<TType>> | undefined => {
+  <TType extends z.ZodTypeAny>(entityKey: string, type: TType) => {
     if (!tree.pluginEntities) return undefined;
-    const parsedEntity = z
-      .record(type)
-      .safeParse(tree.pluginEntities[entityKey]);
+    const data = tree.pluginEntities[entityKey];
+    const parsedEntity = z.record(type).safeParse(data);
 
     if (!parsedEntity.success) {
       console.error(parsedEntity.error);
@@ -21,5 +17,8 @@ export const getEntirePluginEntity =
       });
     }
 
-    return parsedEntity.data;
+    // We need to keep the reference to the original object.
+    // The parse above is a safeguard to make sure the requested data is of the expected format.
+    // We cannot return the data from the parse because it is a new object.
+    return data as Record<string, z.infer<TType>>;
   };

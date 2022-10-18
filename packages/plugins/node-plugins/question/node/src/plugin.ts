@@ -4,9 +4,12 @@ import { z } from "zod";
 import { NodePlugin } from "@open-decision/node-editor";
 import { isEmpty } from "ramda";
 import { createInputPlugins } from "./createinputPlugins";
-import { deleteInput, getInput } from "@open-decision/input-plugins-helpers";
+import {
+  deleteInput,
+  getInput,
+  updateInput,
+} from "@open-decision/input-plugins-helpers";
 import { match } from "ts-pattern";
-import { ODProgrammerError } from "@open-decision/type-classes";
 
 export const typeName = "question" as const;
 
@@ -44,6 +47,8 @@ export class QuestionNodePlugin extends NodePlugin<
 
     return this.safeParse(newNode);
   }
+
+  updateInput = updateInput(this.treeClient);
 
   updateNodeContent(
     nodeId: string,

@@ -4,15 +4,13 @@ import { ODProgrammerError } from "@open-decision/type-classes";
 
 export const getPluginEntity =
   (tree: Tree.TTree) =>
-  <TType extends z.ZodTypeAny>(
-    entityKey: string,
-    id: string,
-    type: TType
-  ): z.infer<TType> | undefined => {
+  <TType extends z.ZodTypeAny>(entityKey: string, id: string, type: TType) => {
     if (!tree.pluginEntities) return undefined;
     if (!tree.pluginEntities[entityKey]) return undefined;
 
-    const parsedEntity = type.safeParse(tree.pluginEntities[entityKey][id]);
+    const data = tree.pluginEntities[entityKey][id];
+
+    const parsedEntity = type.safeParse(data);
 
     if (!parsedEntity.success) {
       console.error(parsedEntity.error);
@@ -22,5 +20,5 @@ export const getPluginEntity =
       });
     }
 
-    return parsedEntity.data;
+    return data as z.infer<TType>;
   };
