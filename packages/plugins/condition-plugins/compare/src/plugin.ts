@@ -21,12 +21,12 @@ export class CompareConditionPlugin extends ConditionPlugin<
     let conditions: Record<string, Condition.TCondition> | undefined;
 
     if (nodeId) {
-      const condition = this.treeClient.conditions.get.byNode(nodeId);
-      if (!condition) return;
-      conditions = { [condition.id]: condition };
+      const nodeConditions = this.treeClient.conditions.get.byNode(nodeId);
+      if (!nodeConditions) return;
+      conditions = nodeConditions;
+    } else {
+      conditions = this.treeClient.conditions.get.all();
     }
-
-    conditions = this.treeClient.conditions.get.all();
 
     const edges = this.treeClient.edges.get.all();
 

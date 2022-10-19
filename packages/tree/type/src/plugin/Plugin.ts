@@ -10,9 +10,9 @@ export class Plugin<
     id: z.ZodString;
   }>
 > {
-  declare treeClient: TTreeClient;
-  declare typeName: TTypeName;
-  declare Type: TType;
+  treeClient: TTreeClient;
+  typeName: TTypeName;
+  Type: TType;
 
   constructor(treeClient: TTreeClient, Type: TType) {
     this.treeClient = treeClient;

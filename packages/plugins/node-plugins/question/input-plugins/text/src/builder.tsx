@@ -9,7 +9,7 @@ import { DirectConditionPlugin } from "@open-decision/condition-plugins-direct";
 export const BuilderComponent = ({
   nodeId,
   input,
-  onClick,
+  onTargetSelect,
 }: InputComponentProps<TTextInput>) => {
   const treeClient = useTreeClient();
   const FreeText = new TextInputPlugin(treeClient);
@@ -54,7 +54,7 @@ export const BuilderComponent = ({
             newItem,
           })
         }
-        onClick={onClick}
+        onClick={onTargetSelect}
         value={formState.values.target}
         setValue={(newValue) =>
           formState.setValue(formState.names.target, newValue)

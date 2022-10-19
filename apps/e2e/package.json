@@ -1,5 +1,8 @@
 {
   "name": "@open-decision/e2e",
+  "scripts": {
+    "pretest": "tsc --incremental -p ./tsconfig.json"
+  },
   "dependencies": {
     "@open-decision/api-client": "workspace:*",
     "@open-decision/prisma": "workspace:*",
