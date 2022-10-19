@@ -10,6 +10,7 @@ export const BuilderComponent = ({
   nodeId,
   input,
   onTargetSelect,
+  onNodeCreate,
 }: InputComponentProps<TTextInput>) => {
   const treeClient = useTreeClient();
   const FreeText = new TextInputPlugin(treeClient);
@@ -41,9 +42,7 @@ export const BuilderComponent = ({
           return createTargetNode(treeClient)(
             nodeId,
             condition.id,
-            treeClient.nodes.create.node({
-              name: value,
-            })
+            onNodeCreate({ name: value })
           );
         }}
         onSelect={(newItem) =>

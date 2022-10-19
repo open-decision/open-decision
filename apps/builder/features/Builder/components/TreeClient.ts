@@ -15,9 +15,7 @@ export const createTreeClientWithPlugins = (tree: Tree.TTree) => {
   const QuestionNode = createQuestionNodePlugin(baseTreeClient);
   const NodeType = QuestionNode.plugin.Type;
 
-  const CompareCondition = createCompareConditionPlugin(
-    QuestionNode.treeClient
-  );
+  const CompareCondition = createCompareConditionPlugin(baseTreeClient);
   const DirectCondition = createDirectConditionPlugin(baseTreeClient);
   const ConditionType = z.discriminatedUnion("type", [
     CompareCondition.plugin.Type,

@@ -20,13 +20,13 @@ export class Plugin<
     this.typeName = this.Type.shape.type.value;
   }
 
-  isType(input: any): input is z.infer<typeof this.Type> {
-    return this.Type.safeParse(input).success;
+  isType(entity: any): entity is z.infer<typeof this.Type> {
+    return this.Type.safeParse(entity).success;
   }
 
   isRecordOfType(
-    inputs: any
-  ): inputs is z.infer<z.ZodRecord<z.ZodString, typeof this.Type>> {
-    return z.record(this.Type).safeParse(inputs).success;
+    entities: any
+  ): entities is z.infer<z.ZodRecord<z.ZodString, typeof this.Type>> {
+    return z.record(this.Type).safeParse(entities).success;
   }
 }

@@ -12,7 +12,6 @@ export const createQuestionNodePlugin = (treeClient: TTreeClient) => {
   const plugin = new QuestionNodePlugin(treeClient);
 
   return {
-    treeClient,
     plugin,
     Node: QuestionNode,
     Sidebar: QuestionNodeSidebar,

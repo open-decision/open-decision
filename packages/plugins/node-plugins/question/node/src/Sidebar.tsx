@@ -120,7 +120,9 @@ const Header = ({ nodeName = "", nodeId }: HeaderProps) => {
   const t = useTranslations("builder.nodeEditingSidebar");
   const treeClient = useTreeClient();
 
-  const startNodeId = useTree((tree) => getStartNodeId(tree));
+  const startNodeId = useTree((tree) => {
+    return getStartNodeId(tree);
+  });
 
   const parentNodes = useTree((tree) => {
     const parentNodeIds = getParents(tree)(nodeId);
