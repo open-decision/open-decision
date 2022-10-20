@@ -278,7 +278,7 @@ importers:
       typescript: ^4.8.2
       uuid: ^8.3.2
       valtio: 1.7.4
-      valtio-yjs: ^0.3.1
+      valtio-yjs: ^0.4.0
       ws: ^8.8.1
       xstate: ^4.33.6
       y-indexeddb: ^9.0.9
@@ -325,7 +325,7 @@ importers:
       typescript: 4.8.3
       uuid: 8.3.2
       valtio: 1.7.4_react@18.2.0
-      valtio-yjs: 0.3.1_valtio@1.7.4+yjs@13.5.41
+      valtio-yjs: 0.4.0_valtio@1.7.4+yjs@13.5.41
       xstate: 4.33.6
       y-indexeddb: 9.0.9_yjs@13.5.41
       yjs: 13.5.41
@@ -882,7 +882,7 @@ importers:
       '@xstate/react': ^3.0.1
       remeda: ^1.1.0
       valtio: 1.7.4
-      valtio-yjs: ^0.3.1
+      valtio-yjs: ^0.4.0
       xstate: ^4.33.6
       y-indexeddb: ^9.0.9
       y-websocket: ^1.4.5
@@ -894,7 +894,7 @@ importers:
       '@xstate/react': 3.0.1_xstate@4.33.6
       remeda: 1.1.0
       valtio: 1.7.4
-      valtio-yjs: 0.3.1_valtio@1.7.4+yjs@13.5.41
+      valtio-yjs: 0.4.0_valtio@1.7.4+yjs@13.5.41
       xstate: 4.33.6
       y-indexeddb: 9.0.9_yjs@13.5.41
       y-websocket: 1.4.5_yjs@13.5.41
@@ -14650,8 +14650,8 @@ packages:
     engines: {node: '>= 0.10'}
     dev: false
 
-  /valtio-yjs/0.3.1_valtio@1.7.4+yjs@13.5.41:
-    resolution: {integrity: sha512-g4Tx+MVWMlQz1O2amYDDFE97/f4HEGF/KAnMNXF0BGeSQDImnI4lGAK5L8jlKWZf8fI7SeANiVVWbL0PzoOW5g==}
+  /valtio-yjs/0.4.0_valtio@1.7.4+yjs@13.5.41:
+    resolution: {integrity: sha512-ZOAbkzCIV/VhLfMdj0t/gIIS32bIc4t9RLlfNwHq+lTiv/5XPQbCfeGSXNnlrHm3Lr6X/vtZ1Af6qdEmObxceg==}
     peerDependencies:
       valtio: ^1.1.0
       yjs: ^13.5.11

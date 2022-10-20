@@ -1,3 +1,4 @@
+import * as React from "react";
 import { styled, StyleObject } from "@open-decision/design-system";
 import { Canvas } from "./Canvas/Canvas";
 import { sidebarWidth } from "./utils/constants";
@@ -21,11 +22,13 @@ type NodeEditorProps = {
 };
 
 export const NodeEditor = ({ css, nodePlugins }: NodeEditorProps) => {
+  const nodeTypes = React.useMemo(
+    () => mapValues(nodePlugins, (plugin) => plugin.Node),
+    [nodePlugins]
+  );
+
   return (
-    <StyledCanvas
-      css={css}
-      nodeTypes={mapValues(nodePlugins, (plugin) => plugin.Node)}
-    >
+    <StyledCanvas css={css} nodeTypes={nodeTypes}>
       <ZoomInOut css={{ position: "absolute", bottom: 10, left: 10 }} />
       <Sidebar nodePlugins={nodePlugins} />
     </StyledCanvas>

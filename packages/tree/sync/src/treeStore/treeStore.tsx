@@ -1,5 +1,5 @@
 import { proxy } from "valtio";
-import { bindProxyAndYMap } from "valtio-yjs";
+import { bind } from "valtio-yjs";
 import * as Y from "yjs";
 import { Tree } from "@open-decision/tree-type";
 
@@ -24,7 +24,7 @@ export function createTreeStore(id: string) {
     }),
   });
 
-  bindProxyAndYMap(syncedStore, yMap, {
+  bind(syncedStore, yMap, {
     transactionOrigin: `valtio for ${id}`,
   });
 
