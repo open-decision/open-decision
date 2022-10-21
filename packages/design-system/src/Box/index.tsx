@@ -1,4 +1,4 @@
-import { styled } from "../stitches";
+import { styled } from "@open-decision/design-system/src/stitches";
 
 export const Box = styled("div", {});
 

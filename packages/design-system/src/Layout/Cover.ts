@@ -1,6 +1,6 @@
 import * as React from "react";
-import { styled } from "../stitches";
-import { center } from "../shared/variants";
+import { styled } from "@open-decision/design-system/src/stitches";
+import { center } from "@open-decision/design-system/src/shared/variants";
 
 /**
  * Apply the `cover` className to the child element that should be the cover.

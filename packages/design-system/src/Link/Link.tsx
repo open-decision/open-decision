@@ -1,7 +1,7 @@
 import * as React from "react";
-import { styled, css } from "../stitches";
-import { intentSelector } from "../stitches/stateSelectors";
-import { textStyles } from "../Text";
+import { styled, css } from "@open-decision/design-system/src/stitches";
+import { intentSelector } from "@open-decision/design-system/src/stitches/stateSelectors";
+import { textStyles } from "@open-decision/design-system/src/Text";
 
 export type LinkProps = React.ComponentProps<typeof Link>;
 

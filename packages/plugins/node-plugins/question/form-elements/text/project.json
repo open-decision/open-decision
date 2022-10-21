@@ -1,0 +1,46 @@
+{
+  "$schema": "../../../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/plugins/node-plugins/question/form-elements/text/src",
+  "projectType": "library",
+  "tags": ["scope:question-node-plugin"],
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/plugins/node-plugins/question/form-elements/text",
+        "main": "packages/plugins/node-plugins/question/form-elements/text/src/index.ts",
+        "tsConfig": "packages/plugins/node-plugins/question/form-elements/text/tsconfig.lib.json",
+        "assets": [
+          "packages/plugins/node-plugins/question/form-elements/text/*.md"
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "packages/plugins/node-plugins/question/form-elements/text/**/*.{ts,tsx,js,jsx}"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": [
+        "coverage/packages/plugins/node-plugins/question/form-elements/text"
+      ],
+      "options": {
+        "jestConfig": "packages/plugins/node-plugins/question/form-elements/text/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "typecheck": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "tsc -p tsconfig.lib.json",
+        "cwd": "packages/plugins/node-plugins/question/form-elements/text"
+      }
+    }
+  }
+}

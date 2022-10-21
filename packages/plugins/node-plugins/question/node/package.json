@@ -4,9 +4,9 @@
   "main": "src/index.ts",
   "dependencies": {
     "@open-decision/design-system": "workspace:*",
-    "@open-decision/input-plugins-helpers": "workspace:*",
-    "@open-decision/input-plugins-select": "workspace:*",
-    "@open-decision/input-plugins-text": "workspace:*",
+    "@open-decision/form-element-helpers": "workspace:*",
+    "@open-decision/form-element-select": "workspace:*",
+    "@open-decision/form-element-text": "workspace:*",
     "@open-decision/node-editor": "workspace:*",
     "@open-decision/rich-text-editor": "workspace:*",
     "@open-decision/tree-sync": "workspace:*",

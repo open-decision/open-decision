@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
-import { styled } from "../../stitches";
-import { overlayCss } from "../shared";
+import { styled } from "@open-decision/design-system/src/stitches";
+import { overlayCss } from "@open-decision/design-system/src/Overlays/shared";
 
 const StyledContent = styled(PopoverPrimitive.Content, overlayCss);
 

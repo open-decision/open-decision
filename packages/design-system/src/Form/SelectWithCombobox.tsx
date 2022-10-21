@@ -1,8 +1,8 @@
 import * as React from "react";
-import { Select, Combobox } from ".";
-import { Badge } from "../Badge";
-import { StyleObject } from "../stitches";
-import { focusSelectorWithin } from "../stitches/stateSelectors";
+import { Select, Combobox } from "@open-decision/design-system/src/Form";
+import { Badge } from "@open-decision/design-system/src/Badge";
+import { StyleObject } from "@open-decision/design-system/src/stitches";
+import { focusSelectorWithin } from "@open-decision/design-system/src/stitches/stateSelectors";
 
 export type SelectWithComboboxProps = {
   onSelect: (id: string) => void;

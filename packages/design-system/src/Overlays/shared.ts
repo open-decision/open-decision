@@ -1,4 +1,4 @@
-import { keyframes, css } from "../stitches";
+import { keyframes, css } from "@open-decision/design-system/src/stitches";
 
 export const slideUpAndFade = keyframes({
   "0%": { opacity: 0, transform: "translateY(2px)" },

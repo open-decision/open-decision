@@ -1,4 +1,4 @@
-import { styled, css } from "../stitches";
+import { styled, css } from "@open-decision/design-system/src/stitches";
 
 export type TextProps = React.ComponentProps<typeof Text>;
 

@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { createSelectInputPlugin } from "@open-decision/input-plugins-select";
-import { createTextInputPlugin } from "@open-decision/input-plugins-text";
+import { createSelectInputPlugin } from "@open-decision/form-element-select";
+import { createTextInputPlugin } from "@open-decision/form-element-text";
 import { TTreeClient } from "@open-decision/tree-type";
 
 export const createInputPlugins = (treeClient: TTreeClient) => {

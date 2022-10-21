@@ -2,7 +2,7 @@
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/plugins/node-plugins/question/node/src",
   "projectType": "library",
-  "tags": [],
+  "tags": ["scope:question-node-plugin"],
   "targets": {
     "build": {
       "executor": "@nrwl/js:swc",

@@ -1,8 +1,7 @@
 import { TTreeClient } from "@open-decision/tree-type";
-import { InputPluginObject } from "@open-decision/input-plugins-helpers";
 import { AnswersForm } from "./ui/AnswersForm";
 import { SingleSelect, AddOptionButton } from "./ui/SingleSelect";
-import { DataType, SelectInputPlugin, TSelectInput } from "./selectPlugin";
+import { SelectInputPlugin } from "./selectPlugin";
 
 export * from "./selectPlugin";
 export type { TSelectInput } from "./selectPlugin";

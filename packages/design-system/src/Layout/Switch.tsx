@@ -1,6 +1,6 @@
 import * as React from "react";
-import { styled, StyleObject } from "../stitches";
-import { center } from "../shared/variants";
+import { styled, StyleObject } from "@open-decision/design-system/src/stitches";
+import { center } from "@open-decision/design-system/src/shared/variants";
 
 const StyledSwitch = styled("div", center, {
   $$threshold: "50vw",

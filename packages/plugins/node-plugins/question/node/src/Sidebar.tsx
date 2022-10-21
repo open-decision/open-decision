@@ -21,10 +21,7 @@ import {
   StartNodeLabel,
 } from "@open-decision/node-editor";
 import { QuestionNodePlugin, TQuestionNode } from "./plugin";
-import {
-  InputComponentProps,
-  getInputs,
-} from "@open-decision/input-plugins-helpers";
+import { InputComponentProps } from "@open-decision/form-element-helpers";
 import { match } from "ts-pattern";
 import { isEmpty } from "ramda";
 

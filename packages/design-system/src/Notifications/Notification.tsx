@@ -1,10 +1,10 @@
 import * as React from "react";
-import { Notification as NotificationType } from "./NotificationState";
+import { Notification as NotificationType } from "@open-decision/design-system/src/Notifications/NotificationState";
 import { motion, useAnimation, Variants } from "framer-motion";
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { InfoBox } from "./InfoBox";
-import { Button } from "../Button";
-import { Icon } from "../Icon/Icon";
+import { InfoBox } from "@open-decision/design-system/src/Notifications/InfoBox";
+import { Button } from "@open-decision/design-system/src/Button";
+import { Icon } from "@open-decision/design-system/src/Icon/Icon";
 
 type NotificationProps = {
   notification: NotificationType;

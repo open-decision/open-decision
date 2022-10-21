@@ -4,7 +4,6 @@ import { z } from "zod";
 import { NodeProps } from "reactflow";
 import { NodePluginData } from "../state";
 import { StyleObject } from "@open-decision/design-system";
-import { InputPluginObject } from "@open-decision/input-plugins-helpers";
 
 export type CanvasNodeProps<TNode extends Node.TNode> = NodeProps<
   NodePluginData<TNode>
@@ -33,8 +32,8 @@ export type RendererNodeContent<TNode extends Node.TNode> = (
 
 export type RendererNodeActionsProps<TNode extends Node.TNode> = {
   node: TNode;
+  children: React.ReactNode;
   css?: StyleObject;
-  inputPlugins: Record<string, InputPluginObject>;
 };
 
 export type RendererNodeActions<TNode extends Node.TNode> = (

@@ -1,6 +1,6 @@
-import { FullscreenMenu, ListMenu } from "./Menus";
-import { Box } from "../Box";
-import { styled } from "../stitches";
+import { FullscreenMenu, ListMenu } from "@open-decision/design-system/src/Header/Menus";
+import { Box } from "@open-decision/design-system/src/Box";
+import { styled } from "@open-decision/design-system/src/stitches";
 
 const Container = styled(Box, {
   $$headerHeight: "calc(50px + $space$2)",

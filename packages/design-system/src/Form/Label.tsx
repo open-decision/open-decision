@@ -1,6 +1,6 @@
-import { styled, css } from "../stitches";
-import { disabledSelector } from "../stitches/stateSelectors";
-import { textStyles } from "../Text";
+import { styled, css } from "@open-decision/design-system/src/stitches";
+import { disabledSelector } from "@open-decision/design-system/src/stitches/stateSelectors";
+import { textStyles } from "@open-decision/design-system/src/Text";
 
 export const labelStyles = css({
   display: "inline-flex",

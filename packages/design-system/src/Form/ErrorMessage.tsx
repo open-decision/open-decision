@@ -1,7 +1,7 @@
 import * as React from "react";
-import { Box } from "../Box";
-import { styled } from "../stitches";
-import { textStyles } from "../Text";
+import { Box } from "@open-decision/design-system/src/Box";
+import { styled } from "@open-decision/design-system/src/stitches";
+import { textStyles } from "@open-decision/design-system/src/Text";
 
 export const ErrorMessage = styled(Box, textStyles, {
   color: "$danger11",

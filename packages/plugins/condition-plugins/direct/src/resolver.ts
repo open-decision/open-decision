@@ -3,7 +3,7 @@ import {
   MissingEdgeForThruthyConditionError,
 } from "@open-decision/interpreter";
 import { ConditionResolver } from "@open-decision/condition-plugins-helpers";
-import { TDirectCondition } from "./plugin";
+import { TDirectCondition } from "@open-decision/condition-plugins-direct/src/plugin";
 
 export const resolver: ConditionResolver<TDirectCondition> =
   (treeClient) => (condition) => (context) => {

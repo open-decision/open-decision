@@ -1,14 +1,14 @@
 import * as React from "react";
 import * as RadixToolbar from "@radix-ui/react-toolbar";
-import { styled } from "../stitches";
+import { styled } from "@open-decision/design-system/src/stitches";
 import {
   Button as SystemButton,
   ToggleButton as SystemToggleButton,
   ToggleButtonProps,
-} from "../Button";
-import { Separator as SystemSeparator } from "../Separator";
-import { linkStyles } from "../Link/Link";
-import * as SystemToggleGroup from "../Button/ToggleGroup";
+} from "@open-decision/design-system/src/Button";
+import { Separator as SystemSeparator } from "@open-decision/design-system/src/Separator";
+import { linkStyles } from "@open-decision/design-system/src/Link/Link";
+import * as SystemToggleGroup from "@open-decision/design-system/src/Button/ToggleGroup";
 
 export const Root = RadixToolbar.Root;
 export type RootProps = RadixToolbar.ToolbarProps;

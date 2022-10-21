@@ -1,5 +1,5 @@
-import { Box } from "../../Box";
-import { styled } from "../../stitches";
+import { Box } from "@open-decision/design-system/src/Box";
+import { styled } from "@open-decision/design-system/src/stitches";
 
 const Front = styled("div", {
   backfaceVisibility: "hidden",

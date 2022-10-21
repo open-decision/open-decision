@@ -1,6 +1,6 @@
 import * as React from "react";
-import { styled, StyleObject } from "../stitches";
-import { gap } from "../shared/variants";
+import { styled, StyleObject } from "@open-decision/design-system/src/stitches";
+import { gap } from "@open-decision/design-system/src/shared/variants";
 
 const StyledGrid = styled("div", gap, {
   display: "grid",

@@ -1,8 +1,8 @@
 import * as React from "react";
 import * as Toggle from "@radix-ui/react-toggle";
-import { Button, ButtonProps } from "..";
+import { Button, ButtonProps } from "@open-decision/design-system";
 import { CheckIcon } from "@radix-ui/react-icons";
-import { Icon } from "../Icon/Icon";
+import { Icon } from "@open-decision/design-system/src/Icon/Icon";
 
 export type ToggleButtonProps = Toggle.ToggleProps &
   ButtonProps & {

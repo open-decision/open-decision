@@ -1,10 +1,10 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import * as RadioGroup from "@radix-ui/react-radio-group";
 import * as React from "react";
-import { Stack } from "../Layout";
-import { styled } from "../stitches";
+import { Stack } from "@open-decision/design-system/src/Layout";
+import { styled } from "@open-decision/design-system/src/stitches";
 
-import { baseInputBoxStyles, baseInputStyles } from "./shared/styles";
+import { baseInputBoxStyles, baseInputStyles } from "@open-decision/design-system/src/Form/shared/styles";
 
 const StyledRadio = styled(
   RadioGroup.Item,

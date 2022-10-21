@@ -1,8 +1,8 @@
 import * as React from "react";
-import { styled, StyleObject, VariantProps } from "../stitches";
-import { baseInputStyles, baseTextInputStyle } from "./shared/styles";
-import { Box } from "../Box";
-import { alignByContent } from "../shared/variants";
+import { styled, StyleObject, VariantProps } from "@open-decision/design-system/src/stitches";
+import { baseInputStyles, baseTextInputStyle } from "@open-decision/design-system/src/Form/shared/styles";
+import { Box } from "@open-decision/design-system/src/Box";
+import { alignByContent } from "@open-decision/design-system/src/shared/variants";
 import { FormInput } from "ariakit/form";
 
 const StyledBox = styled(

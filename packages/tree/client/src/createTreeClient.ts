@@ -1,4 +1,3 @@
-import { ODValidationError } from "@open-decision/type-classes";
 import {
   Tree,
   createTreeClient as createBaseTreeClient,

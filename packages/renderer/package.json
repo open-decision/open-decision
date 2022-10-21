@@ -11,7 +11,6 @@
     "@open-decision/type-classes": "workspace:*",
     "@open-decision/design-system": "workspace:*",
     "@open-decision/tree-client": "workspace:*",
-    "@open-decision/input-plugins-helpers": "workspace:*",
     "@open-decision/tree-type": "workspace:*",
     "@open-decision/tree-sync": "workspace:*",
     "@open-decision/node-plugins-helpers": "workspace:*",

@@ -3,7 +3,6 @@ import { useInterpreter } from "@open-decision/interpreter-react";
 import { Answers } from "./Answers";
 import { TSelectInput } from "../selectPlugin";
 import { RendererComponentProps } from "@open-decision/input-plugins-helpers";
-import { useTreeClient } from "@open-decision/tree-sync";
 
 export function AnswersForm({
   input,

@@ -240,8 +240,6 @@ importers:
       '@open-decision/condition-plugins-compare': workspace:*
       '@open-decision/condition-plugins-direct': workspace:*
       '@open-decision/design-system': workspace:*
-      '@open-decision/input-plugins-select': workspace:*
-      '@open-decision/input-plugins-text': workspace:*
       '@open-decision/interpreter-react': workspace:*
       '@open-decision/node-editor': workspace:*
       '@open-decision/node-plugins-question': workspace:*
@@ -293,8 +291,6 @@ importers:
       '@open-decision/condition-plugins-compare': link:../../packages/plugins/condition-plugins/compare
       '@open-decision/condition-plugins-direct': link:../../packages/plugins/condition-plugins/direct
       '@open-decision/design-system': link:../../packages/design-system
-      '@open-decision/input-plugins-select': link:../../packages/plugins/node-plugins/question/input-plugins/select
-      '@open-decision/input-plugins-text': link:../../packages/plugins/node-plugins/question/input-plugins/text
       '@open-decision/interpreter-react': link:../../packages/interpreter-react
       '@open-decision/node-editor': link:../../packages/node-editor
       '@open-decision/node-plugins-question': link:../../packages/plugins/node-plugins/question/node
@@ -523,7 +519,6 @@ importers:
   packages/node-editor:
     specifiers:
       '@open-decision/design-system': workspace:*
-      '@open-decision/input-plugins-helpers': workspace:*
       '@open-decision/tree-sync': workspace:*
       '@open-decision/tree-type': workspace:*
       '@open-decision/type-classes': workspace:*
@@ -532,7 +527,6 @@ importers:
       zod: ^3.19.1
     dependencies:
       '@open-decision/design-system': link:../design-system
-      '@open-decision/input-plugins-helpers': link:../plugins/node-plugins/question/input-plugins/helpers
       '@open-decision/tree-sync': link:../tree/sync
       '@open-decision/tree-type': link:../tree/type
       '@open-decision/type-classes': link:../type-classes
@@ -610,7 +604,7 @@ importers:
       remeda: 1.1.0
       zod: 3.19.1
 
-  packages/plugins/node-plugins/question/input-plugins/helpers:
+  packages/plugins/node-plugins/question/form-elements/helpers:
     specifiers:
       '@open-decision/design-system': workspace:*
       '@open-decision/tree-sync': workspace:*
@@ -628,11 +622,11 @@ importers:
       remeda: 1.1.0
       zod: 3.19.1
 
-  packages/plugins/node-plugins/question/input-plugins/select:
+  packages/plugins/node-plugins/question/form-elements/select:
     specifiers:
       '@open-decision/condition-plugins-compare': workspace:*
       '@open-decision/design-system': workspace:*
-      '@open-decision/input-plugins-helpers': workspace:*
+      '@open-decision/form-element-helpers': workspace:*
       '@open-decision/node-plugins-helpers': workspace:*
       '@open-decision/tree-sync': workspace:*
       '@open-decision/tree-type': workspace:*
@@ -644,7 +638,7 @@ importers:
     dependencies:
       '@open-decision/condition-plugins-compare': link:../../../../condition-plugins/compare
       '@open-decision/design-system': link:../../../../../design-system
-      '@open-decision/input-plugins-helpers': link:../helpers
+      '@open-decision/form-element-helpers': link:../helpers
       '@open-decision/node-plugins-helpers': link:../../../helpers
       '@open-decision/tree-sync': link:../../../../../tree/sync
       '@open-decision/tree-type': link:../../../../../tree/type
@@ -654,11 +648,11 @@ importers:
       remeda: 1.1.0
       zod: 3.19.1
 
-  packages/plugins/node-plugins/question/input-plugins/text:
+  packages/plugins/node-plugins/question/form-elements/text:
     specifiers:
       '@open-decision/condition-plugins-direct': workspace:*
       '@open-decision/design-system': workspace:*
-      '@open-decision/input-plugins-helpers': workspace:*
+      '@open-decision/form-element-helpers': workspace:*
       '@open-decision/node-plugins-helpers': workspace:*
       '@open-decision/tree-sync': workspace:*
       '@open-decision/tree-type': workspace:*
@@ -668,7 +662,7 @@ importers:
     dependencies:
       '@open-decision/condition-plugins-direct': link:../../../../condition-plugins/direct
       '@open-decision/design-system': link:../../../../../design-system
-      '@open-decision/input-plugins-helpers': link:../helpers
+      '@open-decision/form-element-helpers': link:../helpers
       '@open-decision/node-plugins-helpers': link:../../../helpers
       '@open-decision/tree-sync': link:../../../../../tree/sync
       '@open-decision/tree-type': link:../../../../../tree/type
@@ -679,9 +673,9 @@ importers:
   packages/plugins/node-plugins/question/node:
     specifiers:
       '@open-decision/design-system': workspace:*
-      '@open-decision/input-plugins-helpers': workspace:*
-      '@open-decision/input-plugins-select': workspace:*
-      '@open-decision/input-plugins-text': workspace:*
+      '@open-decision/form-element-helpers': workspace:*
+      '@open-decision/form-element-select': workspace:*
+      '@open-decision/form-element-text': workspace:*
       '@open-decision/node-editor': workspace:*
       '@open-decision/node-plugins-helpers': workspace:*
       '@open-decision/rich-text-editor': workspace:*
@@ -692,9 +686,9 @@ importers:
       zod: ^3.19.1
     dependencies:
       '@open-decision/design-system': link:../../../../design-system
-      '@open-decision/input-plugins-helpers': link:../input-plugins/helpers
-      '@open-decision/input-plugins-select': link:../input-plugins/select
-      '@open-decision/input-plugins-text': link:../input-plugins/text
+      '@open-decision/form-element-helpers': link:../form-elements/helpers
+      '@open-decision/form-element-select': link:../form-elements/select
+      '@open-decision/form-element-text': link:../form-elements/text
       '@open-decision/node-editor': link:../../../../node-editor
       '@open-decision/node-plugins-helpers': link:../../helpers
       '@open-decision/rich-text-editor': link:../../../../rich-text-editor
@@ -741,7 +735,6 @@ importers:
   packages/renderer:
     specifiers:
       '@open-decision/design-system': workspace:*
-      '@open-decision/input-plugins-helpers': workspace:*
       '@open-decision/interpreter-react': workspace:*
       '@open-decision/node-editor': workspace:*
       '@open-decision/node-plugins-helpers': workspace:*
@@ -754,7 +747,6 @@ importers:
       remeda: ^1.1.0
     dependencies:
       '@open-decision/design-system': link:../design-system
-      '@open-decision/input-plugins-helpers': link:../plugins/node-plugins/question/input-plugins/helpers
       '@open-decision/interpreter-react': link:../interpreter-react
       '@open-decision/node-editor': link:../node-editor
       '@open-decision/node-plugins-helpers': link:../plugins/node-plugins/helpers
@@ -859,7 +851,6 @@ importers:
     specifiers:
       '@open-decision/condition-plugins-helpers': workspace:*
       '@open-decision/design-system': workspace:*
-      '@open-decision/input-plugins-helpers': workspace:*
       '@open-decision/node-editor': workspace:*
       '@open-decision/tree-sync': workspace:*
       '@open-decision/tree-type': workspace:*
@@ -868,7 +859,6 @@ importers:
     dependencies:
       '@open-decision/condition-plugins-helpers': link:../../plugins/condition-plugins/helpers
       '@open-decision/design-system': link:../../design-system
-      '@open-decision/input-plugins-helpers': link:../../plugins/node-plugins/question/input-plugins/helpers
       '@open-decision/node-editor': link:../../node-editor
       '@open-decision/tree-sync': link:../sync
       '@open-decision/tree-type': link:../type

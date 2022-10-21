@@ -4,10 +4,10 @@ import {
   RendererNodeContent,
 } from "@open-decision/node-editor";
 import { RichTextRenderer } from "@open-decision/rich-text-editor";
-import { useTree } from "@open-decision/tree-sync";
-import { getInputs, Input } from "@open-decision/input-plugins-helpers";
-import { TQuestionNode } from "./plugin";
-import { createTreeClient } from "@open-decision/tree-type";
+import { useTree, useTreeClient } from "@open-decision/tree-sync";
+import { QuestionNodePlugin, TQuestionNode } from "./plugin";
+import { Input } from "@open-decision/form-element-helpers";
+import { match } from "ts-pattern";
 
 export const Content: RendererNodeContent<TQuestionNode> = ({ node }) => {
   if (!node.data.content) return null;
@@ -18,34 +18,42 @@ export const Content: RendererNodeContent<TQuestionNode> = ({ node }) => {
 export const Actions: RendererNodeActions<TQuestionNode> = ({
   node,
   css,
-  inputPlugins,
+  children,
 }) => {
+  const treeClient = useTreeClient();
+  const QuestionNode = new QuestionNodePlugin(treeClient);
   const inputs = useTree((treeClient) => {
     return treeClient.pluginEntity.get.collection(
       "inputs",
       node.data.inputs,
-      Input.Type
+      QuestionNode.inputType
     );
   });
 
   return (
     <>
       {Object.values(inputs ?? {}).map((input) => {
-        const Input = inputPlugins[input.type];
+        return match(input)
+          .with({ type: "text" }, (input) => {
+            const FormElement =
+              QuestionNode.inputPlugins.text.RendererComponent;
 
-        return (
-          <Input.RendererComponent input={input} css={css} key={input.id}>
-            <Form.Submit
-              css={{
-                alignSelf: "end",
-                marginTop: "$2",
-                fontWeight: "$large-text",
-              }}
-            >
-              Weiter
-            </Form.Submit>
-          </Input.RendererComponent>
-        );
+            return (
+              <FormElement input={input} css={css} key={input.id}>
+                {children}
+              </FormElement>
+            );
+          })
+          .with({ type: "select" }, (input) => {
+            const FormElement =
+              QuestionNode.inputPlugins.select.RendererComponent;
+
+            return (
+              <FormElement input={input} css={css} key={input.id}>
+                {children}
+              </FormElement>
+            );
+          });
       })}
     </>
   );

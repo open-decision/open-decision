@@ -1,12 +1,12 @@
 {
-  "name": "@open-decision/input-plugins-text",
+  "name": "@open-decision/form-element-text",
   "version": "0.0.1",
   "main": "src/index.ts",
   "dependencies": {
     "zod": "^3",
     "@open-decision/type-classes": "workspace:*",
     "@open-decision/design-system": "workspace:*",
-    "@open-decision/input-plugins-helpers": "workspace:*",
+    "@open-decision/form-element-helpers": "workspace:*",
     "@open-decision/tree-sync": "workspace:*",
     "@open-decision/tree-type": "workspace:*",
     "@open-decision/variable-plugins-text": "workspace:*",

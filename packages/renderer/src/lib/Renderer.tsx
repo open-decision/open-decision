@@ -11,18 +11,16 @@ import {
   useInterpreter,
 } from "@open-decision/interpreter-react";
 import { Navigation } from "./components/Navigation";
-import { InputPluginObject } from "@open-decision/input-plugins-helpers";
 import { NodePluginObject } from "@open-decision/node-editor";
 
 export type RendererProps = {
   css?: StyleObject;
   nodeId?: string;
   nodePlugins: Record<string, NodePluginObject<any, any, any>>;
-  inputPlugins: Record<string, InputPluginObject<any, any, any>>;
 } & StackProps;
 
 function RendererImpl(
-  { css, nodePlugins, inputPlugins, ...props }: RendererProps,
+  { css, nodePlugins, ...props }: RendererProps,
   ref: React.Ref<HTMLDivElement>
 ) {
   const { getCurrentNode } = useInterpreter();
@@ -67,7 +65,7 @@ function RendererImpl(
         {Node.Actions ? (
           <Node.Actions
             css={{ paddingInline: "$$padding", marginTop: "$4" }}
-            inputPlugins={inputPlugins}
+            nodePlugins={nodePlugins}
             node={node}
           />
         ) : null}

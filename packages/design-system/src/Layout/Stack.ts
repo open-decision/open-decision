@@ -1,6 +1,6 @@
 import * as React from "react";
-import { styled } from "../stitches";
-import { center } from "../shared/variants";
+import { styled } from "@open-decision/design-system/src/stitches";
+import { center } from "@open-decision/design-system/src/shared/variants";
 
 export const Stack = styled("div", center, {
   display: "flex",

@@ -1,5 +1,5 @@
-import { styled, css } from "../stitches";
-import { Text } from "../Text";
+import { styled, css } from "@open-decision/design-system/src/stitches";
+import { Text } from "@open-decision/design-system/src/Text";
 
 const responsiveFontSize = {
   variants: {

@@ -5,10 +5,10 @@ import {
   menuItemStyles,
   menuLabelStyles,
   menuSeparatorStyles,
-} from "../Menus";
-import { styled } from "../stitches";
-import { InputProps as SystemInputProps } from "./Input";
-import { Input as SystemInput } from "./Input";
+} from "@open-decision/design-system/src/Menus";
+import { styled } from "@open-decision/design-system/src/stitches";
+import { InputProps as SystemInputProps } from "@open-decision/design-system/src/Form/Input";
+import { Input as SystemInput } from "@open-decision/design-system/src/Form/Input";
 
 export type InputProps = Combobox.ComboboxProps &
   Omit<SystemInputProps, "name" | "state">;

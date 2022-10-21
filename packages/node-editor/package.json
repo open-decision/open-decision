@@ -9,7 +9,6 @@
     "@open-decision/type-classes": "workspace:*",
     "@open-decision/tree-sync": "workspace:*",
     "@open-decision/tree-type": "workspace:*",
-    "@open-decision/input-plugins-helpers": "workspace:*",
     "valtio": "^1.7.4"
   }
 }

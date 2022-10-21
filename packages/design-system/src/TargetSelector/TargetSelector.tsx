@@ -1,9 +1,9 @@
 import { Edge } from "@open-decision/tree-type";
-import { Form, SelectWithCombobox, SelectWithComboboxProps } from "../Form";
-import { Row } from "../Layout";
-import { StyleObject } from "../stitches";
-import { focusSelector } from "../stitches/stateSelectors";
-import { NodeLink, NodeLinkProps } from "./NodeLink";
+import { Form, SelectWithCombobox, SelectWithComboboxProps } from "@open-decision/design-system/src/Form";
+import { Row } from "@open-decision/design-system/src/Layout";
+import { StyleObject } from "@open-decision/design-system/src/stitches";
+import { focusSelector } from "@open-decision/design-system/src/stitches/stateSelectors";
+import { NodeLink, NodeLinkProps } from "@open-decision/design-system/src/TargetSelector/NodeLink";
 
 export type TargetSelectorProps = {
   name: Form.CustomControlProps["name"];

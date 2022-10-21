@@ -1,7 +1,7 @@
 import * as React from "react";
-import { ColorKeys } from "../internal/utils";
-import { LoadingSpinner } from "../LoadingSpinner/LoadingSpinner";
-import { Button, ButtonProps } from "./Button";
+import { ColorKeys } from "@open-decision/design-system/src/internal/utils";
+import { LoadingSpinner } from "@open-decision/design-system/src/LoadingSpinner/LoadingSpinner";
+import { Button, ButtonProps } from "@open-decision/design-system/src/Button/Button";
 
 export type SubmitButtonProps = ButtonProps & {
   isLoading?: boolean;

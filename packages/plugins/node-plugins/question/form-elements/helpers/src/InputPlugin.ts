@@ -10,7 +10,7 @@ import {
   getInput,
   getInputs,
   addInput,
-} from "./utils/";
+} from "./utils";
 import { BaseVariableType } from "@open-decision/variable-plugins-helpers";
 
 const mergeTypes = <TType extends z.ZodType, TTypeName extends string>(

@@ -1,7 +1,7 @@
 import { Form } from "@open-decision/design-system";
 import { useInterpreter } from "@open-decision/interpreter-react";
 import { RendererComponentProps } from "@open-decision/input-plugins-helpers";
-import { TTextInput } from "./textPlugin";
+import { TTextInput } from "../textPlugin";
 
 export function RendererComponent({
   input,

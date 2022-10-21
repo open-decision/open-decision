@@ -1,6 +1,6 @@
 import * as React from "react";
-import { styled } from "../stitches";
-import { baseInputStyles, baseTextInputStyle } from "./shared/styles";
+import { styled } from "@open-decision/design-system/src/stitches";
+import { baseInputStyles, baseTextInputStyle } from "@open-decision/design-system/src/Form/shared/styles";
 
 const StyledTextarea = styled("textarea", baseInputStyles, baseTextInputStyle, {
   paddingBlock: "$$paddingBlock",

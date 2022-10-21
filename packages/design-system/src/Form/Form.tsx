@@ -1,16 +1,16 @@
 import * as Form from "ariakit/form";
-import { styled } from "../stitches";
+import { styled } from "@open-decision/design-system/src/stitches";
 import {
   Checkbox as SystemCheckbox,
   CheckboxProps as SystemCheckboxProps,
-} from "./Checkbox";
-import { Label as SystemLabel } from "./Label";
-import { ErrorMessage } from "./ErrorMessage";
+} from "@open-decision/design-system/src/Form/Checkbox";
+import { Label as SystemLabel } from "@open-decision/design-system/src/Form/Label";
+import { ErrorMessage } from "@open-decision/design-system/src/Form/ErrorMessage";
 import {
   Item as SystemRadioButton,
   Root as SystemRadioGroup,
-} from "./RadioButton";
-import { Button, SubmitButton, SubmitButtonProps } from "../Button";
+} from "@open-decision/design-system/src/Form/RadioButton";
+import { Button, SubmitButton, SubmitButtonProps } from "@open-decision/design-system/src/Button";
 
 export const Root = styled(Form.Form, {
   gap: "$2",
@@ -34,8 +34,8 @@ export type CheckboxProps = SystemCheckboxProps &
 export const Label = styled(Form.FormLabel, SystemLabel);
 export type LabelProps = React.ComponentProps<typeof Label>;
 
-export type { InputProps } from "./Input";
-export { Input } from "./Input";
+export type { InputProps } from "@open-decision/design-system/src/Form/Input";
+export { Input } from "@open-decision/design-system/src/Form/Input";
 
 export const Error = styled(Form.FormError, ErrorMessage);
 export type ErrorProps = React.ComponentProps<typeof Error>;
@@ -63,8 +63,8 @@ export const Submit = (props: SubmitProps) => (
   <Form.FormSubmit as={SubmitButton} {...props} />
 );
 
-export { Field } from "./Field";
-export type { FieldProps } from "./Field";
+export { Field } from "@open-decision/design-system/src/Form/Field";
+export type { FieldProps } from "@open-decision/design-system/src/Form/Field";
 
 export { FormField as CustomControl } from "ariakit/form";
 export type { FormFieldProps as CustomControlProps } from "ariakit/form";

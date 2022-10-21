@@ -9,7 +9,7 @@ import {
   deleteInput,
   getInput,
   updateInput,
-} from "@open-decision/input-plugins-helpers";
+} from "@open-decision/form-element-helpers";
 import { match } from "ts-pattern";
 
 export const typeName = "question" as const;

@@ -1,10 +1,10 @@
 import * as React from "react";
-import { StyleObject } from "../stitches";
+import { StyleObject } from "@open-decision/design-system/src/stitches";
 
-import { Form } from ".";
+import { Form } from "@open-decision/design-system/src/Form";
 import { VisuallyHidden } from "ariakit";
-import { Stack } from "../Layout";
-import { Box } from "../Box";
+import { Stack } from "@open-decision/design-system/src/Layout";
+import { Box } from "@open-decision/design-system/src/Box";
 
 export type FieldProps = {
   children: JSX.Element;
