@@ -1,10 +1,9 @@
-import { InputPluginObject } from "@open-decision/input-plugins-helpers";
 import { TTreeClient } from "@open-decision/tree-type";
-import { BuilderComponent } from "./builder";
-import { DataType, TTextInput, TextInputPlugin } from "./plugin";
-import { RendererComponent } from "./renderer";
+import { BuilderComponent } from "./ui/builder";
+import { TextInputPlugin } from "./textPlugin";
+import { RendererComponent } from "./ui/renderer";
 
-export * from "./plugin";
+export * from "./textPlugin";
 
 export const createTextInputPlugin = (treeClient: TTreeClient) => {
   return {

@@ -1,6 +1,6 @@
 import { Form, TargetSelector } from "@open-decision/design-system";
 import { InputComponentProps } from "@open-decision/input-plugins-helpers";
-import { TextInputPlugin, TTextInput } from "./plugin";
+import { TextInputPlugin, TTextInput } from "../textPlugin";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { createTargetNode } from "@open-decision/node-plugins-helpers";
 import { DirectConditionPlugin } from "@open-decision/condition-plugins-direct";
