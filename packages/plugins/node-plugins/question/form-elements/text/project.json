@@ -2,29 +2,11 @@
   "$schema": "../../../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/plugins/node-plugins/question/form-elements/text/src",
   "projectType": "library",
-  "tags": [
-    "scope:question-node-plugin"
-  ],
+  "tags": ["scope:question-node-plugin"],
   "targets": {
-    "build": {
-      "executor": "@nrwl/js:swc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
-      "options": {
-        "outputPath": "dist/packages/plugins/node-plugins/question/form-elements/text",
-        "main": "packages/plugins/node-plugins/question/form-elements/text/src/index.ts",
-        "tsConfig": "packages/plugins/node-plugins/question/form-elements/text/tsconfig.lib.json",
-        "assets": [
-          "packages/plugins/node-plugins/question/form-elements/text/*.md"
-        ]
-      }
-    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
+      "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": [
           "packages/plugins/node-plugins/question/form-elements/text/**/*.{ts,tsx,js,jsx}"

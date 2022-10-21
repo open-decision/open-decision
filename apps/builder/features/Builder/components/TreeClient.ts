@@ -1,8 +1,8 @@
 import { useTreeContext } from "@open-decision/tree-sync";
 import { createTreeClient } from "@open-decision/tree-client";
 import { createQuestionNodePlugin } from "@open-decision/node-plugins-question";
-import { createCompareConditionPlugin } from "@open-decision/condition-plugins-compare";
-import { createDirectConditionPlugin } from "@open-decision/condition-plugins-direct";
+import { createCompareConditionPlugin } from "@open-decision/plugins-condition-compare";
+import { createDirectConditionPlugin } from "@open-decision/plugins-condition-direct";
 import { createTreeClient as createBaseTreeClient } from "@open-decision/tree-type";
 import { z } from "zod";
 import { getCurrentNode, Resolver } from "@open-decision/interpreter";

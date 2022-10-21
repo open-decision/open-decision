@@ -3,9 +3,7 @@
   "version": "0.0.1",
   "type": "commonjs",
   "main": "src/index.ts",
-  "scripts": {
-    "typecheck": "tsc -p ./tsconfig.lib.json --noEmit"
-  },
+  "scripts": {},
   "sideEffects": false,
   "dependencies": {
     "validator": "^13.7.0",
@@ -14,9 +12,7 @@
     "@zxcvbn-ts/language-common": "^2.0.1",
     "@zxcvbn-ts/language-de": "^2.0.1",
     "@zxcvbn-ts/language-en": "^2.0.1",
-    "jose": "^4.9.2",
-    "@open-decision/api-helpers": "workspace:*",
-    "@open-decision/type-classes": "workspace:*"
+    "jose": "^4.9.2"
   },
   "devDependencies": {
     "@types/validator": "^13.7.6"

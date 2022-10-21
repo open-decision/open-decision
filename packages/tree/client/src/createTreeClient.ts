@@ -3,7 +3,7 @@ import {
   createTreeClient as createBaseTreeClient,
 } from "@open-decision/tree-type";
 import { z } from "zod";
-import { ConditionPlugin } from "@open-decision/condition-plugins-helpers";
+import { ConditionPlugin } from "@open-decision/plugins-condition-helpers";
 import { NodePlugin } from "@open-decision/node-editor";
 
 export const createTreeClient = <

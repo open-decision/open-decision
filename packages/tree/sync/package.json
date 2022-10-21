@@ -4,8 +4,6 @@
   "main": "src/index.ts",
   "dependencies": {
     "zod": "^3",
-    "@open-decision/type-classes": "workspace:*",
-    "@open-decision/tree-type": "workspace:*",
     "xstate": "^4.33.6",
     "yjs": "^13.5.41",
     "y-websocket": "^1.4.5",
@@ -13,8 +11,7 @@
     "valtio": "^1.7.4",
     "valtio-yjs": "^0.4.0",
     "@xstate/react": "^3.0.1",
-    "remeda": "^1.1.0",
-    "@open-decision/api-helpers": "workspace:*"
+    "remeda": "^1.1.0"
   },
   "peerDependencies": {
     "react": "^18.2.0",

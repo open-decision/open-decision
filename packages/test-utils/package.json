@@ -5,11 +5,6 @@
   "type": "commonjs",
   "sideEffects": false,
   "dependencies": {
-    "@faker-js/faker": "^7.5.0",
-    "@open-decision/prisma": "workspace:*",
-    "@open-decision/auth-api-specification": "workspace:*",
-    "@open-decision/tree-api-specification": "workspace:*",
-    "@open-decision/models": "workspace:*",
-    "@open-decision/type-classes": "workspace:*"
+    "@faker-js/faker": "^7.5.0"
   }
 }

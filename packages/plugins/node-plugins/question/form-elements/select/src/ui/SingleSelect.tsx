@@ -16,7 +16,7 @@ import {
   InputPrimaryActionSlotProps,
 } from "@open-decision/form-element-helpers";
 import { SelectInputPlugin, TAnswer, TSelectInput } from "../selectPlugin";
-import { CompareConditionPlugin } from "@open-decision/condition-plugins-compare";
+import { CompareConditionPlugin } from "@open-decision/plugins-condition-compare";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { Edge } from "@open-decision/tree-type";
 import { createTargetNode } from "@open-decision/node-plugins-helpers";

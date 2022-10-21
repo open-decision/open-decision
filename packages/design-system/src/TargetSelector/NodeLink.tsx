@@ -1,12 +1,11 @@
 import { ButtonProps, Button } from "../Button";
 import { Icon } from "../Icon/Icon";
-import { Node } from "@open-decision/tree-type";
 import { Crosshair2Icon } from "@radix-ui/react-icons";
 
 export type NodeLinkProps = {
   target?: string;
   onClick: (target: string) => void;
-  nodeName?: Node.TNode["name"];
+  nodeName?: string;
 } & Omit<ButtonProps, "label" | "Icon" | "onClick">;
 
 export function NodeLink({

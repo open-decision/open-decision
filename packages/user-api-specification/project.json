@@ -4,35 +4,25 @@
   "projectType": "library",
   "targets": {
     "build": {
-      "executor": "@nrwl/js:swc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/user-api-specification",
         "main": "packages/user-api-specification/src/index.ts",
         "tsConfig": "packages/user-api-specification/tsconfig.lib.json",
-        "assets": [
-          "packages/user-api-specification/*.md"
-        ]
+        "assets": ["packages/user-api-specification/*.md"]
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
+      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "packages/user-api-specification/**/*.ts"
-        ]
+        "lintFilePatterns": ["packages/user-api-specification/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/packages/user-api-specification"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/packages/user-api-specification"],
       "options": {
         "jestConfig": "packages/user-api-specification/jest.config.ts",
         "passWithNoTests": true

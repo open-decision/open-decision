@@ -5,35 +5,25 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@nrwl/js:swc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/tree/client",
         "main": "packages/tree/client/src/index.ts",
         "tsConfig": "packages/tree/client/tsconfig.lib.json",
-        "assets": [
-          "packages/tree/client/*.md"
-        ]
+        "assets": ["packages/tree/client/*.md"]
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
+      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "packages/tree/client/**/*.{ts,tsx,js,jsx}"
-        ]
+        "lintFilePatterns": ["packages/tree/client/**/*.{ts,tsx,js,jsx}"]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/packages/tree/client"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/packages/tree/client"],
       "options": {
         "jestConfig": "packages/tree/client/jest.config.ts",
         "passWithNoTests": true

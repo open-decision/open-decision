@@ -4,11 +4,7 @@
   "main": "src/index.ts",
   "dependencies": {
     "zod": "^3",
-    "@open-decision/design-system": "workspace:*",
     "reactflow": "^11.1.1",
-    "@open-decision/type-classes": "workspace:*",
-    "@open-decision/tree-sync": "workspace:*",
-    "@open-decision/tree-type": "workspace:*",
     "valtio": "^1.7.4"
   }
 }

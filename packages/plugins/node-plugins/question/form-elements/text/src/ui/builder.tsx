@@ -3,7 +3,7 @@ import { InputComponentProps } from "@open-decision/form-element-helpers";
 import { TextInputPlugin, TTextInput } from "../textPlugin";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { createTargetNode } from "@open-decision/node-plugins-helpers";
-import { DirectConditionPlugin } from "@open-decision/condition-plugins-direct";
+import { DirectConditionPlugin } from "@open-decision/plugins-condition-direct";
 
 export const BuilderComponent = ({
   nodeId,

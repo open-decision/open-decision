@@ -4,6 +4,7 @@
     "esbenp.prettier-vscode",
     "ms-vsliveshare.vsliveshare-pack",
     "eamodio.gitlens",
-    "vivaxy.vscode-conventional-commits"
+    "vivaxy.vscode-conventional-commits",
+    "firsttris.vscode-jest-runner"
   ]
 }

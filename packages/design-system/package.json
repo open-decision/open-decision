@@ -9,9 +9,6 @@
     "build:icons": "svgr ./src/icons/svgs -d ./src/icons/ --replace-attr-values '#2329D6=currentcolor' --typescript --no-dimensions --svg-props 'width=1.1em','height=1.1em' --ignore-existing"
   },
   "dependencies": {
-    "@open-decision/type-classes": "workspace:*",
-    "@open-decision/tree-sync": "workspace:*",
-    "@open-decision/tree-type": "workspace:*",
     "@radix-ui/colors": "^0.1.8",
     "@radix-ui/react-accessible-icon": "^1.0.0",
     "@radix-ui/react-collapsible": "^1.0.0",

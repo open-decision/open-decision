@@ -4,25 +4,9 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "build": {
-      "executor": "@nrwl/js:swc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
-      "options": {
-        "outputPath": "dist/packages/plugins/variable-plugins/select",
-        "main": "packages/plugins/variable-plugins/select/src/index.ts",
-        "tsConfig": "packages/plugins/variable-plugins/select/tsconfig.lib.json",
-        "assets": [
-          "packages/plugins/variable-plugins/select/*.md"
-        ]
-      }
-    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
+      "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": [
           "packages/plugins/variable-plugins/select/**/*.{ts,tsx,js,jsx}"

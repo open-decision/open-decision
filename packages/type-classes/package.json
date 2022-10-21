@@ -12,7 +12,6 @@
     "zod": "^3"
   },
   "devDependencies": {
-    "@tiptap/core": "^2.0.0-beta.183",
     "@types/ramda": "^0.28.15",
     "@types/uuid": "^8.3.4",
     "tslib": "^2.4.0",

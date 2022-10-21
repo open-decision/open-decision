@@ -18,18 +18,13 @@
       }
     },
     "build:lib": {
-      "executor": "@nrwl/js:swc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/prisma",
         "main": "packages/prisma/src/index.ts",
         "tsConfig": "packages/prisma/tsconfig.lib.json",
-        "assets": [
-          "packages/prisma/*.md",
-          "node_modules/.prisma"
-        ]
+        "assets": ["packages/prisma/*.md", "node_modules/.prisma"]
       },
       "dependsOn": [
         {

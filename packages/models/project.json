@@ -4,36 +4,25 @@
   "projectType": "library",
   "targets": {
     "build": {
-      "executor": "@nrwl/js:swc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/models",
         "main": "packages/models/src/index.ts",
         "tsConfig": "packages/models/tsconfig.lib.json",
-        "assets": [
-          "packages/models/*.md",
-          "**/generated/prisma-client/*"
-        ]
+        "assets": ["packages/models/*.md"]
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
+      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "packages/models/**/*.ts"
-        ]
+        "lintFilePatterns": ["packages/models/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/packages/models"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/packages/models"],
       "options": {
         "jestConfig": "packages/models/jest.config.ts",
         "passWithNoTests": true

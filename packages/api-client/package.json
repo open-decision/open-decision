@@ -8,10 +8,6 @@
     "typecheck": "tsc -p ./tsconfig.lib.json --noEmit"
   },
   "dependencies": {
-    "@open-decision/api-helpers": "workspace:*",
-    "@open-decision/auth-api-specification": "workspace:*",
-    "@open-decision/tree-api-specification": "workspace:*",
-    "@open-decision/user-api-specification": "workspace:*",
     "remeda": "^1.1.0"
   }
 }

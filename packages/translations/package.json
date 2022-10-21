@@ -1,7 +1,5 @@
 {
   "name": "@open-decision/translations",
   "main": "index.ts",
-  "dependencies": {
-    "@open-decision/type-classes": "workspace:*"
-  }
+  "dependencies": {}
 }

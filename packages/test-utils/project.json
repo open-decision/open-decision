@@ -3,35 +3,11 @@
   "sourceRoot": "packages/test-utils/src",
   "projectType": "library",
   "targets": {
-    "build": {
-      "executor": "@nrwl/js:swc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
-      "options": {
-        "outputPath": "dist/packages/test-utils",
-        "main": "packages/test-utils/src/index.ts",
-        "tsConfig": "packages/test-utils/tsconfig.lib.json",
-        "assets": [
-          "packages/test-utils/*.md"
-        ]
-      },
-      "dependsOn": [
-        {
-          "target": "build",
-          "projects": "dependencies"
-        }
-      ]
-    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
+      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "packages/test-utils/**/*.ts"
-        ]
+        "lintFilePatterns": ["packages/test-utils/**/*.ts"]
       }
     },
     "test": {

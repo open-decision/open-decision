@@ -5,28 +5,20 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@nrwl/js:swc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/tree/type",
         "main": "packages/tree/type/src/index.ts",
         "tsConfig": "packages/tree/type/tsconfig.lib.json",
-        "assets": [
-          "packages/tree/type/*.md"
-        ]
+        "assets": ["packages/tree/type/*.md"]
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
+      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "packages/tree/type/**/*.{ts,tsx,js,jsx}"
-        ]
+        "lintFilePatterns": ["packages/tree/type/**/*.{ts,tsx,js,jsx}"]
       }
     },
     "test": {

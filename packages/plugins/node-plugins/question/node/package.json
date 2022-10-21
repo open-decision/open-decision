@@ -3,16 +3,6 @@
   "version": "0.0.1",
   "main": "src/index.ts",
   "dependencies": {
-    "@open-decision/design-system": "workspace:*",
-    "@open-decision/form-element-helpers": "workspace:*",
-    "@open-decision/form-element-select": "workspace:*",
-    "@open-decision/form-element-text": "workspace:*",
-    "@open-decision/node-editor": "workspace:*",
-    "@open-decision/rich-text-editor": "workspace:*",
-    "@open-decision/tree-sync": "workspace:*",
-    "@open-decision/tree-type": "workspace:*",
-    "@open-decision/type-classes": "workspace:*",
-    "@open-decision/node-plugins-helpers": "workspace:*",
     "ts-pattern": "^4.0.5",
     "zod": "^3"
   }

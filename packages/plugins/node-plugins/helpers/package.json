@@ -3,15 +3,9 @@
   "version": "0.0.1",
   "main": "src/index.ts",
   "dependencies": {
-    "@open-decision/type-classes": "workspace:*",
-    "@open-decision/tree-sync": "workspace:*",
-    "@open-decision/tree-type": "workspace:*",
-    "@open-decision/design-system": "workspace:*",
     "zod": "^3",
     "remeda": "^1.1.0",
-    "reactflow": "^11.1.1",
-    "@open-decision/node-editor": "workspace:*",
-    "@open-decision/rich-text-editor": "workspace:*"
+    "reactflow": "^11.1.1"
   },
   "peerDependencies": {
     "react": "^18.2.0",

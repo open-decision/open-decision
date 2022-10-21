@@ -16,7 +16,10 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "lib": ["es2019", "dom"],
+    "lib": [
+      "es2019",
+      "dom"
+    ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "declaration": false,
@@ -24,8 +27,85 @@
     "rootDir": ".",
     "baseUrl": ".",
     "paths": {
-      "@stitches/react": ["./node_modules/@stitches/react"]
+      "@open-decision/api-client": [
+        "packages/api-client/src/index.ts"
+      ],
+      "@open-decision/api-helpers": [
+        "packages/api-helpers/src/index.ts"
+      ],
+      "@open-decision/auth-api-specification": [
+        "packages/auth-api-specification/src/index.ts"
+      ],
+      "@open-decision/condition": [
+        "packages/condition/src/index.ts"
+      ],
+      "@open-decision/design-system": [
+        "packages/design-system/src/index.ts"
+      ],
+      "@open-decision/interpreter": [
+        "packages/interpreter/src/index.ts"
+      ],
+      "@open-decision/interpreter-react": [
+        "packages/interpreter-react/src/index.ts"
+      ],
+      "@open-decision/models": [
+        "packages/models/src/index.ts"
+      ],
+      "@open-decision/node-editor": [
+        "packages/node-editor/src/index.ts"
+      ],
+      "@open-decision/node-plugins-question": [
+        "packages/plugins/node-plugins/question/node/src/index.ts"
+      ],
+      "@open-decision/plugins-condition-compare": [
+        "packages/plugins/condition/compare/src/index.ts"
+      ],
+      "@open-decision/plugins-condition-direct": [
+        "packages/plugins/condition/direct/src/index.ts"
+      ],
+      "@open-decision/plugins-condition-helpers": [
+        "packages/plugins/condition/helpers/src/index.ts"
+      ],
+      "@open-decision/prisma": [
+        "packages/prisma/src/index.ts"
+      ],
+      "@open-decision/renderer": [
+        "packages/renderer/src/index.ts"
+      ],
+      "@open-decision/rich-text-editor": [
+        "packages/rich-text-editor/src/index.ts"
+      ],
+      "@open-decision/test-utils": [
+        "packages/test-utils/src/index.ts"
+      ],
+      "@open-decision/tree-api-specification": [
+        "packages/tree-api-specification/src/index.ts"
+      ],
+      "@open-decision/tree-client": [
+        "packages/tree/client/src/index.ts"
+      ],
+      "@open-decision/tree-sync": [
+        "packages/tree/sync/src/index.ts"
+      ],
+      "@open-decision/tree-type": [
+        "packages/tree/type/src/index.ts"
+      ],
+      "@open-decision/type-classes": [
+        "packages/type-classes/src/index.ts"
+      ],
+      "@open-decision/user-api-specification": [
+        "packages/user-api-specification/src/index.ts"
+      ],
+      "@open-decision/variable-plugins-select": [
+        "packages/plugins/variable-plugins/select/src/index.ts"
+      ],
+      "@open-decision/variable-plugins-text": [
+        "packages/plugins/variable-plugins/text/src/index.ts"
+      ]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }

@@ -3,11 +3,8 @@
   "version": "0.0.1",
   "type": "commonjs",
   "main": "src/index.ts",
-  "scripts": {
-    "typecheck": "tsc -p ./tsconfig.lib.json --noEmit"
-  },
+  "scripts": {},
   "dependencies": {
-    "@open-decision/type-classes": "workspace:*",
     "@types/validator": "^13.7.6",
     "validator": "^13.7.0",
     "zod": "^3"

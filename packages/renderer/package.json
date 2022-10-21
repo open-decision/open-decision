@@ -5,16 +5,7 @@
   "sideEffects": false,
   "dependencies": {
     "@radix-ui/react-icons": "^1.1.1",
-    "remeda": "^1.1.0",
-    "@open-decision/rich-text-editor": "workspace:*",
-    "@open-decision/interpreter-react": "workspace:*",
-    "@open-decision/type-classes": "workspace:*",
-    "@open-decision/design-system": "workspace:*",
-    "@open-decision/tree-client": "workspace:*",
-    "@open-decision/tree-type": "workspace:*",
-    "@open-decision/tree-sync": "workspace:*",
-    "@open-decision/node-plugins-helpers": "workspace:*",
-    "@open-decision/node-editor": "workspace:*"
+    "remeda": "^1.1.0"
   },
   "peerDependencies": {
     "react": "^18.2.0",
