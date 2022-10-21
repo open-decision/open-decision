@@ -1,6 +1,6 @@
 import { useTranslations } from "next-intl";
-import { InfoBox, Text, StyleObject } from "@open-decision/design-system";
-import { ErrorReportLink } from "@open-decision/design-system/src/Error/ErrorReportLink";
+import { InfoBox, Text, StyleObject } from "../";
+import { ErrorReportLink } from "./ErrorReportLink";
 import { ODError } from "@open-decision/type-classes";
 
 export type ErrorCardProps = {

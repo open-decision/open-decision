@@ -5,9 +5,9 @@ import {
   menuItemStyles,
   menuLabelStyles,
   menuSeparatorStyles,
-} from "@open-decision/design-system/src/Menus";
-import { styled } from "@open-decision/design-system/src/stitches";
-import { baseInputStyles, baseTextInputStyle } from "@open-decision/design-system/src/Form/shared/styles";
+} from "../Menus";
+import { styled } from "../stitches";
+import { baseInputStyles, baseTextInputStyle } from "../Form/shared/styles";
 import "ariakit-utils";
 
 export const Input = styled(

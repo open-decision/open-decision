@@ -1,10 +1,10 @@
 import * as CheckboxPrimitive from "ariakit/checkbox";
 import * as React from "react";
-import { styled } from "@open-decision/design-system/src/stitches";
+import { styled } from "../stitches";
 
-import { baseInputBoxStyles, baseInputStyles } from "@open-decision/design-system/src/Form/shared/styles";
+import { baseInputBoxStyles, baseInputStyles } from "../Form/shared/styles";
 import { VisuallyHidden } from "ariakit/visually-hidden";
-import { Box } from "@open-decision/design-system/src/Box";
+import { Box } from "../Box";
 
 const StyledCheckbox = styled(Box, baseInputStyles, baseInputBoxStyles, {
   boxSizing: "border-box",

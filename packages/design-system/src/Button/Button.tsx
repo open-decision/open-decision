@@ -1,10 +1,10 @@
-import { alignByContent } from "@open-decision/design-system/src/shared/variants";
-import { styled, css, darkTheme } from "@open-decision/design-system/src/stitches";
+import { alignByContent } from "../shared/variants";
+import { styled, css, darkTheme } from "../stitches";
 import {
   activeSelector,
   disabledSelector,
   intentSelector,
-} from "@open-decision/design-system/src/stitches/stateSelectors";
+} from "../stitches/stateSelectors";
 
 export const buttonStyles = css(alignByContent, {
   $$borderWidth: "1px",

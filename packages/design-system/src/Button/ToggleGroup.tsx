@@ -1,8 +1,8 @@
 import * as React from "react";
-import { styled, StyleObject } from "@open-decision/design-system/src/stitches";
-import { ButtonProps, buttonStyles } from "@open-decision/design-system/src/Button/Button";
+import { styled, StyleObject } from "../stitches";
+import { ButtonProps, buttonStyles } from "../Button/Button";
 import * as ToggleGroupPrimitives from "@radix-ui/react-toggle-group";
-import { Box } from "@open-decision/design-system/src/Box";
+import { Box } from "../Box";
 import { ODProgrammerError } from "@open-decision/type-classes";
 
 const StyledContainer = styled(Box, {

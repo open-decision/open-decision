@@ -1,8 +1,8 @@
 import * as React from "react";
-import { styled, StyleObject } from "@open-decision/design-system/src/stitches";
-import { Box } from "@open-decision/design-system/src/Box";
-import { Input as SystemInput } from "@open-decision/design-system/src/Form/Input";
-import { Button as SystemButton } from "@open-decision/design-system/src/Button/Button";
+import { styled, StyleObject } from "../stitches";
+import { Box } from "../Box";
+import { Input as SystemInput } from "../Form/Input";
+import { Button as SystemButton } from "../Button/Button";
 
 const StyledBox = styled(Box, {
   display: "flex",

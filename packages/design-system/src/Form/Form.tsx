@@ -1,16 +1,16 @@
 import * as Form from "ariakit/form";
-import { styled } from "@open-decision/design-system/src/stitches";
+import { styled } from "../stitches";
 import {
   Checkbox as SystemCheckbox,
   CheckboxProps as SystemCheckboxProps,
-} from "@open-decision/design-system/src/Form/Checkbox";
-import { Label as SystemLabel } from "@open-decision/design-system/src/Form/Label";
-import { ErrorMessage } from "@open-decision/design-system/src/Form/ErrorMessage";
+} from "../Form/Checkbox";
+import { Label as SystemLabel } from "../Form/Label";
+import { ErrorMessage } from "../Form/ErrorMessage";
 import {
   Item as SystemRadioButton,
   Root as SystemRadioGroup,
-} from "@open-decision/design-system/src/Form/RadioButton";
-import { Button, SubmitButton, SubmitButtonProps } from "@open-decision/design-system/src/Button";
+} from "../Form/RadioButton";
+import { Button, SubmitButton, SubmitButtonProps } from "../Button";
 
 export const Root = styled(Form.Form, {
   gap: "$2",
@@ -34,8 +34,8 @@ export type CheckboxProps = SystemCheckboxProps &
 export const Label = styled(Form.FormLabel, SystemLabel);
 export type LabelProps = React.ComponentProps<typeof Label>;
 
-export type { InputProps } from "@open-decision/design-system/src/Form/Input";
-export { Input } from "@open-decision/design-system/src/Form/Input";
+export type { InputProps } from "../Form/Input";
+export { Input } from "../Form/Input";
 
 export const Error = styled(Form.FormError, ErrorMessage);
 export type ErrorProps = React.ComponentProps<typeof Error>;
@@ -63,8 +63,8 @@ export const Submit = (props: SubmitProps) => (
   <Form.FormSubmit as={SubmitButton} {...props} />
 );
 
-export { Field } from "@open-decision/design-system/src/Form/Field";
-export type { FieldProps } from "@open-decision/design-system/src/Form/Field";
+export { Field } from "../Form/Field";
+export type { FieldProps } from "../Form/Field";
 
 export { FormField as CustomControl } from "ariakit/form";
 export type { FormFieldProps as CustomControlProps } from "ariakit/form";
