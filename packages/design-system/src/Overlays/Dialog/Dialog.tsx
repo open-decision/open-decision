@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { Button, Icon, ButtonProps } from "@open-decision/design-system";
+import { Button, ButtonProps } from "../../Button";
 import { styled, keyframes, StyleObject } from "../../stitches";
 import { Heading } from "../../Heading";
 import { ColorKeys } from "../../internal/utils";
@@ -8,6 +8,7 @@ import { Stack } from "../../Layout/Stack";
 import { SubmitButton, SubmitButtonProps } from "../../Button/SubmitButton";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { Row } from "../../Layout/Row";
+import { Icon } from "../../Icon/Icon";
 
 function DialogRoot({ children, ...props }: DialogRootProps) {
   return (

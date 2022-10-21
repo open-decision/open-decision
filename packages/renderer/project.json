@@ -6,36 +6,51 @@
   "targets": {
     "build": {
       "executor": "@nrwl/js:swc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/packages/renderer",
         "main": "packages/renderer/src/index.ts",
         "tsConfig": "packages/renderer/tsconfig.lib.json",
-        "assets": ["packages/renderer/*.md"]
+        "assets": [
+          "packages/renderer/*.md"
+        ]
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
-        "lintFilePatterns": ["packages/renderer/**/*.{ts,tsx,js,jsx}"]
+        "lintFilePatterns": [
+          "packages/renderer/**/*.{ts,tsx,js,jsx}"
+        ]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/packages/renderer"],
+      "outputs": [
+        "{workspaceRoot}/coverage/packages/renderer"
+      ],
       "options": {
         "jestConfig": "packages/renderer/jest.config.ts",
         "passWithNoTests": true
       }
     },
     "typecheck": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "command": "tsc -p tsconfig.lib.json",
         "cwd": "packages/renderer"
       },
-      "dependsOn": [{ "projects": "dependencies", "target": "build" }]
+      "dependsOn": [
+        {
+          "projects": "dependencies",
+          "target": "build"
+        }
+      ]
     }
   }
 }

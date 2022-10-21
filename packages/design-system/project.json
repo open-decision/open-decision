@@ -5,19 +5,27 @@
   "targets": {
     "build": {
       "executor": "@nrwl/js:swc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/packages/design-system",
         "main": "packages/design-system/src/index.ts",
         "tsConfig": "packages/design-system/tsconfig.lib.json",
-        "assets": ["packages/design-system/*.md"]
+        "assets": [
+          "packages/design-system/*.md"
+        ]
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
-        "lintFilePatterns": ["packages/design-system/**/*.ts"]
+        "lintFilePatterns": [
+          "packages/design-system/**/*.ts"
+        ]
       }
     },
     "test": {
@@ -27,12 +35,17 @@
       }
     },
     "typecheck": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "command": "tsc -p tsconfig.lib.json",
         "cwd": "packages/design-system"
       },
-      "dependsOn": [{ "projects": "dependencies", "target": "build" }]
+      "dependsOn": [
+        {
+          "projects": "dependencies",
+          "target": "build"
+        }
+      ]
     }
   },
   "tags": []

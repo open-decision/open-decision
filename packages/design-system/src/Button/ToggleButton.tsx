@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Toggle from "@radix-ui/react-toggle";
-import { Button, ButtonProps } from "@open-decision/design-system";
+import { Button, ButtonProps } from "./Button";
 import { CheckIcon } from "@radix-ui/react-icons";
 import { Icon } from "../Icon/Icon";
 

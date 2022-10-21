@@ -8,7 +8,8 @@
     "remeda": "^1.1.0",
     "@open-decision/type-classes": "workspace:*",
     "@open-decision/tree-sync": "workspace:*",
-    "@open-decision/tree-type": "workspace:*"
+    "@open-decision/tree-type": "workspace:*",
+    "@open-decision/interpreter": "workspace:*"
   },
   "devDependencies": {}
 }

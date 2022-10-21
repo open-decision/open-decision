@@ -4,14 +4,16 @@
   "projectType": "application",
   "targets": {
     "start:db": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
-        "commands": ["docker compose -f docker-compose.yml up -d"],
+        "commands": [
+          "docker compose -f docker-compose.yml up -d"
+        ],
         "cwd": "apps/e2e"
       }
     },
     "cleanup": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "commands": [
           "docker compose -f docker-compose.yml down",
@@ -21,37 +23,47 @@
       }
     },
     "test": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "command": "pnpm playwright test",
         "cwd": "apps/e2e"
       },
-      "dependsOn": [{ "target": "build", "projects": "dependencies" }]
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": "dependencies"
+        }
+      ]
     },
     "test:ci": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "command": "pnpm playwright test --config=playwright.ci.config.ts",
         "cwd": "apps/e2e"
       },
-      "dependsOn": [{ "target": "build", "projects": "dependencies" }]
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": "dependencies"
+        }
+      ]
     },
     "show-trace": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "command": "pnpm playwright show-trace",
         "cwd": "apps/e2e"
       }
     },
     "serve": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "command": "pnpm playwright show-report playwright-report",
         "cwd": "apps/e2e"
       }
     },
     "record": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "command": "pnpm playwright codegen --load-storage=apps/e2e/storageState.json localhost:4400"
       }

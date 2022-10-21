@@ -5,20 +5,33 @@
   "targets": {
     "build": {
       "executor": "@nrwl/js:swc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/packages/test-utils",
         "main": "packages/test-utils/src/index.ts",
         "tsConfig": "packages/test-utils/tsconfig.lib.json",
-        "assets": ["packages/test-utils/*.md"]
+        "assets": [
+          "packages/test-utils/*.md"
+        ]
       },
-      "dependsOn": [{ "target": "build", "projects": "dependencies" }]
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": "dependencies"
+        }
+      ]
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
-        "lintFilePatterns": ["packages/test-utils/**/*.ts"]
+        "lintFilePatterns": [
+          "packages/test-utils/**/*.ts"
+        ]
       }
     },
     "test": {
@@ -34,12 +47,17 @@
       ]
     },
     "typecheck": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "command": "tsc -p tsconfig.lib.json",
         "cwd": "packages/test-utils"
       },
-      "dependsOn": [{ "projects": "dependencies", "target": "build" }]
+      "dependsOn": [
+        {
+          "projects": "dependencies",
+          "target": "build"
+        }
+      ]
     }
   }
 }

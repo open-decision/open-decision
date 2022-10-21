@@ -6,36 +6,51 @@
   "targets": {
     "build": {
       "executor": "@nrwl/js:swc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/packages/rich-text-editor",
         "main": "packages/rich-text-editor/src/index.ts",
         "tsConfig": "packages/rich-text-editor/tsconfig.lib.json",
-        "assets": ["packages/rich-text-editor/*.md"]
+        "assets": [
+          "packages/rich-text-editor/*.md"
+        ]
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
-        "lintFilePatterns": ["packages/rich-text-editor/**/*.{ts,tsx,js,jsx}"]
+        "lintFilePatterns": [
+          "packages/rich-text-editor/**/*.{ts,tsx,js,jsx}"
+        ]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/packages/rich-text-editor"],
+      "outputs": [
+        "{workspaceRoot}/coverage/packages/rich-text-editor"
+      ],
       "options": {
         "jestConfig": "packages/rich-text-editor/jest.config.ts",
         "passWithNoTests": true
       }
     },
     "typecheck": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "command": "tsc -p tsconfig.lib.json",
         "cwd": "packages/rich-text-editor"
       },
-      "dependsOn": [{ "projects": "dependencies", "target": "build" }]
+      "dependsOn": [
+        {
+          "projects": "dependencies",
+          "target": "build"
+        }
+      ]
     }
   }
 }

@@ -5,36 +5,51 @@
   "targets": {
     "build": {
       "executor": "@nrwl/js:swc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/packages/api-helpers",
         "main": "packages/api-helpers/src/index.ts",
         "tsConfig": "packages/api-helpers/tsconfig.lib.json",
-        "assets": ["packages/api-helpers/*.md"]
+        "assets": [
+          "packages/api-helpers/*.md"
+        ]
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
-        "lintFilePatterns": ["packages/api-helpers/**/*.ts"]
+        "lintFilePatterns": [
+          "packages/api-helpers/**/*.ts"
+        ]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/packages/api-helpers"],
+      "outputs": [
+        "{workspaceRoot}/coverage/packages/api-helpers"
+      ],
       "options": {
         "jestConfig": "packages/api-helpers/jest.config.ts",
         "passWithNoTests": true
       }
     },
     "typecheck": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "command": "tsc -p tsconfig.lib.json",
         "cwd": "packages/api-helpers"
       },
-      "dependsOn": [{ "projects": "dependencies", "target": "build" }]
+      "dependsOn": [
+        {
+          "projects": "dependencies",
+          "target": "build"
+        }
+      ]
     }
   },
   "tags": []

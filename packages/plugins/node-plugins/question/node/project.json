@@ -2,22 +2,30 @@
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/plugins/node-plugins/question/node/src",
   "projectType": "library",
-  "tags": ["scope:question-node-plugin"],
+  "tags": [
+    "scope:question-node-plugin"
+  ],
   "targets": {
     "build": {
       "executor": "@nrwl/js:swc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/packages/plugins/node-plugins/question/node",
         "main": "packages/plugins/node-plugins/question/node/src/index.ts",
         "tsConfig": "packages/plugins/node-plugins/question/node/tsconfig.lib.json",
-        "assets": ["packages/plugins/node-plugins/question/node/*.md"],
+        "assets": [
+          "packages/plugins/node-plugins/question/node/*.md"
+        ],
         "skipTypeCheck": true
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
         "lintFilePatterns": [
           "packages/plugins/node-plugins/question/node/**/*.{ts,tsx,js,jsx}"
@@ -26,14 +34,16 @@
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/packages/plugins/node-plugins/question"],
+      "outputs": [
+        "{workspaceRoot}/coverage/packages/plugins/node-plugins/question"
+      ],
       "options": {
         "jestConfig": "packages/plugins/node-plugins/question/node/jest.config.ts",
         "passWithNoTests": true
       }
     },
     "typecheck": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "command": "tsc -p tsconfig.lib.json",
         "cwd": "packages/plugins/node-plugins/question/node"

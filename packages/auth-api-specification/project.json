@@ -5,36 +5,51 @@
   "targets": {
     "build": {
       "executor": "@nrwl/js:swc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/packages/auth-api-specification",
         "main": "packages/auth-api-specification/src/index.ts",
         "tsConfig": "packages/auth-api-specification/tsconfig.lib.json",
-        "assets": ["packages/auth-api-specification/*.md"]
+        "assets": [
+          "packages/auth-api-specification/*.md"
+        ]
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
-        "lintFilePatterns": ["packages/auth-api-specification/**/*.ts"]
+        "lintFilePatterns": [
+          "packages/auth-api-specification/**/*.ts"
+        ]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/packages/auth-api-specification"],
+      "outputs": [
+        "{workspaceRoot}/coverage/packages/auth-api-specification"
+      ],
       "options": {
         "jestConfig": "packages/auth-api-specification/jest.config.ts",
         "passWithNoTests": true
       }
     },
     "typecheck": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "command": "tsc -p tsconfig.lib.json",
         "cwd": "packages/auth-api-specification"
       },
-      "dependsOn": [{ "projects": "dependencies", "target": "build" }]
+      "dependsOn": [
+        {
+          "projects": "dependencies",
+          "target": "build"
+        }
+      ]
     }
   },
   "tags": []

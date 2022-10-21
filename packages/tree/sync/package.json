@@ -13,7 +13,8 @@
     "valtio": "^1.7.4",
     "valtio-yjs": "^0.4.0",
     "@xstate/react": "^3.0.1",
-    "remeda": "^1.1.0"
+    "remeda": "^1.1.0",
+    "@open-decision/api-helpers": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18.2.0",

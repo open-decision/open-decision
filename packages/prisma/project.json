@@ -4,14 +4,14 @@
   "projectType": "library",
   "targets": {
     "serve:studio": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "command": "pnpm prisma studio",
         "cwd": "packages/prisma"
       }
     },
     "generate": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "command": "pnpm prisma generate --schema=./src/schema.prisma",
         "cwd": "packages/prisma"
@@ -19,32 +19,47 @@
     },
     "build:lib": {
       "executor": "@nrwl/js:swc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/packages/prisma",
         "main": "packages/prisma/src/index.ts",
         "tsConfig": "packages/prisma/tsconfig.lib.json",
-        "assets": ["packages/prisma/*.md", "node_modules/.prisma"]
+        "assets": [
+          "packages/prisma/*.md",
+          "node_modules/.prisma"
+        ]
       },
-      "dependsOn": [{ "target": "generate", "projects": "self" }]
+      "dependsOn": [
+        {
+          "target": "generate",
+          "projects": "self"
+        }
+      ]
     },
     "build": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "command": "cp -r node_modules/.prisma ../../dist/packages/prisma/node_modules",
         "cwd": "packages/prisma"
       },
-      "dependsOn": [{ "target": "build:lib", "projects": "self" }]
+      "dependsOn": [
+        {
+          "target": "build:lib",
+          "projects": "self"
+        }
+      ]
     },
     "migrate:deploy": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "command": "prisma migrate deploy --schema=./src/schema.prisma",
         "cwd": "packages/prisma"
       }
     },
     "migrate:dev": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "command": "prisma migrate dev --schema=./src/schema.prisma",
         "cwd": "packages/prisma"
