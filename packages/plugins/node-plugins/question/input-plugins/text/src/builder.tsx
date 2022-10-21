@@ -2,7 +2,6 @@ import { Form, TargetSelector } from "@open-decision/design-system";
 import { InputComponentProps } from "@open-decision/input-plugins-helpers";
 import { TextInputPlugin, TTextInput } from "./plugin";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
-import { getEdgesByNode, getNodeOptions } from "@open-decision/tree-type";
 import { createTargetNode } from "@open-decision/node-plugins-helpers";
 import { DirectConditionPlugin } from "@open-decision/condition-plugins-direct";
 
@@ -17,11 +16,12 @@ export const BuilderComponent = ({
   const DirectCondition = new DirectConditionPlugin(treeClient);
 
   const edge = useTree(
-    (tree) => Object.values(getEdgesByNode(tree)(nodeId)?.source ?? {})?.[0]
+    (treeClient) =>
+      Object.values(treeClient.edges.get.byNode(nodeId)?.source ?? {})?.[0]
   );
 
-  const nodeNames = useTree((tree) =>
-    Object.values(getNodeOptions(tree)(nodeId, "Ohne Name"))
+  const nodeNames = useTree((treeClient) =>
+    Object.values(treeClient.nodes.get.options(nodeId, "Ohne Name"))
   );
 
   const formState = Form.useFormState({

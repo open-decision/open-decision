@@ -6,7 +6,6 @@ import {
   Icon,
 } from "@open-decision/design-system";
 import { useTree } from "@open-decision/tree-sync";
-import { getNodeNames } from "@open-decision/tree-type";
 import { useTranslations } from "next-intl";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { useEditor } from "@open-decision/node-editor";
@@ -19,7 +18,7 @@ export const NodeSearch = ({ css }: Props) => {
 
   const { treeClient } = useTreeClient();
   const { replaceSelectedNodes } = useEditor();
-  const nodeNames = useTree(getNodeNames);
+  const nodeNames = useTree((treeClient) => treeClient.nodes.get.names());
 
   const { getCenter, zoomToNode } = useEditor();
   const combobox = Combobox.useComboboxState({
@@ -34,13 +33,10 @@ export const NodeSearch = ({ css }: Props) => {
   function createHandler(label: string) {
     // Currently we are always creating question nodes, because we do not have any
     // other node types yet.
-    const newNode = treeClient.node.question.create(
-      {
-        name: label,
-        position: getCenter(),
-      },
-      { inputs: [], content: [] }
-    );
+    const newNode = treeClient.node.question.create({
+      name: label,
+      position: getCenter(),
+    });
 
     treeClient.nodes.add(newNode);
     replaceSelectedNodes([newNode.id]);

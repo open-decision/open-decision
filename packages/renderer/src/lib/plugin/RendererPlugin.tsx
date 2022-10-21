@@ -1,11 +1,6 @@
 import { Form, StyleObject } from "@open-decision/design-system";
-import {
-  getInputs,
-  Input,
-  InputPluginObject,
-} from "@open-decision/input-plugins-helpers";
+import { Input, InputPluginObject } from "@open-decision/input-plugins-helpers";
 import { useTree } from "@open-decision/tree-sync";
-import { createTreeClient } from "@open-decision/tree-type";
 
 type RendererPluginProps = {
   inputIds: string[];
@@ -18,9 +13,12 @@ export function RendererPlugin({
   css,
   inputPlugins,
 }: RendererPluginProps) {
-  const inputs = useTree((tree) => {
-    const treeClient = createTreeClient(tree);
-    return getInputs(treeClient, Input.Type)(inputIds);
+  const inputs = useTree((treeClient) => {
+    return treeClient.pluginEntity.get.collection(
+      "inputs",
+      inputIds,
+      Input.Type
+    );
   });
 
   return (

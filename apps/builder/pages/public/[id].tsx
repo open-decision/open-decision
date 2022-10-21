@@ -102,7 +102,7 @@ export default function Page({ treeId }: PageProps) {
                   marginBlock: "$4",
                 },
               }}
-              inputPlugins={nodePlugins.QuestionNode.plugin.inputPlugins}
+              inputPlugins={nodePlugins.question.plugin.inputPlugins}
               nodePlugins={nodePlugins}
             />
           </Stack>

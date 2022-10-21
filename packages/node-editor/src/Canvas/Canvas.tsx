@@ -4,7 +4,6 @@ import { styled, StyleObject } from "@open-decision/design-system";
 import { ConnectionLine } from "./Edges/ConnectionLine";
 import { CustomEdge } from "./Edges/CustomEdge";
 import { ODError } from "@open-decision/type-classes";
-import { getStartNodeId } from "@open-decision/tree-type";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { useRFNodes } from "../state/useRFNodes";
 import { useRFEdges } from "../state/useRFEdges";
@@ -52,7 +51,7 @@ export function Canvas({
   const selectedNodeIds = useSelectedNodeIds();
 
   const [dragging, setDragging] = React.useState(false);
-  const startNodeId = useTree(getStartNodeId);
+  const startNodeId = useTree((treeClient) => treeClient.get.startNodeId());
 
   const {
     closeNodeEditingSidebar,

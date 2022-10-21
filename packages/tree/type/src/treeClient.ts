@@ -20,6 +20,8 @@ import {
   getPluginEntities,
   getEntirePluginEntity,
   getConditionsByNode,
+  getStartNodeId,
+  getNodeNames,
 } from "./getters";
 import {
   updateStartNode,
@@ -48,21 +50,17 @@ import {
 } from "./utils";
 import { isValidEdge } from "./validators";
 
-export type TTreeClient = ReturnType<typeof createTreeClient<Tree.TTree>>;
-
-export function createTreeClient<TTree extends Tree.TTree>(tree: TTree) {
+export function createReadOnlyTreeClient<TTree extends Tree.TTree>(
+  tree: TTree
+) {
   return {
-    updateStartNode: updateStartNode(tree),
     pluginEntity: {
-      add: addPluginEntity(tree),
-      delete: deletePluginEntity(tree),
       get: {
         single: getPluginEntity(tree),
         all: getEntirePluginEntity(tree),
         collection: getPluginEntities(tree),
       },
     },
-    get: () => tree,
     nodes: {
       get: {
         single: getNode(tree),
@@ -73,8 +71,51 @@ export function createTreeClient<TTree extends Tree.TTree>(tree: TTree) {
         parents: getParents(tree),
         paths: getPaths(tree),
         options: getNodeOptions(tree),
+        names: getNodeNames(tree),
         byEdge: getNodesByEdge(tree),
       },
+    },
+
+    conditions: {
+      get: {
+        single: getCondition(tree),
+        collection: getConditions(tree),
+        all: () => tree.conditions as TTree["conditions"],
+        byEdge: getConditionByEdge(tree),
+        byNode: getConditionsByNode(tree),
+      },
+    },
+    edges: {
+      get: {
+        single: getEdge(tree),
+        collection: getEdges(tree),
+        all: () => tree.edges,
+        byNode: getEdgesByNode(tree),
+        byCondition: getEdgesByCondition(tree),
+      },
+    },
+    get: { tree: () => tree, startNodeId: () => getStartNodeId(tree) },
+  };
+}
+
+export type TReadOnlyTreeClient = ReturnType<
+  typeof createReadOnlyTreeClient<Tree.TTree>
+>;
+export type TTreeClient = ReturnType<typeof createTreeClient<Tree.TTree>>;
+
+export function createTreeClient<TTree extends Tree.TTree>(tree: TTree) {
+  const readOnlyTreeClient = createReadOnlyTreeClient(tree);
+
+  return {
+    get: readOnlyTreeClient.get,
+    updateStartNode: updateStartNode(tree),
+    pluginEntity: {
+      add: addPluginEntity(tree),
+      delete: deletePluginEntity(tree),
+      ...readOnlyTreeClient.pluginEntity,
+    },
+    nodes: {
+      ...readOnlyTreeClient.nodes,
       delete: deleteNodes(tree),
       create: { node: createNode, childNode: createChildNode(tree) },
       add: addNode(tree),
@@ -97,13 +138,7 @@ export function createTreeClient<TTree extends Tree.TTree>(tree: TTree) {
       },
     },
     conditions: {
-      get: {
-        single: getCondition(tree),
-        collection: getConditions(tree),
-        all: () => tree.conditions as TTree["conditions"],
-        byEdge: getConditionByEdge(tree),
-        byNode: getConditionsByNode(tree),
-      },
+      ...readOnlyTreeClient.conditions,
       delete: deleteConditions(tree),
       create: createCondition,
       add: addCondition(tree),
@@ -115,13 +150,7 @@ export function createTreeClient<TTree extends Tree.TTree>(tree: TTree) {
       },
     },
     edges: {
-      get: {
-        single: getEdge(tree),
-        collection: getEdges(tree),
-        all: () => tree.edges,
-        byNode: getEdgesByNode(tree),
-        byCondition: getEdgesByCondition(tree),
-      },
+      ...readOnlyTreeClient.edges,
       delete: deleteEdges(tree),
       create: createEdge(tree),
       add: addEdge(tree),

@@ -4,7 +4,7 @@ import { Position } from "reactflow";
 import { SourcePort, TargetPort } from "./Port";
 import { useTranslations } from "next-intl";
 import { useTree } from "@open-decision/tree-sync";
-import { getStartNodeId, Node } from "@open-decision/tree-type";
+import { Node } from "@open-decision/tree-type";
 import { CanvasNodeProps } from "../types/NodePluginObject";
 import { useEditor } from "../state";
 import { nodeHeight, nodeWidth } from "../utils/constants";
@@ -45,7 +45,7 @@ export function CanvasNodeContainer<TNode extends Node.TNode>({
     connectingNodeId,
     editorStore: { validConnections },
   } = useEditor();
-  const startNodeId = useTree(getStartNodeId);
+  const startNodeId = useTree((treeClient) => treeClient.get.startNodeId());
 
   const validConnectionTarget = React.useMemo(
     () => !isConnecting || (isConnecting && validConnections?.includes(id)),

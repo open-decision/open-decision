@@ -5,7 +5,7 @@ import { nodeHeight, nodeWidth } from "../utils/constants";
 import { SourcePort, TargetPort } from "./Port";
 import { useTranslations } from "next-intl";
 import { useTree } from "@open-decision/tree-sync";
-import { getStartNodeId, Node } from "@open-decision/tree-type";
+import { Node } from "@open-decision/tree-type";
 import { StartNodeLabel } from "./StartNodeLabels";
 import { NodePluginData, useEditor } from "@open-decision/node-editor";
 
@@ -52,7 +52,7 @@ export const CanvasNodeContainer = <TNode extends Node.TNode>({
     connectingNodeId,
     editorStore: { validConnections },
   } = useEditor();
-  const startNodeId = useTree(getStartNodeId);
+  const startNodeId = useTree((treeClient) => treeClient.get.startNodeId());
 
   const validConnectionTarget = React.useMemo(
     () => !isConnecting || (isConnecting && validConnections?.includes(id)),

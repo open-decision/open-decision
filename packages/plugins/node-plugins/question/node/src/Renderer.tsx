@@ -20,9 +20,12 @@ export const Actions: RendererNodeActions<TQuestionNode> = ({
   css,
   inputPlugins,
 }) => {
-  const inputs = useTree((tree) => {
-    const treeClient = createTreeClient(tree);
-    return getInputs(treeClient, Input.Type)(node.data.inputs);
+  const inputs = useTree((treeClient) => {
+    return treeClient.pluginEntity.get.collection(
+      "inputs",
+      node.data.inputs,
+      Input.Type
+    );
   });
 
   return (

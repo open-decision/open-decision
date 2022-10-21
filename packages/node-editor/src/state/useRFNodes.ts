@@ -1,10 +1,12 @@
 import { useTree } from "@open-decision/tree-sync";
-import { getNodes, Node } from "@open-decision/tree-type";
+import { Node } from "@open-decision/tree-type";
 import { useSelectedNodeIds } from "./useSelectedNodes";
 
 export function useRFNodes<TNode extends Node.TNode>() {
-  const nodes = useTree((tree) => getNodes(tree)());
   const selectedNodeIds = useSelectedNodeIds();
+  const nodes = useTree((treeClient) =>
+    treeClient.nodes.get.collection(selectedNodeIds)
+  );
 
   if (!nodes) return [];
 

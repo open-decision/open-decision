@@ -18,7 +18,7 @@ import {
 import { SelectInputPlugin, TAnswer, TSelectInput } from "../selectPlugin";
 import { CompareConditionPlugin } from "@open-decision/condition-plugins-compare";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
-import { Edge, getNode, getNodeOptions } from "@open-decision/tree-type";
+import { Edge } from "@open-decision/tree-type";
 import { createTargetNode } from "@open-decision/node-plugins-helpers";
 
 export const AddOptionButton = ({
@@ -115,9 +115,9 @@ export const OptionTargetInput = ({
   const Compare = new CompareConditionPlugin(treeClient);
 
   const controls = useDragControls();
-  const node = useTree((tree) => getNode(tree)(nodeId));
-  const nodeOptions = useTree((tree) =>
-    Object.values(getNodeOptions(tree)(nodeId, "Ohne Name"))
+  const node = useTree((treeClient) => treeClient.nodes.get.single(nodeId));
+  const nodeOptions = useTree((treeClient) =>
+    Object.values(treeClient.nodes.get.options(nodeId, "Ohne Name"))
   );
 
   const ref = React.useRef<HTMLDivElement | null>(null);

@@ -8,13 +8,7 @@ import {
   Sidebar,
   DropdownMenu,
 } from "@open-decision/design-system";
-import {
-  createTreeClient,
-  getNodeNames,
-  getParents,
-  getStartNodeId,
-  Node,
-} from "@open-decision/tree-type";
+import { Node } from "@open-decision/tree-type";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { RichTextEditor } from "@open-decision/rich-text-editor";
 import { useTranslations } from "next-intl";
@@ -120,13 +114,11 @@ const Header = ({ nodeName = "", nodeId }: HeaderProps) => {
   const t = useTranslations("builder.nodeEditingSidebar");
   const treeClient = useTreeClient();
 
-  const startNodeId = useTree((tree) => {
-    return getStartNodeId(tree);
-  });
+  const startNodeId = useTree((treeClient) => treeClient.get.startNodeId());
 
-  const parentNodes = useTree((tree) => {
-    const parentNodeIds = getParents(tree)(nodeId);
-    return Object.values(getNodeNames(tree)(parentNodeIds));
+  const parentNodes = useTree((treeClient) => {
+    const parentNodeIds = treeClient.nodes.get.parents(nodeId);
+    return Object.values(treeClient.nodes.get.names(parentNodeIds));
   });
 
   const isStartNode = nodeId === startNodeId;
@@ -262,9 +254,12 @@ export function InputPluginComponent({
   nodeId,
   QuestionNode,
 }: InputPluginComponentProps) {
-  const inputs = useTree((tree) => {
-    const treeClient = createTreeClient(tree);
-    return getInputs(treeClient, QuestionNode.inputType)(inputIds);
+  const inputs = useTree((treeClient) => {
+    return treeClient.pluginEntity.get.collection(
+      "inputs",
+      inputIds,
+      QuestionNode.inputType
+    );
   });
 
   return (

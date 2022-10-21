@@ -1,4 +1,6 @@
 import "reactflow";
+import "valtio";
+
 import type { NodePluginData } from "../state/useRFNodes";
 
 declare module "reactflow" {
@@ -10,4 +12,8 @@ declare module "reactflow" {
   interface NodeProps {
     data: NodePluginData;
   }
+}
+
+declare module "valtio" {
+  function useSnapshot<T extends object>(p: T): T;
 }
