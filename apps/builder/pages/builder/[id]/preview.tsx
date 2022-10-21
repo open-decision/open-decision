@@ -83,7 +83,6 @@ export default function VorschauPage({ treeId }: PageProps) {
                 marginBlock: "$4",
               },
             }}
-            inputPlugins={nodePlugins.question.plugin.inputPlugins}
             nodePlugins={nodePlugins}
           />
         </Stack>

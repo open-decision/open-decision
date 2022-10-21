@@ -32,11 +32,11 @@ importers:
       dotenv: ^16.0.2
       eslint: ^8.23.1
       eslint-plugin-unused-imports: ^2.0.0
-      i: ^0.3.7
       jsdom: ^20.0.0
       next: 12.3.0
       nx: 14.7.5
       prettier: ^2.7.1
+      react: 18.2.0
       ts-node: ^10.9.1
       tsconfig-paths-webpack-plugin: ^4.0.0
       tslib: ^2.4.0
@@ -59,10 +59,10 @@ importers:
       dotenv: 16.0.2
       eslint: 8.23.1
       eslint-plugin-unused-imports: 2.0.0_of2nnyqymyuameo6fhejva33re
-      i: 0.3.7
-      next: 12.3.0_@babel+core@7.19.1
+      next: 12.3.0_3toe27fv7etiytxb5kxc7fxaw4
       nx: 14.7.5_@swc+core@1.3.2
       prettier: 2.7.1
+      react: 18.2.0
       ts-node: 10.9.1_rirhebo7lhg45loez5su6drrqe
       tslib: 2.4.0
       typescript: 4.8.3
@@ -3400,7 +3400,7 @@ packages:
       eslint-config-next: 12.3.1_irgkl5vooow2ydyo6aokmferha
       fs-extra: 10.1.0
       ignore: 5.2.0
-      next: 12.3.0_@babel+core@7.19.1
+      next: 12.3.0_3toe27fv7etiytxb5kxc7fxaw4
       semver: 7.3.4
       ts-node: 10.9.1_rirhebo7lhg45loez5su6drrqe
       tsconfig-paths: 3.14.1
@@ -9730,11 +9730,6 @@ packages:
     resolution: {integrity: sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==}
     engines: {node: '>=10.17.0'}
 
-  /i/0.3.7:
-    resolution: {integrity: sha512-FYz4wlXgkQwIPqhzC5TdNMLSE5+GS1IIDJZY/1ZiEPCT2S3COUVZeT5OW4BmW4r5LHLQuOosSwsvnroG9GR59Q==}
-    engines: {node: '>=0.4'}
-    dev: false
-
   /iconv-lite/0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
     engines: {node: '>=0.10.0'}
@@ -11641,7 +11636,7 @@ packages:
       use-intl: 2.7.5_react@18.2.0
     dev: false
 
-  /next/12.3.0_@babel+core@7.19.1:
+  /next/12.3.0_3toe27fv7etiytxb5kxc7fxaw4:
     resolution: {integrity: sha512-GpzI6me9V1+XYtfK0Ae9WD0mKqHyzQlGq1xH1rzNIYMASo4Tkl4rTe9jSqtBpXFhOS33KohXs9ZY38Akkhdciw==}
     engines: {node: '>=12.22.0'}
     hasBin: true
@@ -11667,8 +11662,9 @@ packages:
       '@swc/helpers': 0.4.11
       caniuse-lite: 1.0.30001409
       postcss: 8.4.14
-      styled-jsx: 5.0.6_@babel+core@7.19.1
-      use-sync-external-store: 1.2.0
+      react: 18.2.0
+      styled-jsx: 5.0.6_3toe27fv7etiytxb5kxc7fxaw4
+      use-sync-external-store: 1.2.0_react@18.2.0
     optionalDependencies:
       '@next/swc-android-arm-eabi': 12.3.0
       '@next/swc-android-arm64': 12.3.0
@@ -13806,7 +13802,7 @@ packages:
       tslib: 2.4.0
     dev: false
 
-  /styled-jsx/5.0.6_@babel+core@7.19.1:
+  /styled-jsx/5.0.6_3toe27fv7etiytxb5kxc7fxaw4:
     resolution: {integrity: sha512-xOeROtkK5MGMDimBQ3J6iPId8q0t/BDoG5XN6oKkZClVz9ISF/hihN8OCn2LggMU6N32aXnrXBdn3auSqNS9fA==}
     engines: {node: '>= 12.0.0'}
     peerDependencies:
@@ -13822,6 +13818,7 @@ packages:
         optional: true
     dependencies:
       '@babel/core': 7.19.1
+      react: 18.2.0
     dev: false
 
   /styled-jsx/5.0.7_3toe27fv7etiytxb5kxc7fxaw4:
