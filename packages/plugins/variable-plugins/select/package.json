@@ -1,9 +1,0 @@
-{
-  "name": "@open-decision/variable-plugins-select",
-  "version": "0.0.1",
-  "main": "src/index.ts",
-  "dependencies": {
-    "zod": "^3"
-  },
-  "devDependencies": {}
-}

@@ -242,24 +242,6 @@ importers:
       '@babel/preset-env': ^7.18.10
       '@fontsource/poppins': ^4.5.9
       '@next/bundle-analyzer': ^12.2.5
-      '@open-decision/api-client': workspace:*
-      '@open-decision/api-helpers': workspace:*
-      '@open-decision/auth-api-specification': workspace:*
-      '@open-decision/condition-plugins-compare': workspace:*
-      '@open-decision/condition-plugins-direct': workspace:*
-      '@open-decision/design-system': workspace:*
-      '@open-decision/interpreter-react': workspace:*
-      '@open-decision/node-editor': workspace:*
-      '@open-decision/node-plugins-question': workspace:*
-      '@open-decision/renderer': workspace:*
-      '@open-decision/rich-text-editor': workspace:*
-      '@open-decision/translations': workspace:*
-      '@open-decision/tree-api-specification': workspace:*
-      '@open-decision/tree-client': workspace:*
-      '@open-decision/tree-sync': workspace:*
-      '@open-decision/tree-type': workspace:*
-      '@open-decision/type-classes': workspace:*
-      '@open-decision/user-api-specification': workspace:*
       '@radix-ui/react-icons': ^1.1.1
       '@sentry/nextjs': ^7.12.1
       '@sentry/tracing': ^7.12.1
@@ -293,24 +275,6 @@ importers:
       zustand: 4.1.1
     dependencies:
       '@fontsource/poppins': 4.5.9
-      '@open-decision/api-client': link:../../packages/api-client
-      '@open-decision/api-helpers': link:../../packages/api-helpers
-      '@open-decision/auth-api-specification': link:../../packages/auth-api-specification
-      '@open-decision/condition-plugins-compare': link:../../packages/plugins/condition-plugins/compare
-      '@open-decision/condition-plugins-direct': link:../../packages/plugins/condition-plugins/direct
-      '@open-decision/design-system': link:../../packages/design-system
-      '@open-decision/interpreter-react': link:../../packages/interpreter-react
-      '@open-decision/node-editor': link:../../packages/node-editor
-      '@open-decision/node-plugins-question': link:../../packages/plugins/node-plugins/question/node
-      '@open-decision/renderer': link:../../packages/renderer
-      '@open-decision/rich-text-editor': link:../../packages/rich-text-editor
-      '@open-decision/translations': link:../../packages/translations
-      '@open-decision/tree-api-specification': link:../../packages/tree-api-specification
-      '@open-decision/tree-client': link:../../packages/tree/client
-      '@open-decision/tree-sync': link:../../packages/tree/sync
-      '@open-decision/tree-type': link:../../packages/tree/type
-      '@open-decision/type-classes': link:../../packages/type-classes
-      '@open-decision/user-api-specification': link:../../packages/user-api-specification
       '@radix-ui/react-icons': 1.1.1_react@18.2.0
       '@sentry/nextjs': 7.13.0_next@12.3.1+react@18.2.0
       '@sentry/tracing': 7.13.0
@@ -399,6 +363,9 @@ importers:
       zod: 3.19.1
     devDependencies:
       '@types/validator': 13.7.6
+
+  packages/condition:
+    specifiers: {}
 
   packages/design-system:
     specifiers:
@@ -498,7 +465,7 @@ importers:
       valtio: 1.7.4
       zod: 3.19.1
 
-  packages/plugins/condition-plugins/compare:
+  packages/plugins/condition/compare:
     specifiers:
       ramda: 0.28.0
       zod: ^3.19.1
@@ -506,7 +473,7 @@ importers:
       ramda: 0.28.0
       zod: 3.19.1
 
-  packages/plugins/condition-plugins/direct:
+  packages/plugins/condition/direct:
     specifiers:
       ramda: 0.28.0
       zod: ^3.19.1
@@ -514,7 +481,7 @@ importers:
       ramda: 0.28.0
       zod: 3.19.1
 
-  packages/plugins/condition-plugins/helpers:
+  packages/plugins/condition/helpers:
     specifiers:
       ramda: 0.28.0
       remeda: ^1.1.0

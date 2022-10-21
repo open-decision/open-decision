@@ -1,0 +1,9 @@
+{
+  "name": "@open-decision/plugins-node-question",
+  "version": "0.0.1",
+  "main": "src/index.ts",
+  "dependencies": {
+    "ts-pattern": "^4.0.5",
+    "zod": "^3"
+  }
+}

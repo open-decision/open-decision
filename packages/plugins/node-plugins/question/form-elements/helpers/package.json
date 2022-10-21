@@ -1,9 +1,0 @@
-{
-  "name": "@open-decision/form-element-helpers",
-  "version": "0.0.1",
-  "main": "src/index.ts",
-  "dependencies": {
-    "zod": "^3",
-    "remeda": "^1.1.0"
-  }
-}
