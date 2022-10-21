@@ -2,7 +2,7 @@ import { Form } from "@open-decision/design-system";
 import { useInterpreter } from "@open-decision/interpreter-react";
 import { Answers } from "./Answers";
 import { TSelectInput } from "../selectPlugin";
-import { RendererComponentProps } from "@open-decision/input-plugins-helpers";
+import { RendererComponentProps } from "@open-decision/form-element-helpers";
 
 export function AnswersForm({
   input,

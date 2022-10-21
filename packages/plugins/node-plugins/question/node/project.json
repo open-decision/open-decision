@@ -11,7 +11,8 @@
         "outputPath": "dist/packages/plugins/node-plugins/question/node",
         "main": "packages/plugins/node-plugins/question/node/src/index.ts",
         "tsConfig": "packages/plugins/node-plugins/question/node/tsconfig.lib.json",
-        "assets": ["packages/plugins/node-plugins/question/node/*.md"]
+        "assets": ["packages/plugins/node-plugins/question/node/*.md"],
+        "skipTypeCheck": true
       }
     },
     "lint": {

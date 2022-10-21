@@ -1,5 +1,5 @@
 import { TTreeClient } from "@open-decision/tree-type";
-import { InputPlugin } from "@open-decision/input-plugins-helpers";
+import { InputPlugin } from "@open-decision/form-element-helpers";
 import { z } from "zod";
 import { TextVariable } from "@open-decision/variable-plugins-text";
 

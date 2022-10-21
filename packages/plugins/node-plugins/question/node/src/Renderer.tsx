@@ -1,4 +1,3 @@
-import { Form } from "@open-decision/design-system";
 import {
   RendererNodeActions,
   RendererNodeContent,
@@ -6,7 +5,6 @@ import {
 import { RichTextRenderer } from "@open-decision/rich-text-editor";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { QuestionNodePlugin, TQuestionNode } from "./plugin";
-import { Input } from "@open-decision/form-element-helpers";
 import { match } from "ts-pattern";
 
 export const Content: RendererNodeContent<TQuestionNode> = ({ node }) => {

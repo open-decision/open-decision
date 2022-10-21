@@ -1,5 +1,5 @@
 import { Form, TargetSelector } from "@open-decision/design-system";
-import { InputComponentProps } from "@open-decision/input-plugins-helpers";
+import { InputComponentProps } from "@open-decision/form-element-helpers";
 import { TextInputPlugin, TTextInput } from "../textPlugin";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { createTargetNode } from "@open-decision/node-plugins-helpers";

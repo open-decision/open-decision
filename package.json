@@ -6,8 +6,7 @@
     "apps/**"
   ],
   "scripts": {
-    "remove:node_modules": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' + ",
-    "remove:dist": "rm -rf dist"
+    "cleanup": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' + && rm -rf dist && rm -rf tmp"
   },
   "license": "MIT",
   "private": true,
@@ -26,7 +25,6 @@
     "dotenv": "^16.0.2",
     "eslint": "^8.23.1",
     "eslint-plugin-unused-imports": "^2.0.0",
-    "i": "^0.3.7",
     "next": "12.3.0",
     "nx": "14.7.5",
     "prettier": "^2.7.1",

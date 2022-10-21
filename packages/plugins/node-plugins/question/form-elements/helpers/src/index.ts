@@ -11,8 +11,8 @@ export type InputComponentProps<TInput extends Input.TInput> = {
   nodeId: string;
   input: TInput;
   onTargetSelect: (target: string) => void;
-  onNodeCreate: <TNodeType extends Omit<Node.TNode, "id" | "data" | "type">>(
-    nodeData: Partial<TNodeType>
+  onNodeCreate: (
+    nodeData: Partial<Omit<Node.TNode, "id" | "data" | "type">>
   ) => Node.TNode;
 };
 

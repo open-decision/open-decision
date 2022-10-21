@@ -14,7 +14,7 @@ import { PlusIcon, TrashIcon } from "@radix-ui/react-icons";
 import {
   InputComponentProps,
   InputPrimaryActionSlotProps,
-} from "@open-decision/input-plugins-helpers";
+} from "@open-decision/form-element-helpers";
 import { SelectInputPlugin, TAnswer, TSelectInput } from "../selectPlugin";
 import { CompareConditionPlugin } from "@open-decision/condition-plugins-compare";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";

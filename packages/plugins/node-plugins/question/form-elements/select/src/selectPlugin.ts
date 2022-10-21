@@ -1,7 +1,7 @@
 import { TTreeClient } from "@open-decision/tree-type";
 import { z } from "zod";
 import { v4 as uuid } from "uuid";
-import { InputPlugin } from "@open-decision/input-plugins-helpers";
+import { InputPlugin } from "@open-decision/form-element-helpers";
 import { SelectVariable } from "@open-decision/variable-plugins-select";
 
 export const typeName = "select" as const;
