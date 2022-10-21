@@ -1,4 +1,5 @@
 import {
+  Form,
   ScrollArea,
   Stack,
   StackProps,
@@ -65,9 +66,18 @@ function RendererImpl(
         {Node.Actions ? (
           <Node.Actions
             css={{ paddingInline: "$$padding", marginTop: "$4" }}
-            nodePlugins={nodePlugins}
             node={node}
-          />
+          >
+            <Form.Submit
+              css={{
+                alignSelf: "end",
+                marginTop: "$2",
+                fontWeight: "$large-text",
+              }}
+            >
+              Weiter
+            </Form.Submit>
+          </Node.Actions>
         ) : null}
       </Stack>
       <Navigation css={{ alignSelf: "center", marginBottom: "$$padding" }} />

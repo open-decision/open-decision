@@ -263,8 +263,34 @@ export function InputPluginComponent({
     <Box as="section">
       {inputs && !isEmpty(inputs) ? (
         Object.values(inputs).map((input) => {
-          const PluginComponents =
-            QuestionNode.inputPlugins[input.type].BuilderComponent;
+          const Components = match(input)
+            .with({ type: "text" }, (input) => [
+              null,
+              <QuestionNode.inputPlugins.text.BuilderComponent.InputConfigurator
+                nodeId={nodeId}
+                onTargetSelect={onTargetSelect}
+                onNodeCreate={({ name, position }) =>
+                  QuestionNode.create({ name, position })
+                }
+                input={input}
+                key={input.id}
+              />,
+            ])
+            .with({ type: "select" }, (input) => [
+              <QuestionNode.inputPlugins.select.BuilderComponent.PrimaryActionSlot
+                input={input}
+              />,
+              <QuestionNode.inputPlugins.select.BuilderComponent.InputConfigurator
+                nodeId={nodeId}
+                onTargetSelect={onTargetSelect}
+                onNodeCreate={({ name, position }) =>
+                  QuestionNode.create({ name, position })
+                }
+                input={input}
+                key={input.id}
+              />,
+            ])
+            .exhaustive();
 
           return (
             <Box as="section" key={input.id}>
@@ -274,27 +300,9 @@ export function InputPluginComponent({
                 inputId={input.id}
                 QuestionNode={QuestionNode}
               >
-                {PluginComponents.PrimaryActionSlot
-                  ? match(input)
-                      .with({ type: "text" }, () => null)
-                      .with({ type: "select" }, (input) => (
-                        <QuestionNode.inputPlugins.select.BuilderComponent.PrimaryActionSlot
-                          input={input}
-                        />
-                      ))
-                      .exhaustive()
-                  : null}
+                {Components[0]}
               </InputHeader>
-              <PluginComponents.InputConfigurator
-                nodeId={nodeId}
-                onTargetSelect={onTargetSelect}
-                onNodeCreate={({ name, position }) =>
-                  QuestionNode.create({ name, position })
-                }
-                //@ts-ignore TODO: fix this
-                input={input}
-                key={input.id}
-              />
+              {Components[1]}
             </Box>
           );
         })
