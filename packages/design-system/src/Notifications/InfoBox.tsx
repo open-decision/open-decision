@@ -5,13 +5,13 @@ import {
   InfoCircledIcon,
 } from "@radix-ui/react-icons";
 import { Required } from "utility-types";
-import { Box } from "@open-decision/design-system/src/Box";
-import { Heading } from "@open-decision/design-system/src/Heading";
-import { Icon } from "@open-decision/design-system/src/Icon/Icon";
-import { Stack } from "@open-decision/design-system/src/Layout";
-import { styled, StyleObject } from "@open-decision/design-system/src/stitches";
-import { Text } from "@open-decision/design-system/src/Text";
-import { Notification } from "@open-decision/design-system/src/Notifications/NotificationState";
+import { Box } from "../Box";
+import { Heading } from "../Heading";
+import { Icon } from "../Icon/Icon";
+import { Stack } from "../Layout";
+import { styled, StyleObject } from "../stitches";
+import { Text } from "../Text";
+import { Notification } from "../Notifications/NotificationState";
 
 const Container = styled(Box, {
   $$accentColor: "$colors$colorScheme11",

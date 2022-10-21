@@ -1,9 +1,9 @@
 import * as Collapsible from "@radix-ui/react-collapsible";
 import * as React from "react";
-import { Box } from "@open-decision/design-system/src/Box";
-import { Button, ButtonProps } from "@open-decision/design-system/src/Button/Button";
-import { keyframes, styled } from "@open-decision/design-system/src/stitches";
-import { Icon as IconComp } from "@open-decision/design-system/src/Icon/Icon";
+import { Box } from "../../Box";
+import { Button, ButtonProps } from "../../Button/Button";
+import { keyframes, styled } from "../../stitches";
+import { Icon as IconComp } from "../../Icon/Icon";
 
 type MenuTriggerProps = ButtonProps & { Icon?: React.ReactNode };
 

@@ -1,12 +1,12 @@
-import { labelStyles } from "@open-decision/design-system/src/Form/Label";
-import { css, darkTheme, keyframes } from "@open-decision/design-system/src/stitches";
+import { labelStyles } from "../Form/Label";
+import { css, darkTheme, keyframes } from "../stitches";
 import {
   activeSelector,
   disabledSelector,
   intentSelector,
-} from "@open-decision/design-system/src/stitches/stateSelectors";
-import { textStyles } from "@open-decision/design-system/src/Text";
-import { Link } from "@open-decision/design-system/src/Link/Link";
+} from "../stitches/stateSelectors";
+import { textStyles } from "../Text";
+import { Link } from "../Link/Link";
 
 const scaleIn = keyframes({
   "0%": { opacity: 0, transform: "scale(0)" },

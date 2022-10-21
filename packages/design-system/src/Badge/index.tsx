@@ -1,5 +1,5 @@
 import * as React from "react";
-import { styled, css } from "@open-decision/design-system/src/stitches";
+import { styled, css } from "../stitches";
 
 export const badgeStyles = css({
   colorScheme: "primary",

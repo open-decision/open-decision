@@ -1,5 +1,5 @@
 import * as React from "react";
-import { styled, StyleObject } from "@open-decision/design-system/src/stitches";
+import { styled, StyleObject } from "../stitches";
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 
 export const Root = styled(ScrollAreaPrimitive.Root, {});

@@ -1,9 +1,9 @@
 import * as React from "react";
-import { Box } from "@open-decision/design-system/src/Box";
-import { Button } from "@open-decision/design-system/src/Button/Button";
+import { Box } from "../Box";
+import { Button } from "../Button/Button";
 import { merge } from "remeda";
-import { styled } from "@open-decision/design-system/src/stitches";
-import { Icon } from "@open-decision/design-system/src/Icon/Icon";
+import { styled } from "../stitches";
+import { Icon } from "../Icon/Icon";
 import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 
 const StyledOuterBox = styled(Box, {

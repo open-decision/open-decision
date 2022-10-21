@@ -1,20 +1,20 @@
 import * as React from "react";
 import * as DropdownMenuPrimitives from "@radix-ui/react-dropdown-menu";
-import { styled, StyleObject } from "@open-decision/design-system/src/stitches";
-import { Icon } from "@open-decision/design-system/src/Icon/Icon";
+import { styled, StyleObject } from "../../stitches";
+import { Icon } from "../../Icon/Icon";
 import {
   menuContainerStyles,
   menuItemStyles,
   menuLabelStyles,
   menuSeparatorStyles,
-} from "@open-decision/design-system/src/Menus/shared";
+} from "../../Menus/shared";
 import {
   CheckIcon,
   TriangleDownIcon,
   TriangleRightIcon,
 } from "@radix-ui/react-icons";
-import { Button as SystemButton, ButtonProps } from "@open-decision/design-system/src/Button";
-import { Row } from "@open-decision/design-system/src/Layout";
+import { Button as SystemButton, ButtonProps } from "../../Button";
+import { Row } from "../../Layout";
 
 export const Root = DropdownMenuPrimitives.Root;
 

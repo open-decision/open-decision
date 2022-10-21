@@ -1,9 +1,9 @@
-export * from "@open-decision/condition-plugins-direct/src/plugin";
+export * from "./plugin";
 
 import { TTreeClient } from "@open-decision/tree-type";
 import { ConditionPluginObject } from "@open-decision/condition-plugins-helpers";
-import { DirectConditionPlugin, DataType, TDirectCondition } from "@open-decision/condition-plugins-direct/src/plugin";
-import { resolver } from "@open-decision/condition-plugins-direct/src/resolver";
+import { DataType, TDirectCondition, DirectConditionPlugin } from "./plugin";
+import { resolver } from "./resolver";
 
 export const createDirectConditionPlugin = (
   treeClient: TTreeClient

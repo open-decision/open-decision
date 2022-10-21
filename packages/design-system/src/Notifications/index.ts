@@ -1,8 +1,8 @@
-export { InfoBox } from "@open-decision/design-system/src/Notifications/InfoBox";
-export type { InfoBoxProps } from "@open-decision/design-system/src/Notifications/InfoBox";
-export { Notifications } from "@open-decision/design-system/src/Notifications/Notifications";
+export { InfoBox } from "./InfoBox";
+export type { InfoBoxProps } from "./InfoBox";
+export { Notifications } from "./Notifications";
 export {
   notificationState,
   useNotificationSnapshot,
-} from "@open-decision/design-system/src/Notifications/NotificationState";
-export type { Notification } from "@open-decision/design-system/src/Notifications/NotificationState";
+} from "./NotificationState";
+export type { Notification } from "./NotificationState";

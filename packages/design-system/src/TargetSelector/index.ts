@@ -1,2 +1,2 @@
-export * from "@open-decision/design-system/src/TargetSelector/NodeLink";
-export * from "@open-decision/design-system/src/TargetSelector/TargetSelector";
+export * from "./NodeLink";
+export * from "./TargetSelector";

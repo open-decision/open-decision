@@ -1,4 +1,4 @@
-import { css, createScaleVariant } from "@open-decision/design-system/src/stitches";
+import { css, createScaleVariant } from "../stitches";
 
 export const center = css({
   variants: {

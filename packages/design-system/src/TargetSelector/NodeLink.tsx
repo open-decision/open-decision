@@ -1,4 +1,5 @@
-import { ButtonProps, Button, Icon } from "@open-decision/design-system";
+import { ButtonProps, Button } from "../Button";
+import { Icon } from "../Icon/Icon";
 import { Node } from "@open-decision/tree-type";
 import { Crosshair2Icon } from "@radix-ui/react-icons";
 

@@ -1,7 +1,7 @@
-import { Notification } from "@open-decision/design-system/src/Notifications/Notification";
+import { Notification } from "../Notifications/Notification";
 import { AnimatePresence } from "framer-motion";
-import { Box } from "@open-decision/design-system/src/Box";
-import type { NotificationState } from "@open-decision/design-system/src/Notifications/NotificationState";
+import { Box } from "../Box";
+import type { NotificationState } from "../Notifications/NotificationState";
 
 type NotificationsProps = { state: NotificationState; closeLabel?: string };
 

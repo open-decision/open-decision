@@ -1,5 +1,5 @@
 import * as SeparatorPrimitive from "@radix-ui/react-separator";
-import { styled } from "@open-decision/design-system/src/stitches";
+import { styled } from "./stitches";
 
 export const Separator = styled(SeparatorPrimitive.Root, {
   backgroundColor: "$gray5",

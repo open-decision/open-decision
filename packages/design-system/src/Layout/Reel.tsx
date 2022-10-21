@@ -1,8 +1,8 @@
 import * as React from "react";
 import useResizeObserver from "use-resize-observer";
-import { mergeRefs } from "@open-decision/design-system/src/internal/utils";
-import { styled } from "@open-decision/design-system/src/stitches";
-import { gap, padding } from "@open-decision/design-system/src/shared/variants";
+import { mergeRefs } from "../internal/utils";
+import { styled } from "../stitches";
+import { gap, padding } from "../shared/variants";
 
 const Container = styled("div", padding, gap, {
   $$itemWidth: "auto",

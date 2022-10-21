@@ -1,4 +1,4 @@
-import { css } from "@open-decision/design-system/src/stitches";
+import { css } from "../stitches";
 
 export const iconSizes = css({
   variants: {

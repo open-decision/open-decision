@@ -1,9 +1,9 @@
 import * as React from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
-import { darkTheme, keyframes, styled } from "@open-decision/design-system/src/stitches";
-import { overlayCss } from "@open-decision/design-system/src/Overlays/shared";
-import { Text } from "@open-decision/design-system/src/Text";
-import { Stack } from "@open-decision/design-system/src/Layout";
+import { darkTheme, keyframes, styled } from "../../stitches";
+import { overlayCss } from "../../Overlays/shared";
+import { Text } from "../../Text";
+import { Stack } from "../../Layout";
 
 const scaleIn = keyframes({
   "0%": { opacity: 0, transform: "scale(0)" },

@@ -1,8 +1,8 @@
 import * as React from "react";
 import { SpinnerCircular } from "spinners-react";
-import { Icon } from "@open-decision/design-system/src/Icon/Icon";
-import { ColorKeys } from "@open-decision/design-system/src/internal/utils";
-import { StyleObject, theme } from "@open-decision/design-system/src/stitches";
+import { Icon } from "../Icon/Icon";
+import { ColorKeys } from "../internal/utils";
+import { StyleObject, theme } from "../stitches";
 import { CheckCircledIcon } from "@radix-ui/react-icons";
 
 type Props = {

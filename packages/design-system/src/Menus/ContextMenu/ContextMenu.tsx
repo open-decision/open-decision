@@ -1,13 +1,13 @@
 import * as React from "react";
 import * as ContextMenuPrimitives from "@radix-ui/react-context-menu";
-import { styled } from "@open-decision/design-system/src/stitches";
+import { styled } from "../../stitches";
 import {
   menuContainerStyles,
   menuItemStyles,
   menuLabelStyles,
   menuSeparatorStyles,
-} from "@open-decision/design-system/src/Menus/shared";
-import { Icon } from "@open-decision/design-system/src/Icon/Icon";
+} from "../../Menus/shared";
+import { Icon } from "../../Icon/Icon";
 import { CheckIcon } from "@radix-ui/react-icons";
 
 const ItemIndicator = () => {

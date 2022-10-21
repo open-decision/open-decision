@@ -34,9 +34,9 @@ import {
   aliasColor,
   TextStyles,
   SystemColors,
-} from "@open-decision/design-system/src/internal/utils";
-import { outerFocusStyle, innerFocusStyle } from "@open-decision/design-system/src/stitches/focusStyles";
-import { focusSelector } from "@open-decision/design-system/src/stitches/stateSelectors";
+} from "../internal/utils";
+import { outerFocusStyle, innerFocusStyle } from "../stitches/focusStyles";
+import { focusSelector } from "../stitches/stateSelectors";
 
 type focusTypes =
   | "inner-within"

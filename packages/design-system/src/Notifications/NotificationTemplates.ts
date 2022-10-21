@@ -1,4 +1,4 @@
-import { Notification } from "@open-decision/design-system/src/Notifications/NotificationState";
+import { Notification } from "../Notifications/NotificationState";
 
 export const notificationTemplates: Record<string, Notification> = {
   "email-verified": {
