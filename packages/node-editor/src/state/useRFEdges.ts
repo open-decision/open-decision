@@ -15,9 +15,7 @@ const staticEdgeData = {
 
 export function useRFEdges() {
   const selectedEdgeIds = useSelectedEdgeIds();
-  const edges = useTree((treeClient) =>
-    treeClient.edges.get.collection(selectedEdgeIds)
-  );
+  const edges = useTree((treeClient) => treeClient.edges.get.all());
 
   if (!edges) return [];
 

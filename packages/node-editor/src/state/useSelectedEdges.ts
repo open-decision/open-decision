@@ -5,7 +5,7 @@ import { useTree } from "@open-decision/tree-sync";
 export function useSelectedEdges() {
   const selectedEdgeIds = useSelectedEdgeIds();
   const edges = useTree((treeClient) =>
-    treeClient.edges.get.collection(selectedEdgeIds)
+    Object.values(treeClient.edges.get.collection(selectedEdgeIds) ?? {})
   );
 
   if (!edges) return undefined;

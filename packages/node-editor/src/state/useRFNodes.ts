@@ -4,9 +4,7 @@ import { useSelectedNodeIds } from "./useSelectedNodes";
 
 export function useRFNodes<TNode extends Node.TNode>() {
   const selectedNodeIds = useSelectedNodeIds();
-  const nodes = useTree((treeClient) =>
-    treeClient.nodes.get.collection(selectedNodeIds)
-  );
+  const nodes = useTree((treeClient) => treeClient.nodes.get.all());
 
   if (!nodes) return [];
 

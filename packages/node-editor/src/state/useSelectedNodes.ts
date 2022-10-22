@@ -5,7 +5,7 @@ import { useSnapshot } from "valtio";
 export function useSelectedNodes() {
   const selectedNodeIds = useSelectedNodeIds();
   const nodes = useTree((treeClient) =>
-    treeClient.nodes.get.collection(selectedNodeIds)
+    Object.values(treeClient.nodes.get.collection(selectedNodeIds) ?? {})
   );
 
   if (!nodes) return undefined;
