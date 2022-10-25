@@ -491,7 +491,7 @@ importers:
       remeda: 1.1.0
       zod: 3.19.1
 
-  packages/plugins/node-plugins/helpers:
+  packages/plugins/node/helpers:
     specifiers:
       reactflow: ^11.1.1
       remeda: ^1.1.0
@@ -501,31 +501,7 @@ importers:
       remeda: 1.1.0
       zod: 3.19.1
 
-  packages/plugins/node-plugins/question/form-elements/helpers:
-    specifiers:
-      remeda: ^1.1.0
-      zod: ^3.19.1
-    dependencies:
-      remeda: 1.1.0
-      zod: 3.19.1
-
-  packages/plugins/node-plugins/question/form-elements/select:
-    specifiers:
-      framer-motion: ^7.3.5
-      remeda: ^1.1.0
-      zod: ^3.19.1
-    dependencies:
-      framer-motion: 7.3.6
-      remeda: 1.1.0
-      zod: 3.19.1
-
-  packages/plugins/node-plugins/question/form-elements/text:
-    specifiers:
-      zod: ^3.19.1
-    dependencies:
-      zod: 3.19.1
-
-  packages/plugins/node-plugins/question/node:
+  packages/plugins/node/question:
     specifiers:
       ts-pattern: ^4.0.5
       zod: ^3.19.1
@@ -533,19 +509,19 @@ importers:
       ts-pattern: 4.0.5
       zod: 3.19.1
 
-  packages/plugins/variable-plugins/helpers:
+  packages/plugins/variable/helpers:
     specifiers:
       zod: ^3.19.1
     dependencies:
       zod: 3.19.1
 
-  packages/plugins/variable-plugins/select:
+  packages/plugins/variable/select:
     specifiers:
       zod: ^3.19.1
     dependencies:
       zod: 3.19.1
 
-  packages/plugins/variable-plugins/text:
+  packages/plugins/variable/text:
     specifiers:
       zod: ^3.19.1
     dependencies:
@@ -9033,27 +9009,6 @@ packages:
 
   /fraction.js/4.2.0:
     resolution: {integrity: sha512-MhLuK+2gUcnZe8ZHlaaINnQLl0xRIGRfcGk2yl8xoQAfHrSsL3rYu6FCmBdkdbhc9EPlwyGHewaRsvwRMJtAlA==}
-    dev: false
-
-  /framer-motion/7.3.6:
-    resolution: {integrity: sha512-en8mLpDv6IcieZo54acHg56HSLpOSryRLZtMOd1Sj1s7hBbUTWnJsv68CWaHI2ysPKcbH/olGfAhRh4yrJn5tw==}
-    peerDependencies:
-      react: ^18.0.0
-      react-dom: ^18.0.0
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
-    dependencies:
-      '@motionone/dom': 10.13.1
-      framesync: 6.1.2
-      hey-listen: 1.0.8
-      popmotion: 11.0.5
-      style-value-types: 5.1.2
-      tslib: 2.4.0
-    optionalDependencies:
-      '@emotion/is-prop-valid': 0.8.8
     dev: false
 
   /framer-motion/7.3.6_biqbaboplfbrettd7655fr4n2y:
