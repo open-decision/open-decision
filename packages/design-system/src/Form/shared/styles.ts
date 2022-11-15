@@ -53,7 +53,7 @@ export const baseTextInputStyle = css({
       },
     },
   },
-  
+
   defaultVariants: {
     size: "medium",
   },
