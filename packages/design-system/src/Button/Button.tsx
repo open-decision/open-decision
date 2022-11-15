@@ -54,13 +54,6 @@ export const buttonStyles = css(alignByContent, {
         fontWeight: 500,
         $$gap: "$space$2",
       },
-      xl: {
-        $$paddingInline: "$space$5",
-        $$paddingBlock: "$space$3",
-        textStyle: "large-text",
-        fontWeight: 500,
-        $$gap: "$space$2",
-      },
     },
     variant: {
       primary: {
@@ -84,7 +77,7 @@ export const buttonStyles = css(alignByContent, {
           backgroundColor: "$colorScheme11",
 
           [`.${darkTheme} &`]: {
-            backgroundColor: "$colorScheme10",
+            backgroundColor: "$colorScheme11",
           },
         },
 
@@ -104,7 +97,7 @@ export const buttonStyles = css(alignByContent, {
         color: "$colorScheme11",
 
         [`.${darkTheme} &`]: {
-          backgroundColor: "$colorScheme4",
+          backgroundColor: "$colorScheme3",
         },
 
         [`${intentSelector}`]: {
@@ -119,7 +112,7 @@ export const buttonStyles = css(alignByContent, {
           backgroundColor: "$colorScheme7",
 
           [`.${darkTheme} &`]: {
-            backgroundColor: "$colorScheme6",
+            backgroundColor: "$colorScheme7",
           },
         },
 
@@ -127,7 +120,7 @@ export const buttonStyles = css(alignByContent, {
           backgroundColor: "$colorScheme3",
 
           [`.${darkTheme} &`]: {
-            backgroundColor: "$colorScheme4",
+            backgroundColor: "$colorScheme3",
           },
         },
       },
@@ -158,7 +151,7 @@ export const buttonStyles = css(alignByContent, {
 
       neutral: {
         colorScheme: "gray",
-        color: "$colorScheme12",
+        color: "$colorScheme11",
         backgroundColor: "unset",
         focusType: "inner",
 
