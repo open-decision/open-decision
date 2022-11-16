@@ -2,11 +2,7 @@
 
 Open Decision is a free and Open Source no-code platform to automate workflows and responses to recurring requests. Designed for the legal market.
 
-This is a project by [Open Legal Tech](https://open-legal-tech.org/), a non-profit based in Berlin, Germany.
-
 Further information and a live version of the Software → [open-decision.org](https://open-decision.org)
-
-Reach out to us → [contact@open-legal-tech.org](mailto:contact@open-legal-tech.org)
 
 Join our community → [Slack Workspace](https://open-decision.org/slack)
 
@@ -48,7 +44,7 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 
 ### Join our Developer Team
 
-If you want to join our team, you are very welcome to contact us at [contact@open-legal-tech.org](mailto:contact@open-legal-tech.org).
+If you want to join our team, you are very welcome to send a DM to **PhilGarb** on GitHub
 
 ### Join the User Community
 
