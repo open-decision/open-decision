@@ -47,13 +47,8 @@ export const baseTextInputStyle = css({
         textStyle: "medium-text",
       },
       large: {
+        $$paddingBlock: "$space$3",
         $$paddingInline: "$space$4",
-        $$paddingBlock: "$space$3",
-        textStyle: "large-text",
-      },
-      xl: {
-        $$paddingInline: "$space$5",
-        $$paddingBlock: "$space$3",
         textStyle: "large-text",
       },
     },
