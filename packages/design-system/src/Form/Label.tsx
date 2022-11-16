@@ -8,7 +8,7 @@ export const labelStyles = css({
   alignItems: "center",
   gap: "$2",
   fontWeight: "500",
-  lineHeight: "0.5",
+  lineHeight: "1.25",
 
   [`${disabledSelector}`]: { color: "$gray11" },
 });
