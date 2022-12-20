@@ -1,4 +1,4 @@
-import { Notification } from "./NotificationState";
+import { Notification } from "../Notifications/NotificationState";
 
 export const notificationTemplates: Record<string, Notification> = {
   "email-verified": {

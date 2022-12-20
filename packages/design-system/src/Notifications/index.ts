@@ -6,7 +6,3 @@ export {
   useNotificationSnapshot,
 } from "./NotificationState";
 export type { Notification } from "./NotificationState";
-
-declare module "valtio" {
-  function useSnapshot<T extends object>(p: T): T;
-}

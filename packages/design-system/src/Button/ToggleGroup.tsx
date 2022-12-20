@@ -1,22 +1,14 @@
 import * as React from "react";
-import { styled, StyleObject } from "../stitches";
-import { ButtonProps, buttonStyles } from "./Button";
+import { buttonClasses, ButtonProps, ButtonVariants } from "../Button/Button";
 import * as ToggleGroupPrimitives from "@radix-ui/react-toggle-group";
-import { Box } from "../Box";
 import { ODProgrammerError } from "@open-decision/type-classes";
+import { cva } from "class-variance-authority";
+import { twMerge } from "../utils";
 
-const StyledContainer = styled(Box, {
-  borderRadius: "$md",
-  layer: "4",
-  padding: "$1",
-  position: "relative",
-  isolation: "isolate",
-
+const container = cva(["rounded-md bg-layer-4 p-1 relative isolate"], {
   variants: {
     raised: {
-      true: {
-        boxShadow: "$1",
-      },
+      true: "shadow-2",
     },
   },
 
@@ -25,18 +17,13 @@ const StyledContainer = styled(Box, {
   },
 });
 
-const StyledRoot = styled(ToggleGroupPrimitives.Root, {
-  display: "inline-flex",
-  gap: "$2",
-  zIndex: "$10",
-
+const root = cva(["inline-flex gap-2 justify-between w-full"], {
   variants: {
     layout: {
-      vertical: { flexDirection: "column" },
-      horizontal: {},
+      vertical: "flex-col",
+      horizontal: "flex-row",
     },
   },
-
   defaultVariants: {
     layout: "horizontal",
   },
@@ -44,7 +31,8 @@ const StyledRoot = styled(ToggleGroupPrimitives.Root, {
 
 export type RootProps = React.ComponentProps<
   typeof ToggleGroupPrimitives.Root
-> & { css?: StyleObject } & {
+> & {
+  className?: string;
   layout?: "vertical" | "horizontal";
   raised?: boolean;
 };
@@ -57,7 +45,7 @@ const ToggleContext = React.createContext<null | {
 }>(null);
 
 export const Root = React.forwardRef<HTMLDivElement, RootProps>(
-  ({ children, value, css, layout, raised, ...props }, ref) => {
+  ({ children, value, className, layout, raised, ...props }, ref) => {
     const [activeNode, setActiveNode] =
       React.useState<null | HTMLButtonElement>(null);
 
@@ -73,54 +61,48 @@ export const Root = React.forwardRef<HTMLDivElement, RootProps>(
 
     return (
       <ToggleContext.Provider value={{ assignActiveNode }}>
-        <StyledContainer ref={ref} css={css} raised={raised}>
-          <StyledRoot layout={layout} {...props}>
-            {children}
-          </StyledRoot>
+        <div className={twMerge(container({ raised, className }))} ref={ref}>
           {activeNode ? (
-            <Box
+            <div
               aria-hidden
-              css={{
-                position: "absolute",
+              className="absolute transition-all duration-200 ease-in-out flex justify-center items-center"
+              style={{
                 width: activeNode.offsetWidth,
                 height: activeNode.offsetHeight,
                 left: activeNode.offsetLeft,
                 top: activeNode.offsetTop,
-                transition: "all 0.2s ease",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
               }}
             >
-              <Box
-                css={{
-                  width: "22px",
-                  height: "22px",
-                  backgroundColor: "$white",
-                  borderRadius: "$md",
-                  boxShadow: "$2",
-                }}
-              />
-            </Box>
+              <div className="w-full h-full bg-white rounded-md shadow-3" />
+            </div>
           ) : null}
-        </StyledContainer>
+          <ToggleGroupPrimitives.Root className={root({ layout })} {...props}>
+            {children}
+          </ToggleGroupPrimitives.Root>
+        </div>
       </ToggleContext.Provider>
     );
   }
 );
 
-export type ToggleItemProps = React.ComponentProps<typeof StyledItem>;
+export type ToggleItemProps = ToggleGroupPrimitives.ToggleGroupItemProps &
+  ButtonVariants;
 export type ToggleRootProps = React.ComponentProps<typeof Root>;
 export type ToggleButtonProps = ButtonProps;
 
-const StyledItem = styled(ToggleGroupPrimitives.Item, buttonStyles, {
-  color: "$gray11",
-  focusType: "outer",
-  backgroundColor: "transparent",
-});
-
 export const Item = React.forwardRef<HTMLButtonElement, ToggleItemProps>(
-  ({ children, value, ...props }, ref) => {
+  (
+    {
+      children,
+      value,
+      className,
+      square = false,
+      size = "small",
+      variant = "ghost",
+      ...props
+    },
+    ref
+  ) => {
     const context = React.useContext(ToggleContext);
 
     if (!context)
@@ -130,9 +112,12 @@ export const Item = React.forwardRef<HTMLButtonElement, ToggleItemProps>(
       });
 
     return (
-      <StyledItem
-        variant="ghost"
-        size="small"
+      <ToggleGroupPrimitives.Item
+        className={twMerge(
+          buttonClasses({ size, variant, square }),
+          "text-gray11 bg-transparent flex-1 z-10",
+          className
+        )}
         ref={(node) => {
           context.assignActiveNode(value)(node);
           if (typeof ref === "function") ref(node);
@@ -142,7 +127,7 @@ export const Item = React.forwardRef<HTMLButtonElement, ToggleItemProps>(
         {...props}
       >
         {children}
-      </StyledItem>
+      </ToggleGroupPrimitives.Item>
     );
   }
 );

@@ -1,90 +1,91 @@
-import * as Form from "ariakit/form";
-import { styled } from "../stitches";
+import { twMerge } from "../utils";
+import { errorMessageClasses, ErrorMessageProps } from "../Error/ErrorMessage";
 import {
-  Checkbox as SystemCheckbox,
-  CheckboxProps as SystemCheckboxProps,
-} from "./Checkbox";
-import { Label as SystemLabel } from "./Label";
-import { ErrorMessage } from "./ErrorMessage";
-import {
-  Item as SystemRadioButton,
-  Root as SystemRadioGroup,
-} from "./RadioButton";
-import { Button, SubmitButton, SubmitButtonProps } from "../Button";
+  FieldValues,
+  FormProvider,
+  useFormContext,
+  UseFormReturn,
+} from "react-hook-form";
+import { ErrorMessage } from "@hookform/error-message";
 
-export const Root = styled(Form.Form, {
-  gap: "$2",
-  display: "flex",
-  flexDirection: "column",
-});
-export type RootProps = React.ComponentProps<typeof Root>;
+export type { FieldValues } from "react-hook-form";
 
-export const Checkbox = ({ formState, ...props }: CheckboxProps) => (
-  <Form.FormField
-    as={SystemCheckbox}
-    value={formState.values[props.name.toString()]}
-    setValue={(newValue: boolean) => formState.setValue(props.name, newValue)}
-    {...props}
-  />
-);
+// ------------------------------------------------------------------
+// Root
 
-export type CheckboxProps = SystemCheckboxProps &
-  Form.FormFieldProps & { formState: Form.FormState<any> };
+const rootClasses = "gap-4 flex flex-col";
+export type RootProps<TFieldValues extends FieldValues> =
+  React.FormHTMLAttributes<HTMLFormElement> & {
+    methods: UseFormReturn<TFieldValues>;
+  };
 
-export const Label = styled(Form.FormLabel, SystemLabel);
-export type LabelProps = React.ComponentProps<typeof Label>;
+export function Root<TFieldValues extends FieldValues>({
+  children,
+  className,
+  methods,
+  ...props
+}: RootProps<TFieldValues>) {
+  return (
+    <FormProvider {...methods}>
+      <form
+        className={className ? twMerge(rootClasses, className) : rootClasses}
+        {...props}
+      >
+        {children}
+      </form>
+    </FormProvider>
+  );
+}
 
-export type { InputProps } from "./Input";
-export { Input } from "./Input";
+// ------------------------------------------------------------------
+// Checkbox
+export * from "./Checkbox";
 
-export const Error = styled(Form.FormError, ErrorMessage);
-export type ErrorProps = React.ComponentProps<typeof Error>;
+// ------------------------------------------------------------------
+// Inputs
 
-export const RadioButton = styled(Form.FormRadio, SystemRadioButton);
-export type RadioButtonProps = React.ComponentProps<typeof RadioButton>;
+export * from "./Inputs";
 
-export const RadioGroup = styled(Form.FormRadioGroup, SystemRadioGroup);
-export type RadioGroupProps = React.ComponentProps<typeof RadioGroup>;
+// ------------------------------------------------------------------
+// Label
 
-export const Description = styled(Form.FormDescription, {});
-export type DescriptionProps = React.ComponentProps<typeof Description>;
+export { Label } from "../Label/Label";
 
-export const Push = styled(Form.FormPush, Button);
-export type PushProps = React.ComponentProps<typeof Push>;
+// ------------------------------------------------------------------
+// Error
 
-export const Reset = styled(Form.FormReset, Button);
-export type ResetProps = React.ComponentProps<typeof Reset>;
+export type ErrorProps = ErrorMessageProps & { name: string };
 
-export const Remove = styled(Form.FormRemove, Button);
-export type RemoveProps = React.ComponentProps<typeof Remove>;
+export const Error = ({ className, size, name, ...props }: ErrorProps) => {
+  const {
+    formState: { errors },
+  } = useFormContext();
 
-export type SubmitProps = Form.FormSubmitProps & SubmitButtonProps;
-export const Submit = (props: SubmitProps) => (
-  <Form.FormSubmit as={SubmitButton} {...props} />
-);
+  return (
+    <ErrorMessage
+      errors={errors}
+      name={name}
+      render={({ message }) => (
+        <span className={errorMessageClasses({ size }, [className])} {...props}>
+          {message}
+        </span>
+      )}
+    />
+  );
+};
 
-export { Field } from "./Field";
-export type { FieldProps } from "./Field";
+// ------------------------------------------------------------------
+// RadioButton
 
-export { FormField as CustomControl } from "ariakit/form";
-export type { FormFieldProps as CustomControlProps } from "ariakit/form";
+export * from "./RadioButton";
 
-export {
-  useForm,
-  useFormCheckbox,
-  useFormDescription,
-  useFormError,
-  useFormGroup,
-  useFormGroupLabel,
-  useFormInput,
-  useFormLabel,
-  useFormPush,
-  useFormRadio,
-  useFormRadioGroup,
-  useFormRemove,
-  useFormReset,
-  useFormState,
-  useFormSubmit,
-} from "ariakit/form";
+// ------------------------------------------------------------------
+// Submit
 
-export type { FormState } from "ariakit/form";
+export * from "../Button/SubmitButton";
+
+// ------------------------------------------------------------------
+
+export * from "./Field/Field";
+
+export { useForm, useFormContext } from "react-hook-form";

@@ -1,202 +1,147 @@
-import { alignByContent } from "../shared/variants";
-import { styled, css, darkTheme } from "../stitches";
-import {
-  activeSelector,
-  disabledSelector,
-  intentSelector,
-} from "../stitches/stateSelectors";
+import * as React from "react";
+import { ClassNameArrayProp, twMerge, WithClassNameArray } from "../utils";
+import { cva, VariantProps } from "class-variance-authority";
 
-export const buttonStyles = css(alignByContent, {
-  $$borderWidth: "1px",
-  $$YTranslation: "0px",
-  $$gap: "$space$2",
-  gap: "$$gap",
-  cursor: "pointer",
-
-  //Mini reset
-  appearance: "none",
-  colorScheme: "primary",
-  borderRadius: "$md",
-
-  //The small animation pressing the Button down on click.
-  transition: "transform background-color",
-  transitionDuration: "0.1s",
-  transform: "translate($$XTranslation, $$YTranslation)",
-
-  [`${disabledSelector}`]: {
-    cursor: "not-allowed",
-  },
-
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  border: "$$borderWidth solid transparent",
-  padding: "$$paddingBlock $$paddingInline",
-
-  variants: {
-    size: {
-      small: {
-        $$paddingInline: "$space$2",
-        $$paddingBlock: "$space$1",
-        textStyle: "small-text",
-        fontWeight: 500,
+const button = cva(
+  [
+    "flex justify-center gap-2 cursor-pointer medium-text appearance-none colorScheme-primary rounded-md disabled:cursor-not-allowed items-center focus-visible:inner-focus",
+  ],
+  {
+    variants: {
+      size: {
+        small: ["px-2", "py-1", "small-text", "font-[500]"],
+        medium: ["px-3", "py-2", "medium-text", "font-[500]"],
+        large: ["px-4", "py-3", "large-text", "font-[500]", "gap-2"],
       },
-      medium: {
-        $$paddingInline: "$space$3",
-        $$paddingBlock: "$space$2",
-        textStyle: "medium-text",
-        fontWeight: 500,
+      square: { true: ["aspect-square"] },
+      round: { true: ["rounded-full"] },
+      variant: {
+        primary: [
+          "bg-colorScheme9",
+          "text-white",
+          "focus-visible:outer-focus",
+          "focus-visible:hover:bg-colorScheme10",
+          "active:bg-colorScheme11",
+          "disabled:bg-gray6",
+          "disabled:text-gray11",
+        ],
+        secondary: [
+          "bg-colorScheme3",
+          "text-colorScheme11",
+          "focus-visible:hover:bg-colorScheme5",
+          "active:bg-colorScheme7",
+          "disabled:bg-colorScheme3",
+        ],
+        tertiary: [
+          "bg-transparent",
+          "text-colorScheme11",
+          "border-current",
+          "focus-visible:hover:bg-colorScheme3",
+          "active:bg-colorScheme5",
+          "disabled:bg-colorScheme1",
+        ],
+        ghost: ["bg-[unset]"],
+        neutral: [
+          "colorScheme-gray",
+          "bg-[unset]",
+          "focus-visible:hover:bg-colorScheme3",
+          "active:bg-colorScheme5",
+          "disabled:bg-[unset]",
+          "disabled:text-colorScheme11",
+        ],
       },
-      large: {
-        $$paddingInline: "$space$4",
-        $$paddingBlock: "$space$3",
-        textStyle: "large-text",
-        fontWeight: 500,
-        $$gap: "$space$2",
-      },
-    },
-    variant: {
-      primary: {
-        backgroundColor: "$colorScheme9",
-        color: "$white",
-        focusType: "outer",
-
-        [`.${darkTheme} &`]: {
-          backgroundColor: "$colorScheme8",
-        },
-
-        [`${intentSelector}`]: {
-          backgroundColor: "$colorScheme10",
-
-          [`.${darkTheme} &`]: {
-            backgroundColor: "$colorScheme9",
-          },
-        },
-
-        [`${activeSelector}`]: {
-          backgroundColor: "$colorScheme11",
-
-          [`.${darkTheme} &`]: {
-            backgroundColor: "$colorScheme11",
-          },
-        },
-
-        [`${disabledSelector}`]: {
-          backgroundColor: "$gray6",
-          color: "$gray11",
-
-          [`.${darkTheme} &`]: {
-            backgroundColor: "$gray6",
-            color: "$gray11",
-          },
-        },
-      },
-
-      secondary: {
-        backgroundColor: "$colorScheme3",
-        color: "$colorScheme11",
-
-        [`.${darkTheme} &`]: {
-          backgroundColor: "$colorScheme3",
-        },
-
-        [`${intentSelector}`]: {
-          backgroundColor: "$colorScheme5",
-
-          [`.${darkTheme} &`]: {
-            backgroundColor: "$colorScheme5",
-          },
-        },
-
-        [`${activeSelector}`]: {
-          backgroundColor: "$colorScheme7",
-
-          [`.${darkTheme} &`]: {
-            backgroundColor: "$colorScheme7",
-          },
-        },
-
-        [`${disabledSelector}`]: {
-          backgroundColor: "$colorScheme3",
-
-          [`.${darkTheme} &`]: {
-            backgroundColor: "$colorScheme3",
-          },
-        },
-      },
-
-      tertiary: {
-        backgroundColor: "transparent",
-        color: "$colorScheme11",
-        borderColor: "currentcolor",
-
-        [`${intentSelector}`]: {
-          backgroundColor: "$colorScheme3",
-        },
-
-        [`${activeSelector}`]: {
-          backgroundColor: "$colorScheme5",
-        },
-
-        [`${disabledSelector}`]: {
-          backgroundColor: "$colorScheme1",
-        },
-      },
-
-      ghost: {
-        backgroundColor: "unset",
-        focusType: "inner",
-        colorFallback: "$colorScheme-text",
-      },
-
-      neutral: {
-        colorScheme: "gray",
-        color: "$colorScheme11",
-        backgroundColor: "unset",
-        focusType: "inner",
-
-        [`${intentSelector}`]: {
-          backgroundColor: "$colorScheme3",
-        },
-
-        [`${activeSelector}`]: {
-          backgroundColor: "$colorScheme5",
-        },
-
-        [`${disabledSelector}`]: {
-          backgroundColor: "unset",
-        },
+      alignByContent: {
+        left: "",
+        right: "",
       },
     },
 
-    pressable: {
-      true: {
-        [`${activeSelector}`]: {
-          $$YTranslation: "1px",
-        },
+    compoundVariants: [
+      {
+        size: "small",
+        square: true,
+        className: ["px-2"],
       },
-    },
-
-    round: {
-      true: {
-        borderRadius: "$full",
+      {
+        size: "medium",
+        square: true,
+        className: ["px-3"],
       },
-    },
-
-    square: {
-      true: {
-        $$paddingInline: "$$paddingBlock !important",
-        aspectRatio: "1 / 1",
+      {
+        size: "large",
+        square: true,
+        className: ["px-4"],
       },
+      {
+        alignByContent: "left",
+        size: "small",
+        className: ["translate-x-[calc((var(--space-2)+1px)*-1)]"],
+      },
+      {
+        alignByContent: "left",
+        size: "medium",
+        className: ["translate-x-[calc((var(--space-3)+1px)*-1)]"],
+      },
+      {
+        alignByContent: "left",
+        size: "large",
+        className: ["translate-x-[calc((var(--space-4)+1px)*-1)]"],
+      },
+      {
+        alignByContent: "right",
+        size: "small",
+        className: ["translate-x-[calc(var(--space-2)+1px)]"],
+      },
+      {
+        alignByContent: "right",
+        size: "medium",
+        className: ["translate-x-[calc(var(--space-3)+1px)]"],
+      },
+      {
+        alignByContent: "right",
+        size: "large",
+        className: ["translate-x-[calc(var(--space-4)+1px)]"],
+      },
+    ],
+
+    defaultVariants: {
+      variant: "primary",
+      size: "medium",
     },
-  },
+  }
+);
 
-  defaultVariants: {
-    variant: "primary",
-    size: "medium",
-    pressable: false,
-  },
-});
+export type ButtonVariants = VariantProps<typeof button>;
 
-export const Button = styled("button", buttonStyles);
-export type ButtonProps = React.ComponentProps<typeof Button>;
+export const buttonClasses = (
+  variants: ButtonVariants,
+  classNames?: ClassNameArrayProp
+) => {
+  return classNames ? twMerge(button(variants), classNames) : button(variants);
+};
+
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    { classNames, className, children, round, size, square, variant, ...props },
+    ref
+  ) => {
+    return (
+      <button
+        type="button"
+        ref={ref}
+        className={buttonClasses({ round, size, square, variant }, [
+          classNames,
+          className,
+        ])}
+        {...props}
+      >
+        {children}
+      </button>
+    );
+  }
+);
+
+export type ButtonProps = WithClassNameArray<
+  React.ButtonHTMLAttributes<HTMLButtonElement>
+> &
+  ButtonVariants;

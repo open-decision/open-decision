@@ -1,33 +1,27 @@
-import * as React from "react";
-import { Box, ScrollArea, styled } from "@open-decision/design-system";
-import { EditorContent, Content, useEditor, EditorEvents } from "@tiptap/react";
+import { ScrollArea, headingClasses } from "@open-decision/design-system";
+import {
+  EditorContent,
+  Content,
+  useEditor,
+  EditorEvents,
+  EditorContentProps,
+} from "@tiptap/react";
 import { Toolbar } from "./Toolbar";
-import { editorStyles, extensions } from "./shared";
-
-const StyledEditorContent = styled(EditorContent, editorStyles, {
-  $$height: "100%",
-  height: "$$height",
-
-  ".ProseMirror": {
-    padding: "$2",
-    outline: "none",
-    height: "$$height",
-  },
-});
+import { extensions } from "./shared";
+import styles from "./RichTextEditor.module.css";
 
 type Props = {
   content?: Content;
   onUpdate: (props: EditorEvents["update"]) => void;
-  Label?: (props: { onClick: () => void }) => JSX.Element;
-} & Omit<
-  React.ComponentProps<typeof StyledEditorContent>,
-  "editor" | "content"
->;
+  Label?: ((props: { onClick: () => void }) => JSX.Element) | string;
+  maxHeight?: number;
+} & Omit<EditorContentProps, "editor" | "content" | "ref">;
 
 export const RichTextEditor = ({
   content,
   onUpdate,
   Label,
+  maxHeight,
   ...props
 }: Props) => {
   const editor = useEditor({
@@ -38,54 +32,44 @@ export const RichTextEditor = ({
 
   return (
     <>
-      {Label?.({ onClick: () => editor?.commands.focus() })}
-      <Box
-        css={{
-          display: "grid",
-          gridTemplateRows: "50px max-content",
-          groupColor: "$colorScheme-text",
+      {typeof Label === "string" ? (
+        <label
+          className={headingClasses({ size: "extra-small" }, "m-0 mb-3 block")}
+        >
+          {Label}
+        </label>
+      ) : (
+        Label?.({ onClick: () => editor?.commands.focus() })
+      )}
+      <div
+        className="grid"
+        style={{
+          gridTemplateRows: `50px minmax(200px, ${
+            maxHeight ? `${maxHeight}px` : "1fr"
+          })`,
         }}
       >
         <Toolbar
           editor={editor}
-          css={{
-            border: "1px solid $gray7",
-            borderBottom: "0",
-            borderTopLeftRadius: "$md",
-            borderTopRightRadius: "$md",
-            layer: "3",
-          }}
+          className="h-[50px] border border-gray7 border-b-0 rounded-tl-md rounded-tr-md bg-layer-3"
         />
         <ScrollArea.Root
-          css={{
-            minHeight: "200px",
-            maxHeight: "500px",
-            layer: "2",
-            border: "1px solid $gray7",
-            borderBottomLeftRadius: "$md",
-            borderBottomRightRadius: "$md",
-            focusType: "inner-within",
-            overflow: "hidden",
+          className="min-h-[200px] bg-layer-2 border border-gray7 rounded-bl-md rounded-br-md overflow-hidden focus-within:inner-focus"
+          style={{
+            maxHeight: `${maxHeight}px`,
           }}
           data-focus={editor?.isFocused}
         >
-          <ScrollArea.Viewport
-            // Without this the RichTextRenderer cannot take up 100% of the height and would therefore not be
-            // focusable by clicking somewhere else, but the extisting text.
-            css={{
-              height: "100%",
-
-              "& > div": {
-                height: "100%",
-                display: "block !important",
-              },
-            }}
-          >
-            <StyledEditorContent editor={editor} {...props} />
+          <ScrollArea.Viewport className="h-full [&>div]:h-full [&>div]:!block">
+            <EditorContent
+              className={`${styles.editor} p-2`}
+              editor={editor}
+              {...props}
+            />
           </ScrollArea.Viewport>
           <ScrollArea.Scrollbar />
         </ScrollArea.Root>
-      </Box>
+      </div>
     </>
   );
 };

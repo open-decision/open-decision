@@ -1,42 +1,55 @@
 import * as React from "react";
-import { styled, css } from "../stitches";
 import * as AccessibleIcon from "@radix-ui/react-accessible-icon";
+import { ClassNameValue, twMerge } from "../utils";
+import { cva, VariantProps } from "class-variance-authority";
 
-export const iconStyles = css({
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  width: "1em",
-  height: "1em",
-
-  "& svg": {
-    width: "1em",
-    height: "1em",
+const baseClasses = cva("inline-flex items-center justify-center", {
+  variants: {
+    size: {
+      inherit: "[&>svg]:h-[1em] [&>svg]:w-[1em]",
+      "extra-small": "[&>svg]:w-[12px] [&>svg]:h-[12px]",
+      small: "[&>svg]:w-[16px] [&>svg]:h-[16px]",
+      medium: "[&>svg]:w-[20px] [&>svg]:h-[20px]",
+      large: "[&>svg]:w-[22px] [&>svg]:h-[22px]",
+    },
   },
 
-  "&[data-active='true'] > svg": {
-    stroke: "$colorScheme11",
+  defaultVariants: {
+    size: "small",
   },
 });
 
-const StyledIcon = styled("span", iconStyles);
+export type IconVariants = VariantProps<typeof baseClasses>;
+
+export const iconClasses = (
+  variants: IconVariants,
+  classNames?: ClassNameValue[]
+) =>
+  classNames
+    ? twMerge(baseClasses(variants), classNames)
+    : baseClasses(variants);
 
 export type IconProps = {
   children: React.ReactNode;
   label?: string;
-} & React.ComponentProps<typeof StyledIcon>;
+} & React.HTMLAttributes<HTMLSpanElement> &
+  IconVariants;
 
-const IconImpl = (
-  { children, label, ...props }: IconProps,
-  ref: React.Ref<HTMLSpanElement>
-) => {
-  return (
-    <AccessibleIcon.Root label={label ?? ""}>
-      <StyledIcon className="icon" ref={ref} {...props}>
-        {children}
-      </StyledIcon>
-    </AccessibleIcon.Root>
-  );
-};
-
-export const Icon = React.forwardRef<HTMLSpanElement, IconProps>(IconImpl);
+export const Icon = React.forwardRef<HTMLSpanElement, IconProps>(
+  (
+    { children, label, className, size, ...props }: IconProps,
+    ref: React.Ref<HTMLSpanElement>
+  ) => {
+    return (
+      <AccessibleIcon.Root label={label ?? ""}>
+        <span
+          ref={ref}
+          className={iconClasses({ size }, [className])}
+          {...props}
+        >
+          {children}
+        </span>
+      </AccessibleIcon.Root>
+    );
+  }
+);

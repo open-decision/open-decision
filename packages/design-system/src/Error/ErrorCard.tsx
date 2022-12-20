@@ -1,14 +1,17 @@
 import { useTranslations } from "next-intl";
-import { InfoBox, Text, StyleObject } from "../index";
+import { InfoBox, Text } from "../";
 import { ErrorReportLink } from "./ErrorReportLink";
 import { ODError } from "@open-decision/type-classes";
+import { twMerge } from "../utils";
 
 export type ErrorCardProps = {
   error: ODError;
-  css?: StyleObject;
+  className?: string;
 };
 
-export function ErrorCard({ error, css }: ErrorCardProps) {
+const baseClasses = "shadow-2 border border-gray4";
+
+export function ErrorCard({ error, className }: ErrorCardProps) {
   const t = useTranslations();
 
   return (
@@ -16,10 +19,7 @@ export function ErrorCard({ error, css }: ErrorCardProps) {
       title={t(`common.errors.${error.code}.short`)}
       content={
         <>
-          <Text
-            size="large"
-            css={{ marginBottom: !error.isOperational ? "$6" : "0" }}
-          >
+          <Text size="large" className={error.isOperational ? "mb-0" : "mb-6"}>
             {t(`common.errors.${error.code}.long`)}
           </Text>
           {!error.isOperational ? (
@@ -30,7 +30,7 @@ export function ErrorCard({ error, css }: ErrorCardProps) {
         </>
       }
       variant="danger"
-      css={{ boxShadow: "$2", border: "1px solid $gray4", ...css }}
+      className={className ? twMerge(baseClasses, className) : baseClasses}
     />
   );
 }

@@ -1,27 +1,66 @@
-import * as React from "react";
 import * as HoverCardPrimitive from "@radix-ui/react-hover-card";
-import { styled } from "../../stitches";
-import { overlayCss } from "../shared";
+import { twMerge } from "../../utils";
+import { arrowClasses, overlayClasses } from "../shared";
 
-const StyledContent = styled(HoverCardPrimitive.Content, overlayCss);
+// ------------------------------------------------------------------
+// Root
 
-const StyledArrow = styled(HoverCardPrimitive.Arrow, {
-  fill: "var(--bgColor)",
-});
+export type RootProps = HoverCardPrimitive.HoverCardProps;
 
-const StyledTrigger = styled(HoverCardPrimitive.Trigger, {
-  backgroundColor: "transparent",
-  border: "none",
-});
+export const Root = HoverCardPrimitive.Root;
 
-export const HoverCard = {
-  Root: HoverCardPrimitive.Root,
-  Trigger: StyledTrigger,
-  Content: StyledContent,
-  Arrow: StyledArrow,
+// ------------------------------------------------------------------
+// Trigger
+
+const triggerClasses = "bg-transparent border-none";
+
+export type TriggerProps = HoverCardPrimitive.HoverCardTriggerProps;
+
+export const Trigger = ({ children, className, ...props }: TriggerProps) => {
+  return (
+    <HoverCardPrimitive.Trigger
+      className={
+        className ? twMerge(triggerClasses, className) : triggerClasses
+      }
+      {...props}
+    >
+      {children}
+    </HoverCardPrimitive.Trigger>
+  );
 };
 
-export type HoverCardRootProps = HoverCardPrimitive.HoverCardProps;
-export type HoverCardTriggerProps = HoverCardPrimitive.HoverCardTriggerProps;
-export type HoverCardContentProps = React.ComponentProps<typeof StyledContent>;
-export type HoverCardArrowProps = HoverCardPrimitive.HoverCardArrowProps;
+// ------------------------------------------------------------------
+// Content
+
+export type ContentProps = HoverCardPrimitive.PopperContentProps;
+
+export const Content = ({ children, className, ...props }: ContentProps) => {
+  return (
+    <HoverCardPrimitive.Content
+      className={
+        className ? twMerge(overlayClasses, className) : overlayClasses
+      }
+      {...props}
+    >
+      {children}
+    </HoverCardPrimitive.Content>
+  );
+};
+
+// ------------------------------------------------------------------
+// Arrow
+
+export type ArrowProps = HoverCardPrimitive.HoverCardArrowProps;
+
+export const Arrow = ({ children, className, ...props }: ArrowProps) => {
+  return (
+    <HoverCardPrimitive.Arrow
+      className={className ? twMerge(arrowClasses, className) : arrowClasses}
+      {...props}
+    >
+      {children}
+    </HoverCardPrimitive.Arrow>
+  );
+};
+
+// ------------------------------------------------------------------

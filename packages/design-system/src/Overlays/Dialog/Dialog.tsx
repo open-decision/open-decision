@@ -1,124 +1,126 @@
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { Button, Icon, ButtonProps } from "../../index";
-import { styled, keyframes, StyleObject } from "../../stitches";
-import { Heading } from "../../Heading";
-import { ColorKeys } from "../../internal/utils";
-import { Stack } from "../../Layout/Stack";
+import { Button, ButtonProps } from "../../Button";
 import { SubmitButton, SubmitButtonProps } from "../../Button/SubmitButton";
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { Row } from "../../Layout/Row";
+import { Icon } from "../../Icon/Icon";
+import { rowClasses, stackClasses } from "../../Layout";
+import { twMerge } from "../../utils";
+import { Heading } from "../../Heading/Heading";
 
-function DialogRoot({ children, ...props }: DialogRootProps) {
-  return (
-    <DialogPrimitive.Root {...props}>
-      <StyledOverlay />
-      {children}
-    </DialogPrimitive.Root>
-  );
-}
+// ------------------------------------------------------------------
+// Root
+export type RootProps = DialogPrimitive.DialogProps;
 
-const contentShow = keyframes({
-  "0%": { opacity: 0, transform: "translate(-50%, -48%) scale(.96)" },
-  "100%": { opacity: 1, transform: "translate(-50%, -50%) scale(1)" },
-});
+const overlayClasses =
+  "bg-gray7 bg-opacity-20 z-10 fixed inset-0 animate-fadeIn";
 
-const StyledContent = styled(DialogPrimitive.Content, Stack, {
-  gap: "$2",
-  boxShadow: "$6",
-  minWidth: "350px",
-  maxWidth: "500px",
-  zIndex: "$10",
-
-  position: "fixed",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-
-  "&:focus": { outline: "none" },
-
-  "@media (prefers-reduced-motion: no-preference)": {
-    animation: `${contentShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
-  },
-});
-
-const DialogCard = styled(Stack, {
-  borderRadius: "$md",
-  layer: "1",
-  padding: "$6",
-  border: "$border$layer",
-});
-
-const overlayShow = keyframes({
-  "0%": { opacity: 0 },
-  "100%": { opacity: 1 },
-});
-
-const StyledOverlay = styled(DialogPrimitive.Overlay, {
-  backgroundColor: "$grayA7",
-  position: "fixed",
-  inset: 0,
-  zIndex: "$10",
-
-  "@media (prefers-reduced-motion: no-preference)": {
-    animation: `${overlayShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
-  },
-});
-
-const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps>(
-  ({ children, Above, Below, ...props }, ref) => {
+export const Root = React.forwardRef<HTMLDivElement, RootProps>(
+  ({ children, ...props }, ref) => {
     return (
-      <StyledContent ref={ref} {...props}>
-        {Above}
-        <DialogCard>{children}</DialogCard>
-        {Below}
-      </StyledContent>
+      <DialogPrimitive.Root {...props}>
+        <DialogPrimitive.Overlay className={overlayClasses} ref={ref} />
+        {children}
+      </DialogPrimitive.Root>
     );
   }
 );
 
-function CloseButton(props: Partial<ButtonProps>) {
+// ------------------------------------------------------------------
+// Content
+
+const contentClasses = stackClasses({}, [
+  "gap-2 shadow-6 z-10 min-w-[350px] max-w-[500px] fixed left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] focus:outline-none",
+]);
+
+const cardClasses = stackClasses({}, [
+  "bg-layer-1 rounded-md border border-gray7 p-6",
+]);
+
+export type ContentProps = DialogPrimitive.DialogContentProps & {
+  Above?: React.ReactNode;
+  Below?: React.ReactNode;
+};
+
+export const Content = React.forwardRef<HTMLDivElement, ContentProps>(
+  ({ children, Above, Below, className, ...props }, ref) => {
+    return (
+      <DialogPrimitive.Content
+        className={
+          className ? twMerge(contentClasses, className) : contentClasses
+        }
+        ref={ref}
+        {...props}
+      >
+        {Above}
+        <div className={cardClasses}>{children}</div>
+        {Below}
+      </DialogPrimitive.Content>
+    );
+  }
+);
+
+// ------------------------------------------------------------------
+// Trigger
+
+export type TriggerProps = DialogPrimitive.DialogTriggerProps;
+
+export const Trigger = DialogPrimitive.Trigger;
+
+// ------------------------------------------------------------------
+// CloseButton
+
+export type CloseButtonProps = ButtonProps;
+
+export const CloseButton = React.forwardRef<
+  HTMLButtonElement,
+  CloseButtonProps
+>((props, ref) => {
   return (
     <DialogPrimitive.Close asChild>
-      <Button variant="ghost" square alignByContent="right" {...props}>
+      <Button variant="ghost" square ref={ref} {...props}>
         <Icon label="Schließe den Dialog">
           <Cross2Icon />
         </Icon>
       </Button>
     </DialogPrimitive.Close>
   );
-}
-
-const StyledHeader = styled("header", Row, {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "baseline",
 });
 
-function Header({ children, css }: HeaderProps) {
-  return (
-    <StyledHeader css={css}>
-      <Dialog.Title asChild>
-        <Heading size="extra-small">{children}</Heading>
-      </Dialog.Title>
-    </StyledHeader>
-  );
-}
+// ------------------------------------------------------------------
+// Header
 
-type ActionButtonProps = { colorScheme?: ColorKeys } & ButtonProps;
+const headerClasses = rowClasses({}, ["flex justify-between items-baseline"]);
+
+export type HeaderProps = { children: React.ReactNode; className?: string };
+
+export const Header = React.forwardRef<HTMLElement, HeaderProps>(
+  ({ children, className }, ref) => {
+    return (
+      <header
+        ref={ref}
+        className={
+          className ? twMerge(headerClasses, className) : headerClasses
+        }
+      >
+        <Title asChild>
+          <Heading size="extra-small">{children}</Heading>
+        </Title>
+      </header>
+    );
+  }
+);
+
+// ------------------------------------------------------------------
+// ActionButton
+type ActionButtonProps = ButtonProps;
 
 const ActionButton = React.forwardRef<HTMLButtonElement, ActionButtonProps>(
-  function ActionButton(
-    { colorScheme = "primary", children, css, ...props },
-    ref
-  ) {
+  ({ children, style, ...props }, ref) => {
     return (
       <Button
         variant="secondary"
-        css={{
-          colorScheme,
-          ...css,
-        }}
+        style={style}
         type="submit"
         ref={ref}
         {...props}
@@ -129,46 +131,56 @@ const ActionButton = React.forwardRef<HTMLButtonElement, ActionButtonProps>(
   }
 );
 
-const ButtonRow = (props: SubmitButtonProps) => (
-  <Stack
-    css={{
-      flexDirection: "row",
-      gap: "$3",
-      justifyContent: "flex-end",
-      marginTop: "$5",
-    }}
-  >
-    <Dialog.Close asChild>
-      <Dialog.ActionButton variant="neutral" colorScheme="gray">
-        Abbrechen
-      </Dialog.ActionButton>
-    </Dialog.Close>
-    <SubmitButton {...props} />
-  </Stack>
+// ------------------------------------------------------------------
+// ButtonRow
+
+const buttonRowClasses = rowClasses({}, ["gap-3 mt-5 justify-end"]);
+
+export const ButtonRow = React.forwardRef<HTMLButtonElement, SubmitButtonProps>(
+  ({ className, ...props }, ref) => (
+    <div
+      className={
+        className ? twMerge(buttonRowClasses, className) : buttonRowClasses
+      }
+    >
+      <Close asChild>
+        <ActionButton variant="neutral" className="colorScheme-gray">
+          Abbrechen
+        </ActionButton>
+      </Close>
+      <SubmitButton {...props} ref={ref} />
+    </div>
+  )
 );
 
-export const Dialog = {
-  Root: DialogRoot,
-  Trigger: DialogPrimitive.Trigger,
-  Content: DialogContent,
-  Title: DialogPrimitive.Title,
-  Description: styled(DialogPrimitive.Description),
-  Close: DialogPrimitive.Close,
-  CloseButton,
-  Header,
-  ActionButton,
-  ButtonRow,
-  Portal: DialogPrimitive.Portal,
-};
+// ------------------------------------------------------------------
+// Title
 
-export type DialogRootProps = DialogPrimitive.DialogProps;
-export type DialogTriggerProps = DialogPrimitive.DialogTriggerProps;
-export type DialogContentProps = React.ComponentProps<typeof StyledContent> & {
-  Above?: React.ReactNode;
-  Below?: React.ReactNode;
-};
-export type DialogTitleProps = DialogPrimitive.DialogTitleProps;
-export type DialogDescriptionProps = DialogPrimitive.DialogDescriptionProps;
-export type DialogCloseProps = DialogPrimitive.DialogCloseProps;
-export type DialogCloseButtonProps = Partial<ButtonProps>;
-export type HeaderProps = { children: React.ReactNode; css?: StyleObject };
+export type TitleProps = DialogPrimitive.DialogTitleProps;
+
+export const Title = DialogPrimitive.Title;
+
+// ------------------------------------------------------------------
+
+// ------------------------------------------------------------------
+// Description
+
+export type DescriptionProps = DialogPrimitive.DialogDescriptionProps;
+
+export const Description = DialogPrimitive.Description;
+
+// ------------------------------------------------------------------
+// Close
+
+export type CloseProps = DialogPrimitive.DialogCloseProps;
+
+export const Close = DialogPrimitive.Close;
+
+// ------------------------------------------------------------------
+// Portal
+
+export type PortalProps = DialogPrimitive.PortalProps;
+
+export const Portal = DialogPrimitive.Portal;
+
+// ------------------------------------------------------------------

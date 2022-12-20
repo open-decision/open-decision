@@ -1,57 +1,75 @@
 import * as React from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
-import { darkTheme, keyframes, styled } from "../../stitches";
-import { overlayCss } from "../shared";
-import { Text } from "../../Text";
-import { Stack } from "../../Layout";
+import { stackClasses } from "../../Layout";
+import { twMerge } from "../../utils";
+import { arrowClasses, overlayClasses } from "../shared";
 
-const scaleIn = keyframes({
-  "0%": { opacity: 0, transform: "scale(0)" },
-  "100%": { opacity: 1, transform: "scale(1)" },
-});
+// ------------------------------------------------------------------
+// Root
 
-const StyledContent = styled(TooltipPrimitive.Content, Stack, overlayCss, {
-  textAlign: "center",
-  maxWidth: "200px",
-  gap: "$1",
-  transformOrigin: "var(--radix-tooltip-content-transform-origin)",
-  animation: `${scaleIn} 0.1s ease-out`,
-  groupColor: "$gray12",
-});
+export type RootProps = TooltipPrimitive.TooltipProps;
 
-const Content = React.forwardRef(
-  (props: TooltipContentProps, ref: React.Ref<HTMLDivElement>) => (
-    <StyledContent sideOffset={10} className={darkTheme} ref={ref} {...props}>
+export const Root = TooltipPrimitive.Root;
+
+// ------------------------------------------------------------------
+// Content
+
+const contentClasses = twMerge(
+  stackClasses({}),
+  overlayClasses,
+  "medium-text align-center max-w-[200px] gap-1 origin-[var(--radix-tooltip-content-transform-origin)] animate-scaleIn bg-slate-900 text-white"
+);
+
+export type ContentProps = TooltipPrimitive.PopperContentProps;
+
+export const Content = React.forwardRef<HTMLDivElement, ContentProps>(
+  ({ className, ...props }, ref) => (
+    <TooltipPrimitive.Content
+      className={
+        className ? twMerge(contentClasses, className) : contentClasses
+      }
+      sideOffset={10}
+      ref={ref}
+      {...props}
+    >
       {props.children}
-    </StyledContent>
+    </TooltipPrimitive.Content>
   )
 );
 
-const StyledArrow = styled(TooltipPrimitive.Arrow, {
-  fill: "$$bgColor",
-});
+// ------------------------------------------------------------------
+// Arrow
 
-const StyledTrigger = styled(TooltipPrimitive.Trigger, {});
+export type TooltipArrowProps = TooltipPrimitive.PopperArrowProps;
 
-const Body = styled(Text, {
-  color: "$gray11",
-});
-
-const Portal = TooltipPrimitive.Portal;
-
-export const Tooltip = {
-  Root: TooltipPrimitive.Root,
-  Trigger: StyledTrigger,
-  Content: Content,
-  Arrow: StyledArrow,
-  Title: Text,
-  Body,
-  Provider: TooltipPrimitive.Provider,
-  Portal,
+export const Arrow = ({ className, ...props }: TooltipArrowProps) => {
+  return (
+    <TooltipPrimitive.Arrow
+      className={className ? twMerge(arrowClasses, className) : arrowClasses}
+      {...props}
+    />
+  );
 };
 
-export type TooltipRootProps = TooltipPrimitive.TooltipProps;
-export type TooltipTriggerProps = TooltipPrimitive.TooltipTriggerProps;
-export type TooltipContentProps = React.ComponentProps<typeof StyledContent>;
-export type TooltipArrowProps = TooltipPrimitive.TooltipArrowProps;
-export type TooltipPrviderProps = TooltipPrimitive.TooltipProviderProps;
+// ------------------------------------------------------------------
+// Trigger
+
+export type TriggerProps = TooltipPrimitive.TooltipTriggerProps;
+
+export const Trigger = TooltipPrimitive.Trigger;
+
+// ------------------------------------------------------------------
+// Portal
+
+export type PortalProps = TooltipPrimitive.PortalProps;
+
+export const Portal = TooltipPrimitive.Portal;
+
+// ------------------------------------------------------------------
+// Provider
+
+export type TooltipProviderProps = TooltipPrimitive.TooltipProviderProps;
+
+export const Provider = TooltipPrimitive.Provider;
+
+// ------------------------------------------------------------------

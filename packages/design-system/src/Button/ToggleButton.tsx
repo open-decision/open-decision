@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Toggle from "@radix-ui/react-toggle";
-import { Button, ButtonProps } from "..";
+import { Button, ButtonProps } from "./Button";
 import { CheckIcon } from "@radix-ui/react-icons";
 import { Icon } from "../Icon/Icon";
 
@@ -21,7 +21,7 @@ export const ToggleButton = React.forwardRef<
       onPressedChange,
       withCheck = false,
       variant = "neutral",
-      css,
+      className,
       ...props
     },
     ref
@@ -33,7 +33,13 @@ export const ToggleButton = React.forwardRef<
         defaultPressed={defaultPressed}
         onPressedChange={onPressedChange}
       >
-        <Button variant={variant} css={css} size="small" ref={ref} {...props}>
+        <Button
+          variant={variant}
+          className={className}
+          size="small"
+          ref={ref}
+          {...props}
+        >
           {withCheck ? <Icon>{pressed ? <CheckIcon /> : null}</Icon> : null}
           {children}
         </Button>

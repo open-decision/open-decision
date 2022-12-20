@@ -1,8 +1,8 @@
 import * as React from "react";
-import { Notification as NotificationType } from "./NotificationState";
+import { Notification as NotificationType } from "../Notifications/NotificationState";
 import { motion, useAnimation, Variants } from "framer-motion";
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { InfoBox } from "./InfoBox";
+import { InfoBox } from "../Notifications/InfoBox";
 import { Button } from "../Button";
 import { Icon } from "../Icon/Icon";
 
@@ -64,7 +64,7 @@ export const Notification = ({
             </Icon>
           </Button>
         }
-        css={{ boxShadow: "$6" }}
+        className="shadow-6"
         variant="info"
         {...notification}
       />

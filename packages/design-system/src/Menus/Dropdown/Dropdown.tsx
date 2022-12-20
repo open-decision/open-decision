@@ -1,23 +1,80 @@
 import * as React from "react";
 import * as DropdownMenuPrimitives from "@radix-ui/react-dropdown-menu";
-import { styled, StyleObject } from "../../stitches";
 import { Icon } from "../../Icon/Icon";
-import {
-  menuContainerStyles,
-  menuItemStyles,
-  menuLabelStyles,
-  menuSeparatorStyles,
-} from "../shared";
 import {
   CheckIcon,
   TriangleDownIcon,
   TriangleRightIcon,
 } from "@radix-ui/react-icons";
-import { Button as SystemButton, ButtonProps } from "../../Button";
-import { Row } from "../../Layout";
+import { buttonClasses, ButtonProps } from "../../Button";
+import { separatorClasses } from "../../Separator/Separator";
+import {
+  menuContainerClasses,
+  menuItemClasses,
+  menuLabelClasses,
+} from "../shared";
+import { twMerge } from "../../utils";
+
+// ------------------------------------------------------------------
+// Root
+
+export type RootProps = DropdownMenuPrimitives.DropdownMenuProps;
 
 export const Root = DropdownMenuPrimitives.Root;
 
+// ------------------------------------------------------------------
+// Trigger
+
+export type TriggerProps = DropdownMenuPrimitives.DropdownMenuTriggerProps;
+export const Trigger = DropdownMenuPrimitives.Trigger;
+
+// ------------------------------------------------------------------
+// SubTrigger
+
+export type SubTriggerItemProps =
+  DropdownMenuPrimitives.DropdownMenuSubTriggerProps;
+
+export const SubTriggerItem = ({
+  children,
+  className,
+  ...props
+}: SubTriggerItemProps) => (
+  <DropdownMenuPrimitives.SubTrigger
+    className={
+      className ? twMerge(menuItemClasses, className) : menuItemClasses
+    }
+    {...props}
+  >
+    {children}
+    <Icon style={{ marginLeft: "auto" }}>
+      <TriangleRightIcon />
+    </Icon>
+  </DropdownMenuPrimitives.SubTrigger>
+);
+
+// ------------------------------------------------------------------
+// Item
+
+export type ItemProps = DropdownMenuPrimitives.DropdownMenuItemProps;
+
+export const Item = React.forwardRef<HTMLDivElement, ItemProps>(
+  ({ className, children, ...props }, ref) => {
+    return (
+      <DropdownMenuPrimitives.Item
+        ref={ref}
+        className={
+          className ? twMerge(menuItemClasses, className) : menuItemClasses
+        }
+        {...props}
+      >
+        {children}
+      </DropdownMenuPrimitives.Item>
+    );
+  }
+);
+
+// ------------------------------------------------------------------
+// CheckboxItem
 type IndicatorProps = { children?: React.ReactNode };
 
 const ItemIndicator = ({ children }: IndicatorProps) => {
@@ -26,7 +83,7 @@ const ItemIndicator = ({ children }: IndicatorProps) => {
       {children ? (
         children
       ) : (
-        <Icon label="Checked" css={{ padding: 0 }}>
+        <Icon label="Checked" style={{ padding: 0 }}>
           <CheckIcon />
         </Icon>
       )}
@@ -34,26 +91,31 @@ const ItemIndicator = ({ children }: IndicatorProps) => {
   );
 };
 
-const StyledCheckboxItem = styled(
-  DropdownMenuPrimitives.CheckboxItem,
-  menuItemStyles,
-  { justifyContent: "space-between" }
-);
-
-type CheckboxItemProps = DropdownCheckboxItemProps & { Icon?: React.ReactNode };
+type CheckboxItemProps = DropdownMenuPrimitives.MenuCheckboxItemProps & {
+  Icon?: React.ReactNode;
+};
 
 export const CheckboxItem = ({
   children,
   Icon,
+  className,
   ...props
 }: CheckboxItemProps) => {
   return (
-    <StyledCheckboxItem {...props}>
+    <DropdownMenuPrimitives.CheckboxItem
+      className={
+        className ? twMerge(menuItemClasses, className) : menuItemClasses
+      }
+      {...props}
+    >
       {children}
       <ItemIndicator>{Icon}</ItemIndicator>
-    </StyledCheckboxItem>
+    </DropdownMenuPrimitives.CheckboxItem>
   );
 };
+
+// ------------------------------------------------------------------
+// CheckboxGroup
 
 type CheckboxGroupProps<TOptions extends Record<string, string>> = {
   selected?: keyof TOptions;
@@ -83,96 +145,74 @@ export function CheckboxGroup<TOptions extends Record<string, string>>({
   );
 }
 
-function DropdownButtonImpl(
-  { children, css, ...props }: ButtonProps,
-  ref: React.Ref<HTMLButtonElement>
-) {
-  return (
-    <SystemButton
-      css={{
-        gap: "$1",
+// ------------------------------------------------------------------
+// DropdownButton
 
-        "&[data-state='open'] .rotate": {
-          transform: "rotate(180deg)",
-        },
-        ...css,
-      }}
-      ref={ref}
-      {...props}
-    >
-      <Row as="span" css={{ gap: "$2" }}>
-        {children}
-      </Row>
-      <Icon
-        className="rotate"
-        css={{
-          transition: "transform 200ms ease-in-out",
-        }}
+const dropdownButtonClasses = "gap-1 group";
+const dropdownRotatingIndicatorClasses =
+  "p-0 group-data-state-open:rotate-180 transition-transform duration-200 ease-in-out";
+
+export type DropdownButtonProps = ButtonProps;
+
+export const Button = React.forwardRef<HTMLButtonElement, DropdownButtonProps>(
+  (
+    {
+      children,
+      style,
+      size,
+      variant,
+      square,
+      round,
+      alignByContent,
+      className,
+      classNames,
+      ...props
+    },
+    ref
+  ) => {
+    return (
+      <button
+        className={buttonClasses(
+          { round, size, variant, square, alignByContent },
+          [dropdownButtonClasses, classNames, className]
+        )}
+        style={style}
+        ref={ref}
+        {...props}
       >
-        <TriangleDownIcon />
-      </Icon>
-    </SystemButton>
-  );
-}
-
-const StyledSubTriggerItem = styled(
-  DropdownMenuPrimitives.SubTrigger,
-  menuItemStyles
+        {children}
+        <Icon className={dropdownRotatingIndicatorClasses}>
+          <TriangleDownIcon />
+        </Icon>
+      </button>
+    );
+  }
 );
 
-export const SubTrigger = ({
-  children,
-  css,
-  ...props
-}: DropdownMenuTriggerItemProps) => (
-  <StyledSubTriggerItem css={{ ...css }} {...props}>
-    {children}
-    <Icon css={{ marginLeft: "auto" }}>
-      <TriangleRightIcon />
-    </Icon>
-  </StyledSubTriggerItem>
-);
+// ------------------------------------------------------------------
+// Portal
 
-export const Sub = DropdownMenuPrimitives.Sub;
+export type PortalProps = DropdownMenuPrimitives.MenuPortalProps;
+
 export const Portal = DropdownMenuPrimitives.Portal;
 
-export const Button = React.forwardRef(DropdownButtonImpl);
+// ------------------------------------------------------------------
+// Content
 
-export type DropdownMenuRootProps = DropdownMenuPrimitives.DropdownMenuProps & {
-  dialogs?: Record<string, React.ReactNode>;
-};
-export type DropdownMenuTriggerProps =
-  DropdownMenuPrimitives.DropdownMenuTriggerProps;
-export type DropdownMenuContentProps =
-  DropdownMenuPrimitives.DropdownMenuContentProps & { css?: StyleObject };
-export type DropdownMenuItemProps = React.ComponentProps<typeof Item>;
-export type DropdownMenuDialogItemProps = Omit<
-  DropdownMenuItemProps,
-  "onSelect" | "onClick"
-> & { dialogKey: string };
-
-export type DropdownCheckboxItemProps = React.ComponentProps<
-  typeof StyledCheckboxItem
->;
-export type DropdownMenuLabelProps = React.ComponentProps<typeof Label>;
-export type DropdownMenuTriggerItemProps = React.ComponentProps<
-  typeof StyledSubTriggerItem
->;
-export type DropdownMenuSeparatorProps = React.ComponentProps<typeof Separator>;
+export type ContentProps = DropdownMenuPrimitives.MenuContentProps;
 
 export const Content = ({
   className,
   children,
-  css,
   hidden,
+  sideOffset = 5,
   ...props
-}: DropdownMenuContentProps) => {
+}: ContentProps) => {
   return (
     <DropdownMenuPrimitives.Content
-      className={
-        !hidden ? `${menuContainerStyles({ css })} ${className}` : undefined
-      }
+      className={!hidden ? twMerge(menuContainerClasses, className) : undefined}
       hidden={hidden}
+      sideOffset={sideOffset}
       {...props}
     >
       {children}
@@ -180,18 +220,20 @@ export const Content = ({
   );
 };
 
+// ------------------------------------------------------------------
+// SubContent
+
 export const SubContent = ({
   className,
   children,
-  css,
   hidden,
+  sideOffset = 5,
   ...props
-}: DropdownMenuContentProps) => {
+}: ContentProps) => {
   return (
     <DropdownMenuPrimitives.SubContent
-      className={
-        !hidden ? `${menuContainerStyles({ css })} ${className}` : undefined
-      }
+      className={!hidden ? twMerge(menuContainerClasses, className) : undefined}
+      sideOffset={sideOffset}
       hidden={hidden}
       {...props}
     >
@@ -200,14 +242,42 @@ export const SubContent = ({
   );
 };
 
-Content.defaultProps = { sideOffset: 5 };
-SubContent.defaultProps = { sideOffset: 5 };
+// ------------------------------------------------------------------
+// Label
 
-export const Item = styled(DropdownMenuPrimitives.Item, menuItemStyles);
-export const Label = styled(DropdownMenuPrimitives.Label, menuLabelStyles);
-export const Trigger = DropdownMenuPrimitives.Trigger;
+export type LabelProps = DropdownMenuPrimitives.MenuLabelProps;
 
-export const Separator = styled(
-  DropdownMenuPrimitives.Separator,
-  menuSeparatorStyles
-);
+export const Label = ({ className, children, ...props }: LabelProps) => {
+  return (
+    <DropdownMenuPrimitives.Label
+      className={
+        className ? twMerge(menuLabelClasses, className) : menuLabelClasses
+      }
+      {...props}
+    >
+      {children}
+    </DropdownMenuPrimitives.Label>
+  );
+};
+
+// ------------------------------------------------------------------
+// Sub
+export type SubProps = DropdownMenuPrimitives.DropdownMenuSubProps;
+
+export const Sub = DropdownMenuPrimitives.Sub;
+
+// ------------------------------------------------------------------
+// Separator
+
+export type SeparatorProps = DropdownMenuPrimitives.MenuSeparatorProps;
+
+export const Separator = ({ className, ...props }: SeparatorProps) => {
+  return (
+    <DropdownMenuPrimitives.Separator
+      className={separatorClasses({}, [className])}
+      {...props}
+    />
+  );
+};
+
+// ------------------------------------------------------------------
