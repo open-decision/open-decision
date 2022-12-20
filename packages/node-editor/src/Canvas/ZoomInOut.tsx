@@ -1,33 +1,22 @@
-import {
-  Button,
-  Icon,
-  Row,
-  styled,
-  StyleObject,
-} from "@open-decision/design-system";
+import { Button, Icon, Row } from "@open-decision/design-system";
 import {
   ZoomInIcon,
   ZoomOutIcon,
   EnterFullScreenIcon,
 } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
-import { useReactFlow } from "react-flow-renderer";
+import { useReactFlow } from "reactflow";
 
-const Container = styled(Row, {
-  layer: "1",
-  borderRadius: "$md",
-  padding: "$1",
-  border: "$border$layer",
-});
+type Props = { className?: string };
 
-type Props = { css?: StyleObject };
-
-export function ZoomInOut({ css }: Props) {
+export function ZoomInOut({ className }: Props) {
   const t = useTranslations("builder.canvas.zoomInAndOut");
   const { zoomIn, zoomOut, fitView } = useReactFlow();
 
   return (
-    <Container css={css}>
+    <Row
+      className={`bg-layer-1 rounded-md p-1 border border-gray7 ${className}`}
+    >
       <Button
         onClick={() => zoomIn({ duration: 200 })}
         variant="neutral"
@@ -58,6 +47,6 @@ export function ZoomInOut({ css }: Props) {
           <EnterFullScreenIcon />
         </Icon>
       </Button>
-    </Container>
+    </Row>
   );
 }

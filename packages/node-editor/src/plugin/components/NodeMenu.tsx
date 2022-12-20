@@ -3,7 +3,6 @@ import {
   Icon,
   DropdownMenu,
   Tooltip,
-  StyleObject,
 } from "@open-decision/design-system";
 import {
   HamburgerMenuIcon,
@@ -11,19 +10,26 @@ import {
   TrashIcon,
 } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
-import { useTreeContext } from "../../../../../features/Builder/state/treeStore/TreeContext";
+import { useTreeClient } from "@open-decision/tree-sync";
+import { useEditor } from "../../state";
 
 type Props = {
   isStartNode?: boolean;
   nodeId: string;
   name: string;
-  css?: StyleObject;
-};
+  className?: string;
+} & DropdownMenu.ContentProps;
 
-export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
+export function NodeMenu({
+  isStartNode = false,
+  name,
+  nodeId,
+  className,
+  ...props
+}: Props) {
   const t = useTranslations("builder.nodeEditingSidebar.menu");
-  const { deleteNodes, updateStartNode, removeSelectedNodes } =
-    useTreeContext();
+  const { removeSelectedNodes } = useEditor();
+  const treeClient = useTreeClient();
 
   return (
     <DropdownMenu.Root>
@@ -31,10 +37,7 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
         <Button
           size="small"
           variant="secondary"
-          css={{
-            colorScheme: "gray",
-            ...css,
-          }}
+          className={`colorScheme-gray ${className}`}
           square
         >
           <Icon label={t("iconLabel", { name })}>
@@ -42,43 +45,43 @@ export function NodeMenu({ isStartNode = false, name, nodeId, css }: Props) {
           </Icon>
         </Button>
       </DropdownMenu.Trigger>
-      <DropdownMenu.Content css={{ groupColor: "$gray12" }}>
+      <DropdownMenu.Content {...props}>
         {isStartNode ? (
           <Tooltip.Root>
             <Tooltip.Trigger style={{ all: "unset" }}>
               <DropdownMenu.Item
-                onSelect={() => deleteNodes([nodeId])}
-                css={{ colorScheme: "danger" }}
+                onSelect={() => treeClient.nodes.delete([nodeId])}
+                className="colorScheme-danger"
                 disabled
               >
-                <Icon css={{ $$paddingInline: 0 }}>
+                <Icon>
                   <TrashIcon />
                 </Icon>
                 {t("deleteNode.label")}
               </DropdownMenu.Item>
             </Tooltip.Trigger>
             <Tooltip.Content side="bottom">
-              <Tooltip.Title>
-                {t("deleteNode.disabledForStartNodeLabel")}
-              </Tooltip.Title>
+              {t("deleteNode.disabledForStartNodeLabel")}
             </Tooltip.Content>
           </Tooltip.Root>
         ) : (
           <>
-            <DropdownMenu.Item onSelect={() => updateStartNode(nodeId)}>
-              <Icon css={{ $$paddingInline: 0 }}>
+            <DropdownMenu.Item
+              onSelect={() => treeClient.updateStartNode(nodeId)}
+            >
+              <Icon>
                 <RocketIcon />
               </Icon>
               {t("makeStartNode.label")}
             </DropdownMenu.Item>
             <DropdownMenu.Item
               onSelect={() => {
-                deleteNodes([nodeId]);
+                treeClient.nodes.delete([nodeId]);
                 removeSelectedNodes();
               }}
-              css={{ colorScheme: "danger" }}
+              className="colorScheme-danger"
             >
-              <Icon css={{ $$paddingInline: 0 }}>
+              <Icon>
                 <TrashIcon />
               </Icon>
               {t("deleteNode.label")}
