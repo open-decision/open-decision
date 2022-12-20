@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { proxiedOD } from "../Data/odClient";
 import { APIError } from "@open-decision/type-classes";
-import { TUpdateUserInput } from "@open-decision/user-api-specification";
+import { TUpdateUserInput } from "@open-decision/api-specification";
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import { useLogoutMutation } from "./mutations/useLogoutMutation";
 

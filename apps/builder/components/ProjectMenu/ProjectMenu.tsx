@@ -2,7 +2,6 @@ import * as React from "react";
 import {
   DropdownMenu,
   Icon,
-  StyleObject,
   Text,
   Tooltip,
 } from "@open-decision/design-system";
@@ -16,15 +15,15 @@ import { useTreeAPI } from "../../features/Data/useTreeAPI";
 import { useTranslations } from "next-intl";
 import { ArchiveItem } from "./ArchiveItem";
 import { PublishItem } from "./PublishItem";
-import { TGetTreeOutput } from "@open-decision/tree-api-specification";
+import { TGetTreeOutput } from "@open-decision/api-specification";
 
 type Props = {
-  css?: StyleObject;
+  className?: string;
   children?: React.ReactNode;
   tree: string | TGetTreeOutput;
 };
 
-export function ProjectMenu({ css, tree, children }: Props) {
+export function ProjectMenu({ className, tree, children }: Props) {
   const t = useTranslations("common");
   const router = useRouter();
 
@@ -60,12 +59,12 @@ export function ProjectMenu({ css, tree, children }: Props) {
     return React.isValidElement(children) ? (
       children
     ) : (
-      <Text css={{ minWidth: "max-content" }}>Projekt lädt...</Text>
+      <Text className="min-w-max">Projekt lädt...</Text>
     );
   if (isError) throw error;
 
   const dialogs = {
-    update: (
+    update: () => (
       <UpdateTreeDialog
         treeId={data.uuid}
         open={openDialog === "update"}
@@ -79,7 +78,7 @@ export function ProjectMenu({ css, tree, children }: Props) {
         focusOnCancel={() => updateItemRef.current?.focus()}
       />
     ),
-    export: (
+    export: () => (
       <ExportDialog
         treeName={data.name}
         treeId={data.uuid}
@@ -94,7 +93,7 @@ export function ProjectMenu({ css, tree, children }: Props) {
         focusOnCancel={() => exportItemRef.current?.focus()}
       />
     ),
-    delete: (
+    delete: () => (
       <DeleteTreeDialog
         tree={data}
         onDelete={() => router.push("/")}
@@ -113,25 +112,20 @@ export function ProjectMenu({ css, tree, children }: Props) {
 
   return (
     <>
-      {openDialog ? dialogs[openDialog] : null}
+      {openDialog ? dialogs[openDialog]?.() : null}
       <DropdownMenu.Root open={dropdownOpen} onOpenChange={setDropdownOpen}>
         <DropdownMenu.Trigger asChild>
           {React.isValidElement(children) ? (
             children
           ) : (
-            <MenuButton label={data.name} css={css} />
+            <MenuButton label={data.name} className={className} />
           )}
         </DropdownMenu.Trigger>
-        <DropdownMenu.Content
-          sideOffset={15}
-          alignOffset={7}
-          align="start"
-          hidden={!!openDialog}
-        >
+        <DropdownMenu.Content sideOffset={15} alignOffset={7} align="start">
           <DropdownMenu.Item
-            onSelect={(event) => {
-              event.preventDefault();
+            onSelect={() => {
               setOpenDialog("update");
+              setDropdownOpen(false);
             }}
             ref={updateItemRef}
           >
@@ -141,9 +135,9 @@ export function ProjectMenu({ css, tree, children }: Props) {
             {t("projectMenu.changeName")}
           </DropdownMenu.Item>
           <DropdownMenu.Item
-            onSelect={(event) => {
-              event.preventDefault();
+            onSelect={() => {
               setOpenDialog("export");
+              setDropdownOpen(false);
             }}
             ref={exportItemRef}
           >
@@ -161,24 +155,22 @@ export function ProjectMenu({ css, tree, children }: Props) {
           <Tooltip.Root open={!data.isPublished ? false : undefined}>
             <Tooltip.Trigger asChild>
               <DropdownMenu.Item
-                onSelect={(event) => {
-                  event.preventDefault();
+                onSelect={() => {
                   setOpenDialog("delete");
+                  setDropdownOpen(false);
                 }}
                 ref={deleteItemRef}
-                css={{ colorScheme: "danger" }}
+                className="colorScheme-danger"
                 disabled={data.isPublished}
               >
-                <Icon css={{ marginTop: "2px" }}>
+                <Icon className="mt-[2px]">
                   <TrashIcon />
                 </Icon>
                 {t("projectMenu.delete")}
               </DropdownMenu.Item>
             </Tooltip.Trigger>
             <Tooltip.Content side="bottom">
-              <Tooltip.Title>
-                {t("projectMenu.disabledDeletePublishedTreeTooltip")}
-              </Tooltip.Title>
+              {t("projectMenu.disabledDeletePublishedTreeTooltip")}
             </Tooltip.Content>
           </Tooltip.Root>
         </DropdownMenu.Content>

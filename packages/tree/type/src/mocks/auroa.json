@@ -1746,7 +1746,7 @@
                 "data": {
                   "condition": {
                     "variableId": "f8e0af5c-0249-42a5-8dbe-da49d74e8434",
-                    "valueId": "7f48812e-af38-42fe-be30-560c3536ef65"
+                    "valueIds": ["7f48812e-af38-42fe-be30-560c3536ef65"]
                   }
                 }
               },
@@ -1756,9 +1756,9 @@
                 "target": "cd94128b-60b8-405a-ae07-4d9edfb571ad",
                 "type": "compare",
                 "data": {
-                  "conditionId": {
+                  "condition": {
                     "variableId": "f8e0af5c-0249-42a5-8dbe-da49d74e8434",
-                    "valueId": "28b267b4-c8a5-47c3-8802-32b694c1429d"
+                    "valueIds": ["28b267b4-c8a5-47c3-8802-32b694c1429d"]
                   }
                 }
               },
@@ -1768,9 +1768,9 @@
                 "target": "6968bcae-db64-4e64-9e5b-9d3cec8b7730",
                 "type": "compare",
                 "data": {
-                  "conditionId": {
+                  "condition": {
                     "variableId": "0ee95dd9-cce4-4256-9c84-7db8249ce6e9",
-                    "valueId": "8b5cd475-d9bf-456a-bed9-e0c208cb6682"
+                    "valueIds": ["8b5cd475-d9bf-456a-bed9-e0c208cb6682"]
                   }
                 }
               },
@@ -1782,7 +1782,7 @@
                 "data": {
                   "condition": {
                     "variableId": "0ee95dd9-cce4-4256-9c84-7db8249ce6e9",
-                    "valueId": "872b7d06-a7b8-4083-a6d1-f33d21d7d4d8"
+                    "valueIds": ["872b7d06-a7b8-4083-a6d1-f33d21d7d4d8"]
                   }
                 }
               },
@@ -1794,7 +1794,7 @@
                 "data": {
                   "condition": {
                     "variableId": "809aa7c7-d064-49ef-8332-8d8a979a2e2e",
-                    "valueId": "6529e9eb-029b-4fb4-abad-c9029721b602"
+                    "valueIds": ["6529e9eb-029b-4fb4-abad-c9029721b602"]
                   }
                 }
               },
@@ -1806,7 +1806,7 @@
                 "data": {
                   "condition": {
                     "variableId": "809aa7c7-d064-49ef-8332-8d8a979a2e2e",
-                    "valueId": "b493df9d-e0ed-4a40-83a4-9785b78ccf3d"
+                    "valueIds": ["b493df9d-e0ed-4a40-83a4-9785b78ccf3d"]
                   }
                 }
               }

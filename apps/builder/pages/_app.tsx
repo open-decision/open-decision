@@ -1,24 +1,20 @@
 import * as React from "react";
-import "../design/index.css";
-import {
-  globalStyles,
-  Notifications,
-  theme,
-  Tooltip,
-} from "@open-decision/design-system";
+import { Notifications, Tooltip } from "@open-decision/design-system";
 import { Hydrate, QueryClientProvider } from "@tanstack/react-query";
 import { NextPage } from "next";
 import { useQueryClient } from "../features/Data/useQueryClient";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { NextIntlProvider, useTranslations } from "next-intl";
 import { MessagesContext } from "../config/messagesContext";
 import { useUrlNotification } from "../utils/useUrlNotification";
 import { convertToODError } from "@open-decision/type-classes";
-import { ErrorBoundary } from "@sentry/nextjs";
 import { FullPageErrorFallback } from "../components/Error/FullPageErrorFallback";
 import { AnimatePresence, motion, Variants } from "framer-motion";
 import { Router } from "next/router";
 import { useNotificationStore } from "../config/notifications";
+import { ErrorBoundary, FallbackProps } from "react-error-boundary";
+import "reactflow/dist/style.css";
+import "@open-decision/design-system/index.css";
+import "../themes/auroa.css";
 
 // ------------------------------------------------------------------
 // xstate devtools
@@ -39,8 +35,11 @@ type AppPropsWithLayout = {
   pageProps: any;
 };
 
+const ErrorFallback = ({ error }: FallbackProps) => {
+  return <FullPageErrorFallback error={convertToODError(error)} />;
+};
+
 function App({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
-  globalStyles();
   const getLayout = Component.getLayout || ((page) => page);
 
   useUrlNotification();
@@ -49,11 +48,7 @@ function App({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
   const t = useTranslations("common.notificationsGeneral");
 
   return (
-    <ErrorBoundary
-      fallback={({ error }) => {
-        return <FullPageErrorFallback error={convertToODError(error)} />;
-      }}
-    >
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
       <QueryClientProvider client={queryClient}>
         <Hydrate state={pageProps.dehydratedState}>
           <Notifications
@@ -63,7 +58,6 @@ function App({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
           <Tooltip.Provider>
             {getLayout(<Component {...pageProps} />)}
           </Tooltip.Provider>
-          {process.env.NODE_ENV === "development" && <ReactQueryDevtools />}
         </Hydrate>
       </QueryClientProvider>
     </ErrorBoundary>
@@ -111,10 +105,7 @@ export default function AppWithContext({
             animate="load"
             variants={variants}
             exit="exit"
-            style={{
-              backgroundColor: theme.colors.primary10.value,
-              position: "absolute",
-            }}
+            className="bg-primary10 absolute"
           />
         ) : null}
       </AnimatePresence>

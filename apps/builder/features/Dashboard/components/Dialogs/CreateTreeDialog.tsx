@@ -1,47 +1,57 @@
 import * as React from "react";
-import { Form, Dialog, DialogTriggerProps } from "@open-decision/design-system";
-import { useTreeAPI } from "../../../Data/useTreeAPI";
+import { Form, Dialog, stackClasses } from "@open-decision/design-system";
+import { useCreateOptions, useTreeAPI } from "../../../Data/useTreeAPI";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/router";
 
-type Props = DialogTriggerProps & {
+type Props = Dialog.TriggerProps & {
   open?: boolean;
-  setOpen?: (open: boolean) => void;
-  focusOnClose?: () => void;
+  focusOnCancel?: () => void;
+  onSuccess?: () => void;
+  onCancel?: () => void;
+  onCreate?: useCreateOptions["onSuccess"];
+  onBeforeCreate?: useCreateOptions["onMutate"];
+  onAfterCreate?: useCreateOptions["onSettled"];
 };
 
 export const CreateTreeDialog = ({
   children,
-  focusOnClose,
+  focusOnCancel,
   open,
-  setOpen,
+  onSuccess,
+  onCancel,
+  onCreate,
+  onBeforeCreate,
+  onAfterCreate,
 }: Props) => {
-  const router = useRouter();
   const t = useTranslations("common.createTreeDialog");
-  const formState = Form.useFormState({ defaultValues: { treeName: "" } });
+  const methods = Form.useForm({ defaultValues: { treeName: "" } });
 
-  const { mutate: createTree, isLoading } = useTreeAPI().useCreate({
-    onSuccess: ({ data: { uuid } }) => {
-      return router.push(`/builder/${uuid}`);
-    },
+  const {
+    mutate: createTree,
+    isLoading,
+    isSuccess,
+  } = useTreeAPI().useCreate({
+    onSuccess: onCreate,
+    onMutate: onBeforeCreate,
+    onSettled: onAfterCreate,
   });
 
-  formState.useSubmit(async () => {
-    createTree({ body: { name: formState.values.treeName } });
+  const onSubmit = methods.handleSubmit((values) => {
+    createTree({ body: { name: values.treeName } }, { onSuccess });
   });
 
   return (
-    <Dialog.Root open={open} onOpenChange={setOpen}>
+    <Dialog.Root open={open} onOpenChange={onCancel}>
       {children ? <Dialog.Trigger asChild>{children}</Dialog.Trigger> : null}
       <Dialog.Portal>
-        <Dialog.Content onCloseAutoFocus={focusOnClose}>
-          <Dialog.Header css={{ marginBottom: "$4" }}>
-            {t("title")}
-          </Dialog.Header>
+        <Dialog.Content
+          onCloseAutoFocus={!isSuccess ? focusOnCancel : undefined}
+        >
+          <Dialog.Header className="mb-4">{t("title")}</Dialog.Header>
           <Form.Root
-            resetOnSubmit={false}
-            state={formState}
-            css={{ display: "flex", flexDirection: "column" }}
+            methods={methods}
+            className={stackClasses()}
+            onSubmit={onSubmit}
           >
             <Form.Field
               Label={
@@ -51,8 +61,12 @@ export const CreateTreeDialog = ({
               }
             >
               <Form.Input
-                name={formState.names.treeName}
-                required
+                {...methods.register("treeName", {
+                  required: {
+                    value: true,
+                    message: t("treeNameInput.required"),
+                  },
+                })}
                 placeholder={t("treeNameInput.placeholder")}
               />
             </Form.Field>

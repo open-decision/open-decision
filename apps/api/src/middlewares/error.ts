@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
 import config from "../config/config";
 import { NextFunction, Request, Response } from "express";
-import { Prisma } from "@open-decision/prisma";
+import { Prisma } from "@prisma/client";
 import http from "http";
 import { APIError } from "@open-decision/type-classes";
 import { de } from "@open-decision/translations";
@@ -54,6 +54,7 @@ export const errorHandler = (
       message: http.STATUS_CODES[httpStatus.INTERNAL_SERVER_ERROR],
     });
   }
-
-  return res.status(err.statusCode).send(err);
+  return res
+    .status(err.statusCode)
+    .send({ ...err, message: res.locals.errorMessage });
 };

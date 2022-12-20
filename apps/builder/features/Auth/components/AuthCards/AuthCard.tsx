@@ -1,30 +1,14 @@
 import {
-  Box,
-  Heading as SystemHeading,
-  Stack,
-  styled,
-  Text,
+  stackClasses,
+  headingClasses as systemHeadingClasses,
+  textClasses,
 } from "@open-decision/design-system";
 
-export const Container = styled(Stack, {
-  gap: "$6",
-  layer: "1",
-  width: "clamp(400px, 50vw, 500px)",
-  padding: "$9",
-  boxShadow: "$7",
-  borderRadius: "$md",
-});
-
-export const Header = styled("header", Stack, {
-  gap: "$2",
-});
-
-export const Heading = SystemHeading;
-Heading.defaultProps = { size: "large" };
-
-export const Description = styled(Text, { color: "$gray11" });
-Description.defaultProps = { size: "large" };
-
-export const Body = styled("main", Box);
-
-export const Footer = styled("footer", Box);
+export const containerClasses = stackClasses(
+  {},
+  "gap-6 bg-layer-1 w-[clamp(400px,50vw,500px)] p-9 shadow-7 rounded-md"
+);
+export const headerClasses = stackClasses({}, "gap-2");
+export const headingClasses = systemHeadingClasses({ size: "large" });
+export const descriptionClasses = textClasses({ size: "large" }, "text-gray11");
+export const footerClasses = textClasses({}, "text-gray11");

@@ -1,4 +1,4 @@
-import { safeFetch } from "@open-decision/api-helpers";
+import { safeFetchJSON } from "@open-decision/api-helpers";
 import { APIError, isAPIError } from "@open-decision/type-classes";
 import { assign, createMachine } from "xstate";
 
@@ -58,7 +58,7 @@ export const createVerifyLoginMachine = (
         verifyLogin: (_, event) => async (send) => {
           const { password } = event;
 
-          await safeFetch(
+          await safeFetchJSON(
             "/api/external-api/auth/verifyLogin",
             {
               body: { email, password },
@@ -71,10 +71,7 @@ export const createVerifyLoginMachine = (
               isAPIError(error)
                 ? send({
                     type: "FAILED_VERIFY_LOGIN",
-                    error: new APIError({
-                      ...error,
-                      message: "Incorrect Password",
-                    }),
+                    error,
                   })
                 : send({
                     type: "FAILED_VERIFY_LOGIN",

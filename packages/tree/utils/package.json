@@ -1,0 +1,15 @@
+{
+  "name": "@open-decision/tree-utils",
+  "version": "0.0.1",
+  "main": "src/index.js",
+  "dependencies": {
+    "valtio": "^1.7.6",
+    "valtio-yjs": "^0.4.0",
+    "y-indexeddb": "^9.0.9",
+    "y-websocket": "^1.4.5",
+    "yjs": "^13.5.42"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.9"
+  }
+}

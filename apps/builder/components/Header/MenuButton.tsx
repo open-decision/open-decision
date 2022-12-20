@@ -3,7 +3,7 @@ import { ButtonProps, DropdownMenu } from "@open-decision/design-system";
 type Props = { label: React.ReactNode } & ButtonProps;
 
 function MenuButtonImpl(
-  { label, css, ...props }: Props,
+  { label, className, classNames, size, ...props }: Props,
   ref: React.Ref<HTMLButtonElement>
 ) {
   const Label =
@@ -14,15 +14,13 @@ function MenuButtonImpl(
   return (
     <DropdownMenu.Button
       variant="neutral"
-      css={{
-        minWidth: "max-content",
-
-        "&[data-state='open'] .rotate": {
-          transform: "rotate(180deg)",
-        },
-        ...css,
-      }}
+      classNames={[
+        "min-w-max [&[data-state=open] .rotate]:rotate-180",
+        classNames,
+        className,
+      ]}
       ref={ref}
+      size={size}
       {...props}
     >
       {Label}

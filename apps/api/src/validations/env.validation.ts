@@ -35,7 +35,6 @@ export const baseEnvVars = z.object({
     .optional()
     .default("30")
     .transform((str) => parseInt(str, 10)),
-  SENTRY_DSN: z.string().optional(),
   INSTANCE_NAME: z.string().optional().default("OD API"),
   PUBLIC_API_DOCUMENTATION: z.string().optional().default("false"),
   DEV_ACCOUNT_WHITELIST: z
@@ -52,6 +51,10 @@ export const baseEnvVars = z.object({
     .boolean()
     .optional()
     .default(false),
+  AWS_S3_ACCESS_KEY_ID: z.string().optional(),
+  AWS_S3_SECRET_ACCESS_KEY: z.string().optional(),
+  OD_BUILDER_ENDPOINT: z.string().optional(),
+  DOCUMENT_TEMPLATE_BUCKET: z.string().default("od-document-generation"),
 });
 
 export type EnvVars = z.infer<typeof baseEnvVars>;

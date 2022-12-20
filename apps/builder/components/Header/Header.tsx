@@ -1,61 +1,45 @@
 import React from "react";
-import {
-  StyleObject,
-  styled,
-  Box,
-  buttonStyles,
-  Icon,
-  Link,
-} from "@open-decision/design-system";
+import { buttonClasses, Icon, twMerge } from "@open-decision/design-system";
 import { UserMenu } from "./UserMenu";
 import NextLink from "next/link";
 import { DashboardIcon } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
 
-const Container = styled("div", {
-  layer: "1",
-  paddingInline: "$3",
-  borderBottom: "$border$layer",
-});
+const containerClasses = "bg-layer-1 px-3 border-b border-gray7";
 
-const Content = styled("header", {
-  display: "flex",
-  alignItems: "center",
-  gap: "$2",
-  paddingBlock: "$3",
-});
+const contentClasses = "flex items-center gap-2 py-3";
 
 type BaseHeaderProps = {
   children?: React.ReactNode;
-  css?: StyleObject;
+  className?: string;
   LogoSlot?: React.ReactNode;
 };
 
 export const BaseHeader = ({
-  children = <Box css={{ flex: 1 }} />,
-  css,
-  LogoSlot = <Box />,
+  children = <div className="flex-1" />,
+  className,
+  LogoSlot = <div />,
 }: BaseHeaderProps) => {
   const t = useTranslations("common.header");
   return (
-    <Container css={css}>
-      <Content>
-        <NextLink href="/" passHref>
-          <Link
-            className={buttonStyles({
-              variant: "neutral",
-              square: true,
-            })}
-          >
-            <Icon label={t("homeButtonHiddenLabel")}>
-              <DashboardIcon />
-            </Icon>
-          </Link>
+    <div
+      className={
+        className ? twMerge(containerClasses, className) : containerClasses
+      }
+    >
+      <header className={contentClasses}>
+        <NextLink
+          className={buttonClasses({ variant: "neutral", square: true }, [])}
+          href="/"
+        >
+          <Icon size="small" label={t("homeButtonHiddenLabel")}>
+            <DashboardIcon />
+          </Icon>
         </NextLink>
         {LogoSlot}
         {children}
         <UserMenu />
-      </Content>
-    </Container>
+      </header>
+    </div>
   );
 };

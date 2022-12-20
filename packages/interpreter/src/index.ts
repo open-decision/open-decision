@@ -1,2 +1,3 @@
 export * from "./interpreter";
-export { createInterpreterMethods } from "./methods";
+export { createInterpreterMethods, getCurrentNode } from "./methods";
+export * from "./errors";

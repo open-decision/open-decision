@@ -10,18 +10,18 @@ export interface Typegen0 {
   };
   missingImplementations: {
     actions: never;
-    services: never;
-    guards: never;
     delays: never;
+    guards: never;
+    services: never;
   };
   eventsCausingActions: {
     assignErrorToContext: "FAILED_VERIFY_LOGIN";
   };
+  eventsCausingDelays: {};
+  eventsCausingGuards: {};
   eventsCausingServices: {
     verifyLogin: "VERIFY_LOGIN";
   };
-  eventsCausingGuards: {};
-  eventsCausingDelays: {};
   matchesStates:
     | "unverified"
     | "verification_failed"

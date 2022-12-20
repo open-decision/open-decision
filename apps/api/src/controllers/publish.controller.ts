@@ -2,11 +2,12 @@ import { Request, Response } from "express";
 import catchAsync from "../utils/catchAsync";
 import httpStatus from "http-status";
 import validateRequest from "../validations/validateRequest";
+import * as publishingService from "../services/publishing.service";
 import {
   deletePublishedTreeInput,
   getPublishedTreeInput,
   TGetPublishedTreeOutput,
-} from "@open-decision/tree-api-specification";
+} from "@open-decision/api-specification";
 import prisma from "../init-prisma-client";
 import { APIError } from "@open-decision/type-classes";
 
@@ -49,21 +50,16 @@ const getPublishedTree = catchAsync(async (req: Request, res: Response) => {
       code: "NOT_FOUND",
     });
 
-  res.send(publishedTree);
+  res.send(publishedTree as TGetPublishedTreeOutput);
 });
 
 const deletePublishedTree = catchAsync(async (req: Request, res: Response) => {
   const reqData = await validateRequest(deletePublishedTreeInput)(req);
 
-  const deletedTree = await prisma.publishedTree.deleteMany({
-    where: {
-      ownerUuid: req.user.uuid,
-      uuid: reqData.params.uuid,
-    },
-  });
-
-  if (deletedTree.count == 0)
-    throw new APIError({ code: "NOT_FOUND", message: "Tree not found." });
+  await publishingService.deletePublishedTree(
+    req.user.uuid,
+    reqData.params.uuid
+  );
 
   res.status(httpStatus.NO_CONTENT).send();
 });

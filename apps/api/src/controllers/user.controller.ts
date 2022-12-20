@@ -7,7 +7,7 @@ import { userService } from "../services";
 import { userValidation } from "../validations";
 import validateRequest from "../validations/validateRequest";
 import { APIError } from "@open-decision/type-classes";
-import { updateUserInput } from "@open-decision/user-api-specification";
+import { updateUserInput } from "@open-decision/api-specification";
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
   const reqData = await validateRequest(userValidation.createUser)(req);

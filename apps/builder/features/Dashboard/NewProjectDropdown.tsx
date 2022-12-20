@@ -4,37 +4,53 @@ import { PlusIcon, RocketIcon } from "@radix-ui/react-icons";
 import { CreateTreeDialog } from "./components/Dialogs/CreateTreeDialog";
 import { TreeImport } from "./TreeImport";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/router";
 
 export function NewProjectDropdown(props: ButtonProps) {
   const t = useTranslations("common");
-  const [open, setOpen] = React.useState(false);
-  const [alertOpen, setAlertOpen] = React.useState(false);
+  const router = useRouter();
+
+  const [dropdownOpen, setDropdownOpen] = React.useState(false);
+  const [dialogOpen, setDialogOpen] = React.useState(false);
   const ref = React.useRef<HTMLDivElement>(null);
+
+  const dialog = (
+    <CreateTreeDialog
+      open={dialogOpen}
+      onCreate={({ data: { uuid } }) => {
+        router.push(`/builder/${uuid}`);
+      }}
+      onSuccess={() => {
+        setDropdownOpen(false);
+        setDialogOpen(false);
+      }}
+      onCancel={() => {
+        setDialogOpen(false);
+      }}
+      focusOnCancel={() => ref.current?.focus()}
+    />
+  );
 
   return (
     <>
-      <CreateTreeDialog
-        open={alertOpen}
-        setOpen={setAlertOpen}
-        focusOnClose={() => ref.current?.focus()}
-      />
-      <DropdownMenu.Root open={open} onOpenChange={setOpen}>
+      {dialogOpen && dialog}
+      <DropdownMenu.Root open={dropdownOpen} onOpenChange={setDropdownOpen}>
         <DropdownMenu.Trigger asChild>
-          <DropdownMenu.Button {...props}>
-            <Icon css={{ marginTop: "2px" }}>
+          <DropdownMenu.Button className="gap-2" {...props}>
+            <Icon>
               <RocketIcon />
             </Icon>
             {t("NewProjectDropdown.label")}
           </DropdownMenu.Button>
         </DropdownMenu.Trigger>
-        <DropdownMenu.Content hidden={alertOpen} align="end">
+        <DropdownMenu.Content hidden={dialogOpen} align="end">
           <DropdownMenu.Item
             ref={ref}
-            onSelect={(event) => {
-              event.preventDefault();
-              setAlertOpen(true);
+            onSelect={() => {
+              setDialogOpen(true);
+              setDropdownOpen(false);
             }}
-            css={{ colorScheme: "success" }}
+            className="colorScheme-success"
           >
             <Icon>
               <PlusIcon />
@@ -49,7 +65,10 @@ export function NewProjectDropdown(props: ButtonProps) {
               event.preventDefault();
             }}
           >
-            <TreeImport css={{ fontWeight: 500 }} onDone={() => setOpen(false)}>
+            <TreeImport
+              className="font-[500]"
+              onDone={() => setDropdownOpen(false)}
+            >
               {t("NewProjectDropdown.importProject.label")}
             </TreeImport>
           </DropdownMenu.Item>

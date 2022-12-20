@@ -1,8 +1,8 @@
-import { TLoginOutput } from "@open-decision/auth-api-specification";
+import { TLoginOutput } from "@open-decision/api-specification";
 import { ODError } from "@open-decision/type-classes";
 import { useRouter } from "next/router";
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
-import { safeFetch } from "@open-decision/api-helpers";
+import { safeFetchJSON } from "@open-decision/api-helpers";
 
 export function useLogoutMutation(
   config?: Omit<UseMutationOptions<TLoginOutput>, "mutationFn">
@@ -12,7 +12,7 @@ export function useLogoutMutation(
   return useMutation<any, ODError>(
     ["logout"],
     () => {
-      return safeFetch(
+      return safeFetchJSON(
         "/api/external-api/auth/logout",
         {
           method: "POST",

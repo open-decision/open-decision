@@ -1,13 +1,12 @@
-import { safeFetch } from "@open-decision/api-helpers";
-import { loginOutput } from "@open-decision/auth-api-specification";
+import { safeFetchJSON } from "@open-decision/api-helpers";
+import { loginOutput } from "@open-decision/api-specification";
 import { setCookieHeaders } from "../../../../utils/auth";
 import type { NextApiHandler } from "next";
 import { APIError, isAPIError } from "@open-decision/type-classes";
-import { withSentry } from "@sentry/nextjs";
 
 const authCatch: NextApiHandler = async (req, res) => {
   try {
-    const authResponse = await safeFetch(
+    const authResponse = await safeFetchJSON(
       `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1/auth/${req.query["slug"]}`,
       {
         body: req.body,
@@ -35,10 +34,4 @@ const authCatch: NextApiHandler = async (req, res) => {
   }
 };
 
-export default withSentry(authCatch);
-
-export const config = {
-  api: {
-    externalResolver: true,
-  },
-};
+export default authCatch;

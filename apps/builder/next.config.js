@@ -1,30 +1,27 @@
-const { withSentryConfig } = require("@sentry/nextjs");
-const withNx = require("@nrwl/next/plugins/with-nx");
+// const path = require("path");
 
-const withBundleAnalyzer = require("@next/bundle-analyzer")({
-  enabled: process.env.ANALYZE === "true",
-});
-
-/**
- * @type {import('@nrwl/next/plugins/with-nx').WithNxOptions}
- **/
 const nextConfig = {
   i18n: {
     locales: ["de"],
     defaultLocale: "de",
   },
   reactStrictMode: true,
-  nx: {
-    svgr: false,
-  },
-  sentry: {
-    hideSourceMaps: true,
-  },
+  // webpack(config, { dev, isServer }) {
+  //   if (dev && !isServer) {
+  //     const originalEntry = config.entry;
+  //     config.entry = async () => {
+  //       const wdrPath = path.resolve(__dirname, "./scripts/wdyr.js");
+  //       const entries = await originalEntry();
+
+  //       if (entries["main.js"] && !entries["main.js"].includes(wdrPath)) {
+  //         entries["main.js"].push(wdrPath);
+  //       }
+  //       return entries;
+  //     };
+  //   }
+
+  //   return config;
+  // },
 };
 
-module.exports = withSentryConfig(withBundleAnalyzer(withNx(nextConfig)), {
-  silent: true,
-  org: "open-legal-tech-ev",
-  project: "builder",
-  url: "https://sentry.io/",
-});
+module.exports = nextConfig;

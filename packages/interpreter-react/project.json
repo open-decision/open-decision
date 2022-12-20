@@ -4,7 +4,7 @@
   "projectType": "library",
   "targets": {
     "build": {
-      "executor": "@nrwl/js:swc",
+      "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/interpreter-react",
@@ -14,7 +14,7 @@
       }
     },
     "publish": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "command": "node tools/scripts/publish.mjs interpreter-react {args.ver} {args.tag}"
       },
@@ -33,21 +33,28 @@
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/packages/interpreter-react"],
-      "options": {
-        "jestConfig": "packages/interpreter-react/jest.config.ts",
-        "passWithNoTests": true
+      "executor": "@nrwl/vite:test",
+      "configurations": {
+        "watch": {
+          "watch": true,
+          "passWithNoTests": true
+        }
       }
     },
     "typecheck": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
-        "command": "tsc -p tsconfig.lib.json",
+        "command": "tsc -p tsconfig.lib.json --noEmit",
         "cwd": "packages/interpreter-react"
       },
-      "dependsOn": [{ "projects": "dependencies", "target": "build" }]
+      "dependsOn": [
+        {
+          "projects": "dependencies",
+          "target": "build"
+        }
+      ]
     }
   },
-  "tags": []
+  "tags": [],
+  "name": "interpreter-react"
 }

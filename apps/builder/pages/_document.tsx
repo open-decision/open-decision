@@ -1,17 +1,11 @@
 import React from "react";
 import NextDocument, { Html, Head, Main, NextScript } from "next/document";
-import { getCssText } from "@open-decision/design-system";
-import { defaultTheme } from "../design/stitches.config";
 
 export default class Document extends NextDocument {
   override render() {
     return (
       <Html lang="en">
         <Head>
-          <style
-            id="stitches"
-            dangerouslySetInnerHTML={{ __html: getCssText() }}
-          />
           <link
             rel="apple-touch-icon"
             sizes="180x180"
@@ -34,7 +28,7 @@ export default class Document extends NextDocument {
           <meta name="msapplication-TileColor" content="#da532c" />
           <meta name="theme-color" content="#302e81"></meta>
         </Head>
-        <body className={defaultTheme}>
+        <body>
           <Main />
           <NextScript />
         </body>

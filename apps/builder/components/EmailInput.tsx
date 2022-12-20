@@ -1,20 +1,33 @@
-import { Form, StyleObject } from "@open-decision/design-system";
+import { Form } from "@open-decision/design-system";
 import { useTranslations } from "next-intl";
 
 type Props = {
-  fieldCss?: StyleObject;
-  inputCss?: StyleObject;
-} & Omit<Form.InputProps, "css">;
+  className?: string;
+  inputClassName?: string;
+  required?: boolean;
+} & Partial<Form.InputProps>;
 
-export const EmailField = ({ fieldCss, inputCss, ...props }: Props) => {
+export const EmailField = ({
+  className,
+  inputClassName,
+  required = true,
+  ...props
+}: Props) => {
   const t = useTranslations();
 
+  const { register } = Form.useFormContext();
+
   return (
-    <Form.Field css={fieldCss} Label={t("common.emailInput.label")}>
+    <Form.Field className={className} Label={t("common.emailInput.label")}>
       <Form.Input
-        css={inputCss}
+        {...register("email", {
+          required: {
+            value: required,
+            message: "Bitte gib eine E-Mail Adresse an.",
+          },
+        })}
+        className={inputClassName}
         type="email"
-        required
         placeholder={t("common.emailInput.placeholder")}
         {...props}
       />

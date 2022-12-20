@@ -1,22 +1,29 @@
 import * as React from "react";
-import { StyleObject } from "@open-decision/design-system";
 import { Renderer } from "@open-decision/renderer";
-import { useTreeContext } from "../Builder/state/treeStore/TreeContext";
-import { useSnapshot } from "valtio";
+import { useTree } from "@open-decision/tree-sync";
 import { useNotificationStore } from "../../config/notifications";
+import { useEditor, useSelectedNodeIds } from "@open-decision/node-editor";
+import { useTreeClientWithPlugins } from "@open-decision/tree-clientWithPlugins";
+import { InterpreterProviderProps } from "@open-decision/interpreter-react";
 
-type Props = { css?: StyleObject };
+type Props = {
+  className?: string;
+  environment: InterpreterProviderProps["environment"];
+};
 
-export function Preview({ css }: Props) {
-  const { tree, replaceSelectedNodes } = useTreeContext();
-  const { syncedStore: treeSnapshot, nonSyncedStore: userState } =
-    useSnapshot(tree);
+export function Preview({ className, environment }: Props) {
+  const { replaceSelectedNodes } = useEditor();
+  const tree = useTree((treeClient) => treeClient.get.tree());
+  const selectedNodeIds = useSelectedNodeIds();
   const { addNotification } = useNotificationStore();
+  const { nodePlugins, edgePlugins } = useTreeClientWithPlugins();
 
   return (
     <Renderer.Root
-      tree={treeSnapshot}
-      defaultNode={userState.selectedNodeIds[0]}
+      environment={environment}
+      edgePlugins={edgePlugins}
+      tree={tree}
+      initialNode={selectedNodeIds[0]}
       onSelectedNodeChange={(nextNodeId) => replaceSelectedNodes([nextNodeId])}
       onError={(error) =>
         addNotification({
@@ -27,11 +34,8 @@ export function Preview({ css }: Props) {
       }
     >
       <Renderer.View
-        css={{
-          height: "100%",
-          paddingBlock: "$7",
-          ...css,
-        }}
+        classNames={["h-full py-7", className]}
+        nodePlugins={nodePlugins}
       />
     </Renderer.Root>
   );

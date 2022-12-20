@@ -22,6 +22,9 @@ import {
   deleteUser,
   getUser,
   updateUser,
+  getDocumentPreviewSingle,
+  getDocumentPublishedSingle,
+  getDocumentPrototypeSingle,
 } from "@open-decision/api-specification";
 import { FetchFunctions } from "@open-decision/api-helpers";
 
@@ -62,6 +65,15 @@ export const client = <FetchFunction extends FetchFunctions>(
       getUser: getUser(context),
       updateUser: updateUser(context),
       deleteUser: deleteUser(context),
+    },
+    file: {
+      document: {
+        get: {
+          preview: getDocumentPreviewSingle(context),
+          prototype: getDocumentPrototypeSingle(context),
+          public: getDocumentPublishedSingle(context),
+        },
+      },
     },
   };
 };

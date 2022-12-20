@@ -16,13 +16,14 @@ usersRouter.route("/").post(auth("manageUsers"), userController.createUser);
 //   userController.getUsers
 // );
 
-usersRouter
-  .route("/whitelist")
-  .get(auth("getWhitelist"), userController.getWhitelist)
-  .post(auth("manageWhitelist"), userController.addToWhitelist)
-  .delete(auth("manageWhitelist"), userController.removeFromWhitelist);
+// Deactivated for now, as we don't use the whitelist atm
+// usersRouter
+//   .route("/whitelist")
+//   .get(auth("getWhitelist"), userController.getWhitelist)
+//   .post(auth("manageWhitelist"), userController.addToWhitelist)
+//   .delete(auth("manageWhitelist"), userController.removeFromWhitelist);
 
-usersRouter.post("/is-whitelisted", userController.isWhitelisted);
+// usersRouter.post("/is-whitelisted", userController.isWhitelisted);
 
 export { usersRouter, userRouter };
 /**

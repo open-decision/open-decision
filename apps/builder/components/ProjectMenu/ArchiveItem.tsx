@@ -21,7 +21,7 @@ export function ArchiveItem({ treeId, status }: PublishItemProps) {
           : archive({ params: { uuid: treeId } })
       }
     >
-      <Icon css={{ marginTop: "2px" }}>
+      <Icon className="mt-[2px]">
         <ArchiveIcon />
       </Icon>
       {status === "ARCHIVED" ? t("unarchive") : t("archive")}

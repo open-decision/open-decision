@@ -26,32 +26,24 @@ export function ResetPasswordForm({ token }: Props) {
       });
     },
   });
-  const formState = Form.useFormState({
+  const methods = Form.useForm({
     defaultValues: {
       newPassword: "",
     },
   });
 
-  formState.useSubmit(() => {
-    resetPassword({
-      password: formState.values.newPassword,
-      token,
-    });
-  });
-
   return (
-    <Form.Root state={formState}>
-      <PasswordInput name={formState.names.newPassword} />
-      {error ? (
-        <ErrorMessage code={error.code} css={{ marginTop: "$2" }} />
-      ) : null}
-      <Form.Submit
-        isLoading={isLoading}
-        type="submit"
-        css={{ marginTop: "$6" }}
-      >
+    <Form.Root
+      methods={methods}
+      onSubmit={methods.handleSubmit((values) =>
+        resetPassword({ password: values.newPassword, token })
+      )}
+    >
+      <PasswordInput {...methods.register("newPassword", { required: true })} />
+      {error ? <ErrorMessage code={error.code} className="mt-2" /> : null}
+      <Form.SubmitButton isLoading={isLoading} type="submit" className="mt-6">
         {t("submitButton")}
-      </Form.Submit>
+      </Form.SubmitButton>
     </Form.Root>
   );
 }

@@ -1,10 +1,7 @@
-import { Stack, styled } from "@open-decision/design-system";
+import { ClassNameArrayProp, stackClasses } from "@open-decision/design-system";
 
-export const Card = styled(Stack, {
-  padding: "$5",
-  border: "$border$layer",
-  boxShadow: "$1",
-  borderRadius: "$md",
-  layer: "1",
-  gap: "$4",
-});
+export const cardClasses = (className?: ClassNameArrayProp) =>
+  stackClasses({}, [
+    "p-5 border border-gray7 shadow-1 rounded-md bg-layer-1 gap-4 focus-visible:inner-focus",
+    className,
+  ]);

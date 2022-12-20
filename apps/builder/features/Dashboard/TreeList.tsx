@@ -7,18 +7,16 @@ import {
   Stack,
   Text,
   Form,
-  styled,
   LoadingSpinner,
+  headingClasses,
 } from "@open-decision/design-system";
 import { TreeCard } from "./components/TreeCard/TreeCard";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { useFilter } from "./Filter";
-import { Card } from "../../components/Card";
+import { cardClasses } from "../../components/Card";
 import { NewProjectDropdown } from "./NewProjectDropdown";
 import { useTreeAPI } from "../Data/useTreeAPI";
 import { useTranslations } from "next-intl";
-
-const NoProjects = styled("span", Heading);
 
 const sorts = {
   updatedAt: "Zuletzt bearbeitet",
@@ -43,41 +41,33 @@ export const TreeList = () => {
   const { search, setSearch, SortButton, FilterButton, filteredData } =
     useFilter(trees ?? [], sorts, "updatedAt", filters, "active");
 
-  const formState = Form.useFormState({
+  const methods = Form.useForm({
     defaultValues: { search },
-    setValues: ({ search }) => setSearch(search),
   });
 
   // Hard loading state when fetching initial data
-  if (isLoading)
-    return (
-      <LoadingSpinner size="50px" css={{ flex: 1, alignSelf: "center" }} />
-    );
+  if (isLoading) return <LoadingSpinner className="flex-1 items-center" />;
 
   return hasTrees ? (
     <>
-      <Row css={{ justifyContent: "space-between", marginBlock: "$9 $7" }}>
+      <Row className="justify-between mt-9 mb-7">
         <Heading as="h1" size="large">
           {t("title")}
         </Heading>
         <NewProjectDropdown />
       </Row>
-      <Form.Root
-        state={formState}
-        css={{
-          gap: "$2",
-          justifyContent: "space-between",
-          flexDirection: "row",
-        }}
-      >
+      <Form.Root methods={methods} className="gap-2 justify-between flex-row">
         <Form.Field
           Label={t("treeList.search.label")}
           layout="no-label"
-          css={{ flexBasis: "400px" }}
+          className="basis-[400px]"
         >
           <Form.Input
             variant="lowered"
-            name={formState.names.search}
+            {...methods.register("search", {
+              onChange: (event) => setSearch(event.target.value),
+            })}
+            name="search"
             Icon={(props) => (
               <Icon {...props}>
                 <MagnifyingGlassIcon />
@@ -86,23 +76,12 @@ export const TreeList = () => {
             placeholder={t("treeList.search.placeholder")}
           />
         </Form.Field>
-        <Row css={{ gap: "$2", alignItems: "center" }}>
+        <Row className="gap-2 items-center">
           <FilterButton />
           <SortButton />
         </Row>
       </Form.Root>
-      <Stack
-        css={{
-          gap: "$2",
-          marginTop: "$1",
-          paddingBlock: "$4",
-          height: "100%",
-          width: "calc(100% + $space$4)",
-          paddingInline: "$2",
-          overflowY: "auto",
-          alignSelf: "center",
-        }}
-      >
+      <Stack className="gap-2 mt-1 py-4 h-full w-[100% - var(--space-4)] px-2 overflow-y-auto w-[calc(100%+2*var(--space-2))] -ml-[var(--space-2)]">
         {filteredData.length > 0 ? (
           filteredData.map((tree) => (
             <motion.div key={tree.uuid} layout transition={{ duration: 0.5 }}>
@@ -110,8 +89,10 @@ export const TreeList = () => {
             </motion.div>
           ))
         ) : (
-          <Stack center css={{ height: "100%" }}>
-            <NoProjects>{t("treeList.noResults")}</NoProjects>
+          <Stack className="h-full" center>
+            <span className={headingClasses({})}>
+              {t("treeList.noResults")}
+            </span>
           </Stack>
         )}
       </Stack>
@@ -125,14 +106,14 @@ const EmptyState = () => {
   const t = useTranslations("dashboard.treeList.empty");
 
   return (
-    <Stack center css={{ flex: 1 }}>
-      <Card css={{ alignItems: "center", padding: "$9", gap: "$2" }}>
+    <Stack center className="flex-1">
+      <div className={cardClasses("items-center p-9 gap-2")}>
         <Heading size="medium">{t("title")}</Heading>
-        <Text size="large" css={{ marginBottom: "$6" }}>
+        <Text size="large" className="mb-6">
           {t("callToAction")}{" "}
         </Text>
         <NewProjectDropdown size="large" />
-      </Card>
+      </div>
     </Stack>
   );
 };

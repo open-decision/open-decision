@@ -1,4 +1,5 @@
-import { Form, Link, Row, StyleObject } from "@open-decision/design-system";
+import * as React from "react";
+import { Form, linkClasses, Row } from "@open-decision/design-system";
 import { useTranslations } from "next-intl";
 import NextLink from "next/link";
 
@@ -6,18 +7,13 @@ const LabelWithForgortPasswordLink = () => {
   const t = useTranslations();
 
   return (
-    <Row
-      css={{
-        justifyContent: "space-between",
-        alignItems: "center",
-        width: "100%",
-      }}
-    >
+    <Row className="justify-between items-center w-full">
       {t("common.passwordInput.label")}
-      <NextLink passHref href="/auth/forgot_password">
-        <Link css={{ textStyle: "small-text" }}>
-          {t("common.passwordInput.forgotPasswordLink")}
-        </Link>
+      <NextLink
+        href="/auth/forgot_password"
+        className={linkClasses({ size: "small" })}
+      >
+        {t("common.passwordInput.forgotPasswordLink")}
       </NextLink>
     </Row>
   );
@@ -25,46 +21,52 @@ const LabelWithForgortPasswordLink = () => {
 
 type Props = {
   hasPasswordResetLink?: boolean;
-  fieldCss?: StyleObject;
-  inputCss?: StyleObject;
+  fieldClassName?: string;
+  inputClassName?: string;
   customLabel?: string;
-} & Omit<Form.InputProps, "css">;
+  required?: boolean;
+} & Partial<Form.InputProps>;
 
-export const PasswordInput = ({
-  hasPasswordResetLink,
-  fieldCss,
-  inputCss,
-  customLabel,
-  ...props
-}: Props) => {
-  const t = useTranslations();
+export const PasswordInput = React.forwardRef<HTMLInputElement, Props>(
+  function PasswordInput(
+    {
+      hasPasswordResetLink,
+      fieldClassName,
+      inputClassName,
+      customLabel,
+      ...props
+    },
+    ref
+  ) {
+    const t = useTranslations();
 
-  const labels = {
-    default: t("common.passwordInput.label"),
-    withLink: <LabelWithForgortPasswordLink />,
-    customLabel,
-  };
+    const labels = {
+      default: t("common.passwordInput.label"),
+      withLink: <LabelWithForgortPasswordLink />,
+      customLabel,
+    };
 
-  return (
-    <Form.Field
-      css={fieldCss}
-      Label={
-        labels[
-          customLabel
-            ? "customLabel"
-            : hasPasswordResetLink
-            ? "withLink"
-            : "default"
-        ]
-      }
-    >
-      <Form.Input
-        css={inputCss}
-        type="password"
-        required
-        placeholder="*******"
-        {...props}
-      />
-    </Form.Field>
-  );
-};
+    return (
+      <Form.Field
+        className={fieldClassName}
+        Label={
+          labels[
+            customLabel
+              ? "customLabel"
+              : hasPasswordResetLink
+              ? "withLink"
+              : "default"
+          ]
+        }
+      >
+        <Form.Input
+          ref={ref}
+          className={inputClassName}
+          type="password"
+          placeholder="*******"
+          {...props}
+        />
+      </Form.Field>
+    );
+  }
+);

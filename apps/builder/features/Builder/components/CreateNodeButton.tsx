@@ -1,31 +1,19 @@
-import {
-  Button,
-  Icon,
-  StyleObject,
-  Text,
-  Tooltip,
-} from "@open-decision/design-system";
+import { Button, Icon, Text, Tooltip } from "@open-decision/design-system";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
-import { useTreeContext } from "../state/treeStore/TreeContext";
-import { useEditor } from "../state/useEditor";
 import { sideMenuTooltipProps } from "./SideMenu/shared";
+import { PlaceholderNodePlugin, useEditor } from "@open-decision/node-editor";
+import { useTreeClient } from "@open-decision/tree-sync";
 
-type Props = { css?: StyleObject };
+const PlaceholderNode = new PlaceholderNodePlugin();
 
-export function CreateNodeButton({ css }: Props) {
+type Props = { className?: string };
+
+export function CreateNodeButton({ className }: Props) {
   const t = useTranslations("builder.createNodeButton");
-  const {
-    createInput,
-    createAnswer,
-    createNode,
-    addNode,
-    addInput,
-    addInputAnswer,
-  } = useTreeContext();
+  const treeClient = useTreeClient();
 
-  const { getCenter, zoomToNode } = useEditor();
-  const { replaceSelectedNodes } = useTreeContext();
+  const { getCenter, zoomToNode, replaceSelectedNodes } = useEditor();
 
   return (
     <Tooltip.Root>
@@ -34,19 +22,13 @@ export function CreateNodeButton({ css }: Props) {
           variant="primary"
           name={t("hiddenLabel")}
           square
-          css={css}
+          className={className}
           onClick={() => {
-            const newInput = createInput();
-            const newAnswer = createAnswer({ text: "" });
-
-            const newNode = createNode({
-              data: { inputs: [newInput.id], conditions: [] },
+            const newNode = PlaceholderNode.create({
               position: getCenter(),
-            });
+            })(treeClient);
 
-            addNode(newNode);
-            addInput(newInput);
-            addInputAnswer(newInput.id, newAnswer);
+            treeClient.nodes.add(newNode);
 
             replaceSelectedNodes([newNode.id]);
             zoomToNode(newNode);

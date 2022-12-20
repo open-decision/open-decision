@@ -2,18 +2,23 @@
   "name": "@open-decision/interpreter-react",
   "version": "0.0.1",
   "type": "commonjs",
-  "main": "src/index.ts",
+  "main": "src/index.js",
   "sideEffects": false,
   "dependencies": {
     "@xstate/react": "^3.0.1",
-    "xstate": "^4.33.5",
-    "@open-decision/interpreter": "workspace:*",
-    "@open-decision/type-classes": "workspace:*",
-    "@open-decision/design-system": "workspace:*"
+    "xstate": "^4.34.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.9",
+    "@types/react": "^18.0.25",
+    "react": "^18.2.0",
+    "tslib": "^2.4.1"
   },
   "peerDependencies": {
+    "@fontsource/poppins": "^4.5.10",
+    "next": "^13.0.1",
+    "next-intl": "^2.9.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
-  },
-  "scripts": {}
+  }
 }

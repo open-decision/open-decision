@@ -1,16 +1,7 @@
-import {
-  Form,
-  Dialog,
-  DialogTriggerProps,
-  Text,
-  styled,
-  StyleObject,
-} from "@open-decision/design-system";
+import { Form, Dialog, Text } from "@open-decision/design-system";
 import { useTranslations } from "next-intl";
 import * as React from "react";
 import { useDeleteOptions, useTreeAPI } from "../../../Data/useTreeAPI";
-
-const Bold = styled("span", { color: "$gray12" });
 
 type Props = {
   tree: { name: string; uuid: string };
@@ -19,8 +10,7 @@ type Props = {
   onCancel?: () => void;
   focusOnCancel?: () => void;
   className?: string;
-  children?: DialogTriggerProps["children"];
-  css?: StyleObject;
+  children?: Dialog.TriggerProps["children"];
   onDelete?: useDeleteOptions["onSuccess"];
   onBeforeDelete?: useDeleteOptions["onMutate"];
   onAfterDelete?: useDeleteOptions["onSettled"];
@@ -34,14 +24,26 @@ export function DeleteTreeDialog({
   focusOnCancel,
   children,
   className,
-  css,
   onDelete,
   onBeforeDelete,
   onAfterDelete,
 }: Props) {
   const t = useTranslations("common.deleteTreeDialog");
-  const formState = Form.useFormState({
+  const methods = Form.useForm({
     defaultValues: { treeName: "" },
+    resolver: (values) => {
+      return values.treeName === tree.name
+        ? { values, errors: {} }
+        : {
+            values: {},
+            errors: {
+              treeName: {
+                message: "Der Projektname stimmt nicht überein.",
+                type: "pattern",
+              },
+            },
+          };
+    },
   });
 
   const {
@@ -54,17 +56,9 @@ export function DeleteTreeDialog({
     onSettled: onAfterDelete,
   });
 
-  formState.useSubmit(async () => {
-    deleteTree({ params: { uuid: tree.uuid } }, { onSuccess });
-  });
-
-  formState.useValidate(() => {
-    if (tree.name !== formState.values.treeName)
-      formState.setError(
-        formState.names.treeName,
-        "Der Projektname ist nicht korrekt"
-      );
-  });
+  const onSubmit = methods.handleSubmit(() =>
+    deleteTree({ params: { uuid: tree.uuid } }, { onSuccess })
+  );
 
   return (
     <Dialog.Root open={open} onOpenChange={onCancel}>
@@ -73,23 +67,22 @@ export function DeleteTreeDialog({
         <Dialog.Content
           onCloseAutoFocus={!isSuccess ? focusOnCancel : undefined}
           className={className}
-          css={css}
         >
-          <Dialog.Header css={{ marginBottom: "$2" }}>
-            {t("title")}
-          </Dialog.Header>
+          <Dialog.Header className="mb-2">{t("title")}</Dialog.Header>
           <Dialog.Description asChild>
-            <Text css={{ marginBottom: "$4", color: "$gray11" }}>
+            <Text className="mb-4 text-gray11">
               {t.rich("description", {
                 treeName: tree.name,
-                bold: (children) => <Bold>{children}</Bold>,
+                bold: (children) => (
+                  <span className="text-gray12">{children}</span>
+                ),
               })}
             </Text>
           </Dialog.Description>
-          <Form.Root state={formState} resetOnSubmit={false}>
+          <Form.Root methods={methods} onSubmit={onSubmit}>
             <Form.Field Label={t("treeNameInput.label")}>
               <Form.Input
-                name={formState.names.treeName}
+                {...methods.register("treeName")}
                 required
                 placeholder={tree.name}
               />

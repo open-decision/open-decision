@@ -1,7 +1,15 @@
 {
   "name": "@open-decision/translations",
-  "main": "index.ts",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "sideEffects": false,
+  "main": "src/index.js",
   "dependencies": {
-    "@open-decision/type-classes": "workspace:*"
+    "remeda": "^1.3.0",
+    "zod": "^3.20.2"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.9",
+    "tslib": "^2.4.1"
   }
 }

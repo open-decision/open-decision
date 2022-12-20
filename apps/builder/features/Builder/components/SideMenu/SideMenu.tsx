@@ -1,26 +1,24 @@
-import { Stack, styled, StyleObject } from "@open-decision/design-system";
+import { Stack } from "@open-decision/design-system";
 import { Separator } from "@open-decision/design-system";
 import { ViewToggle } from "./ViewToggle";
 
-const Container = styled(Stack, {
-  paddingBlock: "$3",
-  alignItems: "center",
-  borderRight: "$border$layer",
-  width: "56px",
-});
-
 type Props = {
-  css?: StyleObject;
+  className?: string;
   selectedView: string;
   children?: React.ReactNode;
 };
 
-export function SideMenu({ css, selectedView, children }: Props) {
+export function SideMenu({ className, selectedView, children }: Props) {
   return (
-    <Container css={css}>
+    <Stack
+      classNames={[
+        "py-3 items-center border-r border-gray7 w-[56px]",
+        className,
+      ]}
+    >
       <ViewToggle selectedView={selectedView} />
-      <Separator css={{ width: "80%", marginTop: "$2" }} />
+      <Separator className="w-[80%] mt-2" />
       {children}
-    </Container>
+    </Stack>
   );
 }

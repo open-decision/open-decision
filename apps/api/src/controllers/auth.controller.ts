@@ -4,7 +4,7 @@ import pickSafeUserProperties from "../utils/pickSafeUserProperties";
 import {
   userService,
   tokenService,
-  createEmailService,
+  emailService,
   authService,
 } from "../services/index";
 import httpStatus from "http-status";
@@ -21,9 +21,9 @@ import {
   TLoginOutput,
   TRegisterOutput,
   TResetPasswordOutput,
-} from "@open-decision/auth-api-specification";
-
-const emailService = createEmailService();
+} from "@open-decision/api-specification";
+import UserHandler from "../models/user.model";
+import { APIError } from "@open-decision/type-classes";
 
 const register = catchAsync(async (req: Request, res: Response) => {
   const reqData = await validateRequest(registerInput)(req);
@@ -36,7 +36,10 @@ const register = catchAsync(async (req: Request, res: Response) => {
   const { refresh, access } = await tokenService.generateAuthTokens(user);
 
   if (user) {
-    const verifyEmailToken = await tokenService.generateVerifyEmailToken(user);
+    const verifyEmailToken = await tokenService.generateVerifyEmailToken(
+      user.uuid
+    );
+
     await emailService?.sendVerificationEmail(user.email, verifyEmailToken);
   }
 
@@ -66,9 +69,9 @@ const login = catchAsync(async (req: Request, res: Response) => {
 });
 
 const logout = catchAsync(async (req: Request, res: Response) => {
-  await validateRequest(logoutInput)(req);
+  const reqData = await validateRequest(logoutInput)(req);
 
-  await authService.logout(res.locals.refreshCookie);
+  await authService.logout(reqData.body.refreshToken);
 
   res.status(httpStatus.NO_CONTENT).send();
 });
@@ -123,10 +126,13 @@ const resetPassword = catchAsync(async (req: Request, res: Response) => {
 
 const sendVerificationEmail = catchAsync(
   async (req: Request, res: Response) => {
+    const user = await UserHandler.findByUuidOrId(req.user.uuid);
+    console.log(user);
+    if (!user) throw new APIError({ code: "UNAUTHENTICATED" });
     const verifyEmailToken = await tokenService.generateVerifyEmailToken(
-      req.user
+      req.user.uuid
     );
-    await emailService?.sendVerificationEmail(req.user.email, verifyEmailToken);
+    await emailService?.sendVerificationEmail(user.email, verifyEmailToken);
     res.status(httpStatus.NO_CONTENT).send();
   }
 );

@@ -1,8 +1,5 @@
-import { safeFetch } from "@open-decision/api-helpers";
-import {
-  TLoginInput,
-  TLoginOutput,
-} from "@open-decision/auth-api-specification";
+import { safeFetchJSON } from "@open-decision/api-helpers";
+import { TLoginInput, TLoginOutput } from "@open-decision/api-specification";
 import { APIError } from "@open-decision/type-classes";
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 
@@ -20,7 +17,7 @@ export function useLoginMutation(
   return useMutation<any, APIError<TLoginInput>, any, unknown>(
     ["login"],
     ({ email, password }) => {
-      return safeFetch(
+      return safeFetchJSON(
         "/api/external-api/auth/login",
         {
           body: { email, password },

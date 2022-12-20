@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "type": "commonjs",
   "sideEffects": false,
-  "main": "src/index.ts",
-  "scripts": {},
+  "main": "src/index.js",
   "dependencies": {
-    "zod": "^3"
+    "tslib": "^2.4.1",
+    "zod": "^3.20.2"
   }
 }

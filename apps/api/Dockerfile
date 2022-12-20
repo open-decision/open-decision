@@ -6,35 +6,21 @@ RUN apt-get update || : && apt-get install -y \
     git \
     openssl
 
-RUN npm i --location=global pnpm
-
-# ------------------------------------------------------------------
-# Fetch node_modules so they can be cached by docker
-FROM base as store
-ENV NODE_ENV=development
-
-WORKDIR /store
-
-COPY pnpm-lock.yaml .npmrc ./
-RUN pnpm fetch
 
 # ------------------------------------------------------------------
 # Install all node_modules, including dev dependencies
 FROM positivly/prisma-binaries:latest as prisma
-FROM store as build
+FROM base as build
 ENV NODE_ENV=development
 
 WORKDIR /app
-RUN mkdir node_modules
-RUN chmod a+rwx -R node_modules
 
 COPY . .
+RUN yarn install
+RUN yarn setup
 
-RUN pnpm install --offline
+RUN yarn dlx nx build api
 
-RUN mkdir dist
-RUN chmod a+rwx -R dist
-RUN pnpm nx build api
 ENV PRISMA_QUERY_ENGINE_BINARY=/prisma-engines/query-engine \
     PRISMA_MIGRATION_ENGINE_BINARY=/prisma-engines/migration-engine \
     PRISMA_INTROSPECTION_ENGINE_BINARY=/prisma-engines/introspection-engine \

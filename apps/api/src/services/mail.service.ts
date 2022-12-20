@@ -1,6 +1,5 @@
 import { logger } from "../config/logger";
 import nodemailer from "nodemailer";
-import { app } from "../app";
 import { MailserverConfig } from "../validations/mailserver.validation";
 import { APIError } from "@open-decision/type-classes";
 
@@ -25,20 +24,15 @@ export function createEmailService() {
     .verify()
     .then(() => {
       logger.info("Connected to email server");
-      app.locals["mailConnection"] = true;
     })
-
-    .catch(() => {
+    .catch((error) => {
+      console.log(error);
       logger.error(
         "Unable to connect to email server. Make sure you have configured the SMTP options in .env"
       );
-      app.locals["mailConnection"] = false;
     });
 
   const sendEmail = async (to: string, subject: string, text: string) => {
-    //FIXME - add error handling
-    if (app.locals.mailConnection != true) return;
-
     try {
       await transporter.sendMail({
         from: config.EMAIL_FROM_ADDRESS,
@@ -83,3 +77,5 @@ If you did not create an account, then ignore this email.`;
     sendVerificationEmail,
   };
 }
+
+export const emailService = createEmailService();

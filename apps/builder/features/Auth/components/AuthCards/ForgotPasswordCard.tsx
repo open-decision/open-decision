@@ -1,11 +1,17 @@
-import { Icon, Link } from "@open-decision/design-system";
+import { Icon, linkClasses } from "@open-decision/design-system";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
 import * as React from "react";
 import { useForgotPasswordMutation } from "../../mutations/useForgotPasswordMutation";
 import { ForgotPasswordForm } from "../AuthForms/ForgotPasswordForm";
-import { AuthCard } from "./";
 import NextLink from "next/link";
+import {
+  containerClasses,
+  descriptionClasses,
+  footerClasses,
+  headerClasses,
+  headingClasses,
+} from "./AuthCard";
 
 export function ForgotPasswordCard() {
   const t = useTranslations("forgotPassword");
@@ -16,42 +22,39 @@ export function ForgotPasswordCard() {
     isSuccess,
   } = useForgotPasswordMutation();
 
-  return !isSuccess ? (
-    <AuthCard.Container>
-      <AuthCard.Header>
-        <AuthCard.Heading>{t("title")}</AuthCard.Heading>
-        <AuthCard.Description>{t("description")}</AuthCard.Description>
-      </AuthCard.Header>
-      <AuthCard.Body>
-        <ForgotPasswordForm
-          onSubmit={forgotPassword}
-          error={error}
-          isLoading={isLoading}
-        />
-      </AuthCard.Body>
-    </AuthCard.Container>
-  ) : (
-    <AuthCard.Container>
-      <AuthCard.Header>
-        <AuthCard.Heading>{t("success.title")}</AuthCard.Heading>
-        <AuthCard.Description>{t("success.description")}</AuthCard.Description>
-      </AuthCard.Header>
-      <AuthCard.Footer>
-        <NextLink passHref href="/auth/login">
-          <Link
-            css={{
-              maxWidth: "max-content",
-              gap: "$1",
-              textStyle: "large-text",
-            }}
-          >
-            <Icon>
-              <ArrowLeftIcon />
-            </Icon>
-            {t("success.loginLink")}
-          </Link>
+  return (
+    <div className={containerClasses}>
+      {!isSuccess ? (
+        <>
+          <header className={headerClasses}>
+            <h2 className={headingClasses}>{t("title")}</h2>
+            <p className={descriptionClasses}>{t("description")}</p>
+          </header>
+          <main>
+            <ForgotPasswordForm
+              onSubmit={forgotPassword}
+              error={error}
+              isLoading={isLoading}
+            />
+          </main>
+        </>
+      ) : (
+        <header className={headerClasses}>
+          <h2 className={headingClasses}>{t("success.title")}</h2>
+          <p className={descriptionClasses}>{t("success.description")}</p>
+        </header>
+      )}
+      <footer className={footerClasses}>
+        <NextLink
+          href="/auth/login"
+          className={linkClasses({ size: "large" }, ["max-w-max gap-1"])}
+        >
+          <Icon>
+            <ArrowLeftIcon />
+          </Icon>
+          {t("success.loginLink")}
         </NextLink>
-      </AuthCard.Footer>
-    </AuthCard.Container>
+      </footer>
+    </div>
   );
 }

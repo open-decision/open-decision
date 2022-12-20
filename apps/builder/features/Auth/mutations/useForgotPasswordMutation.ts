@@ -1,9 +1,9 @@
 import { client } from "@open-decision/api-client";
-import { safeFetch } from "@open-decision/api-helpers";
+import { safeFetchJSON } from "@open-decision/api-helpers";
 import {
   TForgotPasswordInput,
   TForgotPasswordOutput,
-} from "@open-decision/auth-api-specification";
+} from "@open-decision/api-specification";
 import { ODError } from "@open-decision/type-classes";
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 
@@ -20,7 +20,7 @@ export function useForgotPasswordMutation(
 ) {
   const OD = client({
     urlPrefix: `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1`,
-    fetchFunction: safeFetch,
+    fetchFunction: safeFetchJSON,
   });
 
   return useMutation<any, ODError, any, unknown>(

@@ -1,88 +1,48 @@
-import { Edge, Tree } from "@open-decision/type-classes";
+import { Tree } from "@open-decision/tree-type";
 import { assign, createMachine, Interpreter, Sender } from "xstate";
 import {
   InvalidTreeError,
-  MissingEdgeForThruthyConditionException,
-  NoTruthyConditionException,
+  MissingEdgeForThruthyConditionError,
+  NoTruthyConditionError,
 } from "./errors";
 import { canGoBack, canGoForward } from "./methods";
+import { z } from "zod";
 
-export function createInterpreter(
-  json: Tree.TTree,
-  initialNode?: string,
-  interpreterOptions?: InterpreterOptions
-) {
-  const decodedJSON = Tree.Type.safeParse(json);
+export type Resolver = (
+  context: InterpreterContext,
+  event: EVALUATE_NODE_CONDITIONS
+) => (callback: Sender<ResolverEvents>) => void;
 
-  if (!decodedJSON.success) return new InvalidTreeError(decodedJSON.error);
-
-  return createInterpreterMachine(
-    decodedJSON.data,
-    initialNode ?? decodedJSON.data.startNode,
-    interpreterOptions
-  );
-}
-
-type ResolveEvents = {
+export type EVALUATE_NODE_CONDITIONS = {
   type: "EVALUATE_NODE_CONDITIONS";
-  conditionIds: string[];
 };
 
 type ResolverEvents =
   | { type: "VALID_INTERPRETATION"; target: string }
-  | { type: "INVALID_INTERPRETATION"; error: InterpreterErrors };
-
-const resolveConditions =
-  (tree: Tree.TTree) =>
-  (context: InterpreterContext, event: ResolveEvents) =>
-  (callback: Sender<ResolverEvents>) => {
-    const conditions = Tree.getConditions(tree)(event.conditionIds);
-
-    for (const conditionId in conditions) {
-      const condition = conditions[conditionId];
-      const existingAnswerId = context.answers[condition.inputId];
-
-      if (condition.answerId === existingAnswerId) {
-        const edge = Object.values<Edge.TEdge>(tree.edges ?? {}).find(
-          (edge) => edge.conditionId === condition.id
-        );
-
-        if (!edge)
-          return callback({
-            type: "INVALID_INTERPRETATION",
-            error: new MissingEdgeForThruthyConditionException(),
-          });
-
-        return callback({
-          type: "VALID_INTERPRETATION",
-          target: edge.target,
-        });
-      }
-    }
-    callback({
-      type: "INVALID_INTERPRETATION",
-      error: new NoTruthyConditionException(),
-    });
-  };
+  | { type: "INVALID_INTERPRETATION"; error: InterpreterErrors }
+  | { type: "FINAL_INTERPRETATION" };
 
 export type InterpreterErrors =
-  | MissingEdgeForThruthyConditionException
-  | NoTruthyConditionException;
+  | MissingEdgeForThruthyConditionError
+  | NoTruthyConditionError;
+
+export type TAnswer = { [id: string]: { [x: string]: unknown } };
 
 export type InterpreterContext = {
   history: { nodes: string[]; position: number };
-  answers: Record<string, string>;
+  answers: TAnswer;
 };
 
 export type InterpreterEvents =
-  | { type: "ADD_USER_ANSWER"; inputId: string; answerId: string }
-  | { type: "EVALUATE_NODE_CONDITIONS"; conditionIds: string[] }
+  | { type: "ADD_USER_ANSWER"; answer: TAnswer }
   | { type: "RESET" }
+  | { type: "DONE" }
   | { type: "GO_BACK" }
   | { type: "GO_FORWARD" }
   | { type: "RECOVER" }
+  | { type: "RESTART" }
   | ResolverEvents
-  | ResolveEvents;
+  | EVALUATE_NODE_CONDITIONS;
 
 export type InterpreterService = Interpreter<
   InterpreterContext,
@@ -95,13 +55,28 @@ export type InterpreterService = Interpreter<
 export type InterpreterOptions = {
   onError?: (error: InterpreterErrors) => void;
   onSelectedNodeChange?: (nextNodeIs: string) => void;
+  initialNode?: string;
+  onDone?: (context: InterpreterContext) => void;
+  environment: "preview" | "prototype" | "public";
 };
 
 export const createInterpreterMachine = (
-  tree: Tree.TTree,
-  initialNode: string,
-  { onError, onSelectedNodeChange }: InterpreterOptions = {}
+  json: Tree.TTree,
+  TreeType: z.ZodType<Tree.TTree>,
+  resolver: Resolver,
+  { onError, onSelectedNodeChange, initialNode, onDone }: InterpreterOptions = {
+    environment: "preview",
+  }
 ) => {
+  const decodedJSON = TreeType.safeParse(json);
+
+  if (!decodedJSON.success) {
+    console.error(decodedJSON.error);
+    return new InvalidTreeError(decodedJSON.error);
+  }
+
+  const startNode = initialNode ?? decodedJSON.data.startNode;
+
   return createMachine(
     {
       predictableActionArguments: true,
@@ -111,8 +86,11 @@ export const createInterpreterMachine = (
         events: {} as InterpreterEvents,
       },
       context: {
-        history: { nodes: [initialNode], position: 0 },
-        answers: {},
+        history: {
+          nodes: [startNode],
+          position: 0,
+        },
+        answers: {} as TAnswer,
       },
       id: "interpreter",
       initial: "idle",
@@ -120,6 +98,9 @@ export const createInterpreterMachine = (
         RESET: {
           target: "#interpreter.idle",
           actions: "resetToInitialContext",
+        },
+        DONE: {
+          target: "#interpreter.done",
         },
       },
       states: {
@@ -155,6 +136,18 @@ export const createInterpreterMachine = (
               target: "idle",
               actions: "callOnError",
             },
+            FINAL_INTERPRETATION: {
+              target: "done",
+            },
+          },
+        },
+        done: {
+          entry: onDone,
+          on: {
+            RESTART: {
+              target: "idle",
+              actions: "resetToInitialContext",
+            },
           },
         },
       },
@@ -162,14 +155,16 @@ export const createInterpreterMachine = (
     {
       actions: {
         assignAnswerToContext: assign({
-          answers: (context, event) => ({
-            ...context.answers,
-            [event.inputId]: event.answerId,
-          }),
+          answers: (context, event) => {
+            return {
+              ...context.answers,
+              ...event.answer,
+            };
+          },
         }),
         resetToInitialContext: assign((_context, _event) => ({
-          history: { nodes: [initialNode], position: 0 },
-          answers: {},
+          history: { nodes: [startNode], position: 0 },
+          answers: {} as TAnswer,
           Error: undefined,
         })),
         goBack: assign((context) => {
@@ -231,7 +226,7 @@ export const createInterpreterMachine = (
         }),
       },
       services: {
-        resolveConditions: resolveConditions(tree),
+        resolveConditions: resolver,
       },
       guards: {
         canGoBack,

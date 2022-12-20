@@ -1,12 +1,9 @@
 import {
   Heading,
   Icon,
-  Label,
   Stack,
-  styled,
-  activeSelector,
-  intentSelector,
   LoadingSpinner,
+  labelClasses,
 } from "@open-decision/design-system";
 import { AvatarIcon } from "@radix-ui/react-icons";
 import { BaseHeader } from "../components";
@@ -38,27 +35,6 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   };
 };
 
-const SideMenuLink = styled("a", Label, {
-  position: "relative",
-  padding: "$2 $3",
-  borderRadius: "$md",
-  textDecoration: "none",
-  colorScheme: "primary",
-  border: "2px solid transparent",
-
-  [`${activeSelector}`]: {
-    backgroundColor: "$colorScheme2",
-    borderColor: "$colorScheme6",
-  },
-
-  [`${intentSelector}`]: {
-    backgroundColor: "$colorScheme3",
-    focusColor: "$colorScheme7",
-  },
-});
-
-SideMenuLink.defaultProps = { size: "medium" };
-
 export default function SettingsPage() {
   const t = useTranslations("settings");
   const { data: user, isLoading, isSuccess } = useUser().useUserQuery();
@@ -73,30 +49,27 @@ export default function SettingsPage() {
         <Head>
           <title>{t("pageTitle")}</title>
         </Head>
-        <BaseHeader css={{ gridColumn: "1 / -1" }} />
-        <Heading
-          size="large"
-          as="h1"
-          css={{ gridColumn: "2 / 4", marginBlock: "$9 $7" }}
-        >
+        <BaseHeader className="col-span-full" />
+        <Heading size="large" as="h1" className="col-[2/4] mt-9 mb-7">
           {t("title")}
         </Heading>
-        <Stack css={{ gap: "$1", gridColumn: "2" }}>
-          <Link href="#account" passHref>
-            <SideMenuLink data-active>
-              <Icon css={{ fontSize: "1.5em" }}>
-                <AvatarIcon />
-              </Icon>
-              {t("account.title")}
-            </SideMenuLink>
+        <Stack className="gap-1 col-[2]">
+          <Link
+            className={labelClasses(
+              { size: "medium" },
+              "relative px-2 py-3 rounded-md no-underline colorScheme-primary border-2 border-transparent active:bg-colorScheme2 active:border-colorScheme6 intent:bg-colorScheme3 intent:border-colorScheme7"
+            )}
+            href="#account"
+            data-active
+          >
+            <Icon>
+              <AvatarIcon />
+            </Icon>
+            {t("account.title")}
           </Link>
         </Stack>
-        <Stack css={{ gridColumn: 3 }}>
-          <Stack
-            css={{
-              gap: "$3",
-            }}
-          >
+        <Stack className="col-[3]">
+          <Stack className="gap-3">
             <ChangePassword user={user} />
             <ChangeEmail user={user} />
             <DeleteAccount user={user} />

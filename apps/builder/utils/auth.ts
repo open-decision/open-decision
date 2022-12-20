@@ -1,6 +1,6 @@
 import { client } from "@open-decision/api-client";
-import { safeFetch } from "@open-decision/api-helpers";
-import { TLoginOutput } from "@open-decision/auth-api-specification";
+import { safeFetchJSON } from "@open-decision/api-helpers";
+import { TLoginOutput } from "@open-decision/api-specification";
 import { APIError, isAPIError } from "@open-decision/type-classes";
 import { serialize } from "cookie";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
@@ -45,7 +45,7 @@ export const setCookieHeaders = (
 
 const OD = client({
   urlPrefix: `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1`,
-  fetchFunction: safeFetch,
+  fetchFunction: safeFetchJSON,
 });
 
 export const withAuthRefresh =

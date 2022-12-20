@@ -1,15 +1,14 @@
 import { WebSocketServer } from "ws";
-import catchAsync from "../utils/catchAsync";
+import { catchAsyncWebsocket } from "../utils/catchAsync";
 import { wsAuth } from "../middlewares/auth";
 import { setupWSConnection } from "y-websocket/bin/utils";
 import { setPersistence } from "y-websocket/bin/utils";
 import { hasPermissionsForTree } from "../services/permission.service";
 import * as http from "http";
-import * as net from "net";
 import * as Y from "yjs";
 import prisma from "../init-prisma-client";
-import buffer from "../utils/buffer";
 import { logger } from "../config/logger";
+import { encodeYDoc, decodeYDoc } from "@open-decision/tree-utils";
 
 export const wss = new WebSocketServer({
   noServer: true,
@@ -21,8 +20,8 @@ wss.on("connection", (websocket, request) => {
   });
 });
 
-export const websocketUpgradeHandler = catchAsync(
-  async (request: http.IncomingMessage, socket: net.Socket, head: Buffer) => {
+export const websocketUpgradeHandler = catchAsyncWebsocket(
+  async (request, socket, head) => {
     wsAuth(request, async function next(err, client) {
       logger.info(
         `${socket.remoteAddress}:wss ${request.url?.split("?auth")[0]} upgrade`
@@ -69,24 +68,26 @@ export const websocketUpgradeHandler = catchAsync(
 export const setupSyncBindings = () => {
   setPersistence({
     bindState: async (docName, ydoc) => {
-      const persistedDoc = await getYDocFromDatabase(docName); // retrieve the original Yjs doc here
-      if (persistedDoc) {
-        Y.applyUpdate(ydoc, persistedDoc as any);
+      const encodedYDoc = await getYDocFromDatabase(docName); // retrieve the original Yjs doc here
+      if (encodedYDoc) {
+        decodeYDoc(encodedYDoc, ydoc);
       }
     },
     writeState: async (docName, ydoc) => {
-      await saveYDocToDatabase(docName, Y.encodeStateAsUpdate(ydoc));
+      await saveYDocToDatabase(docName, ydoc);
     },
   });
 };
 
-const saveYDocToDatabase = async (docName: string, yData) => {
+const saveYDocToDatabase = async (docName: string, yDoc: Y.Doc) => {
+  const encodedYDocument = encodeYDoc(yDoc);
+
   await prisma.decisionTree.updateMany({
     where: {
       uuid: { equals: docName },
     },
     data: {
-      yDocument: buffer.toBase64(yData),
+      yDocument: encodedYDocument,
     },
   });
 };
@@ -99,7 +100,7 @@ const getYDocFromDatabase = async (docName: string) => {
   });
 
   if (!data?.yDocument) return false;
-  return buffer.fromBase64(data.yDocument);
+  return data.yDocument;
 };
 
 const getUuidFromRequest = (request: http.IncomingMessage) => {
