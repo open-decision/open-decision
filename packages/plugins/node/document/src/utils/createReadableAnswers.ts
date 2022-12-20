@@ -74,8 +74,6 @@ export function createReadableAnswers(
     FormAnswerType | DecisionAnswerType | GroupAnswerType
   > = {};
 
-  console.log(answers);
-
   for (const answerId in answers) {
     const answer = answers[answerId];
     const parsedAnswer = getValidAnswer(answer);

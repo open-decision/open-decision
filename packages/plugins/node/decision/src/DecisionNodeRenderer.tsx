@@ -24,17 +24,18 @@ export const DecisionNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
   });
 
   const answer = DecisionNode.getAnswer(node.id, getAnswers());
-  const methods = Form.useForm<{ answer: string }>({
-    defaultValues: answer ? { answer: answer.data.value } : {},
+  const methods = Form.useForm<{ [x: string]: string }>({
+    defaultValues:
+      answer && node.data.input ? { [node.data.input]: answer.data.value } : {},
   });
 
   const onSubmit = methods.handleSubmit((values) => {
+    if (!node.data.input) return;
+
     const answer = DecisionNode.createVariable(
       node.id,
-      values.answer
+      values[node.data.input]
     )(treeClient);
-
-    console.log(answer);
 
     if (!answer) return;
 

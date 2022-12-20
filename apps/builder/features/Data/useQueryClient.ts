@@ -44,7 +44,7 @@ export function useQueryClient() {
           },
           mutations: {
             onError(error) {
-              console.log(error);
+              console.error(error);
               if (!isODError(error)) {
                 return addNotification({
                   title: t("UNEXPECTED_ERROR.short"),
