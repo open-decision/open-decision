@@ -1,46 +1,28 @@
-import {
-  createUserFixture,
-  getFromEnv,
-  insertUsers,
-} from "@open-decision/test-utils";
-import { test, expect } from "@playwright/test";
-import { de } from "@open-decision/translations";
-import { User } from "@open-decision/prisma";
+import { forgotPasswordUrl } from "@open-decision/api-specification";
+import { pwTest } from "@open-decision/test-utils";
+import { expect } from "@playwright/test";
 
-test.beforeEach(async ({ page }, testInfo) => {
-  testInfo.snapshotSuffix = "";
-  const user = createUserFixture();
-  await insertUsers([user]);
-  process.env["user"] = JSON.stringify(user);
+pwTest(
+  "should send password reset request and show success message",
+  async ({ forgotPasswordPage }) => {
+    // This does actually send an email. The service is limited however so our credit can be used up.
+    pwTest.fixme();
+    const user = await forgotPasswordPage.User.insert();
 
-  await page.goto("/auth/login");
-  await page
-    .locator(`text=${de.common.passwordInput.forgotPasswordLink}`)
-    .click();
+    await forgotPasswordPage.emailField.input.fill(user.email);
 
-  await expect(page).toHaveURL("/auth/forgot_password");
-});
+    await Promise.all([
+      forgotPasswordPage.page.waitForResponse(`**${forgotPasswordUrl}`),
+      forgotPasswordPage.submitButton.click(),
+    ]);
 
-test("should send password reset request and show success message", async ({
-  page,
-}) => {
-  const user = getFromEnv<User>("user");
-  await page
-    .locator(`label >> text=${de.common.emailInput.label}`)
-    .fill(user.email);
-  await page
-    .locator(`button >> text=${de.forgotPassword.submitButton}`)
-    .click();
+    await expect(forgotPasswordPage.successTitle).toBeVisible();
 
-  await expect(
-    page.locator(`text=${de.forgotPassword.success.title}`)
-  ).toBeVisible();
+    await Promise.all([
+      forgotPasswordPage.page.waitForNavigation(),
+      forgotPasswordPage.loginLink.click(),
+    ]);
 
-  await page.locator(`text=${de.forgotPassword.success.loginLink}`).click();
-  await expect(page).toHaveURL("/auth/login");
-});
-
-// TODO not sure how to implement this
-test("should send email", async ({ page }) => {
-  test.fixme();
-});
+    await expect(forgotPasswordPage.page).toHaveURL("/auth/login");
+  }
+);

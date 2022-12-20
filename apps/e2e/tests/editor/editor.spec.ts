@@ -1,478 +1,307 @@
-import { getFromEnv } from "@open-decision/test-utils";
-import { test, expect, Page } from "@playwright/test";
+import { expect } from "@playwright/test";
 import { de } from "@open-decision/translations";
-import { t } from "../../utils/internationalize";
-import { withUniqueUser } from "../../utils/szenarios/withUniqueUser";
-import { WithTrees, withTrees } from "../../utils/szenarios/withTrees";
 import {
-  openProjectMenu,
-  openPublishedTreeAction,
-  openPublishSubMenu,
-  publishTreeAction,
-} from "../../utils/locators/projectMenu";
-import {
-  openPreviewPage,
-  openPreviewPopover,
-  togglePreviewCheckbox,
-} from "../../utils/locators/previewPopover";
+  DashboardPage,
+  PrototypePage,
+  pwTest,
+} from "@open-decision/test-utils";
 
-const generateNodeLocator = (content?: string, selected = true) =>
-  `[aria-label="${t(de.builder.canvas.questionNode.empty.hiddenLabel)({
-    content: (content?.length ?? 0) > 0,
-    name: content,
-    selected,
-  })}"]`;
+pwTest.describe.configure({ mode: "parallel" });
 
-const locateNode = (page: Page, content?: string, selected?: boolean) =>
-  page.locator(generateNodeLocator(content, selected));
+pwTest("should be able to create new node", async ({ nodeEditorPage }) => {
+  await nodeEditorPage.editor.createNodeButton.click();
 
-const expectSelectedNodeToBeVisible = async (page: Page, content?: string) => {
-  // ------------------------------------------------------------------
-  // FIXME - React flow has an issue with fitView resulting in the tree not being shown in
-  // the center every time.
-  await page
-    .locator(
-      `role=button[name="${de.builder.canvas.zoomInAndOut.fitView.hiddenLabel}"]`
-    )
-    .click();
-
-  await page.waitForTimeout(2000);
-  // ------------------------------------------------------------------
+  await expect(nodeEditorPage.editor.getSidebarLocator()).toBeVisible();
 
   await expect(
-    page.locator(
-      `aside >> text=${de.builder.nodeEditingSidebar.nameInput.label}`
-    )
+    nodeEditorPage.editor.getNodeLocator({
+      selected: true,
+    })
   ).toBeVisible();
-
-  await expect(locateNode(page, content, true)).toBeVisible();
-};
-
-withUniqueUser("editor");
-withTrees();
-
-// eslint-disable-next-line no-empty-pattern
-test.beforeEach(async ({}, testInfo) => {
-  testInfo.snapshotSuffix = "";
 });
 
-test("should be able to open a tree", async ({ page }) => {
-  const trees = getFromEnv<WithTrees>("trees");
-  await page.goto("/");
-  await page.locator(`h2 >> text=${trees.activeTree.name}`).click();
+pwTest.describe("node search", () => {
+  pwTest(
+    "should filter nodes by name based on search query",
+    async ({ nodeEditorPage }) => {
+      await nodeEditorPage.header.nodeSearch.input.fill("Willkommen");
 
-  await expect(page).toHaveURL(/builder\/*/);
-});
+      await expect(
+        nodeEditorPage.header.nodeSearch.getOptionLocator("Mangel")
+      ).not.toBeVisible();
 
-test.beforeEach(async ({ page }) => {
-  const trees = getFromEnv<WithTrees>("trees");
+      await nodeEditorPage.header.nodeSearch.selectOption("Willkommen");
 
-  await page.goto(`/builder/${trees.activeTree.uuid}`);
-  await page.waitForSelector(
-    generateNodeLocator("Wirksamer Mietvertrag", false)
+      await expect(nodeEditorPage.editor.getSidebarLocator()).toHaveValue(
+        "Willkommen"
+      );
+
+      await expect(
+        nodeEditorPage.editor.getNodeLocator({
+          content: "Willkommen",
+          selected: true,
+        })
+      ).toBeVisible();
+    }
+  );
+
+  pwTest(
+    "should be able to create node with search queries name",
+    async ({ nodeEditorPage }) => {
+      await nodeEditorPage.header.nodeSearch.input.fill(
+        "Nicht existierender Knoten"
+      );
+      await nodeEditorPage.header.nodeSearch.selectOption(
+        "Nicht existierender Knoten"
+      );
+
+      await expect(nodeEditorPage.editor.getSidebarLocator()).toHaveValue(
+        "Nicht existierender Knoten"
+      );
+
+      await expect(
+        nodeEditorPage.editor.getNodeLocator({
+          content: "Nicht existierender Knoten",
+          selected: true,
+        })
+      ).toBeVisible();
+    }
   );
 });
 
-test("should be able to create new node", async ({ page }) => {
-  await page
-    .locator(`role=button[name="${de.builder.createNodeButton.hiddenLabel}"]`)
-    .click();
+pwTest.describe("canvas", () => {
+  pwTest("should be able to pan around", async ({ nodeEditorPage }) => {
+    await nodeEditorPage.editor.pan(100, 100);
 
-  await expectSelectedNodeToBeVisible(page);
-});
-
-test.describe("node search", () => {
-  test("should filter nodes by name based on search query", async ({
-    page,
-  }) => {
-    await page
-      .locator(`[placeholder="${de.builder.nodeSearch.placeholder}"]`)
-      .type("Wirksamer Mietvertrag");
-
-    await expect(page.locator(`role=option >> text=Mangel`)).not.toBeVisible();
-    await page.locator(`role=option >> text=Wirksamer Mietvertrag`).click();
-
-    await expectSelectedNodeToBeVisible(page, "Wirksamer Mietvertrag");
+    await expect(nodeEditorPage.editor.canvas).toHaveScreenshot();
   });
 
-  test("should be able to create node with search queries name", async ({
-    page,
-  }) => {
-    await page.waitForTimeout(100);
-    await page
-      .locator(`[placeholder="${de.builder.nodeSearch.placeholder}"]`)
-      .fill("nicht existierender Knoten");
-
-    await page
-      .locator(`role=option >> text=nicht existierender Knoten`)
-      .click();
-
-    await expectSelectedNodeToBeVisible(page, "nicht existierender Knoten");
-  });
-});
-
-test.describe("canvas", () => {
-  test("should be able to pan around", async ({ page }) => {
-    await page.mouse.move(200, 200);
-    await page.mouse.down();
-    await page.mouse.move(500, 500);
-    await page.mouse.up();
-
-    await expect(page.locator("data-test=canvas")).toHaveScreenshot();
-  });
-
-  test("should be able to zoom in and out", async ({ page }) => {
+  pwTest("should be able to zoom in and out", async ({ nodeEditorPage }) => {
     // zoom out with mouse wheel
-    await page.mouse.move(200, 200);
-    await page.keyboard.down("Control");
-    await page.mouse.wheel(0, 500);
-    await page.keyboard.up("Control");
+    await nodeEditorPage.editor.zoom(500);
 
-    await expect(page.locator("data-test=canvas")).toHaveScreenshot();
+    await expect(nodeEditorPage.editor.canvas).toHaveScreenshot();
 
-    // zoom in with mouse wheel
-    await page.keyboard.down("Control");
-    await page.mouse.wheel(0, -500);
-    await page.keyboard.up("Control");
+    await nodeEditorPage.editor.zoom(-500);
 
-    await expect(page.locator("data-test=canvas")).toHaveScreenshot();
+    await expect(nodeEditorPage.editor.canvas).toHaveScreenshot();
 
     // zoom out with buttons
-    await page
-      .locator(
-        `role=button[name="${de.builder.canvas.zoomInAndOut.zoomOut.hiddenLabel}"]`
-      )
-      .click();
+    await nodeEditorPage.editor.zoomOutButton.click();
 
-    await expect(page.locator("data-test=canvas")).toHaveScreenshot();
+    await expect(nodeEditorPage.editor.canvas).toHaveScreenshot();
 
     // zoom in with buttons
-    await page
-      .locator(
-        `role=button[name="${de.builder.canvas.zoomInAndOut.zoomIn.hiddenLabel}"]`
-      )
-      .click();
+    await nodeEditorPage.editor.zoomInButton.click();
 
-    await expect(page.locator("data-test=canvas")).toHaveScreenshot();
+    await expect(nodeEditorPage.editor.canvas).toHaveScreenshot();
   });
 
-  test("should be able to drag nodes around", async ({ page }) => {
-    await page
-      .locator(`text=Wirksamer Mietvertrag`)
-      .dragTo(page.locator(`text=Sachmangel`));
+  pwTest("should be able to drag nodes around", async ({ nodeEditorPage }) => {
+    await nodeEditorPage.editor
+      .getNodeLocator({ content: "Willkommen", selected: false })
+      .dragTo(
+        nodeEditorPage.editor.getNodeLocator({
+          content: "Lizenzart",
+          selected: false,
+        })
+      );
 
-    await expect(page.locator("data-test=canvas")).toHaveScreenshot();
+    await expect(nodeEditorPage.editor.canvas).toHaveScreenshot();
   });
 
-  test("should be able to connect two nodes", async ({ page }) => {
-    await page.waitForTimeout(100);
-    await page
-      .locator(`role=button[name="${de.builder.createNodeButton.hiddenLabel}"]`)
-      .click();
+  pwTest(
+    "should be able to delete node with the backspace key",
+    async ({ nodeEditorPage }) => {
+      await nodeEditorPage.editor.selectNode({
+        content: "Willkommen",
+        selected: false,
+      });
+      await nodeEditorPage.page.keyboard.press("Backspace");
 
-    await page.waitForSelector(
-      `[aria-label="${t(de.builder.canvas.questionNode.empty.hiddenLabel)({
-        content: false,
-        name: "",
+      await expect(
+        nodeEditorPage.editor.getNodeLocator({
+          content: "Willkommen",
+          selected: false,
+        })
+      ).not.toBeVisible();
+
+      await expect(
+        nodeEditorPage.editor.getEdgeLocator(
+          "2ccf5f67-3149-4434-a5d6-51760b48fe2f_71b50b99-60fb-488f-a26d-a261b16292b5"
+        )
+      ).not.toBeVisible();
+    }
+  );
+
+  pwTest(
+    "should not be able to delete start node",
+    async ({ nodeEditorPage }) => {
+      // The start node concept is not correctly implemented yet
+      pwTest.fixme();
+    }
+  );
+
+  pwTest("should be able to deselect a node", async ({ nodeEditorPage }) => {
+    await nodeEditorPage.editor.selectNode({
+      content: "Willkommen",
+      selected: false,
+    });
+
+    await expect(
+      nodeEditorPage.editor.getNodeLocator({
+        content: "Willkommen",
         selected: true,
-      })}"]`
-    );
-
-    await page
-      .locator(`data-test=2ccf5f67-3149-4434-a5d6-51760b48fe2f-source-port`)
-      .dragTo(locateNode(page));
-
-    await expect(page.locator("data-test=canvas")).toHaveScreenshot();
-  });
-
-  test("should be able to delete node", async ({ page }) => {
-    await locateNode(page, "Wirksamer Mietvertrag", false).click();
-    await page.keyboard.press("Backspace");
-
-    await expect(
-      page.locator(`data-test=questionNode`, {
-        hasText: "Wirksamer Mietvertrag",
       })
-    ).not.toBeVisible();
+    ).toBeVisible();
+
+    await nodeEditorPage.editor.canvas.click();
+
     await expect(
-      page.locator(
-        `data-test=2ccf5f67-3149-4434-a5d6-51760b48fe2f_71b50b99-60fb-488f-a26d-a261b16292b5_edge`
-      )
-    ).not.toBeVisible();
-  });
-
-  test("should not be able to delete start node", async ({ page }) => {
-    // Currently no alert is shown when trying to delete the start node
-    test.fixme();
-    await page.locator(`text=eine Frage`).click();
-    await page.keyboard.press("Backspace");
-
-    await expect(page.locator(`role=alert`)).toBeVisible();
-  });
-
-  test("should be able to deselect a node", async ({ page }) => {
-    await locateNode(page, "Wirksamer Mietvertrag", false).click();
-
-    await expect(locateNode(page, "Wirksamer Mietvertrag")).toBeVisible();
-
-    await page.locator(`data-test=canvas`).click();
-
-    await expect(locateNode(page, "Wirksamer Mietvertrag")).not.toBeVisible();
-    await expect(
-      locateNode(page, "Wirksamer Mietvertrag", false)
+      nodeEditorPage.editor.getNodeLocator({
+        content: "Willkommen",
+        selected: false,
+      })
     ).toBeVisible();
   });
 
-  test.describe("multi select", () => {
-    test("should be able to select multiple nodes at once", async ({
-      page,
-    }) => {
-      //expect sidebar not to open
-      test.fixme();
-    });
-
-    test("should be able to drag multi selected nodes together", async ({
-      page,
-    }) => {
-      test.fixme();
-    });
-
-    test("should be able to delete multi selected nodes", async ({ page }) => {
-      //expect startnode not to be deleted
-      test.fixme();
-    });
-    test("should be able to deselect nodes", async ({ page }) => {
-      test.fixme();
-    });
-  });
-});
-
-test.describe("node editing sidebar", () => {
-  test("should be able to give name to node", async ({ page }) => {
-    await locateNode(page, "Wirksamer Mietvertrag", false).click();
-    await page
-      .locator(`label >> text=${de.builder.nodeEditingSidebar.nameInput.label}`)
-      .fill("Nicht wirksamer Mietvertrag");
-
-    await expect(locateNode(page, "Nicht wirksamer Mietvertrag")).toBeVisible();
-  });
-
-  test("should be able to edit content of node", async ({ page }) => {
-    const richTextEditor = page.locator(
-      `data-test=richTextEditor >> [contenteditable=true]`
+  pwTest.describe("multi select", () => {
+    pwTest(
+      "should be able to select multiple nodes at once",
+      async ({ nodeEditorPage }) => {
+        pwTest.fixme();
+      }
     );
-    await locateNode(page, "Sachmangel", false).click();
-    await richTextEditor.fill("Hello World");
 
-    await expect(richTextEditor).toContainText("Hello World");
-  });
-
-  //FIXME after preview is updated
-  test("should be able to open preview at the selected node", async ({
-    page,
-  }) => {
-    test.fixme();
-  });
-
-  test("should not be able to delete the startnode", async ({ page }) => {
-    await locateNode(page, "Start", false).click();
-
-    await page
-      .locator(
-        `text=${t(de.builder.nodeEditingSidebar.menu.iconLabel)({
-          name: "Start",
-        })}`
-      )
-      .click();
-
-    const deleteOption = page.locator(
-      `text=${de.builder.nodeEditingSidebar.menu.deleteNode.label}`
+    pwTest(
+      "should be able to drag multi selected nodes together",
+      async ({ nodeEditorPage }) => {
+        pwTest.fixme();
+      }
     );
-    await deleteOption.hover();
-    await expect(
-      page.locator(
-        `role=tooltip >> text=${de.builder.nodeEditingSidebar.menu.deleteNode.disabledForStartNodeLabel}`
-      )
-    ).toBeVisible();
-    await deleteOption.click();
 
-    await expect(locateNode(page, "Start")).toBeVisible();
-  });
-
-  test("should be able to reassign start node", async ({ page }) => {
-    await locateNode(page, "Wirksamer Mietvertrag", false).click();
-
-    await page
-      .locator(
-        `text=${t(de.builder.nodeEditingSidebar.menu.iconLabel)({
-          name: "Wirksamer Mietvertrag",
-        })}`
-      )
-      .click();
-
-    await page
-      .locator(`text=${de.builder.nodeEditingSidebar.menu.makeStartNode.label}`)
-      .click();
-
-    await expect(page.locator(`aside >> text=Start`)).toBeVisible();
-  });
-
-  test("should be able to delete node", async ({ page }) => {
-    await locateNode(page, "Wirksamer Mietvertrag", false).click();
-
-    await page
-      .locator(
-        `text=${t(de.builder.nodeEditingSidebar.menu.iconLabel)({
-          name: "Wirksamer Mietvertrag",
-        })}`
-      )
-      .click();
-
-    await page
-      .locator(`text=${de.builder.nodeEditingSidebar.menu.deleteNode.label}`)
-      .click();
-
-    await expect(
-      locateNode(page, "Wirksamer Mietvertrag", false)
-    ).not.toBeVisible();
-  });
-
-  test("should be able to select parent nodes", async ({ page }) => {
-    await locateNode(page, "Wirksamer Mietvertrag", false).click();
-
-    await page
-      .locator(`text=${de.builder.nodeEditingSidebar.parentNodeSelector.label}`)
-      .click();
-
-    await page.locator(`role=menuitem >> text=Start`).click();
-
-    await expect(locateNode(page, "Start")).toBeVisible();
+    pwTest(
+      "should be able to delete multi selected nodes",
+      async ({ nodeEditorPage }) => {
+        pwTest.fixme();
+      }
+    );
+    pwTest("should be able to deselect nodes", async ({ nodeEditorPage }) => {
+      pwTest.fixme();
+    });
   });
 });
 
-test("should be able to go back to Dashboard", async ({ page }) => {
-  await page.locator(`text=${de.common.header.homeButtonHiddenLabel}`).click();
-  await expect(page).toHaveURL("/");
+pwTest("should be able to go back to Dashboard", async ({ nodeEditorPage }) => {
+  await Promise.all([
+    nodeEditorPage.page.waitForNavigation(),
+    nodeEditorPage.header.goHome(),
+  ]);
+
+  await expect(nodeEditorPage.page).toHaveURL("/");
 });
 
-test.describe("project menu", () => {
-  test.beforeEach(async ({ page }) => {
-    const trees = getFromEnv<WithTrees>("trees");
-    await page
-      .locator(`button >> text=${trees.activeTree.name}`)
-      .dispatchEvent("pointerdown");
-  });
+pwTest.describe("project menu", () => {
+  pwTest("should be able to change tree name", async ({ nodeEditorPage }) => {
+    await nodeEditorPage.header.projectMenuDropdown.changeName(
+      "Neuer Baumname"
+    );
 
-  test("should be able to change tree name", async ({ page }) => {
-    await page.locator(`text=${de.common.projectMenu.changeName}`).click();
-
-    await page
-      .locator(
-        `label >> text=${de.common.updateTreeDialog.treeNameInput.label}`
+    await expect(
+      nodeEditorPage.notification.getLocator(
+        de.common.notifications.updateProject.title
       )
-      .fill("Neuer Baumname");
-
-    await Promise.all([
-      page.waitForResponse("/api/external-api/trees/*"),
-      page
-        .locator(`button >> text=${de.common.updateTreeDialog.submit}`)
-        .click(),
-    ]);
-
-    await expect(
-      page.locator(`text=${de.common.notifications.updateProject.title}`)
     ).toBeVisible();
+
     await expect(
-      page.locator(`text=${de.common.updateTreeDialog.title}`)
+      nodeEditorPage.header.projectMenuDropdown.changeNameDialog.title
     ).not.toBeVisible();
-    await expect(page.locator(`text=Neuer Baumname`)).toBeVisible();
+
+    await expect(
+      nodeEditorPage.page.locator(`text=Neuer Baumname`)
+    ).toBeVisible();
   });
 
-  test("should be able to export tree", async ({ page }) => {
-    await page.locator(`text=${de.common.projectMenu.export}`).click();
-
-    await page
-      .locator(`text=${de.common.exportDialog.customization.nameInput.label}`)
-      .fill("Export Name");
-    await page
-      .locator(`text=${de.common.exportDialog.customization.submit}`)
-      .click();
+  pwTest("should be able to export tree", async ({ nodeEditorPage }) => {
+    const exportedFileName = "Export Name";
 
     const [download] = await Promise.all([
       // It is important to call waitForEvent before click to set up waiting.
-      page.waitForEvent("download"),
+      nodeEditorPage.page.waitForEvent("download"),
       // Triggers the download.
-      page.locator(`a >> text=${de.common.exportDialog.save.cta}`).click(),
+      await nodeEditorPage.header.projectMenuDropdown.export(exportedFileName),
     ]);
 
-    await expect(download.suggestedFilename()).toBe("Export Name.json");
-    await expect(
-      page.locator(`text=${de.common.notifications.export.title}`)
-    ).toBeVisible();
+    expect(download.suggestedFilename()).toBe(`${exportedFileName}.json`);
   });
 
-  test("should be able to delete tree", async ({ page }) => {
-    const trees = getFromEnv<WithTrees>("trees");
-    await page.locator(`text=${de.common.projectMenu.delete}`).click();
+  pwTest("should be able to delete tree", async ({ nodeEditorPage }) => {
+    await Promise.all([
+      nodeEditorPage.page.waitForNavigation(),
+      await nodeEditorPage.header.projectMenuDropdown.delete(),
+      expect(
+        nodeEditorPage.notification.getLocator(
+          de.common.notifications.deleteProject.title
+        )
+      ).toBeVisible(),
+    ]);
 
-    await page
-      .locator(`text=${de.common.deleteTreeDialog.treeNameInput.label}`)
-      .fill(trees.activeTree.name);
+    const dashboardPage = new DashboardPage(
+      nodeEditorPage.page,
+      nodeEditorPage.user,
+      { [nodeEditorPage.tree.uuid]: nodeEditorPage.tree },
+      nodeEditorPage.dataFixtures
+    );
 
-    await page
-      .locator(`button >> text=${de.common.deleteTreeDialog.submit}`)
-      .click();
+    await expect(dashboardPage.page).toHaveURL("/");
 
-    await expect(page).toHaveURL("/");
     await expect(
-      page.locator(`text=${de.common.notifications.deleteProject.title}`)
-    ).toBeVisible();
-    await expect(
-      page.locator(`h2 >> text=${trees.activeTree.name}`)
+      dashboardPage.getProjectCardLocator(nodeEditorPage.tree.name)
     ).not.toBeVisible();
   });
 });
 
-test("should be able to navigate to renderer", async ({ page, context }) => {
-  const trees = getFromEnv<WithTrees>("trees");
+pwTest(
+  "should be able to navigate to renderer",
+  async ({ nodeEditorPage, context }) => {
+    await nodeEditorPage.header.projectMenuDropdown.publish();
+    await nodeEditorPage.header.projectMenuDropdown.openPublishSubMenu();
 
-  await openProjectMenu(page, trees.activeTree.name);
-  await openPublishSubMenu(page);
-  await publishTreeAction(page);
+    const [newPage] = await Promise.all([
+      context.waitForEvent("page"),
+      nodeEditorPage.header.projectMenuDropdown.publishMenu.openRenderer.click(),
+    ]);
 
-  await openProjectMenu(page, trees.activeTree.name);
-  await openPublishSubMenu(page);
+    await newPage.waitForLoadState();
 
-  const [newPage] = await Promise.all([
-    context.waitForEvent("page"),
-    openPublishedTreeAction(page),
-  ]);
+    await expect(newPage).toHaveURL(/\/public*/);
+    await expect(newPage.locator("h1 >> text=AuROA")).toBeVisible();
+  }
+);
 
-  await expect(newPage).toHaveURL(/\/public*/);
-  await expect(newPage.locator("text=Willkommen")).toBeVisible();
-});
+pwTest(
+  "should be able to activate and deactivate the prototype",
+  async ({ nodeEditorPage, context }) => {
+    // FIXME The api returns a 404 when the hasPreview flag is set to false
+    pwTest.fixme();
+    await nodeEditorPage.header.prototypeDialog.open();
+    await nodeEditorPage.header.prototypeDialog.toggleCheckbox();
 
-test("should be able to activate and deactivate the preview", async ({
-  page,
-  context,
-}) => {
-  await openPreviewPopover(page);
-  await togglePreviewCheckbox(page);
-  const [newPage] = await Promise.all([
-    context.waitForEvent("page"),
-    openPreviewPage(page),
-  ]);
+    const [newPage] = await Promise.all([
+      context.waitForEvent("page"),
+      nodeEditorPage.header.prototypeDialog.openPrototype(),
+    ]);
 
-  await expect(newPage).toHaveURL(/\/*preview/);
-  await expect(newPage.locator("text=Willkommen")).toBeVisible();
+    const prototypePage = new PrototypePage(newPage, nodeEditorPage.tree);
 
-  await Promise.all([
-    page.waitForLoadState("networkidle"),
-    togglePreviewCheckbox(page),
-  ]);
+    await expect(prototypePage.page).toHaveURL(/\/*prototype/);
+    await expect(prototypePage.page.locator("text=Willkommen")).toBeVisible();
 
-  await newPage.reload();
-  await expect(
-    newPage.locator(`text=${de.common.errors.PREVIEW_NOT_ENABLED.long}`)
-  ).toBeVisible();
-});
+    await nodeEditorPage.header.prototypeDialog.toggleCheckbox();
+
+    await prototypePage.page.reload();
+    await expect(
+      prototypePage.getErrorLocator(de.common.errors.PREVIEW_NOT_ENABLED.long)
+    ).toBeVisible();
+  }
+);

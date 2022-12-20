@@ -2,16 +2,17 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/e2e/src",
   "projectType": "application",
+  "implicitDependencies": ["prisma"],
   "targets": {
     "start:db": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "commands": ["docker compose -f docker-compose.yml up -d"],
         "cwd": "apps/e2e"
       }
     },
     "cleanup": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "commands": [
           "docker compose -f docker-compose.yml down",
@@ -21,41 +22,97 @@
       }
     },
     "test": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
-        "command": "pnpm playwright test",
+        "command": "playwright test --config=../../playwright.config.ts",
         "cwd": "apps/e2e"
       },
-      "dependsOn": [{ "target": "build", "projects": "dependencies" }]
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": "dependencies"
+        },
+        {
+          "target": "setup",
+          "projects": "dependencies"
+        }
+      ]
+    },
+    "test:single": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "playwright test --config=../../playwright.config.ts -g '{args.name}' --headed",
+        "cwd": "apps/e2e"
+      },
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": "dependencies"
+        },
+        {
+          "target": "setup",
+          "projects": "dependencies"
+        }
+      ]
+    },
+    "test:debug": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "PWDEBUG=1 playwright test --config=../../playwright.config.ts -g '{args.name}'",
+        "cwd": "apps/e2e"
+      },
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": "dependencies"
+        },
+        {
+          "target": "setup",
+          "projects": "dependencies"
+        }
+      ]
     },
     "test:ci": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
-        "command": "pnpm playwright test --config=playwright.ci.config.ts",
+        "command": "playwright test --config=playwright.ci.config.ts",
         "cwd": "apps/e2e"
       },
-      "dependsOn": [{ "target": "build", "projects": "dependencies" }]
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": "dependencies"
+        }
+      ]
     },
     "show-trace": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
-        "command": "pnpm playwright show-trace",
+        "command": "playwright show-trace",
         "cwd": "apps/e2e"
       }
     },
     "serve": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
-        "command": "pnpm playwright show-report playwright-report",
+        "command": "playwright show-report playwright-report",
+        "cwd": "apps/e2e"
+      }
+    },
+    "serve:custom": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "playwright show-report {args.report}",
         "cwd": "apps/e2e"
       }
     },
     "record": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
-        "command": "pnpm playwright codegen --load-storage=apps/e2e/storageState.json localhost:4400"
+        "command": "playwright codegen --load-storage=apps/e2e/storageState.json localhost:4400"
       }
     }
   },
-  "tags": []
+  "tags": [],
+  "name": "e2e"
 }

@@ -1,5 +1,5 @@
-import { PrismaPromise } from "@open-decision/prisma";
-import prisma from "../client";
+import { PrismaPromise } from "@prisma/client";
+import prisma from "./prismaClient";
 
 export const clearTrees = async (
   ownerUuid: string,
