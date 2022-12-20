@@ -91,17 +91,15 @@ export function createReadableAnswers(
       }
 
       case "single-select-variable": {
-        const nodes = DecisionNode.getNodesByInput(answerId)(treeClient);
+        const node = DecisionNode.get.single(answerId)(treeClient);
 
-        if (!nodes) break;
+        if (!node) break;
 
-        Object.values(nodes).forEach((node) => {
-          const value = createReadableDecisionAnswer(parsedAnswer);
+        const value = createReadableDecisionAnswer(parsedAnswer);
 
-          const readableKey = createReadableKey(node["name"] ?? "");
+        const readableKey = createReadableKey(node["name"] ?? "");
 
-          result[readableKey] = value;
-        });
+        result[readableKey] = value;
 
         break;
       }
