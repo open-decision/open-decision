@@ -10,12 +10,12 @@ export function ErrorReportLink({ children }: Props) {
 
   return (
     <Link
-      css={{ color: "$primary11", fontWeight: 500 }}
+      className="text-colorScheme11 font-[500]"
       target="_blank"
       href="https://open-decision.org#contact"
     >
       {children ?? t("common.ErrorCard.callToAction")}
-      <Icon css={{ marginLeft: "$1" }}>
+      <Icon className="ml-1">
         <ExternalLinkIcon />
       </Icon>
     </Link>

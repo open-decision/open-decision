@@ -1,21 +1,20 @@
 import * as React from "react";
-import { EditorContent, useEditor } from "@tiptap/react";
-import { editorStyles, extensions } from "./shared";
-import { styled, StyleObject } from "@open-decision/design-system";
-import { Node } from "@open-decision/type-classes";
+import { EditorContent, EditorContentProps, useEditor } from "@tiptap/react";
+import { extensions } from "./shared";
+import { TRichText } from "./types";
+import styles from "./RichTextEditor.module.css";
 
-const StyledEditorContent = styled(EditorContent, editorStyles);
-
-type Props = { content: Node.TRichText; css?: StyleObject } & Omit<
-  React.ComponentProps<typeof StyledEditorContent>,
-  "editor" | "content"
+type Props = { content: TRichText; className?: string } & Omit<
+  EditorContentProps,
+  "editor" | "content" | "ref"
 >;
 
-export function RichTextRenderer({ content, ...props }: Props) {
+export function RichTextRenderer({ content, className, ...props }: Props) {
   const editor = useEditor({ extensions, content, editable: false });
 
   return (
-    <StyledEditorContent
+    <EditorContent
+      className={`${styles.editor} ${className}`}
       data-test="richTextEditor"
       editor={editor}
       {...props}

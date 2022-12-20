@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ColorKeys } from "../internal/utils";
 import { LoadingSpinner } from "../LoadingSpinner/LoadingSpinner";
-import { Button, ButtonProps } from "./Button";
+import { Button, ButtonProps } from "../Button/Button";
 
 export type SubmitButtonProps = ButtonProps & {
   isLoading?: boolean;
@@ -12,25 +12,18 @@ export const SubmitButton = React.forwardRef<
   HTMLButtonElement,
   SubmitButtonProps
 >(function SubmitButton(
-  { isLoading = false, children, colorScheme = "primary", css, ...props },
+  { isLoading = false, children, colorScheme = "primary", className, ...props },
   ref
 ) {
   return (
     <Button
       type="submit"
-      css={{
-        focusColor: colorScheme ? `$${colorScheme}11` : undefined,
-        colorScheme,
-        ...css,
-      }}
+      className={`colorScheme-${colorScheme} ${className}`}
       ref={ref}
+      variant="primary"
       {...props}
     >
-      {isLoading ? (
-        <LoadingSpinner colorScheme={colorScheme} size="1.4em" />
-      ) : (
-        children
-      )}
+      {isLoading ? <LoadingSpinner colorScheme={colorScheme} /> : children}
     </Button>
   );
 });

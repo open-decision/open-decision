@@ -1,0 +1,11 @@
+.editor {
+  @apply h-full;
+}
+
+.editor > div {
+  @apply colorScheme-primary flex gap-[10px] flex-col outline-none h-full;
+}
+
+.editor > p {
+  @apply pb-2;
+}

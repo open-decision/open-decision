@@ -5,23 +5,14 @@ import {
   InfoCircledIcon,
 } from "@radix-ui/react-icons";
 import { Required } from "utility-types";
-import { Box } from "../Box";
-import { Heading } from "../Heading";
+import { Heading } from "../Heading/Heading";
 import { Icon } from "../Icon/Icon";
-import { Stack } from "../Layout";
-import { styled, StyleObject } from "../stitches";
-import { Text } from "../Text";
-import { Notification } from "./NotificationState";
+import { Row, Stack } from "../Layout";
+import { Text } from "../Text/Text";
+import { Notification } from "../Notifications/NotificationState";
+import { twMerge } from "../utils";
 
-const Container = styled(Box, {
-  $$accentColor: "$colors$colorScheme11",
-  borderRadius: "$md",
-  backgroundColor: "$white",
-
-  defaultVariants: {
-    variant: "neutral",
-  },
-});
+const containerClasses = "rounded-md bg-white";
 
 const icons = {
   danger: CrossCircledIcon,
@@ -33,7 +24,7 @@ const icons = {
 export type InfoBoxProps = {
   children?: React.ReactNode;
   CloseButton?: React.ReactNode;
-  css?: StyleObject;
+  className?: string;
 } & Required<Omit<Notification, "duration">, "variant">;
 
 export function InfoBox({
@@ -42,34 +33,26 @@ export function InfoBox({
   title,
   variant,
   CloseButton,
-  css,
+  className,
 }: InfoBoxProps) {
   const IconSVG = icons[variant];
 
   return (
-    <Container css={{ colorScheme: variant, ...css }} role="alert">
-      <Stack
-        css={{
-          padding: "$5",
-          flexDirection: "row",
-          gap: "$5",
-          alignItems: "center",
-        }}
-      >
+    <div
+      className={
+        className
+          ? twMerge(containerClasses, `colorScheme-${variant}`, className)
+          : containerClasses
+      }
+      role="alert"
+    >
+      <Row className="p-5 gap-5 items-center">
         <Icon
-          css={{
-            marginBottom: "-2px",
-            backgroundColor: "$colorScheme3",
-            borderRadius: "$full",
-            width: "$5",
-            height: "$5",
-            padding: "$3",
-            color: "$$accentColor",
-          }}
+          className={`bg-colorScheme3 rounded-full w-8 h-8 text-colorScheme10`}
         >
           <IconSVG />
         </Icon>
-        <Stack css={{ gap: "$1", flex: 1 }}>
+        <Stack className="flex-1 gap-1">
           <Heading size="extra-small">{title}</Heading>
           {content ? (
             typeof content === "string" ? (
@@ -80,8 +63,8 @@ export function InfoBox({
           ) : null}
         </Stack>
         {CloseButton}
-      </Stack>
+      </Row>
       {children}
-    </Container>
+    </div>
   );
 }

@@ -76,7 +76,3 @@ export type TextStyles =
   | "medium-text"
   | "small-text"
   | "extra-small-text";
-
-export function isEmptyObject(obj: object) {
-  return Object.keys(obj).length === 0 && obj.constructor === Object;
-}

@@ -1,7 +1,7 @@
 import {
   Icon,
-  styled,
   Toolbar as SystemToolbar,
+  twMerge,
 } from "@open-decision/design-system";
 import * as React from "react";
 import {
@@ -15,19 +15,11 @@ import {
 import { Editor } from "@tiptap/react";
 import { NumberedList } from "./NumberedListIcon";
 
-const StyledToolbar = styled(SystemToolbar.Root, {
-  display: "flex",
-  alignItems: "center",
-  padding: "$2 $1",
-  boxShadow: "$1",
-  gap: "$1",
-});
+const toolbarClasses = "flex items-center py-2 px-1 shadow-1 gap-1";
 
-type Props = { editor: Editor | null } & React.ComponentProps<
-  typeof StyledToolbar
->;
+type Props = { editor: Editor | null } & SystemToolbar.RootProps;
 
-export function Toolbar({ css, editor, ...props }: Props) {
+export function Toolbar({ className, editor, ...props }: Props) {
   if (!editor) {
     return null;
   }
@@ -44,9 +36,15 @@ export function Toolbar({ css, editor, ...props }: Props) {
     listMarks.includes(value);
 
   return (
-    <StyledToolbar css={css} {...props}>
+    <SystemToolbar.Root
+      className={
+        className ? twMerge(toolbarClasses, className) : toolbarClasses
+      }
+      {...props}
+    >
       <SystemToolbar.Button
         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+        size="small"
       >
         <Icon label="Konvertiere den ausgewählten Text in eine Überschrift">
           {editor.isActive("heading", { level: 1 }) ? (
@@ -59,17 +57,19 @@ export function Toolbar({ css, editor, ...props }: Props) {
       <SystemToolbar.Separator
         orientation="vertical"
         decorative
-        css={{ alignSelf: "stretch" }}
+        className="self-stretch"
       />
       <SystemToolbar.ToggleButton
         onPressedChange={() => editor.chain().focus().toggleBold().run()}
         pressed={editor.isActive("bold")}
+        size="small"
       >
         <Icon label="Markiere den ausgewählten Text fett">
           <FontBoldIcon />
         </Icon>
       </SystemToolbar.ToggleButton>
       <SystemToolbar.ToggleButton
+        size="small"
         onPressedChange={() => editor.chain().focus().toggleItalic().run()}
         pressed={editor.isActive("italic")}
       >
@@ -78,6 +78,7 @@ export function Toolbar({ css, editor, ...props }: Props) {
         </Icon>
       </SystemToolbar.ToggleButton>
       <SystemToolbar.ToggleButton
+        size="small"
         onPressedChange={() => editor.chain().focus().toggleUnderline().run()}
         pressed={editor.isActive("underline")}
       >
@@ -88,7 +89,7 @@ export function Toolbar({ css, editor, ...props }: Props) {
       <SystemToolbar.Separator
         orientation="vertical"
         decorative
-        css={{ alignSelf: "stretch" }}
+        className="self-stretch"
       />
       <SystemToolbar.ToggleGroup
         type="single"
@@ -105,19 +106,19 @@ export function Toolbar({ css, editor, ...props }: Props) {
 
           return editor.chain().focus()[`toggle${value}`]?.().run();
         }}
-        css={{ layer: "3" }}
+        className="bg-layer-3"
       >
-        <SystemToolbar.ToggleItem value="BulletList">
+        <SystemToolbar.ToggleItem value="BulletList" size="small">
           <Icon label="Erstelle eine unnumerierte Liste">
             <ListBulletIcon />
           </Icon>
         </SystemToolbar.ToggleItem>
-        <SystemToolbar.ToggleItem value="OrderedList">
+        <SystemToolbar.ToggleItem value="OrderedList" size="small">
           <Icon label="Erstelle eine numerierte Liste">
             <NumberedList />
           </Icon>
         </SystemToolbar.ToggleItem>
       </SystemToolbar.ToggleGroup>
-    </StyledToolbar>
+    </SystemToolbar.Root>
   );
 }

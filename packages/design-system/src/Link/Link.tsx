@@ -1,19 +1,25 @@
 import * as React from "react";
-import { styled, css } from "../stitches";
-import { intentSelector } from "../stitches/stateSelectors";
-import { textStyles } from "../Text";
+import { textClasses, TextVariants } from "../Text/Text";
+import { ClassNameValue } from "../utils";
 
-export type LinkProps = React.ComponentProps<typeof Link>;
+export const linkClasses = (
+  { size = "inherit" }: TextVariants = {},
+  className?: ClassNameValue[] | ClassNameValue
+) =>
+  textClasses({ size }, [
+    `inline-flex items-center no-underline text-primary11 rounded-sm intent:underline focus-visible:inner-focus`,
+    className,
+  ]);
 
-export const linkStyles = css({
-  display: "inline-flex",
-  alignItems: "center",
-  textDecoration: "none",
-  color: "$primary11",
-  borderRadius: "$sm",
-  focusType: "outer",
+export type LinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement> &
+  TextVariants;
 
-  [`${intentSelector}`]: { textDecoration: "underline" },
-});
-
-export const Link = styled("a", linkStyles, textStyles);
+export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
+  ({ className, children, size, ...props }, ref) => {
+    return (
+      <a className={linkClasses({ size }, [className])} ref={ref} {...props}>
+        {children}
+      </a>
+    );
+  }
+);

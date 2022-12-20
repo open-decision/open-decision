@@ -1,25 +1,71 @@
-import * as React from "react";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
-import { styled } from "../../stitches";
-import { overlayCss } from "../shared";
+import { twMerge } from "../../utils";
+import { arrowClasses, overlayClasses } from "../shared";
 
-const StyledContent = styled(PopoverPrimitive.Content, overlayCss);
+// ------------------------------------------------------------------
+// Root
 
-const StyledArrow = styled(PopoverPrimitive.Arrow, {
-  fill: "var(--bgColor)",
-});
+export type RootProps = PopoverPrimitive.PopoverProps;
 
-export const Popover = {
-  Root: PopoverPrimitive.Root,
-  Trigger: PopoverPrimitive.Trigger,
-  Content: StyledContent,
-  Arrow: StyledArrow,
-  Anchor: PopoverPrimitive.Anchor,
-  Close: PopoverPrimitive.Close,
+export const Root = PopoverPrimitive.Root;
+
+// ------------------------------------------------------------------
+// Trigger
+
+export type TriggerProps = PopoverPrimitive.PopoverTriggerProps;
+
+export const Trigger = PopoverPrimitive.Trigger;
+
+// ------------------------------------------------------------------
+// Content
+
+export type ContentProps = PopoverPrimitive.PopperContentProps;
+
+export const Content = ({
+  children,
+  className,
+  sideOffset = 10,
+  ...props
+}: ContentProps) => {
+  return (
+    <PopoverPrimitive.Content
+      className={
+        className ? twMerge(overlayClasses, className) : overlayClasses
+      }
+      sideOffset={sideOffset}
+      {...props}
+    >
+      {children}
+    </PopoverPrimitive.Content>
+  );
 };
 
-export type PopoverRootProps = PopoverPrimitive.PopoverProps;
-export type PopoverTriggerProps = PopoverPrimitive.PopoverTriggerProps;
-export type PopoverContentProps = React.ComponentProps<typeof StyledContent>;
+// ------------------------------------------------------------------
+// Arrow
+
 export type PopoverArrowProps = PopoverPrimitive.PopoverArrowProps;
+
+export const Arrow = ({ className, ...props }: PopoverArrowProps) => {
+  return (
+    <PopoverPrimitive.Arrow
+      className={className ? twMerge(arrowClasses, className) : arrowClasses}
+      {...props}
+    />
+  );
+};
+
+// ------------------------------------------------------------------
+// Anchor
+
 export type PopoverAnchor = PopoverPrimitive.PopoverAnchorProps;
+
+export const Anchor = PopoverPrimitive.Anchor;
+
+// ------------------------------------------------------------------
+// Close
+
+export type PopoverClose = PopoverPrimitive.PopoverCloseProps;
+
+export const Close = PopoverPrimitive.Close;
+
+// ------------------------------------------------------------------
