@@ -1,5 +1,8 @@
 import { APIError, isAPIError } from "@open-decision/type-classes";
-import { FetchFunction } from "./fetchClientFunctionHelpers";
+import {
+  FetchBlobFunction,
+  FetchJSONFunction,
+} from "./fetchClientFunctionHelpers";
 import { z } from "zod";
 
 const getResponseData = async (response: Response) => {
@@ -12,10 +15,16 @@ const getResponseData = async (response: Response) => {
   return data;
 };
 
-export const safeFetch: FetchFunction = async (
-  url,
-  { body, headers, ...options },
-  { validation, retry = 0 }
+export const safeFetch = async (
+  url: string,
+  {
+    body,
+    headers,
+    ...options
+  }: Omit<RequestInit, "body"> & {
+    body?: Record<string, any>;
+  },
+  { retry = 0 }: { retry?: number }
 ) => {
   let retries = 0;
 
@@ -55,10 +64,7 @@ export const safeFetch: FetchFunction = async (
       }
     }
 
-    const data = await getResponseData(response);
-    const parsedData = validation?.parse(data) ?? data;
-
-    return { data: parsedData, status: response.status };
+    return response;
   } catch (error) {
     console.error(error);
     if (isAPIError(error)) throw error;
@@ -71,4 +77,25 @@ export const safeFetch: FetchFunction = async (
   }
 };
 
-export type FetchReturn<TData> = { data: TData; status: number };
+export const safeFetchJSON: FetchJSONFunction = async (...params) => {
+  const response = await safeFetch(...params);
+
+  const data = await getResponseData(response);
+
+  if (!data) {
+    return { data: response, status: response.status };
+  }
+
+  const parsedData = params[2].validation?.parse(data) ?? data;
+
+  return {
+    data: parsedData,
+    status: response.status,
+  };
+};
+
+export const safeFetchBlob: FetchBlobFunction = async (...params) => {
+  const response = await safeFetch(...params);
+
+  return { data: await response.blob(), status: response.status };
+};

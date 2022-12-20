@@ -4,8 +4,6 @@ import {
   getPublishedTree,
   getPublishedTrees,
   getTreeData,
-} from "@open-decision/tree-api-specification";
-import {
   createPublishedTreeOfTree,
   createTree,
   deleteTree,
@@ -14,8 +12,6 @@ import {
   getTrees,
   updateTree,
   getTreePreview,
-} from "@open-decision/tree-api-specification";
-import {
   login,
   logout,
   register,
@@ -23,14 +19,15 @@ import {
   resetPassword,
   verifyEmail,
   refreshToken,
-} from "@open-decision/auth-api-specification";
-import {
   deleteUser,
   getUser,
   updateUser,
-} from "@open-decision/user-api-specification";
+} from "@open-decision/api-specification";
+import { FetchFunctions } from "@open-decision/api-helpers";
 
-export const client = (context: TContext) => {
+export const client = <FetchFunction extends FetchFunctions>(
+  context: TContext<FetchFunction>
+) => {
   return {
     auth: {
       login: login(context),
