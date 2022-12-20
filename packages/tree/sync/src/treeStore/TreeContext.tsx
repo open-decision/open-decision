@@ -1,20 +1,18 @@
 import * as React from "react";
 import { createTreeStore } from "./treeStore";
 import { IndexeddbPersistence } from "y-indexeddb";
-import { useTreeId } from "../../../Data/useTreeId";
 import { ODError } from "@open-decision/type-classes";
+import { TreeClient } from "@open-decision/tree-type";
 import { useTreeSuspension } from "./hooks/useTreeSuspension";
-import { websocketMachine } from "../../../Data/websocket.machine";
+import { websocketMachine } from "../websocket.machine";
 import { useMachine } from "@xstate/react";
 
 export type TTreeContext = ReturnType<typeof createTreeStore>;
 
 const TreeContext = React.createContext<TTreeContext | null>(null);
 
-type Props = { children: React.ReactNode };
-export const TreeProvider = ({ children }: Props) => {
-  const isClient = typeof window != "undefined";
-  const id = useTreeId();
+type Props = { children: React.ReactNode; id: string };
+const TreeProvider = ({ id, children }: Props) => {
   const treeStore = React.useMemo(
     () => (id ? createTreeStore(id) : undefined),
     [id]
@@ -30,7 +28,7 @@ export const TreeProvider = ({ children }: Props) => {
   }
 
   React.useEffect(() => {
-    if (id && treeStore && isClient) {
+    if (id && treeStore) {
       new IndexeddbPersistence(id, treeStore.yDoc);
       send({
         type: "OPEN",
@@ -45,12 +43,14 @@ export const TreeProvider = ({ children }: Props) => {
     }
 
     return () => undefined;
-  }, [id, isClient, send, treeStore]);
+  }, [id, send, treeStore]);
 
   return id && treeStore ? (
     <TreeContext.Provider value={treeStore}>{children}</TreeContext.Provider>
   ) : null;
 };
+
+export default TreeProvider;
 
 export const useTreeContext = () => {
   const context = React.useContext(TreeContext);
@@ -63,4 +63,14 @@ export const useTreeContext = () => {
   useTreeSuspension(context?.tree as TTreeContext["tree"]);
 
   return context;
+};
+
+export const useTreeClient = () => {
+  const context = useTreeContext();
+  const treeClient = React.useMemo(
+    () => new TreeClient(context.tree.tree),
+    [context.tree.tree]
+  );
+
+  return treeClient;
 };
