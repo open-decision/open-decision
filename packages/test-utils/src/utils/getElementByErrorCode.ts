@@ -3,4 +3,4 @@ import { Page } from "@playwright/test";
 
 export const getElementByErrorCode =
   (page: Page) => async (errorCode: ErrorCodes) =>
-    await page.locator(`data-test=${errorCode}`);
+    page.locator(`data-test=${errorCode}`);

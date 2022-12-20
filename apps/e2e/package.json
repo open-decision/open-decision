@@ -1,11 +1,10 @@
 {
+  "version": "1.0.0",
   "name": "@open-decision/e2e",
   "dependencies": {
-    "@open-decision/api-client": "workspace:*",
-    "@open-decision/prisma": "workspace:*",
     "@open-decision/test-utils": "workspace:*",
     "@open-decision/translations": "workspace:*",
-    "@open-decision/tree-api-specification": "workspace:*",
-    "intl-messageformat": "^10.1.1"
+    "dotenv": "^16.0.3",
+    "intl-messageformat": "^10.2.5"
   }
 }

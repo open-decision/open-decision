@@ -1,14 +1,14 @@
-import { User } from "@open-decision/prisma";
-import prisma from "../client";
+import { User } from "@prisma/client";
+import prisma from "../utils/prismaClient";
 import { faker } from "@faker-js/faker";
 const password = "Th@t!shardToGuess";
 const hashedPassword =
   "$argon2id$v=19$m=15360,t=2,p=1$G6IkVa7e5SDHgeAGqcATfQ$HpzqEJ8IBkEQWWw2oKHjxlbxx8PQeYhNLh+DoLY8OOc";
 
 export const userOne: User = {
-  id: 1,
+  id: faker.datatype.number(),
   name: "Max Mustermann",
-  uuid: "71876990-27b7-4d87-9048-338a39fb19d9",
+  uuid: faker.datatype.uuid(),
   email: "static@test.com",
   password,
   role: "USER",
@@ -18,7 +18,7 @@ export const userOne: User = {
 export const userTwo: User = {
   id: faker.datatype.number(),
   name: faker.name.fullName(),
-  uuid: "170faab0-0e13-4432-9b48-b4e54baba597",
+  uuid: faker.datatype.uuid(),
   email: faker.internet.email().toLowerCase(),
   password,
   role: "USER",
@@ -67,5 +67,13 @@ export const insertUsers = async (users: User[]) => {
 
   await prisma.user.createMany({
     data: mod,
+  });
+};
+
+export const deleteUser = async (user: User) => {
+  await prisma.user.delete({
+    where: {
+      id: user.id,
+    },
   });
 };

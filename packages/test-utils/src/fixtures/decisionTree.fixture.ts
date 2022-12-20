@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
-import { DecisionTree } from "@open-decision/prisma";
-import prisma from "../client";
-import { yDocumentOne } from "./yDocument.fixture";
+import { DecisionTree } from "@prisma/client";
+import prisma from "../utils/prismaClient";
+import { auroaYDoc } from "@open-decision/tree-type";
 
 export type PartialTree = Pick<
   DecisionTree,
@@ -13,7 +13,7 @@ export const createTreeFixture = (
 ): PartialTree => ({
   uuid: faker.datatype.uuid(),
   name: faker.lorem.words(5),
-  yDocument: yDocumentOne,
+  yDocument: auroaYDoc,
   status: "ACTIVE",
   createdAt: new Date("2020-01-01T00:00:00.000Z"),
   updatedAt: new Date("2022-01-01T00:00:00.000Z"),

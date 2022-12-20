@@ -1,181 +1,88 @@
-/* eslint-disable no-empty-pattern */
-import { test, expect, Page } from "@playwright/test";
+import { expect } from "@playwright/test";
 import { de } from "@open-decision/translations";
-import { User } from "@open-decision/prisma";
-import { createUserFixture, insertUsers } from "@open-decision/test-utils";
+import { pwTest } from "@open-decision/test-utils";
 
-const getElements = (page: Page) => {
-  const emailInput = page.locator(
-    `label >> text=${de.common.emailInput.label}`
-  );
-  const passwordInput = page
-    .locator(`label >> text=${de.common.passwordInput.label}`)
-    .first();
-  const passwordConfirmationInput = page.locator(
-    `label >> text=${de.register.passwordConfirmation.label}`
-  );
-  const privacyInput = page.locator(
-    `label >> text=${de.register.dataProtection.start}`
-  );
-  const legalInput = page.locator(
-    `label >> text=${de.register.alphaDisclaimer}`
-  );
-  const submitButton = page.locator(`text=${de.register.submitButton}`);
+pwTest.describe.configure({ mode: "parallel" });
 
-  return {
-    emailInput,
-    passwordInput,
-    passwordConfirmationInput,
-    privacyInput,
-    legalInput,
-    submitButton,
-  };
-};
-
-const fillWithCredentials = async (page: Page, user: User) => {
-  const {
-    emailInput,
-    passwordConfirmationInput,
-    passwordInput,
-    legalInput,
-    privacyInput,
-  } = getElements(page);
-
-  // Fill the inputs with valid credentials
-  await emailInput.fill(user.email);
-  await passwordInput.fill(user.password);
-  await passwordConfirmationInput.fill(user.password);
-  await privacyInput.click();
-  await legalInput.click();
-};
-
-test.beforeEach(async ({}, testInfo) => {
-  testInfo.snapshotSuffix = "";
-});
-
-test.describe("register with valid data", () => {
-  test.beforeEach(async ({ page, browserName }) => {
-    // For some reason webkit fails the navigation to auth/register when all tests are run together
-    // It works fine when running it separately
-    if (browserName === "webkit") test.fixme();
-
-    const registerUser = createUserFixture();
-    await page.goto("/auth/login");
-
-    // Navigate from Login to Register
-    await Promise.all([
-      page.waitForNavigation(),
-      page.click(`text=${de.login.registerCTA}`),
-    ]);
-
-    await expect(page, "should be on register page").toHaveURL(
-      "/auth/register"
-    );
-    await expect(
-      page.locator(`h2 >> text=${de.register.title}`),
-      "register page should contain the title"
-    ).toBeVisible();
-
-    await fillWithCredentials(page, registerUser);
-    process.env["registerUser"] = JSON.stringify(registerUser);
-  });
-
-  test("successfull register", async ({ page }) => {
-    await Promise.all([
-      page.waitForNavigation(),
-      page.click(`text=${de.register.submitButton}`),
-    ]);
+pwTest.describe("register with valid data", () => {
+  pwTest("successfull register", async ({ registerPage }) => {
+    // Email credits exhausted. Service needs to be mocked.
+    pwTest.fixme();
+    await registerPage.register();
 
     await expect(
-      page,
+      registerPage.page,
       "should have redirected after successfull registration"
-    ).toHaveURL("/");
+    ).toHaveURL("/", { timeout: 30000 });
   });
 
-  test("should show error when user is offline", async ({ page }) => {
-    await page.route("**/auth/register", (route) =>
+  pwTest("should show error when user is offline", async ({ registerPage }) => {
+    await registerPage.page.route("**/auth/register", (route) =>
       route.abort("internetdisconnected")
     );
 
-    await page.locator(`text=${de.register.submitButton}`).click();
-
-    await expect(
-      page.locator(`text=${de.common.errors.OFFLINE.long}`),
-      "should show error that user is offline"
-    ).toBeVisible();
+    await registerPage.register(),
+      await expect(
+        registerPage.page.locator(`text=${de.common.errors.OFFLINE.long}`),
+        "should show error that user is offline"
+      ).toBeVisible();
   });
 });
 
-test.describe("register with invalid credentials", () => {
-  let registerUser: User;
+pwTest.describe("register with invalid credentials", () => {
+  pwTest(
+    "should show field error when data is missing",
+    async ({ registerPage }) => {
+      const registerUser = registerPage.User.create();
 
-  test.beforeEach(async ({ page }) => {
-    registerUser = createUserFixture();
-    await page.goto("/auth/register");
-  });
+      // We assume that each input works on its own so we can check all errors at once
+      await registerPage.emailField.input.fill(registerUser.email);
+      await registerPage.submitButton.click();
 
-  test("should show field error when data is missing", async ({ page }) => {
-    const { submitButton, emailInput } = getElements(page);
+      await expect(registerPage.emailField.error).not.toBeVisible();
 
-    // We assume that each input works on its own so we can check all errors at once
-    await emailInput.fill(registerUser.email);
-    await submitButton.click();
-    await expect(
-      page.locator(`data-test=error-email`),
-      "should not show error for input"
-    ).not.toBeVisible();
-    await expect(
-      page.locator(`data-test=error-password`),
-      "should show error for input"
-    ).toBeVisible();
-    await expect(
-      page.locator(`data-test=error-passwordConfirmation`)
-    ).toBeVisible();
-    await expect(
-      page.locator(`data-test=error-legal`),
-      "should show error for input"
-    ).toBeVisible();
-    await expect(
-      page.locator(`data-test=error-privacy`),
-      "should show error for input"
-    ).toBeVisible();
-  });
+      await expect(registerPage.passwordField.error).toBeVisible();
 
-  test("should show relevant error when register was unsucessfull", async ({
-    page,
-  }) => {
-    await insertUsers([registerUser]);
-    await fillWithCredentials(page, registerUser);
+      await expect(registerPage.passwordConfirmationField.error).toBeVisible();
 
-    const { submitButton } = getElements(page);
-    await submitButton.click();
+      await expect(registerPage.legalField.error).toBeVisible();
 
-    await expect(
-      page.locator(`data-test=form-error`),
-      "should show form error"
-    ).toBeVisible();
-  });
-});
+      await expect(registerPage.privacyField.error).toBeVisible();
+    }
+  );
 
-test("should navigate to the data protection agreement", async ({
-  page,
-  context,
-}) => {
-  await page.goto("auth/register");
+  pwTest(
+    "should not register when email is taken",
+    async ({ registerPage }) => {
+      const user = await registerPage.User.insert();
 
-  const [newPage] = await Promise.all([
-    context.waitForEvent("page"),
-    page.locator(`text=${de.register.dataProtection.link}`).click(),
-  ]);
+      await registerPage.register(user);
 
-  await expect(newPage, " should be on privacy page").toHaveURL(
-    "https://open-decision.org/privacy"
+      await expect(registerPage.formError).toBeVisible();
+    }
   );
 });
 
-test("should navigate to login", async ({ page }) => {
-  await page.goto("/auth/register");
-  await page.locator(`text=${de.register.loginCTA}`).click();
+pwTest(
+  "should navigate to the data protection agreement",
+  async ({ registerPage, context }) => {
+    const [newPage] = await Promise.all([
+      context.waitForEvent("page"),
+      registerPage.dataProtectionLink.click(),
+    ]);
 
-  await expect(page, "should be on login page").toHaveURL("/auth/login");
+    await newPage.waitForLoadState();
+
+    await expect(newPage, "should be on privacy page").toHaveURL(
+      "https://open-decision.org/privacy"
+    );
+  }
+);
+
+pwTest("should navigate to login", async ({ registerPage }) => {
+  await registerPage.loginLink.click();
+
+  await expect(registerPage.page, "should be on login page").toHaveURL(
+    "/auth/login"
+  );
 });

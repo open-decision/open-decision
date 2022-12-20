@@ -8,5 +8,6 @@
     "outDir": "../../dist/out-tsc",
     "esModuleInterop": true
   },
-  "include": ["**/*.ts", "**/*.js"]
+  "include": ["**/*.ts", "**/*.js"],
+  "exclude": ["*config.ts"]
 }
