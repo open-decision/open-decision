@@ -1,0 +1,15 @@
+{
+  "name": "@open-decision/tree-client",
+  "version": "0.0.1",
+  "main": "src/index.js",
+  "dependencies": {
+    "zod": "^3.20.2"
+  },
+  "peerDependencies": {
+    "@fontsource/poppins": "^4.5.10",
+    "next": "^13.0.1",
+    "next-intl": "^2.9.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}

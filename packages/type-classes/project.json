@@ -5,12 +5,13 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@nrwl/js:swc",
+      "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/type-classes",
         "main": "packages/type-classes/src/index.ts",
-        "tsConfig": "packages/type-classes/tsconfig.lib.json"
+        "tsConfig": "packages/type-classes/tsconfig.lib.json",
+        "assets": ["packages/type-classes/*.md"]
       }
     },
     "lint": {
@@ -23,11 +24,12 @@
     "test": {
       "executor": "@nxext/vitest:vitest",
       "options": {
-        "command": "run"
+        "command": "run",
+        "passWithNoTests": true
       }
     },
     "publish": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "command": "node tools/scripts/publish.mjs type-classes {args.ver} {args.tag}"
       },
@@ -39,12 +41,18 @@
       ]
     },
     "typecheck": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
-        "command": "tsc -p tsconfig.lib.json",
+        "command": "tsc -p tsconfig.lib.json --noEmit",
         "cwd": "packages/type-classes"
       },
-      "dependsOn": [{ "projects": "dependencies", "target": "build" }]
+      "dependsOn": [
+        {
+          "projects": "dependencies",
+          "target": "build"
+        }
+      ]
     }
-  }
+  },
+  "name": "type-classes"
 }

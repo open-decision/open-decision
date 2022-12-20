@@ -1,0 +1,41 @@
+{
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/tree/type/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/tree/type",
+        "main": "packages/tree/type/src/index.ts",
+        "tsConfig": "packages/tree/type/tsconfig.lib.json",
+        "assets": ["packages/tree/type/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/tree/type/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/vite:test",
+      "configurations": {
+        "watch": {
+          "watch": true
+        }
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -p tsconfig.lib.json --noEmit",
+        "cwd": "packages/tree/type"
+      }
+    }
+  },
+  "name": "tree-type"
+}

@@ -1,0 +1,43 @@
+{
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/plugins/node/document/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/plugins/node/document",
+        "main": "packages/plugins/node/document/src/index.ts",
+        "tsConfig": "packages/plugins/node/document/tsconfig.lib.json",
+        "assets": ["packages/plugins/node/document/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "packages/plugins/node/document/**/*.{ts,tsx,js,jsx}"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/vite:test",
+      "configurations": {
+        "watch": {
+          "watch": true,
+          "passWithNoTests": true
+        }
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -p tsconfig.lib.json --noEmit",
+        "cwd": "packages/plugins/node/document"
+      }
+    }
+  },
+  "name": "plugins-node-document"
+}

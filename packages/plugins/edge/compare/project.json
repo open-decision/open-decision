@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/plugins/edge/compare/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/plugins/edge/compare",
+        "main": "packages/plugins/edge/compare/src/index.ts",
+        "tsConfig": "packages/plugins/edge/compare/tsconfig.lib.json",
+        "assets": ["packages/plugins/edge/compare/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "packages/plugins/edge/compare/**/*.{ts,tsx,js,jsx}"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/vite:test",
+      "configurations": {
+        "watch": {
+          "watch": true,
+          "passWithNoTests": true
+        }
+      }
+    }
+  },
+  "name": "plugins-edge-compare"
+}

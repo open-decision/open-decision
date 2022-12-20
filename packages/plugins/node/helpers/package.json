@@ -1,0 +1,22 @@
+{
+  "name": "@open-decision/plugins-node-helpers",
+  "version": "0.0.1",
+  "main": "src/index.js",
+  "dependencies": {
+    "@radix-ui/react-icons": "^1.1.1",
+    "reactflow": "^11.3.0",
+    "remeda": "^1.3.0",
+    "valtio": "^1.7.6"
+  },
+  "peerDependencies": {
+    "@fontsource/poppins": "^4.5.10",
+    "next": "12.3.1",
+    "next-intl": "^2.9.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "next": "13.0.4",
+    "next-intl": "^2.9.1"
+  }
+}
