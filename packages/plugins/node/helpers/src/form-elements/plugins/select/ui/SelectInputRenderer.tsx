@@ -28,7 +28,7 @@ export function SelectInputRendererComponent({
       <Stack className="gap-2">
         <RendererRadioGroup
           required
-          name="answer"
+          name={input.id}
           answers={input.data.answers}
           key={inputId}
           activeValue={watch(inputId)}

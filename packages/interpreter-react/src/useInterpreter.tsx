@@ -27,7 +27,6 @@ function createResolver(
   edgePlugins: Record<string, EdgePluginObject>
 ) {
   const resolvers = (edge: Edge.TEdge) => {
-    console.log(edge, edgePlugins);
     const edgeResolver = edgePlugins[edge.type].resolver(treeClient);
 
     if (!edgeResolver) {
