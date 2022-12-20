@@ -7,7 +7,7 @@
   ],
   "scripts": {
     "remove:node_modules": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' + ",
-    "remove:dist": "rm -rf dist"
+    "setup": "yarn nx generate:client prisma"
   },
   "license": "MIT",
   "private": true,
@@ -51,12 +51,14 @@
     "tsconfig-paths-webpack-plugin": "^4.0.0",
     "webpack": "^5.74.0"
   },
-  "pnpm": {
-    "peerDependencyRules": {
-      "ignoreMissing": [
-        "react",
-        "react-dom"
-      ]
-    }
-  }
+  "resolutions": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "yjs": "13",
+    "next": "13"
+  },
+  "volta": {
+    "node": "16.17.0"
+  },
+  "packageManager": "yarn@3.2.4"
 }

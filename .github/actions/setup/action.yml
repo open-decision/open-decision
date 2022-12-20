@@ -4,31 +4,16 @@ runs:
   using: "composite"
   steps:
     - name: Use Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
-        node-version: 16
-
-    - uses: pnpm/action-setup@v2.2.2
-      with:
-        version: latest
-        run_install: false
-
-    - name: Get pnpm store directory
-      shell: bash
-      id: pnpm-cache
-      run: |
-        echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
-
-    - uses: actions/cache@v3
-      name: Setup pnpm cache
-      with:
-        path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
-        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-        restore-keys: |
-          ${{ runner.os }}-pnpm-store-
+        node-version: 18
 
     - name: Install dependencies
       shell: bash
-      run: pnpm install
+      run: yarn install
+
+    - name: Generate prisma client
+      shell: bash
+      run: yarn setup
 
     - uses: nrwl/nx-set-shas@v2.2.5

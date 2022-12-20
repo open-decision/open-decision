@@ -3,16 +3,6 @@ name: "Format and Lint"
 runs:
   using: "composite"
   steps:
-    - name: Format code with Prettier
-      shell: bash
-      run: pnpm nx format:write
-
     - name: Run ESLint
       shell: bash
-      run: pnpm nx affected --target=lint --parallel=3 --fix
-
-    - name: Commit changes
-      uses: stefanzweifel/git-auto-commit-action@v4
-      with:
-        commit_message: Apply formatting and eslint fixes changes
-        branch: ${{ github.head_ref }}
+      run: yarn nx affected --target=lint --parallel=3

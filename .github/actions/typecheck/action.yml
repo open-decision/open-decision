@@ -5,4 +5,4 @@ runs:
   steps:
     - name: Typecheck
       shell: bash
-      run: pnpm nx affected --target=typecheck --parallel=3
+      run: yarn nx affected --target=typecheck --parallel=3

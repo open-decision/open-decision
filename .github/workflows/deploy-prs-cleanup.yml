@@ -35,12 +35,8 @@ jobs:
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v2
-      - uses: pnpm/action-setup@v2.2.2
-        with:
-          version: latest
-          run_install: false
+        uses: actions/checkout@v3
       - name: Install Vercel CLI
-        run: pnpm install -g vercel@latest
+        run: yarn add global vercel@latest
       - name: Remove Builder Deploy
         run: vercel alias rm ${{env.OD_BUILDER_ENDPOINT}} --token ${{secrets.VERCEL_TOKEN}} --scope open-decision --yes
