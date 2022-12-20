@@ -4,7 +4,7 @@ import config from "../config/config";
 import { userService } from "./index";
 import { tokenHandler } from "../models/token.model";
 import { UUID } from "../types/uuid-class";
-import { TokenType, User } from "@open-decision/prisma";
+import { TokenType, User } from "@prisma/client";
 import { APIError } from "@open-decision/type-classes";
 /**
  * Generate token
@@ -220,21 +220,21 @@ const generateResetPasswordToken = async (email: string) => {
 
 /**
  * Generate verify email token
- * @param {User} user
+ * @param {string} userUuid
  * @returns {Promise<string>}
  */
-const generateVerifyEmailToken = async (user: User) => {
+const generateVerifyEmailToken = async (userUuid: string) => {
   const expires = dayjs().add(
     config.VERIFY_EMAIL_EXPIRATION_MINUTES,
     "minutes"
   );
   const verifyEmailToken = await generateToken(
-    user.uuid,
+    userUuid,
     expires,
     TokenType.VERIFY_EMAIL,
     config.ACCESS_TOKEN_SECRET
   );
-  await saveToken(verifyEmailToken, user.uuid, expires, TokenType.VERIFY_EMAIL);
+  await saveToken(verifyEmailToken, userUuid, expires, TokenType.VERIFY_EMAIL);
   return verifyEmailToken;
 };
 

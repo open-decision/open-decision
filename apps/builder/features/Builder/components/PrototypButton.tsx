@@ -8,8 +8,8 @@ import {
   Text,
   Heading,
   Form,
-  Link,
   LoadingSpinner,
+  linkClasses,
 } from "@open-decision/design-system";
 import { ClipboardCopyIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
@@ -36,7 +36,7 @@ export function PrototypButton({ treeId }: Props) {
         : addNotificationFromTemplate("disablePreview");
     },
   });
-  const formState = Form.useFormState({
+  const methods = Form.useForm({
     defaultValues: { preview: hasPreview },
   });
   const t = useTranslations("builder.header.prototypeButton");
@@ -45,41 +45,34 @@ export function PrototypButton({ treeId }: Props) {
   const { addNotification, addNotificationFromTemplate } =
     useNotificationStore();
 
-  const link = `${process.env["NEXT_PUBLIC_OD_BUILDER_ENDPOINT"]}/builder/${treeId}/preview`;
+  const link = `${process.env["NEXT_PUBLIC_OD_BUILDER_ENDPOINT"]}/builder/${treeId}/prototype`;
 
   return (
     <Popover.Root>
       <Popover.Trigger asChild>
-        <Button css={{ minWidth: "max-content" }}>{t("button")}</Button>
+        <Button className="min-w-max">{t("button")}</Button>
       </Popover.Trigger>
       <Popover.Content sideOffset={15} asChild>
-        <Stack
-          css={{
-            zIndex: "$10",
-            maxWidth: "350px",
-            padding: "$5",
-            gap: "$2",
-          }}
-        >
+        <Stack className="z-10 max-w-[350px] p-5 gap-2">
           <Heading as="h2">{t("popover.title")}</Heading>
-          <Text css={{ marginBottom: "$2" }}>{t("popover.description")}</Text>
-          <Stack css={{ gap: "$3", justifyContent: "space-between" }}>
-            <Form.Root state={formState}>
-              <Row css={{ gap: "$2" }}>
+          <Text className="mb-2">{t("popover.description")}</Text>
+          <Stack className="gap-3 justify-between">
+            <Form.Root methods={methods}>
+              <Row className="gap-2">
                 <Form.Field
                   Label={t("popover.checkbox")}
                   layout="inline-right"
-                  css={{ maxWidth: "max-content" }}
+                  className="max-w-max"
                 >
                   <Form.Checkbox
-                    name={formState.names.preview}
-                    formState={formState}
-                    onChange={(event) => {
-                      updateTree({
-                        body: { hasPreview: event.target.checked },
-                        params: { uuid: treeId },
-                      });
-                    }}
+                    {...methods.register("preview", {
+                      onChange: (event) => {
+                        updateTree({
+                          body: { hasPreview: event.target.checked },
+                          params: { uuid: treeId },
+                        });
+                      },
+                    })}
                     disabled={isLoading}
                   />
                 </Form.Field>
@@ -87,14 +80,16 @@ export function PrototypButton({ treeId }: Props) {
               </Row>
             </Form.Root>
             {hasPreview ? (
-              <Row css={{ justifyContent: "space-between" }}>
-                <NextLink href={link} passHref>
-                  <Link css={{ gap: "$1" }} target="_blank">
-                    {t("popover.newTabLink")}
-                    <Icon>
-                      <ExternalLinkIcon />
-                    </Icon>
-                  </Link>
+              <Row className="justify-between">
+                <NextLink
+                  href={link}
+                  className={linkClasses({}, "gap-1")}
+                  target="_blank"
+                >
+                  {t("popover.newTabLink")}
+                  <Icon>
+                    <ExternalLinkIcon />
+                  </Icon>
                 </NextLink>
                 <Button
                   onClick={() => {

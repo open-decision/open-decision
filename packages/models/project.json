@@ -4,13 +4,13 @@
   "projectType": "library",
   "targets": {
     "build": {
-      "executor": "@nrwl/js:swc",
+      "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/models",
         "main": "packages/models/src/index.ts",
         "tsConfig": "packages/models/tsconfig.lib.json",
-        "assets": ["packages/models/*.md", "**/generated/prisma-client/*"]
+        "assets": ["packages/models/*.md"]
       }
     },
     "lint": {
@@ -21,21 +21,28 @@
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/packages/models"],
-      "options": {
-        "jestConfig": "packages/models/jest.config.ts",
-        "passWithNoTests": true
+      "executor": "@nrwl/vite:test",
+      "configurations": {
+        "watch": {
+          "watch": true,
+          "passWithNoTests": true
+        }
       }
     },
     "typecheck": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
-        "command": "tsc -p tsconfig.lib.json",
+        "command": "tsc -p tsconfig.lib.json --noEmit",
         "cwd": "packages/models"
       },
-      "dependsOn": [{ "projects": "dependencies", "target": "build" }]
+      "dependsOn": [
+        {
+          "projects": "dependencies",
+          "target": "build"
+        }
+      ]
     }
   },
-  "tags": []
+  "tags": [],
+  "name": "models"
 }

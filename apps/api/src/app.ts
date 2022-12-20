@@ -10,28 +10,8 @@ import { errorConverter, errorHandler } from "./middlewares/error";
 import { authLimiter } from "./middlewares/rateLimiter";
 import router from "./routes/v1";
 import { APIError } from "@open-decision/type-classes";
-import * as Sentry from "@sentry/node";
-import "@sentry/tracing";
-import * as Tracing from "@sentry/tracing";
 
 export const app = express();
-
-Sentry.init({
-  dsn: config.SENTRY_DSN,
-  environment: config.NODE_ENV,
-  // for finer control
-  tracesSampleRate: 1.0,
-  integrations: [
-    // enable HTTP calls tracing
-    new Sentry.Integrations.Http({ tracing: true }),
-    new Tracing.Integrations.Express({
-      app,
-    }),
-  ],
-});
-
-app.use(Sentry.Handlers.requestHandler());
-app.use(Sentry.Handlers.tracingHandler());
 
 if (config.NODE_ENV !== "test") {
   app.use(morganHandler);
@@ -80,8 +60,6 @@ app.use((req, res, next) => {
   );
 });
 
-// Log error in sentry before processing it
-app.use(Sentry.Handlers.errorHandler());
 // convert error to ApiError, if needed
 app.use(errorConverter);
 // handle error

@@ -1,14 +1,14 @@
 import {
-  publishedTreesCollection,
+  publishedTreesRoot,
   publishedTreesSingle,
-} from "@open-decision/tree-api-specification";
+} from "@open-decision/api-specification";
 import express from "express";
 import { publishController } from "../../controllers/publish.controller";
 import { auth } from "../../middlewares/auth";
 const publishedTreeRouter = express.Router();
 
 publishedTreeRouter
-  .route(publishedTreesCollection)
+  .route(publishedTreesRoot)
   .get(publishController.getPublishedTrees);
 
 publishedTreeRouter

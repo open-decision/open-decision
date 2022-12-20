@@ -1,6 +1,25 @@
-import { Tree } from "@open-decision/type-classes";
-import { pick } from "remeda";
+import {
+  ReadOnlyTreeClient,
+  TReadOnlyTreeClient,
+  Tree,
+  TTreeClient,
+} from "@open-decision/tree-type";
 import { InterpreterContext } from "./interpreter";
+
+function getAnswers(interpreterContext: InterpreterContext) {
+  return interpreterContext.answers;
+}
+
+export const getCurrentNode = (
+  treeClient: TTreeClient | TReadOnlyTreeClient,
+  context: InterpreterContext
+) => {
+  const currentNode = treeClient.nodes.get.single(
+    context.history.nodes[context.history.position]
+  );
+
+  return currentNode;
+};
 
 export const canGoBack = (interpreterContext: InterpreterContext) =>
   interpreterContext.history.nodes.length > 1 &&
@@ -14,31 +33,14 @@ export function createInterpreterMethods(
   interpreterContext: InterpreterContext,
   tree: Tree.TTree
 ) {
-  const treeMethods = Tree.createTreeMethods(tree);
+  const treeClient = new ReadOnlyTreeClient(tree);
 
   return {
-    getCurrentNode: () =>
-      treeMethods.getNode(
-        interpreterContext.history.nodes[interpreterContext.history.position]
-      ),
-    getAnswer: (inputId: string) => {
-      const maybeAnswer = interpreterContext.answers[inputId];
-      if (!maybeAnswer) return undefined;
-
-      return maybeAnswer;
-    },
+    treeClient,
+    getCurrentNode: () => getCurrentNode(treeClient, interpreterContext),
+    getAnswers: () => getAnswers(interpreterContext),
     canGoBack: canGoBack(interpreterContext),
     canGoForward: canGoForward(interpreterContext),
     hasHistory: () => interpreterContext.history.nodes.length > 1,
-    ...pick(treeMethods, [
-      "getChildren",
-      "getCondition",
-      "getConditions",
-      "getEdge",
-      "getInput",
-      "getInputs",
-      "getInputsWithAnswers",
-      "getNode",
-    ]),
   };
 }

@@ -1,7 +1,7 @@
 import prisma from "../init-prisma-client";
 import dayjs from "dayjs";
 import { UUID } from "../types/uuid-class";
-import { TokenType } from "@open-decision/prisma";
+import { TokenType } from "@prisma/client";
 import { FindTokenInterface } from "../types/types";
 /**
  * Store a token in DB

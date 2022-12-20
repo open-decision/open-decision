@@ -1,13 +1,12 @@
 import * as React from "react";
 import {
+  ColorKeys,
   Dialog,
-  DialogTriggerProps,
   Form,
   InfoBox,
   InfoBoxProps,
   Text,
 } from "@open-decision/design-system";
-import { ColorKeys } from "@open-decision/design-system";
 import {
   createVerifyLoginMachine,
   onVerify,
@@ -19,7 +18,7 @@ import { EmailField } from "../../../components/EmailInput";
 import { PasswordInput } from "../../../components/PasswordInput";
 import { ErrorMessage } from "../../../components/Error/ErrorMessage";
 
-export type VerfiyLoginDialogProps = DialogTriggerProps & {
+export type VerfiyLoginDialogProps = Dialog.TriggerProps & {
   open?: boolean;
   setOpen?: (open: boolean) => void;
   focusOnClose?: () => void;
@@ -50,15 +49,11 @@ export function VerifyLoginDialog({
     createVerifyLoginMachine(email, onVerify, onVerifyFailure)
   );
 
-  const formState = Form.useFormState({
+  const methods = Form.useForm({
     defaultValues: {
       email,
       password: "",
     },
-  });
-
-  formState.useSubmit(() => {
-    send({ type: "VERIFY_LOGIN", password: formState.values.password });
   });
 
   const definedDescription = description ?? t("descriptionFallback");
@@ -78,9 +73,7 @@ export function VerifyLoginDialog({
           additionalMessage ? <InfoBox {...additionalMessage} /> : undefined
         }
       >
-        <Dialog.Header css={{ marginBottom: "$2" }}>
-          Passwort verifizieren
-        </Dialog.Header>
+        <Dialog.Header className="mb-2">Passwort verifizieren</Dialog.Header>
         <Dialog.Description asChild>
           {typeof definedDescription === "string" ? (
             <Text>{definedDescription}</Text>
@@ -88,14 +81,17 @@ export function VerifyLoginDialog({
             definedDescription
           )}
         </Dialog.Description>
-        <Form.Root state={formState} css={{ marginTop: "$4" }}>
-          <EmailField name={formState.names.email} disabled />
-          <PasswordInput name={formState.names.password} />
+        <Form.Root
+          methods={methods}
+          className="mt-4"
+          onSubmit={methods.handleSubmit((values) =>
+            send({ type: "VERIFY_LOGIN", password: values.password })
+          )}
+        >
+          <EmailField disabled inputClassName="disabled:opacity-75" />
+          <PasswordInput />
           {state.context.Error ? (
-            <ErrorMessage
-              css={{ marginTop: "$2" }}
-              code={state.context.Error.code}
-            />
+            <ErrorMessage className="mt-2" code={state.context.Error.code} />
           ) : null}
           <Dialog.ButtonRow
             isLoading={state.matches("verifingLogin")}

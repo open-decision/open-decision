@@ -1,9 +1,4 @@
-import {
-  Form,
-  Dialog,
-  DialogTriggerProps,
-  StyleObject,
-} from "@open-decision/design-system";
+import { Form, Dialog } from "@open-decision/design-system";
 import { useTranslations } from "next-intl";
 import * as React from "react";
 import { useTreeAPI } from "../../../Data/useTreeAPI";
@@ -15,8 +10,7 @@ type Props = {
   onCancel?: () => void;
   focusOnCancel?: () => void;
   className?: string;
-  children?: DialogTriggerProps["children"];
-  css?: StyleObject;
+  children?: Dialog.TriggerProps["children"];
 };
 
 export function UpdateTreeDialog({
@@ -27,10 +21,9 @@ export function UpdateTreeDialog({
   focusOnCancel,
   children,
   className,
-  css,
 }: Props) {
   const t = useTranslations("common.updateTreeDialog");
-  const formState = Form.useFormState({ defaultValues: { treeName: "" } });
+  const methods = Form.useForm({ defaultValues: { treeName: "" } });
 
   const {
     mutate: updateTree,
@@ -41,13 +34,6 @@ export function UpdateTreeDialog({
     onSuccess,
   });
 
-  formState.useSubmit(() => {
-    updateTree({
-      body: { name: formState.values.treeName },
-      params: { uuid: treeId },
-    });
-  });
-
   return (
     <Dialog.Root open={open} onOpenChange={onCancel}>
       {children ? <Dialog.Trigger asChild>{children}</Dialog.Trigger> : null}
@@ -55,12 +41,17 @@ export function UpdateTreeDialog({
         <Dialog.Content
           onCloseAutoFocus={!isSuccess ? focusOnCancel : undefined}
           className={className}
-          css={css}
         >
-          <Dialog.Header css={{ marginBottom: "$4" }}>
-            {t("title")}
-          </Dialog.Header>
-          <Form.Root state={formState}>
+          <Dialog.Header className="mb-4">{t("title")}</Dialog.Header>
+          <Form.Root
+            methods={methods}
+            onSubmit={methods.handleSubmit((values) =>
+              updateTree({
+                body: { name: values.treeName },
+                params: { uuid: treeId },
+              })
+            )}
+          >
             <Form.Field
               Label={
                 <Dialog.Description>
@@ -69,7 +60,7 @@ export function UpdateTreeDialog({
               }
             >
               <Form.Input
-                name={formState.names.treeName}
+                {...methods.register("treeName", { required: true })}
                 placeholder={t("treeNameInput.placeholder")}
                 required
               />

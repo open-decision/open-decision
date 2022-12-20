@@ -1,5 +1,6 @@
 import {
-  ODError,
+  InterpreterError,
+  ODProgrammerError,
   ODValidationError,
   ODValidationErrorConstructorParameters,
 } from "@open-decision/type-classes";
@@ -14,7 +15,10 @@ export class InvalidTreeError extends ODValidationError {
   }
 }
 
-export class MissingEdgeForThruthyConditionException extends ODError {
+/**
+ * This error is thrown when the interpreter is unable to find an edge for a condition that is truthy.
+ */
+export class MissingEdgeForThruthyConditionError extends InterpreterError {
   constructor() {
     super({
       message: "There is no Edge for this condition.",
@@ -23,11 +27,21 @@ export class MissingEdgeForThruthyConditionException extends ODError {
   }
 }
 
-export class NoTruthyConditionException extends ODError {
+export class NoTruthyConditionError extends InterpreterError {
   constructor() {
     super({
       message: "No thruthy condition has been found.",
       code: "NO_TRUTHY_CONDITION",
+    });
+  }
+}
+
+export class MissingAnswerOnInterpreterContextError extends ODProgrammerError {
+  constructor() {
+    super({
+      code: "MISSING_ANSWER_ON_INTERPRETER_CONTEXT",
+      message:
+        "No answer was found on the interpreter context for the provided condition.",
     });
   }
 }

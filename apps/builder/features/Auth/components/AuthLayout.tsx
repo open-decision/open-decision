@@ -3,14 +3,7 @@ import { Layout } from "../../../components";
 
 export function getAuthLayout(page: React.ReactElement) {
   return (
-    <Layout
-      css={{
-        background: "url(/background_pattern_auth_pages.svg)",
-        backgroundSize: "cover",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
+    <Layout className="bg-cover items-center justify-center bg-[url(/background_pattern_auth_pages.svg)]">
       {page}
     </Layout>
   );

@@ -1,16 +1,13 @@
 import * as React from "react";
 import {
-  buttonStyles,
   Dialog,
   Link,
   Text,
   Form,
   Stack,
-  DialogTriggerProps,
-  StyleObject,
+  buttonClasses,
 } from "@open-decision/design-system";
 import { readableDate } from "../../../features/Dashboard/utils";
-import { ErrorBoundary } from "@sentry/nextjs";
 import { useTreeAPI } from "../../Data/useTreeAPI";
 import { useTranslations } from "next-intl";
 
@@ -20,8 +17,7 @@ type Props = {
   onCancel?: () => void;
   focusOnCancel?: () => void;
   className?: string;
-  children?: DialogTriggerProps["children"];
-  css?: StyleObject;
+  children?: Dialog.TriggerProps["children"];
   treeId: string;
   treeName?: string;
 };
@@ -33,7 +29,6 @@ export function ExportDialog({
   onCancel,
   focusOnCancel,
   className,
-  css,
   treeId,
   treeName,
 }: Props) {
@@ -45,16 +40,10 @@ export function ExportDialog({
     isSuccess,
   } = useTreeAPI().useExport(treeId);
 
-  const formState = Form.useFormState({
+  const methods = Form.useForm({
     defaultValues: {
       name: `${treeName ?? "Unbennant"}_${readableDate(new Date())}`,
     },
-  });
-
-  formState.useSubmit(() => {
-    mutate({
-      name: treeName ?? "Unbennant",
-    });
   });
 
   return (
@@ -63,59 +52,51 @@ export function ExportDialog({
       <Dialog.Portal>
         <Dialog.Content
           className={className}
-          css={css}
           onCloseAutoFocus={!isSuccess ? focusOnCancel : undefined}
         >
           <Dialog.Header>{t("title")}</Dialog.Header>
-          <ErrorBoundary fallback={ExportErrorFallback}>
-            {!fileUrl ? (
-              <>
-                <Dialog.Description asChild>
-                  <Text css={{ marginTop: "$2" }}>
-                    {t("customization.description")}
-                  </Text>
-                </Dialog.Description>
-                <Form.Root
-                  state={formState}
-                  css={{ marginTop: "$4" }}
-                  resetOnSubmit={false}
+          {!fileUrl ? (
+            <>
+              <Dialog.Description asChild>
+                <Text className="mt-2">{t("customization.description")}</Text>
+              </Dialog.Description>
+              <Form.Root
+                methods={methods}
+                onSubmit={methods.handleSubmit(() =>
+                  mutate({
+                    name: treeName ?? "Unbennant",
+                  })
+                )}
+                className="mt-4"
+              >
+                <Form.Field Label={t("customization.nameInput.label")}>
+                  <Form.Input {...methods.register("name")} />
+                </Form.Field>
+                <Form.SubmitButton
+                  isLoading={isLoading}
+                  className="mt-2 ml-auto"
                 >
-                  <Form.Field Label={t("customization.nameInput.label")}>
-                    <Form.Input name={formState.names.name} />
-                  </Form.Field>
-                  <Form.Submit
-                    isLoading={isLoading}
-                    css={{ marginTop: "$2", marginLeft: "auto" }}
-                  >
-                    {t("customization.submit")}
-                  </Form.Submit>
-                </Form.Root>
-              </>
-            ) : (
-              <Stack>
-                <Dialog.Description asChild>
-                  <Text css={{ marginTop: "$2" }}>{t("save.description")}</Text>
-                </Dialog.Description>
-                <Link
-                  className={buttonStyles({
-                    css: { marginTop: "$4", alignSelf: "flex-end" },
-                  })}
-                  download={`${formState.values.name}.json`}
-                  href={fileUrl}
-                  onClick={onSuccess}
-                >
-                  {t("save.cta")}
-                </Link>
-              </Stack>
-            )}
-          </ErrorBoundary>
+                  {t("customization.submit")}
+                </Form.SubmitButton>
+              </Form.Root>
+            </>
+          ) : (
+            <Stack>
+              <Dialog.Description asChild>
+                <Text className="mt-2">{t("save.description")}</Text>
+              </Dialog.Description>
+              <Link
+                className={buttonClasses({}, ["mt-4 self-end"])}
+                download={`${methods.watch("name")}.json`}
+                href={fileUrl}
+                onClick={onSuccess}
+              >
+                {t("save.cta")}
+              </Link>
+            </Stack>
+          )}
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
   );
-}
-
-function ExportErrorFallback() {
-  const t = useTranslations("common.exportDialog");
-  return <Text>{t("errorFallback")}</Text>;
 }

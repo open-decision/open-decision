@@ -5,3 +5,5 @@ export * from "./whitelistentry";
 export * from "./token";
 export * from "./tag";
 export * from "../enums";
+export * from "./publishedTemplate";
+export * from "./documentTemplate";

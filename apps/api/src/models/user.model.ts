@@ -1,4 +1,4 @@
-import { User as PrismaUser } from "@open-decision/prisma";
+import { User as PrismaUser } from "@prisma/client";
 import { UserBody } from "../types/types";
 import prisma from "../init-prisma-client";
 import * as argon2 from "argon2";

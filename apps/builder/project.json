@@ -32,11 +32,16 @@
       }
     },
     "serve:app": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "command": "nx run-many --target=serve --projects=builder,api --parallel=2 --output-style=stream"
       },
-      "dependsOn": [{ "target": "build", "projects": "dependencies" }]
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": "dependencies"
+        }
+      ]
     },
     "export": {
       "executor": "@nrwl/next:export",
@@ -45,9 +50,12 @@
       }
     },
     "test": {
-      "executor": "@nxext/vitest:vitest",
-      "options": {
-        "command": "run"
+      "executor": "@nrwl/vite:test",
+      "configurations": {
+        "watch": {
+          "watch": true,
+          "passWithNoTests": true
+        }
       }
     },
     "lint": {
@@ -58,19 +66,26 @@
       }
     },
     "deploy": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "command": "vercel deploy --force"
       }
     },
     "typecheck": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "command": "tsc -p tsconfig.json",
         "cwd": "apps/builder"
       },
-      "dependsOn": [{ "projects": "dependencies", "target": "build" }]
+      "dependsOn": [
+        {
+          "projects": "dependencies",
+          "target": "build"
+        }
+      ]
     }
   },
-  "tags": []
+  "tags": [],
+  "implicitDependencies": ["api"],
+  "name": "builder"
 }

@@ -19,9 +19,9 @@ export interface Typegen0 {
   };
   missingImplementations: {
     actions: never;
-    services: never;
-    guards: never;
     delays: never;
+    guards: never;
+    services: never;
   };
   eventsCausingActions: {
     assignAnswerToContext: "ADD_USER_ANSWER";
@@ -29,16 +29,16 @@ export interface Typegen0 {
     callOnError: "INVALID_INTERPRETATION";
     goBack: "GO_BACK";
     goForward: "GO_FORWARD";
-    resetToInitialContext: "RESET";
+    resetToInitialContext: "RESET" | "RESTART";
   };
-  eventsCausingServices: {
-    resolveConditions: "EVALUATE_NODE_CONDITIONS";
-  };
+  eventsCausingDelays: {};
   eventsCausingGuards: {
     canGoBack: "GO_BACK";
     canGoForward: "GO_FORWARD";
   };
-  eventsCausingDelays: {};
-  matchesStates: "idle" | "interpreting";
+  eventsCausingServices: {
+    resolveConditions: "EVALUATE_NODE_CONDITIONS";
+  };
+  matchesStates: "done" | "idle" | "interpreting";
   tags: never;
 }

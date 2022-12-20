@@ -1,4 +1,3 @@
-import { withSentry } from "@sentry/nextjs";
 import { NextApiHandler } from "next";
 import { withAuthRefresh } from "../../../../utils/auth";
 
@@ -9,10 +8,4 @@ const getToken: NextApiHandler = async (req, res) => {
   return res.json({ token });
 };
 
-export default withSentry(withAuthRefresh(getToken));
-
-export const config = {
-  api: {
-    externalResolver: true,
-  },
-};
+export default withAuthRefresh(getToken);

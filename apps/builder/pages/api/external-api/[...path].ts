@@ -1,6 +1,5 @@
-import { safeFetch } from "@open-decision/api-helpers";
+import { safeFetchJSON } from "@open-decision/api-helpers";
 import { APIError, isAPIError } from "@open-decision/type-classes";
-import { withSentry } from "@sentry/nextjs";
 import { NextApiHandler } from "next";
 import { withAuthRefresh } from "../../../utils/auth";
 
@@ -9,7 +8,7 @@ const ProxyAPI: NextApiHandler = async (req, res) => {
 
   try {
     const path = req.url?.split("external-api")[1];
-    const { status, data } = await safeFetch(
+    const { status, data } = await safeFetchJSON(
       `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1${path}`,
       {
         body: req.method === "GET" ? undefined : req.body,
@@ -22,6 +21,8 @@ const ProxyAPI: NextApiHandler = async (req, res) => {
     );
 
     res.setHeader("Cache-Control", "no-store");
+    if (status === 204) return res.status(status).end();
+
     return res.status(status).json(data);
   } catch (error) {
     console.error(error);
@@ -36,10 +37,4 @@ const ProxyAPI: NextApiHandler = async (req, res) => {
   }
 };
 
-export default withSentry(withAuthRefresh(ProxyAPI));
-
-export const config = {
-  api: {
-    externalResolver: true,
-  },
-};
+export default withAuthRefresh(ProxyAPI);

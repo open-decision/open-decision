@@ -1,8 +1,4 @@
-import {
-  DropdownMenu,
-  Icon,
-  Link as SystemLink,
-} from "@open-decision/design-system";
+import { DropdownMenu, Icon } from "@open-decision/design-system";
 import { ExitIcon, GearIcon } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
@@ -19,16 +15,14 @@ export function UserMenu() {
         <MenuButton label={t("common.UserMenu.label")} />
       </DropdownMenu.Trigger>
       <DropdownMenu.Content align="end" sideOffset={15}>
-        <Link href="/settings#account" passHref>
-          <DropdownMenu.Item asChild>
-            <SystemLink>
-              <Icon>
-                <GearIcon />
-              </Icon>
-              {t("common.glossary.settings")}
-            </SystemLink>
-          </DropdownMenu.Item>
-        </Link>
+        <DropdownMenu.Item asChild>
+          <Link href="/settings#account">
+            <Icon>
+              <GearIcon />
+            </Icon>
+            {t("common.glossary.settings")}
+          </Link>
+        </DropdownMenu.Item>
         <DropdownMenu.Item onSelect={() => logout()}>
           <Icon>
             <ExitIcon />

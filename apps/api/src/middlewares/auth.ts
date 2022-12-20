@@ -2,10 +2,10 @@ import { Request, Response, NextFunction } from "express";
 import * as http from "http";
 import passport from "passport";
 import { Permissions, roleRights } from "../config/roles";
-import { User } from "@open-decision/prisma";
+import { User } from "@prisma/client";
 import { jwtStrategy, jwtWebsocketStrategy } from "../config/passport";
 import { APIError } from "@open-decision/type-classes";
-
+import UserHandler from "../models/user.model";
 const verifyCallback =
   (
     req: Request | http.IncomingMessage,
@@ -13,7 +13,7 @@ const verifyCallback =
     reject,
     requiredRights: Permissions[]
   ) =>
-  async (err: any, user: User, info: any) => {
+  async (err: any, user: Pick<User, "uuid">, info: any) => {
     if (err || info || !user) {
       return reject(
         new APIError({
@@ -24,21 +24,25 @@ const verifyCallback =
     }
 
     if (!("user" in req)) {
-      req["user"] = user;
+      req["user"] = { ...user };
     } else {
-      req.user = user;
+      req.user = { ...user };
     }
 
     if (requiredRights.length !== 0) {
-      const userRights = roleRights.get(user.role) ?? [];
+      const userFromDB = await UserHandler.findByUuidOrId(user.uuid);
+      if (!userFromDB)
+        return reject(
+          new APIError({
+            code: "UNAUTHORIZED",
+            message: "Please authenticate",
+          })
+        );
+      const userRights = roleRights.get(userFromDB.role) ?? [];
       const hasRequiredRights = requiredRights.every((requiredRight) =>
         userRights.includes(requiredRight)
       );
-      if (
-        !hasRequiredRights &&
-        "params" in req &&
-        req.params.userUuid !== user.uuid
-      ) {
+      if (!hasRequiredRights) {
         return reject(
           new APIError({
             code: "FORBIDDEN",

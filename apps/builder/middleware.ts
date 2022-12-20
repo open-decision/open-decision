@@ -2,12 +2,12 @@ import { NextMiddleware, NextResponse } from "next/server";
 import { client } from "@open-decision/api-client";
 import { APIError, ODError } from "@open-decision/type-classes";
 import { authCookieConfig } from "./utils/auth";
-import { safeFetch } from "@open-decision/api-helpers";
+import { safeFetchJSON } from "@open-decision/api-helpers";
 
 export const middleware: NextMiddleware = async (request) => {
   const OD = client({
     urlPrefix: `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1`,
-    fetchFunction: safeFetch,
+    fetchFunction: safeFetchJSON,
     config: { retry: 3 },
   });
 
@@ -22,7 +22,9 @@ export const middleware: NextMiddleware = async (request) => {
     }
 
     if (refreshToken) {
-      const { data } = await OD.auth.refreshToken({ body: { refreshToken } });
+      const { data } = await OD.auth.refreshToken({
+        body: { refreshToken: refreshToken.value },
+      });
 
       if (data instanceof ODError) throw data;
 

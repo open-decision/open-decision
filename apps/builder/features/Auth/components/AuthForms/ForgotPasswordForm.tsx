@@ -12,28 +12,21 @@ type Props = {
 
 export function ForgotPasswordForm({ onSubmit, error, isLoading }: Props) {
   const t = useTranslations("forgotPassword");
-  const formState = Form.useFormState({
+  const methods = Form.useForm({
     defaultValues: {
       email: "",
     },
   });
 
-  formState.useSubmit(() => {
-    onSubmit({ email: formState.values.email });
-  });
-
   return (
     <Form.Root
-      state={formState}
-      css={{ display: "flex", flexDirection: "column" }}
+      methods={methods}
+      onSubmit={methods.handleSubmit(onSubmit)}
+      className="flex flex-col"
     >
-      <EmailField name={formState.names.email} />
+      <EmailField />
       {error ? <ErrorMessage code={error.code} /> : null}
-      <SubmitButton
-        isLoading={isLoading}
-        type="submit"
-        css={{ marginTop: "$6" }}
-      >
+      <SubmitButton isLoading={isLoading} type="submit" className="mt-6">
         {t("submitButton")}
       </SubmitButton>
     </Form.Root>

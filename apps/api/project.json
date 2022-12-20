@@ -5,29 +5,41 @@
   "implicitDependencies": ["prisma"],
   "targets": {
     "build": {
-      "executor": "@nrwl/node:webpack",
+      "executor": "@nrwl/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/api",
         "main": "apps/api/src/index.ts",
-        "tsConfig": "apps/api/tsconfig.app.json"
+        "tsConfig": "apps/api/tsconfig.app.json",
+        "target": "node",
+        "compiler": "tsc",
+        "externalDependencies": [
+          "express",
+          "swagger-jsdoc",
+          "argon2",
+          "@prisma/client"
+        ]
       },
       "dependsOn": [
         {
           "target": "build",
           "projects": "dependencies"
+        },
+        {
+          "target": "setup",
+          "projects": "dependencies"
         }
       ]
     },
     "close:db": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "commands": ["docker compose -f docker-compose.yml down"],
         "cwd": "apps/api"
       }
     },
     "start:db": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "commands": [
           "docker compose -f apps/api/docker-compose.yml up -d --wait"
@@ -43,7 +55,7 @@
       "watch": true
     },
     "serve": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "commands": [
           "nx migrate:dev prisma",
@@ -52,12 +64,17 @@
         ],
         "parallel": false
       },
-      "dependsOn": [{ "target": "start:db", "projects": "self" }]
+      "dependsOn": [
+        {
+          "target": "start:db",
+          "projects": "self"
+        }
+      ]
     },
     "seed:db": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
-        "commands": ["pnpm prisma db seed"],
+        "commands": ["prisma db seed"],
         "cwd": "apps/api"
       }
     },
@@ -69,27 +86,34 @@
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/apps/api"],
-      "options": {
-        "jestConfig": "apps/api/jest.config.ts",
-        "passWithNoTests": true
+      "executor": "@nrwl/vite:test",
+      "configurations": {
+        "watch": {
+          "watch": true,
+          "passWithNoTests": true
+        }
       }
     },
     "deploy": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "command": "flyctl deploy --config apps/api/fly.toml --dockerfile apps/api/Dockerfile"
       }
     },
     "typecheck": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "command": "tsc -p tsconfig.app.json",
         "cwd": "apps/api"
       },
-      "dependsOn": [{ "projects": "dependencies", "target": "build" }]
+      "dependsOn": [
+        {
+          "projects": "dependencies",
+          "target": "build"
+        }
+      ]
     }
   },
-  "tags": []
+  "tags": [],
+  "name": "api"
 }

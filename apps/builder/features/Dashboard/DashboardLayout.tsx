@@ -3,15 +3,7 @@ import { Layout } from "../../components";
 
 export function getDashboardLayout(page: React.ReactElement) {
   return (
-    <Layout
-      css={{
-        display: "grid",
-        overflow: "hidden",
-        gridTemplateRows: "max-content max-content 1fr",
-        gridTemplateColumns: "1fr 200px minmax(600px, 1fr) 1fr",
-        columnGap: "$7",
-      }}
-    >
+    <Layout className="grid overflow-hidden grid-rows-[max-content_max-content_1fr] gap-7 grid-cols-[1fr_200px_minmax(600px,_1fr)_1fr]">
       {page}
     </Layout>
   );

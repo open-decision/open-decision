@@ -9,7 +9,7 @@ import { useLoginMutation } from "../../mutations/useLoginMutation";
 export function LoginForm() {
   const t = useTranslations();
   const router = useRouter();
-  const formState = Form.useFormState({
+  const methods = Form.useForm({
     defaultValues: {
       email: "",
       password: "",
@@ -25,28 +25,32 @@ export function LoginForm() {
       return router.push("/");
     },
     onError: (error) => {
-      formState.setErrors({
-        email: error.errors?.body?.email?._errors[0],
-        password: error.errors?.body?.password?._errors[0],
+      methods.setError("email", {
+        message: error.errors?.body?.email?._errors[0],
+      });
+      methods.setError("password", {
+        message: error.errors?.body?.password?._errors[0],
       });
     },
   });
 
-  formState.useSubmit(() => {
+  const onSubmit = methods.handleSubmit((values) => {
     login({
-      email: formState.values.email,
-      password: formState.values.password,
+      email: values.email,
+      password: values.password,
     });
   });
 
   return (
-    <Form.Root state={formState} css={{ gap: "$6" }} resetOnSubmit={false}>
+    <Form.Root methods={methods} onSubmit={onSubmit} className="gap-6">
       <Stack>
-        <EmailField name={formState.names.email} />
+        <EmailField />
         <PasswordInput
-          name={formState.names.password}
+          {...methods.register("password", {
+            required: { value: true, message: "Bitte gib dein Passwort ein." },
+          })}
           hasPasswordResetLink
-          fieldCss={{ marginTop: "$4" }}
+          fieldClassName="mt-4"
         />
       </Stack>
       {error ? <ErrorMessage code={error.code} /> : null}

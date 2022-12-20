@@ -1,1 +1,4 @@
-export * as Renderer from "./lib/Renderer";
+export * as Renderer from "./Renderer";
+export * from "./types";
+
+export * from "./components";

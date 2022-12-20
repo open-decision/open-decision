@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Heading, Form } from "@open-decision/design-system";
-import { Card } from "../../components/Card";
+import { cardClasses } from "../../components/Card";
 import { VerifiedSettingsChange } from "./VerifiedSettingsChange";
-import { TGetUserOutput } from "@open-decision/user-api-specification";
+import { TGetUserOutput } from "@open-decision/api-specification";
 import { useUser } from "../Auth/useUserQuery";
 import { EmailField } from "../../components/EmailInput";
 import { useTranslations } from "next-intl";
@@ -13,26 +13,22 @@ type Props = { user: TGetUserOutput };
 export function ChangeEmail({ user }: Props) {
   const t = useTranslations("settings.account.changeEmail");
   const { addNotification } = useNotificationStore();
-  const formState = Form.useFormState({
+  const methods = Form.useForm({
     defaultValues: {
       newEmail: "",
     },
   });
 
-  formState.useSubmit(() => {
-    setOpen(true);
-  });
-
   const { mutate, isLoading } = useUser().useUserUpdateMutation({
     onError: (error) => {
-      formState.setErrors({ newEmail: error.message });
+      methods.setError("newEmail", { message: error.message });
     },
     onSuccess: () => {
       addNotification({
         title: t("success.title"),
         variant: "success",
       });
-      formState.reset();
+      methods.reset();
     },
   });
 
@@ -42,27 +38,32 @@ export function ChangeEmail({ user }: Props) {
     <VerifiedSettingsChange
       email={user.email}
       onVerify={() => {
-        mutate({ email: formState.values.newEmail });
+        const newEmail = methods.getValues("newEmail");
+
+        mutate({ email: newEmail });
         setOpen(false);
       }}
       open={open}
       setOpen={setOpen}
     >
-      <Card>
+      <div className={cardClasses()}>
         <Heading as="h3" size="small">
           {t("title")}
         </Heading>
-        <Form.Root state={formState} resetOnSubmit={false}>
-          <EmailField name={formState.names.newEmail} />
-          <Form.Submit
+        <Form.Root
+          methods={methods}
+          onSubmit={methods.handleSubmit(() => setOpen(true))}
+        >
+          <EmailField />
+          <Form.SubmitButton
             isLoading={isLoading}
             variant="secondary"
-            css={{ marginLeft: "auto", marginTop: "$3" }}
+            className="ml-auto mt-3"
           >
             {t("submit")}
-          </Form.Submit>
+          </Form.SubmitButton>
         </Form.Root>
-      </Card>
+      </div>
     </VerifiedSettingsChange>
   );
 }

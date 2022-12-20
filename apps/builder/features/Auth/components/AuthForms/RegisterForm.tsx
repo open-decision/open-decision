@@ -1,14 +1,20 @@
-import { Form, Stack, Box, Row, InfoBox } from "@open-decision/design-system";
+import {
+  Form,
+  Stack,
+  Row,
+  InfoBox,
+  linkClasses,
+} from "@open-decision/design-system";
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
-import { InternalLink } from "../../../../components/InternalLink";
 import { useRegisterMutation } from "../../mutations/useRegisterMutation";
 import { useRouter } from "next/router";
-import { safeFetch } from "@open-decision/api-helpers";
+import { safeFetchJSON } from "@open-decision/api-helpers";
 import { useTranslations } from "next-intl";
 import { EmailField } from "../../../../components/EmailInput";
 import { PasswordInput } from "../../../../components/PasswordInput";
 import { ErrorMessage } from "../../../../components/Error/ErrorMessage";
 import { APIErrors } from "@open-decision/type-classes";
+import Link from "next/link";
 
 type Data = { email: string };
 
@@ -18,7 +24,7 @@ const useIsOnWhiteListQuery = (
   useMutation(
     ["isOnWhiteList"],
     async (data: Data) => {
-      const result = await safeFetch(
+      const result = await safeFetchJSON(
         `/users/is-whitelisted`,
         {
           body: data,
@@ -37,14 +43,10 @@ const useIsOnWhiteListQuery = (
 export function CombinedRegisterForm() {
   const t = useTranslations();
 
-  const formState = Form.useFormState({
+  const methods = Form.useForm({
     defaultValues: {
       email: "",
     },
-  });
-
-  formState.useSubmit(() => {
-    mutate({ email: formState.values.email });
   });
 
   const { mutate, isSuccess, isError, isLoading, variables } =
@@ -70,13 +72,14 @@ export function CombinedRegisterForm() {
 
   return (
     <Form.Root
-      state={formState}
-      css={{ display: "flex", flexDirection: "column" }}
+      methods={methods}
+      onSubmit={methods.handleSubmit((values) => mutate(values))}
+      className="flex flex-col"
     >
-      <EmailField name={formState.names.email} />
-      <Form.Submit isLoading={isLoading} css={{ marginTop: "$6" }}>
+      <EmailField />
+      <Form.SubmitButton isLoading={isLoading} className="mt-6">
         {t("register.submitButton")}
-      </Form.Submit>
+      </Form.SubmitButton>
     </Form.Root>
   );
 }
@@ -84,13 +87,15 @@ export function CombinedRegisterForm() {
 function RegisterForm({ email }: { email?: string }) {
   const t = useTranslations();
 
-  const formState = Form.useFormState({
+  const methods = Form.useForm<{
+    email: string;
+    password: string;
+    passwordConfirmation: string;
+    legal: boolean;
+    privacy: boolean;
+  }>({
     defaultValues: {
-      email: email ?? "",
-      password: "",
-      passwordConfirmation: "",
-      legal: false,
-      privacy: false,
+      email,
     },
   });
 
@@ -108,115 +113,108 @@ function RegisterForm({ email }: { email?: string }) {
       const emailFieldError = error?.errors?.body?.email
         ?._errors[0] as keyof typeof APIErrors;
 
-      formState.setErrors({
-        password: passwordFieldError
+      methods.setError("password", {
+        message: passwordFieldError
           ? t(`common.errors.${passwordFieldError}.long`)
           : undefined,
-        email: emailFieldError
+      });
+
+      methods.setError("email", {
+        message: emailFieldError
           ? t(`common.errors.${emailFieldError}.long`)
           : undefined,
       });
     },
   });
 
-  formState.useSubmit(() => {
-    register({
-      email: formState.values.email,
-      password: formState.values.password,
-      toc: true,
-    });
-  });
-
-  formState.useValidate(() => {
-    if (formState.values.password !== formState.values.passwordConfirmation)
-      formState.setError(
-        formState.names.passwordConfirmation,
-        "Die Passwörter stimmen nicht überein."
-      );
-  });
-
   return (
-    <Form.Root state={formState} resetOnSubmit={false}>
-      <EmailField name={formState.names.email} />
+    <Form.Root
+      methods={methods}
+      onSubmit={methods.handleSubmit((values) =>
+        register({
+          email: values.email,
+          password: values.password,
+          toc: true,
+        })
+      )}
+    >
+      <EmailField />
       <PasswordInput
-        name={formState.names.password}
-        fieldCss={{ marginTop: "$4" }}
+        {...methods.register("password", {
+          required: {
+            value: true,
+            message: "Dieses Feld muss ausgefüllt werden.",
+          },
+        })}
+        fieldClassName="mt-4"
       />
       <PasswordInput
         customLabel={t("register.passwordConfirmation.label")}
-        name={formState.names.passwordConfirmation}
-        fieldCss={{ marginTop: "$4" }}
+        {...methods.register("passwordConfirmation", {
+          required: {
+            value: true,
+            message: "Dieses Feld muss ausgefüllt werden.",
+          },
+          validate: (value) =>
+            value === methods.getValues("password") ||
+            "Die Passwörter stimmen nicht überein.",
+        })}
+        fieldClassName="mt-4"
       />
-      <Stack css={{ gap: "$2", marginTop: "$4" }}>
+      <Stack className="gap-2 mt-4">
         <Stack>
-          <Row css={{ alignItems: "center", gap: "$2" }}>
+          <Row className="items-center gap-2">
             <Form.Checkbox
-              formState={formState}
-              name={formState.names.privacy}
-              required
+              {...methods.register("privacy", {
+                required: {
+                  value: true,
+                  message: "Bitte bestätigen sie diese Bedingung.",
+                },
+              })}
             />
-            <Box as="span" css={{ lineHeight: "2px" }}>
-              <Form.Label
-                css={{ display: "inline" }}
-                size="small"
-                name={formState.names.privacy}
-              >
+            <span>
+              <Form.Label className="inline" htmlFor="privacy">
                 {t("register.dataProtection.start")}
               </Form.Label>{" "}
-              <InternalLink
+              <Link
+                className={linkClasses({})}
                 href="https://open-decision.org/privacy"
                 target="_blank"
-                size="small"
               >
                 {t("register.dataProtection.link")}
-              </InternalLink>{" "}
-              <Form.Label
-                css={{ display: "inline" }}
-                size="small"
-                name={formState.names.privacy}
-              >
+              </Link>{" "}
+              <Form.Label className="inline" htmlFor="privacy">
                 {t("register.dataProtection.end")}
               </Form.Label>
-            </Box>
+            </span>
           </Row>
           <Form.Error
-            data-test={`error-${formState.names.privacy}`}
-            name={formState.names.privacy}
-            css={{ marginTop: "$2" }}
+            data-test={`error-privacy`}
+            className="mt-2"
+            name="privacy"
           />
         </Stack>
         <Stack>
-          <Row css={{ alignItems: "center", gap: "$2" }}>
+          <Row className="items-center gap-2">
             <Form.Checkbox
-              formState={formState}
-              name={formState.names.legal}
-              required
+              {...methods.register("legal", {
+                required: {
+                  value: true,
+                  message: "Bitte bestätigen sie diese Bedingung.",
+                },
+              })}
             />
-            <Form.Label
-              css={{ display: "inline" }}
-              size="small"
-              name={formState.names.legal}
-            >
+            <Form.Label className="inline" htmlFor="legal">
               {t("register.alphaDisclaimer")}
             </Form.Label>
           </Row>
-          <Form.Error
-            data-test={`error-${formState.names.legal}`}
-            name={formState.names.legal}
-            css={{ marginTop: "$2" }}
-          />
+          <Form.Error data-test={`error-legal`} name="legal" className="mt-2" />
         </Stack>
       </Stack>
-      {isError ? (
-        <ErrorMessage css={{ marginTop: "$4" }} code={error.code} />
-      ) : null}
-      <Form.Submit
-        isLoading={isLoading}
-        css={{ marginTop: "$4" }}
-        type="submit"
-      >
+      {isError ? <ErrorMessage className="mt-4" code={error.code} /> : null}
+      <Form.SubmitButton isLoading={isLoading} className="mt-4" type="submit">
         {t("register.submitButton")}
-      </Form.Submit>
+      </Form.SubmitButton>
     </Form.Root>
   );
 }

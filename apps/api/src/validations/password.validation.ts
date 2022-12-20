@@ -1,7 +1,7 @@
 import { zxcvbn, zxcvbnOptions } from "@zxcvbn-ts/core";
 import zxcvbnCommonPackage from "@zxcvbn-ts/language-common";
 import zxcvbnEnPackage from "@zxcvbn-ts/language-en";
-import zxcvbnDePackage from "@zxcvbn-ts/language-en";
+import zxcvbnDePackage from "@zxcvbn-ts/language-de";
 
 export async function isPasswordStrongEnough(password: string) {
   const slicedPassword =

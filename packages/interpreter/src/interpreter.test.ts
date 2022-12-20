@@ -1,5 +1,5 @@
 import { test, expect, describe } from "vitest";
-import { mietminderungTreeMock, treeMock } from "@open-decision/type-classes";
+import { mietminderungTreeMock, treeMock } from "@open-decision/tree-type";
 import { createInterpreterMachine } from "./interpreter";
 import { interpret } from "xstate";
 

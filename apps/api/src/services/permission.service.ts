@@ -1,4 +1,5 @@
 import prisma from "../init-prisma-client";
+import * as publishedTreeModel from "../models/publishedTree.model";
 
 export const hasPermissionsForTree = async (
   userUuidFromRequest: string,
@@ -16,5 +17,41 @@ export const hasPermissionsForTree = async (
   });
 
   if (tree) return true;
+  return false;
+};
+
+export const hasPermissionsForDocumentTemplate = async (
+  userUuidFromRequest: string,
+  documentUuidFromRequest: string
+) => {
+  const documentTemplate = await prisma.documentTemplate.findFirst({
+    where: {
+      OR: [
+        { uuid: documentUuidFromRequest, ownerUuid: userUuidFromRequest },
+        {
+          uuid: documentUuidFromRequest,
+          decisionTree: {
+            ownerUuid: userUuidFromRequest,
+          },
+        },
+      ],
+    },
+  });
+
+  if (documentTemplate) return true;
+  return false;
+};
+
+export const hasPermissionsForPublishedTree = async (
+  userUuidFromRequest: string,
+  publishedTreeUuidFromRequest: string
+) => {
+  const publishedTree =
+    await publishedTreeModel.getPublishedTreeFromDbWithPermission(
+      userUuidFromRequest,
+      publishedTreeUuidFromRequest
+    );
+
+  if (publishedTree) return true;
   return false;
 };

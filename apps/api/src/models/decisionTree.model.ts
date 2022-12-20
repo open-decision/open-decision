@@ -1,57 +1,138 @@
 import prisma from "../init-prisma-client";
-import { docs } from "y-websocket/bin/utils";
-import buffer from "../utils/buffer";
-import * as Y from "yjs";
-import { APIError } from "@open-decision/type-classes";
+import { TreeStatus } from "@prisma/client";
+import { TUpdateTreeInput } from "@open-decision/api-specification";
+import { decodeYDoc } from "@open-decision/tree-utils";
 
-function createTreeFromYDocument(yDocument: string) {
-  const ydoc = new Y.Doc();
-  // Apply the base64 db-stored update data to the empty ydoc
-  Y.applyUpdate(ydoc, buffer.fromBase64(yDocument));
+const prismaSelectionForTree = {
+  publishedTrees: { select: { uuid: true } },
+  createdAt: true,
+  updatedAt: true,
+  name: true,
+  hasPreview: true,
+  status: true,
+  uuid: true,
+  ownerUuid: true,
+};
 
-  return ydoc.getMap("tree").toJSON();
-}
-
-/**
- * Get the tree with updated treeData as JSON
- * @param {(string)} userUuid
- * @param {(string)} treeToPublish
- *
- * @returns {string}
- */
-export const getTreeWithUpdatedTreeData = async (
-  treeUuid: string,
-  userUuid?: string
+export const createTree = async (
+  userUuid: string,
+  name: string,
+  status?: TreeStatus
 ) => {
-  const treeFromDb = await prisma.decisionTree.findFirst({
+  return prisma.decisionTree.create({
+    data: {
+      name,
+      status,
+      owner: { connect: { uuid: userUuid } },
+    },
+    select: prismaSelectionForTree,
+  });
+};
+
+export const getSingleTree = async (userUuid: string, treeUuid: string) => {
+  return prisma.decisionTree.findFirst({
     where: {
-      uuid: treeUuid,
       ownerUuid: userUuid,
+      uuid: treeUuid,
+    },
+    select: prismaSelectionForTree,
+  });
+};
+
+export const getFullSingleTree = async (userUuid: string, treeUuid: string) => {
+  return prisma.decisionTree.findFirst({
+    where: {
+      ownerUuid: userUuid,
+      uuid: treeUuid,
     },
   });
+};
 
-  // Return if the user does not own the tree he wants to get
-  if (!treeFromDb)
-    return new APIError({
-      code: "NOT_FOUND",
-      message: "The requested tree does not exist.",
-    });
+export const getSingleTreeWithPreview = async (treeUuid: string) => {
+  return prisma.decisionTree.findFirst({
+    where: {
+      hasPreview: true,
+      uuid: treeUuid,
+    },
+    select: prismaSelectionForTree,
+  });
+};
 
-  // Check if the tree is currently being edited using the yjs-websocket and use that version otherwise use the dbs version
-  const treeData = docs.has(treeFromDb.uuid)
-    ? docs.get(treeFromDb.uuid).getMap("tree").toJSON()
-    : treeFromDb.yDocument
-    ? createTreeFromYDocument(treeFromDb.yDocument)
-    : null;
+export const getFullSingleTreeWithPreview = async (treeUuid: string) => {
+  return prisma.decisionTree.findFirst({
+    where: {
+      hasPreview: true,
+      uuid: treeUuid,
+    },
+  });
+};
 
-  if (!treeData)
-    return new APIError({
-      code: "NO_TREE_DATA",
-      message: "This tree does not have any data.",
-    });
+export const getFullSingleTreeWithoutPermissionCheck = async (
+  treeUuid: string
+) => {
+  return prisma.decisionTree.findFirst({
+    where: {
+      uuid: treeUuid,
+    },
+  });
+};
 
-  return {
-    ...treeFromDb,
-    treeData,
-  };
+export const getTreeCollection = async (
+  userUuid: string,
+  options?: {
+    status?: TreeStatus;
+    nameContains?: string;
+  }
+) => {
+  return prisma.decisionTree.findMany({
+    where: {
+      status: options?.status,
+      name: {
+        contains: options?.nameContains,
+        mode: "insensitive",
+      },
+      ownerUuid: userUuid,
+    },
+    select: prismaSelectionForTree,
+  });
+};
+
+export const deleteTree = async (userUuid: string, treeUuid: string) => {
+  return prisma.decisionTree.deleteMany({
+    where: {
+      ownerUuid: userUuid,
+      uuid: treeUuid,
+    },
+  });
+};
+
+export const updateTree = async (
+  userUuid: string,
+  treeUuid: string,
+  updateBody: TUpdateTreeInput["body"]
+) => {
+  return prisma.decisionTree.updateMany({
+    data: updateBody,
+    where: {
+      ownerUuid: userUuid,
+      uuid: treeUuid,
+    },
+  });
+};
+
+export const getRelatedPublishedTrees = async (
+  userUuid: string,
+  originTreeUuid: string
+) => {
+  return prisma.publishedTree.findMany({
+    where: {
+      ownerUuid: userUuid,
+      originTreeUuid,
+    },
+  });
+};
+
+export const createTreeFromYDocument = (yDocument: string) => {
+  const ydoc = decodeYDoc(yDocument);
+  return ydoc.getMap("tree").toJSON();
 };

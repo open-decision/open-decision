@@ -1,10 +1,15 @@
-import { Link } from "@open-decision/design-system";
 import { GetStaticProps } from "next";
 import { useTranslations } from "next-intl";
 import Head from "next/head";
-import { AuthCard } from "../features/Auth/components/AuthCards";
 import NextLink from "next/link";
 import { getAuthLayout } from "../features/Auth/components/AuthLayout";
+import { linkClasses } from "@open-decision/design-system";
+import {
+  containerClasses,
+  descriptionClasses,
+  headerClasses,
+  headingClasses,
+} from "../features/Auth/components/AuthCards/AuthCard";
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const messages = await import(`@open-decision/translations`).then(
@@ -30,17 +35,17 @@ export default function Page() {
       <Head>
         <title>{t("pageTitle")}</title>
       </Head>
-      <AuthCard.Container>
-        <AuthCard.Header>
-          <AuthCard.Heading>{t("title")}</AuthCard.Heading>
-          <AuthCard.Description>{t("description")}</AuthCard.Description>
-        </AuthCard.Header>
-        <AuthCard.Footer>
-          <NextLink passHref href="/">
-            <Link>{t("backToHome")}</Link>
+      <div className={containerClasses}>
+        <header className={headerClasses}>
+          <h2 className={headingClasses}>{t("title")}</h2>
+          <p className={descriptionClasses}>{t("description")}</p>
+        </header>
+        <footer>
+          <NextLink href="/" className={linkClasses()}>
+            {t("backToHome")}
           </NextLink>
-        </AuthCard.Footer>
-      </AuthCard.Container>
+        </footer>
+      </div>
     </>
   );
 }

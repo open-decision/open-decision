@@ -1,8 +1,12 @@
 import * as React from "react";
-import { Heading, SubmitButton } from "@open-decision/design-system";
-import { Card } from "../../components/Card";
+import {
+  Heading,
+  rowClasses,
+  SubmitButton,
+} from "@open-decision/design-system";
+import { cardClasses } from "../../components/Card";
 import { VerifiedSettingsChange } from "./VerifiedSettingsChange";
-import { TGetUserOutput } from "@open-decision/user-api-specification";
+import { TGetUserOutput } from "@open-decision/api-specification";
 import { useUser } from "../Auth/useUserQuery";
 import { useTranslations } from "next-intl";
 
@@ -25,19 +29,11 @@ export function DeleteAccount({ user }: Props) {
         variant: "danger",
         title: t("verifyOverlay.additionalMessage.title"),
         content: t("verifyOverlay.additionalMessage.content"),
-        css: {
-          backgroundColor: "$danger2",
-        },
+        className: "bg-danger2",
       }}
       colorScheme="danger"
     >
-      <Card
-        css={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
+      <div className={cardClasses([rowClasses(), "justify-between"])}>
         <Heading as="h3" size="small">
           {t("title")}
         </Heading>
@@ -46,10 +42,11 @@ export function DeleteAccount({ user }: Props) {
           isLoading={isLoading}
           colorScheme="danger"
           variant="secondary"
+          className="self-end"
         >
           {t("submit")}
         </SubmitButton>
-      </Card>
+      </div>
     </VerifiedSettingsChange>
   );
 }

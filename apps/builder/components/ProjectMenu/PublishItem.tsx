@@ -1,5 +1,4 @@
 import {
-  Box,
   DropdownMenu,
   Icon,
   Link,
@@ -32,12 +31,12 @@ export function PublishItem({
 
   return (
     <DropdownMenu.Sub>
-      <DropdownMenu.SubTrigger>
-        <Icon css={{ marginTop: "2px" }}>
+      <DropdownMenu.SubTriggerItem>
+        <Icon className="mt-[2px]">
           <UploadIcon />
         </Icon>
         {t("publish")}
-      </DropdownMenu.SubTrigger>
+      </DropdownMenu.SubTriggerItem>
       <DropdownMenu.SubContent sideOffset={10}>
         <DropdownMenu.Item
           onSelect={() =>
@@ -49,7 +48,7 @@ export function PublishItem({
                 })
           }
         >
-          <Icon css={{ marginTop: "2px" }}>
+          <Icon className="mt-[2px]">
             <UploadIcon />
           </Icon>
           {publishedTreeId ? t("unpublish") : t("publish")}
@@ -59,7 +58,7 @@ export function PublishItem({
           <>
             <DropdownMenu.Item asChild>
               <Link href={`/public/${publishedTreeId}`} target="_blank">
-                <Icon css={{ marginTop: "2px" }}>
+                <Icon className="mt-[2px]">
                   <OpenInNewWindowIcon />
                 </Icon>
                 {t("open")}
@@ -68,7 +67,7 @@ export function PublishItem({
             <DropdownMenu.Item
               onSelect={() => addNotificationFromTemplate("copyLink")}
             >
-              <Icon css={{ marginTop: "2px" }}>
+              <Icon className="mt-[2px]">
                 <ClipboardCopyIcon />
               </Icon>
               {t("copyLink")}
@@ -77,23 +76,23 @@ export function PublishItem({
         ) : (
           <Tooltip.Root>
             <Tooltip.Trigger asChild>
-              <Box>
+              <div>
                 <DropdownMenu.Item disabled>
-                  <Icon css={{ marginTop: "2px" }}>
+                  <Icon className="mt-[2px]">
                     <OpenInNewWindowIcon />
                   </Icon>
                   {t("open")}
                 </DropdownMenu.Item>
                 <DropdownMenu.Item disabled>
-                  <Icon css={{ marginTop: "2px" }}>
+                  <Icon className="mt-[2px]">
                     <ClipboardCopyIcon />
                   </Icon>
                   {t("copyLink")}
                 </DropdownMenu.Item>
-              </Box>
+              </div>
             </Tooltip.Trigger>
             <Tooltip.Content side="bottom">
-              <Tooltip.Title>Veröffentliche den Baum zuerst.</Tooltip.Title>
+              Veröffentliche den Baum zuerst.
             </Tooltip.Content>
           </Tooltip.Root>
         )}

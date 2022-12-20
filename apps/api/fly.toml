@@ -42,4 +42,4 @@ processes = []
     timeout = "2s"
 
 [deploy]
-  release_command = "pnpm prisma migrate deploy --schema=packages/prisma/src/schema.prisma"
+  release_command = "yarn dlx prisma migrate deploy --schema=packages/prisma/schema.prisma"

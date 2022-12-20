@@ -1,4 +1,3 @@
-import { FetchReturn } from "@open-decision/api-helpers";
 import {
   TCreatePublishedTreeInput,
   TCreateTreeInput,
@@ -14,13 +13,8 @@ import {
   TDeletePublishedTreeOutput,
   TGetTreeDataOutput,
   TGetTreePreviewOutput,
-} from "@open-decision/tree-api-specification";
-import {
-  APIError,
-  isAPIError,
-  ODError,
-  Tree,
-} from "@open-decision/type-classes";
+} from "@open-decision/api-specification";
+import { APIError, isAPIError, ODError } from "@open-decision/type-classes";
 import {
   useMutation,
   UseMutationOptions,
@@ -31,6 +25,14 @@ import { OD, proxiedOD } from "../Data/odClient";
 import { z } from "zod";
 import { useNotificationStore } from "../../config/notifications";
 import { createYjsDocumentIndexedDB } from "./utils/createYjsDocumentIndexedDB";
+import { Tree, Node, TreeClient } from "@open-decision/tree-type";
+import * as Y from "yjs";
+import { IndexeddbPersistence } from "y-indexeddb";
+import { createTreeClientWithPlugins } from "@open-decision/tree-client";
+import { PlaceholderNodePlugin } from "@open-decision/node-editor";
+import { FetchJSONReturn } from "@open-decision/api-helpers";
+
+const PlaceholderNode = new PlaceholderNodePlugin();
 
 export const treesQueryKey = ["Trees"] as const;
 export const treeQueryKey = (treeUuid: string) =>
@@ -40,43 +42,43 @@ export const treeDataQueryKey = (treeUuid: string) =>
   [treeUuid, "TreeData"] as const;
 
 export type useDeleteOptions = UseMutationOptions<
-  FetchReturn<TDeleteTreeOutput>,
+  FetchJSONReturn<TDeleteTreeOutput>,
   APIError<void>,
   TDeleteTreeInput
 >;
 
 export type useCreateOptions = UseMutationOptions<
-  FetchReturn<TCreateTreeOutput>,
+  FetchJSONReturn<TCreateTreeOutput>,
   APIError<TCreateTreeOutput>,
   TCreateTreeInput
 >;
 
 export type useUpdateOptions = UseMutationOptions<
-  FetchReturn<TUpdateTreeOutput>,
+  FetchJSONReturn<TUpdateTreeOutput>,
   APIError<void>,
   TUpdateTreeInput
 >;
 
 export type useArchiveOptions = UseMutationOptions<
-  FetchReturn<TUpdateTreeOutput>,
+  FetchJSONReturn<TUpdateTreeOutput>,
   APIError<void>,
   Pick<TUpdateTreeInput, "params">
 >;
 
 export type usePublishOptions = UseMutationOptions<
-  FetchReturn<TCreatePublishedTreeOutput>,
+  FetchJSONReturn<TCreatePublishedTreeOutput>,
   APIError<void>,
   TCreatePublishedTreeInput
 >;
 
 export type useUnpublishOptions = UseMutationOptions<
-  FetchReturn<TDeletePublishedTreeOutput>,
+  FetchJSONReturn<TDeletePublishedTreeOutput>,
   APIError<void>,
   TDeletePublishedTreeInput
 >;
 
 export type useImportOptions = UseMutationOptions<
-  FetchReturn<TCreateTreeOutput>,
+  FetchJSONReturn<TCreateTreeOutput>,
   APIError<void>,
   { event: ProgressEvent<FileReader> }
 >;
@@ -98,9 +100,9 @@ export const useTreeAPI = () => {
   const { addNotificationFromTemplate } = useNotificationStore();
   type notification = Parameters<typeof addNotificationFromTemplate>[0] | false;
 
-  const useTreesQuery = <TData = FetchReturn<TGetTreesOutput>>(options?: {
+  const useTreesQuery = <TData = FetchJSONReturn<TGetTreesOutput>>(options?: {
     staleTime?: number;
-    select?: (data: FetchReturn<TGetTreesOutput>) => TData;
+    select?: (data: FetchJSONReturn<TGetTreesOutput>) => TData;
   }) => {
     return useQuery(
       treesQueryKey,
@@ -109,13 +111,13 @@ export const useTreeAPI = () => {
     );
   };
 
-  const useTreeQuery = <TData = FetchReturn<TGetTreeOutput>>(
+  const useTreeQuery = <TData = FetchJSONReturn<TGetTreeOutput>>(
     uuid: string,
     options?: {
-      select?: (data: FetchReturn<TGetTreeOutput>) => TData;
+      select?: (data: FetchJSONReturn<TGetTreeOutput>) => TData;
       staleTime?: number;
       enabled?: boolean;
-      initialData?: FetchReturn<TGetTreeOutput>;
+      initialData?: FetchJSONReturn<TGetTreeOutput>;
       onSuccess?: (data: TData) => void;
     }
   ) =>
@@ -125,11 +127,11 @@ export const useTreeAPI = () => {
       options
     );
 
-  const useTreeData = <TData = FetchReturn<TGetTreeDataOutput>>(
+  const useTreeData = <TData = FetchJSONReturn<TGetTreeDataOutput>>(
     uuid: string,
     options?: {
       staleTime?: number;
-      select?: (data: FetchReturn<Tree.TTree>) => TData;
+      select?: (data: FetchJSONReturn<Tree.TTree>) => TData;
       enabled?: boolean;
     }
   ) => {
@@ -140,11 +142,11 @@ export const useTreeAPI = () => {
     );
   };
 
-  const useTreePreview = <TData = FetchReturn<TGetTreePreviewOutput>>(
+  const useTreePreview = <TData = FetchJSONReturn<TGetTreePreviewOutput>>(
     uuid: string,
     options?: {
       staleTime?: number;
-      select?: (data: FetchReturn<Tree.TTree>) => TData;
+      select?: (data: FetchJSONReturn<Tree.TTree>) => TData;
       enabled?: boolean;
     }
   ) => {
@@ -173,19 +175,25 @@ export const useTreeAPI = () => {
       ["createTree"],
       async (data) => {
         const response = await proxiedOD.trees.create(data);
+        const yDoc = new Y.Doc();
+        new IndexeddbPersistence(response.data.uuid, yDoc);
 
-        const newInput = Tree.createInput();
-        const newAnswer = Tree.createAnswer({ text: "" });
+        const yMap = yDoc.getMap("tree");
 
-        const newNode = Tree.createNode({
-          data: { inputs: [newInput.id], conditions: [] },
+        const treeClient = new TreeClient({
+          nodes: {},
+          pluginEntities: {},
+          edges: {},
+          startNode: "",
         });
 
-        const store = createYjsDocumentIndexedDB({}, response.data.uuid);
+        const node = PlaceholderNode.create({})(treeClient);
+        const yNodes = new Y.Map<Node.TRecord>([[node.id, node]]);
 
-        Tree.addNode(store)(newNode);
-        Tree.addInput(store)(newInput);
-        Tree.addInputAnswer(store)(newInput.id, newAnswer);
+        yMap.set("startNode", node.id);
+        yMap.set("nodes", yNodes);
+        yMap.set("edges", new Y.Map());
+        yMap.set("pluginEntities", new Y.Map());
 
         return response;
       },
@@ -359,8 +367,6 @@ export const useTreeAPI = () => {
       }
     );
 
-  const TreeImportType = z.object({ name: z.string(), treeData: Tree.Type });
-
   const useImport = ({
     onSuccess,
     onSettled,
@@ -375,11 +381,19 @@ export const useTreeAPI = () => {
 
           if (!result || !(typeof result === "string")) throw result;
           const parsedResult = JSON.parse(result);
+
+          const TreeImportType = z.object({
+            name: z.string(),
+            treeData: createTreeClientWithPlugins(parsedResult["treeData"])
+              .treeClient.Type,
+          });
+
           const validatedResult = TreeImportType.safeParse(parsedResult);
           if (!validatedResult.success) {
             console.error(validatedResult.error);
             throw validatedResult;
           }
+
           const data = validatedResult.data;
 
           const response = await proxiedOD.trees.create({
@@ -412,28 +426,29 @@ export const useTreeAPI = () => {
       }
     );
 
+  function createFile(data: object) {
+    return new Blob([JSON.stringify(data)], { type: "application/json" });
+  }
+
   const useExport = (
     uuid: string,
     {
-      notification,
       onSuccess,
       ...options
     }: useExportOptions & { notification?: notification } = {}
   ) => {
-    const { data: treeData } = useTreeData(uuid);
-
-    function createFile(data: object) {
-      return new Blob([JSON.stringify(data)], { type: "application/json" });
-    }
-
     return useMutation(
       ["exportTree"],
-      (data) => {
+      async (data) => {
+        const { data: treeData } = await proxiedOD.trees.data.get({
+          params: { uuid },
+        });
+
         return new Promise<string>((resolve) => {
           return setTimeout(() => {
             const file = createFile({
               name: data?.name,
-              treeData: treeData?.data,
+              treeData,
             });
 
             return resolve(URL.createObjectURL(file));
@@ -443,9 +458,6 @@ export const useTreeAPI = () => {
       {
         ...options,
         onSuccess: (...params) => {
-          notification !== false
-            ? addNotificationFromTemplate(notification ?? "export")
-            : null;
           return onSuccess?.(...params);
         },
       }

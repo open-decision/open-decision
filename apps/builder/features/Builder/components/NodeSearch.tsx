@@ -1,64 +1,51 @@
 import React from "react";
+import { Combobox, Badge, Icon } from "@open-decision/design-system";
 import {
-  Combobox,
-  StyleObject,
-  Badge,
-  Icon,
-} from "@open-decision/design-system";
-import { useEditor } from "../state/useEditor";
-import { useTreeContext } from "../state/treeStore/TreeContext";
+  useSubscribedTreeClient,
+  useTreeClient,
+} from "@open-decision/tree-sync";
 import { useTranslations } from "next-intl";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { PlaceholderNodePlugin, useEditor } from "@open-decision/node-editor";
 
-type Props = { css?: StyleObject };
+type Props = { className?: string };
 
-export const NodeSearch = ({ css }: Props) => {
+const PlaceholderNode = new PlaceholderNodePlugin();
+
+export const NodeSearch = ({ className }: Props) => {
   const t = useTranslations("builder.nodeSearch");
 
-  const {
-    createNode,
-    addNode,
-    getNode,
-    createInput,
-    createAnswer,
-    addInput,
-    replaceSelectedNodes,
-    getNodeNames,
-  } = useTreeContext();
-
-  const nodeNames = getNodeNames();
+  const treeClient = useTreeClient();
+  const { replaceSelectedNodes } = useEditor();
+  const subscribedTreeClient = useSubscribedTreeClient();
+  const nodeNames = subscribedTreeClient.nodes.get.names();
 
   const { getCenter, zoomToNode } = useEditor();
   const combobox = Combobox.useComboboxState({
     gutter: 8,
     sameWidth: true,
-    list: nodeNames.map((nodeName) => nodeName.name) ?? [],
+    list:
+      Object.values(nodeNames).map(
+        (nodeName) => nodeName.name ?? "Kein Name"
+      ) ?? [],
   });
 
   function createHandler(label: string) {
-    const newAnswer = createAnswer({ text: "" });
-    const newInput = createInput({ answers: [newAnswer] });
-
-    const newNode = createNode({
+    const newNode = PlaceholderNode.create({
+      name: label,
       position: getCenter(),
-      data: {
-        name: label,
-        inputs: [newInput.id],
-        conditions: [],
-      },
-    });
+    })(treeClient);
 
-    addNode(newNode);
-    addInput(newInput);
+    treeClient.nodes.add(newNode);
     replaceSelectedNodes([newNode.id]);
     zoomToNode(newNode);
 
-    return { id: newNode.id, label: newNode.data.name };
+    return { id: newNode.id, label: newNode.name };
   }
 
   function changeHandler(newSelectedItemId: string) {
     replaceSelectedNodes([newSelectedItemId]);
-    const node = getNode(newSelectedItemId);
+    const node = treeClient.nodes.get.single(newSelectedItemId);
 
     if (!node) return;
     zoomToNode(node);
@@ -69,7 +56,7 @@ export const NodeSearch = ({ css }: Props) => {
       <Combobox.Input
         state={combobox}
         placeholder={t("placeholder")}
-        css={{ width: "400px", ...css }}
+        classNames={["w-[400px]", className]}
         Icon={(props) => (
           <Icon {...props}>
             <MagnifyingGlassIcon />
@@ -80,7 +67,7 @@ export const NodeSearch = ({ css }: Props) => {
         <Combobox.Popover state={combobox}>
           {combobox.matches.length ? (
             combobox.matches.map((item) => {
-              const id = nodeNames.find(
+              const id = Object.values(nodeNames).find(
                 (nodeName) => nodeName.name === item
               )?.id;
               return id ? (
@@ -100,7 +87,7 @@ export const NodeSearch = ({ css }: Props) => {
               value={combobox.value}
             >
               {combobox.value}
-              <Badge css={{ colorScheme: "success" }} size="small">
+              <Badge className="colorScheme-success" size="small">
                 {t("createBadge")}
               </Badge>
             </Combobox.Item>

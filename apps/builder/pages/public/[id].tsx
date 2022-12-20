@@ -9,6 +9,7 @@ import { FullPageErrorFallback } from "../../components/Error/FullPageErrorFallb
 import { ODError } from "@open-decision/type-classes";
 import { Layout } from "../../components";
 import { useNotificationStore } from "../../config/notifications";
+import { createTreeClientWithPlugins } from "@open-decision/tree-client";
 
 export const getServerSideProps: GetServerSideProps = async ({
   params,
@@ -45,6 +46,8 @@ export default function Page({ treeId }: PageProps) {
     staleTime: Infinity,
   });
 
+  const { nodePlugins, edgePlugins } = createTreeClientWithPlugins(data);
+
   if (isLoading) return <LoadingSpinner />;
   if (!isSuccess)
     return <FullPageErrorFallback error={new ODError({ code: "NOT_FOUND" })} />;
@@ -56,6 +59,8 @@ export default function Page({ treeId }: PageProps) {
       </Head>
       <Layout>
         <Renderer.Root
+          environment="public"
+          edgePlugins={edgePlugins}
           tree={data}
           onError={(error) =>
             addNotification({
@@ -65,19 +70,10 @@ export default function Page({ treeId }: PageProps) {
             })
           }
         >
-          <Stack center css={{ layer: "2", height: "100%" }}>
+          <Stack center className="bg-layer-2 h-full auroa-theme">
             <Renderer.View
-              css={{
-                marginBlock: "$2",
-                paddingInline: "$4",
-                paddingBlock: "$4",
-                height: "100%",
-                maxWidth: "700px",
-
-                "@desktop": {
-                  marginBlock: "$4",
-                },
-              }}
+              className="mb-2 p-4 h-full max-w-[700px] lg:mb-4"
+              nodePlugins={nodePlugins}
             />
           </Stack>
         </Renderer.Root>

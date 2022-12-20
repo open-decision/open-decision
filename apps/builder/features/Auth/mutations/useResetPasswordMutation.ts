@@ -1,8 +1,8 @@
-import { safeFetch } from "@open-decision/api-helpers";
+import { safeFetchJSON } from "@open-decision/api-helpers";
 import {
   TResetPasswordInput,
   TResetPasswordOutput,
-} from "@open-decision/auth-api-specification";
+} from "@open-decision/api-specification";
 import { ODError } from "@open-decision/type-classes";
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 
@@ -20,7 +20,7 @@ export function useResetPasswordMutation(
   return useMutation<any, ODError, any, unknown>(
     ["resetPassword"],
     ({ token, password }) => {
-      return safeFetch(
+      return safeFetchJSON(
         "/api/external-api/auth/reset-password",
         {
           method: "POST",

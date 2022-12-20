@@ -1,18 +1,18 @@
 import {
   publishedTreesOfTreesCollection,
-  treesCollection,
+  treesRoot,
   treesSingle,
   treeDataSingle,
   treePreview,
-} from "@open-decision/tree-api-specification";
+} from "@open-decision/api-specification";
 import express from "express";
-import { treeController } from "../../controllers/tree.controller";
+import * as treeController from "../../controllers/tree.controller";
 import { auth } from "../../middlewares/auth";
 const treeRouter = express.Router();
 
 treeRouter
-  .route(treesCollection)
-  .get(auth(), treeController.getDecisionTrees)
+  .route(treesRoot)
+  .get(auth(), treeController.getDecisionTreeCollection)
   .post(auth(), treeController.createDecisionTree);
 
 treeRouter

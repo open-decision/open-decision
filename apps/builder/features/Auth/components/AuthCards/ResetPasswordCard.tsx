@@ -3,7 +3,12 @@ import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/router";
 import { ResetPasswordForm } from "../AuthForms/ResetPasswordForm";
-import { AuthCard } from "./";
+import {
+  containerClasses,
+  descriptionClasses,
+  headerClasses,
+  headingClasses,
+} from "./AuthCard";
 
 export function ResetPasswordCard() {
   const t = useTranslations("resetPassword");
@@ -11,42 +16,29 @@ export function ResetPasswordCard() {
   const token = query["token"];
 
   return token ? (
-    <AuthCard.Container>
-      <AuthCard.Header>
-        <AuthCard.Heading>{t("title")}</AuthCard.Heading>
-        <AuthCard.Description>{t("description")} </AuthCard.Description>
-      </AuthCard.Header>
-      <AuthCard.Body>
+    <div className={containerClasses}>
+      <header className={headerClasses}>
+        <h2 className={headingClasses}>{t("title")}</h2>
+        <p className={descriptionClasses}>{t("description")} </p>
+      </header>
+      <main>
         <ResetPasswordForm token={token instanceof Object ? token[0] : token} />
-      </AuthCard.Body>
-    </AuthCard.Container>
+      </main>
+    </div>
   ) : (
-    <AuthCard.Container>
-      <AuthCard.Header>
-        <AuthCard.Heading>{t("invalid.title")}</AuthCard.Heading>
-        <AuthCard.Description>{t("invalid.description")} </AuthCard.Description>
-      </AuthCard.Header>
-      <AuthCard.Footer
-        css={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          marginTop: "$4",
-          gap: "$2",
-        }}
-      >
-        <Icon css={{ color: "$primary9" }}>
+    <div className={containerClasses}>
+      <header className={headerClasses}>
+        <h2 className={headingClasses}>{t("invalid.title")}</h2>
+        <p className={descriptionClasses}>{t("invalid.description")} </p>
+      </header>
+      <footer className="flex flex-row items-center mt-4 gap-2">
+        <Icon className="text-primary9">
           <ArrowRightIcon />
         </Icon>
-        <Link
-          css={{
-            textStyle: "extra-small-heading",
-          }}
-          href="/auth/forgot_password"
-        >
+        <Link className="extra-small-heading" href="/auth/forgot_password">
           {t("invalid.retry")}
         </Link>
-      </AuthCard.Footer>
-    </AuthCard.Container>
+      </footer>
+    </div>
   );
 }

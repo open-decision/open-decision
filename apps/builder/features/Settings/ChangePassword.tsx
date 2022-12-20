@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Heading, Form } from "@open-decision/design-system";
-import { Card } from "../../components/Card";
+import { cardClasses } from "../../components/Card";
 import { VerifiedSettingsChange } from "./VerifiedSettingsChange";
-import { TGetUserOutput } from "@open-decision/user-api-specification";
+import { TGetUserOutput } from "@open-decision/api-specification";
 import { useUser } from "../Auth/useUserQuery";
 import { useTranslations } from "next-intl";
 import { PasswordInput } from "../../components/PasswordInput";
@@ -13,20 +13,16 @@ type Props = { user: TGetUserOutput };
 export function ChangePassword({ user }: Props) {
   const t = useTranslations("settings.account.changePassword");
   const { addNotification } = useNotificationStore();
-  const formState = Form.useFormState({
+  const methods = Form.useForm({
     defaultValues: {
       newPassword: "",
     },
   });
 
-  formState.useSubmit(() => {
-    setOpen(true);
-  });
-
   const { mutate, isLoading } = useUser().useUserUpdateMutation({
     onError: (error) => {
-      formState.setErrors({
-        newPassword: error.errors?.body?.password?._errors[0],
+      methods.setError("newPassword", {
+        message: error.errors?.body?.password?._errors[0],
       });
     },
     onSuccess: () => {
@@ -34,7 +30,7 @@ export function ChangePassword({ user }: Props) {
         title: t("success.title"),
         variant: "success",
       });
-      formState.reset();
+      methods.reset();
     },
   });
   const [open, setOpen] = React.useState(false);
@@ -43,30 +39,35 @@ export function ChangePassword({ user }: Props) {
     <VerifiedSettingsChange
       email={user.email}
       onVerify={() => {
-        mutate({ password: formState.values.newPassword });
+        const newPassword = methods.watch("newPassword");
+
+        mutate({ password: newPassword });
         setOpen(false);
       }}
       open={open}
       setOpen={setOpen}
     >
-      <Card>
+      <div className={cardClasses()}>
         <Heading as="h3" size="small">
           {t("title")}
         </Heading>
-        <Form.Root state={formState} resetOnSubmit={false}>
+        <Form.Root
+          methods={methods}
+          onSubmit={methods.handleSubmit(() => setOpen(true))}
+        >
           <PasswordInput
-            name={formState.names.newPassword}
+            {...methods.register("newPassword", { required: true })}
             customLabel={t("inputLabel")}
           />
-          <Form.Submit
+          <Form.SubmitButton
             isLoading={isLoading}
             variant="secondary"
-            css={{ marginLeft: "auto", marginTop: "$3" }}
+            className="ml-auto mt-3"
           >
             {t("submit")}
-          </Form.Submit>
+          </Form.SubmitButton>
         </Form.Root>
-      </Card>
+      </div>
     </VerifiedSettingsChange>
   );
 }
