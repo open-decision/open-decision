@@ -3,6 +3,16 @@
 # dependencies
 node_modules
 
+# yarn
+.pnp.*
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
 # builds
 build
 dist
@@ -19,13 +29,13 @@ stats.html
 .vercel
 .cache
 tmp
+generated
 
 # misc
 .DS_Store
 .env.local
 .local.env
 .next
-.sentryclirc
 *.log
 .vsls.json
 
