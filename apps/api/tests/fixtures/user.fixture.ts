@@ -1,4 +1,4 @@
-import { User } from "@open-decision/prisma";
+import { User } from "@prisma/client";
 import prisma from "../../src/init-prisma-client";
 import { faker } from "@faker-js/faker";
 const password = "Th@t!shardToGuess";

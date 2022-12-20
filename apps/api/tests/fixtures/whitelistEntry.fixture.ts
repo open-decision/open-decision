@@ -1,4 +1,4 @@
-import { WhitelistEntry } from "@open-decision/prisma";
+import { WhitelistEntry } from "@prisma/client";
 import prisma from "../../src/init-prisma-client";
 import faker from "faker";
 import { admin } from "./user.fixture";

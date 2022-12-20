@@ -2,7 +2,7 @@ import request from "supertest";
 import faker from "faker";
 import httpStatus from "http-status";
 import { app } from "../../src/app";
-import { setupTestDB } from "../utils/setupTestDB";
+import { clearTestDB } from "../utils/setupTestDB";
 import { userOne, admin, insertUsers } from "../fixtures/user.fixture";
 import {
   userOneAccessToken,
@@ -16,7 +16,8 @@ import {
   insertEntry,
   entryBaseDomainTwo,
 } from "../fixtures/whitelistEntry.fixture";
-setupTestDB();
+
+clearTestDB();
 
 describe("Whitelist user routes", () => {
   describe("POST /v1/users/whitelist", () => {
