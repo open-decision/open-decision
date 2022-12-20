@@ -2,15 +2,9 @@ import request from "supertest";
 import { faker } from "@faker-js/faker";
 import httpStatus from "http-status";
 import { app } from "../../src/app";
-import { setupTestDB } from "../utils/setupTestDB";
 import UserHandler from "../../src/models/user.model";
-import { userOne, userTwo, admin, insertUsers } from "../fixtures/user.fixture";
-import {
-  userOneAccessToken,
-  adminAccessToken,
-} from "../fixtures/token.fixture";
-
-setupTestDB();
+import { User } from "@open-decision/test-utils";
+import { getAccessToken } from "../../utils/generateToken";
 
 describe("User routes", () => {
   describe("POST /v1/users", () => {

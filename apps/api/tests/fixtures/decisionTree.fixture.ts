@@ -1,4 +1,4 @@
-import { DecisionTree } from "@open-decision/prisma";
+import { DecisionTree } from "@prisma/client";
 import prisma from "../../src/init-prisma-client";
 import { userOne, userTwo } from "./user.fixture";
 import { treeDataOne, yDocumentOne } from "./yDocument.fixture";

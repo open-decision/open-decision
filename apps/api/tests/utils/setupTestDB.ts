@@ -1,32 +1,7 @@
-import { prisma } from "@open-decision/prisma";
-export const setupTestDB = () => {
+import { clearDB } from "@open-decision/test-utils";
+
+export const clearTestDB = () => {
   beforeEach(async () => {
-    const deleteToken = prisma.token.deleteMany();
-    const deleteTree = prisma.decisionTree.deleteMany();
-    const deleteManyWhitelistEntries = prisma.whitelistEntry.deleteMany();
-    const deleteUser = prisma.user.deleteMany();
-
-    await prisma.$transaction([
-      deleteToken,
-      deleteTree,
-      deleteManyWhitelistEntries,
-      deleteUser,
-    ]);
-  });
-
-  afterAll(async () => {
-    const deleteToken = prisma.token.deleteMany();
-    const deleteTree = prisma.decisionTree.deleteMany();
-    const deleteManyWhitelistEntries = prisma.whitelistEntry.deleteMany();
-    const deleteUser = prisma.user.deleteMany();
-
-    await prisma.$transaction([
-      deleteToken,
-      deleteTree,
-      deleteManyWhitelistEntries,
-      deleteUser,
-    ]);
-
-    await prisma.$disconnect();
+    await clearDB();
   });
 };
