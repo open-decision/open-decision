@@ -1,8 +1,12 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "plugins": [
+      {
+        "name": "typescript-plugin-css-modules"
+      }
+    ],
     "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "strict": true,
@@ -26,8 +30,8 @@
     "paths": {
       "@open-decision/api-client": ["packages/api-client/src/index.ts"],
       "@open-decision/api-helpers": ["packages/api-helpers/src/index.ts"],
-      "@open-decision/auth-api-specification": [
-        "packages/auth-api-specification/src/index.ts"
+      "@open-decision/api-specification": [
+        "packages/api-specification/src/index.ts"
       ],
       "@open-decision/design-system": ["packages/design-system/src/index.ts"],
       "@open-decision/interpreter": ["packages/interpreter/src/index.ts"],
@@ -35,19 +39,64 @@
         "packages/interpreter-react/src/index.ts"
       ],
       "@open-decision/models": ["packages/models/src/index.ts"],
-      "@open-decision/prisma": ["packages/prisma/src/index.ts"],
+      "@open-decision/node-editor": ["packages/node-editor/src/index.ts"],
+      "@open-decision/plugins-edge-compare": [
+        "packages/plugins/edge/compare/src/index.ts"
+      ],
+      "@open-decision/plugins-edge-direct": [
+        "packages/plugins/edge/direct/src/index.ts"
+      ],
+      "@open-decision/plugins-edge-helpers": [
+        "packages/plugins/edge/helpers/src/index.ts"
+      ],
+      "@open-decision/plugins-node-decision": [
+        "packages/plugins/node/decision/src/index.ts"
+      ],
+      "@open-decision/plugins-node-document": [
+        "packages/plugins/node/document/src/index.ts"
+      ],
+      "@open-decision/plugins-node-form": [
+        "packages/plugins/node/form/src/index.ts"
+      ],
+      "@open-decision/plugins-node-group": [
+        "packages/plugins/node/group/src/index.ts"
+      ],
+      "@open-decision/plugins-node-helpers": [
+        "packages/plugins/node/helpers/src/index.ts"
+      ],
+      "@open-decision/plugins-node-info": [
+        "packages/plugins/node/info/src/index.ts"
+      ],
+      "@open-decision/plugins-node-placeholder": [
+        "packages/plugins/node/placeholder/src/index.ts"
+      ],
+      "@open-decision/plugins-variable-helpers": [
+        "packages/plugins/variable/helpers/src/index.ts"
+      ],
+      "@open-decision/plugins-variable-multi-select": [
+        "packages/plugins/variable/multi-select/src/index.ts"
+      ],
+      "@open-decision/plugins-variable-select": [
+        "packages/plugins/variable/select/src/index.ts"
+      ],
+      "@open-decision/plugins-variable-text": [
+        "packages/plugins/variable/text/src/index.ts"
+      ],
       "@open-decision/renderer": ["packages/renderer/src/index.ts"],
       "@open-decision/rich-text-editor": [
         "packages/rich-text-editor/src/index.ts"
       ],
       "@open-decision/test-utils": ["packages/test-utils/src/index.ts"],
-      "@open-decision/tree-api-specification": [
-        "packages/tree-api-specification/src/index.ts"
+      "@open-decision/translations": ["packages/translations/src/index.ts"],
+      "@open-decision/tree-client": ["packages/tree/client/src/index.ts"],
+      "@open-decision/tree-sync": ["packages/tree/sync/src/index.ts"],
+      "@open-decision/tree-type": ["packages/tree/type/src/index.ts"],
+      "@open-decision/tree-utils": ["packages/tree/utils/src/index.ts"],
+      "@open-decision/tree-clientWithPlugins": [
+        "packages/tree/clientWithPlugins/src/index.ts"
       ],
       "@open-decision/type-classes": ["packages/type-classes/src/index.ts"],
-      "@open-decision/user-api-specification": [
-        "packages/user-api-specification/src/index.ts"
-      ]
+      "@open-decision/types": ["packages/types/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

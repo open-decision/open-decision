@@ -1,0 +1,5 @@
+{
+  "name": "@open-decision/types",
+  "main": "index.ts",
+  "types": "index.d.ts"
+}
