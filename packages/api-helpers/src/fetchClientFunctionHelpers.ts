@@ -25,12 +25,14 @@ export const Context = z.object({
   requestOrigin: z.string().optional(),
 });
 
-type Config<TValidation extends z.ZodTypeAny> = {
+type Config<TValidation extends z.ZodTypeAny = z.ZodTypeAny> = {
   validation?: TValidation;
   retry?: number;
 };
 
-export type FetchFunction = <TValidation extends z.ZodTypeAny = z.ZodTypeAny>(
+export type FetchJSONFunction = <
+  TValidation extends z.ZodTypeAny = z.ZodTypeAny
+>(
   url: string,
   {
     body,
@@ -40,12 +42,33 @@ export type FetchFunction = <TValidation extends z.ZodTypeAny = z.ZodTypeAny>(
     body?: Record<string, any>;
   },
   { validation, retry }: Config<TValidation>
-) => Promise<{ data: z.output<TValidation>; status: number }>;
+) => Promise<FetchJSONReturn<z.output<TValidation>>>;
 
-export type TContext = z.infer<typeof Context> & {
+export type FetchBlobFunction = (
+  url: string,
+  {
+    body,
+    headers,
+    ...options
+  }: Omit<RequestInit, "body"> & {
+    body?: Record<string, any>;
+  },
+  { retry }: Omit<Config, "validation">
+) => Promise<FetchBlobReturn>;
+
+export type TContext<
+  FetchFunction extends
+    | FetchJSONFunction
+    | FetchBlobFunction = FetchJSONFunction
+> = z.infer<typeof Context> & {
   headers?: HeadersInit;
   fetchFunction: FetchFunction;
   config?: Pick<Config<any>, "retry">;
 };
 
-export type QueryConfig = TContext;
+export type FetchJSONReturn<TData> = { data: TData; status: number };
+
+export type FetchBlobReturn = { data: Blob; status: number };
+export type FetchFunctions = FetchJSONFunction | FetchBlobFunction;
+
+export type QueryConfig = TContext<FetchFunctions>;

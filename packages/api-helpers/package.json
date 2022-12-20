@@ -2,14 +2,11 @@
   "name": "@open-decision/api-helpers",
   "version": "0.0.1",
   "type": "commonjs",
-  "main": "src/index.ts",
-  "scripts": {
-    "typecheck": "tsc -p ./tsconfig.lib.json --noEmit"
-  },
+  "main": "src/index.js",
   "dependencies": {
-    "@open-decision/type-classes": "workspace:*",
-    "@types/validator": "^13.7.6",
+    "@types/validator": "^13.7.10",
+    "tslib": "^2.4.1",
     "validator": "^13.7.0",
-    "zod": "^3"
+    "zod": "^3.20.2"
   }
 }

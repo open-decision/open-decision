@@ -1,0 +1,20 @@
+{
+  "name": "@open-decision/api-specification",
+  "version": "0.0.1",
+  "type": "commonjs",
+  "main": "src/index.js",
+  "sideEffects": false,
+  "dependencies": {
+    "@zxcvbn-ts/core": "^2.1.0",
+    "@zxcvbn-ts/language-common": "^2.0.1",
+    "@zxcvbn-ts/language-de": "^2.1.0",
+    "@zxcvbn-ts/language-en": "^2.1.0",
+    "jose": "^4.11.1",
+    "validator": "^13.7.0",
+    "zod": "^3.20.2"
+  },
+  "devDependencies": {
+    "@types/validator": "^13.7.10",
+    "tslib": "^2.4.1"
+  }
+}
