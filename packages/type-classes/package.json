@@ -2,20 +2,21 @@
   "name": "@open-decision/type-classes",
   "version": "0.0.1",
   "type": "commonjs",
-  "main": "src/index.ts",
+  "main": "src/index.js",
   "description": "The foundational types classes shared by all parts of the open decision application.",
   "sideEffects": false,
   "dependencies": {
     "ramda": "^0.28.0",
-    "remeda": "^1.1.0",
-    "uuid": "^8.3.2",
-    "zod": "^3"
+    "remeda": "^1.3.0",
+    "uuid": "^9.0.0",
+    "zod": "^3.20.2"
   },
   "devDependencies": {
-    "@tiptap/core": "^2.0.0-beta.183",
-    "@types/ramda": "^0.28.15",
+    "@types/node": "^18.11.9",
+    "@types/ramda": "^0.28.20",
     "@types/uuid": "^8.3.4",
-    "tslib": "^2.4.0",
-    "vitest": "^0.23.0"
+    "tslib": "^2.4.1",
+    "vite": "^3.2.4",
+    "vitest": "^0.25.3"
   }
 }

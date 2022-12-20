@@ -1,0 +1,19 @@
+{
+  "name": "@open-decision/plugins-node-info",
+  "version": "0.0.1",
+  "main": "src/index.js",
+  "dependencies": {
+    "zod": "^3.20.2"
+  },
+  "devDependencies": {
+    "@types/uuid": "^8.3.4",
+    "react": "^18.2.0"
+  },
+  "peerDependencies": {
+    "@fontsource/poppins": "^4.5.10",
+    "next": "^13.0.1",
+    "next-intl": "^2.9.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}
