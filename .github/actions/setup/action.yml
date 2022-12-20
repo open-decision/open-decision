@@ -16,4 +16,4 @@ runs:
       shell: bash
       run: yarn setup
 
-    - uses: nrwl/nx-set-shas@v2.2.5
+    - uses: nrwl/nx-set-shas@v3

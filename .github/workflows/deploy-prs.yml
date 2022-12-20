@@ -107,9 +107,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup environment
-        uses: ./.github/actions/setup
-
       - name: Set api endpoint end var
         continue-on-error: true
         run: |

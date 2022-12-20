@@ -3,21 +3,62 @@ on:
   push:
     branches:
       - main
+
+concurrency:
+  group: ${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
 env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-  FLY_REGION: fra
   FLY_ORG: open-decision
+  FLY_REGION: fra
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
+  ADMIN_ACCOUNT_WHITELIST: ${{ secrets.ADMIN_ACCOUNT_WHITELIST }}
+  DEV_ACCOUNT_WHITELIST: ${{ secrets.DEV_ACCOUNT_WHITELIST }}
+  EMAIL_FROM_ADDRESS: ${{ secrets.EMAIL_FROM_ADDRESS }}
+  FEATURE_WHITELIST: ${{ secrets.FEATURE_WHITELIST }}
+  PUBLIC_API_DOCUMENTATION: ${{ secrets.PUBLIC_API_DOCUMENTATION }}
+  REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
+  SMTP_HOST: ${{ secrets.SMTP_HOST }}
+  SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+  SMTP_PORT: ${{ secrets.SMTP_PORT }}
+  SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+  PORT: 8080
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  VERCEL_SCOPE: open-decision
+  NEXT_PUBLIC_OD_API_ENDPOINT: ${{ secrets.NEXT_PUBLIC_OD_API_ENDPOINT }}
+  NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT: ${{ secrets.NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT }}
+  OD_BUILDER_ENDPOINT: ${{ secrets.OD_BUILDER_ENDPOINT }}
+  NEXT_PUBLIC_OD_BUILDER_ENDPOINT: ${{ secrets.NEXT_PUBLIC_OD_BUILDER_ENDPOINT }}
 
 jobs:
   api:
     name: Deploy api
     runs-on: ubuntu-latest
+
+    env:
+      APP_NAME: open-decision
+      CONFIG: apps/api/fly.toml
+
     steps:
       - uses: actions/checkout@v3
-      - name: Setup environment
-        uses: ./.github/actions/setup
+
       - uses: superfly/flyctl-actions/setup-flyctl@master
-      - run: yarn nx deploy api
+      - name: Create App
+        continue-on-error: true
+        run: flyctl apps create --name ${{env.APP_NAME}}
+      - name: Set secrets for app
+        shell: bash
+        continue-on-error: true
+        run: |
+          flyctl secrets set NODE_ENV="test" PORT="$PORT" OD_BUILDER_ENDPOINT="$OD_BUILDER_ENDPOINT" DATABASE_URL="$DATABASE_URL" ACCESS_TOKEN_SECRET="$ACCESS_TOKEN_SECRET" ADMIN_ACCOUNT_WHITELIST="$ADMIN_ACCOUNT_WHITELIST" DEV_ACCOUNT_WHITELIST="$DEV_ACCOUNT_WHITELIST" EMAIL_FROM_ADDRESS="$EMAIL_FROM_ADDRESS" FEATURE_WHITELIST="$FEATURE_WHITELIST" PUBLIC_API_DOCUMENTATION="$PUBLIC_API_DOCUMENTATION" REFRESH_TOKEN_SECRET="$REFRESH_TOKEN_SECRET" SMTP_HOST="$SMTP_HOST" SMTP_PASSWORD="$SMTP_PASSWORD" SMTP_PORT="$SMTP_PORT" SMTP_USERNAME="$SMTP_USERNAME" --app "$APP_NAME"
+      - name: Set regions for deploy
+        run: flyctl regions set fra ams --app ${{env.APP_NAME}}
+      - name: Deploy
+        id: deploy
+        run: flyctl deploy --config ${{env.CONFIG}} --app ${{env.APP_NAME}} --region ${{env.FLY_REGION}} --strategy immediate
 
   builder:
     name: Deploy builder
@@ -30,7 +71,7 @@ jobs:
         run: yarn add global vercel@latest
 
       - name: Deploy to Vercel Action
-        uses: PhilGarb/deploy-to-vercel-action@v1.9.8
+        uses: BetaHuhn/deploy-to-vercel-action@v1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
