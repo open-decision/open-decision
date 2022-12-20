@@ -1,0 +1,148 @@
+import {
+  Badge,
+  Icon,
+  Stack,
+  textClasses,
+  twMerge,
+} from "@open-decision/design-system";
+import * as React from "react";
+import { Handle, NodeProps, Position } from "reactflow";
+import { useTranslations } from "next-intl";
+import { useSubscribedTreeClient, useTree } from "@open-decision/tree-sync";
+import { StartNodeLabel } from "./StartNodeLabels";
+import { useEditor } from "../../state";
+import { nodeWidth, nodeHeight } from "../../utils/constants";
+import { targetPortClasses, portWidth, sourcePortClasses } from "./Port";
+import { MoonIcon } from "@radix-ui/react-icons";
+
+type Props = { className?: string };
+
+export function FinalNodeLabel({ className }: Props) {
+  const t = useTranslations("builder.nodeEditingSidebar.nodeLabels");
+  return (
+    <Badge className={twMerge("colorScheme-warning", className)}>
+      <Icon>
+        <MoonIcon />
+      </Icon>
+      {t("finalNode")}
+    </Badge>
+  );
+}
+
+const nodeContainerClasses =
+  "bg-layer-1 rounded-md border border-gray7 [&[data-connecting=false]:hover]:border-primary9 [&[data-connecting=true][data-connectable=true]]:cursor-crosshair [&[data-connecting=true][data-connectable=false]]:cursor-not-allowed";
+
+export type NodePluginProps = NodeProps & {
+  className?: string;
+};
+
+export type CanvasNode = (props: NodePluginProps) => JSX.Element;
+
+export const CanvasNodeContainer = ({
+  id,
+  selected: isSelected,
+  children,
+  zIndex,
+  className,
+}: NodePluginProps & {
+  children: React.ReactNode;
+}) => {
+  const name = useTree((treeClient) => treeClient.nodes.get.single(id).name);
+  const t = useTranslations("builder.canvas.questionNode");
+  const {
+    isConnecting,
+    connectingNodeId,
+    editorStore: { validConnections },
+  } = useEditor();
+
+  const subscribedTreeClient = useSubscribedTreeClient();
+  const startNodeId = subscribedTreeClient.get.startNodeId();
+
+  const validConnectionTarget = React.useMemo(
+    () => !isConnecting || (isConnecting && validConnections?.includes(id)),
+    [isConnecting, validConnections, id]
+  );
+
+  const isStartNode = startNodeId === id;
+  const isConnectingNode = connectingNodeId === id;
+  const connectable = validConnectionTarget && !isConnectingNode;
+
+  const isFinalNode = useTree(
+    (treeClient) => treeClient.nodes.get.single(id).final
+  );
+
+  return (
+    <Stack
+      center
+      classNames={[
+        nodeContainerClasses,
+        isSelected
+          ? "shadow-6 border-2 border-primary10 p-[calc(var(--space-5)-1px)]"
+          : "shadow-3 border border-gray8 p-5",
+        "text-center",
+        className,
+      ]}
+      aria-label={t("empty.hiddenLabel", {
+        content: (name?.length ?? 0) > 0 ? true : null,
+        name,
+        selected: isSelected,
+      })}
+      data-nodeid={id}
+      data-connecting={isConnecting}
+      data-connectable={connectable}
+      style={{
+        opacity: validConnectionTarget ? 1 : 0.5,
+        zIndex,
+        width: nodeWidth,
+        height: nodeHeight,
+      }}
+    >
+      {isStartNode ? (
+        <StartNodeLabel className="absolute top-[-14px] left-[-14px]" />
+      ) : null}
+      {isFinalNode ? (
+        <FinalNodeLabel className="absolute top-[-14px] left-[-14px]" />
+      ) : null}
+      <Handle
+        className={targetPortClasses}
+        style={{
+          height: `${portWidth}px `,
+          width: `${portWidth}px`,
+          top: `-${portWidth / 2}px`,
+        }}
+        type="target"
+        data-connecting={isConnecting}
+        data-connectingnode={isConnectingNode}
+        data-connectable={connectable}
+        position={Position.Top}
+        id={id}
+        isConnectable={isConnecting}
+        data-test={`${id}-target-port`}
+      />
+      <span
+        data-connecting={isConnecting}
+        data-nodeid={id}
+        className={textClasses({}, ["align-center"])}
+      >
+        {children}
+      </span>
+      {!isFinalNode ? (
+        <Handle
+          className={sourcePortClasses}
+          style={{
+            width: `${portWidth}px`,
+            height: `${portWidth}px `,
+            bottom: `-${(portWidth - 2) / 2}px`,
+          }}
+          type="source"
+          data-connecting={isConnecting}
+          data-connectingnode={isConnectingNode}
+          data-connectable={connectable}
+          position={Position.Bottom}
+          data-active={isConnecting && connectingNodeId === id}
+          data-test={`${id}-source-port`}
+        />
+      ) : null}
+    </Stack>
+  );
+};
