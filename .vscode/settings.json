@@ -1,15 +1,18 @@
 {
   "conventionalCommits.scopes": [
     "builder",
-    "type-classes",
+    "types",
     "design-system",
     "interpreter",
-    "api",
-    "models",
-    "api-client",
-    "e2e"
+    "renderer",
+    "api"
   ],
-  "typescript.tsdk": "node_modules/typescript/lib",
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/*.code-search": true,
+    "**/*.yarn": true
+  },
   "todo-tree.general.tags": ["BUG", "HACK", "FIXME", "TODO", "SECURITY"],
   "rest-client.environmentVariables": {
     "$shared": {
@@ -18,5 +21,21 @@
   },
   "conventionalCommits.gitmoji": false,
   "conventionalCommits.lineBreak": "\\n",
-  "conventionalCommits.showEditor": true
+  "conventionalCommits.showEditor": true,
+  "eslint.nodePath": ".yarn/sdks",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "tailwindCSS.classAttributes": [
+    "class",
+    "className",
+    "ngClass",
+    ".*Styles",
+    "classNames"
+  ],
+  "tailwindCSS.experimental.configFile": "packages/design-system/tailwind.config.js",
+  "tailwindCSS.experimental.classRegex": [
+    ["Classes \\=([^;]*);", "'([^']*)'"],
+    ["Classes \\=([^;]*);", "\"([^\"]*)\""],
+    ["Classes \\=([^;]*);", "\\`([^\\`]*)\\`"],
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
+  ]
 }
