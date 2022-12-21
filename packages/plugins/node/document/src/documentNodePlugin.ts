@@ -17,10 +17,7 @@ export class DocumentNodePlugin extends NodePlugin<
   constructor() {
     super(DataType, typeName);
 
-    this.defaultData = {
-      content: [],
-      templateUuid: "",
-    };
+    this.defaultData = {};
   }
 
   getByTemplateUuid =
@@ -38,12 +35,16 @@ export class DocumentNodePlugin extends NodePlugin<
     (treeClient: TTreeClient) => {
       const node = this.get.single(nodeId)(treeClient);
 
+      if (node instanceof Error) throw node;
+
       node.data.content = content;
     };
 
   updateTemplateUuid =
     (nodeId: string, newTemplateUuid: string) => (treeClient: TTreeClient) => {
       const node = this.get.single(nodeId)(treeClient);
+
+      if (node instanceof Error) throw node;
 
       node.data.templateUuid = newTemplateUuid;
     };

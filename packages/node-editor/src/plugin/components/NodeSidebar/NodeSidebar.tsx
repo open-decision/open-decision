@@ -73,11 +73,16 @@ const Header = ({ nodeId, selectedTab, setSelectedTab, tabs }: HeaderProps) => {
   const isStartNode = nodeId === startNodeId;
 
   const methods = Form.useForm({
-    defaultValues: {
-      name: node.name ?? "",
-      rendererButtonLabel: node.rendererButtonLabel,
-    },
+    defaultValues:
+      node instanceof Error
+        ? {}
+        : {
+            name: node?.name ?? "",
+            rendererButtonLabel: node?.rendererButtonLabel,
+          },
   });
+
+  if (node instanceof Error) return null;
 
   return (
     <Form.Root methods={methods}>

@@ -13,6 +13,8 @@ export const InfoNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
   const methods = Form.useForm({});
   const { send } = useInterpreter();
 
+  if (node instanceof Error) return null;
+
   return (
     <RendererPrimitives.Container
       nodeId={nodeId}

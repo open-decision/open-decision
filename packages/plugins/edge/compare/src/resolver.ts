@@ -5,6 +5,7 @@ import {
 } from "@open-decision/interpreter";
 import { EdgeResolver } from "@open-decision/plugins-edge-helpers";
 import { SingleSelectVariablePlugin } from "@open-decision/plugins-variable-select";
+import { ODProgrammerError } from "@open-decision/type-classes";
 import { TCompareEdge } from "./plugin";
 
 const SingleSelectVariable = new SingleSelectVariablePlugin();
@@ -12,6 +13,13 @@ const SingleSelectVariable = new SingleSelectVariablePlugin();
 export const resolver: EdgeResolver<TCompareEdge> =
   (treeClient) => (edge) => (context) => {
     const currentNode = getCurrentNode(treeClient, context);
+
+    if (!currentNode)
+      throw new ODProgrammerError({
+        code: "INTERPRETER_WITHOUT_CURRENT_NODE",
+        message: "Interpreter has no current node that is on the tree.",
+      });
+
     const condition = edge.data.condition;
 
     if (!condition || !edge.target) return { state: "failure" };

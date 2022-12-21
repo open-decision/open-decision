@@ -10,10 +10,9 @@ export const getEdge = (tree: Tree.TTree) => (edgeId: string) => {
   const edge = tree.edges?.[edgeId];
 
   if (!edge)
-    throw new ODProgrammerError({
+    return new ODProgrammerError({
       code: "ENTITY_NOT_FOUND",
-      message: `The edge of id ${edgeId} could not be found. Please check that the id is correct.
-        Is the passed id actually a valid edge id?`,
+      message: "Tried to get an edge that does not exist on the tree.",
     });
 
   return edge;

@@ -36,7 +36,7 @@ export type NodePluginProps = NodeProps & {
   className?: string;
 };
 
-export type CanvasNode = (props: NodePluginProps) => JSX.Element;
+export type CanvasNode = (props: NodePluginProps) => JSX.Element | null;
 
 export const CanvasNodeContainer = ({
   id,
@@ -47,7 +47,8 @@ export const CanvasNodeContainer = ({
 }: NodePluginProps & {
   children: React.ReactNode;
 }) => {
-  const name = useTree((treeClient) => treeClient.nodes.get.single(id).name);
+  const node = useTree((treeClient) => treeClient.nodes.get.single(id));
+
   const t = useTranslations("builder.canvas.questionNode");
   const {
     isConnecting,
@@ -67,9 +68,7 @@ export const CanvasNodeContainer = ({
   const isConnectingNode = connectingNodeId === id;
   const connectable = validConnectionTarget && !isConnectingNode;
 
-  const isFinalNode = useTree(
-    (treeClient) => treeClient.nodes.get.single(id).final
-  );
+  if (node instanceof Error) return null;
 
   return (
     <Stack
@@ -83,8 +82,8 @@ export const CanvasNodeContainer = ({
         className,
       ]}
       aria-label={t("empty.hiddenLabel", {
-        content: (name?.length ?? 0) > 0 ? true : null,
-        name,
+        content: (node?.name?.length ?? 0) > 0 ? true : null,
+        name: node?.name,
         selected: isSelected,
       })}
       data-nodeid={id}
@@ -100,7 +99,7 @@ export const CanvasNodeContainer = ({
       {isStartNode ? (
         <StartNodeLabel className="absolute top-[-14px] left-[-14px]" />
       ) : null}
-      {isFinalNode ? (
+      {node?.final ? (
         <FinalNodeLabel className="absolute top-[-14px] left-[-14px]" />
       ) : null}
       <Handle
@@ -126,7 +125,7 @@ export const CanvasNodeContainer = ({
       >
         {children}
       </span>
-      {!isFinalNode ? (
+      {!node?.final ? (
         <Handle
           className={sourcePortClasses}
           style={{
