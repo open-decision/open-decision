@@ -93,6 +93,8 @@ export class MultiSelectInputPlugin extends InputPlugin<
     (treeClient: TTreeClient) => {
       const edge = edgeId ? treeClient.edges.get.single(edgeId) : undefined;
 
+      if (edge instanceof Error) throw edge;
+
       if (!edge?.target && newItem) {
         const newEdge = treeClient.edges.create({
           source: nodeId,

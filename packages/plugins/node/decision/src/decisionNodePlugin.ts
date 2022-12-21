@@ -38,6 +38,7 @@ export class DecisionNodePlugin extends NodePlugin<
     (nodeId: string) => (treeClient: TReadOnlyTreeClient | TTreeClient) => {
       const node = this.get.single(nodeId)(treeClient);
 
+      if (node instanceof Error) throw node;
       if (!node.data.input) return undefined;
 
       return treeClient.pluginEntity.get.single<typeof decisionNodeInputType>(
@@ -73,6 +74,8 @@ export class DecisionNodePlugin extends NodePlugin<
     (treeClient: TTreeClient) => {
       const node = this.get.single(nodeId)(treeClient);
 
+      if (node instanceof Error) throw node;
+
       node.data = {
         ...node.data,
         ...data,
@@ -101,7 +104,7 @@ export class DecisionNodePlugin extends NodePlugin<
     (treeClient: TTreeClient) => {
       const node = this.get.single(nodeId)(treeClient);
 
-      if (!node) return;
+      if (node instanceof Error) throw node;
 
       node.data.content = content;
     };
@@ -109,7 +112,7 @@ export class DecisionNodePlugin extends NodePlugin<
   delete = (id: string) => (treeClient: TTreeClient) => {
     const node = this.get.single(id)(treeClient);
 
-    if (!node) return;
+    if (node instanceof Error) throw node;
 
     treeClient.nodes.delete([id]);
 
@@ -140,6 +143,8 @@ export class DecisionNodePlugin extends NodePlugin<
     (nodeId: string, answer: string) =>
     (treeClient: TTreeClient | TReadOnlyTreeClient) => {
       const node = this.get.single(nodeId)(treeClient);
+
+      if (node instanceof Error) return undefined;
 
       if (!node.data.input) return;
 

@@ -13,9 +13,10 @@ export const DecisionNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
   const { getAnswers, send, treeClient } = useInterpreter();
 
   const node = DecisionNode.get.single(nodeId)(treeClient);
+  const isError = node instanceof Error;
 
   const inputType = useInterpreterTree((treeClient) => {
-    if (!node.data.input) return undefined;
+    if (isError || !node.data.input) return undefined;
 
     return treeClient.pluginEntity.get.single<typeof DecisionNode.inputType>(
       "inputs",
@@ -23,14 +24,18 @@ export const DecisionNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
     )?.type;
   });
 
-  const answer = DecisionNode.getAnswer(node.id, getAnswers());
+  const answer = isError
+    ? undefined
+    : DecisionNode.getAnswer(node.id, getAnswers());
   const methods = Form.useForm<{ [x: string]: string }>({
     defaultValues:
-      answer && node.data.input ? { [node.data.input]: answer.data.value } : {},
+      !isError && answer && node.data.input
+        ? { [node.data.input]: answer.data.value }
+        : {},
   });
 
   const onSubmit = methods.handleSubmit((values) => {
-    if (!node.data.input) return;
+    if (isError || !node.data.input) return;
 
     const answer = DecisionNode.createVariable(
       node.id,
@@ -47,7 +52,7 @@ export const DecisionNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
     send("EVALUATE_NODE_CONDITIONS");
   });
 
-  if (!inputType || !node.data.input) return null;
+  if (isError || !inputType || !node.data.input) return null;
 
   const FormElement = DecisionNode.inputPlugins[inputType].RendererComponent;
 

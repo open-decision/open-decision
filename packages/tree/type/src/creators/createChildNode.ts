@@ -8,6 +8,8 @@ export const createChildNode =
     // Get the node we want the children for
     const node = getNode(tree)(nodeId);
 
+    if (node instanceof Error) throw node;
+
     // Fitler the edges to only include the ones with the given node as the source
     const numberOfEdges = Object.values(tree.edges ?? {}).filter(
       (edge) => edge.source === nodeId

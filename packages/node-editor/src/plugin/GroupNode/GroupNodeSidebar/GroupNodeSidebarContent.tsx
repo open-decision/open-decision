@@ -36,17 +36,22 @@ export function GroupNodeSidebarContent({ nodeId, onNodeCreate }: Props) {
 
   const targetNodeName = useTree((treeClient) => {
     return edge?.target
-      ? treeClient.nodes.get.single(edge.target).name
+      ? treeClient.nodes.get.single(edge.target)?.name ?? "Zielknoten ohne Name"
       : undefined;
   });
 
   const methods = Form.useForm({
-    defaultValues: {
-      target: targetNodeName,
-      title: node.data?.title ?? "",
-      cta: node.data?.cta ?? "",
-    },
+    defaultValues:
+      node instanceof Error
+        ? {}
+        : {
+            target: targetNodeName,
+            title: node.data?.title ?? "",
+            cta: node.data?.cta ?? "",
+          },
   });
+
+  if (node instanceof Error) return null;
 
   return (
     <Tabs.Content value="Inhalt" className={stackClasses({}, "gap-4")}>

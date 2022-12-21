@@ -8,6 +8,8 @@ import { getEdge } from "./getEdge";
  */
 export const getNodesByEdge = (tree: Tree.TTree) => (edgeId: string) => {
   const edge = getEdge(tree)(edgeId);
+  if (edge instanceof Error) return undefined;
+
   const source = getNode(tree)(edge.source);
   const target = edge?.target ? getNode(tree)(edge.target) : undefined;
 

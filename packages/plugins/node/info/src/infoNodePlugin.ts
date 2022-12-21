@@ -25,7 +25,7 @@ export class InfoNodePlugin extends NodePlugin<
     (treeClient: TTreeClient) => {
       const node = this.get.single(nodeId)(treeClient);
 
-      if (!node) return;
+      if (node instanceof Error) throw node;
 
       node.data.content = content;
     };
@@ -42,6 +42,8 @@ export class InfoNodePlugin extends NodePlugin<
     }) =>
     (treeClient: TTreeClient) => {
       const edge = edgeId ? treeClient.edges.get.single(edgeId) : undefined;
+
+      if (edge instanceof Error) throw edge;
 
       if (!edge?.target && newItem) {
         const newEdge = treeClient.edges.create({

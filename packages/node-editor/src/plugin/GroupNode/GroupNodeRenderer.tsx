@@ -37,13 +37,18 @@ export function createGroupNodeRenderer(
     const groupNode = GroupNode.get.single(nodeId)(treeClient);
 
     const subTree = React.useMemo(
-      () => createSubTree(clone(groupNode)),
+      () =>
+        groupNode instanceof Error
+          ? undefined
+          : createSubTree(clone(groupNode)),
       [groupNode]
     );
 
     const [iterationResults, setIterationsResults] = React.useState<
       InterpreterContext[]
     >([]);
+
+    if (groupNode instanceof Error || !subTree) return null;
 
     return (
       <RendererPrimitives.Container nodeId={nodeId} {...props}>
@@ -99,6 +104,8 @@ const RendererContent = ({
   const groupNode = useInterpreterTree(GroupNode.get.single(groupNodeId));
 
   const methods = Form.useForm();
+
+  if (groupNode instanceof Error) return null;
 
   if (state.matches("done"))
     return (
@@ -171,6 +178,8 @@ type ButtonRowProps = {
 
 const ButtonRow = ({ onClick, groupNodeId }: ButtonRowProps) => {
   const groupNode = useInterpreterTree(GroupNode.get.single(groupNodeId));
+
+  if (groupNode instanceof Error) return null;
 
   return (
     <Row className="gap-2 justify-end">

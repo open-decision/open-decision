@@ -2,11 +2,11 @@ import { CanvasNodeContainer, CanvasNode } from "../components";
 import { useTree } from "@open-decision/tree-sync";
 
 export const GroupCanvasNode: CanvasNode = ({ id, ...props }) => {
-  const name = useTree((treeClient) => treeClient.nodes.get.single(id).name);
+  const node = useTree((treeClient) => treeClient.nodes.get.single(id));
 
-  return (
+  return node ? (
     <CanvasNodeContainer id={id} {...props}>
-      {name}
+      {node.name}
     </CanvasNodeContainer>
-  );
+  ) : null;
 };

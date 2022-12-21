@@ -22,7 +22,7 @@ const createSelectionMethods = (
 ) => {
   function startConnecting(sourceNodeId: string) {
     const connectionOriginNode = treeClient.nodes.get.single(sourceNodeId);
-    if (!connectionOriginNode) return;
+    if (connectionOriginNode instanceof Error) return;
 
     editorStore.connectionSourceNodeId = sourceNodeId;
 

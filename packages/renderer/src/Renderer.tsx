@@ -21,6 +21,7 @@ export function View({
 }: RendererProps) {
   const { getCurrentNode } = useInterpreter();
   const node = getCurrentNode();
+
   const Renderer = nodePlugins[node.type]?.Renderer;
 
   if (!Renderer) return null;

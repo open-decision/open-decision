@@ -11,13 +11,11 @@ export const getNode = <TTree extends Tree.TTree>(tree: TTree) =>
   function getNode(nodeId: string) {
     const node = tree.nodes?.[nodeId];
 
-    if (!node) {
-      throw new ODProgrammerError({
+    if (!node)
+      return new ODProgrammerError({
         code: "ENTITY_NOT_FOUND",
-        message: `The node of id ${nodeId} could not be found. Please check that the id is correct.
-        Is the passed id actually a valid node id?`,
+        message: "Tried to get a node that does not exist on the tree.",
       });
-    }
 
     return node;
   };
