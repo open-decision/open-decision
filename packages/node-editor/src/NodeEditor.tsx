@@ -71,7 +71,10 @@ export function Sidebar({ nodePlugins, edgePlugins }: SidebarProps) {
   const selectedNodeType = useTree((treeClient) => {
     if (!nodeId) return;
 
-    return treeClient.nodes.get.single(selectedNodeIds[0])?.type;
+    const selectedNode = treeClient.nodes.get.single(selectedNodeIds[0]);
+    if (selectedNode instanceof Error) throw selectedNode;
+
+    return selectedNode.type;
   });
 
   const SidebarContent = selectedNodeType ? Sidebars[selectedNodeType] : null;

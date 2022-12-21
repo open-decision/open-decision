@@ -15,6 +15,8 @@ export function FormNodeSidebarContent({ nodeId }: Props) {
 
   const node = useTree(FormNode.get.single(nodeId));
 
+  if (node instanceof Error) return null;
+
   return (
     <Tabs.Content value="Inhalt">
       <section>

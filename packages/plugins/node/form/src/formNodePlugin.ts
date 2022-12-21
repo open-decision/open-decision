@@ -38,7 +38,7 @@ export class FormNodePlugin extends NodePlugin<
     (treeClient: TTreeClient) => {
       const node = this.get.single(nodeId)(treeClient);
 
-      if (!node) return;
+      if (node instanceof Error) throw node;
 
       node.data.content = content;
     };
@@ -47,7 +47,7 @@ export class FormNodePlugin extends NodePlugin<
     (nodeId: string, newInputs: string[]) => (treeClient: TTreeClient) => {
       const node = this.get.single(nodeId)(treeClient);
 
-      if (!node) return;
+      if (node instanceof Error) throw node;
 
       node.data.inputs = newInputs;
     };
@@ -56,7 +56,7 @@ export class FormNodePlugin extends NodePlugin<
     (nodeId: string, inputId: string) => (treeClient: TTreeClient) => {
       const node = this.get.single(nodeId)(treeClient);
 
-      if (!node) return;
+      if (node instanceof Error) throw node;
 
       // We get the input just to validate that it exists.
       treeClient.pluginEntity.get.single("inputs", inputId);
@@ -67,6 +67,8 @@ export class FormNodePlugin extends NodePlugin<
   disconnectInputAndNode =
     (nodeId: string, inputId: string) => (treeClient: TTreeClient) => {
       const node = this.get.single(nodeId)(treeClient);
+
+      if (node instanceof Error) throw node;
 
       const inputIndex = node.data.inputs?.findIndex((id) => id === inputId);
 
@@ -87,6 +89,8 @@ export class FormNodePlugin extends NodePlugin<
     }) =>
     (treeClient: TTreeClient) => {
       const edge = edgeId ? treeClient.edges.get.single(edgeId) : undefined;
+
+      if (edge instanceof Error) throw edge;
 
       if (!edge?.target && newItem) {
         const newEdge = treeClient.edges.create({

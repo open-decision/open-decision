@@ -28,6 +28,11 @@ export const createNodeSidebar = <
                 const newNode = plugin.create({})(treeClient);
                 const oldNode = treeClient.nodes.get.single(nodeId);
 
+                if (oldNode instanceof Error) {
+                  oldNode.message = `A placeholder node should be transformed into a ${newNode.type}. The placeholder of ${nodeId} could however not be found in the tree.`;
+                  throw oldNode;
+                }
+
                 // FIXME the any type cast is not good
                 treeClient.nodes.update.node(nodeId, {
                   ...newNode,

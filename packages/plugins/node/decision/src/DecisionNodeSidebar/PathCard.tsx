@@ -43,7 +43,8 @@ export function PathCard({ onNodeCreate, onEdgeCreate, nodeId, edge }: Props) {
 
   const targetName = useTree((treeClient) =>
     edge.target
-      ? treeClient.nodes.get.single(edge.target).name ?? "Zielknoten ohne Namen"
+      ? treeClient.nodes.get.single(edge.target)?.name ??
+        "Zielknoten ohne Namen"
       : undefined
   );
 
@@ -100,7 +101,7 @@ export function PathCard({ onNodeCreate, onEdgeCreate, nodeId, edge }: Props) {
         <Button
           variant="secondary"
           size="small"
-          onClick={(event) => {
+          onClick={() => {
             append({ value: "" });
             return CompareEdge.addValue(edge.id, "")(treeClient);
           }}
@@ -138,7 +139,7 @@ export function PathCard({ onNodeCreate, onEdgeCreate, nodeId, edge }: Props) {
               <Button
                 variant="neutral"
                 size="small"
-                onClick={(event) => {
+                onClick={() => {
                   remove(index);
                   return CompareEdge.removeValue(edge.id, index)(treeClient);
                 }}

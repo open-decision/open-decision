@@ -16,7 +16,7 @@ export const FormNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
   const node = FormNode.get.single(nodeId)(treeClient);
 
   const inputs = useInterpreterTree((treeClient) => {
-    if (!node.data.inputs) return undefined;
+    if (node instanceof Error || !node.data.inputs) return undefined;
 
     return treeClient.pluginEntity.get.collection<typeof FormNode.inputType>(
       "inputs",
@@ -24,11 +24,14 @@ export const FormNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
     );
   });
 
-  const answer = FormNode.getAnswer(node.id, getAnswers());
+  const answer =
+    node instanceof Error ? {} : FormNode.getAnswer(node.id, getAnswers());
 
   const methods = Form.useForm({
     defaultValues: mapValues(answer ?? {}, (value) => value?.data.value),
   });
+
+  if (node instanceof Error) return null;
 
   const onSubmit = methods.handleSubmit((values) => {
     const answers = FormNode.createVariable(values)(treeClient);

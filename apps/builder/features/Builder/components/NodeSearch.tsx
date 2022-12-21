@@ -47,7 +47,7 @@ export const NodeSearch = ({ className }: Props) => {
     replaceSelectedNodes([newSelectedItemId]);
     const node = treeClient.nodes.get.single(newSelectedItemId);
 
-    if (!node) return;
+    if (node instanceof Error) return;
     zoomToNode(node);
   }
 

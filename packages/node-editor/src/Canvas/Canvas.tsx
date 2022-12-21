@@ -96,8 +96,8 @@ export function Canvas({
             switch (nodeChange.type) {
               case "remove":
                 if (nodeChange.id !== startNodeId) {
-                  treeClient.nodes.delete([nodeChange.id]);
                   removeSelectedNodes();
+                  treeClient.nodes.delete([nodeChange.id]);
                 }
                 break;
               case "position": {

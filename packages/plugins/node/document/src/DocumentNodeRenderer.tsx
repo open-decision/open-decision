@@ -44,6 +44,8 @@ export const DocumentNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
   const { mutate, data, isLoading } = useMutation(
     ["generateDocument"],
     async () => {
+      if (node instanceof Error) throw node;
+
       if (!node.data.templateUuid) {
         throw new ODError({
           code: "MISSING_TEMPLATE_UUID",
@@ -90,6 +92,8 @@ export const DocumentNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
       },
     }
   );
+
+  if (node instanceof Error) return null;
 
   return (
     <RendererPrimitives.Container

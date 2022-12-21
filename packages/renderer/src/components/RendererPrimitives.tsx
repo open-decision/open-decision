@@ -44,9 +44,11 @@ export function Container({
   successButtonLabel,
   classNames,
 }: RendererContainerProps) {
-  const isNodeFinal = useInterpreterTree(
-    (treeClient) => treeClient.nodes.get.single(nodeId).final
+  const node = useInterpreterTree((treeClient) =>
+    treeClient.nodes.get.single(nodeId)
   );
+
+  if (node instanceof Error) throw node;
 
   return (
     <Stack
@@ -55,7 +57,7 @@ export function Container({
       <Stack className="flex-1 overflow-hidden mb-4 px-1 pb-1 gap-4">
         {children}
       </Stack>
-      {withNavigation && !isNodeFinal ? (
+      {withNavigation && !node.final ? (
         <Navigation
           className="self-center mb-[var(--padding)]"
           successButtonLabel={successButtonLabel}

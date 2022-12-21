@@ -21,6 +21,8 @@ export function DecisionNodeSidebarContent({ nodeId }: Props) {
   const treeClient = useTreeClient();
   const node = useTree(DecisionNode.get.single(nodeId));
 
+  if (node instanceof Error) return null;
+
   return (
     <Tabs.Content
       value="Inhalt"

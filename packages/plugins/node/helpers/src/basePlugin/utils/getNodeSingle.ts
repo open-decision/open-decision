@@ -4,5 +4,9 @@ export const getNodeSingle = <TReturn>(
   treeClient: TTreeClient | TReadOnlyTreeClient,
   nodeId: string
 ) => {
-  return treeClient.nodes.get.single(nodeId) as TReturn;
+  const node = treeClient.nodes.get.single(nodeId);
+
+  if (node instanceof Error) return node;
+
+  return node as TReturn;
 };

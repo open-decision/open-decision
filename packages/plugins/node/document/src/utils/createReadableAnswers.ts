@@ -105,7 +105,7 @@ export function createReadableAnswers(
       }
 
       case "group": {
-        const nodeName = treeClient.nodes.get.single(answerId).name;
+        const nodeName = treeClient.nodes.get.single(answerId)?.name;
         const readableKey = createReadableKey(nodeName ?? "");
 
         const readableGroupAnswer = createReadableGroupAnswer(
@@ -114,7 +114,10 @@ export function createReadableAnswers(
           treeClient
         );
 
-        result[readableKey] = readableGroupAnswer;
+        if (readableGroupAnswer) {
+          result[readableKey] = readableGroupAnswer;
+        }
+
         break;
       }
 
@@ -132,7 +135,7 @@ const createReadableFormAnswer = (
   treeClient: TTreeClient | TReadOnlyTreeClient
 ) => {
   const formResult: FormAnswerType = {};
-  const nodeName = treeClient.nodes.get.single(nodeId).name;
+  const nodeName = treeClient.nodes.get.single(nodeId)?.name;
   const readableKey = createReadableKey(nodeName ?? "");
 
   for (const answerId in answer.answers) {
@@ -189,6 +192,8 @@ const createReadableGroupAnswer = (
   const result: GroupAnswerType = [];
 
   const groupNode = GroupNode.get.single(nodeId)(treeClient);
+
+  if (groupNode instanceof Error) return undefined;
 
   const subTreeClient = new TreeClient(groupNode.data.tree);
 

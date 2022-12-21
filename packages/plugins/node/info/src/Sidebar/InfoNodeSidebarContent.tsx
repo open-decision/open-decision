@@ -27,6 +27,9 @@ export function InfoNodeSidebarContent({ nodeId }: Props) {
 
   const content = useTree((treeClient) => {
     const node = InfoNode.get.single(nodeId)(treeClient);
+
+    if (node instanceof Error) return undefined;
+
     return node.data.content;
   });
 
@@ -36,7 +39,7 @@ export function InfoNodeSidebarContent({ nodeId }: Props) {
 
   const targetNodeName = useTree((treeClient) => {
     return edge?.target
-      ? treeClient.nodes.get.single(edge.target).name
+      ? treeClient.nodes.get.single(edge.target)?.name ?? "Zielknoten ohne Name"
       : undefined;
   });
 

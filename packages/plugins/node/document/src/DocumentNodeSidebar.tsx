@@ -20,10 +20,15 @@ export const DocumentNodeSidebar: TNodeSidebar = ({
   });
 
   const methods = Form.useForm({
-    defaultValues: {
-      templateUuid: node.data.templateUuid ?? "",
-    },
+    defaultValues:
+      node instanceof Error
+        ? {}
+        : {
+            templateUuid: node.data.templateUuid ?? "",
+          },
   });
+
+  if (node instanceof Error) return null;
 
   return (
     <NodeSidebar

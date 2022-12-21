@@ -4,6 +4,7 @@ import {
   Tree,
   TTreeClient,
 } from "@open-decision/tree-type";
+import { ODProgrammerError } from "@open-decision/type-classes";
 import { InterpreterContext } from "./interpreter";
 
 function getAnswers(interpreterContext: InterpreterContext) {
@@ -17,6 +18,13 @@ export const getCurrentNode = (
   const currentNode = treeClient.nodes.get.single(
     context.history.nodes[context.history.position]
   );
+
+  if (currentNode instanceof Error)
+    throw new ODProgrammerError({
+      code: "INTERPRETER_WITHOUT_CURRENT_NODE",
+      message:
+        "The interpreters current node is invalid, because it cannot be found on the tree.",
+    });
 
   return currentNode;
 };
