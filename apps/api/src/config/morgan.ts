@@ -10,12 +10,12 @@ const defaultResponseFormat = `${getIpFormat()}:method :url :status - :response-
 const errorResponseFormat = `${getIpFormat()}:method :url :status - :response-time ms - message: :message`;
 
 export const morganHandler = morgan(defaultResponseFormat, {
-  skip: (req, res) => res.statusCode >= 500,
-  stream: { write: (message) => logger.http(message.trim()) },
+  skip: (req, res) => res.statusCode >= 400,
+  stream: { write: (message) => logger.info(message.trim()) },
 });
 
 export const morganErrorHandler = morgan(errorResponseFormat, {
-  skip: (req, res) => res.statusCode < 500,
+  skip: (req, res) => res.statusCode < 400,
   stream: { write: (message) => logger.error(message.trim()) },
 });
 

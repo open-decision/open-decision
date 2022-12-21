@@ -12,7 +12,6 @@ env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
   FLY_ORG: open-decision
   FLY_REGION: fra
-  DATABASE_URL: ${{ secrets.DATABASE_URL }}
   ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
   ADMIN_ACCOUNT_WHITELIST: ${{ secrets.ADMIN_ACCOUNT_WHITELIST }}
   DEV_ACCOUNT_WHITELIST: ${{ secrets.DEV_ACCOUNT_WHITELIST }}
@@ -28,19 +27,17 @@ env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
   VERCEL_SCOPE: open-decision
-  NEXT_PUBLIC_OD_API_ENDPOINT: ${{ secrets.NEXT_PUBLIC_OD_API_ENDPOINT }}
-  NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT: ${{ secrets.NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT }}
-  OD_BUILDER_ENDPOINT: ${{ secrets.OD_BUILDER_ENDPOINT }}
-  NEXT_PUBLIC_OD_BUILDER_ENDPOINT: ${{ secrets.NEXT_PUBLIC_OD_BUILDER_ENDPOINT }}
 
 jobs:
   api:
     name: Deploy api
     runs-on: ubuntu-latest
+    environment: Production
 
     env:
-      APP_NAME: open-decision
+      APP_NAME: od-api
       CONFIG: apps/api/fly.toml
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
     steps:
       - uses: actions/checkout@v3
@@ -63,6 +60,7 @@ jobs:
   builder:
     name: Deploy builder
     runs-on: ubuntu-latest
+    environment: Production
 
     steps:
       - uses: actions/checkout@v3
@@ -72,6 +70,11 @@ jobs:
 
       - name: Deploy to Vercel Action
         uses: BetaHuhn/deploy-to-vercel-action@v1
+        env:
+          NEXT_PUBLIC_OD_API_ENDPOINT: ${{  secrets.OD_API_ENDPOINT }}
+          NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT: ${{ secrets.OD_WEBSOCKET_ENDPOINT }}
+          OD_BUILDER_ENDPOINT: ${{ secrets.OD_BUILDER_ENDPOINT }}
+          NEXT_PUBLIC_OD_BUILDER_ENDPOINT: ${{ secrets.OD_BUILDER_ENDPOINT }}
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
