@@ -27,6 +27,7 @@ env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
   VERCEL_SCOPE: open-decision
+  OD_BUILDER_ENDPOINT: ${{format('https://open-decision-{0}.vercel.app', github.event.pull_request.number)}}
 
 jobs:
   lint:
@@ -108,7 +109,6 @@ jobs:
     env:
       NEXT_PUBLIC_OD_API_ENDPOINT: ${{format('https://pr-{0}-open-decision.fly.dev', github.event.pull_request.number)}}
       NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT: ${{format('wss://pr-{0}-open-decision.fly.dev', github.event.pull_request.number)}}
-      OD_BUILDER_ENDPOINT: ${{format('https://open-decision-{0}.vercel.app', github.event.pull_request.number)}}
       NEXT_PUBLIC_OD_BUILDER_ENDPOINT: ${{format('https://open-decision-{0}.vercel.app', github.event.pull_request.number)}}
 
     steps:
