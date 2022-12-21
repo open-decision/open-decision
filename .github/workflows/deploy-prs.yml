@@ -12,7 +12,6 @@ env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
   FLY_ORG: open-decision
   FLY_REGION: fra
-  DATABASE_URL: ${{ secrets.DATABASE_URL }}
   ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
   ADMIN_ACCOUNT_WHITELIST: ${{ secrets.ADMIN_ACCOUNT_WHITELIST }}
   DEV_ACCOUNT_WHITELIST: ${{ secrets.DEV_ACCOUNT_WHITELIST }}
@@ -28,10 +27,6 @@ env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
   VERCEL_SCOPE: open-decision
-  NEXT_PUBLIC_OD_API_ENDPOINT: ${{format('https://pr-{0}-open-decision.fly.dev', github.event.pull_request.number)}}
-  NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT: ${{format('wss://pr-{0}-open-decision.fly.dev', github.event.pull_request.number)}}
-  OD_BUILDER_ENDPOINT: ${{format('https://open-decision-{0}.vercel.app', github.event.pull_request.number)}}
-  NEXT_PUBLIC_OD_BUILDER_ENDPOINT: ${{format('https://open-decision-{0}.vercel.app', github.event.pull_request.number)}}
 
 jobs:
   lint:
@@ -53,6 +48,7 @@ jobs:
   typecheck:
     runs-on: ubuntu-latest
     name: Typecheck
+    environment: Preview
 
     steps:
       - name: Check out Git repository
@@ -68,6 +64,7 @@ jobs:
   preview_api:
     runs-on: ubuntu-latest
     name: "Deploy api"
+    environment: Preview
 
     env:
       APP_NAME: ${{format('pr-{0}-open-decision', github.event.pull_request.number)}}
@@ -84,22 +81,32 @@ jobs:
         shell: bash
         continue-on-error: true
         run: |
-          flyctl secrets set NODE_ENV="test" PORT="$PORT" OD_BUILDER_ENDPOINT="$OD_BUILDER_ENDPOINT" DATABASE_URL="$DATABASE_URL" ACCESS_TOKEN_SECRET="$ACCESS_TOKEN_SECRET" ADMIN_ACCOUNT_WHITELIST="$ADMIN_ACCOUNT_WHITELIST" DEV_ACCOUNT_WHITELIST="$DEV_ACCOUNT_WHITELIST" EMAIL_FROM_ADDRESS="$EMAIL_FROM_ADDRESS" FEATURE_WHITELIST="$FEATURE_WHITELIST" PUBLIC_API_DOCUMENTATION="$PUBLIC_API_DOCUMENTATION" REFRESH_TOKEN_SECRET="$REFRESH_TOKEN_SECRET" SMTP_HOST="$SMTP_HOST" SMTP_PASSWORD="$SMTP_PASSWORD" SMTP_PORT="$SMTP_PORT" SMTP_USERNAME="$SMTP_USERNAME" --app "$APP_NAME"
+          flyctl secrets set NODE_ENV="test" PORT="$PORT" OD_BUILDER_ENDPOINT="$OD_BUILDER_ENDPOINT" ACCESS_TOKEN_SECRET="$ACCESS_TOKEN_SECRET" ADMIN_ACCOUNT_WHITELIST="$ADMIN_ACCOUNT_WHITELIST" DEV_ACCOUNT_WHITELIST="$DEV_ACCOUNT_WHITELIST" EMAIL_FROM_ADDRESS="$EMAIL_FROM_ADDRESS" FEATURE_WHITELIST="$FEATURE_WHITELIST" PUBLIC_API_DOCUMENTATION="$PUBLIC_API_DOCUMENTATION" REFRESH_TOKEN_SECRET="$REFRESH_TOKEN_SECRET" SMTP_HOST="$SMTP_HOST" SMTP_PASSWORD="$SMTP_PASSWORD" SMTP_PORT="$SMTP_PORT" SMTP_USERNAME="$SMTP_USERNAME" --app "$APP_NAME"
       - name: Set regions for deploy
         run: flyctl regions set fra ams --app ${{env.APP_NAME}}
-      - name: Deploy
-        id: deploy
-        run: flyctl deploy --config ${{env.CONFIG}} --app ${{env.APP_NAME}} --region ${{env.FLY_REGION}} --strategy immediate
       - name: Attach database
         continue-on-error: true
         run: flyctl postgres attach od-preview-db --app ${{env.APP_NAME}}
+      - name: Deploy
+        id: deploy
+        run: flyctl deploy --config ${{env.CONFIG}} --app ${{env.APP_NAME}} --region ${{env.FLY_REGION}} --strategy immediate
+      - name: Set ressources
+        id: resources
+        run: flyctl scale memory 512 --app ${{env.APP_NAME}}
 
   preview_builder:
     runs-on: ubuntu-latest
     name: "Deploy builder"
+    environment: Preview
 
     outputs:
       PREVIEW_URL: ${{ steps.step1.outputs.PREVIEW_URL }}
+
+    env:
+      NEXT_PUBLIC_OD_API_ENDPOINT: ${{format('https://pr-{0}-open-decision.fly.dev', github.event.pull_request.number)}}
+      NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT: ${{format('wss://pr-{0}-open-decision.fly.dev', github.event.pull_request.number)}}
+      OD_BUILDER_ENDPOINT: ${{format('https://open-decision-{0}.vercel.app', github.event.pull_request.number)}}
+      NEXT_PUBLIC_OD_BUILDER_ENDPOINT: ${{format('https://open-decision-{0}.vercel.app', github.event.pull_request.number)}}
 
     steps:
       - name: Check out Git repository
@@ -140,6 +147,8 @@ jobs:
     name: Playwright tests
     runs-on: ubuntu-latest
     needs: [preview_builder, preview_api]
+    environment: Preview
+
     env:
       DATABASE_URL: ${{secrets.DATABASE_URL_PROXIED}}
 
