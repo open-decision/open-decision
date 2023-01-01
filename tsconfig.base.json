@@ -25,13 +25,17 @@
     "skipDefaultLibCheck": true,
     "declaration": false,
     "useUnknownInCatchVariables": true,
+    "esModuleInterop": true,
     "rootDir": ".",
     "baseUrl": ".",
     "paths": {
-      "@open-decision/api-client": ["packages/api-client/src/index.ts"],
-      "@open-decision/api-helpers": ["packages/api-helpers/src/index.ts"],
+      "@open-decision/api-client": ["packages/api/client/src/index.ts"],
+      "@open-decision/api-react-binding": [
+        "packages/api/react-binding/src/index.ts"
+      ],
+      "@open-decision/api-helpers": ["packages/api/helpers/src/index.ts"],
       "@open-decision/api-specification": [
-        "packages/api-specification/src/index.ts"
+        "packages/api/specification/src/index.ts"
       ],
       "@open-decision/design-system": ["packages/design-system/src/index.ts"],
       "@open-decision/interpreter": ["packages/interpreter/src/index.ts"],
@@ -76,6 +80,9 @@
       "@open-decision/plugins-variable-multi-select": [
         "packages/plugins/variable/multi-select/src/index.ts"
       ],
+      "@open-decision/plugins-variable-empty": [
+        "packages/plugins/variable/empty/src/index.ts"
+      ],
       "@open-decision/plugins-variable-select": [
         "packages/plugins/variable/select/src/index.ts"
       ],
@@ -95,8 +102,7 @@
       "@open-decision/tree-clientWithPlugins": [
         "packages/tree/clientWithPlugins/src/index.ts"
       ],
-      "@open-decision/type-classes": ["packages/type-classes/src/index.ts"],
-      "@open-decision/types": ["packages/types/src/index.ts"]
+      "@open-decision/type-classes": ["packages/type-classes/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
