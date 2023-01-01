@@ -28,6 +28,7 @@ export const RendererRadioGroup = React.forwardRef<HTMLDivElement, Props>(
             <Form.Radio.Item
               {...register(name, { required })}
               value={answer.id}
+              className="focus-within:no-focus"
             />
             {answer.value ? (
               answer.value

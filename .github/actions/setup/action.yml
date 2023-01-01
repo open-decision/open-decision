@@ -16,4 +16,5 @@ runs:
       shell: bash
       run: yarn setup
 
-    - uses: nrwl/nx-set-shas@v3
+    - name: Derive appropriate SHAs for base and head for `nx affected` commands
+      uses: nrwl/nx-set-shas@v3

@@ -1,20 +1,23 @@
 import * as React from "react";
-import { Notifications, Tooltip } from "@open-decision/design-system";
+import {
+  Notifications,
+  Tooltip,
+  useNotificationSnapshot,
+} from "@open-decision/design-system";
 import { Hydrate, QueryClientProvider } from "@tanstack/react-query";
 import { NextPage } from "next";
-import { useQueryClient } from "../features/Data/useQueryClient";
 import { NextIntlProvider, useTranslations } from "next-intl";
-import { MessagesContext } from "../config/messagesContext";
 import { useUrlNotification } from "../utils/useUrlNotification";
 import { convertToODError } from "@open-decision/type-classes";
 import { FullPageErrorFallback } from "../components/Error/FullPageErrorFallback";
 import { AnimatePresence, motion, Variants } from "framer-motion";
 import { Router } from "next/router";
-import { useNotificationStore } from "../config/notifications";
 import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 import "reactflow/dist/style.css";
 import "@open-decision/design-system/index.css";
-import "../themes/auroa.css";
+import { MessagesContext } from "@open-decision/translations";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { useQueryClient } from "../features/Data/useQueryClient";
 
 // ------------------------------------------------------------------
 // xstate devtools
@@ -44,8 +47,9 @@ function App({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
 
   useUrlNotification();
   const queryClient = useQueryClient();
-  const notificationState = useNotificationStore();
   const t = useTranslations("common.notificationsGeneral");
+
+  const notificationState = useNotificationSnapshot();
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
@@ -59,6 +63,7 @@ function App({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
             {getLayout(<Component {...pageProps} />)}
           </Tooltip.Provider>
         </Hydrate>
+        {process.env.NODE_ENV === "development" && <ReactQueryDevtools />}
       </QueryClientProvider>
     </ErrorBoundary>
   );

@@ -12,6 +12,7 @@ export class PlaceholderNodePlugin extends NodePlugin<
     super(DataType, typeName);
 
     this.defaultData = {};
+    this.isAddable = false;
   }
 }
 

@@ -65,9 +65,7 @@ export const developer: User = {
 export const insertUsers = async (users: User[]) => {
   const mod = users.map((user) => ({ ...user, password: hashedPassword }));
 
-  await prisma.user.createMany({
-    data: mod,
-  });
+  await prisma.user.createMany({ data: mod });
 };
 
 export const deleteUser = async (user: User) => {

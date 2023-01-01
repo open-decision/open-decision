@@ -1,18 +1,16 @@
 import * as React from "react";
-import { Heading, Form } from "@open-decision/design-system";
+import { Heading, Form, addNotification } from "@open-decision/design-system";
 import { cardClasses } from "../../components/Card";
 import { VerifiedSettingsChange } from "./VerifiedSettingsChange";
 import { TGetUserOutput } from "@open-decision/api-specification";
 import { useUser } from "../Auth/useUserQuery";
 import { EmailField } from "../../components/EmailInput";
 import { useTranslations } from "next-intl";
-import { useNotificationStore } from "../../config/notifications";
 
 type Props = { user: TGetUserOutput };
 
 export function ChangeEmail({ user }: Props) {
   const t = useTranslations("settings.account.changeEmail");
-  const { addNotification } = useNotificationStore();
   const methods = Form.useForm({
     defaultValues: {
       newEmail: "",

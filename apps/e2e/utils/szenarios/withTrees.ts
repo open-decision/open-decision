@@ -4,7 +4,6 @@ import {
   createTreeFixture,
   clearTrees,
   insertTrees,
-  getFromEnv,
   PartialTree,
 } from "@open-decision/test-utils";
 import { APIRequestContext } from "@playwright/test";
@@ -38,7 +37,7 @@ const fetchFn =
   };
 
 export const createTrees = async (request: APIRequestContext, user: User) => {
-  const proxiedOD = client({
+  const proxiedClient = client({
     fetchFunction: fetchFn(request),
     urlPrefix: "/api/external-api",
   });
@@ -93,11 +92,11 @@ export const createTrees = async (request: APIRequestContext, user: User) => {
     ]),
   ]);
 
-  await proxiedOD.trees.publishedTrees.create({
+  await proxiedClient.trees.publishedTrees.create({
     params: { treeUuid: activePublishedTree.uuid },
     body: { name: "Published Tree" },
   });
-  await proxiedOD.trees.publishedTrees.create({
+  await proxiedClient.trees.publishedTrees.create({
     params: { treeUuid: archivedPublishedTree.uuid },
     body: { name: "Published Tree Two" },
   });

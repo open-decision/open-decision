@@ -9,8 +9,11 @@ const authCatch: NextApiHandler = async (req, res) => {
     const authResponse = await safeFetchJSON(
       `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1/auth/${req.query["slug"]}`,
       {
-        body: req.body,
+        body: JSON.stringify(req.body),
         method: req.method,
+        headers: {
+          "Content-Type": req.headers["content-type"] ?? "application/json",
+        },
       },
       { validation: loginOutput }
     );

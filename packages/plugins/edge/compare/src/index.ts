@@ -1,21 +1,13 @@
-import { EdgePluginObject } from "@open-decision/plugins-edge-helpers";
-import { CompareEdgePlugin, DataType, TCompareEdge } from "./plugin";
-import { resolver } from "./resolver";
+import { CompareEdgePlugin, TCompareEdge } from "./plugin";
+import { compareEdgeResolver } from "./resolver";
 
-export const createCompareEdgePlugin = (): EdgePluginObject<
-  typeof DataType,
-  "compare",
-  TCompareEdge
-> => {
-  const plugin = new CompareEdgePlugin();
-
-  return {
-    plugin,
-    type: plugin.typeName,
-    resolver,
-  };
+const plugin = new CompareEdgePlugin();
+export const CompareEdgePluginObject = {
+  plugin,
+  type: plugin.typeName,
+  resolver: compareEdgeResolver,
 };
 
 export { CompareEdgePlugin };
 export type { TCompareEdge };
-export { resolver };
+export { compareEdgeResolver as resolver };

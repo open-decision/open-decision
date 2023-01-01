@@ -84,6 +84,7 @@ export default {
   projectMenu: {
     changeName: "Namen ändern",
     export: "Exportieren",
+    uploadTheme: "Theme hochladen",
     publish: {
       publish: "Veröffentlichen",
       unpublish: "Unveröffentlichen",
@@ -95,5 +96,19 @@ export default {
     delete: "Projekt löschen",
     disabledDeletePublishedTreeTooltip:
       "Ein veröffentlichter Baum kann nicht gelöscht werden. Bitte unveröffentliche den Baum erst.",
+  },
+  nodeNames: {
+    decision: "Entscheidung",
+    form: "Formular",
+    "node-group": "Gruppe",
+    info: "Information",
+    document: "Dokumentengenerierung",
+    placeholder: "Platzhalter",
+  },
+  inputNames: {
+    select: "Einfachauswahl",
+    "multi-select": "Mehrfachauswahl",
+    text: "Texteingabe",
+    placeholder: "Platzhalter",
   },
 } as const;

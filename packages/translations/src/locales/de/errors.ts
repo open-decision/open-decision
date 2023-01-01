@@ -177,6 +177,10 @@ const errorMessages: Record<ErrorCodes, { short: string; long: string }> = {
     short: "Template fehlt.",
     long: "Bitte lege ein Template für diese Dokumentengenerierung fest.",
   },
+  MISSING_TREE_IN_MODULE: {
+    short: "Entscheidungsbaum fehlt.",
+    long: "Bitte lege einen Entscheidungsbaum für dieses Modul fest.",
+  },
 } as const;
 
 export default errorMessages;

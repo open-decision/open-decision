@@ -6,7 +6,6 @@ export const Type = z.object({
   label: z.string().optional(),
   name: z.string().optional(),
   data: z.unknown(),
-  required: z.boolean(),
 });
 
 export const Record = z.record(Type);

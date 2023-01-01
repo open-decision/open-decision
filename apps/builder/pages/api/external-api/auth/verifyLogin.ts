@@ -9,7 +9,7 @@ const verifyLogin: NextApiHandler = async (req, res) => {
     const authResponse = await safeFetchJSON(
       `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1/auth/login`,
       {
-        body: req.body,
+        body: JSON.stringify(req.body),
         method: req.method,
       },
       { validation: loginOutput }

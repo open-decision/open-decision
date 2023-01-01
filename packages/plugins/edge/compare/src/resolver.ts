@@ -10,7 +10,7 @@ import { TCompareEdge } from "./plugin";
 
 const SingleSelectVariable = new SingleSelectVariablePlugin();
 
-export const resolver: EdgeResolver<TCompareEdge> =
+export const compareEdgeResolver: EdgeResolver<TCompareEdge> =
   (treeClient) => (edge) => (context) => {
     const currentNode = getCurrentNode(treeClient, context);
 

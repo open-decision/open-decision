@@ -60,17 +60,17 @@ const button = cva(
       {
         size: "small",
         square: true,
-        className: ["px-2"],
+        className: ["px-1"],
       },
       {
         size: "medium",
         square: true,
-        className: ["px-3"],
+        className: ["px-2"],
       },
       {
         size: "large",
         square: true,
-        className: ["px-4"],
+        className: ["px-3"],
       },
       {
         alignByContent: "left",
@@ -122,17 +122,27 @@ export const buttonClasses = (
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { classNames, className, children, round, size, square, variant, ...props },
+    {
+      classNames,
+      className,
+      children,
+      round,
+      size,
+      square,
+      variant,
+      alignByContent,
+      ...props
+    },
     ref
   ) => {
     return (
       <button
         type="button"
         ref={ref}
-        className={buttonClasses({ round, size, square, variant }, [
-          classNames,
-          className,
-        ])}
+        className={buttonClasses(
+          { round, size, square, variant, alignByContent },
+          [classNames, className]
+        )}
         {...props}
       >
         {children}

@@ -1,7 +1,8 @@
-import { Button, stackClasses, Tabs } from "@open-decision/design-system";
-import { TNodeSidebarProps } from "@open-decision/node-editor";
+import { stackClasses, Tabs } from "@open-decision/design-system";
+import { SidebarButton } from "@open-decision/node-editor";
 import { CompareEdgePlugin } from "@open-decision/plugins-edge-compare";
 import { EdgePluginObject } from "@open-decision/plugins-edge-helpers";
+import { TNodeSidebarProps } from "@open-decision/plugins-node-helpers";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { ODError } from "@open-decision/type-classes";
 import { PathCard } from "./PathCard";
@@ -37,10 +38,7 @@ export function DecisionNodeSidebarPaths({ nodeId, onNodeCreate }: Props) {
           }
         />
       ))}
-      <Button
-        className="w-full"
-        variant="secondary"
-        size="small"
+      <SidebarButton
         onClick={() => {
           const newEdge = CompareEdge.create({
             source: nodeId,
@@ -53,7 +51,7 @@ export function DecisionNodeSidebarPaths({ nodeId, onNodeCreate }: Props) {
         }}
       >
         Pfad hinzufügen
-      </Button>
+      </SidebarButton>
     </Tabs.Content>
   );
 }

@@ -66,7 +66,7 @@ export const ToggleGroup = React.forwardRef<HTMLDivElement, ToggleGroupProps>(
           layout={layout}
           raised={raised}
           className={className}
-          type={props.type}
+          {...props}
         >
           {children}
         </SystemToggleGroup.Root>
@@ -84,16 +84,9 @@ export const ToggleItem = React.forwardRef<
 >(function ToggleItem({ children, ...props }, ref) {
   return (
     <RadixToolbar.ToggleItem asChild {...props}>
-      <SystemToggleButton
-        ref={ref}
-        variant="neutral"
-        className="colorScheme-primary"
-        square
-        size="medium"
-        {...props}
-      >
+      <SystemToggleGroup.Item ref={ref} {...props}>
         {children}
-      </SystemToggleButton>
+      </SystemToggleGroup.Item>
     </RadixToolbar.ToggleItem>
   );
 });

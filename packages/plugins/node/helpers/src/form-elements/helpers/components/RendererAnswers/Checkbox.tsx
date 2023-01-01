@@ -15,7 +15,7 @@ export const CheckboxElement = React.forwardRef<HTMLInputElement, ElementProps>(
 
     return (
       <label className={labelContainerClasses}>
-        <Form.Checkbox {...props} ref={ref} />
+        <Form.Checkbox {...props} ref={ref} className="focus-within:no-focus" />
         {answer.value ? (
           answer.value
         ) : (

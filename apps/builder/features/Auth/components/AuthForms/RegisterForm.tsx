@@ -27,7 +27,7 @@ const useIsOnWhiteListQuery = (
       const result = await safeFetchJSON(
         `/users/is-whitelisted`,
         {
-          body: data,
+          body: JSON.stringify(data),
           method: "POST",
         },
         {}
@@ -172,7 +172,7 @@ function RegisterForm({ email }: { email?: string }) {
                 },
               })}
             />
-            <span>
+            <span className="flex-1">
               <Form.Label className="inline" htmlFor="privacy">
                 {t("register.dataProtection.start")}
               </Form.Label>{" "}
@@ -204,7 +204,7 @@ function RegisterForm({ email }: { email?: string }) {
                 },
               })}
             />
-            <Form.Label className="inline" htmlFor="legal">
+            <Form.Label className="inline flex-1" htmlFor="legal">
               {t("register.alphaDisclaimer")}
             </Form.Label>
           </Row>

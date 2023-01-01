@@ -32,24 +32,24 @@ export interface Typegen0 {
   };
   missingImplementations: {
     actions: never;
-    services: never;
-    guards: never;
     delays: never;
+    guards: never;
+    services: never;
   };
   eventsCausingActions: {
     assignDataToContext: "OPEN";
     assignTokenToContext: "done.invoke.authenticate";
     incrementRetries: "xstate.after(retry_delay)#websocketMachine.retry";
   };
-  eventsCausingServices: {
-    authenticate: "OPEN" | "xstate.after(retry_delay)#websocketMachine.retry";
-    openWebsocket: "done.invoke.authenticate";
+  eventsCausingDelays: {
+    retry_delay: "connection.error";
   };
   eventsCausingGuards: {
     underRetryLimit: "connection.error";
   };
-  eventsCausingDelays: {
-    retry_delay: "connection.error";
+  eventsCausingServices: {
+    authenticate: "OPEN" | "xstate.after(retry_delay)#websocketMachine.retry";
+    openWebsocket: "done.invoke.authenticate";
   };
   matchesStates:
     | "authenticating"

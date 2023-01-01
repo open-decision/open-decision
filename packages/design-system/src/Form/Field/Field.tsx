@@ -45,6 +45,34 @@ export function Field({
 
   const isLabelHidden = layout === "no-label";
 
+  const WrappedLabel =
+    typeof Label === "string" ? (
+      <Form.Label className="grid gap-2 field flex-1" data-layout={layout}>
+        <span
+          className={rowClasses({}, ["gap-2"])}
+          style={{
+            gridArea: "label",
+            wordBreak: typeof Label === "string" ? "break-word" : undefined,
+          }}
+        >
+          {Label}
+          {required ? (
+            <span
+              className={badgeClasses({ size: "small" }, ["colorScheme-gray"])}
+            >
+              *Pflichtfeld
+            </span>
+          ) : null}
+        </span>
+        <span style={{ gridArea: "input" }}>{children}</span>
+      </Form.Label>
+    ) : (
+      <span className="grid gap-2 field flex-1" data-layout={layout}>
+        {Label}
+        <span style={{ gridArea: "input" }}>{children}</span>
+      </span>
+    );
+
   return (
     <div className={stackClasses({}, [className])} style={style}>
       {isLabelHidden ? (
@@ -55,27 +83,7 @@ export function Field({
           <span style={{ gridArea: "input" }}>{children}</span>
         </>
       ) : (
-        <Form.Label className="grid gap-2 field" data-layout={layout}>
-          <span
-            className={rowClasses({}, ["gap-2"])}
-            style={{
-              gridArea: "label",
-              wordBreak: typeof Label === "string" ? "break-word" : undefined,
-            }}
-          >
-            {Label}
-            {required ? (
-              <span
-                className={badgeClasses({ size: "small" }, [
-                  "colorScheme-danger",
-                ])}
-              >
-                *Pflichtfeld
-              </span>
-            ) : null}
-          </span>
-          <span style={{ gridArea: "input" }}>{children}</span>
-        </Form.Label>
+        WrappedLabel
       )}
       <Form.Error
         data-test={`error-${name}`}

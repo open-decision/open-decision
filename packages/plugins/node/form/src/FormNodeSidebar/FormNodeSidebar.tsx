@@ -1,6 +1,7 @@
 import * as React from "react";
-import { TNodeSidebar, NodeSidebar } from "@open-decision/node-editor";
+import { NodeSidebar } from "@open-decision/node-editor";
 import { FormNodeSidebarContent } from "./FormNodeSidebarContent";
+import { TNodeSidebar } from "@open-decision/plugins-node-helpers";
 
 export const FormNodeSidebar: TNodeSidebar = ({
   nodeId,

@@ -67,7 +67,11 @@ export const SelectWithCombobox = React.forwardRef<
         className={className ? twMerge(inputClasses, className) : inputClasses}
         ref={ref}
       >
-        {selectState.value.length ? selectState.value : selectPlaceholder}
+        {selectState.value.length ? (
+          selectState.value
+        ) : (
+          <span className="text-gray10">{selectPlaceholder}</span>
+        )}
         <Select.Arrow />
       </Select.Input>
       <Select.Popover state={selectState} composite={false}>

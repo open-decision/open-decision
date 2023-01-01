@@ -1,6 +1,7 @@
-import { TNodeSidebar } from "../../../types/EditorPluginObject";
+import { TNodeSidebar } from "@open-decision/plugins-node-helpers";
 import { NodeSidebar } from "../../components";
 import { GroupNodeSidebarContent } from "./GroupNodeSidebarContent";
+import { GroupNodeSidebarPaths } from "./GroupNodeSidebarPaths";
 
 export const GroupNodeSidebar: TNodeSidebar = ({
   nodeId,
@@ -15,11 +16,12 @@ export const GroupNodeSidebar: TNodeSidebar = ({
       className={className}
       edgePlugins={edgePlugins}
       nodePlugins={nodePlugins}
-      tabs={["Inhalt"]}
+      tabs={["Inhalt", "Ziel"]}
       initialTab="Inhalt"
       hasPreview
     >
-      <GroupNodeSidebarContent nodeId={nodeId} onNodeCreate={onNodeCreate} />
+      <GroupNodeSidebarContent nodeId={nodeId} />
+      <GroupNodeSidebarPaths nodeId={nodeId} onNodeCreate={onNodeCreate} />
     </NodeSidebar>
   );
 };

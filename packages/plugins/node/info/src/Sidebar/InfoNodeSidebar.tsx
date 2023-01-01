@@ -1,6 +1,8 @@
 import * as React from "react";
-import { TNodeSidebar, NodeSidebar } from "@open-decision/node-editor";
+import { NodeSidebar } from "@open-decision/node-editor";
 import { InfoNodeSidebarContent } from "./InfoNodeSidebarContent";
+import { InfoNodeSidebarPaths } from "./InfoNodeSidebarPaths";
+import { TNodeSidebar } from "@open-decision/plugins-node-helpers";
 
 export const InfoNodeSidebar: TNodeSidebar = ({
   nodeId,
@@ -14,11 +16,12 @@ export const InfoNodeSidebar: TNodeSidebar = ({
       className={className}
       edgePlugins={edgePlugins}
       nodePlugins={nodePlugins}
-      tabs={["Inhalt"]}
+      tabs={["Inhalt", "Ziel"]}
       initialTab="Inhalt"
       hasPreview
     >
       <InfoNodeSidebarContent nodeId={nodeId} />
+      <InfoNodeSidebarPaths nodeId={nodeId} />
     </NodeSidebar>
   );
 };

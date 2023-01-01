@@ -7,16 +7,14 @@ import { MultiSelectInputPlugin } from "./multiSelectPlugin";
 
 export * from "./multiSelectPlugin";
 
-export const createMultiSelectInputPlugin = () => {
-  const plugin = new MultiSelectInputPlugin();
+const plugin = new MultiSelectInputPlugin();
 
-  return {
-    plugin,
-    type: plugin.typeName,
-    BuilderComponent: {
-      InputConfigurator: MultiSelectInputConfigurator,
-      PrimaryActionSlot: MultiSelectInputPrimaryActionSlot,
-    },
-    RendererComponent: MultiSelectInputRenderer,
-  };
+export const MultiSelectInputPluginObject = {
+  plugin,
+  type: plugin.typeName,
+  BuilderComponent: {
+    InputConfigurator: MultiSelectInputConfigurator,
+    PrimaryActionSlot: MultiSelectInputPrimaryActionSlot,
+  },
+  RendererComponent: MultiSelectInputRenderer,
 };

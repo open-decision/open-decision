@@ -19,7 +19,7 @@ export function ViewToggle({ selectedView, className }: Props) {
           <Tooltip.Root>
             <Tabs.Trigger value="editor" asChild>
               <Tooltip.Trigger asChild>
-                <ToggleGroup.Item square value="editor" className="z-10">
+                <ToggleGroup.Item square value="editor" className="z-10 w-full">
                   <Icon size="extra-small">
                     <Pencil2Icon />
                   </Icon>
@@ -38,7 +38,11 @@ export function ViewToggle({ selectedView, className }: Props) {
           <Tooltip.Root>
             <Tabs.Trigger value="preview" asChild>
               <Tooltip.Trigger asChild>
-                <ToggleGroup.Item square value="preview" className="z-10">
+                <ToggleGroup.Item
+                  square
+                  value="preview"
+                  className="z-10 w-full"
+                >
                   <Icon size="extra-small">
                     <PlayIcon />
                   </Icon>

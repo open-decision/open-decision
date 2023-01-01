@@ -10,12 +10,13 @@ import {
   Form,
   LoadingSpinner,
   linkClasses,
+  addNotification,
 } from "@open-decision/design-system";
 import { ClipboardCopyIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
 import NextLink from "next/link";
-import { useNotificationStore } from "../../../config/notifications";
-import { useTreeAPI } from "../../Data/useTreeAPI";
+import { useNotificationTemplate } from "@open-decision/design-system";
+import { useTreeAPI } from "@open-decision/api-react-binding";
 
 type Props = { treeId: string };
 
@@ -23,6 +24,7 @@ export function PrototypButton({ treeId }: Props) {
   const { data: hasPreview } = useTreeAPI().useTreeQuery(treeId, {
     select: (data) => data.data.hasPreview,
   });
+
   const { mutate: updateTree, isLoading } = useTreeAPI().useUpdate({
     notification: false,
     onSuccess: (_, { body: { hasPreview } }) => {
@@ -42,8 +44,7 @@ export function PrototypButton({ treeId }: Props) {
   const t = useTranslations("builder.header.prototypeButton");
   const notificationMessages = useTranslations("common.notifications");
   const common = useTranslations("common");
-  const { addNotification, addNotificationFromTemplate } =
-    useNotificationStore();
+  const addNotificationFromTemplate = useNotificationTemplate();
 
   const link = `${process.env["NEXT_PUBLIC_OD_BUILDER_ENDPOINT"]}/builder/${treeId}/prototype`;
 

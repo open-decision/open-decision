@@ -6,8 +6,8 @@ import { cva, VariantProps } from "class-variance-authority";
 const baseClasses = cva(["bg-gray5 my-1 rounded-full"], {
   variants: {
     orientation: {
-      vertical: "w-[1px] h-[95%]",
-      horizontal: "w-[95%] h-[1px]",
+      vertical: "w-[1px]",
+      horizontal: "h-[1px]",
     },
   },
 });

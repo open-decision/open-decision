@@ -1,7 +1,7 @@
 import { Form, Dialog, Text } from "@open-decision/design-system";
 import { useTranslations } from "next-intl";
 import * as React from "react";
-import { useDeleteOptions, useTreeAPI } from "../../../Data/useTreeAPI";
+import { useDeleteOptions, useTreeAPI } from "@open-decision/api-react-binding";
 
 type Props = {
   tree: { name: string; uuid: string };

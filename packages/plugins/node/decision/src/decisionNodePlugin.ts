@@ -34,6 +34,26 @@ export class DecisionNodePlugin extends NodePlugin<
     this.defaultData = {};
   }
 
+  connectInputAndNode =
+    (nodeId: string, inputId: string) => (treeClient: TTreeClient) => {
+      const node = this.get.single(nodeId)(treeClient);
+
+      if (node instanceof Error) throw node;
+
+      // We get the input just to validate that it exists.
+      treeClient.pluginEntity.get.single("inputs", inputId);
+
+      node.data.input = inputId;
+    };
+
+  disconnectInputAndNode = (nodeId: string) => (treeClient: TTreeClient) => {
+    const node = this.get.single(nodeId)(treeClient);
+
+    if (node instanceof Error) throw node;
+
+    delete node.data.input;
+  };
+
   getInputByNode =
     (nodeId: string) => (treeClient: TReadOnlyTreeClient | TTreeClient) => {
       const node = this.get.single(nodeId)(treeClient);
@@ -46,6 +66,7 @@ export class DecisionNodePlugin extends NodePlugin<
         node.data.input
       );
     };
+
   getNodesByInput =
     (inputId: string) => (treeClient: TTreeClient | TReadOnlyTreeClient) => {
       type TNode = z.infer<typeof this.Type>;

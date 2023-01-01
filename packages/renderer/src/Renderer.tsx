@@ -5,11 +5,13 @@ import {
   InterpreterProviderProps,
   useInterpreter,
 } from "@open-decision/interpreter-react";
-import { RendererNodePluginObject } from "./types";
+import { NodePluginObject } from "@open-decision/plugins-node-helpers";
+import { EdgePluginObject } from "@open-decision/plugins-edge-helpers";
 
 export type RendererProps = {
   nodeId?: string;
-  nodePlugins: Record<string, RendererNodePluginObject>;
+  nodePlugins: Record<string, NodePluginObject>;
+  edgePlugins: Record<string, EdgePluginObject>;
   withNavigation?: boolean;
 } & StackProps;
 
@@ -18,6 +20,7 @@ export function View({
   className,
   withNavigation,
   classNames,
+  edgePlugins,
 }: RendererProps) {
   const { getCurrentNode } = useInterpreter();
   const node = getCurrentNode();
@@ -33,6 +36,8 @@ export function View({
       className={className}
       withNavigation={withNavigation}
       classNames={classNames}
+      nodePlugins={nodePlugins}
+      edgePlugins={edgePlugins}
     />
   );
 }

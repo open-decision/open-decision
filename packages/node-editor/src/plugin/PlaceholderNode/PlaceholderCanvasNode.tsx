@@ -1,6 +1,7 @@
 import { Icon } from "@open-decision/design-system";
+import { CanvasNode } from "@open-decision/plugins-node-helpers";
 import { QuestionMarkIcon } from "@radix-ui/react-icons";
-import { CanvasNode, CanvasNodeContainer } from "../components/CanvasNode";
+import { CanvasNodeContainer } from "../components/CanvasNode";
 
 export const PlaceholderCanvasNode: CanvasNode = (props) => {
   return (

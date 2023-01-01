@@ -7,15 +7,14 @@ import {
   Icon,
   SelectWithCombobox,
   Label,
+  stackClasses,
 } from "@open-decision/design-system";
-import {
-  sidebarCardClasses,
-  TNodeSidebarProps,
-} from "@open-decision/node-editor";
+import { sidebarCardClasses } from "@open-decision/node-editor";
 import {
   CompareEdgePlugin,
   TCompareEdge,
 } from "@open-decision/plugins-edge-compare";
+import { TNodeSidebarProps } from "@open-decision/plugins-node-helpers";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { CrossCircledIcon } from "@radix-ui/react-icons";
 import { Controller, useFieldArray } from "react-hook-form";
@@ -36,10 +35,9 @@ export function PathCard({ onNodeCreate, onEdgeCreate, nodeId, edge }: Props) {
   );
   const treeClient = useTreeClient();
 
-  const inputAnswers = useTree(
-    (treeClient) =>
-      DecisionNode.getInputByNode(nodeId)(treeClient)?.data.answers
-  );
+  const inputAnswers = useTree((treeClient) => {
+    return DecisionNode.getInputByNode(nodeId)(treeClient)?.data.answers;
+  });
 
   const targetName = useTree((treeClient) =>
     edge.target
@@ -66,7 +64,7 @@ export function PathCard({ onNodeCreate, onEdgeCreate, nodeId, edge }: Props) {
   });
 
   return (
-    <section className={sidebarCardClasses}>
+    <section className={stackClasses({}, sidebarCardClasses)}>
       <Form.Root methods={targetFormMethods}>
         <Form.Field
           Label={
@@ -133,6 +131,7 @@ export function PathCard({ onNodeCreate, onEdgeCreate, nodeId, edge }: Props) {
                       })) ?? []
                     }
                     className="flex-1"
+                    selectPlaceholder="Antwort auswählen..."
                   />
                 )}
               />

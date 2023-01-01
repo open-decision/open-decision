@@ -1,9 +1,9 @@
 import React from "react";
-import { buttonClasses, Icon, twMerge } from "@open-decision/design-system";
+import { buttonClasses, twMerge } from "@open-decision/design-system";
 import { UserMenu } from "./UserMenu";
 import NextLink from "next/link";
-import { DashboardIcon } from "@radix-ui/react-icons";
-import { useTranslations } from "next-intl";
+import Image from "next/image";
+import logo from "../../public/od-logo.svg";
 
 const containerClasses = "bg-layer-1 px-3 border-b border-gray7";
 
@@ -20,7 +20,6 @@ export const BaseHeader = ({
   className,
   LogoSlot = <div />,
 }: BaseHeaderProps) => {
-  const t = useTranslations("common.header");
   return (
     <div
       className={
@@ -32,9 +31,7 @@ export const BaseHeader = ({
           className={buttonClasses({ variant: "neutral", square: true }, [])}
           href="/"
         >
-          <Icon size="small" label={t("homeButtonHiddenLabel")}>
-            <DashboardIcon />
-          </Icon>
+          <Image src={logo} alt="Logo" />
         </NextLink>
         {LogoSlot}
         {children}

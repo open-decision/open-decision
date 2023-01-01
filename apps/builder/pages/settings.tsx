@@ -40,7 +40,11 @@ export default function SettingsPage() {
   const { data: user, isLoading, isSuccess } = useUser().useUserQuery();
 
   if (isLoading) {
-    return <LoadingSpinner />;
+    return (
+      <Stack center className="col-span-full row-span-full">
+        <LoadingSpinner />
+      </Stack>
+    );
   }
 
   if (isSuccess) {

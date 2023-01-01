@@ -6,12 +6,14 @@ import {
 } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
 import { useReactFlow } from "reactflow";
+import { useEditor } from "../state";
 
 type Props = { className?: string };
 
 export function ZoomInOut({ className }: Props) {
   const t = useTranslations("builder.canvas.zoomInAndOut");
   const { zoomIn, zoomOut, fitView } = useReactFlow();
+  const { removeSelectedNodes } = useEditor();
 
   return (
     <Row
@@ -38,7 +40,10 @@ export function ZoomInOut({ className }: Props) {
         </Icon>
       </Button>
       <Button
-        onClick={() => fitView({ duration: 200, maxZoom: 1 })}
+        onClick={() => {
+          removeSelectedNodes();
+          fitView({ duration: 200, maxZoom: 1 });
+        }}
         variant="neutral"
         square
         name={t("fitView.hiddenLabel")}

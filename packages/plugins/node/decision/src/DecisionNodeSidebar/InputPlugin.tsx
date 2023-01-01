@@ -1,6 +1,7 @@
-import { Stack } from "@open-decision/design-system";
+import * as React from "react";
+import { Stack, stackClasses } from "@open-decision/design-system";
 import { sidebarCardClasses } from "@open-decision/node-editor";
-import { useTree } from "@open-decision/tree-sync";
+import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { DecisionNodePlugin } from "../decisionNodePlugin";
 import { InputHeader } from "./InputHeader";
 
@@ -20,6 +21,15 @@ export function InputPlugin({ inputId, nodeId }: InputPluginComponentProps) {
     );
   });
 
+  const treeClient = useTreeClient();
+
+  if (!inputId) {
+    const newInput = DecisionNode.inputPlugins.select.plugin.create();
+
+    treeClient.pluginEntity.add("inputs", newInput);
+    DecisionNode.connectInputAndNode(nodeId, newInput.id)(treeClient);
+  }
+
   const InputComponents = input
     ? DecisionNode.inputPlugins[input.type].BuilderComponent
     : null;
@@ -31,7 +41,7 @@ export function InputPlugin({ inputId, nodeId }: InputPluginComponentProps) {
   );
 
   return (
-    <section key={inputId} className={sidebarCardClasses}>
+    <section key={inputId} className={stackClasses({}, sidebarCardClasses)}>
       <Stack>
         {!InputComponents || !inputId ? (
           <Header />
@@ -42,7 +52,12 @@ export function InputPlugin({ inputId, nodeId }: InputPluginComponentProps) {
                 <InputComponents.PrimaryActionSlot inputId={inputId} />
               ) : null}
             </Header>
-            <InputComponents.InputConfigurator inputId={inputId} />
+            {InputComponents.InputConfigurator ? (
+              <InputComponents.InputConfigurator
+                inputId={inputId}
+                withRequiredOption={false}
+              />
+            ) : null}
           </>
         )}
       </Stack>

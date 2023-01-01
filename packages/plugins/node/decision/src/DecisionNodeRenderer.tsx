@@ -3,7 +3,8 @@ import {
   useInterpreter,
   useInterpreterTree,
 } from "@open-decision/interpreter-react";
-import { NodeRenderer, RendererPrimitives } from "@open-decision/renderer";
+import { NodeRenderer } from "@open-decision/plugins-node-helpers";
+import { RendererPrimitives } from "@open-decision/renderer";
 import { RichTextRenderer } from "@open-decision/rich-text-editor";
 import { DecisionNodePlugin } from "./decisionNodePlugin";
 
@@ -27,6 +28,7 @@ export const DecisionNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
   const answer = isError
     ? undefined
     : DecisionNode.getAnswer(node.id, getAnswers());
+
   const methods = Form.useForm<{ [x: string]: string }>({
     defaultValues:
       !isError && answer && node.data.input
@@ -70,10 +72,10 @@ export const DecisionNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
             className="px-0"
           />
         ) : null}
+        <RendererPrimitives.Form methods={methods} onSubmit={onSubmit}>
+          <FormElement inputId={node.data.input} />
+        </RendererPrimitives.Form>
       </RendererPrimitives.ContentArea>
-      <RendererPrimitives.Form methods={methods} onSubmit={onSubmit}>
-        <FormElement inputId={node.data.input} />
-      </RendererPrimitives.Form>
     </RendererPrimitives.Container>
   );
 };

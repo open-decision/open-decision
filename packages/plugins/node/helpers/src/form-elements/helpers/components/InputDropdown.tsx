@@ -1,12 +1,10 @@
-import * as React from "react";
-import { DropdownMenu, Icon } from "@open-decision/design-system";
-import { PlusIcon } from "@radix-ui/react-icons";
+import { Button, DropdownMenu } from "@open-decision/design-system";
+import { useTranslations } from "next-intl";
 import { InputPluginObject } from "../types/InputPluginObject";
 
 export type InputDropdownProps<
   TInputPlugins extends Record<string, InputPluginObject>
 > = {
-  nodeId: string;
   onSelect: (type: keyof TInputPlugins) => void;
   inputPlugins: TInputPlugins;
   currentType?: string;
@@ -20,30 +18,38 @@ export function InputDropdown<
   className,
   classNames,
   currentType,
+  ...props
 }: InputDropdownProps<TInputPlugins>) {
-  return (
+  const t = useTranslations("common.inputNames");
+
+  const relevantInputPlugins = Object.values(inputPlugins).filter(
+    (plugin) => plugin.plugin.typeName !== "placeholder"
+  );
+
+  return Object.values(relevantInputPlugins).length === 1 ? (
+    <Button
+      disabled
+      variant="neutral"
+      classNames={classNames}
+      className={className}
+      {...props}
+    >
+      {t(currentType as any)}
+    </Button>
+  ) : (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <DropdownMenu.Button
           variant="neutral"
-          size="small"
           classNames={classNames}
           className={className}
+          {...props}
         >
-          {currentType ? (
-            currentType
-          ) : (
-            <>
-              <Icon>
-                <PlusIcon />
-              </Icon>
-              Neuen Input hinzufügen
-            </>
-          )}
+          {t(currentType as any)}
         </DropdownMenu.Button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content align="start">
-        {Object.values(inputPlugins).map((plugin) => {
+        {relevantInputPlugins.map((plugin) => {
           return (
             <DropdownMenu.Item
               key={plugin.type}
@@ -51,7 +57,7 @@ export function InputDropdown<
                 onSelect(plugin.type);
               }}
             >
-              {plugin.type.charAt(0).toUpperCase() + plugin.type.slice(1)}
+              {t(plugin.type as any)}
             </DropdownMenu.Item>
           );
         })}

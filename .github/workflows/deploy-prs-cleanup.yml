@@ -22,9 +22,6 @@ jobs:
       - name: Remove API Deploy
         continue-on-error: true
         run: flyctl apps destroy ${{env.APP_NAME}} --yes
-      - name: Remove DB Deploy
-        continue-on-error: true
-        run: flyctl apps destroy ${{env.DB_NAME}} --yes
 
   remove_builder_deploy:
     runs-on: ubuntu-latest
@@ -40,3 +37,5 @@ jobs:
         run: yarn add global vercel@latest
       - name: Remove Builder Deploy
         run: vercel alias rm ${{env.OD_BUILDER_ENDPOINT}} --token ${{secrets.VERCEL_TOKEN}} --scope open-decision --yes
+      - name: Remove env variables
+        run: vercel env rm OD_BUILDER_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} --yes

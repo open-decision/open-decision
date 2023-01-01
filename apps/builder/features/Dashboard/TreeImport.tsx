@@ -1,13 +1,12 @@
+import { FileInput, FileInputProps } from "@open-decision/design-system";
 import * as React from "react";
-import { FileInput } from "../../components";
-import { FileInputProps } from "../../components/FileInput";
-import { useTreeAPI } from "../Data/useTreeAPI";
+import { useImport } from "../Data/useImport";
 
 export const TreeImport = React.forwardRef<
   HTMLLabelElement,
   FileInputProps & { onDone?: () => void }
 >(function TreeImport({ onDone, children, ...props }, ref) {
-  const { mutate: createTree } = useTreeAPI().useImport({
+  const { mutate: createTree } = useImport({
     onSettled: () => onDone?.(),
   });
 

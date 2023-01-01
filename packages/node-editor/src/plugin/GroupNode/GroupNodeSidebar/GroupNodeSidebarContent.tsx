@@ -1,51 +1,32 @@
-import { stackClasses, Tabs } from "@open-decision/design-system";
 import {
   Form,
   Heading,
-  Label,
   Stack,
-  TargetSelector,
+  stackClasses,
+  Tabs,
 } from "@open-decision/design-system";
-import { DirectEdgePlugin } from "@open-decision/plugins-edge-direct";
+import { Label } from "@open-decision/design-system";
 import { RichTextEditor } from "@open-decision/rich-text-editor";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { useTranslations } from "next-intl";
-import { TNodeSidebarProps } from "../../../types/EditorPluginObject";
+import { sidebarCardClasses } from "../../components";
 import { GroupNodePlugin } from "../groupNodePlugin";
 
 const GroupNode = new GroupNodePlugin();
-const DirectEdge = new DirectEdgePlugin();
 
-type Props = { nodeId: string } & Pick<TNodeSidebarProps, "onNodeCreate">;
+type Props = { nodeId: string };
 
-export function GroupNodeSidebarContent({ nodeId, onNodeCreate }: Props) {
+export function GroupNodeSidebarContent({ nodeId }: Props) {
   const node = useTree(GroupNode.get.single(nodeId));
   const treeClient = useTreeClient();
 
-  const edge = useTree((treeClient) => {
-    return Object.values(
-      treeClient.edges.get.byNode(nodeId)?.source ?? {}
-    )?.[0];
-  });
-
   const t = useTranslations("builder.nodeEditingSidebar");
-
-  const nodeNames = useTree((treeClient) =>
-    Object.values(treeClient.nodes.get.options(nodeId, "Ohne Name"))
-  );
-
-  const targetNodeName = useTree((treeClient) => {
-    return edge?.target
-      ? treeClient.nodes.get.single(edge.target)?.name ?? "Zielknoten ohne Name"
-      : undefined;
-  });
 
   const methods = Form.useForm({
     defaultValues:
       node instanceof Error
         ? {}
         : {
-            target: targetNodeName,
             title: node.data?.title ?? "",
             cta: node.data?.cta ?? "",
           },
@@ -70,12 +51,11 @@ export function GroupNodeSidebarContent({ nodeId, onNodeCreate }: Props) {
           maxHeight={400}
         />
       </section>
-
+      <Heading size="extra-small" as="h3">
+        Input Konfiguration
+      </Heading>
       <Form.Root methods={methods}>
-        <Heading size="extra-small" as="h3">
-          Input Konfiguration
-        </Heading>
-        <Stack className="mb-4 gap-2">
+        <Stack classNames={["mb-4 gap-2", sidebarCardClasses]}>
           <Form.Field Label="Gruppentitel">
             <Form.Input
               {...methods.register("title", {
@@ -95,14 +75,6 @@ export function GroupNodeSidebarContent({ nodeId, onNodeCreate }: Props) {
             />
           </Form.Field>
         </Stack>
-        <TargetSelector
-          name="target"
-          nodeId={nodeId}
-          edge={edge}
-          onNodeCreate={onNodeCreate}
-          onEdgeCreate={DirectEdge.create}
-          selectOptions={nodeNames}
-        />
       </Form.Root>
     </Tabs.Content>
   );

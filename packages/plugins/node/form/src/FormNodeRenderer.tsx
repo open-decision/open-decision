@@ -3,7 +3,8 @@ import {
   useInterpreter,
   useInterpreterTree,
 } from "@open-decision/interpreter-react";
-import { NodeRenderer, RendererPrimitives } from "@open-decision/renderer";
+import { NodeRenderer } from "@open-decision/plugins-node-helpers";
+import { RendererPrimitives } from "@open-decision/renderer";
 import { RichTextRenderer } from "@open-decision/rich-text-editor";
 import { mapValues } from "remeda";
 import { FormNodePlugin } from "./formNodePlugin";
@@ -54,15 +55,15 @@ export const FormNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
         {node.data.content ? (
           <RichTextRenderer content={node.data.content} key={node.id} />
         ) : null}
-      </RendererPrimitives.ContentArea>
-      <RendererPrimitives.Form methods={methods} onSubmit={onSubmit}>
-        {Object.values(inputs ?? {}).map((input) => {
-          const FormElement =
-            FormNode.inputPlugins[input.type].RendererComponent;
+        <RendererPrimitives.Form methods={methods} onSubmit={onSubmit}>
+          {Object.values(inputs ?? {}).map((input) => {
+            const FormElement =
+              FormNode.inputPlugins[input.type].RendererComponent;
 
-          return <FormElement key={input.id} inputId={input.id} />;
-        })}
-      </RendererPrimitives.Form>
+            return <FormElement key={input.id} inputId={input.id} />;
+          })}
+        </RendererPrimitives.Form>
+      </RendererPrimitives.ContentArea>
     </RendererPrimitives.Container>
   );
 };

@@ -1,7 +1,7 @@
+import { useTreeAPI } from "@open-decision/api-react-binding";
 import { DropdownMenu, Icon } from "@open-decision/design-system";
 import { ArchiveIcon } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
-import { useTreeAPI } from "../../features/Data/useTreeAPI";
 
 export type PublishItemProps = {
   treeId: string;

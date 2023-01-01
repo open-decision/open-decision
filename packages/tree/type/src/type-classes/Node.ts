@@ -11,6 +11,7 @@ export const Type = z.object({
   parent: z.string().optional(),
   final: z.literal(true).optional(),
   rendererButtonLabel: z.string().optional(),
+  isAddable: z.boolean().optional(),
 });
 
 export const Record = z.record(Type);

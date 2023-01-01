@@ -19,6 +19,7 @@ export const createVerifyLoginMachine = (
 ) =>
   createMachine(
     {
+      predictableActionArguments: true,
       tsTypes: {} as import("./verifyLogin.machine.typegen").Typegen0,
       initial: "unverified",
       schema: {
@@ -61,7 +62,7 @@ export const createVerifyLoginMachine = (
           await safeFetchJSON(
             "/api/external-api/auth/verifyLogin",
             {
-              body: { email, password },
+              body: JSON.stringify({ email, password }),
               method: "POST",
             },
             {}

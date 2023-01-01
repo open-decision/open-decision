@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "main": "src/index.js",
   "dependencies": {
-    "@tanstack/react-query": "^4.16.1",
     "next-intl": "^2.9.1",
     "zod": "^3.20.2"
   },

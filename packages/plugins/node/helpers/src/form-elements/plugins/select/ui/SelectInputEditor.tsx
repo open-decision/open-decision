@@ -8,9 +8,9 @@ import {
   InputPrimaryActionSlotProps,
   AddOptionButton,
   InputComponentProps,
-  InputConfig,
   TAnswer,
   DragHandle,
+  InputConfig,
 } from "../../../helpers";
 
 const SelectInput = new SelectInputPlugin();
@@ -30,7 +30,10 @@ export const SelectInputPrimaryActionSlot = ({
   );
 };
 
-export const SelectInputConfigurator = ({ inputId }: InputComponentProps) => {
+export const SelectInputConfigurator = ({
+  inputId,
+  withRequiredOption,
+}: InputComponentProps) => {
   const treeClient = useTreeClient();
   const ref = React.useRef<HTMLDivElement | null>(null);
 
@@ -44,7 +47,7 @@ export const SelectInputConfigurator = ({ inputId }: InputComponentProps) => {
   const methods = Form.useForm({
     defaultValues: {
       label: input?.label ?? "",
-      required: input?.required.toString() ?? "false",
+      required: [input.data.required ? "required" : ""],
       ...Object.fromEntries(
         input.data.answers.map((answer) => [answer.id, answer.value])
       ),
@@ -55,7 +58,7 @@ export const SelectInputConfigurator = ({ inputId }: InputComponentProps) => {
 
   return (
     <Reorder.Group
-      className="list-none p-0 grid gap-4"
+      className="list-none p-0 grid"
       ref={ref}
       axis="y"
       values={input.data.answers ?? []}
@@ -63,7 +66,7 @@ export const SelectInputConfigurator = ({ inputId }: InputComponentProps) => {
         SelectInput.reorderAnswers(input.id, newOrder)(treeClient);
       }}
     >
-      <Form.Root methods={methods} className="gap-2">
+      <Form.Root methods={methods}>
         {input.data.answers?.map((answer) => {
           return (
             <Answer
@@ -75,8 +78,11 @@ export const SelectInputConfigurator = ({ inputId }: InputComponentProps) => {
             />
           );
         })}
-        <Separator />
-        <InputConfig inputId={inputId} />
+        <Separator className="my-2" />
+        <InputConfig
+          inputId={inputId}
+          withRequiredOption={withRequiredOption}
+        />
       </Form.Root>
     </Reorder.Group>
   );

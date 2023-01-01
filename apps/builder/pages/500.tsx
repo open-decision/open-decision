@@ -7,6 +7,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
     (translations) => ({
       common: translations.de.common,
       error: translations.de.error,
+      notFound: translations.de.notFound,
     })
   );
 

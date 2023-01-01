@@ -1,18 +1,17 @@
 import { DocumentCanvasNode } from "./DocumentCanvasNode";
-import { DocumentNodeSidebar } from "./DocumentNodeSidebar";
+import { DocumentNodeSidebar } from "./DocumentNodeSidebar/DocumentNodeSidebar";
 import { DocumentNodePlugin } from "./documentNodePlugin";
 import { DocumentNodeRenderer } from "./DocumentNodeRenderer";
+import { FileTextIcon } from "@radix-ui/react-icons";
 
-export const createDocumentNodePlugin = () => {
-  const plugin = new DocumentNodePlugin();
-
-  return {
-    plugin,
-    Editor: {
-      Node: DocumentCanvasNode,
-      Sidebar: DocumentNodeSidebar,
-    },
-    Renderer: DocumentNodeRenderer,
-    type: plugin.typeName,
-  };
+const plugin = new DocumentNodePlugin();
+export const DocumentNodePluginObject = {
+  plugin,
+  Editor: {
+    Node: DocumentCanvasNode,
+    Sidebar: DocumentNodeSidebar,
+  },
+  Renderer: DocumentNodeRenderer,
+  type: plugin.typeName,
+  Icon: FileTextIcon,
 };

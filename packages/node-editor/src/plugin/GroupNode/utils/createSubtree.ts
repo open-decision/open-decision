@@ -6,6 +6,12 @@ import { TGroupNode } from "../groupNodePlugin";
 const DirectEdge = new DirectEdgePlugin();
 
 export const createSubTree = (masterNode: TGroupNode) => {
+  if (!masterNode.data.tree)
+    throw new ODError({
+      code: "MISSING_TREE_IN_MODULE",
+      message: "The module is missing a tree",
+    });
+
   const treeClient = new TreeClient(masterNode.data.tree);
 
   treeClient.nodes.add(masterNode);

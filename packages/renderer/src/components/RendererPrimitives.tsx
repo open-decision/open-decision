@@ -8,6 +8,7 @@ import {
 } from "@open-decision/design-system";
 import { Navigation } from "./Navigation";
 import { useInterpreterTree } from "@open-decision/interpreter-react";
+import { mapKeys } from "remeda";
 
 type RendererContentAreaProps = {
   children: React.ReactNode;
@@ -18,8 +19,9 @@ export function ContentArea({ children, className }: RendererContentAreaProps) {
   return (
     <ScrollArea.Root
       className={twMerge("flex flex-col overflow-hidden", className)}
+      scrollHideDelay={1000000}
     >
-      <ScrollArea.Viewport className="min-h-0">
+      <ScrollArea.Viewport className="min-h-0 p-4 -ml-2">
         {children}
         <ScrollArea.Scrollbar />
       </ScrollArea.Viewport>
@@ -44,6 +46,7 @@ export function Container({
   successButtonLabel,
   classNames,
 }: RendererContainerProps) {
+  const theme = useInterpreterTree((treeClient) => treeClient.get.tree().theme);
   const node = useInterpreterTree((treeClient) =>
     treeClient.nodes.get.single(nodeId)
   );
@@ -53,6 +56,7 @@ export function Container({
   return (
     <Stack
       classNames={[`rounded-md overflow-hidden w-full`, classNames, className]}
+      style={mapKeys(theme ?? {}, (key) => `--${key}`) as React.CSSProperties}
     >
       <Stack className="flex-1 overflow-hidden mb-4 px-1 pb-1 gap-4">
         {children}

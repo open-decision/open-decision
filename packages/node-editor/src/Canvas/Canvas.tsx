@@ -10,11 +10,11 @@ import { useEditor } from "../state";
 import { useUnmount } from "react-use";
 import { twMerge } from "@open-decision/design-system";
 
-const validConnectEvent = (
-  target: MouseEvent["target"]
-): target is HTMLDivElement | HTMLSpanElement =>
-  (target instanceof HTMLDivElement || target instanceof HTMLSpanElement) &&
-  target.dataset["nodeid"] != null;
+// const validConnectEvent = (
+//   target: MouseEvent["target"]
+// ): target is HTMLDivElement | HTMLSpanElement =>
+//   (target instanceof HTMLDivElement || target instanceof HTMLSpanElement) &&
+//   target.dataset["nodeid"] != null;
 
 const containerClasses = "grid h-full w-full relative bg-layer-3";
 
@@ -34,7 +34,6 @@ export function Canvas({
   className,
   nodeTypes,
   edgeTypes,
-  onInvalidConnection,
   defaultViewport,
   onUnmount,
   style,
@@ -44,15 +43,12 @@ export function Canvas({
   const edges = useRFEdges();
   const {
     closeNodeEditingSidebar,
-    abortConnecting,
-    startConnecting,
     removeSelectedNodes,
     addSelectedNodes,
     removeSelectedNode,
     addSelectedEdges,
     removeSelectedEdge,
     reactFlowWrapperRef,
-    editorStore: { connectionSourceNodeId },
   } = useEditor();
 
   const selectedNodeIds = useSelectedNodeIds();
@@ -137,37 +133,6 @@ export function Canvas({
           });
         }}
         nodesConnectable={false}
-        onConnectStart={(event) => {
-          if (
-            validConnectEvent(event.target) &&
-            event.target.dataset["nodeid"]
-          ) {
-            startConnecting(event.target.dataset["nodeid"]);
-          }
-        }}
-        onConnectEnd={(event) => {
-          // FIXME How to handle the connection with multiple input types?
-          if (
-            !validConnectEvent(event.target) ||
-            !event.target.dataset["nodeid"]
-          )
-            return abortConnecting();
-
-          const sourceNode = treeClient.nodes.get.single(
-            connectionSourceNodeId
-          );
-          if (!sourceNode) return abortConnecting();
-
-          const possibleEdge = treeClient.edges.create({
-            source: connectionSourceNodeId,
-            target: event.target.dataset["nodeid"],
-          });
-
-          if (possibleEdge instanceof ODError)
-            return onInvalidConnection?.(possibleEdge);
-
-          treeClient.edges.add(possibleEdge);
-        }}
         style={{
           gridColumn: "1 / -1",
           gridRow: "1 / -1",

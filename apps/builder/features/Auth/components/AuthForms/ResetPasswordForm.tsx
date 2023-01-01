@@ -1,17 +1,15 @@
-import { Form } from "@open-decision/design-system";
+import { addNotification, Form } from "@open-decision/design-system";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/router";
 import * as React from "react";
 import { ErrorMessage } from "../../../../components/Error/ErrorMessage";
 import { PasswordInput } from "../../../../components/PasswordInput";
-import { useNotificationStore } from "../../../../config/notifications";
 import { useResetPasswordMutation } from "../../mutations/useResetPasswordMutation";
 
 type Props = { token: string };
 
 export function ResetPasswordForm({ token }: Props) {
   const t = useTranslations("resetPassword");
-  const { addNotification } = useNotificationStore();
   const router = useRouter();
   const {
     mutate: resetPassword,

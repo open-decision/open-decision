@@ -4,89 +4,105 @@ import {
   useInterpreter,
   useInterpreterTree,
 } from "@open-decision/interpreter-react";
-import { EdgePluginObject } from "@open-decision/plugins-edge-helpers";
-import {
-  RendererNodePluginObject,
-  Renderer,
-  RendererPrimitives,
-  NodeRendererProps,
-} from "@open-decision/renderer";
+import { Renderer, RendererPrimitives } from "@open-decision/renderer";
 import { RichTextRenderer } from "@open-decision/rich-text-editor";
 import { clone } from "remeda";
 import { GroupNodePlugin } from "./groupNodePlugin";
 import { createSubTree } from "./utils/createSubtree";
 import {
   Button,
+  ErrorCard,
   Form,
   Heading,
   Icon,
   Row,
+  Stack,
   stackClasses,
   textClasses,
 } from "@open-decision/design-system";
 import { PlusIcon } from "@radix-ui/react-icons";
+import { ErrorBoundary } from "react-error-boundary";
+import { convertToODError } from "@open-decision/type-classes";
+import {
+  NodePluginObject,
+  NodeRenderer,
+  NodeRendererProps,
+} from "@open-decision/plugins-node-helpers";
+import { EdgePluginObject } from "@open-decision/plugins-edge-helpers";
 
 const GroupNode = new GroupNodePlugin();
 
-export function createGroupNodeRenderer(
-  edgePlugins: Record<string, EdgePluginObject>,
-  nodePlugins: Record<string, RendererNodePluginObject>
-) {
-  function RendererComponent({ nodeId, ...props }: NodeRendererProps) {
-    const { treeClient, send, environment } = useInterpreter();
-    const groupNode = GroupNode.get.single(nodeId)(treeClient);
+export const GroupNodeRenderer: NodeRenderer = (props) => {
+  return (
+    <ErrorBoundary
+      FallbackComponent={({ error }) => (
+        <Stack className="h-full" center>
+          <ErrorCard error={convertToODError(error)} />
+        </Stack>
+      )}
+    >
+      <RendererComponent {...props} />
+    </ErrorBoundary>
+  );
+};
 
-    const subTree = React.useMemo(
-      () =>
-        groupNode instanceof Error
-          ? undefined
-          : createSubTree(clone(groupNode)),
-      [groupNode]
-    );
+function RendererComponent({
+  nodeId,
+  nodePlugins,
+  edgePlugins,
+  ...props
+}: NodeRendererProps) {
+  const { treeClient, send, environment } = useInterpreter();
+  const groupNode = GroupNode.get.single(nodeId)(treeClient);
 
-    const [iterationResults, setIterationsResults] = React.useState<
-      InterpreterContext[]
-    >([]);
+  const subTree = React.useMemo(
+    () =>
+      groupNode instanceof Error ? undefined : createSubTree(clone(groupNode)),
+    [groupNode]
+  );
 
-    if (groupNode instanceof Error || !subTree) return null;
+  const [iterationResults, setIterationsResults] = React.useState<
+    InterpreterContext[]
+  >([]);
 
-    return (
-      <RendererPrimitives.Container nodeId={nodeId} {...props}>
-        <Renderer.Root
-          environment={environment}
-          tree={subTree}
-          onDone={(context) => {
-            return setIterationsResults((oldState) => [...oldState, context]);
-          }}
-          edgePlugins={edgePlugins}
-        >
-          <RendererContent
-            onDone={() => {
-              send({
-                type: "ADD_USER_ANSWER",
-                answer: {
-                  [groupNode.id]: {
-                    type: "group",
-                    answers: iterationResults.map((result) => result.answers),
-                  },
+  if (groupNode instanceof Error || !subTree) return null;
+
+  return (
+    <RendererPrimitives.Container nodeId={nodeId} {...props}>
+      <Renderer.Root
+        environment={environment}
+        tree={subTree}
+        onDone={(context) => {
+          return setIterationsResults((oldState) => [...oldState, context]);
+        }}
+        edgePlugins={edgePlugins}
+      >
+        <RendererContent
+          onDone={() => {
+            send({
+              type: "ADD_USER_ANSWER",
+              answer: {
+                [groupNode.id]: {
+                  type: "group",
+                  answers: iterationResults.map((result) => result.answers),
                 },
-              });
-              send({ type: "EVALUATE_NODE_CONDITIONS" });
-            }}
-            iterationResults={iterationResults}
-            nodePlugins={nodePlugins}
-            groupNodeId={nodeId}
-          />
-        </Renderer.Root>
-      </RendererPrimitives.Container>
-    );
-  }
-
-  return RendererComponent;
+              },
+            });
+            send({ type: "EVALUATE_NODE_CONDITIONS" });
+          }}
+          iterationResults={iterationResults}
+          nodePlugins={nodePlugins}
+          edgePlugins={edgePlugins}
+          groupNodeId={nodeId}
+        />
+      </Renderer.Root>
+    </RendererPrimitives.Container>
+  );
 }
 
-type Props = {
-  nodePlugins: Record<string, RendererNodePluginObject>;
+type RendererContentProps = {
+  nodePlugins: Record<string, NodePluginObject>;
+  edgePlugins: Record<string, EdgePluginObject>;
   groupNodeId: string;
   iterationResults: InterpreterContext[];
   onDone: () => void;
@@ -95,11 +111,12 @@ type Props = {
 
 const RendererContent = ({
   nodePlugins,
+  edgePlugins,
   groupNodeId,
   iterationResults,
   onDone,
   className,
-}: Props) => {
+}: RendererContentProps) => {
   const { getCurrentNode, state, send } = useInterpreter();
   const groupNode = useInterpreterTree(GroupNode.get.single(groupNodeId));
 
@@ -165,6 +182,7 @@ const RendererContent = ({
   return (
     <Renderer.View
       nodePlugins={nodePlugins}
+      edgePlugins={edgePlugins}
       withNavigation={false}
       className={`p-0 ${className}`}
     />

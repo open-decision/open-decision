@@ -6,7 +6,7 @@ import {
   twMerge,
 } from "@open-decision/design-system";
 import * as React from "react";
-import { Handle, NodeProps, Position } from "reactflow";
+import { Handle, Position } from "reactflow";
 import { useTranslations } from "next-intl";
 import { useSubscribedTreeClient, useTree } from "@open-decision/tree-sync";
 import { StartNodeLabel } from "./StartNodeLabels";
@@ -14,6 +14,7 @@ import { useEditor } from "../../state";
 import { nodeWidth, nodeHeight } from "../../utils/constants";
 import { targetPortClasses, portWidth, sourcePortClasses } from "./Port";
 import { MoonIcon } from "@radix-ui/react-icons";
+import { NodePluginProps } from "@open-decision/plugins-node-helpers";
 
 type Props = { className?: string };
 
@@ -31,12 +32,6 @@ export function FinalNodeLabel({ className }: Props) {
 
 const nodeContainerClasses =
   "bg-layer-1 rounded-md border border-gray7 [&[data-connecting=false]:hover]:border-primary9 [&[data-connecting=true][data-connectable=true]]:cursor-crosshair [&[data-connecting=true][data-connectable=false]]:cursor-not-allowed";
-
-export type NodePluginProps = NodeProps & {
-  className?: string;
-};
-
-export type CanvasNode = (props: NodePluginProps) => JSX.Element | null;
 
 export const CanvasNodeContainer = ({
   id,

@@ -16,9 +16,9 @@ export function TextInputRenderer({ inputId }: RendererComponentProps) {
   const { register } = Form.useFormContext();
 
   return (
-    <Form.Field Label={input.label ?? "Eingabe"} required={input.required}>
+    <Form.Field Label={input.label ?? "Eingabe"} required={input.data.required}>
       <Form.Input
-        {...register(inputId, { required: input.required })}
+        {...register(inputId, { required: input.data.required })}
         autoComplete="off"
       />
     </Form.Field>

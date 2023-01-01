@@ -1,21 +1,24 @@
 import * as React from "react";
-import { Button, Form, Icon } from "@open-decision/design-system";
+import { Button, Form, Icon, Separator } from "@open-decision/design-system";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { AnimatePresence, Reorder, useDragControls } from "framer-motion";
 import { MultiSelectInputPlugin } from "../multiSelectPlugin";
 import { TrashIcon } from "@radix-ui/react-icons";
 import {
   InputComponentProps,
-  InputConfig,
   TAnswer,
   DragHandle,
   InputPrimaryActionSlotProps,
   AddOptionButton,
+  InputConfig,
 } from "../../../helpers";
 
 const MultiSelect = new MultiSelectInputPlugin();
 
-export function MultiSelectInputConfigurator({ inputId }: InputComponentProps) {
+export function MultiSelectInputConfigurator({
+  inputId,
+  withRequiredOption,
+}: InputComponentProps) {
   const treeClient = useTreeClient();
 
   const ref = React.useRef<HTMLDivElement | null>(null);
@@ -27,9 +30,10 @@ export function MultiSelectInputConfigurator({ inputId }: InputComponentProps) {
     )
   );
 
-  const methods = Form.useForm<{ label: string } & Record<string, string>>({
+  const methods = Form.useForm({
     defaultValues: {
       label: input?.label ?? "",
+      required: [input.data.required ? "required" : ""],
       ...Object.fromEntries(
         input.data.answers.map((answer) => [answer.id, answer.value])
       ),
@@ -39,16 +43,16 @@ export function MultiSelectInputConfigurator({ inputId }: InputComponentProps) {
   if (!input) return null;
 
   return (
-    <Form.Root methods={methods} className="gap-0">
-      <Reorder.Group
-        className="list-none p-0 grid gap-2"
-        ref={ref}
-        axis="y"
-        values={input.data.answers ?? []}
-        onReorder={(newOrder) => {
-          return MultiSelect.reorderAnswers(input.id, newOrder)(treeClient);
-        }}
-      >
+    <Reorder.Group
+      className="list-none p-0 grid"
+      ref={ref}
+      axis="y"
+      values={input.data.answers ?? []}
+      onReorder={(newOrder) => {
+        return MultiSelect.reorderAnswers(input.id, newOrder)(treeClient);
+      }}
+    >
+      <Form.Root methods={methods}>
         {input.data.answers.map((answer) => {
           return (
             <Answer
@@ -60,9 +64,13 @@ export function MultiSelectInputConfigurator({ inputId }: InputComponentProps) {
             />
           );
         })}
-      </Reorder.Group>
-      <InputConfig className="mt-2" inputId={input.id} />
-    </Form.Root>
+        <Separator className="my-2" />
+        <InputConfig
+          inputId={inputId}
+          withRequiredOption={withRequiredOption}
+        />
+      </Form.Root>
+    </Reorder.Group>
   );
 }
 

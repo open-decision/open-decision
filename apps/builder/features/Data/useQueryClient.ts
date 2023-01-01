@@ -1,14 +1,13 @@
+import { addNotification } from "@open-decision/design-system";
 import { isAPIError, isODError } from "@open-decision/type-classes";
 import { QueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/router";
 import * as React from "react";
-import { useNotificationStore } from "../../config/notifications";
 
 export function useQueryClient() {
   const t = useTranslations("common.errors");
   const router = useRouter();
-  const { addNotification } = useNotificationStore();
 
   const [state] = React.useState(
     () =>
@@ -31,9 +30,10 @@ export function useQueryClient() {
               // If we get an unauthenticated API error we want to show a notification and
               // redirect the user to the login page.
               if (error.code === "UNAUTHENTICATED") {
-                typeof window != "undefined"
-                  ? router.push("/auth/login")
-                  : null;
+                if (typeof window != "undefined") {
+                  router.push("/auth/login");
+                }
+
                 return addNotification({
                   title: t("UNAUTHENTICATED.short"),
                   content: t("UNAUTHENTICATED.long"),

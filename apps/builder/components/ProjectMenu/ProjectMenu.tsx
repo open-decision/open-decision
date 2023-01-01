@@ -2,6 +2,7 @@ import * as React from "react";
 import {
   DropdownMenu,
   Icon,
+  Separator,
   Text,
   Tooltip,
 } from "@open-decision/design-system";
@@ -11,19 +12,24 @@ import { DeleteTreeDialog } from "../../features/Dashboard/components/Dialogs/De
 import { UpdateTreeDialog } from "../../features/Dashboard/components/Dialogs/UpdateTreeDialog";
 import { useRouter } from "next/router";
 import { ExportDialog } from "../../features/Builder/components/ExportDialog";
-import { useTreeAPI } from "../../features/Data/useTreeAPI";
+import { useTreeAPI } from "@open-decision/api-react-binding";
 import { useTranslations } from "next-intl";
 import { ArchiveItem } from "./ArchiveItem";
 import { PublishItem } from "./PublishItem";
 import { TGetTreeOutput } from "@open-decision/api-specification";
 
+type ItemRendererProps = {
+  setDropdownOpen: (open: boolean) => void;
+};
+
 type Props = {
   className?: string;
   children?: React.ReactNode;
   tree: string | TGetTreeOutput;
+  Items?: (props: ItemRendererProps) => React.ReactNode;
 };
 
-export function ProjectMenu({ className, tree, children }: Props) {
+export function ProjectMenu({ className, tree, children, Items }: Props) {
   const t = useTranslations("common");
   const router = useRouter();
 
@@ -61,6 +67,7 @@ export function ProjectMenu({ className, tree, children }: Props) {
     ) : (
       <Text className="min-w-max">Projekt lädt...</Text>
     );
+
   if (isError) throw error;
 
   const dialogs = {
@@ -173,6 +180,12 @@ export function ProjectMenu({ className, tree, children }: Props) {
               {t("projectMenu.disabledDeletePublishedTreeTooltip")}
             </Tooltip.Content>
           </Tooltip.Root>
+          {Items ? (
+            <>
+              <Separator />
+              {Items?.({ setDropdownOpen })}
+            </>
+          ) : null}
         </DropdownMenu.Content>
       </DropdownMenu.Root>
     </>

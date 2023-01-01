@@ -48,7 +48,7 @@ export function NodeMenu({
       <DropdownMenu.Content {...props}>
         {isStartNode ? (
           <Tooltip.Root>
-            <Tooltip.Trigger style={{ all: "unset" }}>
+            <Tooltip.Trigger asChild>
               <DropdownMenu.Item
                 onSelect={() => treeClient.nodes.delete([nodeId])}
                 className="colorScheme-danger"

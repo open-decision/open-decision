@@ -89,7 +89,14 @@ export function VerifyLoginDialog({
           )}
         >
           <EmailField disabled inputClassName="disabled:opacity-75" />
-          <PasswordInput />
+          <PasswordInput
+            {...methods.register("password", {
+              required: {
+                value: true,
+                message: "Bitte gib dein Passwort ein.",
+              },
+            })}
+          />
           {state.context.Error ? (
             <ErrorMessage className="mt-2" code={state.context.Error.code} />
           ) : null}

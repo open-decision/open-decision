@@ -28,7 +28,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   const iModule = new InspectModule();
   let tags = {};
   try {
-    const doc = new Docxtemplater(zip, {
+    new Docxtemplater(zip, {
       paragraphLoop: true,
       linebreaks: true,
       parser: expressionParser,

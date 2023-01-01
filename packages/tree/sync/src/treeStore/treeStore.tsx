@@ -11,7 +11,7 @@ export function createTreeStore(id: string) {
   const yDoc = new Y.Doc({ guid: id });
   const yMap = yDoc.getMap("tree");
 
-  const syncedStore = proxy<Tree.TTree>({} as Tree.TTree);
+  const syncedStore = proxy<Tree.TTree>({ uuid: id } as Tree.TTree);
 
   let onSync = (_value: unknown) => {
     return;

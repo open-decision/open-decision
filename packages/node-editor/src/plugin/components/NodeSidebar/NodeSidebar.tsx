@@ -11,11 +11,14 @@ import {
 } from "@open-decision/design-system";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { useTranslations } from "next-intl";
-import { TNodeSidebarProps } from "../../../types/EditorPluginObject";
 import { nodeNameMaxLength } from "../../utils/constants";
 import { NodeMenu } from "../NodeMenu";
-import { Pencil1Icon } from "@radix-ui/react-icons";
 import { SidebarPreview } from "./SidebarPreview";
+import {
+  getAddableNodePlugins,
+  NodePluginObject,
+  TNodeSidebarProps,
+} from "@open-decision/plugins-node-helpers";
 
 export const sidebarPaddingClasses = "p-4";
 
@@ -41,6 +44,7 @@ export const NodeSidebar = ({
         selectedTab={selectedTab}
         setSelectedTab={setSelectedTab}
         tabs={[...tabs, hasPreview ? "Vorschau" : ""]}
+        nodePlugins={nodePlugins}
       />
       <Tabs.Root value={selectedTab} asChild>
         <Stack
@@ -61,10 +65,18 @@ type HeaderProps = { nodeId: string } & {
   selectedTab?: string;
   setSelectedTab?: (value: string) => void;
   tabs?: string[];
+  nodePlugins: Record<string, NodePluginObject>;
 };
 
-const Header = ({ nodeId, selectedTab, setSelectedTab, tabs }: HeaderProps) => {
+const Header = ({
+  nodeId,
+  selectedTab,
+  setSelectedTab,
+  tabs,
+  nodePlugins,
+}: HeaderProps) => {
   const t = useTranslations("builder.nodeEditingSidebar");
+  const nodeNames = useTranslations("common.nodeNames");
   const treeClient = useTreeClient();
 
   const node = useTree((treeClient) => treeClient.nodes.get.single(nodeId));
@@ -84,6 +96,10 @@ const Header = ({ nodeId, selectedTab, setSelectedTab, tabs }: HeaderProps) => {
 
   if (node instanceof Error) return null;
 
+  const NodeTypeIcon = nodePlugins[node.type].Icon;
+
+  const addableNodePlugins = getAddableNodePlugins(nodePlugins);
+
   return (
     <Form.Root methods={methods}>
       <header
@@ -95,14 +111,35 @@ const Header = ({ nodeId, selectedTab, setSelectedTab, tabs }: HeaderProps) => {
         <Row center className="justify-between w-full">
           <Row>
             <Icon label="" className="bg-gray3 rounded-md p-2">
-              <Pencil1Icon />
+              <NodeTypeIcon />
             </Icon>
             <DropdownMenu.Root>
               <DropdownMenu.Trigger asChild>
                 <DropdownMenu.Button variant="neutral">
-                  Nutzereingabe
+                  {nodeNames(node.type as any)}
                 </DropdownMenu.Button>
               </DropdownMenu.Trigger>
+              <DropdownMenu.Content align="start">
+                {Object.values(addableNodePlugins).map(({ plugin }) => (
+                  <DropdownMenu.Item
+                    key={plugin.typeName}
+                    onSelect={() => {
+                      const newNode = plugin.create({})(treeClient);
+                      const oldNode = treeClient.nodes.get.single(nodeId);
+
+                      if (oldNode instanceof Error) throw oldNode;
+
+                      treeClient.nodes.update.node(nodeId, {
+                        ...newNode,
+                        name: oldNode.name,
+                        position: oldNode.position,
+                      } as any);
+                    }}
+                  >
+                    {nodeNames(plugin.typeName)}
+                  </DropdownMenu.Item>
+                ))}
+              </DropdownMenu.Content>
             </DropdownMenu.Root>
           </Row>
           <NodeMenu
@@ -129,7 +166,9 @@ const Header = ({ nodeId, selectedTab, setSelectedTab, tabs }: HeaderProps) => {
           <ToggleGroup.Root
             type="single"
             value={selectedTab}
-            onValueChange={setSelectedTab}
+            onValueChange={(value) => {
+              if (value) setSelectedTab(value);
+            }}
           >
             {tabs.map((tab, index) => (
               <ToggleGroup.Item key={tab} value={tab}>

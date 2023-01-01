@@ -10,7 +10,7 @@ const fileDownload: NextApiHandler = async (req, res) => {
     const { status, data } = await safeFetchJSON(
       `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1${path}`,
       {
-        body: req.method === "GET" ? undefined : req.body,
+        body: req.method === "GET" ? undefined : JSON.stringify(req.body),
         headers: {
           authorization: `Bearer ${token}`,
         },

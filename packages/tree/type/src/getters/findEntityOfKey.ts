@@ -1,15 +1,13 @@
 import { Tree } from "../type-classes";
 
 export const findEntityOfKey = (tree: Tree.TTree, id: string) => {
-  return Object.entries(tree).reduce((acc, [key, value]) => {
-    // Once the accumulator has a value we have our result and can skip every
-    // further iteration.
-    if (acc) return acc;
-
+  for (const key in tree) {
     // Plugin entities are different, because they are an object of entity groups.
     // This is like the tree itself. In this case we want to know not just that
     // the key is in a plugin entity, but in which one specifically.
     if (key === "pluginEntities") {
+      const value = tree[key];
+
       const possiblePluginEntityKey = Object.entries(value).reduce(
         (acc, [key, value]) => {
           if (acc) return acc;
@@ -23,18 +21,20 @@ export const findEntityOfKey = (tree: Tree.TTree, id: string) => {
       );
 
       if (possiblePluginEntityKey) {
-        acc = `${key} > ${possiblePluginEntityKey}`;
+        return `${key} > ${possiblePluginEntityKey}`;
       }
-
-      return acc;
     }
 
-    // If the value is an object we can check if has the is as a key.
-    // If true we have our entityKey.
-    if (typeof value === "object" && value[id]) {
-      acc = key;
-    }
+    if (key === "nodes" || key === "edges") {
+      const value = tree[key];
 
-    return acc;
-  }, undefined as string | undefined);
+      // If the value is an object we can check if has the id as a key.
+      // If true we have our entityKey.
+      if (typeof value === "object" && value[id]) {
+        return key;
+      }
+    }
+  }
+
+  return undefined;
 };
