@@ -28,6 +28,7 @@ export abstract class InputPlugin<
   pluginType = "input" as const;
 
   declare variable: TVariablePlugin;
+  declare defaultData: { [key: string]: any };
 
   constructor(Type: TType, typeName: TTypeName, variable: TVariablePlugin) {
     super(mergeTypes(Type, typeName));
@@ -57,6 +58,7 @@ export abstract class InputPlugin<
       id: uuid(),
       type: this.typeName,
       required: false,
+      data: this.defaultData,
     });
 
     return this.parse(newInput);

@@ -5,7 +5,9 @@ import { InputPlugin } from "../../helpers";
 
 export const typeName = "text" as const;
 
-export const DataType = z.object({}).default({});
+export const DataType = z
+  .object({ required: z.boolean() })
+  .default({ required: false });
 
 export type TTextInput = z.infer<TextInputPlugin["Type"]>;
 const TextVariable = new TextVariablePlugin();
@@ -17,6 +19,8 @@ export class TextInputPlugin extends InputPlugin<
 > {
   constructor() {
     super(DataType, typeName, TextVariable);
+
+    this.defaultData = { required: false };
   }
 
   updateTarget =

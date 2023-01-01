@@ -7,8 +7,12 @@ import { Answer, InputPlugin, TAnswer } from "../../helpers";
 export const typeName = "select" as const;
 
 export const DataType = z
-  .object({ answers: z.array(Answer), label: z.string().optional() })
-  .default({ answers: [] });
+  .object({
+    answers: z.array(Answer),
+    label: z.string().optional(),
+    required: z.boolean(),
+  })
+  .default({ answers: [], required: false });
 
 export type TSelectInput = z.infer<SelectInputPlugin["Type"]>;
 const SingleSelectVariable = new SingleSelectVariablePlugin();
@@ -20,6 +24,7 @@ export class SelectInputPlugin extends InputPlugin<
 > {
   constructor() {
     super(DataType, typeName, SingleSelectVariable);
+    this.defaultData = { answers: [], required: false };
   }
 
   createAnswer(answer: Pick<TAnswer, "value">) {

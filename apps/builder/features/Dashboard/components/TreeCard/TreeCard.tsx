@@ -7,21 +7,21 @@ import {
   Button,
   rowClasses,
 } from "@open-decision/design-system";
-import { parseISO } from "date-fns";
+import { formatRelative, parseISO } from "date-fns";
 import Link from "next/link";
 import { cardClasses } from "../../../../components/Card";
 import { TGetTreeOutput } from "@open-decision/api-specification";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { useQueryClient } from "../../../Data/useQueryClient";
-import { treeQueryKey } from "../../../Data/useTreeAPI";
-import { useIntl, useTranslations } from "next-intl";
+import { treeQueryKey } from "@open-decision/api-react-binding";
+import { useTranslations } from "next-intl";
 import { ProjectMenu } from "../../../../components/ProjectMenu/ProjectMenu";
+import { de } from "date-fns/locale";
 
 type Props = { tree: TGetTreeOutput };
 
 export function TreeCard({ tree }: Props) {
   const t = useTranslations("dashboard.treeList.treeCard");
-  const intl = useIntl();
   const queryClient = useQueryClient();
 
   return (
@@ -47,7 +47,9 @@ export function TreeCard({ tree }: Props) {
           ) : null}
         </header>
         <Text className="text-gray11" size="small">
-          {intl.formatRelativeTime(parseISO(tree.updatedAt))}
+          {formatRelative(new Date(parseISO(tree.updatedAt)), new Date(), {
+            locale: de,
+          })}
         </Text>
       </Link>
       <ProjectMenu tree={tree}>

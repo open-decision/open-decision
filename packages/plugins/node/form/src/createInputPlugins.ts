@@ -1,25 +1,25 @@
 import {
-  createMultiSelectInputPlugin,
+  MultiSelectInputPluginObject,
   SelectInputPluginObject,
-  createTextInputPlugin,
+  TextInputPluginObject,
+  PlaceholderInputPluginObject,
 } from "@open-decision/plugins-node-helpers";
 import { ODProgrammerError } from "@open-decision/type-classes";
 import { match } from "ts-pattern";
 import { z } from "zod";
 
-const MultiSelectInput = createMultiSelectInputPlugin();
-const TextInput = createTextInputPlugin();
-
 export const formNodeInputPlugins = {
-  [MultiSelectInput.type]: MultiSelectInput,
-  [TextInput.type]: TextInput,
+  [MultiSelectInputPluginObject.type]: MultiSelectInputPluginObject,
+  [TextInputPluginObject.type]: TextInputPluginObject,
   [SelectInputPluginObject.type]: SelectInputPluginObject,
+  [PlaceholderInputPluginObject.type]: PlaceholderInputPluginObject,
 };
 
-export const formNodeInputType = z.union([
-  MultiSelectInput.plugin.Type,
-  TextInput.plugin.Type,
+export const formNodeInputType = z.discriminatedUnion("type", [
+  MultiSelectInputPluginObject.plugin.Type,
+  TextInputPluginObject.plugin.Type,
   SelectInputPluginObject.plugin.Type,
+  PlaceholderInputPluginObject.plugin.Type,
 ]);
 
 export function createVariableFromInput(
@@ -81,6 +81,7 @@ export function createVariableFromInput(
 
       return variable;
     })
+    .with({ type: "placeholder" }, () => undefined)
     .run();
 }
 

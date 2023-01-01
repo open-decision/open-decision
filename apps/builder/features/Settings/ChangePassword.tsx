@@ -1,18 +1,16 @@
 import * as React from "react";
-import { Heading, Form } from "@open-decision/design-system";
+import { Heading, Form, addNotification } from "@open-decision/design-system";
 import { cardClasses } from "../../components/Card";
 import { VerifiedSettingsChange } from "./VerifiedSettingsChange";
 import { TGetUserOutput } from "@open-decision/api-specification";
 import { useUser } from "../Auth/useUserQuery";
 import { useTranslations } from "next-intl";
 import { PasswordInput } from "../../components/PasswordInput";
-import { useNotificationStore } from "../../config/notifications";
 
 type Props = { user: TGetUserOutput };
 
 export function ChangePassword({ user }: Props) {
   const t = useTranslations("settings.account.changePassword");
-  const { addNotification } = useNotificationStore();
   const methods = Form.useForm({
     defaultValues: {
       newPassword: "",

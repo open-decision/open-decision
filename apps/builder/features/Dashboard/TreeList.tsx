@@ -15,7 +15,7 @@ import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { useFilter } from "./Filter";
 import { cardClasses } from "../../components/Card";
 import { NewProjectDropdown } from "./NewProjectDropdown";
-import { useTreeAPI } from "../Data/useTreeAPI";
+import { useTreeAPI } from "@open-decision/api-react-binding";
 import { useTranslations } from "next-intl";
 
 const sorts = {
@@ -33,7 +33,6 @@ export const TreeList = () => {
 
   const { data: trees, isLoading } = useTreeAPI().useTreesQuery({
     select: ({ data }) => data,
-    staleTime: 500,
   });
 
   const hasTrees = trees && trees.length > 0;

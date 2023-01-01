@@ -1,6 +1,7 @@
 import { Form } from "@open-decision/design-system";
 import { useInterpreter } from "@open-decision/interpreter-react";
-import { NodeRenderer, RendererPrimitives } from "@open-decision/renderer";
+import { NodeRenderer } from "@open-decision/plugins-node-helpers";
+import { RendererPrimitives } from "@open-decision/renderer";
 import { RichTextRenderer } from "@open-decision/rich-text-editor";
 import { InfoNodePlugin } from "./infoNodePlugin";
 

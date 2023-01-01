@@ -7,7 +7,7 @@ export const AddOptionButton = ({ onClick }: { onClick: () => void }) => {
       <Icon label="Neue Antwortmöglichkeit hinzufügen">
         <PlusIcon />
       </Icon>
-      Hinzufügen
+      Neue Antwortmöglichkeit
     </Button>
   );
 };

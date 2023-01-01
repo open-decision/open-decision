@@ -20,7 +20,7 @@ export function SelectInputRendererComponent({
 
   return (
     <Form.Field
-      Label={input.data.label ?? "Einfachauswahl"}
+      Label={input.label ?? "Einfachauswahl"}
       name={inputId}
       required
       className={className}

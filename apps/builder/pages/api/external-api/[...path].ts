@@ -6,15 +6,23 @@ import { withAuthRefresh } from "../../../utils/auth";
 const ProxyAPI: NextApiHandler = async (req, res) => {
   const token = req.cookies["token"];
 
+  const headers: HeadersInit = {
+    authorization: `Bearer ${token}`,
+    "Content-Type": req.headers["content-type"] ?? "application/json",
+  };
+
+  const body =
+    req.headers["content-type"] === "application/json"
+      ? JSON.stringify(req.body)
+      : req.body;
+
   try {
     const path = req.url?.split("external-api")[1];
     const { status, data } = await safeFetchJSON(
       `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1${path}`,
       {
-        body: req.method === "GET" ? undefined : req.body,
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
+        body: req.method === "GET" ? undefined : body,
+        headers,
         method: req.method,
       },
       {}

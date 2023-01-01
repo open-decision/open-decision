@@ -14,6 +14,9 @@ import Text from "@tiptap/extension-text";
 import Document from "@tiptap/extension-document";
 import { headingClasses, textClasses } from "@open-decision/design-system";
 
+export const editorClasses =
+  "list-inside colorScheme-primary flex gap-[10px] flex-col outline-none h-full";
+
 export const extensions = [
   Document,
   Heading.configure({
@@ -29,15 +32,19 @@ export const extensions = [
   Text,
   OrderedList.configure({
     HTMLAttributes: {
-      class: textClasses({}, "list-decimal"),
+      class: "list-decimal pl-4",
     },
   }),
   BulletList.configure({
     HTMLAttributes: {
-      class: textClasses({}, "list-disc"),
+      class: "list-disc pl-4",
     },
   }),
-  ListItem,
+  ListItem.configure({
+    HTMLAttributes: {
+      class: "list-item [&_p]:list-inside [&_p]:inline",
+    },
+  }),
   Bold,
   Italic,
   Underline,

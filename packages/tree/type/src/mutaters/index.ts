@@ -10,3 +10,4 @@ export * from "./updateEdgeSource";
 export * from "./addPluginEntity";
 export * from "./deletePluginEntity";
 export * from "./updateNode";
+export * from "./updateEdge";

@@ -194,6 +194,7 @@ const createReadableGroupAnswer = (
   const groupNode = GroupNode.get.single(nodeId)(treeClient);
 
   if (groupNode instanceof Error) return undefined;
+  if (!groupNode.data.tree) return undefined;
 
   const subTreeClient = new TreeClient(groupNode.data.tree);
 

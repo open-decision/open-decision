@@ -1,5 +1,9 @@
 import * as React from "react";
-import { LoadingSpinner, Stack } from "@open-decision/design-system";
+import {
+  addNotification,
+  LoadingSpinner,
+  Stack,
+} from "@open-decision/design-system";
 import { Renderer } from "@open-decision/renderer";
 import { GetServerSideProps } from "next";
 import { useTranslations } from "next-intl";
@@ -8,7 +12,6 @@ import { usePublicTree } from "../../features/Data/usePublicTree";
 import { FullPageErrorFallback } from "../../components/Error/FullPageErrorFallback";
 import { ODError } from "@open-decision/type-classes";
 import { Layout } from "../../components";
-import { useNotificationStore } from "../../config/notifications";
 import { createTreeClientWithPlugins } from "@open-decision/tree-client";
 
 export const getServerSideProps: GetServerSideProps = async ({
@@ -39,7 +42,6 @@ export const getServerSideProps: GetServerSideProps = async ({
 type PageProps = { treeId: string };
 
 export default function Page({ treeId }: PageProps) {
-  const { addNotification } = useNotificationStore();
   const t = useTranslations();
   const { isLoading, data, isSuccess } = usePublicTree(treeId, {
     select: (result) => result.data.treeData,
@@ -48,7 +50,12 @@ export default function Page({ treeId }: PageProps) {
 
   const { nodePlugins, edgePlugins } = createTreeClientWithPlugins(data);
 
-  if (isLoading) return <LoadingSpinner />;
+  if (isLoading)
+    return (
+      <Stack center className="h-full">
+        <LoadingSpinner />
+      </Stack>
+    );
   if (!isSuccess)
     return <FullPageErrorFallback error={new ODError({ code: "NOT_FOUND" })} />;
 
@@ -70,10 +77,11 @@ export default function Page({ treeId }: PageProps) {
             })
           }
         >
-          <Stack center className="bg-layer-2 h-full auroa-theme">
+          <Stack center className="bg-layer-2 h-full">
             <Renderer.View
               className="mb-2 p-4 h-full max-w-[700px] lg:mb-4"
               nodePlugins={nodePlugins}
+              edgePlugins={edgePlugins}
             />
           </Stack>
         </Renderer.Root>

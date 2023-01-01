@@ -7,14 +7,6 @@ import {
 } from "@open-decision/tree-type";
 import { z } from "zod";
 
-const emptyTree = {
-  startNode: "",
-  nodes: {},
-  conditions: {},
-  edges: {},
-  pluginEntities: {},
-};
-
 export const typeName = "node-group" as const;
 
 export const DataType = z
@@ -22,12 +14,11 @@ export const DataType = z
     children: z.array(z.string()),
     content: RichText.optional(),
     cta: z.string().optional(),
-    tree: Tree.Type,
+    tree: Tree.Type.optional(),
     title: z.string().optional(),
   })
   .default({
     children: [],
-    tree: emptyTree,
   });
 
 export class GroupNodePlugin extends NodePlugin<
@@ -35,8 +26,8 @@ export class GroupNodePlugin extends NodePlugin<
   typeof typeName
 > {
   constructor() {
-    super(DataType, typeName);
-    this.defaultData = { children: [], tree: emptyTree };
+    super(DataType, typeName, { isAddable: false });
+    this.defaultData = { children: [] };
   }
 
   updateTitle =

@@ -7,8 +7,7 @@ import {
   EditorContentProps,
 } from "@tiptap/react";
 import { Toolbar } from "./Toolbar";
-import { extensions } from "./shared";
-import styles from "./RichTextEditor.module.css";
+import { editorClasses, extensions } from "./shared";
 
 type Props = {
   content?: Content;
@@ -25,6 +24,11 @@ export const RichTextEditor = ({
   ...props
 }: Props) => {
   const editor = useEditor({
+    editorProps: {
+      attributes: {
+        class: editorClasses,
+      },
+    },
     extensions,
     content,
     onUpdate,
@@ -60,9 +64,9 @@ export const RichTextEditor = ({
           }}
           data-focus={editor?.isFocused}
         >
-          <ScrollArea.Viewport className="h-full [&>div]:h-full [&>div]:!block">
+          <ScrollArea.Viewport className="h-full [&>div]:h-full">
             <EditorContent
-              className={`${styles.editor} p-2`}
+              className={`h-full p-2`}
               editor={editor}
               {...props}
             />

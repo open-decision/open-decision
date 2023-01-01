@@ -1,15 +1,25 @@
-import { Heading, Row, Button, Icon } from "@open-decision/design-system";
+import {
+  Heading,
+  Row,
+  Button,
+  Icon,
+  stackClasses,
+} from "@open-decision/design-system";
+import { SidebarButton, sidebarCardClasses } from "@open-decision/node-editor";
 import {
   DragHandle,
   InputComponentProps,
+  InputDropdown,
 } from "@open-decision/plugins-node-helpers";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
-import { TrashIcon } from "@radix-ui/react-icons";
+import { CrossCircledIcon } from "@radix-ui/react-icons";
 import { Reorder, useDragControls } from "framer-motion";
 import React from "react";
 import { FormNodePlugin } from "../formNodePlugin";
+import { PlaceholderInputPlugin } from "@open-decision/plugins-node-helpers";
 
 const FormNode = new FormNodePlugin();
+const PlaceholderInput = new PlaceholderInputPlugin();
 
 type InputPluginComponentProps = {
   inputIds: string[];
@@ -23,7 +33,7 @@ export function InputPlugin({ inputIds, nodeId }: InputPluginComponentProps) {
   return (
     <Reorder.Group
       as="section"
-      className="gap-6 list-none p-0 grid"
+      className="gap-2 list-none p-0 grid"
       ref={ref}
       axis="y"
       values={inputIds}
@@ -31,6 +41,7 @@ export function InputPlugin({ inputIds, nodeId }: InputPluginComponentProps) {
         return FormNode.reorderInputs(nodeId, newOrder)(treeClient);
       }}
     >
+      <Heading size="extra-small">Inputs</Heading>
       {inputIds.map((inputId) => {
         return (
           <InputItem
@@ -41,6 +52,15 @@ export function InputPlugin({ inputIds, nodeId }: InputPluginComponentProps) {
           />
         );
       })}
+      <SidebarButton
+        onClick={() => {
+          const input = PlaceholderInput.create();
+          FormNode.addInput(input)(treeClient);
+          FormNode.connectInputAndNode(nodeId, input.id)(treeClient);
+        }}
+      >
+        Input hinzufügen
+      </SidebarButton>
     </Reorder.Group>
   );
 }
@@ -76,34 +96,54 @@ const InputItem = ({ inputId, dragGroupRef, nodeId }: InputItemProps) => {
       dragListener={false}
       dragControls={controls}
       dragConstraints={dragGroupRef}
+      className={stackClasses({}, sidebarCardClasses)}
     >
-      <Row className="items-center justify-between mb-2">
-        <Row className="items-center gap-1 -ml-2">
+      <Row className="items-center justify-between">
+        <Row className="items-center">
           <Button
             variant="neutral"
             type="button"
             square
             className="flex-shrink-0"
+            size="small"
             onPointerDown={(event) => controls.start(event)}
+            alignByContent="left"
           >
             <Icon>
               <DragHandle />
             </Icon>
           </Button>
-          <Heading size="extra-small">
-            {input.type.charAt(0).toUpperCase() + input.type.slice(1)}{" "}
-          </Heading>
-          <Button variant="neutral" type="button" square onClick={onClick}>
+          <InputDropdown
+            currentType={input.type}
+            inputPlugins={FormNode.inputPlugins}
+            onSelect={(newType) => {
+              const newInput = FormNode.inputPlugins[newType].plugin.create();
+
+              FormNode.updateInput(inputId, newInput)(treeClient);
+            }}
+            alignByContent="left"
+          />
+        </Row>
+        <Row className="items-center">
+          {InputComponents.PrimaryActionSlot ? (
+            <InputComponents.PrimaryActionSlot inputId={input.id} />
+          ) : null}
+          <Button
+            variant="neutral"
+            type="button"
+            square
+            onClick={onClick}
+            size="small"
+          >
             <Icon label="Entferne den Input">
-              <TrashIcon />
+              <CrossCircledIcon />
             </Icon>
           </Button>
         </Row>
-        {InputComponents.PrimaryActionSlot ? (
-          <InputComponents.PrimaryActionSlot inputId={input.id} />
-        ) : null}
       </Row>
-      <InputComponents.InputConfigurator inputId={input.id} />
+      {InputComponents.InputConfigurator ? (
+        <InputComponents.InputConfigurator inputId={input.id} />
+      ) : null}
     </Reorder.Item>
   );
 };

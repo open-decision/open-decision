@@ -20,20 +20,11 @@ const toolbarClasses = "flex items-center py-2 px-1 shadow-1 gap-1";
 type Props = { editor: Editor | null } & SystemToolbar.RootProps;
 
 export function Toolbar({ className, editor, ...props }: Props) {
+  const [value, setValue] = React.useState("");
+
   if (!editor) {
     return null;
   }
-
-  const listMarks = ["OrderedList", "BulletList"] as const;
-
-  const listMarksState = editor.isActive("bulletList")
-    ? "BulletList"
-    : editor.isActive("orderedList")
-    ? "OrderedList"
-    : undefined;
-
-  const validListMark = (value: any): value is typeof listMarks[number] =>
-    listMarks.includes(value);
 
   return (
     <SystemToolbar.Root
@@ -93,27 +84,31 @@ export function Toolbar({ className, editor, ...props }: Props) {
       />
       <SystemToolbar.ToggleGroup
         type="single"
-        defaultValue={listMarksState}
-        onValueChange={(value) => {
-          if (!validListMark(value)) {
-            if (editor.isActive("orderedList"))
-              return editor.chain().focus().toggleOrderedList().run();
-            if (editor.isActive("bulletList"))
-              return editor.chain().focus().toggleBulletList().run();
+        value={value}
+        onValueChange={(newValue) => {
+          setValue((oldValue) => {
+            if (!oldValue && !newValue) return newValue;
 
-            return;
-          }
+            if (!newValue) {
+              editor.chain().focus().toggleList(oldValue, "listItem").run();
+            }
 
-          return editor.chain().focus()[`toggle${value}`]?.().run();
+            if (newValue === "bulletList") {
+              editor.chain().focus().toggleBulletList().run();
+            } else if (newValue === "orderedList") {
+              editor.chain().focus().toggleOrderedList().run();
+            }
+
+            return newValue;
+          });
         }}
-        className="bg-layer-3"
       >
-        <SystemToolbar.ToggleItem value="BulletList" size="small">
+        <SystemToolbar.ToggleItem value="bulletList" size="small">
           <Icon label="Erstelle eine unnumerierte Liste">
             <ListBulletIcon />
           </Icon>
         </SystemToolbar.ToggleItem>
-        <SystemToolbar.ToggleItem value="OrderedList" size="small">
+        <SystemToolbar.ToggleItem value="orderedList" size="small">
           <Icon label="Erstelle eine numerierte Liste">
             <NumberedList />
           </Icon>

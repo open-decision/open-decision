@@ -4,7 +4,7 @@ import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { Renderer } from "@open-decision/renderer";
 import { useTranslations } from "next-intl";
-import { useTreeAPI } from "../../../features/Data/useTreeAPI";
+import { useTreeAPI } from "@open-decision/api-react-binding";
 import { createTreeClientWithPlugins } from "@open-decision/tree-client";
 
 export const getServerSideProps: GetServerSideProps<
@@ -63,10 +63,11 @@ export default function VorschauPage({ treeId }: PageProps) {
         edgePlugins={treeClientWithPlugins.edgePlugins}
         environment="prototype"
       >
-        <Stack center className="bg-layer-2 h-full auroa-theme">
+        <Stack center className="bg-layer-2 h-full">
           <Renderer.View
             className="mb-2 px-4 py-4 h-full max-w-[700px] lg:mb-4"
             nodePlugins={treeClientWithPlugins.nodePlugins}
+            edgePlugins={treeClientWithPlugins.edgePlugins}
           />
         </Stack>
       </Renderer.Root>

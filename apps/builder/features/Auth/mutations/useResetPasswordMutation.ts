@@ -24,7 +24,10 @@ export function useResetPasswordMutation(
         "/api/external-api/auth/reset-password",
         {
           method: "POST",
-          body: { password, token },
+          body: JSON.stringify({ password, token }),
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
         {}
       );

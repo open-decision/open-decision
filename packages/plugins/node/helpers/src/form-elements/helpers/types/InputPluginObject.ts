@@ -9,7 +9,7 @@ export type InputPluginObject = {
   plugin: InputPlugin;
   type: string;
   BuilderComponent: {
-    InputConfigurator: (props: InputComponentProps) => React.ReactNode;
+    InputConfigurator: ((props: InputComponentProps) => React.ReactNode) | null;
     PrimaryActionSlot:
       | ((props: InputPrimaryActionSlotProps) => React.ReactNode)
       | null;

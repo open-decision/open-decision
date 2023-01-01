@@ -12,5 +12,4 @@ export {
 export { ParentNodeSelector } from "./ParentNodeSelector";
 
 export * from "./utils/constants";
-export * from "./types/EditorPluginObject";
 export * from "./plugin";

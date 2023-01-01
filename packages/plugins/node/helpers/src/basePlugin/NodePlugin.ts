@@ -23,17 +23,23 @@ export abstract class NodePlugin<
   ReturnType<typeof mergeTypes<TType, TTypeName>>
 > {
   pluginType = "node" as const;
-  protected declare defaultData: any;
+  isAddable: boolean;
+  protected declare defaultData: z.infer<TType>;
 
-  constructor(Type: TType, typeName: TTypeName) {
+  constructor(
+    Type: TType,
+    typeName: TTypeName,
+    config: { isAddable: boolean } = { isAddable: true }
+  ) {
     super(mergeTypes(Type, typeName));
 
     this.typeName = typeName;
+    this.isAddable = config?.isAddable;
   }
 
   create =
     (data: Partial<Omit<z.infer<typeof this.Type>, "id" | "type">>) =>
-    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
+    (treeClient: TTreeClient) => {
       const newNode = treeClient.nodes.create.node(
         merge(
           {

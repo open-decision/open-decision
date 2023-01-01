@@ -20,8 +20,11 @@ export function useLoginMutation(
       return safeFetchJSON(
         "/api/external-api/auth/login",
         {
-          body: { email, password },
+          body: JSON.stringify({ email, password }),
           method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
         {}
       );

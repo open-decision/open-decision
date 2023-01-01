@@ -1,6 +1,2 @@
-import { stackClasses } from "@open-decision/design-system";
-
-export const sidebarCardClasses = stackClasses(
-  {},
-  "p-4 border border-gray5 rounded-md gap-4"
-);
+export const sidebarCardClasses =
+  "bg-layer-1 p-4 border border-gray5 rounded-md gap-2";

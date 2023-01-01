@@ -25,7 +25,10 @@ export function useRegisterMutation(
         "/api/external-api/auth/register",
         {
           method: "POST",
-          body: { email, password, toc },
+          body: JSON.stringify({ email, password, toc }),
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
         {}
       );

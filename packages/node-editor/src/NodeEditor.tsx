@@ -9,17 +9,16 @@ import { ZoomInOut } from "./Canvas/ZoomInOut";
 import { mapValues } from "remeda";
 import { useSelectedNodeIds } from "./state";
 import { useTree } from "@open-decision/tree-sync";
-import { EditorPluginObject } from "./types/EditorPluginObject";
 import { PlaceholderNodePlugin } from "./plugin/PlaceholderNode/placholderNodePlugin";
 import { EdgePluginObject } from "@open-decision/plugins-edge-helpers";
-import { RendererNodePluginObject } from "@open-decision/renderer";
 import { CustomEdge } from "./Canvas/Edges/CustomEdge";
+import { NodePluginObject } from "@open-decision/plugins-node-helpers";
 
 const canvasClasses = "grid justify-center h-full overflow-hidden";
 
 type NodeEditorProps = {
   className?: string;
-  nodePlugins: Record<string, EditorPluginObject & RendererNodePluginObject>;
+  nodePlugins: Record<string, NodePluginObject>;
   edgePlugins: Record<string, EdgePluginObject>;
   defaultViewport?: { x: number; y: number; zoom: number };
   onUnmount?: (viewport: { x: number; y: number; zoom: number }) => void;
@@ -57,7 +56,7 @@ export const NodeEditor = ({
 };
 
 type SidebarProps = {
-  nodePlugins: Record<string, EditorPluginObject & RendererNodePluginObject>;
+  nodePlugins: Record<string, NodePluginObject>;
   edgePlugins: Record<string, EdgePluginObject>;
 };
 

@@ -1,22 +1,21 @@
 import * as React from "react";
 import { Renderer } from "@open-decision/renderer";
 import { useTree } from "@open-decision/tree-sync";
-import { useNotificationStore } from "../../config/notifications";
 import { useEditor, useSelectedNodeIds } from "@open-decision/node-editor";
 import { useTreeClientWithPlugins } from "@open-decision/tree-clientWithPlugins";
 import { InterpreterProviderProps } from "@open-decision/interpreter-react";
+import { addNotification } from "@open-decision/design-system";
 
 type Props = {
-  className?: string;
+  children: React.ReactNode;
   environment: InterpreterProviderProps["environment"];
 };
 
-export function Preview({ className, environment }: Props) {
+export function PreviewRoot({ children, environment }: Props) {
   const { replaceSelectedNodes } = useEditor();
   const tree = useTree((treeClient) => treeClient.get.tree());
   const selectedNodeIds = useSelectedNodeIds();
-  const { addNotification } = useNotificationStore();
-  const { nodePlugins, edgePlugins } = useTreeClientWithPlugins();
+  const { edgePlugins } = useTreeClientWithPlugins();
 
   return (
     <Renderer.Root
@@ -33,10 +32,23 @@ export function Preview({ className, environment }: Props) {
         })
       }
     >
-      <Renderer.View
-        classNames={["h-full py-7", className]}
-        nodePlugins={nodePlugins}
-      />
+      {children}
     </Renderer.Root>
+  );
+}
+
+type ViewProps = {
+  className?: string;
+};
+
+export function PreviewView({ className }: ViewProps) {
+  const { nodePlugins, edgePlugins } = useTreeClientWithPlugins();
+
+  return (
+    <Renderer.View
+      classNames={["h-full py-7", className]}
+      nodePlugins={nodePlugins}
+      edgePlugins={edgePlugins}
+    />
   );
 }

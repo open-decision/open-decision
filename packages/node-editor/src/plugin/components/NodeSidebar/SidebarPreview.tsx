@@ -1,11 +1,12 @@
-import { Tabs, notificationState } from "@open-decision/design-system";
+import { Tabs, addNotification } from "@open-decision/design-system";
 import { EdgePluginObject } from "@open-decision/plugins-edge-helpers";
-import { Renderer, RendererNodePluginObject } from "@open-decision/renderer";
+import { NodePluginObject } from "@open-decision/plugins-node-helpers";
+import { Renderer } from "@open-decision/renderer";
 import { useTree } from "@open-decision/tree-sync";
 import { useEditor, useSelectedNodeIds } from "../../../state";
 
 type Props = {
-  nodePlugins: Record<string, RendererNodePluginObject>;
+  nodePlugins: Record<string, NodePluginObject>;
   edgePlugins: Record<string, EdgePluginObject>;
 };
 
@@ -25,14 +26,18 @@ export function SidebarPreview({ nodePlugins, edgePlugins }: Props) {
           replaceSelectedNodes([nextNodeId])
         }
         onError={(error) =>
-          notificationState.addNotification({
+          addNotification({
             title: error.code,
             content: error.message,
             variant: "danger",
           })
         }
       >
-        <Renderer.View className="h-full gap-4" nodePlugins={nodePlugins} />
+        <Renderer.View
+          className="h-full gap-4"
+          nodePlugins={nodePlugins}
+          edgePlugins={edgePlugins}
+        />
       </Renderer.Root>
     </Tabs.Content>
   );

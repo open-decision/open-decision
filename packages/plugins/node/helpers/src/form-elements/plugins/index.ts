@@ -2,10 +2,16 @@ export { SelectInputPluginObject, SelectInputPlugin } from "./select";
 export type { TSelectInput } from "./select";
 
 export {
-  createMultiSelectInputPlugin,
+  MultiSelectInputPluginObject,
   MultiSelectInputPlugin,
 } from "./multi-select";
 export type { TMultiSelectInput } from "./multi-select";
 
-export { createTextInputPlugin, TextInputPlugin } from "./text";
+export { TextInputPluginObject, TextInputPlugin } from "./text";
 export type { TTextInput } from "./text";
+
+export {
+  PlaceholderInputPluginObject,
+  PlaceholderInputPlugin,
+} from "./placeholder";
+export type { TPlaceholderInput } from "./placeholder";

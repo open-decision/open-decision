@@ -1,4 +1,5 @@
-import { TNodeSidebar, NodeSidebar } from "@open-decision/node-editor";
+import { NodeSidebar } from "@open-decision/node-editor";
+import { TNodeSidebar } from "@open-decision/plugins-node-helpers";
 import { DecisionNodeSidebarContent } from "./DecisionNodeSidebarContent";
 import { DecisionNodeSidebarPaths } from "./DecisionNodeSidebarPaths";
 

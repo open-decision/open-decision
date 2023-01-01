@@ -29,12 +29,14 @@ export interface Typegen0 {
     callOnError: "INVALID_INTERPRETATION";
     goBack: "GO_BACK";
     goForward: "GO_FORWARD";
+    jumpToNode: "JUMP_TO_NODE";
     resetToInitialContext: "RESET" | "RESTART";
   };
   eventsCausingDelays: {};
   eventsCausingGuards: {
     canGoBack: "GO_BACK";
     canGoForward: "GO_FORWARD";
+    notInPreview: "EVALUATE_NODE_CONDITIONS";
   };
   eventsCausingServices: {
     resolveConditions: "EVALUATE_NODE_CONDITIONS";

@@ -17,7 +17,7 @@
     "**/*.js",
     "**/*.jsx",
     "next-env.d.ts",
-    "../../packages/types/global.d.ts"
+    "../../types/global.d.ts"
   ],
   "exclude": ["node_modules"]
 }

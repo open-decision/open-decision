@@ -10,8 +10,8 @@ import {
   ClipboardCopyIcon,
 } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
-import { useNotificationStore } from "../../config/notifications";
-import { useTreeAPI } from "../../features/Data/useTreeAPI";
+import { useNotificationTemplate } from "@open-decision/design-system";
+import { useTreeAPI } from "@open-decision/api-react-binding";
 
 export type PublishItemProps = {
   treeId: string;
@@ -27,7 +27,7 @@ export function PublishItem({
   const t = useTranslations("common.projectMenu.publish");
   const { mutate: publish } = useTreeAPI().usePublish();
   const { mutate: unPublish } = useTreeAPI().useUnPublish();
-  const { addNotificationFromTemplate } = useNotificationStore();
+  const addNotificationFromTemplate = useNotificationTemplate();
 
   return (
     <DropdownMenu.Sub>

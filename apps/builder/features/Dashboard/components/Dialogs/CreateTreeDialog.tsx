@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Form, Dialog, stackClasses } from "@open-decision/design-system";
-import { useCreateOptions, useTreeAPI } from "../../../Data/useTreeAPI";
+import { useCreateOptions, useTreeAPI } from "@open-decision/api-react-binding";
 import { useTranslations } from "next-intl";
 
 type Props = Dialog.TriggerProps & {

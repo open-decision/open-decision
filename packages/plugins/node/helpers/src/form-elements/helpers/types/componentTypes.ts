@@ -3,6 +3,7 @@ import { z } from "zod";
 
 export type InputComponentProps = {
   inputId: string;
+  withRequiredOption?: boolean;
 };
 
 export type InputPrimaryActionSlotProps = {

@@ -39,6 +39,7 @@ export type InterpreterEvents =
   | { type: "DONE" }
   | { type: "GO_BACK" }
   | { type: "GO_FORWARD" }
+  | { type: "JUMP_TO_NODE"; target: string }
   | { type: "RECOVER" }
   | { type: "RESTART" }
   | ResolverEvents
@@ -64,7 +65,13 @@ export const createInterpreterMachine = (
   json: Tree.TTree,
   TreeType: z.ZodType<Tree.TTree>,
   resolver: Resolver,
-  { onError, onSelectedNodeChange, initialNode, onDone }: InterpreterOptions = {
+  {
+    onError,
+    onSelectedNodeChange,
+    initialNode,
+    onDone,
+    environment,
+  }: InterpreterOptions = {
     environment: "preview",
   }
 ) => {
@@ -111,6 +118,7 @@ export const createInterpreterMachine = (
             },
             EVALUATE_NODE_CONDITIONS: {
               target: "interpreting",
+              cond: "notInPreview",
             },
             GO_BACK: {
               cond: "canGoBack",
@@ -119,6 +127,9 @@ export const createInterpreterMachine = (
             GO_FORWARD: {
               cond: "canGoForward",
               actions: "goForward",
+            },
+            JUMP_TO_NODE: {
+              actions: "jumpToNode",
             },
           },
         },
@@ -198,6 +209,16 @@ export const createInterpreterMachine = (
             },
           };
         }),
+        jumpToNode: assign((context, event) => {
+          onSelectedNodeChange?.(event.target);
+
+          return {
+            history: {
+              position: 0,
+              nodes: [event.target, ...context.history.nodes],
+            },
+          };
+        }),
         callOnError: (_context, event) => onError?.(event.error),
         assignNewTarget: assign((context, event) => {
           onSelectedNodeChange?.(event.target);
@@ -231,6 +252,7 @@ export const createInterpreterMachine = (
       guards: {
         canGoBack,
         canGoForward,
+        notInPreview: () => environment !== "preview",
       },
     }
   );

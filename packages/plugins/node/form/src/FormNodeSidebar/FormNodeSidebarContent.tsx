@@ -1,4 +1,4 @@
-import { Tabs } from "@open-decision/design-system";
+import { stackClasses, Tabs } from "@open-decision/design-system";
 import { RichTextEditor } from "@open-decision/rich-text-editor";
 import { useTreeClient, useTree } from "@open-decision/tree-sync";
 import { useTranslations } from "next-intl";
@@ -18,7 +18,7 @@ export function FormNodeSidebarContent({ nodeId }: Props) {
   if (node instanceof Error) return null;
 
   return (
-    <Tabs.Content value="Inhalt">
+    <Tabs.Content value="Inhalt" className={stackClasses({}, "gap-4")}>
       <section>
         <RichTextEditor
           data-test="richTextEditor"

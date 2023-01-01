@@ -1,6 +1,6 @@
 import * as React from "react";
 import {
-  notificationState,
+  addNotification,
   Row,
   SubmitButton,
   VisuallyHidden,
@@ -8,15 +8,16 @@ import {
 import { useInterpreter } from "@open-decision/interpreter-react";
 import { useMutation } from "@tanstack/react-query";
 import { RichTextRenderer } from "@open-decision/rich-text-editor";
-import { NodeRenderer, RendererPrimitives } from "@open-decision/renderer";
+import { RendererPrimitives } from "@open-decision/renderer";
 import { DocumentNodePlugin } from "./documentNodePlugin";
 import { createReadableAnswers } from "./utils/createReadableAnswers";
 import { isODError, ODError } from "@open-decision/type-classes";
 import { useTranslations } from "next-intl";
 import { safeFetchBlob } from "@open-decision/api-helpers";
 import { client } from "@open-decision/api-client";
+import { NodeRenderer } from "@open-decision/plugins-node-helpers";
 
-export const proxiedOD = client({
+export const proxiedClient = client({
   requestOrigin: "client",
   urlPrefix: `${process.env["NEXT_PUBLIC_OD_BUILDER_ENDPOINT"]}/api/external-api`,
   fetchFunction: safeFetchBlob,
@@ -53,7 +54,7 @@ export const DocumentNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
         });
       }
 
-      const response = await proxiedOD.file.document.get[environment]({
+      const response = await proxiedClient.file.document.get[environment]({
         params: { uuid: node.data.templateUuid },
         body: { variables: readableAnswers },
       });
@@ -83,7 +84,7 @@ export const DocumentNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
       },
       onError: (error) => {
         if (isODError(error)) {
-          notificationState.addNotification({
+          addNotification({
             title: t(`${error.code}.short`),
             content: t(`${error.code}.long`),
             variant: "danger",

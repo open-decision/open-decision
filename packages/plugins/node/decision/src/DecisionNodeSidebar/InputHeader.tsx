@@ -30,7 +30,6 @@ export function InputHeader({ children, inputId, nodeId }: InputHeaderProps) {
       <h2 className={labelClasses({}, ["m-0 block"])}>
         <InputDropdown
           currentType={inputType}
-          nodeId={nodeId}
           inputPlugins={DecisionNode.inputPlugins}
           onSelect={(newType) => {
             if (inputType && inputId) {
@@ -43,6 +42,7 @@ export function InputHeader({ children, inputId, nodeId }: InputHeaderProps) {
             treeClient.pluginEntity.add("inputs", newInput);
             DecisionNode.updateInput(nodeId, newInput.id)(treeClient);
           }}
+          alignByContent="left"
         />
       </h2>
       {children}

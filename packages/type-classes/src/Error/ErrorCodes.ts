@@ -32,7 +32,8 @@ export type InterpreterErrors =
   | "NO_CURRENT_NODE"
   | "NO_EDGE_FOR_THRUTHY_CONDITION"
   | "NO_TRUTHY_CONDITION"
-  | "MISSING_TEMPLATE_UUID";
+  | "MISSING_TEMPLATE_UUID"
+  | "MISSING_TREE_IN_MODULE";
 
 export type BuilderErrors =
   | "AUTH_VALIDATION_FAILED"

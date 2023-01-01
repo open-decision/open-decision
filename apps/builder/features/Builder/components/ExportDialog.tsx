@@ -8,7 +8,7 @@ import {
   buttonClasses,
 } from "@open-decision/design-system";
 import { readableDate } from "../../../features/Dashboard/utils";
-import { useTreeAPI } from "../../Data/useTreeAPI";
+import { useTreeAPI } from "@open-decision/api-react-binding";
 import { useTranslations } from "next-intl";
 
 type Props = {

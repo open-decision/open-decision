@@ -9,8 +9,9 @@ export const typeName = "multi-select" as const;
 export const DataType = z
   .object({
     answers: z.array(Answer),
+    required: z.boolean(),
   })
-  .default({ answers: [] });
+  .default({ answers: [], required: false });
 
 const MultiSelectVariable = new MultiSelectVariablePlugin();
 
@@ -21,6 +22,8 @@ export class MultiSelectInputPlugin extends InputPlugin<
 > {
   constructor() {
     super(DataType, typeName, MultiSelectVariable);
+
+    this.defaultData = { answers: [], required: false };
   }
 
   createAnswer = (answer: Pick<TAnswer, "value">) => {

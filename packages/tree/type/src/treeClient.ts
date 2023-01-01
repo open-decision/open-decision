@@ -25,6 +25,7 @@ import {
   addPluginEntity,
   updateNode,
   deletePluginEntity,
+  updateEdge,
 } from "./mutaters";
 import { Tree } from "./type-classes";
 import {
@@ -37,6 +38,8 @@ import {
 import { isValidEdge } from "./validators";
 import type {} from "zod";
 import { udpateRendererLabel } from "./mutaters/updateRendererLabel";
+import { Theme } from "./type-classes/Theme";
+import { z } from "zod";
 
 export class ReadOnlyTreeClient<TTree extends Tree.TTree> {
   tree: Tree.TTree;
@@ -95,7 +98,11 @@ export class ReadOnlyTreeClient<TTree extends Tree.TTree> {
       },
     };
   }
-  get = { tree: () => this.tree, startNodeId: () => getStartNodeId(this.tree) };
+  get = {
+    tree: () => this.tree,
+    startNodeId: () => getStartNodeId(this.tree),
+    id: () => this.tree.uuid,
+  };
 }
 
 export type TReadOnlyTreeClient = ReadOnlyTreeClient<Tree.TTree>;
@@ -108,6 +115,10 @@ export class TreeClient<TTree extends Tree.TTree> {
   constructor(tree: TTree) {
     this.tree = tree;
     this.ReadOnlyTreeClient = new ReadOnlyTreeClient(tree);
+  }
+
+  updateTheme(newTheme: z.infer<typeof Theme>) {
+    this.tree.theme = newTheme;
   }
 
   get get() {
@@ -194,6 +205,7 @@ export class TreeClient<TTree extends Tree.TTree> {
          */
         fromSourceNode: (id: string) => deleteEdges(this.tree)([id]),
       },
+      update: updateEdge(this.tree),
     };
   }
 }

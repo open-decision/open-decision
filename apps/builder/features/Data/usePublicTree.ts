@@ -1,7 +1,7 @@
 import { FetchJSONReturn } from "@open-decision/api-helpers";
 import { TGetPublishedTreeOutput } from "@open-decision/api-specification";
 import { useQuery } from "@tanstack/react-query";
-import { OD } from "./odClient";
+import { directClient } from "@open-decision/api-client";
 
 export const publicTreesQueryKey = ["PublicTrees"] as const;
 export const publicTreeQueryKey = (treeUuid: string) =>
@@ -16,7 +16,7 @@ export const usePublicTree = <TData = FetchJSONReturn<TGetPublishedTreeOutput>>(
 ) => {
   return useQuery(
     publicTreeQueryKey(uuid),
-    () => OD.publishedTrees.getSingle({ params: { uuid } }),
+    () => directClient.publishedTrees.getSingle({ params: { uuid } }),
     options
   );
 };
