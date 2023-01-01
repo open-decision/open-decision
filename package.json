@@ -11,7 +11,7 @@
   },
   "license": "MIT",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.2",
   "dependencies": {
     "@nrwl/devkit": "15.4.1",
     "@nrwl/esbuild": "15.4.1",
