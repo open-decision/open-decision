@@ -1,6 +1,6 @@
 {
-  "name": "Open Decision",
-  "short_name": "OD",
+  "name": "",
+  "short_name": "",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -13,7 +13,7 @@
       "type": "image/png"
     }
   ],
-  "theme_color": "#302e81",
-  "background_color": "#302e81",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
   "display": "standalone"
 }
