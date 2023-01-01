@@ -24,7 +24,7 @@
     "test": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "playwright test --config=../../playwright.config.ts",
+        "command": "playwright test --config=../../playwright.config.ts --max-failures=20",
         "cwd": "apps/e2e"
       },
       "dependsOn": [
@@ -68,19 +68,6 @@
         },
         {
           "target": "setup",
-          "projects": "dependencies"
-        }
-      ]
-    },
-    "test:ci": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "playwright test --config=playwright.ci.config.ts",
-        "cwd": "apps/e2e"
-      },
-      "dependsOn": [
-        {
-          "target": "build",
           "projects": "dependencies"
         }
       ]

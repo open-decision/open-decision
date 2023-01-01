@@ -5,7 +5,6 @@ import path from "path";
 dotenv.config({ path: "../../.env" });
 
 const config: PlaywrightTestConfig = {
-  // workers: 4,
   globalSetup: require.resolve("./tools/testing/global-setup"),
   testMatch: ["**/*.spec.ts"],
   forbidOnly: !!process.env["CI"],
