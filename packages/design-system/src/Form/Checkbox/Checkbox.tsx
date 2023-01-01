@@ -18,7 +18,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
         className={twMerge(
           baseInputClasses({ variant }),
           inputWrapperClasses,
-          "rounded-md p-[2px] max-w-max",
+          "rounded-md p-[2px] accent-primary9",
           className
         )}
         id={id ?? name}

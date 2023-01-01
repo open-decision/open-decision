@@ -13,22 +13,20 @@ export type Notification = {
 
 export const notificationState = proxy({
   notifications: {} as Record<string, Notification>,
-  addNotification: (notification: Omit<Notification, "id">) => {
-    notificationState.notifications[uuidV4()] = {
-      duration: 5,
-      variant: "info",
-      ...notification,
-    };
-  },
-  removeNotification: (id: string) => {
-    delete notificationState.notifications[id];
-  },
 });
 
+export const addNotification = (notification: Omit<Notification, "id">) => {
+  notificationState.notifications[uuidV4()] = {
+    duration: 5,
+    variant: "info",
+    ...notification,
+  };
+};
+export const removeNotification = (id: string) => {
+  delete notificationState.notifications[id];
+};
 export type NotificationState = typeof notificationState;
 
 export const useNotificationSnapshot = () => {
-  const { notifications } = useSnapshot(notificationState);
-
-  return notifications;
+  return useSnapshot(notificationState);
 };

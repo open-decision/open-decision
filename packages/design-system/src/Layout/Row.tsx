@@ -24,11 +24,14 @@ export const rowClasses = (
 export type RowProps = RowVariants &
   WithClassNameArray<React.HTMLAttributes<HTMLDivElement>>;
 
-export const Row = ({ className, classNames, center, ...props }: RowProps) => {
-  return (
-    <div
-      className={rowClasses({ center }, [classNames, className])}
-      {...props}
-    />
-  );
-};
+export const Row = React.forwardRef<HTMLDivElement, RowProps>(
+  ({ className, classNames, center, ...props }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={rowClasses({ center }, [classNames, className])}
+        {...props}
+      />
+    );
+  }
+);

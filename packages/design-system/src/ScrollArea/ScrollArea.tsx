@@ -36,7 +36,7 @@ const scrollbarClasses =
   "bg-gray5 flex select-none touch-none p-[2px] transition-colors duration-[160ms] ease-out hover:bg-gray7 data-[orientation='vertical']:w-[10px] data-[orientation='horizontal']:flex-col data-[orientation='horizontal']:h-10";
 
 const thumbClasses =
-  "flex-1 rounded-[10px] relative before:[content=''] before:absolute before:top-1/2 before:left-1/2 before:transform before:-translate-x-1/2 before:-translate-y-1/2 before:w-full before:h-full before:min-w-[44px] before:min-h-[44px]";
+  "flex-1 bg-gray1 rounded-[10px] relative before:[content=''] before:absolute before:top-1/2 before:left-1/2 before:transform before:-translate-x-1/2 before:-translate-y-1/2 before:w-full before:h-full before:min-w-[44px] before:min-h-[44px]";
 
 export const Scrollbar = ({ className, ...props }: ScrollbarProps) => (
   <ScrollAreaPrimitive.Scrollbar

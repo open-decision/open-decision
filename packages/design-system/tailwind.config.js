@@ -193,6 +193,7 @@ const tokens = {
 module.exports = {
   theme: { ...tokens, extend: extendProperties },
   plugins: [
+    require("@tailwindcss/typography"),
     plugin(function ({ addUtilities, addVariant }) {
       // ------------------------------------------------------------------
       // colorSchemes

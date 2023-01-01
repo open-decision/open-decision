@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { Controller } from "react-hook-form";
 import { Form, SelectWithCombobox, SelectWithComboboxProps } from "../Form";
 import { Row } from "../Layout";
-import { notificationState } from "../Notifications";
+import { addNotification } from "../Notifications";
 
 export type onNodeCreate = (
   data: Pick<Node.TNode, "name">
@@ -64,7 +64,7 @@ export function TargetSelector({
                 })(treeClient);
 
                 if (newEdge instanceof ODError) {
-                  return notificationState.addNotification({
+                  return addNotification({
                     title: t(`${newEdge.code}.short`),
                     content: t(`${newEdge.code}.long`),
                     variant: "danger",
@@ -85,14 +85,14 @@ export function TargetSelector({
                 })(treeClient);
 
                 if (newEdge instanceof ODError) {
-                  return notificationState.addNotification({
+                  return addNotification({
                     title: t(`${newEdge.code}.short`),
                     content: t(`${newEdge.code}.long`),
                     variant: "danger",
                   });
                 }
 
-                treeClient.edges.add(newEdge);
+                treeClient.edges.update(edge.id, newEdge);
 
                 return onTargetUpdate?.(newTarget);
               }}

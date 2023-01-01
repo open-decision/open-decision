@@ -1,15 +1,15 @@
 // Primitives Components
 export * from "./Layout";
-export * from "./Badge/Badge";
-export * from "./Label/Label";
+export * from "./Badge";
+export * from "./Label";
 export * from "./Button";
-export * from "./Link/Link";
-export * from "./Icon/Icon";
+export * from "./Link";
+export * from "./Icon";
 export * from "./VisuallyHidden";
-export * from "./Separator/Separator";
-export * from "./LoadingSpinner/LoadingSpinner";
-export * from "./Text/Text";
-export * from "./Heading/Heading";
+export * from "./Separator";
+export * from "./LoadingSpinner";
+export * from "./Text";
+export * from "./Heading";
 
 // Component Systems
 export * from "./Error";

@@ -38,7 +38,7 @@ const radioItemClasses = (
   rowClasses({ center: true }, [
     baseInputClasses({ variant }),
     inputWrapperClasses,
-    `rounded-full appearance-none after:block after:w-[10px] after:h-[10px] after:rounded-full after:m-[6px] checked:after:bg-colorScheme10 checked:bg-white`,
+    `rounded-full appearance-none after:block after:w-[8px] after:h-[8px] after:rounded-full after:m-[4px] checked:bg-primary2 checked:after:bg-colorScheme9`,
     classNames,
   ]);
 

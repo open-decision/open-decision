@@ -1,6 +1,9 @@
 import { Notification } from "../Notifications/Notification";
 import { AnimatePresence } from "framer-motion";
-import type { NotificationState } from "../Notifications/NotificationState";
+import {
+  NotificationState,
+  removeNotification,
+} from "../Notifications/NotificationState";
 
 type NotificationsProps = { state: NotificationState; closeLabel?: string };
 
@@ -14,7 +17,7 @@ export function Notifications({ state, closeLabel }: NotificationsProps) {
             key={id}
             id={id}
             notification={notification}
-            removeNotification={state.removeNotification}
+            removeNotification={removeNotification}
           />
         ))}
       </AnimatePresence>

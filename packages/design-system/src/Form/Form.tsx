@@ -13,7 +13,7 @@ export type { FieldValues } from "react-hook-form";
 // ------------------------------------------------------------------
 // Root
 
-const rootClasses = "gap-4 flex flex-col";
+const rootClasses = "gap-2 flex flex-col";
 export type RootProps<TFieldValues extends FieldValues> =
   React.FormHTMLAttributes<HTMLFormElement> & {
     methods: UseFormReturn<TFieldValues>;
