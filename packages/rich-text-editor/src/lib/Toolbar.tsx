@@ -20,7 +20,11 @@ const toolbarClasses = "flex items-center py-2 px-1 shadow-1 gap-1";
 type Props = { editor: Editor | null } & SystemToolbar.RootProps;
 
 export function Toolbar({ className, editor, ...props }: Props) {
-  const [value, setValue] = React.useState("");
+  const activeListValue = editor?.isActive("bulletList")
+    ? "bulletList"
+    : editor?.isActive("orderedList")
+    ? "orderedList"
+    : "";
 
   if (!editor) {
     return null;
@@ -83,24 +87,29 @@ export function Toolbar({ className, editor, ...props }: Props) {
         className="self-stretch"
       />
       <SystemToolbar.ToggleGroup
+        key={activeListValue}
         type="single"
-        value={value}
+        value={activeListValue}
         onValueChange={(newValue) => {
-          setValue((oldValue) => {
-            if (!oldValue && !newValue) return newValue;
+          if (
+            !newValue &&
+            (activeListValue === "bulletList" ||
+              activeListValue === "orderedList")
+          ) {
+            editor
+              .chain()
+              .focus()
+              .toggleList(activeListValue, "listItem")
+              .run();
+          }
 
-            if (!newValue) {
-              editor.chain().focus().toggleList(oldValue, "listItem").run();
-            }
+          if (newValue === "bulletList") {
+            editor.chain().focus().toggleBulletList().run();
+          } else if (newValue === "orderedList") {
+            editor.chain().focus().toggleOrderedList().run();
+          }
 
-            if (newValue === "bulletList") {
-              editor.chain().focus().toggleBulletList().run();
-            } else if (newValue === "orderedList") {
-              editor.chain().focus().toggleOrderedList().run();
-            }
-
-            return newValue;
-          });
+          return newValue;
         }}
       >
         <SystemToolbar.ToggleItem value="bulletList" size="small">
