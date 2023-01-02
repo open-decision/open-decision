@@ -29,6 +29,12 @@ export function PublishItem({
   const { mutate: unPublish } = useTreeAPI().useUnPublish();
   const addNotificationFromTemplate = useNotificationTemplate();
 
+  const link =
+    `${process.env["NEXT_PUBLIC_OD_BUILDER_ENDPOINT"]}/public/${publishedTreeId}`.replace(
+      " ",
+      ""
+    );
+
   return (
     <DropdownMenu.Sub>
       <DropdownMenu.SubTriggerItem>
@@ -57,7 +63,7 @@ export function PublishItem({
         {publishedTreeId ? (
           <>
             <DropdownMenu.Item asChild>
-              <Link href={`/public/${publishedTreeId}`} target="_blank">
+              <Link href={link} target="_blank">
                 <Icon className="mt-[2px]">
                   <OpenInNewWindowIcon />
                 </Icon>
@@ -65,7 +71,10 @@ export function PublishItem({
               </Link>
             </DropdownMenu.Item>
             <DropdownMenu.Item
-              onSelect={() => addNotificationFromTemplate("copyLink")}
+              onSelect={() => {
+                navigator.clipboard.writeText(link);
+                addNotificationFromTemplate("copyLink");
+              }}
             >
               <Icon className="mt-[2px]">
                 <ClipboardCopyIcon />
