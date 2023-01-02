@@ -46,7 +46,11 @@ export function PrototypButton({ treeId }: Props) {
   const common = useTranslations("common");
   const addNotificationFromTemplate = useNotificationTemplate();
 
-  const link = `${process.env["NEXT_PUBLIC_OD_BUILDER_ENDPOINT"]}/builder/${treeId}/prototype`;
+  const link =
+    `${process.env["NEXT_PUBLIC_OD_BUILDER_ENDPOINT"]}/builder/${treeId}/prototype`.replace(
+      " ",
+      ""
+    );
 
   return (
     <Popover.Root>
