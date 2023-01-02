@@ -9,6 +9,7 @@ export const InfoNodeSidebar: TNodeSidebar = ({
   className,
   nodePlugins,
   edgePlugins,
+  onNodeCreate,
 }) => {
   return (
     <NodeSidebar
@@ -21,7 +22,7 @@ export const InfoNodeSidebar: TNodeSidebar = ({
       hasPreview
     >
       <InfoNodeSidebarContent nodeId={nodeId} />
-      <InfoNodeSidebarPaths nodeId={nodeId} />
+      <InfoNodeSidebarPaths nodeId={nodeId} onNodeCreate={onNodeCreate} />
     </NodeSidebar>
   );
 };
