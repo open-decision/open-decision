@@ -1,13 +1,13 @@
 import { Form, Tabs, TargetSelector } from "@open-decision/design-system";
-import { useTree } from "@open-decision/tree-sync";
 import { DirectEdgePlugin } from "@open-decision/plugins-edge-direct";
 import { TNodeSidebarProps } from "@open-decision/plugins-node-helpers";
+import { useTree } from "@open-decision/tree-sync";
 
 const DirectEdge = new DirectEdgePlugin();
 
-type Props = Pick<TNodeSidebarProps, "nodeId" | "onNodeCreate">;
+type Props = Pick<TNodeSidebarProps, "onNodeCreate" | "nodeId">;
 
-export function InfoNodeSidebarPaths({ nodeId, onNodeCreate }: Props) {
+export function FormNodeSidebarPaths({ nodeId, onNodeCreate }: Props) {
   const edge = useTree(
     (treeClient) =>
       Object.values(
