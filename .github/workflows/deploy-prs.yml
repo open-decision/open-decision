@@ -160,7 +160,7 @@ jobs:
       - run: flyctl proxy 5432 -a od-preview-db &
       - run: yarn dlx playwright install --with-deps
       - name: Run tests
-        run: yarn dlx playwright test
+        run: yarn nx test e2e
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v2
