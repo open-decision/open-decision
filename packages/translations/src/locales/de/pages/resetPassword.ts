@@ -1,5 +1,5 @@
 export default {
-  pageTitle: "Passwort zurücksetzen | OD",
+  pageTitle: "Passwort zurücksetzen | Open Decision",
   title: "Passwort zurücksetzen",
   description: "Bitte vergib ein neues Passwort",
   submitButton: "Passwort zurücksetzen",

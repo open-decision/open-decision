@@ -1,3 +1,3 @@
 export default {
-  pageTitle: "Fehler | OD",
+  pageTitle: "Fehler | Open Decision",
 };

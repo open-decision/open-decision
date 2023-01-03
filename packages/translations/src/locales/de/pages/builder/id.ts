@@ -1,5 +1,5 @@
 export default {
-  pageTitle: "Builder | OD",
+  pageTitle: "Builder | Open Decision",
   header: {
     prototypeButton: {
       button: "Prototyp teilen",
