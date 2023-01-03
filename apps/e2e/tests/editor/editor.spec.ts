@@ -71,18 +71,18 @@ pwTest.describe("node search", () => {
 
 pwTest.describe("canvas", () => {
   pwTest("should be able to pan around", async ({ nodeEditorPage }) => {
-    await nodeEditorPage.editor.pan(100, 100);
+    await nodeEditorPage.editor.pan(1000, 1000);
 
     await expect(nodeEditorPage.editor.canvas).toHaveScreenshot();
   });
 
   pwTest("should be able to zoom in and out", async ({ nodeEditorPage }) => {
     // zoom out with mouse wheel
-    await nodeEditorPage.editor.zoom(500);
+    await nodeEditorPage.editor.zoom(5000);
 
     await expect(nodeEditorPage.editor.canvas).toHaveScreenshot();
 
-    await nodeEditorPage.editor.zoom(-500);
+    await nodeEditorPage.editor.zoom(-2500);
 
     await expect(nodeEditorPage.editor.canvas).toHaveScreenshot();
 

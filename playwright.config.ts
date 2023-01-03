@@ -3,6 +3,7 @@ import * as dotenv from "dotenv";
 import path from "path";
 
 dotenv.config({ path: "../../.env" });
+dotenv.config({ path: "../../.env.local" });
 
 const config: PlaywrightTestConfig = {
   globalSetup: require.resolve("./tools/testing/global-setup"),

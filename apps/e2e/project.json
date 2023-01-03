@@ -58,7 +58,7 @@
     "test:debug": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "PWDEBUG=1 playwright test --config=../../playwright.config.ts -g '{args.name}'",
+        "command": "PWDEBUG=1 playwright test --config=../../playwright.config.ts -g '{args.name}' --project=chromium",
         "cwd": "apps/e2e"
       },
       "dependsOn": [

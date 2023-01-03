@@ -4,6 +4,7 @@ import { UserMenu } from "./UserMenu";
 import NextLink from "next/link";
 import Image from "next/image";
 import logo from "../../public/od-logo.svg";
+import { useTranslations } from "next-intl";
 
 const containerClasses = "bg-layer-1 px-3 border-b border-gray7";
 
@@ -20,6 +21,8 @@ export const BaseHeader = ({
   className,
   LogoSlot = <div />,
 }: BaseHeaderProps) => {
+  const t = useTranslations("common");
+
   return (
     <div
       className={
@@ -28,10 +31,16 @@ export const BaseHeader = ({
     >
       <header className={contentClasses}>
         <NextLink
-          className={buttonClasses({ variant: "neutral", square: true }, [])}
+          className={buttonClasses(
+            {
+              variant: "neutral",
+              square: true,
+            },
+            "flex-0 w-[40px] h-[40px]"
+          )}
           href="/"
         >
-          <Image src={logo} alt="Logo" />
+          <Image src={logo} alt={t("header.homeButtonHiddenLabel")} />
         </NextLink>
         {LogoSlot}
         {children}
