@@ -1,6 +1,5 @@
 import { stackClasses, Tabs } from "@open-decision/design-system";
 import * as React from "react";
-import { Label } from "@open-decision/design-system";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { useTranslations } from "next-intl";
 import { InfoNodePlugin } from "../infoNodePlugin";
@@ -35,11 +34,7 @@ export function InfoNodeSidebarContent({ nodeId }: Props) {
             InfoNode.updateNodeContent(nodeId, editor.getJSON())(treeClient)
           }
           content={content}
-          Label={(props) => (
-            <Label className="m-0 mb-3 block" {...props}>
-              {t("richTextEditor.label")}
-            </Label>
-          )}
+          Label={t("richTextEditor.label")}
         />
       </section>
     </Tabs.Content>
