@@ -102,7 +102,7 @@ export const EditorHeader = ({ className, treeId, children }: HeaderProps) => {
                   </DropdownMenu.Item>
                 )}
                 <DropdownMenu.Item asChild>
-                  <a href="./theme-template.json" download>
+                  <a href="./theme-template.json" download className="gap-2">
                     <Icon className="mt-[2px]">
                       <DownloadIcon />
                     </Icon>
