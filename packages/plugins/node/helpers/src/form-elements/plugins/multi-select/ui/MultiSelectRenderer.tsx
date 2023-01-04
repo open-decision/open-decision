@@ -17,7 +17,11 @@ export function MultiSelectInputRenderer({ inputId }: RendererComponentProps) {
   const { register } = Form.useFormContext();
 
   return (
-    <Form.Field Label={input.label ?? "Mehrfacheingabe"} name={inputId}>
+    <Form.Field
+      Label={input.label ?? "Mehrfacheingabe"}
+      name={inputId}
+      required={input.data.required}
+    >
       <Stack className="gap-2">
         {input.data.answers.map((answer) => {
           return (
