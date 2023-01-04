@@ -1,5 +1,10 @@
+import { CrossCircledIcon } from "@radix-ui/react-icons";
 import * as React from "react";
 import { badgeClasses } from "../../Badge/Badge";
+import { Button } from "../../Button";
+import { Icon } from "../../Icon";
+import { Row } from "../../Layout";
+import { Separator } from "../../Separator";
 import { twMerge } from "../../utils";
 import { Combobox } from "../Combobox";
 import { Select } from "../Select";
@@ -8,7 +13,7 @@ const inputClasses =
   "rounded-md ml-[-1px] justify-between focus-within:border-primary9 focus-within:z-10";
 
 export type SelectWithComboboxProps = {
-  onSelect: (id: string) => void;
+  onSelect: (id?: string) => void;
   onCreate?: (value: string) => void;
   selectOptions: { id: string; name: string }[];
   selectPlaceholder?: string;
@@ -17,6 +22,8 @@ export type SelectWithComboboxProps = {
   onChange?: (newValue: string) => void;
   defaultValue?: string;
   className?: string;
+  id?: string;
+  withClearButton?: boolean;
 };
 
 export const SelectWithCombobox = React.forwardRef<
@@ -33,6 +40,8 @@ export const SelectWithCombobox = React.forwardRef<
     selectPlaceholder,
     comboboxPlaceholder,
     className,
+    id,
+    withClearButton = true,
   },
   ref
 ) {
@@ -62,18 +71,37 @@ export const SelectWithCombobox = React.forwardRef<
 
   return (
     <>
-      <Select.Input
-        state={selectState}
-        className={className ? twMerge(inputClasses, className) : inputClasses}
-        ref={ref}
-      >
-        {selectState.value.length ? (
-          selectState.value
-        ) : (
-          <span className="text-gray10">{selectPlaceholder}</span>
-        )}
-        <Select.Arrow />
-      </Select.Input>
+      <Row className="gap-2 flex-1">
+        <Select.Input
+          state={selectState}
+          className={
+            className ? twMerge(inputClasses, className) : inputClasses
+          }
+          ref={ref}
+          id={id}
+        >
+          {selectState.value.length ? (
+            selectState.value
+          ) : (
+            <span className="text-gray10">{selectPlaceholder}</span>
+          )}
+          <Select.Arrow />
+        </Select.Input>
+        {value && withClearButton ? (
+          <Button
+            variant="neutral"
+            size="small"
+            onClick={() => {
+              selectState.setValue("");
+              onSelect();
+            }}
+          >
+            <Icon>
+              <CrossCircledIcon />
+            </Icon>
+          </Button>
+        ) : null}
+      </Row>
       <Select.Popover state={selectState} composite={false}>
         <Combobox.Input
           state={comboboxState}
@@ -81,6 +109,32 @@ export const SelectWithCombobox = React.forwardRef<
           className="m-2"
         />
         <Combobox.List state={comboboxState}>
+          {comboboxState.value.length &&
+          !selectOptions.find(
+            (option) => option.name === comboboxState.value.trimEnd()
+          ) ? (
+            <>
+              <Combobox.Item key="create">
+                {(props) => (
+                  <Select.Item
+                    {...props}
+                    value={comboboxState.value}
+                    onClick={() => onCreate?.(comboboxState.value)}
+                  >
+                    {comboboxState.value}
+                    <span
+                      className={badgeClasses({ size: "small" }, [
+                        "colorScheme-success",
+                      ])}
+                    >
+                      Erstellen
+                    </span>
+                  </Select.Item>
+                )}
+              </Combobox.Item>
+              <Separator />
+            </>
+          ) : null}
           {comboboxState.matches.length ? (
             comboboxState.matches.map((item, index) => {
               const id = selectOptions.find(
@@ -108,25 +162,6 @@ export const SelectWithCombobox = React.forwardRef<
                 </Combobox.Item>
               );
             })
-          ) : comboboxState.value.length ? (
-            <Combobox.Item key="create">
-              {(props) => (
-                <Select.Item
-                  {...props}
-                  value={comboboxState.value}
-                  onClick={() => onCreate?.(comboboxState.value)}
-                >
-                  {comboboxState.value}
-                  <span
-                    className={badgeClasses({ size: "small" }, [
-                      "colorScheme-success",
-                    ])}
-                  >
-                    Erstellen
-                  </span>
-                </Select.Item>
-              )}
-            </Combobox.Item>
           ) : (
             <Combobox.Item disabled>Keine Auswahlmöglichkeiten</Combobox.Item>
           )}
