@@ -103,7 +103,6 @@ export class ReadOnlyTreeClient<TTree extends Tree.TTree> {
     tree: () => this.tree,
     startNodeId: () => getStartNodeId(this.tree),
     id: () => this.tree.uuid,
-    theme: () => this.tree.theme,
   };
 }
 
@@ -121,10 +120,6 @@ export class TreeClient<TTree extends Tree.TTree> {
 
   updateTheme(newTheme: z.infer<typeof Theme>) {
     this.tree.theme = newTheme;
-  }
-
-  removeTheme() {
-    delete this.tree.theme;
   }
 
   get get() {

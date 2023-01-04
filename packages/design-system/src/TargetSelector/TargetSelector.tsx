@@ -15,7 +15,7 @@ export type onEdgeCreate = (
   data: Pick<Edge.TEdge, "source" | "target">
 ) => (treeClient: TTreeClient) => Edge.TEdge | ODError;
 
-export type onTargetUpdate = (newTarget: string) => void;
+export type onTargetUpdate = (newTarget?: string) => void;
 
 export type TargetSelectorProps = {
   name: string;
@@ -26,7 +26,7 @@ export type TargetSelectorProps = {
   onNodeCreate: onNodeCreate;
   onEdgeCreate: onEdgeCreate;
   onTargetUpdate?: onTargetUpdate;
-} & Pick<SelectWithComboboxProps, "selectOptions">;
+} & Pick<SelectWithComboboxProps, "selectOptions" | "id" | "withClearButton">;
 
 export function TargetSelector({
   name,
@@ -38,6 +38,8 @@ export function TargetSelector({
   inputClassName,
   selectOptions,
   className,
+  id,
+  withClearButton,
 }: TargetSelectorProps) {
   const t = useTranslations("common.errors");
   const { control } = Form.useFormContext();
@@ -52,6 +54,7 @@ export function TargetSelector({
           return (
             <SelectWithCombobox
               {...field}
+              id={id}
               onCreate={(value) => {
                 const childNode = treeClient.nodes.create.childNode(
                   nodeId,
@@ -71,7 +74,12 @@ export function TargetSelector({
                   });
                 }
 
-                treeClient.edges.update(edge.id, newEdge);
+                if (!edge) {
+                  treeClient.edges.add(newEdge);
+                } else {
+                  treeClient.edges.update(edge.id, newEdge);
+                }
+
                 treeClient.nodes.add(childNode);
               }}
               onSelect={(newTarget) => {
@@ -88,7 +96,11 @@ export function TargetSelector({
                   });
                 }
 
-                treeClient.edges.update(edge.id, newEdge);
+                if (!edge) {
+                  treeClient.edges.add(newEdge);
+                } else {
+                  treeClient.edges.update(edge.id, newEdge);
+                }
 
                 return onTargetUpdate?.(newTarget);
               }}
@@ -100,6 +112,7 @@ export function TargetSelector({
               }
               selectPlaceholder="Zielknoten auswählen..."
               className={`flex-1 rounded-md ${inputClassName}`}
+              withClearButton={withClearButton}
             />
           );
         }}

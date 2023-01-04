@@ -108,7 +108,7 @@ export const DocumentNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
           className="max-w-max"
           isLoading={isLoading}
         >
-          Dokument generieren
+          Vertrag generieren
         </SubmitButton>
         <VisuallyHidden>
           <a href={data} download={`Vertrag.docx`} ref={ref}>
