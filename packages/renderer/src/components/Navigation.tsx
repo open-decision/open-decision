@@ -28,27 +28,15 @@ export function Navigation({ className, successButtonLabel }: Props) {
             </Icon>
             Zurück
           </Button>
-          {canGoForward ? (
-            <Button
-              onClick={() => send("GO_FORWARD")}
-              className={isPreview ? "pointer-events-none" : ""}
-            >
-              Vor
-              <Icon label="Vorwärts">
-                <ArrowRightIcon />
-              </Icon>
-            </Button>
-          ) : (
-            <Form.SubmitButton
-              form="form"
-              className={isPreview ? "pointer-events-none" : ""}
-            >
-              {successButtonLabel ? successButtonLabel : "Zum nächsten Schritt"}
-              <Icon label="Vorwärts">
-                <ArrowRightIcon />
-              </Icon>
-            </Form.SubmitButton>
-          )}
+          <Form.SubmitButton
+            form="form"
+            className={isPreview ? "pointer-events-none" : ""}
+          >
+            {successButtonLabel ? successButtonLabel : "Zum nächsten Schritt"}
+            <Icon label="Vorwärts">
+              <ArrowRightIcon />
+            </Icon>
+          </Form.SubmitButton>
         </Row>
       </Tooltip.Trigger>
       <Tooltip.Content>

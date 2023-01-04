@@ -57,3 +57,17 @@ pwTest("should go back and remember answer", async ({ publishedPage }) => {
     )
   ).toBeChecked();
 });
+
+pwTest(
+  "should be able to submit a new answer after going back",
+  async ({ publishedPage }) => {
+    await publishedPage.renderer.submitButton.click();
+    await publishedPage.renderer.submitButton.click();
+
+    await publishedPage.page
+      .locator(
+        "label >> text=Creative Commons Namensnennung 4.0 International (CC BY 4.0)"
+      )
+      .click();
+  }
+);
