@@ -8,9 +8,10 @@ import {
   HamburgerMenuIcon,
   RocketIcon,
   TrashIcon,
+  MoonIcon,
 } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
-import { useTreeClient } from "@open-decision/tree-sync";
+import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { useEditor } from "../../state";
 
 type Props = {
@@ -30,6 +31,10 @@ export function NodeMenu({
   const t = useTranslations("builder.nodeEditingSidebar.menu");
   const { removeSelectedNodes } = useEditor();
   const treeClient = useTreeClient();
+
+  const node = useTree((treeClient) => treeClient.nodes.get.single(nodeId));
+
+  if (node instanceof Error) return null;
 
   return (
     <DropdownMenu.Root>
@@ -73,6 +78,27 @@ export function NodeMenu({
                 <RocketIcon />
               </Icon>
               {t("makeStartNode.label")}
+            </DropdownMenu.Item>
+            <DropdownMenu.Item
+              onSelect={() =>
+                treeClient.nodes.update.final(nodeId, !node.final)
+              }
+            >
+              {node.final ? (
+                <>
+                  <Icon>
+                    <MoonIcon />
+                  </Icon>
+                  {t("endNode.remove.label")}
+                </>
+              ) : (
+                <>
+                  <Icon>
+                    <MoonIcon />
+                  </Icon>
+                  {t("endNode.add.label")}
+                </>
+              )}
             </DropdownMenu.Item>
             <DropdownMenu.Item
               onSelect={() => {

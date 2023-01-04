@@ -49,6 +49,14 @@ export default {
       makeStartNode: {
         label: "Zum Startknoten machen",
       },
+      endNode: {
+        add: {
+          label: "Zu einem Endknoten machen",
+        },
+        remove: {
+          label: "Endknoten entfernen",
+        },
+      },
     },
   },
   canvas: {
