@@ -71,11 +71,7 @@ export function TargetSelector({
                   });
                 }
 
-                if (edge) {
-                  treeClient.edges.delete([edge.id]);
-                }
-
-                treeClient.edges.add(newEdge);
+                treeClient.edges.update(edge.id, newEdge);
                 treeClient.nodes.add(childNode);
               }}
               onSelect={(newTarget) => {
