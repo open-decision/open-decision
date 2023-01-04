@@ -39,7 +39,7 @@ export const Item = React.forwardRef<HTMLDivElement, ItemProps>(
   ({ className, ...props }, ref) => {
     return (
       <ComboboxPrimitive.ComboboxItem
-        className={twMerge(menuItemClasses, className)}
+        className={twMerge(menuItemClasses, ["justify-between", className])}
         ref={ref}
         {...props}
       />
