@@ -1,9 +1,4 @@
-import {
-  DropdownMenu,
-  Icon,
-  Link,
-  Tooltip,
-} from "@open-decision/design-system";
+import { DropdownMenu, Icon, Tooltip } from "@open-decision/design-system";
 import {
   UploadIcon,
   OpenInNewWindowIcon,
@@ -63,12 +58,12 @@ export function PublishItem({
         {publishedTreeId ? (
           <>
             <DropdownMenu.Item asChild>
-              <Link href={link} target="_blank">
+              <a href={link} target="_blank" rel="noreferrer">
                 <Icon className="mt-[2px]">
                   <OpenInNewWindowIcon />
                 </Icon>
                 {t("open")}
-              </Link>
+              </a>
             </DropdownMenu.Item>
             <DropdownMenu.Item
               onSelect={() => {
