@@ -1,5 +1,5 @@
 export default {
-  pageTitle: "Login | Open Decision",
+  pageTitle: "Login | OD",
   title: "Anmelden",
   description: "Loggen Sie sich ein um mit Open Decision fortzufahren.",
   registerQuestion: "Sie haben noch kein Konto?",

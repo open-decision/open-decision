@@ -5,7 +5,8 @@ import { userService } from "./index";
 import { tokenHandler } from "../models/token.model";
 import { UUID } from "../types/uuid-class";
 import { TokenType, User } from "@prisma/client";
-import { APIError } from "@open-decision/type-classes";
+import { APIError, ODProgrammerError } from "@open-decision/type-classes";
+import { z } from "zod";
 /**
  * Generate token
  * @param {(UUID|string)} userId
@@ -18,9 +19,11 @@ const generateToken = async (
   userUuid: UUID | string,
   expiry: dayjs.Dayjs,
   type: TokenType,
-  secret: string
+  secret: string,
+  payload?: Record<string, string>
 ) => {
   return await new jose.SignJWT({
+    ...payload,
     userUuid: userUuid instanceof UUID ? userUuid.toString() : userUuid,
     type,
   })
@@ -238,9 +241,69 @@ const generateVerifyEmailToken = async (userUuid: string) => {
   return verifyEmailToken;
 };
 
+const generateFileUploadToken = async (
+  userUuid: string,
+  treeUuid: string,
+  updateTemplateUuid?: string
+) => {
+  const expires = dayjs().add(15, "minutes");
+  const uploadFileToken = await generateToken(
+    userUuid,
+    expires,
+    TokenType.UPLOAD_FILE,
+    config.ACCESS_TOKEN_SECRET,
+    updateTemplateUuid ? { treeUuid, updateTemplateUuid } : { treeUuid }
+  );
+  await saveToken(uploadFileToken, userUuid, expires, TokenType.UPLOAD_FILE);
+  return uploadFileToken;
+};
+
+const fileUploadTokenPayload = z.object({
+  treeUuid: z.string(),
+  userUuid: z.string(),
+  updateTemplateUuid: z.string().optional(),
+});
+
+const verifyFileUploadToken = async (token: string) => {
+  let payload;
+  try {
+    ({ payload } = await jose.jwtVerify(
+      token,
+      new TextEncoder().encode(config.ACCESS_TOKEN_SECRET)
+    ));
+  } catch {
+    throw new APIError({ code: "EXPIRED_TOKEN" });
+  }
+
+  const tokenFromDatabase = await tokenHandler.findOne({
+    token,
+    ownerUuid: payload.userUuid as string,
+    blacklisted: false,
+    type: TokenType.UPLOAD_FILE,
+  });
+
+  if (!tokenFromDatabase) {
+    throw new APIError({ code: "TOKEN_NOT_FOUND", message: "Token not found" });
+  }
+
+  const parsedPayload = fileUploadTokenPayload.safeParse(payload);
+
+  if (!parsedPayload.success) {
+    console.error(parsedPayload.error);
+    throw new ODProgrammerError({
+      code: "INVALID_TOKEN_PAYLOAD",
+      message:
+        "The uploadFileToken used does not have a valid payload. This is almost certainly caused by including the wrong data in the token generation endpoint.",
+    });
+  }
+
+  return parsedPayload.data;
+};
+
 export const tokenService = {
   generateToken,
   verifyToken,
+  verifyFileUploadToken,
   saveToken,
   refreshTokens,
   generateAuthTokens,
@@ -248,4 +311,5 @@ export const tokenService = {
   generateVerifyEmailToken,
   generateAccessToken,
   generateRefreshToken,
+  generateFileUploadToken,
 };

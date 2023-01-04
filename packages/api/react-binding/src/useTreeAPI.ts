@@ -149,7 +149,7 @@ export const useTreeAPI = () => {
   ) => {
     return useQuery(
       treeDataQueryKey(uuid),
-      () => directClient.trees.data.getPreview({ params: { uuid } }),
+      () => proxiedClient.trees.data.getPreview({ params: { uuid } }),
       {
         ...options,
         retry: (failureCount, error) => {
@@ -263,7 +263,7 @@ export const useTreeAPI = () => {
           return onSuccess?.(...params);
         },
         onSettled: (...params) => {
-          queryClient.invalidateQueries(treeQueryKey(params[2].params.uuid));
+          invalidateTrees(queryClient)(params[2].params.uuid);
           return onSettled?.(...params);
         },
       }

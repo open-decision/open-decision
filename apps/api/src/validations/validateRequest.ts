@@ -8,6 +8,7 @@ const validateRequest =
     const validationResult = await schema.safeParseAsync(req);
 
     if (!validationResult.success) {
+      console.error(validationResult.error);
       throw new APIError<TSchema>({
         code: "VALIDATION_ERROR",
         message: "The validation of the inputs failed",

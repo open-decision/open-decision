@@ -136,6 +136,7 @@ enum TokenType {
   REFRESH
   RESET_PASSWORD
   VERIFY_EMAIL
+  UPLOAD_FILE
 }
 
 enum TreeStatus {

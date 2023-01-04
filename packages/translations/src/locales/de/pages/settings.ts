@@ -1,5 +1,5 @@
 export default {
-  pageTitle: "Einstellungen | Open Decision",
+  pageTitle: "Einstellungen | OD",
   title: "Einstellungen",
   account: {
     title: "Account",

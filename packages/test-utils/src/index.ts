@@ -5,3 +5,4 @@ export { TreeFixture as Trees, createDefaultSetOfTrees } from "./fixtures/Tree";
 
 export * from "./utils/pageModels";
 export * from "./utils/componentModels";
+export * from "./utils/pluginModels";

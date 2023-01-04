@@ -1,10 +1,10 @@
 import { z } from "zod";
 
 export const createTemplateInputApi = z.object({
-  body: z.object({
-    treeUuid: z.string().uuid(),
-    displayName: z.string(),
+  query: z.object({
+    token: z.string(),
   }),
+  body: z.object({ displayName: z.string() }),
   file: z.object({
     fieldname: z.literal("template"),
     originalname: z.string(),

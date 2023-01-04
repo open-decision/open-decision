@@ -9,10 +9,11 @@ import {
   Heading,
   Form,
   LoadingSpinner,
-  linkClasses,
   addNotification,
+  Separator,
+  buttonClasses,
 } from "@open-decision/design-system";
-import { ClipboardCopyIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
+import { ClipboardCopyIcon, PlayIcon } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
 import NextLink from "next/link";
 import { useNotificationTemplate } from "@open-decision/design-system";
@@ -38,6 +39,7 @@ export function PrototypButton({ treeId }: Props) {
         : addNotificationFromTemplate("disablePreview");
     },
   });
+
   const methods = Form.useForm({
     defaultValues: { preview: hasPreview },
   });
@@ -54,9 +56,23 @@ export function PrototypButton({ treeId }: Props) {
 
   return (
     <Popover.Root>
-      <Popover.Trigger asChild>
-        <Button className="min-w-max">{t("button")}</Button>
-      </Popover.Trigger>
+      <Row>
+        <Popover.Trigger asChild>
+          <Button className="min-w-max rounded-none rounded-l-md">
+            {t("button")}
+          </Button>
+        </Popover.Trigger>
+        <Separator orientation="vertical" />
+        <NextLink
+          href={link}
+          className={buttonClasses({}, "rounded-none rounded-r-md")}
+          target="_blank"
+        >
+          <Icon>
+            <PlayIcon />
+          </Icon>
+        </NextLink>
+      </Row>
       <Popover.Content sideOffset={15} asChild>
         <Stack className="z-10 max-w-[350px] p-5 gap-2">
           <Heading as="h2">{t("popover.title")}</Heading>
@@ -84,31 +100,20 @@ export function PrototypButton({ treeId }: Props) {
                 {isLoading ? <LoadingSpinner /> : null}
               </Row>
             </Form.Root>
-            {hasPreview ? (
-              <Row className="justify-between">
-                <NextLink
-                  href={link}
-                  className={linkClasses({}, "gap-1")}
-                  target="_blank"
-                >
-                  {t("popover.newTabLink")}
-                  <Icon>
-                    <ExternalLinkIcon />
-                  </Icon>
-                </NextLink>
-                <Button
-                  onClick={() => {
-                    addNotificationFromTemplate("copyLink");
-                    navigator.clipboard.writeText(link);
-                  }}
-                >
-                  <Icon>
-                    <ClipboardCopyIcon />
-                  </Icon>
-                  {common("projectMenu.publish.copyLink")}
-                </Button>
-              </Row>
-            ) : null}
+            <Button
+              disabled={!hasPreview}
+              variant="secondary"
+              size="small"
+              onClick={() => {
+                addNotificationFromTemplate("copyLink");
+                navigator.clipboard.writeText(link);
+              }}
+            >
+              <Icon>
+                <ClipboardCopyIcon />
+              </Icon>
+              {common("projectMenu.publish.copyLink")}
+            </Button>
           </Stack>
         </Stack>
       </Popover.Content>

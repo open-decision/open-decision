@@ -1,5 +1,5 @@
 export default {
-  pageTitle: "Builder | Open Decision",
+  pageTitle: "Builder | OD",
   header: {
     prototypeButton: {
       button: "Prototyp teilen",
@@ -7,7 +7,7 @@ export default {
         title: "Prototyp teilen",
         description:
           "Wenn der Prototyp aktiviert ist kann jeder mit dem Link den Projekt-Prototyp ansehen.",
-        checkbox: "Prototyp aktivieren",
+        checkbox: "Prototyp öffentlich teilen",
         newTabLink: "In neuem Tab öffnen",
         copyLinkButton: "Link kopieren",
       },

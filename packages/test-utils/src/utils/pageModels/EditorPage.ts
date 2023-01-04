@@ -3,16 +3,16 @@ import { PartialTree } from "../../fixtures";
 import { TreeFixture } from "../../fixtures/Tree";
 import { TUser, UserFixture } from "../../fixtures/User";
 import { EditorHeaderComponent } from "../componentModels/EditorHeaderComponent";
-import { NodeEditorComponent } from "../componentModels/NodeEditor";
+import { EditorComponent } from "../componentModels/Editor";
 import { NotificationComponent } from "../componentModels/NotificationComponent";
 import { proxiedPlaywrightOD } from "../playwright/odClient";
 
-export class NodeEditorPage {
+export class EditorPage {
   readonly page: Page;
   readonly user: TUser;
   readonly tree: PartialTree;
   readonly header: EditorHeaderComponent;
-  readonly editor: NodeEditorComponent;
+  readonly editor: EditorComponent;
   readonly notification: NotificationComponent;
   readonly dataFixtures: { User: UserFixture; Tree: TreeFixture };
 
@@ -28,7 +28,7 @@ export class NodeEditorPage {
     this.dataFixtures = DataFixtures;
 
     this.header = new EditorHeaderComponent(page, tree.name);
-    this.editor = new NodeEditorComponent(page);
+    this.editor = new EditorComponent(page);
     this.notification = new NotificationComponent(page);
   }
 
@@ -42,7 +42,7 @@ export class NodeEditorPage {
   }
 }
 
-export async function createNodeEditorPage(page: Page) {
+export async function createEditorPage(page: Page) {
   const User = new UserFixture();
   const Tree = new TreeFixture(await proxiedPlaywrightOD(page.request));
   const user = await User.insert();
@@ -53,5 +53,5 @@ export async function createNodeEditorPage(page: Page) {
 
   const tree = await Tree.insert(user);
 
-  return new NodeEditorPage(page, user, tree, { User, Tree });
+  return new EditorPage(page, user, tree, { User, Tree });
 }

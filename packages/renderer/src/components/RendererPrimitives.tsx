@@ -22,7 +22,7 @@ export function ContentArea({ children, className }: RendererContentAreaProps) {
       scrollHideDelay={1000000}
     >
       <ScrollArea.Viewport className="min-h-0 p-4 -ml-2">
-        {children}
+        <Stack className="gap-4">{children}</Stack>
         <ScrollArea.Scrollbar />
       </ScrollArea.Viewport>
     </ScrollArea.Root>

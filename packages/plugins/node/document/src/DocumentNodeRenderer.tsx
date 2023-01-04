@@ -39,6 +39,8 @@ export const DocumentNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
   const node = DocumentNode.get.single(nodeId)(treeClient);
   const readableAnswers = createReadableAnswers(answers, treeClient);
 
+  console.log(readableAnswers);
+
   const t = useTranslations("common.errors");
 
   const ref = React.useRef<HTMLAnchorElement | null>(null);
@@ -58,18 +60,6 @@ export const DocumentNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
         params: { uuid: node.data.templateUuid },
         body: { variables: readableAnswers },
       });
-
-      // const response = await fetch(
-      //   `/api/external-api/file/document/${environment}/${node.data.templateUuid}`,
-      //   {
-      //     cache: "no-cache",
-      //     body: JSON.stringify({ variables: readableAnswers }),
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //   }
-      // );
 
       const file = new Blob([response.data], { type: "application/xlsx" });
 
@@ -113,6 +103,7 @@ export const DocumentNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
       </RendererPrimitives.ContentArea>
       <Row className="justify-end">
         <SubmitButton
+          type="button"
           onClick={() => mutate()}
           className="max-w-max"
           isLoading={isLoading}
