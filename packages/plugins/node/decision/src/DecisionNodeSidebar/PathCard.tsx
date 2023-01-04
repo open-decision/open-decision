@@ -14,13 +14,17 @@ import {
   CompareEdgePlugin,
   TCompareEdge,
 } from "@open-decision/plugins-edge-compare";
-import { TNodeSidebarProps } from "@open-decision/plugins-node-helpers";
+import {
+  SelectInputPlugin,
+  TNodeSidebarProps,
+} from "@open-decision/plugins-node-helpers";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { CrossCircledIcon } from "@radix-ui/react-icons";
 import { Controller, useFieldArray } from "react-hook-form";
 import { DecisionNodePlugin } from "../decisionNodePlugin";
 
 const DecisionNode = new DecisionNodePlugin();
+const SelectInput = new SelectInputPlugin();
 const CompareEdge = new CompareEdgePlugin();
 
 type Props = {
@@ -62,6 +66,10 @@ export function PathCard({ onNodeCreate, onEdgeCreate, nodeId, edge }: Props) {
     control: conditionFormMethods.control,
     name: edge.id,
   });
+
+  const inputId = useTree(
+    (treeClient) => DecisionNode.getInputByNode(nodeId)(treeClient)?.id
+  );
 
   return (
     <section className={stackClasses({}, sidebarCardClasses)}>
@@ -121,6 +129,18 @@ export function PathCard({ onNodeCreate, onEdgeCreate, nodeId, edge }: Props) {
                         edge.id,
                         index,
                         newItem
+                      )(treeClient);
+                    }}
+                    onCreate={(value) => {
+                      if (!inputId) return;
+
+                      const newAnswer = SelectInput.createAnswer({ value });
+                      SelectInput.addAnswer(inputId, newAnswer)(treeClient);
+
+                      return CompareEdge.updateValue(
+                        edge.id,
+                        index,
+                        newAnswer.id
                       )(treeClient);
                     }}
                     selectOptions={

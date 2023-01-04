@@ -39,8 +39,6 @@ export const DocumentNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
   const node = DocumentNode.get.single(nodeId)(treeClient);
   const readableAnswers = createReadableAnswers(answers, treeClient);
 
-  console.log(readableAnswers);
-
   const t = useTranslations("common.errors");
 
   const ref = React.useRef<HTMLAnchorElement | null>(null);
