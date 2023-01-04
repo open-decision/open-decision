@@ -62,7 +62,7 @@ jobs:
         run: flyctl regions set fra ams --app ${{env.APP_NAME}}
       - name: Deploy
         id: deploy
-        run: flyctl deploy --config ${{env.CONFIG}} --app ${{env.APP_NAME}} --region ${{env.FLY_REGION}} --strategy immediate
+        run: flyctl deploy --config ${{env.CONFIG}} --app ${{env.APP_NAME}} --region ${{env.FLY_REGION}}
 
   builder:
     name: Deploy builder
