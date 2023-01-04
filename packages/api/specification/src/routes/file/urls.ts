@@ -16,4 +16,7 @@ export const templateSingle = (templateUuid: string) =>
   `${templateRoot}/${templateUuid}`;
 
 export const templateDownloadUrlSingle = (templateUuid: string) =>
-  `${templateRoot}/file/${templateUuid}`;
+  `${templateRoot}/${templateUuid}/download`;
+
+export const templateUploadRoot = `${templateRoot}/upload`;
+export const templateRequestUploadToken = `${templateRoot}/upload/request`;

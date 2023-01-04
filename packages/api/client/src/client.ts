@@ -31,6 +31,7 @@ import {
   updateTemplate,
   deleteTemplateSingle,
   getTemplateFileUrlSingle,
+  requestTemplateUpload,
 } from "@open-decision/api-specification";
 
 export const client = <FetchFunction extends FetchFunctions>(
@@ -82,8 +83,14 @@ export const client = <FetchFunction extends FetchFunctions>(
       template: {
         getSingle: getTemplateSingle(context),
         getCollection: getTemplateCollection(context),
-        create: createTemplate(context),
-        update: updateTemplate(context),
+        create: {
+          request: requestTemplateUpload(context),
+          upload: createTemplate(context),
+        },
+        update: {
+          request: requestTemplateUpload(context),
+          upload: updateTemplate(context),
+        },
         delete: deleteTemplateSingle(context),
         getFileUrl: getTemplateFileUrlSingle(context),
       },

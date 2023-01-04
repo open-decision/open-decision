@@ -179,7 +179,7 @@ export const createPublishedTree = catchAsync(
 
     if (publishedTree instanceof Error) throw publishedTree;
 
-    const publishedTemplates = await createPublishedTemplatesForTree(
+    const _publishedTemplates = await createPublishedTemplatesForTree(
       reqData.params.treeUuid,
       publishedTree.uuid
     );

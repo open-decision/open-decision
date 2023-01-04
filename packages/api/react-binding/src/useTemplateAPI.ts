@@ -1,6 +1,7 @@
 import { FetchJSONReturn } from "@open-decision/api-helpers";
 import {
   TCreateTemplateOutput,
+  TDeleteTemplateSingleOutput,
   TGetTemplateSingleOutput,
 } from "@open-decision/api-specification";
 import {
@@ -10,7 +11,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { proxiedClient } from "@open-decision/api-client";
+import { proxiedClient, directClient } from "@open-decision/api-client";
 import {
   NotificationTemplate,
   useNotificationTemplate,
@@ -20,12 +21,34 @@ import { APIError } from "@open-decision/type-classes";
 export type useCreateTemplateOptions = UseMutationOptions<
   FetchJSONReturn<TCreateTemplateOutput>,
   APIError<void>,
-  { template: File; treeUuid: string; displayName: string }
+  {
+    template: File;
+    treeUuid: string;
+    displayName: string;
+    templateUuid?: string;
+  }
+>;
+export type useDeleteTemplateOptions = UseMutationOptions<
+  FetchJSONReturn<TDeleteTemplateSingleOutput>,
+  APIError<void>,
+  { templateUuid: string }
+>;
+
+export type useUpdateTemplateOptions = UseMutationOptions<
+  FetchJSONReturn<TDeleteTemplateSingleOutput>,
+  APIError<void>,
+  {
+    templateUuid: string;
+    template: File;
+    treeUuid: string;
+    displayName: string;
+  }
 >;
 
 export const templateQueryKeys = ["Templates"] as const;
 
-export const templateQueryKey = (uuid: string) => ["Template", uuid] as const;
+export const templateQueryKey = (uuid: string) =>
+  [...templateQueryKeys, uuid] as const;
 
 export const invalidateTemplates =
   (queryClient: QueryClient) => (uuid?: string) => {
@@ -41,15 +64,18 @@ export const useTemplateAPI = () => {
   const addNotificationFromTemplate = useNotificationTemplate();
 
   const useTemplateQuery = <TData = FetchJSONReturn<TGetTemplateSingleOutput>>(
-    uuid: string,
+    templateUuid: string,
     options?: {
       staleTime?: number;
       select?: (data: FetchJSONReturn<TGetTemplateSingleOutput>) => TData;
     }
   ) => {
     return useQuery(
-      templateQueryKey(uuid),
-      () => proxiedClient.file.template.getSingle({ params: { uuid } }),
+      templateQueryKey(templateUuid),
+      () =>
+        proxiedClient.file.template.getSingle({
+          params: { uuid: templateUuid },
+        }),
       options
     );
   };
@@ -64,22 +90,57 @@ export const useTemplateAPI = () => {
   } = {}) => {
     return useMutation(
       ["createTemplate"],
-      async ({ template, treeUuid, displayName }) => {
-        try {
-          return await proxiedClient.file.template.create({
-            body: { template, displayName, treeUuid },
-          });
-        } catch (error) {
-          console.error(error);
-          // Unhandled error
-          throw new Error();
-        }
+      async ({ template, treeUuid, displayName, templateUuid }) => {
+        const token = await proxiedClient.file.template.create.request({
+          body: { treeUuid, templateUuid },
+        });
+
+        return await directClient.file.template.create.upload({
+          body: {
+            template,
+            displayName,
+          },
+          query: {
+            token: token.data.token,
+          },
+        });
       },
       {
         ...options,
         onSuccess: (...params) => {
           if (notification !== false) {
-            addNotificationFromTemplate(notification ?? "import");
+            addNotificationFromTemplate(notification ?? "addTemplate");
+          }
+          return onSuccess?.(...params);
+        },
+        onSettled: (...params) => {
+          invalidateTemplates(queryClient)();
+          return onSettled?.(...params);
+        },
+      }
+    );
+  };
+
+  const useDeleteTemplateMutation = ({
+    onSuccess,
+    onSettled,
+    notification,
+    ...options
+  }: useDeleteTemplateOptions & {
+    notification?: NotificationTemplate;
+  } = {}) => {
+    return useMutation(
+      ["deleteTemplate"],
+      async ({ templateUuid }) => {
+        return await proxiedClient.file.template.delete({
+          params: { uuid: templateUuid },
+        });
+      },
+      {
+        ...options,
+        onSuccess: (...params) => {
+          if (notification !== false) {
+            addNotificationFromTemplate(notification ?? "deleteTemplate");
           }
           return onSuccess?.(...params);
         },
@@ -94,5 +155,6 @@ export const useTemplateAPI = () => {
   return {
     useTemplateQuery,
     useCreateTemplateMutation,
+    useDeleteTemplateMutation,
   };
 };

@@ -1,6 +1,6 @@
 export * from "./DashboardPage";
 export * from "./ForgotPasswordPage";
 export * from "./LoginPage";
-export * from "./NodeEditorPage";
+export * from "./EditorPage";
 export * from "./PrototypePage";
 export * from "./RegisterPage";

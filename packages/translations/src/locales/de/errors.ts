@@ -181,6 +181,10 @@ const errorMessages: Record<ErrorCodes, { short: string; long: string }> = {
     short: "Entscheidungsbaum fehlt.",
     long: "Bitte lege einen Entscheidungsbaum für dieses Modul fest.",
   },
+  TOKEN_NOT_FOUND: {
+    short: "Upload fehlgeschlagen.",
+    long: "Bitte starte den Upload erneut.",
+  },
 } as const;
 
 export default errorMessages;

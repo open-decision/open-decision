@@ -263,7 +263,7 @@ export const useTreeAPI = () => {
           return onSuccess?.(...params);
         },
         onSettled: (...params) => {
-          queryClient.invalidateQueries(treeQueryKey(params[2].params.uuid));
+          invalidateTrees(queryClient)(params[2].params.uuid);
           return onSettled?.(...params);
         },
       }

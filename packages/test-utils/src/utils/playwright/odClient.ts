@@ -4,8 +4,12 @@ import { APIRequestContext, request as globalRequest } from "@playwright/test";
 
 const fetchFn =
   (request: APIRequestContext): FetchJSONFunction =>
-  async (url, { body, method }, { validation }) => {
-    const response = await request.fetch(url, { data: body, method });
+  async (url, { body, method, headers }, { validation }) => {
+    const response = await request.fetch(url, {
+      data: body,
+      method,
+      headers: headers as any,
+    });
     let data;
     const contentType = response.headers()["content-type"];
     if (

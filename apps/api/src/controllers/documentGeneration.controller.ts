@@ -48,6 +48,7 @@ export const generateDocumentForPrototype = catchAsync(
       await documentTemplateModel.getSingleDocumentTemplateForPreview(
         reqData.params.uuid
       );
+
     return fetchAndReturnDocument(template, reqData.body.variables, res);
   }
 );

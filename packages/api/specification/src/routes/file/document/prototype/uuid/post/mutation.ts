@@ -17,7 +17,6 @@ export const getDocumentPrototypeSingle =
     return await context.fetchFunction(
       combinedUrl,
       {
-        cache: "no-cache",
         body: JSON.stringify(inputs.body),
         method: "POST",
         headers: {

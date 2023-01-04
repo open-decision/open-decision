@@ -1,28 +1,39 @@
-import { Page } from "@playwright/test";
+import { de } from "@open-decision/translations";
+import { expect, Page } from "@playwright/test";
+import path from "path";
 import { PartialTree } from "../../fixtures";
 import { TreeFixture } from "../../fixtures/Tree";
-import { UserFixture } from "../../fixtures/User";
+import { TUser, UserFixture } from "../../fixtures/User";
+import { NotificationComponent } from "../componentModels";
+import { RendererComponent } from "../componentModels/RendererComponent";
 import { proxiedPlaywrightOD } from "../playwright/odClient";
+import { DocumentNodeModel } from "../pluginModels";
+import { EditorPage } from "./EditorPage";
 
 export class PrototypePage {
   readonly page: Page;
+  readonly user: TUser;
   readonly tree: PartialTree;
-  private TreeClass?: TreeFixture;
-  private UserClass?: UserFixture;
+  readonly dataFixtures: { User: UserFixture; Tree: TreeFixture };
+
+  renderer: RendererComponent;
 
   constructor(
     page: Page,
+    user: TUser,
     tree: PartialTree,
-    DataFixtures?: { TreeClass: TreeFixture; UserClass: UserFixture }
+    DataFixtures: { User: UserFixture; Tree: TreeFixture }
   ) {
     this.page = page;
+    this.user = user;
     this.tree = tree;
-    this.TreeClass = DataFixtures?.TreeClass;
-    this.UserClass = DataFixtures?.UserClass;
+    this.dataFixtures = DataFixtures;
+
+    this.renderer = new RendererComponent(page);
   }
 
   async goto() {
-    await this.page.goto(`/prototype/${this.tree.uuid}`);
+    await this.page.goto(`/builder/${this.tree.uuid}/prototype`);
   }
 
   getErrorLocator(text: string) {
@@ -30,17 +41,46 @@ export class PrototypePage {
   }
 
   async cleanup() {
-    await this.TreeClass?.cleanup();
-    await this.UserClass?.cleanup();
+    await this.dataFixtures.Tree?.cleanup();
+    await this.dataFixtures.User?.cleanup();
   }
 }
 
 export async function createPrototypePage(page: Page) {
-  const UserClass = new UserFixture();
-  const TreeClass = new TreeFixture(await proxiedPlaywrightOD(page.request));
-  const user = await UserClass.insert();
+  const User = new UserFixture();
+  const Tree = new TreeFixture(await proxiedPlaywrightOD(page.request));
+  const user = await User.insert();
 
-  const tree = await TreeClass.insert(user);
+  const treeToInsert = Tree.create({ hasPreview: true });
+  const tree = await Tree.insert(user, treeToInsert);
 
-  return new PrototypePage(page, tree, { TreeClass, UserClass });
+  await page.request.post(`/api/external-api/auth/login`, {
+    data: { email: user.email, password: user.password },
+  });
+
+  const editorPage = new EditorPage(page, user, tree, { User, Tree });
+
+  await editorPage.goto(tree.uuid);
+
+  await editorPage.editor.selectNode({
+    content: "Vertrag generieren",
+    selected: false,
+  });
+
+  const DocumentNode = new DocumentNodeModel(page);
+
+  await DocumentNode.sidebar.uploadTemplate(
+    path.join(__dirname, "../../files/auroa.docx")
+  );
+
+  const Notification = new NotificationComponent(page);
+
+  await expect(
+    Notification.getLocator(de.common.notifications.addTemplate.title)
+  ).toBeVisible();
+
+  return new PrototypePage(page, user, tree, {
+    Tree,
+    User,
+  });
 }

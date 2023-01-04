@@ -67,10 +67,10 @@ export function Field({
         <span style={{ gridArea: "input" }}>{children}</span>
       </Form.Label>
     ) : (
-      <span className="grid gap-2 field flex-1" data-layout={layout}>
+      <Form.Label className="grid gap-2 field flex-1" data-layout={layout}>
         {Label}
         <span style={{ gridArea: "input" }}>{children}</span>
-      </span>
+      </Form.Label>
     );
 
   return (

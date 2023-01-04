@@ -1025,8 +1025,7 @@
                 ]
               }
             ]
-          },
-          "templateUuid": "e874d31a-b6e0-4034-baa4-2f3cd1901965"
+          }
         },
         "type": "document",
         "final": true
@@ -1746,7 +1745,7 @@
                 "data": {
                   "condition": {
                     "variableId": "f8e0af5c-0249-42a5-8dbe-da49d74e8434",
-                    "valueId": "7f48812e-af38-42fe-be30-560c3536ef65"
+                    "valueIds": ["7f48812e-af38-42fe-be30-560c3536ef65"]
                   }
                 }
               },
@@ -1756,9 +1755,9 @@
                 "target": "cd94128b-60b8-405a-ae07-4d9edfb571ad",
                 "type": "compare",
                 "data": {
-                  "conditionId": {
+                  "condition": {
                     "variableId": "f8e0af5c-0249-42a5-8dbe-da49d74e8434",
-                    "valueId": "28b267b4-c8a5-47c3-8802-32b694c1429d"
+                    "valueIds": ["28b267b4-c8a5-47c3-8802-32b694c1429d"]
                   }
                 }
               },
@@ -1768,9 +1767,9 @@
                 "target": "6968bcae-db64-4e64-9e5b-9d3cec8b7730",
                 "type": "compare",
                 "data": {
-                  "conditionId": {
+                  "condition": {
                     "variableId": "0ee95dd9-cce4-4256-9c84-7db8249ce6e9",
-                    "valueId": "8b5cd475-d9bf-456a-bed9-e0c208cb6682"
+                    "valueIds": ["8b5cd475-d9bf-456a-bed9-e0c208cb6682"]
                   }
                 }
               },
@@ -1782,7 +1781,7 @@
                 "data": {
                   "condition": {
                     "variableId": "0ee95dd9-cce4-4256-9c84-7db8249ce6e9",
-                    "valueId": "872b7d06-a7b8-4083-a6d1-f33d21d7d4d8"
+                    "valueIds": ["872b7d06-a7b8-4083-a6d1-f33d21d7d4d8"]
                   }
                 }
               },
@@ -1794,7 +1793,7 @@
                 "data": {
                   "condition": {
                     "variableId": "809aa7c7-d064-49ef-8332-8d8a979a2e2e",
-                    "valueId": "6529e9eb-029b-4fb4-abad-c9029721b602"
+                    "valueIds": ["6529e9eb-029b-4fb4-abad-c9029721b602"]
                   }
                 }
               },
@@ -1806,7 +1805,7 @@
                 "data": {
                   "condition": {
                     "variableId": "809aa7c7-d064-49ef-8332-8d8a979a2e2e",
-                    "valueId": "b493df9d-e0ed-4a40-83a4-9785b78ccf3d"
+                    "valueIds": ["b493df9d-e0ed-4a40-83a4-9785b78ccf3d"]
                   }
                 }
               }
@@ -1826,7 +1825,8 @@
                         "id": "7f48812e-af38-42fe-be30-560c3536ef65",
                         "value": "Nein"
                       }
-                    ]
+                    ],
+                    "required": false
                   }
                 },
                 "0ee95dd9-cce4-4256-9c84-7db8249ce6e9": {
@@ -1842,7 +1842,8 @@
                         "id": "8b5cd475-d9bf-456a-bed9-e0c208cb6682",
                         "value": "Nein"
                       }
-                    ]
+                    ],
+                    "required": false
                   }
                 },
                 "809aa7c7-d064-49ef-8332-8d8a979a2e2e": {
@@ -1858,36 +1859,33 @@
                         "id": "6529e9eb-029b-4fb4-abad-c9029721b602",
                         "value": "Nein"
                       }
-                    ]
+                    ],
+                    "required": false
                   }
                 },
                 "5a740f01-f729-4921-8262-9421665a54f7": {
                   "id": "5a740f01-f729-4921-8262-9421665a54f7",
                   "type": "text",
-                  "data": {},
-                  "label": "Quelle",
-                  "required": true
+                  "data": { "required": true },
+                  "label": "Quelle"
                 },
                 "33154bb7-4396-435d-9201-2b07cad6f207": {
                   "id": "33154bb7-4396-435d-9201-2b07cad6f207",
                   "type": "text",
-                  "data": {},
-                  "label": "Lizenzhinweis",
-                  "required": true
+                  "data": { "required": true },
+                  "label": "Lizenzhinweis"
                 },
                 "ea0623b5-288c-445d-8535-5f7912e8ede0": {
                   "id": "ea0623b5-288c-445d-8535-5f7912e8ede0",
                   "type": "text",
-                  "data": {},
-                  "label": "Name des Urhebers",
-                  "required": true
+                  "data": { "required": true },
+                  "label": "Name des Urhebers"
                 },
                 "ba9bd3e4-6497-4f08-a563-e76e1d6d2159": {
                   "id": "ba9bd3e4-6497-4f08-a563-e76e1d6d2159",
                   "type": "text",
-                  "data": {},
-                  "label": "Name des Drittwerkes",
-                  "required": true
+                  "data": { "required": true },
+                  "label": "Name des Drittwerkes"
                 }
               }
             }
@@ -2623,9 +2621,9 @@
                 "value": "Nein"
               },
               { "id": "582a700b-3d08-4136-807c-3bf424240d42", "value": "Ja" }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "55ed1707-6f23-450b-b306-a443084dcdeb": {
           "id": "55ed1707-6f23-450b-b306-a443084dcdeb",
@@ -2644,27 +2642,9 @@
                 "id": "956d2373-ca95-4be2-ba25-b7dad9550b4c",
                 "value": "Die Veröffentlichung erfolgt hybrid (print und online)"
               }
-            ]
-          },
-          "required": false
-        },
-        "68cbbc03-a4a7-4bba-b476-97825d713510": {
-          "id": "68cbbc03-a4a7-4bba-b476-97825d713510",
-          "type": "multi-select",
-          "data": {
-            "answers": [
-              { "id": "26c42b1a-94fa-4ef6-ae94-69d822cfd875", "value": "" },
-              { "id": "6a455cc0-7b92-45e9-a10b-3011f039dc76", "value": "" },
-              { "id": "bc0457e8-800c-4448-936c-a407608f0e99", "value": "" }
-            ]
-          },
-          "required": false
-        },
-        "04019f63-97fc-46da-8b73-ab5e27a6759f": {
-          "id": "04019f63-97fc-46da-8b73-ab5e27a6759f",
-          "type": "text",
-          "data": {},
-          "required": false
+            ],
+            "required": false
+          }
         },
         "db645a46-2b62-4ea0-b7a9-9af55ed07f3a": {
           "id": "db645a46-2b62-4ea0-b7a9-9af55ed07f3a",
@@ -2672,9 +2652,9 @@
           "data": {
             "answers": [
               { "id": "273830a0-4d21-4cae-8ef0-dd5f80e043e1", "value": "" }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "a1252bd4-2dac-49f8-beef-8cc26892c7d6": {
           "id": "a1252bd4-2dac-49f8-beef-8cc26892c7d6",
@@ -2693,9 +2673,9 @@
                 "id": "dedb3bf6-ac03-43c3-80da-ae3cbfa0fe63",
                 "value": "Die Veröffentlichung erfolgt nur online"
               }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "a275aead-dc36-4cfd-a3fa-38cbd8ef882c": {
           "id": "a275aead-dc36-4cfd-a3fa-38cbd8ef882c",
@@ -2707,16 +2687,15 @@
                 "id": "4f6ffcd7-7b97-47ab-8a8f-3ab5d69f50cc",
                 "value": "Nein"
               }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "16436fdd-5211-4234-9f71-65543d33ea18": {
           "id": "16436fdd-5211-4234-9f71-65543d33ea18",
           "type": "text",
           "label": "Zusatzvereinbarung",
-          "data": {},
-          "required": true
+          "data": { "required": true }
         },
         "d285c28a-0531-4333-b2e7-b3f417f06c0a": {
           "id": "d285c28a-0531-4333-b2e7-b3f417f06c0a",
@@ -2731,9 +2710,9 @@
                 "id": "8782057e-cc84-4e0a-af09-e86e8b5740f9",
                 "value": "Creative Commons Namensnennung - Weitergabe unter gleichen Bedingungen 4.0 International (CC BY-SA 4.0)"
               }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "c42ee0fd-236f-48f9-89f7-935358f3a2fe": {
           "id": "c42ee0fd-236f-48f9-89f7-935358f3a2fe",
@@ -2748,9 +2727,9 @@
                 "id": "c19b5f82-193b-4e09-a66b-ad7f9390ac54",
                 "value": "Ja, in der Publikation sind Werke Dritter enthalten"
               }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "3035768d-ba66-4481-84df-03aa9e822a71": {
           "id": "3035768d-ba66-4481-84df-03aa9e822a71",
@@ -2769,21 +2748,19 @@
                 "id": "546f9758-c9e4-42bc-931f-bb64a1e1bead",
                 "value": "Ja, alle Drittwerke sind bekannt"
               }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "fce27978-be71-42de-9625-0703a27e0af3": {
           "id": "fce27978-be71-42de-9625-0703a27e0af3",
           "type": "text",
-          "data": {},
-          "required": false
+          "data": { "required": false }
         },
         "05ae7147-7124-4a73-8b73-ca2671d69cc3": {
           "id": "05ae7147-7124-4a73-8b73-ca2671d69cc3",
           "type": "text",
-          "data": {},
-          "required": false
+          "data": { "required": false }
         },
         "f49a9a75-eb56-4c62-8304-5f9c15c16f51": {
           "id": "f49a9a75-eb56-4c62-8304-5f9c15c16f51",
@@ -2795,15 +2772,14 @@
                 "value": "Nein"
               },
               { "id": "1afed917-5eb8-4948-a000-ebf58205c738", "value": "Ja" }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "7f688ae5-1909-4487-8eaa-12bce5c0bcb5": {
           "id": "7f688ae5-1909-4487-8eaa-12bce5c0bcb5",
           "type": "text",
-          "data": {},
-          "required": false
+          "data": { "required": false }
         },
         "8cf06cd7-36c4-4051-b891-c60e030848c7": {
           "id": "8cf06cd7-36c4-4051-b891-c60e030848c7",
@@ -2815,9 +2791,9 @@
                 "value": "Nein"
               },
               { "id": "fd2febf4-f4f0-48fe-a328-2a4fc6beb0f5", "value": "Ja" }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "d1689abc-6e6a-405d-95fa-b92d3c518fe0": {
           "id": "d1689abc-6e6a-405d-95fa-b92d3c518fe0",
@@ -2829,15 +2805,14 @@
                 "id": "c25eb620-011d-4cfb-87b6-37fba14c9cfa",
                 "value": "Nein"
               }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "a63e9f70-4c6e-43bc-a68c-c015c6695f38": {
           "id": "a63e9f70-4c6e-43bc-a68c-c015c6695f38",
           "type": "text",
-          "data": {},
-          "required": false
+          "data": { "required": false }
         },
         "d8ca84d5-74f1-4951-bf30-6a92e343f8f2": {
           "id": "d8ca84d5-74f1-4951-bf30-6a92e343f8f2",
@@ -2856,9 +2831,9 @@
                 "id": "990592ba-bfaa-4ec6-be16-0ae9c92bb64a",
                 "value": "Hybrid (print und online)"
               }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "d26edc20-b173-4f56-ba08-3b8169b59952": {
           "id": "d26edc20-b173-4f56-ba08-3b8169b59952",
@@ -2877,9 +2852,9 @@
                 "id": "5d6acb69-f838-445b-866e-5610e738ffb7",
                 "value": "Nein"
               }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "d5a5bc0d-5f3f-481c-a9c1-06865ed0e511": {
           "id": "d5a5bc0d-5f3f-481c-a9c1-06865ed0e511",
@@ -2907,9 +2882,9 @@
                 "id": "f0e6b2e9-7e71-4921-8b02-99ef9ca19eeb",
                 "value": "gängige Literaturverwaltungsprogramme"
               }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "7f2c9ab9-b4f9-4179-88f2-20931db74493": {
           "id": "7f2c9ab9-b4f9-4179-88f2-20931db74493",
@@ -2920,9 +2895,9 @@
                 "id": "057218f0-80fb-4315-977a-1166f3285a67",
                 "value": "Mit der Erstellung beginnen"
               }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "3a1ea603-c363-41ca-8d6c-f81c0ff8631f": {
           "id": "3a1ea603-c363-41ca-8d6c-f81c0ff8631f",
@@ -2937,9 +2912,9 @@
                 "id": "5a8d0cf4-148e-4c65-a854-352f62b72d60",
                 "value": "Ja, in der Publikation sind Werke Dritter enthalten"
               }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "8dd0b035-a392-4eb3-809d-091c7252392c": {
           "id": "8dd0b035-a392-4eb3-809d-091c7252392c",
@@ -2950,9 +2925,9 @@
                 "id": "5d0b4c1c-e582-4452-8714-d89a23bfdf94",
                 "value": "Weiter"
               }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "df74ccc1-b1b4-46da-b427-9632d22f3889": {
           "id": "df74ccc1-b1b4-46da-b427-9632d22f3889",
@@ -2963,16 +2938,15 @@
                 "id": "6fb1dcb3-dad1-4f92-8c58-1d17ad55965f",
                 "value": "Weiter"
               }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "f2585b14-ed6d-439c-ae17-748f8651170d": {
           "id": "f2585b14-ed6d-439c-ae17-748f8651170d",
           "type": "text",
           "label": "Anzahl der Druckexemplare",
-          "data": {},
-          "required": false
+          "data": { "required": false }
         },
         "13d71edd-3ee5-4dfc-83ce-5becb932273c": {
           "id": "13d71edd-3ee5-4dfc-83ce-5becb932273c",
@@ -2984,16 +2958,15 @@
                 "id": "c231480a-f6bc-41ec-9863-fe14d78126d0",
                 "value": "Nein"
               }
-            ]
+            ],
+            "required": true
           },
-          "required": true,
           "label": "Einhaltung wissenschaftlicher Standards"
         },
         "d4f20f9f-ddbd-49a5-81ec-58522ecaa4e0": {
           "id": "d4f20f9f-ddbd-49a5-81ec-58522ecaa4e0",
           "type": "text",
-          "data": {},
-          "required": true,
+          "data": { "required": true },
           "label": "Ort der Onlinestellung"
         },
         "a503a60f-5c14-4a07-bc15-a28b059052e9": {
@@ -3002,9 +2975,9 @@
           "data": {
             "answers": [
               { "id": "9d382a24-9a6a-4b88-8075-fc8eb43ebd0e", "value": "" }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "0396b66a-405f-4f81-9916-83f67bf90f1f": {
           "id": "0396b66a-405f-4f81-9916-83f67bf90f1f",
@@ -3020,21 +2993,19 @@
                 "id": "92986fd5-0a15-42d9-87ba-e03b646953ec",
                 "value": "Die Veröffentlichung erfolgt nur online"
               }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "bbade54d-3b68-4390-828e-04c7e43d1e14": {
           "id": "bbade54d-3b68-4390-828e-04c7e43d1e14",
           "type": "text",
-          "data": {},
-          "required": false
+          "data": { "required": false }
         },
         "b0fe922d-a670-4572-8dcb-6e50c094e103": {
           "id": "b0fe922d-a670-4572-8dcb-6e50c094e103",
           "type": "select",
-          "data": { "answers": [] },
-          "required": false
+          "data": { "answers": [], "required": false }
         },
         "2467f72a-ec27-4b2d-b8fe-3eb9a4157db2": {
           "id": "2467f72a-ec27-4b2d-b8fe-3eb9a4157db2",
@@ -3046,22 +3017,20 @@
                 "id": "4ca44631-7862-40ba-8374-89643ba8788b",
                 "value": "Nein"
               }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "17d9b0e1-929d-44cb-9301-c793718caa3a": {
           "id": "17d9b0e1-929d-44cb-9301-c793718caa3a",
           "type": "text",
           "label": "in Euro",
-          "data": {},
-          "required": true
+          "data": { "required": true }
         },
         "7094042f-fa02-47ae-8dbf-d4a9fbbef195": {
           "id": "7094042f-fa02-47ae-8dbf-d4a9fbbef195",
           "type": "multi-select",
-          "data": { "answers": [] },
-          "required": false
+          "data": { "answers": [], "required": false }
         },
         "479047bc-0809-4e40-bdff-e4e3a797db10": {
           "id": "479047bc-0809-4e40-bdff-e4e3a797db10",
@@ -3097,9 +3066,9 @@
                 "id": "0708de53-3349-451b-adf7-a2fbd93fe249",
                 "value": "FTP (File Transport Protocol)"
               }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "adf32307-a3c0-4977-a8a0-7f078d3fcb0d": {
           "id": "adf32307-a3c0-4977-a8a0-7f078d3fcb0d",
@@ -3110,15 +3079,14 @@
                 "id": "8dfda095-8971-4919-8c6a-f78c78e656e0",
                 "value": "Nein"
               }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "d5fd5314-8950-4ae6-bc3c-5fd7eecccad4": {
           "id": "d5fd5314-8950-4ae6-bc3c-5fd7eecccad4",
           "type": "text",
-          "data": {},
-          "required": false
+          "data": { "required": false }
         },
         "f3b1cda3-5643-4b3e-8e31-a540b8539951": {
           "id": "f3b1cda3-5643-4b3e-8e31-a540b8539951",
@@ -3129,9 +3097,9 @@
                 "id": "7a207423-83ca-4295-931e-1baf38da7453",
                 "value": "Download als Word-Dokument"
               }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "9a51cf61-42b3-46f1-ba0e-b2414f3877dc": {
           "id": "9a51cf61-42b3-46f1-ba0e-b2414f3877dc",
@@ -3142,9 +3110,9 @@
                 "id": "1217487d-71b4-4f5a-ae7e-21d46a405932",
                 "value": "Weiter"
               }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "83fcce86-647c-487c-9a08-d94085bb6208": {
           "id": "83fcce86-647c-487c-9a08-d94085bb6208",
@@ -3156,9 +3124,9 @@
                 "id": "47bdc8d6-e212-441f-946b-a86f2c6006ee",
                 "value": "Nein"
               }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "0af5ada7-bd90-4309-b747-03fa250a386e": {
           "id": "0af5ada7-bd90-4309-b747-03fa250a386e",
@@ -3198,9 +3166,9 @@
                 "id": "d733778c-de71-45d1-bdcf-c19d877fcf4a",
                 "value": "Zitationsstil"
               }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "45be4c98-1a66-457b-8500-81ac9a7b8888": {
           "id": "45be4c98-1a66-457b-8500-81ac9a7b8888",
@@ -3240,9 +3208,9 @@
                 "id": "eeab349c-f006-4081-a9b2-88791815cf30",
                 "value": "Drawing ML-Format"
               }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "dfe6aaf9-4dcd-47b3-8f08-5ce329ebf110": {
           "id": "dfe6aaf9-4dcd-47b3-8f08-5ce329ebf110",
@@ -3266,9 +3234,9 @@
                 "id": "5ed1fcd9-90ab-495e-9f4b-c84c7ef08854",
                 "value": "Die Bilder können sowohl als Teil des Manuskriptes als auch separat eingereicht werden"
               }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "987fdb1f-71dc-432a-ab7f-35699e0166d0": {
           "id": "987fdb1f-71dc-432a-ab7f-35699e0166d0",
@@ -3280,9 +3248,9 @@
                 "id": "bb6171d8-f8be-4c76-88f6-862936483568",
                 "value": "Nein"
               }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "60a10efc-2365-4f7d-9b04-c66a43aa5068": {
           "id": "60a10efc-2365-4f7d-9b04-c66a43aa5068",
@@ -3294,29 +3262,26 @@
                 "id": "61901398-445d-4cc6-b2c0-7b588f71f6a3",
                 "value": "Nein"
               }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "04f33b4e-556e-4e74-a103-50fa8b6a26e0": {
           "id": "04f33b4e-556e-4e74-a103-50fa8b6a26e0",
           "type": "text",
-          "data": {},
-          "required": false
+          "data": { "required": false }
         },
         "17350989-f472-4b82-b08a-6be189d6a5d8": {
           "id": "17350989-f472-4b82-b08a-6be189d6a5d8",
           "type": "text",
           "label": "in Euro",
-          "data": {},
-          "required": true
+          "data": { "required": true }
         },
         "3dd17609-7d99-41ab-80e5-f2f3a65bae05": {
           "id": "3dd17609-7d99-41ab-80e5-f2f3a65bae05",
           "type": "text",
           "label": "Zahlungsvereinbarung",
-          "data": {},
-          "required": false
+          "data": { "required": false }
         },
         "aca01489-3c2d-4805-bda9-6336e2981f0b": {
           "id": "aca01489-3c2d-4805-bda9-6336e2981f0b",
@@ -3326,36 +3291,32 @@
               { "id": "77401369-82b8-450e-ab77-c0349f3ea130", "value": "" },
               { "id": "577fd5a7-60a1-4130-ab27-3d92bfa1a436", "value": "" },
               { "id": "3231da7b-c9e9-4b8e-81b6-55f3f85b3d79", "value": "" }
-            ]
-          },
-          "required": false
+            ],
+            "required": false
+          }
         },
         "7a917290-791b-4069-8cb1-9f800f7803e0": {
           "id": "7a917290-791b-4069-8cb1-9f800f7803e0",
           "type": "text",
           "label": "Name der Autorin",
-          "data": {},
-          "required": false
+          "data": { "required": false }
         },
         "20d0c124-b1de-4824-8c5a-fd766eb8a961": {
           "id": "20d0c124-b1de-4824-8c5a-fd766eb8a961",
           "type": "text",
           "label": "Name des Verlages",
-          "data": {},
-          "required": false
+          "data": { "required": false }
         },
         "985ee390-37c0-44d0-9b4e-5c03cfcf8279": {
           "id": "985ee390-37c0-44d0-9b4e-5c03cfcf8279",
           "type": "text",
           "label": "Arbeitstitel des Werkes",
-          "data": {},
-          "required": false
+          "data": { "required": false }
         },
         "26bc885d-b6d6-4e8a-b8f6-a138f0d62ead": {
           "id": "26bc885d-b6d6-4e8a-b8f6-a138f0d62ead",
           "type": "text",
-          "data": {},
-          "required": false,
+          "data": { "required": false },
           "label": "Ort der Onlinestellung"
         }
       }

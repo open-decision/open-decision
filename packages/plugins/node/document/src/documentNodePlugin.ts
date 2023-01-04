@@ -48,6 +48,14 @@ export class DocumentNodePlugin extends NodePlugin<
 
       node.data.templateUuid = newTemplateUuid;
     };
+
+  deleteTemplateUuid = (nodeId: string) => (treeClient: TTreeClient) => {
+    const node = this.get.single(nodeId)(treeClient);
+
+    if (node instanceof Error) throw node;
+
+    delete node.data.templateUuid;
+  };
 }
 
 export type TDocumentNode = z.infer<DocumentNodePlugin["Type"]>;
