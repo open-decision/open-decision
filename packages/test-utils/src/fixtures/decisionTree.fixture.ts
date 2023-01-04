@@ -5,7 +5,13 @@ import { auroaYDoc } from "@open-decision/tree-type";
 
 export type PartialTree = Pick<
   DecisionTree,
-  "uuid" | "name" | "yDocument" | "status" | "createdAt" | "updatedAt"
+  | "uuid"
+  | "name"
+  | "yDocument"
+  | "status"
+  | "createdAt"
+  | "updatedAt"
+  | "hasPreview"
 >;
 
 export const createTreeFixture = (
@@ -17,6 +23,7 @@ export const createTreeFixture = (
   status: "ACTIVE",
   createdAt: new Date("2020-01-01T00:00:00.000Z"),
   updatedAt: new Date("2022-01-01T00:00:00.000Z"),
+  hasPreview: false,
   ...data,
 });
 

@@ -24,7 +24,7 @@
     "test": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "playwright test --config=../../playwright.config.ts --max-failures=20",
+        "command": "playwright test --config=./playwright.config.ts --max-failures=20",
         "cwd": "apps/e2e"
       },
       "dependsOn": [
@@ -41,7 +41,7 @@
     "test:single": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "playwright test --config=../../playwright.config.ts -g '{args.name}' --headed",
+        "command": "playwright test --config=./playwright.config.ts -g '{args.name}' --headed",
         "cwd": "apps/e2e"
       },
       "dependsOn": [
@@ -58,7 +58,7 @@
     "test:debug": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "PWDEBUG=1 playwright test --config=../../playwright.config.ts -g '{args.name}'",
+        "command": "PWDEBUG=1 playwright test --config=./playwright.config.ts -g '{args.name}' --project=chromium",
         "cwd": "apps/e2e"
       },
       "dependsOn": [

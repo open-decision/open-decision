@@ -1,5 +1,5 @@
 export default {
-  pageTitle: "Passwort vergessen | Open Decision",
+  pageTitle: "Passwort vergessen | OD",
   title: "Passwort zurücksetzen",
   description:
     "Bitte gib deine E-Mail Adresse an, mit der du dich bei Open Decision registriert hast.",

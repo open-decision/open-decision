@@ -1,9 +1,6 @@
 import { test as base } from "@playwright/test";
 import { DashboardPage, createDashboardPage } from "./pageModels/DashboardPage";
-import {
-  createNodeEditorPage,
-  NodeEditorPage,
-} from "./pageModels/NodeEditorPage";
+import { createEditorPage, EditorPage } from "./pageModels/EditorPage";
 import { ForgotPasswordPage } from "./pageModels/ForgotPasswordPage";
 import { LoginPage } from "./pageModels/LoginPage";
 import { RegisterPage } from "./pageModels/RegisterPage";
@@ -15,7 +12,7 @@ type Fixtures = {
   registerPage: RegisterPage;
   loginPage: LoginPage;
   forgotPasswordPage: ForgotPasswordPage;
-  nodeEditorPage: NodeEditorPage;
+  editorPage: EditorPage;
   prototypePage: PrototypePage;
   publishedPage: PublishedPage;
   _autoSnapshotSuffix: void;
@@ -62,8 +59,8 @@ export const pwTest = base.extend<Fixtures>({
 
     await forgotPasswordPage.cleanup();
   },
-  nodeEditorPage: async ({ page }, use) => {
-    const nodeEditorPage = await createNodeEditorPage(page);
+  editorPage: async ({ page }, use) => {
+    const nodeEditorPage = await createEditorPage(page);
     await nodeEditorPage.goto(nodeEditorPage.tree.uuid);
     await nodeEditorPage.editor.fitViewButton.click();
 

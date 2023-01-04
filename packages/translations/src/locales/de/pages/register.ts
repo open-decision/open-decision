@@ -1,5 +1,5 @@
 export default {
-  pageTitle: "Registrieren | Open Decision",
+  pageTitle: "Registrieren | OD",
   title: "Registrieren",
   description:
     "Registriere dich jetzt und erstelle dein erstes Open Decision-Projekt.",

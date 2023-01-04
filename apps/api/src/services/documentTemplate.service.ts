@@ -1,5 +1,5 @@
-import * as FiletypeLib from "file-type";
 import fetch from "node-fetch";
+import * as FiletypeLib from "file-type";
 import { APIError } from "@open-decision/type-classes";
 import { DocumentTemplate } from "@prisma/client";
 import * as s3Service from "./s3.service";
@@ -17,15 +17,16 @@ export const uploadDocumentTemplate = async (
   updateTemplateUuid: string | undefined = undefined
 ) => {
   const fileType = await FiletypeLib.fromBuffer(file);
-  if (
+  const isWordDocument =
     fileType == undefined ||
     !(
       fileType.mime ===
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     ) ||
-    !(fileType.ext === "docx")
-  ) {
-    throw new APIError({
+    !(fileType.ext === "docx");
+
+  if (isWordDocument) {
+    return new APIError({
       code: "INVALID_FILETYPE",
       message:
         "We only support .docx files, please create the template with Office 2007 or newer.",
@@ -41,7 +42,7 @@ export const uploadDocumentTemplate = async (
   );
 
   if (!uploadedDoc.Location) {
-    throw new APIError({
+    return new APIError({
       code: "TEMPLATE_UPLOAD_FAILED",
     });
   }
@@ -53,7 +54,7 @@ export const uploadDocumentTemplate = async (
 
   if (templateVariables instanceof APIError) {
     s3Service.deleteFile(config.DOCUMENT_TEMPLATE_BUCKET, s3Key);
-    throw templateVariables;
+    return templateVariables;
   }
 
   if (!updateTemplateUuid) {
@@ -76,7 +77,7 @@ export const uploadDocumentTemplate = async (
       }
     );
     if (updated.count == 0) {
-      throw new APIError({ code: "FILE_UPDATED_UPDATE_DB_ENTRY_FAILED" });
+      return new APIError({ code: "FILE_UPDATED_UPDATE_DB_ENTRY_FAILED" });
     }
     return getSingleDocument(userUuid, templateUuid);
   }

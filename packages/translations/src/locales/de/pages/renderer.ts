@@ -1,7 +1,7 @@
 export default {
-  pageTitle: "Renderer | Open Decision",
+  pageTitle: "Renderer | OD",
   preview: {
-    pageTitle: "Preview | Open Decision",
+    pageTitle: "Preview | OD",
     missingText: "Kein Antworttext",
   },
 };

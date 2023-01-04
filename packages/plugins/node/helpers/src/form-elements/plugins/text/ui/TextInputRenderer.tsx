@@ -20,6 +20,7 @@ export function TextInputRenderer({ inputId }: RendererComponentProps) {
       <Form.Input
         {...register(inputId, { required: input.data.required })}
         autoComplete="off"
+        className="bg-layer-1"
       />
     </Form.Field>
   );

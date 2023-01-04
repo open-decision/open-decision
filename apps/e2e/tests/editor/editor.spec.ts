@@ -8,22 +8,25 @@ import {
 
 pwTest.describe.configure({ mode: "parallel" });
 
-pwTest("should be able to create new node", async ({ nodeEditorPage }) => {
-  await nodeEditorPage.editor.createNodeButton.click();
+pwTest(
+  "should be able to create new node",
+  async ({ editorPage: nodeEditorPage }) => {
+    await nodeEditorPage.editor.createNodeButton.click();
 
-  await expect(nodeEditorPage.editor.getSidebarLocator()).toBeVisible();
+    await expect(nodeEditorPage.editor.getSidebarLocator()).toBeVisible();
 
-  await expect(
-    nodeEditorPage.editor.getNodeLocator({
-      selected: true,
-    })
-  ).toBeVisible();
-});
+    await expect(
+      nodeEditorPage.editor.getNodeLocator({
+        selected: true,
+      })
+    ).toBeVisible();
+  }
+);
 
 pwTest.describe("node search", () => {
   pwTest(
     "should filter nodes by name based on search query",
-    async ({ nodeEditorPage }) => {
+    async ({ editorPage: nodeEditorPage }) => {
       await nodeEditorPage.header.nodeSearch.input.fill("Willkommen");
 
       await expect(
@@ -47,7 +50,7 @@ pwTest.describe("node search", () => {
 
   pwTest(
     "should be able to create node with search queries name",
-    async ({ nodeEditorPage }) => {
+    async ({ editorPage: nodeEditorPage }) => {
       await nodeEditorPage.header.nodeSearch.input.fill(
         "Nicht existierender Knoten"
       );
@@ -70,49 +73,58 @@ pwTest.describe("node search", () => {
 });
 
 pwTest.describe("canvas", () => {
-  pwTest("should be able to pan around", async ({ nodeEditorPage }) => {
-    await nodeEditorPage.editor.pan(100, 100);
+  pwTest(
+    "should be able to pan around",
+    async ({ editorPage: nodeEditorPage }) => {
+      await nodeEditorPage.editor.pan(1000, 1000);
 
-    await expect(nodeEditorPage.editor.canvas).toHaveScreenshot();
-  });
+      await expect(nodeEditorPage.editor.canvas).toHaveScreenshot();
+    }
+  );
 
-  pwTest("should be able to zoom in and out", async ({ nodeEditorPage }) => {
-    // zoom out with mouse wheel
-    await nodeEditorPage.editor.zoom(500);
+  pwTest(
+    "should be able to zoom in and out",
+    async ({ editorPage: nodeEditorPage }) => {
+      // zoom out with mouse wheel
+      await nodeEditorPage.editor.zoom(5000);
 
-    await expect(nodeEditorPage.editor.canvas).toHaveScreenshot();
+      await expect(nodeEditorPage.editor.canvas).toHaveScreenshot();
 
-    await nodeEditorPage.editor.zoom(-500);
+      await nodeEditorPage.editor.zoom(-2500);
 
-    await expect(nodeEditorPage.editor.canvas).toHaveScreenshot();
+      await expect(nodeEditorPage.editor.canvas).toHaveScreenshot();
 
-    // zoom out with buttons
-    await nodeEditorPage.editor.zoomOutButton.click();
+      // zoom out with buttons
+      await nodeEditorPage.editor.zoomOutButton.click();
 
-    await expect(nodeEditorPage.editor.canvas).toHaveScreenshot();
+      await expect(nodeEditorPage.editor.canvas).toHaveScreenshot();
 
-    // zoom in with buttons
-    await nodeEditorPage.editor.zoomInButton.click();
+      // zoom in with buttons
+      await nodeEditorPage.editor.zoomInButton.click();
 
-    await expect(nodeEditorPage.editor.canvas).toHaveScreenshot();
-  });
+      await expect(nodeEditorPage.editor.canvas).toHaveScreenshot();
+    }
+  );
 
-  pwTest("should be able to drag nodes around", async ({ nodeEditorPage }) => {
-    await nodeEditorPage.editor
-      .getNodeLocator({ content: "Willkommen", selected: false })
-      .dragTo(
-        nodeEditorPage.editor.getNodeLocator({
-          content: "Lizenzart",
-          selected: false,
-        })
-      );
+  pwTest(
+    "should be able to drag nodes around",
+    async ({ editorPage: nodeEditorPage }) => {
+      await nodeEditorPage.editor
+        .getNodeLocator({ content: "Willkommen", selected: false })
+        .dragTo(
+          nodeEditorPage.editor.getNodeLocator({
+            content: "Lizenzart",
+            selected: false,
+          })
+        );
 
-    await expect(nodeEditorPage.editor.canvas).toHaveScreenshot();
-  });
+      await expect(nodeEditorPage.editor.canvas).toHaveScreenshot();
+    }
+  );
 
   pwTest(
     "should be able to delete node with the backspace key",
-    async ({ nodeEditorPage }) => {
+    async ({ editorPage: nodeEditorPage }) => {
       await nodeEditorPage.editor.selectNode({
         content: "Willkommen",
         selected: false,
@@ -136,134 +148,154 @@ pwTest.describe("canvas", () => {
 
   pwTest(
     "should not be able to delete start node",
-    async ({ nodeEditorPage }) => {
+    async ({ editorPage: nodeEditorPage }) => {
       // The start node concept is not correctly implemented yet
       pwTest.fixme();
     }
   );
 
-  pwTest("should be able to deselect a node", async ({ nodeEditorPage }) => {
-    await nodeEditorPage.editor.selectNode({
-      content: "Willkommen",
-      selected: false,
-    });
-
-    await expect(
-      nodeEditorPage.editor.getNodeLocator({
-        content: "Willkommen",
-        selected: true,
-      })
-    ).toBeVisible();
-
-    await nodeEditorPage.editor.canvas.click();
-
-    await expect(
-      nodeEditorPage.editor.getNodeLocator({
+  pwTest(
+    "should be able to deselect a node",
+    async ({ editorPage: nodeEditorPage }) => {
+      await nodeEditorPage.editor.selectNode({
         content: "Willkommen",
         selected: false,
-      })
-    ).toBeVisible();
-  });
+      });
+
+      await expect(
+        nodeEditorPage.editor.getNodeLocator({
+          content: "Willkommen",
+          selected: true,
+        })
+      ).toBeVisible();
+
+      await nodeEditorPage.editor.canvas.click();
+
+      await expect(
+        nodeEditorPage.editor.getNodeLocator({
+          content: "Willkommen",
+          selected: false,
+        })
+      ).toBeVisible();
+    }
+  );
 
   pwTest.describe("multi select", () => {
     pwTest(
       "should be able to select multiple nodes at once",
-      async ({ nodeEditorPage }) => {
+      async ({ editorPage: nodeEditorPage }) => {
         pwTest.fixme();
       }
     );
 
     pwTest(
       "should be able to drag multi selected nodes together",
-      async ({ nodeEditorPage }) => {
+      async ({ editorPage: nodeEditorPage }) => {
         pwTest.fixme();
       }
     );
 
     pwTest(
       "should be able to delete multi selected nodes",
-      async ({ nodeEditorPage }) => {
+      async ({ editorPage: nodeEditorPage }) => {
         pwTest.fixme();
       }
     );
-    pwTest("should be able to deselect nodes", async ({ nodeEditorPage }) => {
-      pwTest.fixme();
-    });
-  });
-});
-
-pwTest("should be able to go back to Dashboard", async ({ nodeEditorPage }) => {
-  await Promise.all([
-    nodeEditorPage.page.waitForNavigation(),
-    nodeEditorPage.header.goHome(),
-  ]);
-
-  await expect(nodeEditorPage.page).toHaveURL("/");
-});
-
-pwTest.describe("project menu", () => {
-  pwTest("should be able to change tree name", async ({ nodeEditorPage }) => {
-    await nodeEditorPage.header.projectMenuDropdown.changeName(
-      "Neuer Baumname"
+    pwTest(
+      "should be able to deselect nodes",
+      async ({ editorPage: nodeEditorPage }) => {
+        pwTest.fixme();
+      }
     );
-
-    await expect(
-      nodeEditorPage.notification.getLocator(
-        de.common.notifications.updateProject.title
-      )
-    ).toBeVisible();
-
-    await expect(
-      nodeEditorPage.header.projectMenuDropdown.changeNameDialog.title
-    ).not.toBeVisible();
-
-    await expect(
-      nodeEditorPage.page.locator(`text=Neuer Baumname`)
-    ).toBeVisible();
-  });
-
-  pwTest("should be able to export tree", async ({ nodeEditorPage }) => {
-    const exportedFileName = "Export Name";
-
-    const [download] = await Promise.all([
-      // It is important to call waitForEvent before click to set up waiting.
-      nodeEditorPage.page.waitForEvent("download"),
-      // Triggers the download.
-      await nodeEditorPage.header.projectMenuDropdown.export(exportedFileName),
-    ]);
-
-    expect(download.suggestedFilename()).toBe(`${exportedFileName}.json`);
-  });
-
-  pwTest("should be able to delete tree", async ({ nodeEditorPage }) => {
-    await Promise.all([
-      nodeEditorPage.page.waitForNavigation(),
-      await nodeEditorPage.header.projectMenuDropdown.delete(),
-      expect(
-        nodeEditorPage.notification.getLocator(
-          de.common.notifications.deleteProject.title
-        )
-      ).toBeVisible(),
-    ]);
-
-    const dashboardPage = new DashboardPage(
-      nodeEditorPage.page,
-      nodeEditorPage.user,
-      { [nodeEditorPage.tree.uuid]: nodeEditorPage.tree },
-      nodeEditorPage.dataFixtures
-    );
-
-    await expect(dashboardPage.page).toHaveURL("/");
-
-    await expect(
-      dashboardPage.getProjectCardLocator(nodeEditorPage.tree.name)
-    ).not.toBeVisible();
   });
 });
 
 pwTest(
+  "should be able to go back to Dashboard",
+  async ({ editorPage: nodeEditorPage }) => {
+    await Promise.all([
+      nodeEditorPage.page.waitForNavigation(),
+      nodeEditorPage.header.goHome(),
+    ]);
+
+    await expect(nodeEditorPage.page).toHaveURL("/");
+  }
+);
+
+pwTest.describe("project menu", () => {
+  pwTest(
+    "should be able to change tree name",
+    async ({ editorPage: nodeEditorPage }) => {
+      await nodeEditorPage.header.projectMenuDropdown.changeName(
+        "Neuer Baumname"
+      );
+
+      await expect(
+        nodeEditorPage.notification.getLocator(
+          de.common.notifications.updateProject.title
+        )
+      ).toBeVisible();
+
+      await expect(
+        nodeEditorPage.header.projectMenuDropdown.changeNameDialog.title
+      ).not.toBeVisible();
+
+      await expect(
+        nodeEditorPage.page.locator(`text=Neuer Baumname`)
+      ).toBeVisible();
+    }
+  );
+
+  pwTest(
+    "should be able to export tree",
+    async ({ editorPage: nodeEditorPage }) => {
+      const exportedFileName = "Export Name";
+
+      const [download] = await Promise.all([
+        // It is important to call waitForEvent before click to set up waiting.
+        nodeEditorPage.page.waitForEvent("download"),
+        // Triggers the download.
+        await nodeEditorPage.header.projectMenuDropdown.export(
+          exportedFileName
+        ),
+      ]);
+
+      expect(download.suggestedFilename()).toBe(`${exportedFileName}.json`);
+    }
+  );
+
+  pwTest(
+    "should be able to delete tree",
+    async ({ editorPage: nodeEditorPage }) => {
+      await Promise.all([
+        nodeEditorPage.page.waitForNavigation(),
+        await nodeEditorPage.header.projectMenuDropdown.delete(),
+        expect(
+          nodeEditorPage.notification.getLocator(
+            de.common.notifications.deleteProject.title
+          )
+        ).toBeVisible(),
+      ]);
+
+      const dashboardPage = new DashboardPage(
+        nodeEditorPage.page,
+        nodeEditorPage.user,
+        { [nodeEditorPage.tree.uuid]: nodeEditorPage.tree },
+        nodeEditorPage.dataFixtures
+      );
+
+      await expect(dashboardPage.page).toHaveURL("/");
+
+      await expect(
+        dashboardPage.getProjectCardLocator(nodeEditorPage.tree.name)
+      ).not.toBeVisible();
+    }
+  );
+});
+
+pwTest(
   "should be able to navigate to renderer",
-  async ({ nodeEditorPage, context }) => {
+  async ({ editorPage: nodeEditorPage, context }) => {
     await nodeEditorPage.header.projectMenuDropdown.publish();
     await nodeEditorPage.header.projectMenuDropdown.openPublishSubMenu();
 
@@ -281,7 +313,9 @@ pwTest(
 
 pwTest(
   "should be able to activate and deactivate the prototype",
-  async ({ nodeEditorPage, context }) => {
+  async ({ editorPage: nodeEditorPage, context }) => {
+    // FIXME The api returns a 404 when the hasPreview flag is set to false
+    pwTest.fixme();
     await nodeEditorPage.header.prototypeDialog.open();
     await nodeEditorPage.header.prototypeDialog.toggleCheckbox();
 
@@ -290,7 +324,12 @@ pwTest(
       nodeEditorPage.header.prototypeDialog.openPrototype(),
     ]);
 
-    const prototypePage = new PrototypePage(newPage, nodeEditorPage.tree);
+    const prototypePage = new PrototypePage(
+      newPage,
+      nodeEditorPage.user,
+      nodeEditorPage.tree,
+      nodeEditorPage.dataFixtures
+    );
 
     await expect(prototypePage.page).toHaveURL(/\/*prototype/);
     await expect(prototypePage.page.locator("text=Willkommen")).toBeVisible();

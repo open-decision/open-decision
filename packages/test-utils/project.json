@@ -4,6 +4,16 @@
   "projectType": "library",
   "implicitDependencies": ["prisma"],
   "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/test-utils",
+        "main": "packages/test-utils/src/index.ts",
+        "tsConfig": "packages/test-utils/tsconfig.lib.json",
+        "assets": ["packages/test-utils/*.md"]
+      }
+    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
