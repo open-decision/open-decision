@@ -26,6 +26,7 @@ import {
   updateNode,
   deletePluginEntity,
   updateEdge,
+  updateNodeFinal,
 } from "./mutaters";
 import { Tree } from "./type-classes";
 import {
@@ -162,6 +163,7 @@ export class TreeClient<TTree extends Tree.TTree> {
         position: updateNodePosition(this.tree),
         node: updateNode(this.tree),
         rendererLabel: udpateRendererLabel(this.tree),
+        final: updateNodeFinal(this.tree),
       },
     };
   }
