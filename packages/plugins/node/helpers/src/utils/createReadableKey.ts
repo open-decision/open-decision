@@ -1,6 +1,7 @@
 export const createReadableKey = (key: string) =>
   key
-    .replace(" ", "_")
+    .split(" ")
+    .join("_")
     .replace(/\u00df/g, "ss")
     .replace(/\u00e4/g, "ae")
     .replace(/\u00f6/g, "oe")
