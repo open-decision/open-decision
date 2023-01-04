@@ -17,6 +17,7 @@ import {
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { useTranslations } from "next-intl";
 import { PrototypButton } from "./PrototypButton";
+import themeTemplate from "./theme-template.json";
 
 type HeaderProps = {
   className?: string;
@@ -32,6 +33,11 @@ export const EditorHeader = ({ className, treeId, children }: HeaderProps) => {
 
   const theme = useTree((treeClient) => treeClient.get.theme());
   const addNotificationFromTemplate = useNotificationTemplate();
+
+  const templateFile = new Blob([JSON.stringify(themeTemplate)], {
+    type: "application/json",
+  });
+  const templateFileLink = URL.createObjectURL(templateFile);
 
   return (
     <BaseHeader
@@ -102,7 +108,11 @@ export const EditorHeader = ({ className, treeId, children }: HeaderProps) => {
                   </DropdownMenu.Item>
                 )}
                 <DropdownMenu.Item asChild>
-                  <a href="./theme-template.json" download className="gap-2">
+                  <a
+                    href={templateFileLink}
+                    download="theme-template.json"
+                    className="gap-2"
+                  >
                     <Icon className="mt-[2px]">
                       <DownloadIcon />
                     </Icon>
