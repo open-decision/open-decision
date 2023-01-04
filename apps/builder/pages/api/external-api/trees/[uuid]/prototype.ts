@@ -23,6 +23,7 @@ const handler: NextApiHandler = async (req, res) => {
         )}`,
         {
           headers: {
+            cache: "no-cache",
             authorization: `Bearer ${token}`,
             "Content-Type": req.headers["content-type"] ?? "application/json",
           },
@@ -61,6 +62,7 @@ async function fetchPrototypeUnauthenticated(uuid: string) {
       `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1${treePreview(uuid)}`,
       {
         headers: {
+          cache: "no-cache",
           "Content-Type": "application/json",
         },
         method: "GET",
