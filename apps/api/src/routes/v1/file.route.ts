@@ -10,6 +10,8 @@ import {
   documentPreviewSingle,
   documentPrototypeSingle,
   documentPublishedSingle,
+  templateUploadRoot,
+  templateRequestUploadToken,
 } from "@open-decision/api-specification";
 const fileRouter = express.Router();
 
@@ -22,8 +24,13 @@ const upload = multer({
 });
 
 fileRouter.post(
-  templateRoot,
+  templateRequestUploadToken,
   auth(),
+  documentTemplateController.requestDocumentTemplateUpload
+);
+
+fileRouter.post(
+  templateUploadRoot,
   upload.single("template"),
   documentTemplateController.uploadDocumentTemplate
 );
@@ -44,13 +51,6 @@ fileRouter.delete(
   templateSingle(":uuid"),
   auth(),
   documentTemplateController.deleteDocumentTemplate
-);
-
-fileRouter.patch(
-  templateSingle(":uuid"),
-  auth(),
-  upload.single("template"),
-  documentTemplateController.updateDocumentTemplate
 );
 
 fileRouter.get(

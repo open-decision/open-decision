@@ -12,7 +12,7 @@ export class HeaderComponent {
 
   async goHome() {
     await this.page
-      .locator(`header >> a >> text=${de.common.header.homeButtonHiddenLabel}`)
+      .getByAltText(de.common.header.homeButtonHiddenLabel)
       .click();
   }
 }

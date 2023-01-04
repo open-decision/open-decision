@@ -1,5 +1,5 @@
 export default {
-  pageTitle: "Dashboard | Open Decision",
+  pageTitle: "Dashboard | OD",
   title: "Meine Projekte",
   treeList: {
     fullError: "Beim laden deiner Bäume ist ein Fehler aufgetreten.",

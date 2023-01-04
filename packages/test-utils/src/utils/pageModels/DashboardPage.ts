@@ -1,6 +1,5 @@
 import { Locator, Page } from "@playwright/test";
 import { de } from "@open-decision/translations";
-
 import { CreateProjectDialogComponent } from "../componentModels/CreateProjectDialogComponent";
 import { HeaderComponent } from "../componentModels/HeaderComponent";
 import { NotificationComponent } from "../componentModels/NotificationComponent";

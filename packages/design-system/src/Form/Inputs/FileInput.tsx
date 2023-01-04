@@ -1,11 +1,22 @@
-import {
-  Icon as SystemIcon,
-  Label,
-  LabelProps,
-  VisuallyHidden,
-} from "@open-decision/design-system";
-import { DownloadIcon } from "@radix-ui/react-icons";
+import { Icon as SystemIcon } from "../../Icon";
+
+import { DownloadIcon, UploadIcon } from "@radix-ui/react-icons";
 import React, { ForwardedRef } from "react";
+import { Label, LabelProps } from "../../Label";
+import { VisuallyHidden } from "ariakit";
+
+const Icons = {
+  upload: (
+    <SystemIcon>
+      <UploadIcon />
+    </SystemIcon>
+  ),
+  download: (
+    <SystemIcon className="mt-[2px]">
+      <DownloadIcon />
+    </SystemIcon>
+  ),
+};
 
 export type FileInputProps = {
   className?: string;
@@ -14,6 +25,7 @@ export type FileInputProps = {
   disabled?: boolean;
   Icon?: React.ReactNode;
   accept?: React.InputHTMLAttributes<HTMLInputElement>["accept"];
+  type?: "upload" | "download";
 } & Omit<LabelProps, "onChange">;
 
 /**
@@ -27,19 +39,14 @@ const FileInputImpl = (
     disabled,
     Icon,
     accept,
+    type = "download",
     ...props
   }: FileInputProps,
   ref: ForwardedRef<HTMLLabelElement>
 ) => {
   return (
     <Label className={className} ref={ref} data-disabled={disabled} {...props}>
-      {Icon ? (
-        Icon
-      ) : (
-        <SystemIcon className="mt-[2px]">
-          <DownloadIcon />
-        </SystemIcon>
-      )}
+      {Icon ? Icon : Icons[type]}
       {children}
       <VisuallyHidden>
         <input

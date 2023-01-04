@@ -11,7 +11,6 @@ prisma.$use(async (params, next) => {
     (params.action == "delete" || params.action == "deleteMany")
   ) {
     const result = await next(params);
-    console.log(result);
     if (params.action == "deleteMany") {
       logger.error("Deleted from DB but not from S3", JSON.stringify(params));
       return result;

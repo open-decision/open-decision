@@ -13,7 +13,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       variables: z.object({}).passthrough(),
     })
     .parse(req.body);
-  console.log(JSON.stringify(req.body, null, 4));
+
   const docTemplate = await fetch(reqData.templateUrl, {
     method: "get",
   }).then((res) => {

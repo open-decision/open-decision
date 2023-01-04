@@ -2,7 +2,7 @@ import { de } from "@open-decision/translations";
 import { Locator, Page } from "@playwright/test";
 import { translate } from "../internationalize";
 
-export class NodeEditorComponent {
+export class EditorComponent {
   readonly page: Page;
   readonly createNodeButton: Locator;
   readonly canvas: Locator;

@@ -35,6 +35,8 @@ const baseNotifications = {
     variant: "success",
   },
   disablePreview: { title: "Vorschau deaktiviert", variant: "success" },
+  addTemplate: { title: "Dokumentenvorlage hinzugefügt.", variant: "success" },
+  deleteTemplate: { title: "Dokumentenvorlage gelöscht.", variant: "success" },
 };
 
 export const notifications = mapValues(

@@ -1,25 +1,16 @@
 import { type PlaywrightTestConfig, devices } from "@playwright/test";
 import * as dotenv from "dotenv";
-import path from "path";
 
 dotenv.config({ path: "../../.env" });
+dotenv.config({ path: "../../.env.local" });
 
 const config: PlaywrightTestConfig = {
-  globalSetup: require.resolve("./tools/testing/global-setup"),
+  workers: 3,
+  globalSetup: require.resolve("./global-setup"),
   testMatch: ["**/*.spec.ts"],
   forbidOnly: !!process.env["CI"],
   retries: process.env["CI"] ? 2 : 0,
-  outputDir: path.join(process.cwd(), "./test-results"),
-  reporter: [
-    [
-      "html",
-      {
-        open: "never",
-        outputFolder: path.join(process.cwd(), "./playwright-report"),
-      },
-    ],
-    ["list"],
-  ],
+  reporter: [["html", { open: "never" }], ["list"]],
   expect: {
     toHaveScreenshot: { maxDiffPixelRatio: 0.1 },
   },

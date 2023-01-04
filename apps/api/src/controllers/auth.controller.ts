@@ -127,7 +127,6 @@ const resetPassword = catchAsync(async (req: Request, res: Response) => {
 const sendVerificationEmail = catchAsync(
   async (req: Request, res: Response) => {
     const user = await UserHandler.findByUuidOrId(req.user.uuid);
-    console.log(user);
     if (!user) throw new APIError({ code: "UNAUTHENTICATED" });
     const verifyEmailToken = await tokenService.generateVerifyEmailToken(
       req.user.uuid
