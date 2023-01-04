@@ -39,6 +39,7 @@ export function PrototypButton({ treeId }: Props) {
         : addNotificationFromTemplate("disablePreview");
     },
   });
+
   const methods = Form.useForm({
     defaultValues: { preview: hasPreview },
   });
@@ -55,23 +56,23 @@ export function PrototypButton({ treeId }: Props) {
 
   return (
     <Popover.Root>
-      <Popover.Trigger asChild>
-        <Row>
+      <Row>
+        <Popover.Trigger asChild>
           <Button className="min-w-max rounded-none rounded-l-md">
             {t("button")}
           </Button>
-          <Separator orientation="vertical" />
-          <NextLink
-            href={link}
-            className={buttonClasses({}, "rounded-none rounded-r-md")}
-            target="_blank"
-          >
-            <Icon>
-              <PlayIcon />
-            </Icon>
-          </NextLink>
-        </Row>
-      </Popover.Trigger>
+        </Popover.Trigger>
+        <Separator orientation="vertical" />
+        <NextLink
+          href={link}
+          className={buttonClasses({}, "rounded-none rounded-r-md")}
+          target="_blank"
+        >
+          <Icon>
+            <PlayIcon />
+          </Icon>
+        </NextLink>
+      </Row>
       <Popover.Content sideOffset={15} asChild>
         <Stack className="z-10 max-w-[350px] p-5 gap-2">
           <Heading as="h2">{t("popover.title")}</Heading>
