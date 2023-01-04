@@ -74,30 +74,33 @@ export function PathCard({ onNodeCreate, onEdgeCreate, nodeId, edge }: Props) {
   return (
     <section className={stackClasses({}, sidebarCardClasses)}>
       <Form.Root methods={targetFormMethods}>
-        <Row className="justify-between w-full">
-          <Label htmlFor="target">Ziel</Label>
-          <Button
-            size="small"
-            variant="neutral"
-            type="button"
-            onClick={() => {
-              treeClient.edges.delete([edge.id]);
-            }}
-          >
-            <Icon>
-              <CrossCircledIcon />
-            </Icon>
-          </Button>
-        </Row>
-        <TargetSelector
-          id="target"
-          name="target"
-          onEdgeCreate={onEdgeCreate}
-          onNodeCreate={onNodeCreate}
-          edge={edge}
-          nodeId={nodeId}
-          selectOptions={nodeOptions}
-        />
+        <Form.Field
+          Label={
+            <Row className="justify-between w-full">
+              <Label>Ziel</Label>
+              <Button
+                size="small"
+                variant="neutral"
+                onClick={() => {
+                  treeClient.edges.delete([edge.id]);
+                }}
+              >
+                <Icon>
+                  <CrossCircledIcon />
+                </Icon>
+              </Button>
+            </Row>
+          }
+        >
+          <TargetSelector
+            name="target"
+            onEdgeCreate={onEdgeCreate}
+            onNodeCreate={onNodeCreate}
+            edge={edge}
+            nodeId={nodeId}
+            selectOptions={nodeOptions}
+          />
+        </Form.Field>
       </Form.Root>
       <Row className="justify-between">
         <Form.Label>(wenn) Bedingungen</Form.Label>
@@ -115,22 +118,20 @@ export function PathCard({ onNodeCreate, onEdgeCreate, nodeId, edge }: Props) {
       <Form.Root methods={conditionFormMethods}>
         {fields.map((field, index) => {
           return (
-            <Row className="justify-between gap-2" key={field.id}>
+            <Row className="justify-between" key={field.id}>
               <Controller
                 name={`${edge.id}.${index}.value`}
                 control={conditionFormMethods.control}
                 render={({ field }) => (
                   <SelectWithCombobox
                     {...field}
-                    onSelect={(newItem) => {
-                      if (!newItem) return;
-
-                      return CompareEdge.updateValue(
+                    onSelect={(newItem) =>
+                      CompareEdge.updateValue(
                         edge.id,
                         index,
                         newItem
-                      )(treeClient);
-                    }}
+                      )(treeClient)
+                    }
                     onCreate={(value) => {
                       if (!inputId) return;
 
@@ -151,7 +152,6 @@ export function PathCard({ onNodeCreate, onEdgeCreate, nodeId, edge }: Props) {
                     }
                     className="flex-1"
                     selectPlaceholder="Antwort auswählen..."
-                    withClearButton={false}
                   />
                 )}
               />
