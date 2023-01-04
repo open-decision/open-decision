@@ -50,7 +50,12 @@ export default function VorschauPage({ treeId }: PageProps) {
   const treeClientWithPlugins = data
     ? createTreeClientWithPlugins(data)
     : undefined;
-  if (isPaused || isLoading) return <LoadingSpinner />;
+  if (isPaused || isLoading)
+    return (
+      <Stack className="h-full" center>
+        <LoadingSpinner />
+      </Stack>
+    );
   if (!isSuccess || !treeClientWithPlugins) throw error;
 
   return (

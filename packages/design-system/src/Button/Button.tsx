@@ -30,7 +30,7 @@ const button = cva(
           "text-colorScheme11",
           "focus-visible:hover:bg-colorScheme5",
           "active:bg-colorScheme7",
-          "disabled:bg-colorScheme3",
+          "disabled:bg-gray3",
         ],
         tertiary: [
           "bg-transparent",
