@@ -11,7 +11,7 @@ import { DecisionNodePlugin } from "./decisionNodePlugin";
 const DecisionNode = new DecisionNodePlugin();
 
 export const DecisionNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
-  const { getAnswers, send, treeClient } = useInterpreter();
+  const { getAnswers, send, treeClient, state } = useInterpreter();
 
   const node = DecisionNode.get.single(nodeId)(treeClient);
   const isError = node instanceof Error;
