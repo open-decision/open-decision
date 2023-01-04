@@ -282,8 +282,6 @@ pwTest(
 pwTest(
   "should be able to activate and deactivate the prototype",
   async ({ nodeEditorPage, context }) => {
-    // FIXME The api returns a 404 when the hasPreview flag is set to false
-    pwTest.fixme();
     await nodeEditorPage.header.prototypeDialog.open();
     await nodeEditorPage.header.prototypeDialog.toggleCheckbox();
 
@@ -300,8 +298,6 @@ pwTest(
     await nodeEditorPage.header.prototypeDialog.toggleCheckbox();
 
     await prototypePage.page.reload();
-    await expect(
-      prototypePage.getErrorLocator(de.common.errors.PREVIEW_NOT_ENABLED.long)
-    ).toBeVisible();
+    await expect(prototypePage.page.locator("text=Willkommen")).toBeVisible();
   }
 );

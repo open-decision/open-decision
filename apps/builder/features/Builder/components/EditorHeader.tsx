@@ -11,6 +11,7 @@ import { Tree } from "@open-decision/tree-type";
 import { BlendingModeIcon } from "@radix-ui/react-icons";
 import { useTreeClient } from "@open-decision/tree-sync";
 import { useTranslations } from "next-intl";
+import { PrototypButton } from "./PrototypButton";
 
 type HeaderProps = {
   className?: string;
@@ -78,8 +79,9 @@ export const EditorHeader = ({ className, treeId, children }: HeaderProps) => {
         />
       }
     >
-      <Row className="gap-3 items-center w-full">
+      <Row className="gap-3 items-center w-full justify-between">
         <NodeSearch />
+        <PrototypButton treeId={treeId} />
       </Row>
       {children}
     </BaseHeader>

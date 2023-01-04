@@ -11,7 +11,6 @@ import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { useTranslations } from "next-intl";
 import { LoadingSpinner, Stack } from "@open-decision/design-system";
-import { PrototypButton } from "../../../features/Builder/components/PrototypButton";
 import { CreateNodeButton } from "../../../features/Builder/components/CreateNodeButton";
 import dynamic from "next/dynamic";
 import { useTreeClientWithPlugins } from "@open-decision/tree-clientWithPlugins";
@@ -61,9 +60,7 @@ const Content = ({ treeId }: PageProps) => {
 
   return (
     <Layout className="bg-layer-3 grid grid-cols-[max-content_1fr] grid-rows-[max-content_1fr]">
-      <EditorHeader treeId={treeId} className="col-span-full row-span-1 z-20">
-        <PrototypButton treeId={treeId} />
-      </EditorHeader>
+      <EditorHeader treeId={treeId} className="col-span-full row-span-1 z-20" />
       <SideMenu className="col-span-1 row-span-1 z-10 gap-2 bg-layer-1">
         <CreateNodeButton />
       </SideMenu>

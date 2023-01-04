@@ -10,6 +10,7 @@ export const getTreePreview =
     const prefix = config?.urlPrefix ?? context.urlPrefix;
 
     if (prefix) combinedUrl = prefix + combinedUrl;
+
     return await context.fetchFunction(
       combinedUrl,
       { cache: "no-cache" },
