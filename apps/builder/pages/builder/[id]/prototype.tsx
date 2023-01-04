@@ -44,7 +44,6 @@ export default function VorschauPage({ treeId }: PageProps) {
   const { isLoading, isPaused, data, error, isSuccess } =
     useTreeAPI().useTreePreview(treeId, {
       select: (result) => result.data,
-      staleTime: Infinity,
     });
 
   const treeClientWithPlugins = data
