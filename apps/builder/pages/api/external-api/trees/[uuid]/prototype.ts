@@ -32,6 +32,7 @@ const handler: NextApiHandler = async (req, res) => {
         {}
       );
 
+      res.setHeader("Cache-Control", "no-store");
       return res.status(status).json(data);
     } catch (error) {
       if (!(isAPIError(error) && error.code === "UNAUTHORIZED")) {
@@ -53,6 +54,7 @@ const handler: NextApiHandler = async (req, res) => {
     return res.status(response.statusCode).json(response);
   }
 
+  res.setHeader("Cache-Control", "no-store");
   return res.status(response.status).json(response.data);
 };
 
