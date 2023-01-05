@@ -5,7 +5,7 @@ dotenv.config({ path: "../../.env" });
 dotenv.config({ path: "../../.env.local" });
 
 const config: PlaywrightTestConfig = {
-  workers: 3,
+  workers: process.env["CI"] ? 1 : 3,
   globalSetup: require.resolve("./global-setup"),
   testMatch: ["**/*.spec.ts"],
   forbidOnly: !!process.env["CI"],

@@ -126,33 +126,48 @@ pwTest.describe("canvas", () => {
     "should be able to delete node with the backspace key",
     async ({ editorPage: nodeEditorPage }) => {
       await nodeEditorPage.editor.selectNode({
-        content: "Willkommen",
+        content: "Info Angestellte",
         selected: false,
       });
+      await nodeEditorPage.page.waitForTimeout(200);
+
       await nodeEditorPage.page.keyboard.press("Backspace");
+
+      await nodeEditorPage.editor.deleteNodesDialog.confirm();
 
       await expect(
         nodeEditorPage.editor.getNodeLocator({
-          content: "Willkommen",
+          content: "Info Angestellte",
           selected: false,
         })
       ).not.toBeVisible();
 
       await expect(
         nodeEditorPage.editor.getEdgeLocator(
-          "2ccf5f67-3149-4434-a5d6-51760b48fe2f_71b50b99-60fb-488f-a26d-a261b16292b5"
+          "95b1680c-dbd4-4a91-9975-5196702d9738_15a24be0-0b27-41a2-aa25-614a61dd1cbd_edge"
         )
       ).not.toBeVisible();
     }
   );
 
-  pwTest(
-    "should not be able to delete start node",
-    async ({ editorPage: nodeEditorPage }) => {
-      // The start node concept is not correctly implemented yet
-      pwTest.fixme();
-    }
-  );
+  pwTest("should not be able to delete start node", async ({ editorPage }) => {
+    await editorPage.editor.selectNode({
+      content: "Willkommen",
+      selected: false,
+    });
+
+    await editorPage.page.waitForTimeout(500);
+
+    await editorPage.page.keyboard.press("Backspace");
+
+    await expect(editorPage.editor.deleteNodesDialog.title).not.toBeVisible();
+
+    await expect(
+      editorPage.notification.getLocator(
+        de.common.notifications.cannotDeleteStartNode.title
+      )
+    ).toBeVisible();
+  });
 
   pwTest(
     "should be able to deselect a node",

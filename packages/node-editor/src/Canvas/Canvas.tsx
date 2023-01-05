@@ -1,5 +1,10 @@
 import * as React from "react";
-import ReactFlow, { EdgeTypes, NodeTypes, useViewport } from "reactflow";
+import ReactFlow, {
+  EdgeTypes,
+  NodeTypes,
+  useViewport,
+  NodeRemoveChange,
+} from "reactflow";
 import { ConnectionLine } from "./Edges/ConnectionLine";
 import { ODError } from "@open-decision/type-classes";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
@@ -8,7 +13,8 @@ import { useRFEdges } from "../state/useRFEdges";
 import { useSelectedNodeIds } from "../state/useSelectedNodes";
 import { useEditor } from "../state";
 import { useUnmount } from "react-use";
-import { twMerge } from "@open-decision/design-system";
+import { twMerge, useNotificationTemplate } from "@open-decision/design-system";
+import { NodeDeletionDialog } from "./NodeDeletionDialog";
 
 // const validConnectEvent = (
 //   target: MouseEvent["target"]
@@ -38,12 +44,14 @@ export function Canvas({
   onUnmount,
   style,
 }: Props) {
+  const [nodesToDelete, setNodesToDelete] = React.useState<string[]>([]);
+  const addNotificationFromTemplate = useNotificationTemplate();
+
   const startNodeId = useTree((treeClient) => treeClient.get.startNodeId());
   const nodes = useRFNodes();
   const edges = useRFEdges();
   const {
     closeNodeEditingSidebar,
-    removeSelectedNodes,
     addSelectedNodes,
     removeSelectedNode,
     addSelectedEdges,
@@ -70,6 +78,12 @@ export function Canvas({
       }
       style={style}
     >
+      <NodeDeletionDialog
+        open={nodesToDelete.length > 0}
+        onCancel={() => setNodesToDelete([])}
+        onSuccess={() => setNodesToDelete([])}
+        nodesToDelete={nodesToDelete}
+      />
       <ReactFlow
         onPaneClick={closeNodeEditingSidebar}
         nodeTypes={nodeTypes}
@@ -86,16 +100,25 @@ export function Canvas({
         minZoom={0.1}
         fitViewOptions={{ maxZoom: 1, minZoom: 0.1, padding: 0.2 }}
         onNodesChange={(nodeChanges) => {
+          const nodesToDelete = nodeChanges
+            .filter(
+              (change): change is NodeRemoveChange =>
+                change.type === "remove" && change.id !== startNodeId
+            )
+            .map((change) => change.id);
+
+          if (nodesToDelete.length > 0) {
+            setNodesToDelete(nodesToDelete);
+          }
+
           nodeChanges.forEach((nodeChange) => {
             if (!("dragging" in nodeChange)) setDragging(false);
 
+            if (nodeChange.type === "remove" && nodeChange.id === startNodeId) {
+              addNotificationFromTemplate("cannotDeleteStartNode");
+            }
+
             switch (nodeChange.type) {
-              case "remove":
-                if (nodeChange.id !== startNodeId) {
-                  removeSelectedNodes();
-                  treeClient.nodes.delete([nodeChange.id]);
-                }
-                break;
               case "position": {
                 if (nodeChange.dragging) {
                   setDragging(true);

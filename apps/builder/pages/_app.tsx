@@ -18,7 +18,6 @@ import "@open-decision/design-system/index.css";
 import { MessagesContext } from "@open-decision/translations";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useQueryClient } from "../features/Data/useQueryClient";
-import { Analytics } from "@vercel/analytics/react";
 
 // ------------------------------------------------------------------
 // xstate devtools
@@ -124,7 +123,6 @@ export default function AppWithContext({
           <App pageProps={pageProps} Component={Component} />
         </MessagesContext.Provider>
       </NextIntlProvider>
-      <Analytics />
     </>
   );
 }

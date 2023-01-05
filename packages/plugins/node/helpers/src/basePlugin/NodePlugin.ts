@@ -43,9 +43,6 @@ export abstract class NodePlugin<
       const newNode = treeClient.nodes.create.node(
         merge(
           {
-            name: `Knoten ${
-              Object.keys(treeClient.nodes.get.all()).length + 1
-            }`,
             type: this.typeName,
             data: this.defaultData,
           },
