@@ -3416,6 +3416,7 @@ __metadata:
     "@types/cookie": ^0.5.1
     "@types/react": ^18.0.25
     "@types/uuid": ^8.3.4
+    "@vercel/analytics": ^0.1.6
     "@welldone-software/why-did-you-render": ^7.0.1
     "@xstate/inspect": ^0.7.0
     "@xstate/react": ^3.0.1
@@ -6705,6 +6706,15 @@ __metadata:
     "@typescript-eslint/types": 5.44.0
     eslint-visitor-keys: ^3.3.0
   checksum: a012c888209e1d6ae684b2a44fd460ae5a80f5faf07bca4bda6c9c0d8c063ad3297d4c53f7151ae86cf1a43dee09625dc3ee72183323c91089c7288fd573c6f4
+  languageName: node
+  linkType: hard
+
+"@vercel/analytics@npm:^0.1.6":
+  version: 0.1.6
+  resolution: "@vercel/analytics@npm:0.1.6"
+  peerDependencies:
+    react: ^16.8||^17||^18
+  checksum: 4428e27778cac2ddb1b55fb2e499e04cbe7ddb76dac4fbcbc1e992729da03166807f72c28664ab0addad7223217baef55b5b7b5210a25967c3652b6b2c07d0be
   languageName: node
   linkType: hard
 
