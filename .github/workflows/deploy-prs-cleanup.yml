@@ -35,7 +35,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Install Vercel CLI
         run: yarn add global vercel@latest
-      - name: Remove Builder Deploy
-        run: vercel alias rm ${{env.OD_BUILDER_ENDPOINT}} --token ${{secrets.VERCEL_TOKEN}} --scope open-decision --yes
       - name: Remove env variables
         run: vercel env rm OD_BUILDER_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} --yes
+      - name: Remove Builder Deploy
+        run: vercel alias rm ${{env.OD_BUILDER_ENDPOINT}} --token ${{secrets.VERCEL_TOKEN}} --scope open-decision --yes

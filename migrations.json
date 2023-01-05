@@ -2,27 +2,11 @@
   "migrations": [
     {
       "cli": "nx",
-      "version": "15.3.1-beta.0",
-      "description": "Remove projects property from vite-tsconfig-paths plugin in vite.config.ts files.",
-      "factory": "./src/migrations/update-15-3-1/update-vite-tsconfig-paths",
-      "package": "@nrwl/vite",
-      "name": "update-vite-tsconfig-paths"
-    },
-    {
-      "cli": "nx",
-      "version": "15.3.4-beta.0",
-      "description": "Set the mode in configurations to match the configurationName.",
-      "factory": "./src/migrations/update-15-3-4/set-mode-in-configuration",
-      "package": "@nrwl/vite",
-      "name": "set-mode-in-configurations"
-    },
-    {
-      "cli": "nx",
-      "version": "15.4.3-beta.0",
-      "description": "Update @nrwl/vite:test reportsDirectory and outputs properties to point to correct paths.",
-      "factory": "./src/migrations/update-15-4-3/update-report-directory",
-      "package": "@nrwl/vite",
-      "name": "update-test-path-placeholder-vars"
+      "version": "15.0.12-beta.1",
+      "description": "Set project names in project.json files",
+      "implementation": "./src/migrations/update-15-1-0/set-project-names",
+      "package": "nx",
+      "name": "15.1.0-set-project-names"
     }
   ]
 }

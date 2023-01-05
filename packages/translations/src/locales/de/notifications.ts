@@ -39,6 +39,10 @@ const baseNotifications = {
   deleteTemplate: { title: "Dokumentenvorlage gelöscht.", variant: "success" },
   addTheme: { title: "Theme hinzugefügt.", variant: "success" },
   removeTheme: { title: "Theme gelöscht.", variant: "success" },
+  cannotDeleteStartNode: {
+    title: "Startknoten kann nicht gelöscht werden",
+    variant: "danger",
+  },
 };
 
 export const notifications = mapValues(

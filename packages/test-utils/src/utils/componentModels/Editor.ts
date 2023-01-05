@@ -1,6 +1,7 @@
 import { de } from "@open-decision/translations";
 import { Locator, Page } from "@playwright/test";
 import { translate } from "../internationalize";
+import { DeleteNodesDialogComponent } from "./DeleteNodesDialogComponent";
 
 export class EditorComponent {
   readonly page: Page;
@@ -9,6 +10,7 @@ export class EditorComponent {
   readonly zoomOutButton: Locator;
   readonly zoomInButton: Locator;
   readonly fitViewButton: Locator;
+  readonly deleteNodesDialog: DeleteNodesDialogComponent;
 
   constructor(page: Page) {
     this.page = page;
@@ -25,6 +27,7 @@ export class EditorComponent {
     this.fitViewButton = page.locator(
       `role=button[name="${de.builder.canvas.zoomInAndOut.fitView.hiddenLabel}"]`
     );
+    this.deleteNodesDialog = new DeleteNodesDialogComponent(page);
   }
 
   getNodeLocator(
@@ -49,7 +52,7 @@ export class EditorComponent {
   }
 
   async selectNode(
-    { content, selected }: { content?: string; selected: boolean } = {
+    { content, selected = true }: { content?: string; selected: boolean } = {
       content: undefined,
       selected: true,
     }
