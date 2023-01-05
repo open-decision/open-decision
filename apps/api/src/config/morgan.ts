@@ -11,7 +11,7 @@ const errorResponseFormat = `${getIpFormat()}:method :url :status - :response-ti
 
 export const morganHandler = morgan(defaultResponseFormat, {
   skip: (req, res) => res.statusCode >= 400,
-  stream: { write: (message) => logger.info(message.trim()) },
+  stream: { write: (message) => logger.http(message.trim()) },
 });
 
 export const morganErrorHandler = morgan(errorResponseFormat, {
