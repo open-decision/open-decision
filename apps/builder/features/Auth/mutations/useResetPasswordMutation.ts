@@ -29,7 +29,7 @@ export function useResetPasswordMutation(
             "Content-Type": "application/json",
           },
         },
-        {}
+        { origin: "client" }
       );
     },
     config

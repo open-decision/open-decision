@@ -21,7 +21,8 @@ pwTest.describe("builder login valid credentials", () => {
     await loginPage.login({ wait: false });
 
     await expect(loginPage.formError).toContainText(
-      de.common.errors.OFFLINE.long
+      de.common.errors.OFFLINE.long,
+      { timeout: 10000 }
     );
   });
 
@@ -40,7 +41,8 @@ pwTest.describe("builder login valid credentials", () => {
       await loginPage.login({ wait: false });
 
       await expect(loginPage.formError).toContainText(
-        de.common.errors.UNEXPECTED_ERROR.long
+        de.common.errors.UNEXPECTED_ERROR.long,
+        { timeout: 10000 }
       );
     }
   );

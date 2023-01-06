@@ -18,12 +18,12 @@ import { client } from "@open-decision/api-client";
 import { NodeRenderer } from "@open-decision/plugins-node-helpers";
 
 export const proxiedClient = client({
-  requestOrigin: "client",
   urlPrefix: `${process.env["NEXT_PUBLIC_OD_BUILDER_ENDPOINT"]}/api/external-api`,
   fetchFunction: safeFetchBlob,
   headers: {
     credentials: "include",
   },
+  config: { origin: "client" },
 });
 
 const DocumentNode = new DocumentNodePlugin();

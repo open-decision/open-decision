@@ -28,4 +28,5 @@ export const proxiedPlaywrightOD = async (request?: APIRequestContext) =>
   client({
     fetchFunction: fetchFn(request ?? (await globalRequest.newContext())),
     urlPrefix: "/api/external-api",
+    config: { origin: "test" },
   });

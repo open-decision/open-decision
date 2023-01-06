@@ -30,7 +30,7 @@ export function useRegisterMutation(
             "Content-Type": "application/json",
           },
         },
-        {}
+        { origin: "client" }
       );
     },
     config

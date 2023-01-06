@@ -18,6 +18,6 @@ export const deleteUser =
           ...context.headers,
         },
       },
-      {}
+      { ...context.config }
     );
   };

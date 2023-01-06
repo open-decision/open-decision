@@ -16,7 +16,7 @@ export const usePublicTree = <TData = FetchJSONReturn<TGetPublishedTreeOutput>>(
 ) => {
   return useQuery(
     publicTreeQueryKey(uuid),
-    () => directClient.publishedTrees.getSingle({ params: { uuid } }),
+    () => directClient("client").publishedTrees.getSingle({ params: { uuid } }),
     options
   );
 };

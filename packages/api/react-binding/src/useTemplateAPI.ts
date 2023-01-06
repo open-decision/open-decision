@@ -73,7 +73,7 @@ export const useTemplateAPI = () => {
     return useQuery(
       templateQueryKey(templateUuid),
       () =>
-        proxiedClient.file.template.getSingle({
+        proxiedClient("client").file.template.getSingle({
           params: { uuid: templateUuid },
         }),
       options
@@ -91,11 +91,13 @@ export const useTemplateAPI = () => {
     return useMutation(
       ["createTemplate"],
       async ({ template, treeUuid, displayName, templateUuid }) => {
-        const token = await proxiedClient.file.template.create.request({
+        const token = await proxiedClient(
+          "client"
+        ).file.template.create.request({
           body: { treeUuid, templateUuid },
         });
 
-        return await directClient.file.template.create.upload({
+        return await directClient("client").file.template.create.upload({
           body: {
             template,
             displayName,
@@ -132,7 +134,7 @@ export const useTemplateAPI = () => {
     return useMutation(
       ["deleteTemplate"],
       async ({ templateUuid }) => {
-        return await proxiedClient.file.template.delete({
+        return await proxiedClient("client").file.template.delete({
           params: { uuid: templateUuid },
         });
       },

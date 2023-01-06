@@ -29,7 +29,7 @@ const handler: NextApiHandler = async (req, res) => {
           },
           method: req.method,
         },
-        {}
+        { origin: "api route" }
       );
 
       res.setHeader("Cache-Control", "no-store");
@@ -69,7 +69,7 @@ async function fetchPrototypeUnauthenticated(uuid: string) {
         },
         method: "GET",
       },
-      {}
+      { origin: "api route" }
     );
   } catch (error) {
     return isAPIError(error)

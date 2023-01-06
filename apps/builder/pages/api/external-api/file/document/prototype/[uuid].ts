@@ -26,7 +26,7 @@ const fileDownload: NextApiHandler = async (req, res) => {
         headers,
         method: req.method,
       },
-      {}
+      { origin: "api route" }
     );
 
     res.setHeader("Cache-Control", "no-store");
@@ -55,7 +55,7 @@ const fileDownload: NextApiHandler = async (req, res) => {
           headers,
           method: "POST",
         },
-        {}
+        { origin: "api route" }
       );
 
       res.status(status).json(data);

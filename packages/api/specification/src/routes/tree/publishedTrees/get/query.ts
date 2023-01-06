@@ -20,6 +20,6 @@ export const getPublishedTrees =
           ...context.headers,
         },
       },
-      { validation: getPublishedTreesOutput }
+      { validation: getPublishedTreesOutput, ...context.config }
     );
   };

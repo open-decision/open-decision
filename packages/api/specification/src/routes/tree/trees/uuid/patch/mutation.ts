@@ -21,6 +21,6 @@ export const updateTree =
           ...context.headers,
         },
       },
-      {}
+      { ...context.config }
     );
   };

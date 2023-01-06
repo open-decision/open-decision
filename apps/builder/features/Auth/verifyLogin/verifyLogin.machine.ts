@@ -65,7 +65,7 @@ export const createVerifyLoginMachine = (
               body: JSON.stringify({ email, password }),
               method: "POST",
             },
-            {}
+            { origin: "client" }
           )
             .then(() => send("SUCCESSFULL_VERIFY_LOGIN"))
             .catch((error) =>

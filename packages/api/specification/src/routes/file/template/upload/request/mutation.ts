@@ -22,6 +22,6 @@ export const requestTemplateUpload =
           ...context.headers,
         },
       },
-      { validation: requestTemplateUploadOutput }
+      { validation: requestTemplateUploadOutput, ...context.config }
     );
   };

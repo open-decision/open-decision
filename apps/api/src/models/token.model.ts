@@ -40,6 +40,23 @@ async function storeInDb(
 async function findOne(constraints: FindTokenInterface) {
   return prisma.token.findFirst({
     where: constraints,
+    include: {
+      nextToken: true,
+    },
+  });
+}
+
+async function addGracePeriod(id: number, nextTokenId: number) {
+  return prisma.token.update({
+    where: {
+      id: id,
+    },
+    data: {
+      deleteAfter: dayjs().add(1, "minute").toISOString(),
+      nextToken: {
+        connect: { id: nextTokenId },
+      },
+    },
   });
 }
 
@@ -76,4 +93,5 @@ export const tokenHandler = {
   findOne,
   deleteFromDbById,
   deleteAllTokenOfUser,
+  addGracePeriod,
 };

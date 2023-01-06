@@ -239,7 +239,6 @@ describe("POST /v1/auth/forgot-password", () => {
     const resetPasswordToken = sendResetPasswordEmailSpy.mock.calls[0][1];
     // @ts-ignore
 
-    console.log(sendResetPasswordEmailSpy.mock.calls[0]);
     const dbResetPasswordTokenDoc = await tokenHandler.findOne({
       // @ts-ignore
       token: resetPasswordToken,

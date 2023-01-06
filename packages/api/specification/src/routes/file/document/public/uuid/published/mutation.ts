@@ -25,6 +25,6 @@ export const getDocumentPublishedSingle =
           ...context.headers,
         },
       },
-      {}
+      { ...context.config }
     );
   };

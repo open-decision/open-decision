@@ -18,6 +18,6 @@ export const getUser =
           ...context.headers,
         },
       },
-      { validation: getUserOutput }
+      { validation: getUserOutput, ...context.config }
     );
   };

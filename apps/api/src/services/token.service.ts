@@ -56,6 +56,7 @@ const saveToken = async (
     type,
     blacklisted
   );
+
   return storedToken;
 };
 
@@ -85,9 +86,8 @@ const verifyToken = async (token: string, type: TokenType) => {
 
   if (!tokenFromDatabase) {
     throw new Error("Token not found");
-  } else {
-    return tokenFromDatabase;
   }
+  return tokenFromDatabase;
 };
 
 /**
@@ -105,10 +105,43 @@ const refreshTokens = async (refreshToken: string) => {
     throw new Error();
   }
 
-  //Delete old refresh token
-  await tokenHandler.deleteFromDbById(refreshTokenFromDb.id);
+  const isTokenInGracePeriod =
+    refreshTokenFromDb.deleteAfter &&
+    dayjs().isBefore(dayjs(refreshTokenFromDb.deleteAfter));
+
+  const isTokenOutOfGracePeriod =
+    refreshTokenFromDb.deleteAfter &&
+    dayjs().isAfter(dayjs(refreshTokenFromDb.deleteAfter));
+
+  // Refresh token within grace period
+  if (isTokenInGracePeriod && refreshTokenFromDb.nextToken) {
+    const accessToken = await generateAccessToken(
+      user.uuid,
+      user.role === "DEVELOPER" ? true : false
+    );
+
+    return {
+      user: user,
+      access: accessToken,
+      refresh: {
+        token: refreshTokenFromDb.nextToken.token,
+        expires: refreshTokenFromDb.nextToken.expires,
+      },
+    };
+  }
+
+  // Refresh token with expired grace period
+  if (isTokenOutOfGracePeriod) {
+    await tokenHandler.deleteFromDbById(refreshTokenFromDb.id);
+    throw new APIError({ code: "UNAUTHENTICATED" });
+  }
+
   // Issue new access and refresh token
   const newTokens = await generateAuthTokens(user);
+  await tokenHandler.addGracePeriod(
+    refreshTokenFromDb.id,
+    newTokens.refresh.tokenInDb.id
+  );
 
   return {
     user: user,
@@ -158,7 +191,7 @@ const generateRefreshToken = async (userUuid: string) => {
     TokenType.REFRESH,
     config.REFRESH_TOKEN_SECRET
   );
-  await saveToken(
+  const tokenInDb = await saveToken(
     refreshToken,
     userUuid,
     refreshTokenExpires,
@@ -168,6 +201,7 @@ const generateRefreshToken = async (userUuid: string) => {
   return {
     token: refreshToken,
     expires: refreshTokenExpires.toString(),
+    tokenInDb,
   };
 };
 

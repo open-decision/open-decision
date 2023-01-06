@@ -7,7 +7,7 @@ import {
   useNotificationTemplate,
 } from "@open-decision/design-system";
 import { createTreeClientWithPlugins } from "@open-decision/tree-client";
-import { APIError, ODError } from "@open-decision/type-classes";
+import { isODError, ODError } from "@open-decision/type-classes";
 import {
   UseMutationOptions,
   useMutation,
@@ -18,7 +18,7 @@ import { createYjsDocumentIndexedDB } from "./utils/createYjsDocumentIndexedDB";
 
 export type useImportOptions = UseMutationOptions<
   FetchJSONReturn<TCreateTreeOutput>,
-  APIError<void>,
+  ODError,
   { event: ProgressEvent<FileReader> }
 >;
 
@@ -54,7 +54,7 @@ export const useImport = ({
 
         const data = validatedResult.data;
 
-        const response = await proxiedClient.trees.create({
+        const response = await proxiedClient("client").trees.create({
           body: { name: data.name },
         });
 
@@ -70,6 +70,13 @@ export const useImport = ({
     },
     {
       ...options,
+      retry: (failureCount, error) => {
+        if (isODError(error) && error.code === "IMPORT_INVALID_FILE") {
+          return false;
+        }
+
+        return failureCount < 3;
+      },
       onSuccess: (...params) => {
         if (notification !== false) {
           addNotificationFromTemplate(notification ?? "import");

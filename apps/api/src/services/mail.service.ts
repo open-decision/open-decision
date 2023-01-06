@@ -26,7 +26,6 @@ export function createEmailService() {
       logger.info("Connected to email server");
     })
     .catch((error) => {
-      console.log(error);
       logger.error(
         "Unable to connect to email server. Make sure you have configured the SMTP options in .env"
       );

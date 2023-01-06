@@ -28,6 +28,6 @@ export const updateTemplate =
           ...context.headers,
         },
       },
-      { validation: updateTemplateOutput }
+      { validation: updateTemplateOutput, ...context.config }
     );
   };

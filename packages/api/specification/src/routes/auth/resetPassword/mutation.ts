@@ -20,6 +20,6 @@ export const resetPassword =
           "Content-Type": "application/json",
         },
       },
-      { validation: resetPasswordOutput }
+      { validation: resetPasswordOutput, ...context.config }
     );
   };

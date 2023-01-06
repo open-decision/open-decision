@@ -22,6 +22,6 @@ export const createPublishedTreeOfTree =
           ...context.headers,
         },
       },
-      { validation: createPublishedTreeOutput }
+      { validation: createPublishedTreeOutput, ...context.config }
     );
   };

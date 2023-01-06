@@ -29,7 +29,7 @@
     "eslint": "^8.28.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-unused-imports": "^2.0.0",
-    "next": "13.0.7",
+    "next": "13.1.1",
     "nx": "15.4.4",
     "ts-node": "^10.9.1",
     "tslib": "^2.4.1",
@@ -71,7 +71,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "yjs": "13",
-    "next": "13"
+    "next": "13.1.1"
   },
   "volta": {
     "node": "16.17.0"

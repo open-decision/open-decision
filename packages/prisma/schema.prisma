@@ -9,83 +9,82 @@ generator client {
 }
 
 model DecisionTree {
-  uuid           String          @id @default(uuid()) @db.Uuid
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  status         TreeStatus      @default(ACTIVE)
-  hasPreview     Boolean         @default(false)
-  name           String
-  Tags           Tag[]
-  treeData       Json?           @db.JsonB
-  yDocument      String?
-  owner          User            @relation(fields: [ownerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  ownerUuid      String          @db.Uuid
-  publishedTrees PublishedTree[]
-  documentTemplates DocumentTemplate[]      
+  uuid              String             @id @default(uuid()) @db.Uuid
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  status            TreeStatus         @default(ACTIVE)
+  hasPreview        Boolean            @default(false)
+  name              String
+  Tags              Tag[]
+  treeData          Json?              @db.JsonB
+  yDocument         String?
+  owner             User               @relation(fields: [ownerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  ownerUuid         String             @db.Uuid
+  publishedTrees    PublishedTree[]
+  documentTemplates DocumentTemplate[]
 }
 
 model PublishedTree {
-  uuid           String       @id @default(uuid()) @db.Uuid
-  createdAt      DateTime     @default(now())
-  name           String
-  treeData       Json?        @db.JsonB
-  owner          User         @relation(fields: [ownerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  ownerUuid      String       @db.Uuid
-  originTree     DecisionTree @relation(fields: [originTreeUuid], references: [uuid])
-  originTreeUuid String       @db.Uuid
-  documentTemplates   DocumentTemplate[]
+  uuid               String              @id @default(uuid()) @db.Uuid
+  createdAt          DateTime            @default(now())
+  name               String
+  treeData           Json?               @db.JsonB
+  owner              User                @relation(fields: [ownerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  ownerUuid          String              @db.Uuid
+  originTree         DecisionTree        @relation(fields: [originTreeUuid], references: [uuid])
+  originTreeUuid     String              @db.Uuid
+  documentTemplates  DocumentTemplate[]
   publishedTemplates PublishedTemplate[]
 }
 
 model DocumentTemplate {
-  uuid              String       @id @default(uuid()) @db.Uuid
-  createdAt         DateTime     @default(now())
-  updatedAt         DateTime     @updatedAt
+  uuid              String              @id @default(uuid()) @db.Uuid
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
   displayName       String
   fileType          FileType
-  owner             User         @relation(fields: [ownerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  ownerUuid         String       @db.Uuid
+  owner             User                @relation(fields: [ownerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  ownerUuid         String              @db.Uuid
   s3BucketName      String
   s3Key             String
   fullS3Path        String?
-  decisionTree      DecisionTree @relation(fields: [treeUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  treeUuid          String        @db.Uuid
+  decisionTree      DecisionTree        @relation(fields: [treeUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  treeUuid          String              @db.Uuid
   publishedTrees    PublishedTree[]
   publishedVersions PublishedTemplate[]
 }
 
 model PublishedTemplate {
-  uuid                   String              @id @default(uuid()) @db.Uuid
-  createdAt              DateTime            @default(now())
-  updatedAt              DateTime            @updatedAt
-  displayName            String
-  fileType               FileType
-  owner                  User                @relation(fields: [ownerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  ownerUuid              String              @db.Uuid
-  s3BucketName           String
-  s3Key                  String
-  fullS3Path             String?
-  originalTemplateUuid   String              @db.Uuid
-  originalTemplate       DocumentTemplate?   @relation(fields: [originalTemplateUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  publishedTree         PublishedTree       @relation(fields: [publishedTreeUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  publishedTreeUuid      String              @db.Uuid
-
+  uuid                 String            @id @default(uuid()) @db.Uuid
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+  displayName          String
+  fileType             FileType
+  owner                User              @relation(fields: [ownerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  ownerUuid            String            @db.Uuid
+  s3BucketName         String
+  s3Key                String
+  fullS3Path           String?
+  originalTemplateUuid String            @db.Uuid
+  originalTemplate     DocumentTemplate? @relation(fields: [originalTemplateUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  publishedTree        PublishedTree     @relation(fields: [publishedTreeUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  publishedTreeUuid    String            @db.Uuid
 }
 
 model User {
-  id               Int              @unique @default(autoincrement())
-  uuid             String           @id @default(uuid()) @db.Uuid
-  name             String?
-  role             Role             @default(USER)
-  email            String           @unique
-  password         String
-  emailIsVerified  Boolean          @default(false)
-  DecisionTrees    DecisionTree[]
-  PublishedTrees   PublishedTree[]
-  Token            Token[]
-  UserTags         Tag[]
-  WhitelistEntries WhitelistEntry[]
-  DocumentTemplates DocumentTemplate[]
+  id                 Int                 @unique @default(autoincrement())
+  uuid               String              @id @default(uuid()) @db.Uuid
+  name               String?
+  role               Role                @default(USER)
+  email              String              @unique
+  password           String
+  emailIsVerified    Boolean             @default(false)
+  DecisionTrees      DecisionTree[]
+  PublishedTrees     PublishedTree[]
+  Token              Token[]
+  UserTags           Tag[]
+  WhitelistEntries   WhitelistEntry[]
+  DocumentTemplates  DocumentTemplate[]
   PublishedTemplates PublishedTemplate[]
 }
 
@@ -101,13 +100,17 @@ model WhitelistEntry {
 }
 
 model Token {
-  id          Int       @id @default(autoincrement())
-  token       String
-  type        TokenType
-  owner       User      @relation(fields: [ownerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
-  ownerUuid   String    @db.Uuid
-  expires     DateTime
-  blacklisted Boolean   @default(false)
+  id            Int       @id @default(autoincrement())
+  token         String
+  type          TokenType
+  owner         User      @relation(fields: [ownerUuid], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+  ownerUuid     String    @db.Uuid
+  expires       DateTime
+  deleteAfter   DateTime?
+  nextToken     Token?    @relation("relatedToken", fields: [nextTokenId], references: [id])
+  nextTokenId   Int?      @unique
+  previousToken Token?    @relation("relatedToken")
+  blacklisted   Boolean   @default(false)
 }
 
 model Tag {

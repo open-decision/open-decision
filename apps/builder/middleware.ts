@@ -8,7 +8,7 @@ export const middleware: NextMiddleware = async (request) => {
   const OD = client({
     urlPrefix: `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1`,
     fetchFunction: safeFetchJSON,
-    config: { retry: 3 },
+    config: { origin: "middleware" },
   });
 
   try {
@@ -18,7 +18,7 @@ export const middleware: NextMiddleware = async (request) => {
     const response = NextResponse.next();
 
     if (token) {
-      return;
+      return response;
     }
 
     if (refreshToken) {
@@ -48,7 +48,7 @@ export const middleware: NextMiddleware = async (request) => {
       message: "The user is not authenticated",
     });
   } catch (error) {
-    console.error(error);
+    console.error("middleware", error);
     const url = request.nextUrl.clone();
     url.pathname = "/auth/login";
 

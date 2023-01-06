@@ -19,6 +19,6 @@ export const deletePublishedTree =
           ...context.headers,
         },
       },
-      {}
+      { ...context.config }
     );
   };

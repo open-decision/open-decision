@@ -21,6 +21,6 @@ export const updateUser =
         },
         method: "PATCH",
       },
-      {}
+      { ...context.config }
     );
   };

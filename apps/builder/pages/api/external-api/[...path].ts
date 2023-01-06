@@ -25,7 +25,7 @@ const ProxyAPI: NextApiHandler = async (req, res) => {
         headers,
         method: req.method,
       },
-      {}
+      { origin: "api route" }
     );
 
     res.setHeader("Cache-Control", "no-store");
@@ -33,7 +33,7 @@ const ProxyAPI: NextApiHandler = async (req, res) => {
 
     return res.status(status).json(data);
   } catch (error) {
-    console.error(error);
+    console.error("general proxy", error);
     const errorToReturn = isAPIError(error)
       ? error
       : new APIError({

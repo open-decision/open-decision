@@ -14,6 +14,6 @@ export const getTreePreview =
     return await context.fetchFunction(
       combinedUrl,
       { cache: "no-cache" },
-      { validation: getTreePreviewOutput }
+      { validation: getTreePreviewOutput, ...context.config }
     );
   };

@@ -17,7 +17,7 @@ export function useLogoutMutation(
         {
           method: "POST",
         },
-        {}
+        { origin: "client" }
       );
     },
     { onSuccess: () => router.push("/auth/login"), ...config }

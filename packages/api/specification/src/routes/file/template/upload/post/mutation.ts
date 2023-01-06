@@ -28,6 +28,6 @@ export const createTemplate =
         method: "POST",
         headers: context.headers,
       },
-      { validation: createTemplateOutput }
+      { validation: createTemplateOutput, ...context.config }
     );
   };

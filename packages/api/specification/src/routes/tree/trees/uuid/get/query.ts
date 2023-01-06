@@ -19,6 +19,6 @@ export const getTree =
           ...context.headers,
         },
       },
-      { validation: getTreeOutput }
+      { validation: getTreeOutput, ...context.config }
     );
   };

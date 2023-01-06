@@ -26,7 +26,7 @@ export function useLoginMutation(
             "Content-Type": "application/json",
           },
         },
-        {}
+        { origin: "client" }
       );
     },
     config

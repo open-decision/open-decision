@@ -13,6 +13,6 @@ export const getTreeData =
     return await context.fetchFunction(
       combinedUrl,
       { cache: "no-cache" },
-      { validation: getTreeDataOutput }
+      { validation: getTreeDataOutput, ...context.config }
     );
   };

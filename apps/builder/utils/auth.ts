@@ -1,5 +1,4 @@
-import { client } from "@open-decision/api-client";
-import { safeFetchJSON } from "@open-decision/api-helpers";
+import { directClient } from "@open-decision/api-client";
 import { TLoginOutput } from "@open-decision/api-specification";
 import { APIError, isAPIError } from "@open-decision/type-classes";
 import { serialize } from "cookie";
@@ -43,11 +42,6 @@ export const setCookieHeaders = (
   ]);
 };
 
-const OD = client({
-  urlPrefix: `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1`,
-  fetchFunction: safeFetchJSON,
-});
-
 export const withAuthRefresh =
   (next: NextApiHandler) =>
   async (req: NextApiRequest, res: NextApiResponse) => {
@@ -60,9 +54,11 @@ export const withAuthRefresh =
     }
 
     // When there is a valid refreshToken we can use it to refresh the token
-    if (refreshToken) {
-      try {
-        const { data: authData } = await OD.auth.refreshToken({
+    try {
+      if (refreshToken) {
+        const { data: authData } = await directClient(
+          "api auth refresh"
+        ).auth.refreshToken({
           body: { refreshToken },
         });
 
@@ -71,20 +67,20 @@ export const withAuthRefresh =
         req.cookies["refreshToken"] = authData.access.refreshToken.token;
 
         return next(req, res);
-      } catch (error) {
-        if (isAPIError(error)) {
-          throw error;
-        }
-
-        throw new APIError({
-          code: "UNAUTHENTICATED",
-          message: "The user is not authenticated",
-        });
       }
-    }
 
-    throw new APIError({
-      code: "UNAUTHENTICATED",
-      message: "The user is not authenticated",
-    });
+      throw new APIError({
+        code: "UNAUTHENTICATED",
+        message: "The user is not authenticated",
+      });
+    } catch (error) {
+      const errorToReturn = isAPIError(error)
+        ? error
+        : new APIError({
+            code: "UNEXPECTED_ERROR",
+            message: "An unexpected error occurred.",
+          });
+
+      return res.status(errorToReturn.statusCode).json(errorToReturn);
+    }
   };

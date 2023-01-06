@@ -20,6 +20,6 @@ export const forgotPassword =
           "Content-Type": "application/json",
         },
       },
-      { validation: forgotPasswordOutput }
+      { validation: forgotPasswordOutput, ...context.config }
     );
   };

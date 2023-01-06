@@ -20,6 +20,6 @@ export const getTemplateSingle =
           ...context.headers,
         },
       },
-      { validation: getTemplateSingleOutput }
+      { validation: getTemplateSingleOutput, ...context.config }
     );
   };

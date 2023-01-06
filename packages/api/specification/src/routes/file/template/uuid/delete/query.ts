@@ -20,6 +20,6 @@ export const deleteTemplateSingle =
           ...context.headers,
         },
       },
-      { validation: deleteTemplateSingleOutput }
+      { validation: deleteTemplateSingleOutput, ...context.config }
     );
   };
