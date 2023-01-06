@@ -87,7 +87,10 @@ const refreshTokens = catchAsync(async (req: Request, res: Response) => {
     user: pickSafeUserProperties(refreshedTokens.user),
     access: {
       token: refreshedTokens?.access,
-      refreshToken: refreshedTokens?.refresh,
+      refreshToken: {
+        token: refreshedTokens?.refresh.token,
+        expires: refreshedTokens?.refresh.expires,
+      },
     },
   } as TRefreshTokenOutput);
 });

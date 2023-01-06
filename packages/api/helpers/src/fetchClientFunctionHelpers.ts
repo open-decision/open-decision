@@ -22,12 +22,12 @@ export const Context = z.object({
   urlPrefix: z.string().optional(),
   authPrefix: z.string().optional(),
   token: z.string().optional(),
-  requestOrigin: z.string().optional(),
 });
 
 type Config<TValidation extends z.ZodTypeAny = z.ZodTypeAny> = {
   validation?: TValidation;
   retry?: number;
+  origin: string;
 };
 
 export type FetchJSONFunction = <
@@ -35,13 +35,13 @@ export type FetchJSONFunction = <
 >(
   url: string,
   { body, headers, ...options }: RequestInit,
-  { validation, retry }: Config<TValidation>
+  { validation, retry, origin }: Config<TValidation>
 ) => Promise<FetchJSONReturn<z.output<TValidation>>>;
 
 export type FetchBlobFunction = (
   url: string,
   { body, headers, ...options }: RequestInit,
-  { retry }: Omit<Config, "validation">
+  { retry, origin }: Omit<Config, "validation">
 ) => Promise<FetchBlobReturn>;
 
 export type TContext<
@@ -51,7 +51,7 @@ export type TContext<
 > = z.infer<typeof Context> & {
   headers?: HeadersInit;
   fetchFunction: FetchFunction;
-  config?: Pick<Config<any>, "retry">;
+  config: Pick<Config<any>, "retry" | "origin">;
 };
 
 export type FetchJSONReturn<TData> = { data: TData; status: number };

@@ -13,6 +13,7 @@ const config: PlaywrightTestConfig = {
   reporter: [["html", { open: "never" }], ["list"]],
   expect: {
     toHaveScreenshot: { maxDiffPixelRatio: 0.1 },
+    timeout: 10000,
   },
   use: {
     baseURL: process.env["OD_BUILDER_ENDPOINT"],

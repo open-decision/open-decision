@@ -20,6 +20,6 @@ export const getTemplateCollection =
           authorization: `Bearer ${context.token}`,
         },
       },
-      { validation: getTemplateCollectionOutput }
+      { validation: getTemplateCollectionOutput, ...context.config }
     );
   };

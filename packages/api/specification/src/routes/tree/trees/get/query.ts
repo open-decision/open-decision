@@ -23,6 +23,6 @@ export const getTrees =
           ...context.headers,
         },
       },
-      { validation: getTreesOutput }
+      { validation: getTreesOutput, ...context.config }
     );
   };

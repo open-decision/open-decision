@@ -12,7 +12,7 @@ const verifyLogin: NextApiHandler = async (req, res) => {
         body: JSON.stringify(req.body),
         method: req.method,
       },
-      { validation: loginOutput }
+      { validation: loginOutput, origin: "client" }
     );
 
     setCookieHeaders(req, res, authResponse.data);
@@ -20,7 +20,7 @@ const verifyLogin: NextApiHandler = async (req, res) => {
     res.setHeader("Cache-Control", "no-store");
     return res.status(200).json({ success: true });
   } catch (error) {
-    console.error(error);
+    console.error("verifyLogin", error);
     if (isAPIError(error)) {
       return res.status(error.statusCode).json(error);
     }

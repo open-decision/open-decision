@@ -24,13 +24,13 @@ const fileDownload: NextApiHandler = async (req, res) => {
         headers,
         method: req.method,
       },
-      {}
+      { origin: "api route" }
     );
 
     res.setHeader("Cache-Control", "no-store");
     return res.status(status).send(data.body);
   } catch (error) {
-    console.error(error);
+    console.error("fileDownload", error);
     const errorToReturn = isAPIError(error)
       ? error
       : new APIError({

@@ -20,6 +20,6 @@ export const verifyEmail =
           "Content-Type": "application/json",
         },
       },
-      { validation: verifyEmailOutput }
+      { validation: verifyEmailOutput, ...context.config }
     );
   };

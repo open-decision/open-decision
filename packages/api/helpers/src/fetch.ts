@@ -18,17 +18,22 @@ const getResponseData = async (response: Response) => {
 export const safeFetch = async (
   url: string,
   { body, headers, ...options }: RequestInit,
-  { retry = 0 }: { retry?: number }
+  { retry = 0 }: { retry?: number; origin: string }
 ) => {
   let retries = 0;
 
   const fetchFn = async (): Promise<Response> => {
     try {
-      return await fetch(url, {
-        headers,
-        body,
-        ...options,
-      });
+      return (await Promise.race([
+        fetch(url, {
+          headers,
+          body,
+          ...options,
+        }),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("Timeout")), 10000)
+        ),
+      ])) as Response;
     } catch (error) {
       if (retries < retry) {
         retries++;
@@ -46,7 +51,11 @@ export const safeFetch = async (
   let response = await fetchFn();
 
   try {
-    if (response?.status >= 400) {
+    if (response.status >= 400 && response.status < 500) {
+      throw await getResponseData(response);
+    }
+
+    if (response.status >= 500) {
       if (retries < retry) {
         retries++;
         response = await fetchFn();

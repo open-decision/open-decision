@@ -13,7 +13,7 @@ import { useTranslations } from "next-intl";
 import { EmailField } from "../../../../components/EmailInput";
 import { PasswordInput } from "../../../../components/PasswordInput";
 import { ErrorMessage } from "../../../../components/Error/ErrorMessage";
-import { APIErrors } from "@open-decision/type-classes";
+import { APIErrors, isAPIError } from "@open-decision/type-classes";
 import Link from "next/link";
 
 type Data = { email: string };
@@ -30,7 +30,7 @@ const useIsOnWhiteListQuery = (
           body: JSON.stringify(data),
           method: "POST",
         },
-        {}
+        { origin: "client" }
       );
 
       if (!result.data.isWhitelisted) throw new Error();
@@ -106,6 +106,13 @@ function RegisterForm({ email }: { email?: string }) {
     isLoading,
     isError,
   } = useRegisterMutation({
+    retry: (failureCount, error) => {
+      if (isAPIError(error) && error.code === "EMAIL_ALREADY_USED") {
+        return false;
+      }
+
+      return failureCount < 3;
+    },
     onSuccess: () => router.push("/"),
     onError: (error) => {
       const passwordFieldError = error?.errors?.body?.password

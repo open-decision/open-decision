@@ -43,6 +43,11 @@ const baseNotifications = {
     title: "Startknoten kann nicht gelöscht werden",
     variant: "danger",
   },
+  loginExpired: {
+    title: "Dein Login ist abgelaufen",
+    content: "Bitte logge dich erneut ein.",
+    variant: "danger",
+  },
 };
 
 export const notifications = mapValues(

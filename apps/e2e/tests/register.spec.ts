@@ -6,8 +6,6 @@ pwTest.describe.configure({ mode: "parallel" });
 
 pwTest.describe("register with valid data", () => {
   pwTest("successfull register", async ({ registerPage }) => {
-    // Email credits exhausted. Service needs to be mocked.
-    pwTest.fixme();
     await registerPage.register();
 
     await expect(
@@ -21,11 +19,12 @@ pwTest.describe("register with valid data", () => {
       route.abort("internetdisconnected")
     );
 
-    await registerPage.register(),
-      await expect(
-        registerPage.page.locator(`text=${de.common.errors.OFFLINE.long}`),
-        "should show error that user is offline"
-      ).toBeVisible();
+    await registerPage.register();
+
+    await expect(
+      registerPage.page.locator(`text=${de.common.errors.OFFLINE.long}`),
+      "should show error that user is offline"
+    ).toBeVisible({ timeout: 10000 });
   });
 });
 

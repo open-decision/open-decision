@@ -38,7 +38,6 @@ describe("Auth middleware", () => {
     const next = vi.fn();
 
     await auth()(req, httpMocks.createResponse(), next);
-    console.log(JSON.stringify(next.mock.calls[0]));
 
     expect(next).toHaveBeenCalledWith(expect.any(APIError));
     expect(next).toHaveBeenCalledWith(
@@ -153,7 +152,6 @@ describe("Auth middleware", () => {
 
     await auth("manageUsers")(req, httpMocks.createResponse(), next);
 
-    console.log(next.mock.lastCall);
     expect(next).toHaveBeenCalledWith(
       expect.objectContaining({
         code: "FORBIDDEN",

@@ -2,7 +2,6 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/api/src",
   "projectType": "application",
-  "implicitDependencies": ["prisma"],
   "targets": {
     "build": {
       "executor": "@nrwl/webpack:webpack",
@@ -23,10 +22,6 @@
       "dependsOn": [
         {
           "target": "build",
-          "projects": "dependencies"
-        },
-        {
-          "target": "setup",
           "projects": "dependencies"
         }
       ]
@@ -57,11 +52,14 @@
     "serve": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "nx migrate:dev prisma",
-          "nx seed:db api",
-          "nx serve:api api"
-        ],
+        "commands": ["nx prepare:db api", "nx serve:api api"],
+        "parallel": true
+      }
+    },
+    "prepare:db": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["nx migrate:dev prisma", "nx seed:db api"],
         "parallel": false
       },
       "dependsOn": [

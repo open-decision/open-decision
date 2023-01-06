@@ -20,6 +20,6 @@ export const deleteTree =
           ...context.headers,
         },
       },
-      { validation: deleteTreeOutput }
+      { validation: deleteTreeOutput, ...context.config }
     );
   };

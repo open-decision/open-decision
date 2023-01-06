@@ -11,7 +11,7 @@ export const useUser = () => {
   const queryClient = useQueryClient();
 
   const useUserQuery = () =>
-    useQuery(userQueryKey, () => proxiedClient.user.getUser(), {
+    useQuery(userQueryKey, () => proxiedClient("client").user.getUser(), {
       staleTime: Infinity,
       select(response) {
         return response.data;
@@ -29,7 +29,7 @@ export const useUser = () => {
     return useMutation(
       ["updateUser"],
       (data: Partial<TUpdateUserInput["body"]>) => {
-        return proxiedClient.user.updateUser({ body: data });
+        return proxiedClient("client").user.updateUser({ body: data });
       },
       {
         onSuccess: (...params) => {
@@ -47,7 +47,7 @@ export const useUser = () => {
     return useMutation(
       ["deleteUser"],
       () => {
-        return proxiedClient.user.deleteUser();
+        return proxiedClient("client").user.deleteUser();
       },
       {
         onSettled: (_data, _error, _variables, _context) => logout(),

@@ -62,7 +62,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       nullGetter: nullGetter,
     });
   } catch (e) {
-    console.log(e);
     return res.send({});
   }
   // Render the document

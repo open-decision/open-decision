@@ -103,7 +103,7 @@ export const useTreeAPI = () => {
   }) => {
     return useQuery(
       treesQueryKey,
-      () => proxiedClient.trees.getCollection({}),
+      () => proxiedClient("client").trees.getCollection({}),
       options
     );
   };
@@ -120,7 +120,7 @@ export const useTreeAPI = () => {
   ) =>
     useQuery(
       treeQueryKey(uuid),
-      () => proxiedClient.trees.getSingle({ params: { uuid } }),
+      () => proxiedClient("client").trees.getSingle({ params: { uuid } }),
       options
     );
 
@@ -134,7 +134,7 @@ export const useTreeAPI = () => {
   ) => {
     return useQuery(
       treeDataQueryKey(uuid),
-      () => directClient.trees.data.get({ params: { uuid } }),
+      () => directClient("client").trees.data.get({ params: { uuid } }),
       options
     );
   };
@@ -149,13 +149,14 @@ export const useTreeAPI = () => {
   ) => {
     return useQuery(
       treeDataQueryKey(uuid),
-      () => proxiedClient.trees.data.getPreview({ params: { uuid } }),
+      () => proxiedClient("client").trees.data.getPreview({ params: { uuid } }),
       {
         ...options,
         retry: (failureCount, error) => {
           if (isAPIError(error) && error.code === "PREVIEW_NOT_ENABLED") {
             return false;
           }
+
           return failureCount < 3;
         },
       }
@@ -171,7 +172,7 @@ export const useTreeAPI = () => {
     return useMutation(
       ["createTree"],
       async (data) => {
-        const response = await proxiedClient.trees.create(data);
+        const response = await proxiedClient("client").trees.create(data);
         const yDoc = new Y.Doc();
         new IndexeddbPersistence(response.data.uuid, yDoc);
 
@@ -222,7 +223,7 @@ export const useTreeAPI = () => {
     useMutation(
       ["deleteTree"],
       async (data) => {
-        return proxiedClient.trees.delete(data);
+        return proxiedClient("client").trees.delete(data);
       },
       {
         ...options,
@@ -251,7 +252,7 @@ export const useTreeAPI = () => {
     useMutation(
       ["updateTree"],
       (data) => {
-        return proxiedClient.trees.update(data);
+        return proxiedClient("client").trees.update(data);
       },
       {
         ...options,
@@ -278,7 +279,7 @@ export const useTreeAPI = () => {
     useMutation(
       ["unarchiveTree"],
       ({ params }) =>
-        proxiedClient.trees.update({
+        proxiedClient("client").trees.update({
           body: { status: "ACTIVE" },
           params,
         }),
@@ -306,7 +307,7 @@ export const useTreeAPI = () => {
     useMutation(
       ["archiveTree"],
       ({ params }) =>
-        proxiedClient.trees.update({
+        proxiedClient("client").trees.update({
           body: { status: "ARCHIVED" },
           params,
         }),
@@ -334,7 +335,7 @@ export const useTreeAPI = () => {
   }: usePublishOptions & { notification?: NotificationTemplate } = {}) =>
     useMutation(
       ["publishTree"],
-      (data) => proxiedClient.trees.publishedTrees.create(data),
+      (data) => proxiedClient("client").trees.publishedTrees.create(data),
       {
         ...options,
         onSuccess: (...params) => {
@@ -348,6 +349,13 @@ export const useTreeAPI = () => {
           invalidateTrees(queryClient)(params[2].params.treeUuid);
           return onSettled;
         },
+        retry: (failureCount, error) => {
+          if (isAPIError(error) && error.code === "NO_TREE_DATA") {
+            return false;
+          }
+
+          return failureCount < 3;
+        },
       }
     );
 
@@ -360,7 +368,7 @@ export const useTreeAPI = () => {
     useMutation(
       ["unpublishTree"],
       (data) => {
-        return proxiedClient.publishedTrees.delete(data);
+        return proxiedClient("client").publishedTrees.delete(data);
       },
       {
         ...options,
@@ -392,9 +400,11 @@ export const useTreeAPI = () => {
     return useMutation(
       ["exportTree"],
       async (data) => {
-        const { data: treeData } = await proxiedClient.trees.data.get({
-          params: { uuid },
-        });
+        const { data: treeData } = await proxiedClient("client").trees.data.get(
+          {
+            params: { uuid },
+          }
+        );
 
         return new Promise<string>((resolve) => {
           return setTimeout(() => {

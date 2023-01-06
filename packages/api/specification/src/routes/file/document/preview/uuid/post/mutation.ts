@@ -26,6 +26,6 @@ export const getDocumentPreviewSingle =
           ...context.headers,
         },
       },
-      {}
+      { ...context.config }
     );
   };

@@ -15,7 +15,7 @@ const authCatch: NextApiHandler = async (req, res) => {
           "Content-Type": req.headers["content-type"] ?? "application/json",
         },
       },
-      { validation: loginOutput }
+      { validation: loginOutput, origin: "api route" }
     );
 
     setCookieHeaders(req, res, authResponse.data);
@@ -23,7 +23,7 @@ const authCatch: NextApiHandler = async (req, res) => {
     res.setHeader("Cache-Control", "no-store");
     return res.status(authResponse.status).json(authResponse.data.user);
   } catch (error) {
-    console.error(error);
+    console.error("authCatch", error);
     if (isAPIError(error)) {
       return res.status(error.statusCode).json(error);
     }

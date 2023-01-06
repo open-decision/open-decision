@@ -281,7 +281,6 @@ describe("Auth routes", () => {
         .send({ email: userTwo.email, password: userTwo.password })
         .expect(httpStatus.CREATED);
 
-      console.log(res.body);
       expect(
         await (
           await emailIsWhitelisted(`hallo@${entryBaseDomainTwo.emailOrDomain}`)

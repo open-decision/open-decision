@@ -24,6 +24,6 @@ export const getDocumentPrototypeSingle =
           ...context.headers,
         },
       },
-      {}
+      { ...context.config }
     );
   };

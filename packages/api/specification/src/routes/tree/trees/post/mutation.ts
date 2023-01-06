@@ -22,6 +22,6 @@ export const createTree =
           ...context.headers,
         },
       },
-      { validation: createTreeOutput }
+      { validation: createTreeOutput, ...context.config }
     );
   };

@@ -1,5 +1,5 @@
 import { ZodError, ZodIssue } from "zod";
-import { ErrorCodes, ProgrammerErrors } from "./ErrorCodes";
+import { ErrorCodes, TProgrammerErrors } from "./ErrorCodes";
 
 export type ODErrorConstructorParameters<
   TErrorCodes extends ErrorCodes = ErrorCodes
@@ -44,13 +44,13 @@ export class ODError<
 
 export type ODProgrammerErrorConstructorParameters = {
   link?: string;
-  code: ProgrammerErrors;
+  code: TProgrammerErrors;
   message?: string;
 };
 
 export class ODProgrammerError extends Error {
   link?: string;
-  code?: ProgrammerErrors;
+  code?: TProgrammerErrors;
 
   constructor({ link, code, message }: ODProgrammerErrorConstructorParameters) {
     super(message);

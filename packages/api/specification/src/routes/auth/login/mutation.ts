@@ -19,6 +19,6 @@ export const login =
           "Content-Type": "application/json",
         },
       },
-      { validation: loginOutput }
+      { validation: loginOutput, ...context.config }
     );
   };

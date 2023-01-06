@@ -20,6 +20,6 @@ export const register =
           "Content-Type": "application/json",
         },
       },
-      { validation: registerOutput }
+      { validation: registerOutput, ...context.config }
     );
   };
