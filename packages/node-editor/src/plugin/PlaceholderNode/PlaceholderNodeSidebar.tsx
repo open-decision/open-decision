@@ -32,7 +32,7 @@ export const PlaceholderNodeSidebar: TNodeSidebar = ({
           return (
             <Row
               classNames={[sidebarCardClasses, "items-center justify-between"]}
-              key={plugin.typeName}
+              key={plugin.type}
             >
               <Heading size="extra-small">
                 {t(`${plugin.typeName}.short`)}

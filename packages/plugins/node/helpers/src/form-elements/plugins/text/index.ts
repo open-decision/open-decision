@@ -7,7 +7,7 @@ export * from "./textPlugin";
 const plugin = new TextInputPlugin();
 export const TextInputPluginObject = {
   plugin,
-  type: plugin.typeName,
+  type: plugin.type,
   BuilderComponent: {
     PrimaryActionSlot: null,
     InputConfigurator: TextInputEditor,

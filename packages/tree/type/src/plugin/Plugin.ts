@@ -10,12 +10,25 @@ export abstract class Plugin<
     id: z.ZodString;
   }>
 > {
-  typeName: TTypeName;
+  type: TTypeName;
   Type: TType;
 
   constructor(Type: TType) {
     this.Type = Type;
-    this.typeName = this.Type.shape.type.value;
+    this.type = this.Type.shape.type.value;
+  }
+}
+
+export abstract class PluginGroup<
+  TName extends string,
+  TType extends z.ZodType
+> {
+  name: TName;
+  Type: TType;
+
+  constructor(name: TName, Type: TType) {
+    this.Type = Type;
+    this.name = name;
   }
 
   safeParse(entity: unknown) {

@@ -22,13 +22,13 @@ export class VariablePlugin<
   TType,
   ReturnType<typeof mergeTypes<TType, TTypeName>>
 > {
-  declare typeName: TTypeName;
+  declare type: TTypeName;
   pluginType = "variable" as const;
 
   constructor(Type: TType, typeName: TTypeName) {
     super(mergeTypes(Type, typeName));
 
-    this.typeName = typeName;
+    this.type = typeName;
   }
 
   getUserAnswer = (answers: Record<string, any>, sourceId: string) => {

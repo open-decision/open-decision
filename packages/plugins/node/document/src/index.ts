@@ -12,6 +12,6 @@ export const DocumentNodePluginObject = {
     Sidebar: DocumentNodeSidebar,
   },
   Renderer: DocumentNodeRenderer,
-  type: plugin.typeName,
+  type: plugin.type,
   Icon: FileTextIcon,
 };

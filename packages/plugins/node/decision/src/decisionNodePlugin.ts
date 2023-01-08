@@ -15,7 +15,6 @@ import {
   decisionNodeInputType,
   DecisionNodeVariable,
 } from "./createInputPlugins";
-import { isEmpty } from "ramda";
 
 export const typeName = "decision" as const;
 
@@ -68,42 +67,6 @@ export class DecisionNodePlugin extends NodePlugin<
     delete node.data.input;
   };
 
-  getInputByNode =
-    (nodeId: string) => (treeClient: TReadOnlyTreeClient | TTreeClient) => {
-      const node = this.get.single(nodeId)(treeClient);
-
-      if (node instanceof Error) throw node;
-      if (!node.data.input) return undefined;
-
-      return treeClient.pluginEntity.get.single<typeof decisionNodeInputType>(
-        "inputs",
-        node.data.input
-      );
-    };
-
-  getNodesByInput =
-    (inputId: string) => (treeClient: TTreeClient | TReadOnlyTreeClient) => {
-      type TNode = z.infer<typeof this.Type>;
-      const nodes = this.get.collection()(treeClient);
-
-      if (!nodes) return undefined;
-
-      const relatedNodes: Record<string, TNode> = {};
-      for (const key in nodes) {
-        const node = nodes[key];
-
-        if (node.data.input === inputId) {
-          relatedNodes[key] = node;
-        }
-      }
-
-      // If the resulting conditions are empty we return undefined, because it is more meaningful and
-      // easier to handle downstream.
-      if (isEmpty(relatedNodes)) return undefined;
-
-      return relatedNodes;
-    };
-
   updateData =
     (nodeId: string, data: Partial<z.infer<typeof this.Type>["data"]>) =>
     (treeClient: TTreeClient) => {
@@ -120,20 +83,6 @@ export class DecisionNodePlugin extends NodePlugin<
   updateInput = (nodeId: string, newInputId: string) => {
     return this.updateData(nodeId, { input: newInputId });
   };
-
-  updateInputType = updateInput;
-  addInput = addInput;
-
-  updateInputName =
-    (inputId: string, name: string) => (treeClient: TTreeClient) => {
-      const inputs =
-        treeClient.pluginEntity.get.all<typeof Input.Type>("inputs");
-
-      if (!inputs) return;
-
-      inputs[inputId].name = name;
-    };
-
   updateNodeContent =
     (nodeId: string, content: z.infer<typeof this.Type>["data"]["content"]) =>
     (treeClient: TTreeClient) => {

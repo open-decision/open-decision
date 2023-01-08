@@ -23,7 +23,7 @@ export function InputDropdown<
   const t = useTranslations("common.inputNames");
 
   const relevantInputPlugins = Object.values(inputPlugins).filter(
-    (plugin) => plugin.plugin.typeName !== "placeholder"
+    (plugin) => plugin.plugin.type !== "placeholder"
   );
 
   return Object.values(relevantInputPlugins).length === 1 ? (

@@ -7,7 +7,7 @@ const plugin = new PlaceholderInputPlugin();
 
 export const PlaceholderInputPluginObject = {
   plugin,
-  type: plugin.typeName,
+  type: plugin.type,
   BuilderComponent: {
     InputConfigurator: null,
     PrimaryActionSlot: null,

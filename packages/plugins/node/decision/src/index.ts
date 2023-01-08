@@ -15,7 +15,7 @@ export const DecisionNodePluginObject = {
     Sidebar: DecisionNodeSidebar,
   },
   Renderer: DecisionNodeRenderer,
-  type: plugin.typeName,
+  type: plugin.type,
   pluginEntities: { inputs: z.record(plugin.inputType) },
   Icon: Pencil1Icon,
 };

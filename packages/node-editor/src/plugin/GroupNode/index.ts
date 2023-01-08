@@ -16,6 +16,6 @@ export const GroupNodePluginObject = {
     Sidebar: GroupNodeSidebar,
   },
   Renderer: GroupNodeRenderer,
-  type: plugin.typeName,
+  type: plugin.type,
   Icon: GroupIcon,
 };

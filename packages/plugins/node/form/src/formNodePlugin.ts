@@ -120,8 +120,14 @@ export class FormNodePlugin extends NodePlugin<
         treeClient.edges.connect.toTargetNode(edge.id, newItem);
     };
 
-  updateInput = updateInput;
-  addInput = addInput;
+  get inputs() {
+    return {
+      getInputByNode: getInputByNode(this),
+      getNodesByInput: getNodesByInput(this),
+      updateType: updateInput,
+      add: addInput,
+    };
+  }
 
   createVariable =
     (answers: Record<string, string | string[] | undefined>) =>
@@ -146,9 +152,15 @@ export class FormNodePlugin extends NodePlugin<
       );
     };
 
-  getAnswer = (nodeId: string, answers: any) => {
-    return answers[nodeId]?.answers as FormNodeVariable | undefined;
-  };
+  getAnswer =
+    (nodeId: string, answers: any) =>
+    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
+      const node = this.get.single(nodeId)(treeClient);
+      const inputs = this.inputs.getInputByNode(nodeId)(treeClient);
+      const answer = answers[nodeId]?.answers as FormNodeVariable | undefined;
+
+      return;
+    };
 }
 
 export type TFormNode = z.infer<FormNodePlugin["Type"]>;

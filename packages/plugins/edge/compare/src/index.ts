@@ -4,7 +4,7 @@ import { compareEdgeResolver } from "./resolver";
 const plugin = new CompareEdgePlugin();
 export const CompareEdgePluginObject = {
   plugin,
-  type: plugin.typeName,
+  type: plugin.type,
   resolver: compareEdgeResolver,
 };
 

@@ -43,7 +43,7 @@ export abstract class EdgePlugin<
       const newEdge = treeClient.edges.create(
         merge(
           {
-            type: this.typeName,
+            type: this.type,
             data: this.defaultData,
           },
           data
@@ -67,7 +67,7 @@ export abstract class EdgePlugin<
           ),
       byNode:
         (nodeId: string) => (treeClient: TTreeClient | TReadOnlyTreeClient) =>
-          treeClient.edges.get.byNode(nodeId, this.typeName, this.Type),
+          treeClient.edges.get.byNode(nodeId, this.type, this.Type),
     };
   }
 

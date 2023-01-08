@@ -11,6 +11,6 @@ export const InfoNodePluginObject = {
   plugin,
   Editor: { Node: InfoCanvasNode, Sidebar: InfoNodeSidebar },
   Renderer: InfoNodeRenderer,
-  type: plugin.typeName,
+  type: plugin.type,
   Icon: InfoCircledIcon,
 };

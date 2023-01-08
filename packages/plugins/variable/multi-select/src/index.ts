@@ -24,7 +24,7 @@ export class MultiSelectVariablePlugin extends VariablePlugin<
     name: string,
     data: z.infer<typeof this.Type>["data"]
   ): z.infer<typeof this.Type> | undefined => {
-    const newVariable = merge({ data }, { type: this.typeName, name, id });
+    const newVariable = merge({ data }, { type: this.type, name, id });
 
     return newVariable;
   };

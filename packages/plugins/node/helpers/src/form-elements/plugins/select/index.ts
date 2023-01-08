@@ -12,7 +12,7 @@ const plugin = new SelectInputPlugin();
 
 export const SelectInputPluginObject = {
   plugin,
-  type: plugin.typeName,
+  type: plugin.type,
   BuilderComponent: {
     PrimaryActionSlot: SelectInputPrimaryActionSlot,
     InputConfigurator: SelectInputConfigurator,

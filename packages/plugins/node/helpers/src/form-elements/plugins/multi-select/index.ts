@@ -11,7 +11,7 @@ const plugin = new MultiSelectInputPlugin();
 
 export const MultiSelectInputPluginObject = {
   plugin,
-  type: plugin.typeName,
+  type: plugin.type,
   BuilderComponent: {
     InputConfigurator: MultiSelectInputConfigurator,
     PrimaryActionSlot: MultiSelectInputPrimaryActionSlot,

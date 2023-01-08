@@ -15,6 +15,6 @@ export const PlaceholderNodePluginObject = {
     Sidebar: PlaceholderNodeSidebar,
   },
   Renderer: null,
-  type: plugin.typeName,
+  type: plugin.type,
   Icon: ComponentPlaceholderIcon,
 };

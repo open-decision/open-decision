@@ -36,7 +36,7 @@ export abstract class NodePlugin<
   ) {
     super(mergeTypes(Type, typeName));
 
-    this.typeName = typeName;
+    this.type = typeName;
     this.isAddable = config?.isAddable;
   }
 

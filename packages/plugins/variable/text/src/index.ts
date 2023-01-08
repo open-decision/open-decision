@@ -24,7 +24,7 @@ export class TextVariablePlugin extends VariablePlugin<
     const newVariable = merge(
       { data },
       {
-        type: this.typeName,
+        type: this.type,
         name,
         id,
       }

@@ -54,7 +54,7 @@ const getValidAnswer = (answer: any) => {
   const validAnswer = AllAnswerTypes.safeParse(answer);
 
   if (!validAnswer.success) {
-    console.error(validAnswer.error);
+    console.error(answer, validAnswer.error);
     throw new ODProgrammerError({
       code: "INVALID_ANSWER_TYPE",
       message:

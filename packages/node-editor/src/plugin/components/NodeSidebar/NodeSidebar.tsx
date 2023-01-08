@@ -126,7 +126,7 @@ const Header = ({
               <DropdownMenu.Content align="start">
                 {Object.values(addableNodePlugins).map(({ plugin }) => (
                   <DropdownMenu.Item
-                    key={plugin.typeName}
+                    key={plugin.type}
                     onSelect={() => {
                       const oldNode = treeClient.nodes.get.single(nodeId);
 

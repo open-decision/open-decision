@@ -2,12 +2,13 @@ import { TTreeClient } from "@open-decision/tree-type";
 import { Input } from "..";
 
 export const updateInput =
-  <TInput extends Input.TInput>(
+  <TType extends Input.TType>(Type: TType) =>
+  <TNewInputType extends Input.TInput>(
     inputId: string,
-    newInput: Omit<TInput, "id">
+    newInput: Omit<TNewInputType, "id">
   ) =>
   (treeClient: TTreeClient) => {
-    const inputs = treeClient.pluginEntity.get.all<typeof Input.Type>("inputs");
+    const inputs = treeClient.pluginEntity.get.all<typeof Type>("inputs");
 
     if (!inputs) return;
 

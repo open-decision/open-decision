@@ -15,7 +15,7 @@ export const FormNodePluginObject = {
     Sidebar: FormNodeSidebar,
   },
   Renderer: FormNodeRenderer,
-  type: plugin.typeName,
+  type: plugin.type,
   pluginEntities: { inputs: z.record(plugin.inputType) },
   Icon: IdCardIcon,
 };

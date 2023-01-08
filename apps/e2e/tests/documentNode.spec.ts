@@ -116,6 +116,7 @@ const fillAuroaTree = async (prototypePage: PrototypePage) => {
   await prototypePage.renderer.SingleSelectRenderer.selectAnswer("Ja");
 
   await prototypePage.renderer.submitButton.click();
+  await prototypePage.renderer.submitButton.click();
 
   await prototypePage.renderer.MultiSelectRenderer.selectAnswers([
     "LaTeX",

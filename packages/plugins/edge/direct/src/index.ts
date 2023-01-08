@@ -5,7 +5,7 @@ import { directEdgeResolver } from "./resolver";
 const plugin = new DirectEdgePlugin();
 export const DirectEdgePluginObject = {
   plugin,
-  type: plugin.typeName,
+  type: plugin.type,
   resolver: directEdgeResolver,
 };
 
