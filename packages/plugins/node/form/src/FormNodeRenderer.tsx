@@ -35,6 +35,7 @@ export const FormNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
   if (node instanceof Error) return null;
 
   const onSubmit = methods.handleSubmit((values) => {
+    console.log(values);
     const answers = FormNode.createVariable(values)(treeClient);
 
     send({
