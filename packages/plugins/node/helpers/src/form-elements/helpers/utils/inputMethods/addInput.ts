@@ -1,5 +1,5 @@
 import { TTreeClient } from "@open-decision/tree-type";
-import { Input } from "..";
+import { Input } from "../..";
 
 /**
  * Always adds a new Input to the tree. There are no rules so this

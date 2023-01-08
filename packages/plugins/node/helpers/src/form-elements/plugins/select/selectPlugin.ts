@@ -1,18 +1,23 @@
-import { TTreeClient } from "@open-decision/tree-type";
 import { z } from "zod";
-import { v4 as uuid } from "uuid";
 import { SingleSelectVariablePlugin } from "@open-decision/plugins-variable-select";
-import { Answer, InputPlugin, TAnswer } from "../../helpers";
+import { Answer, createFn, InputPlugin } from "../../helpers";
+import {
+  addAnswer,
+  createAnswer,
+  deleteAnswer,
+  getAnswer,
+  getInputsWithAnswers,
+  reorderAnswers,
+  updateAnswer,
+} from "../../helpers/utils/answerMethods";
 
 export const typeName = "select" as const;
 
-export const DataType = z
-  .object({
-    answers: z.array(Answer),
-    label: z.string().optional(),
-    required: z.boolean(),
-  })
-  .default({ answers: [], required: false });
+export const DataType = z.object({
+  answers: z.array(Answer),
+  label: z.string().optional(),
+  required: z.boolean(),
+});
 
 export type TSelectInput = z.infer<SelectInputPlugin["Type"]>;
 const SingleSelectVariable = new SingleSelectVariablePlugin();
@@ -27,110 +32,29 @@ export class SelectInputPlugin extends InputPlugin<
     this.defaultData = { answers: [], required: false };
   }
 
-  createAnswer(answer: Pick<TAnswer, "value">) {
-    return { id: uuid(), ...answer };
-  }
+  create: createFn<typeof this.Type> = (data) => {
+    const newInput = {
+      id: crypto.randomUUID(),
+      type: this.type,
+      required: false,
+      ...data,
+      data: { ...this.defaultData, ...data?.data },
+    };
 
-  getAnswer = (input: TSelectInput, answerId: string) => {
-    return input.data.answers?.find(({ id }) => id === answerId);
+    return this.parse(newInput);
   };
 
-  addAnswer =
-    (inputId: string, answer: TAnswer) => (treeClient: TTreeClient) => {
-      const input = this.getInput(inputId)(treeClient);
+  createAnswer = createAnswer;
 
-      if (!input) return;
+  getAnswer = getAnswer(this.Type);
 
-      if (!input.data.answers) input.data.answers = [];
+  addAnswer = addAnswer(this.Type);
 
-      input.data.answers.push(answer);
-    };
+  updateAnswer = updateAnswer(this.Type);
 
-  updateAnswer =
-    (inputId: string, answerId: string, newValue: string) =>
-    (treeClient: TTreeClient) => {
-      const input = this.getInput(inputId)(treeClient);
-      if (!input) return;
+  reorderAnswers = reorderAnswers(this.Type);
 
-      const answer = this.getAnswer(input, answerId);
+  deleteAnswer = deleteAnswer(this.Type);
 
-      if (!answer) return;
-
-      answer.value = newValue;
-    };
-
-  reorderAnswers =
-    (inputId: string, newAnswers: TAnswer[]) => (treeClient: TTreeClient) => {
-      const input = treeClient.pluginEntity.get.single<typeof this.Type>(
-        "inputs",
-        inputId
-      );
-
-      if (!input) return;
-
-      input.data.answers = newAnswers;
-    };
-
-  deleteAnswer =
-    (inputId: string, answerId: string) => (treeClient: TTreeClient) => {
-      const input = this.getInput(inputId)(treeClient);
-
-      const answerIndex = input.data.answers?.findIndex(
-        ({ id }) => id === answerId
-      );
-
-      if (!(answerIndex !== null)) return;
-
-      input.data.answers?.splice(answerIndex, 1);
-    };
-
-  updateTarget =
-    ({
-      nodeId,
-      newItem,
-      edgeId,
-    }: {
-      nodeId: string;
-      newItem: string;
-      edgeId?: string;
-    }) =>
-    (treeClient: TTreeClient) => {
-      const edge = edgeId ? treeClient.edges.get.single(edgeId) : undefined;
-
-      if (edge instanceof Error) throw edge;
-
-      if (!edge?.target && newItem) {
-        const newEdge = treeClient.edges.create({
-          source: nodeId,
-          target: newItem,
-        });
-
-        if (newEdge instanceof Error) return;
-
-        treeClient.edges.add(newEdge);
-      }
-
-      if (edge?.target && newItem)
-        treeClient.edges.connect.toTargetNode(edge.id, newItem);
-    };
-
-  getInputsWithAnswers = (
-    inputs: TSelectInput[]
-  ): Record<string, TSelectInput> | undefined => {
-    if (!inputs) return undefined;
-
-    const filteredInputs = Object.values(inputs).reduce(
-      function filterInputsWithoutAnswer(previousValue, input) {
-        if ((input.data.answers?.length ?? 0) > 0)
-          previousValue[input.id] = input;
-
-        return previousValue;
-      },
-      {} as Record<string, TSelectInput>
-    );
-
-    if (Object.values(filteredInputs).length === 0) return undefined;
-
-    return filteredInputs;
-  };
+  getInputsWithAnswers = getInputsWithAnswers(this.Type);
 }

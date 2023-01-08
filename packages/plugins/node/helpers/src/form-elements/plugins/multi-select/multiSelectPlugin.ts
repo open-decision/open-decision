@@ -1,17 +1,22 @@
-import { TTreeClient } from "@open-decision/tree-type";
 import { z } from "zod";
-import { v4 as uuid } from "uuid";
 import { MultiSelectVariablePlugin } from "@open-decision/plugins-variable-multi-select";
-import { Answer, InputPlugin, TAnswer } from "../../helpers";
+import { Answer, createFn, InputPlugin } from "../../helpers";
+import {
+  addAnswer,
+  createAnswer,
+  deleteAnswer,
+  getAnswer,
+  getInputsWithAnswers,
+  reorderAnswers,
+  updateAnswer,
+} from "../../helpers/utils/answerMethods";
 
 export const typeName = "multi-select" as const;
 
-export const DataType = z
-  .object({
-    answers: z.array(Answer),
-    required: z.boolean(),
-  })
-  .default({ answers: [], required: false });
+export const DataType = z.object({
+  answers: z.array(Answer),
+  required: z.boolean(),
+});
 
 const MultiSelectVariable = new MultiSelectVariablePlugin();
 
@@ -26,92 +31,31 @@ export class MultiSelectInputPlugin extends InputPlugin<
     this.defaultData = { answers: [], required: false };
   }
 
-  createAnswer = (answer: Pick<TAnswer, "value">) => {
-    return { id: uuid(), ...answer };
+  create: createFn<typeof this.Type> = (data) => {
+    const newInput = {
+      id: crypto.randomUUID(),
+      type: this.type,
+      required: false,
+      ...data,
+      data: { ...this.defaultData, ...data?.data },
+    };
+
+    return this.parse(newInput);
   };
 
-  addAnswer =
-    (inputId: string, answer: TAnswer) => (treeClient: TTreeClient) => {
-      const input = this.getInput(inputId)(treeClient);
+  createAnswer = createAnswer;
 
-      if (!input) return;
+  addAnswer = addAnswer(this.Type);
 
-      if (!input.data.answers) input.data.answers = [];
+  getAnswer = getAnswer(this.Type);
 
-      input.data.answers.push(answer);
-    };
+  updateAnswer = updateAnswer(this.Type);
 
-  getAnswer = (input: TMultiSelectInput, answerId: string) => {
-    return input.data.answers?.find(({ id }) => id === answerId);
-  };
+  reorderAnswers = reorderAnswers(this.Type);
 
-  updateAnswer =
-    (inputId: string, answerId: string, newValue: string) =>
-    (treeClient: TTreeClient) => {
-      const input = this.getInput(inputId)(treeClient);
-      if (!input) return;
+  deleteAnswer = deleteAnswer(this.Type);
 
-      const answer = this.getAnswer(input, answerId);
-
-      if (!answer) return;
-
-      answer.value = newValue;
-    };
-
-  reorderAnswers =
-    (inputId: string, newAnswers: TAnswer[]) => (treeClient: TTreeClient) => {
-      const input = treeClient.pluginEntity.get.single<typeof this.Type>(
-        "inputs",
-        inputId
-      );
-
-      if (!input) return;
-
-      input.data.answers = newAnswers;
-    };
-
-  deleteAnswer =
-    (inputId: string, answerId: string) => (treeClient: TTreeClient) => {
-      const input = this.getInput(inputId)(treeClient);
-
-      const answerIndex = input.data.answers?.findIndex(
-        ({ id }) => id === answerId
-      );
-
-      if (!(answerIndex !== null)) return;
-
-      input.data.answers?.splice(answerIndex, 1);
-    };
-
-  updateTarget =
-    ({
-      nodeId,
-      newItem,
-      edgeId,
-    }: {
-      nodeId: string;
-      newItem: string;
-      edgeId?: string;
-    }) =>
-    (treeClient: TTreeClient) => {
-      const edge = edgeId ? treeClient.edges.get.single(edgeId) : undefined;
-
-      if (edge instanceof Error) throw edge;
-
-      if (!edge?.target && newItem) {
-        const newEdge = treeClient.edges.create({
-          source: nodeId,
-          target: newItem,
-        });
-
-        if (newEdge instanceof Error) return;
-
-        treeClient.edges.add(newEdge);
-      }
-
-      if (edge?.target && newItem)
-        treeClient.edges.connect.toTargetNode(edge.id, newItem);
-    };
+  getInputsWithAnswers = getInputsWithAnswers(this.Type);
 }
 
 export type TMultiSelectInput = z.infer<MultiSelectInputPlugin["Type"]>;

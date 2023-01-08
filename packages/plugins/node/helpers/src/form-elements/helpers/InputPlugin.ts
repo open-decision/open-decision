@@ -1,8 +1,6 @@
 import { Plugin, PluginGroup } from "@open-decision/tree-type";
 import { z } from "zod";
-import { merge } from "remeda";
 import { Input } from ".";
-import { v4 as uuid } from "uuid";
 import {
   deleteInput,
   updateInput,
@@ -11,10 +9,14 @@ import {
   getInputs,
   parse,
   updateInputLabel,
-} from "./utils";
+} from "./utils/inputMethods";
 import { VariablePlugin } from "@open-decision/plugins-variable-helpers";
 
-export class InputPlugin<
+export type createFn<TType extends z.ZodType> = (
+  data: Omit<z.infer<TType>, "id" | "type">
+) => z.infer<TType>;
+
+export abstract class InputPlugin<
   TData extends z.ZodType = any,
   TType extends string = any,
   TVariablePlugin extends VariablePlugin = VariablePlugin<any, any>
@@ -29,22 +31,11 @@ export class InputPlugin<
     this.variable = variable;
     this.type = type;
   }
+  abstract create: createFn<typeof this.Type>;
 
   getInput = getInput(this.Type);
 
   getInputs = getInputs(this.Type);
-
-  //FIXME Reflect on whether create belongs into specific implementations
-  create(data?: Omit<z.infer<typeof this.Type>, "id" | "type">) {
-    const newInput = merge(data, {
-      id: uuid(),
-      type: this.type,
-      required: false,
-      data: this.defaultData,
-    });
-
-    return this.parse(newInput);
-  }
 
   parse = parse(this.Type);
 

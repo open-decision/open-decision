@@ -1,0 +1,17 @@
+import { TTreeClient } from "@open-decision/tree-type";
+import { TAnswer } from "../../types";
+import { InputWithAnswers } from "./sharedTypes";
+
+export const reorderAnswers =
+  <TType extends InputWithAnswers>(Type: TType) =>
+  (inputId: string, newAnswers: TAnswer[]) =>
+  (treeClient: TTreeClient) => {
+    const input = treeClient.pluginEntity.get.single<typeof Type>(
+      "inputs",
+      inputId
+    );
+
+    if (!input) return;
+
+    input.data.answers = newAnswers;
+  };
