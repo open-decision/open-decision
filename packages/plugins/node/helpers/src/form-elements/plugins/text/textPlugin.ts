@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { TextVariablePlugin } from "@open-decision/plugins-variable-text";
 import { createFn, InputPlugin } from "../../helpers";
+import { updateRequired } from "../../helpers/utils/inputMethods";
 
 export const typeName = "text" as const;
 
@@ -31,4 +32,6 @@ export class TextInputPlugin extends InputPlugin<
 
     return this.parse(newInput);
   };
+
+  updateRequired = updateRequired(this.Type);
 }

@@ -10,6 +10,7 @@ import {
   reorderAnswers,
   updateAnswer,
 } from "../../helpers/utils/answerMethods";
+import { updateRequired } from "../../helpers/utils/inputMethods";
 
 export const typeName = "select" as const;
 
@@ -57,4 +58,5 @@ export class SelectInputPlugin extends InputPlugin<
   deleteAnswer = deleteAnswer(this.Type);
 
   getInputsWithAnswers = getInputsWithAnswers(this.Type);
+  updateRequired = updateRequired(this.Type);
 }

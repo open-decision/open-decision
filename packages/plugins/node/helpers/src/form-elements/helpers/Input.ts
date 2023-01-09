@@ -1,9 +1,6 @@
 import { z } from "zod";
 
-export const Type = <
-  TType extends string = string,
-  TData extends z.ZodType = any
->(
+export const Type = <TType extends string, TData extends z.ZodType = any>(
   type: TType,
   data: TData
 ) =>
@@ -24,7 +21,7 @@ export const Record = <
 ) => z.record(Type(type, data));
 
 export type TType<
-  TType extends string = string,
+  TType extends string,
   TData extends z.ZodType = any
 > = ReturnType<typeof Type<TType, TData>>;
 

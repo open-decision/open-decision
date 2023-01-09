@@ -30,7 +30,7 @@ export const compareEdgeResolver: EdgeResolver<TCompareEdge> =
     // We expect there to be an answer on the interpreter context.
     // Not finding an answer on the interpreter context is a programmer error.
     if (!existingAnswer) throw new MissingAnswerOnInterpreterContextError();
-    const answerOfType = SingleSelectVariable.safeParse(existingAnswer);
+    const answerOfType = SingleSelectVariable.parse(existingAnswer);
 
     if (
       !answerOfType.data.value ||

@@ -6,7 +6,7 @@ const InputType = SelectInputPluginObject.plugin.Type;
 
 export const decisionNodeInputPlugins = {
   [SelectInputPluginObject.type]: SelectInputPluginObject,
-} as const;
+};
 
 export const decisionNodeInputType = InputType;
 

@@ -6,5 +6,4 @@ export * from "./getNodesByInput";
 export * from "./getInput";
 export * from "./getInputs";
 export * from "./updateInputLabel";
-
-export * from "./parse";
+export * from "./updateRequired";

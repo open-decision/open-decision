@@ -1,5 +1,5 @@
 import { TReadOnlyTreeClient, TTreeClient } from "@open-decision/tree-type";
-import { NodePlugin } from "../../../basePlugin";
+import { NodePlugin } from "../../../../basePlugin";
 import { z } from "zod";
 import { isEmpty } from "ramda";
 

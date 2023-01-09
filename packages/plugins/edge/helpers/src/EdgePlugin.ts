@@ -10,28 +10,15 @@ import { z } from "zod";
 import { getEdgeCollection } from "./utils/getEdgeCollection";
 import { getEdgeSingle } from "./utils/getEdgeSingle";
 
-const mergeTypes = <TType extends z.ZodType, TTypeName extends string>(
-  Type: TType,
-  typeName: TTypeName
-) =>
-  Edge.Type.extend({
-    type: z.literal(typeName),
-    data: Type,
-  });
-
 export abstract class EdgePlugin<
-  TType extends z.ZodType = any,
-  TTypeName extends string = any
-> extends Plugin<
-  TTypeName,
-  TType,
-  ReturnType<typeof mergeTypes<TType, TTypeName>>
-> {
+  TData extends z.ZodType = any,
+  TType extends string = any
+> extends Plugin<TType, TData, Edge.TType<TType, TData>> {
   pluginType = "edge" as const;
   protected declare defaultData: any;
 
-  constructor(Type: TType, typeName: TTypeName) {
-    super(mergeTypes(Type, typeName));
+  constructor(Type: TData, type: TType) {
+    super(Edge.Type(type, Type));
   }
 
   create =

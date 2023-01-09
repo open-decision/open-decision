@@ -83,6 +83,12 @@ export const SelectInputConfigurator = ({
         <InputConfig
           inputId={inputId}
           withRequiredOption={withRequiredOption}
+          onLabelChange={(newLabel) =>
+            SelectInput.updateLabel(inputId, newLabel)(treeClient)
+          }
+          onRequiredChange={(newValue) =>
+            SelectInput.updateRequired(inputId, newValue)(treeClient)
+          }
         />
       </Form.Root>
     </Reorder.Group>

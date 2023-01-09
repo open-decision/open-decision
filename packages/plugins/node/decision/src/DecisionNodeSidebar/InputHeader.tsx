@@ -38,7 +38,9 @@ export function InputHeader({ children, inputId, nodeId }: InputHeaderProps) {
               ]);
             }
 
-            const newInput = DecisionNode.inputPlugins[newType].plugin.create();
+            const newInput = DecisionNode.inputPlugins[newType].plugin.create(
+              {}
+            );
             treeClient.pluginEntity.add("inputs", newInput);
             DecisionNode.updateInput(nodeId, newInput.id)(treeClient);
           }}

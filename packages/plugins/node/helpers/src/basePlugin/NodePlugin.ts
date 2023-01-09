@@ -27,16 +27,16 @@ export abstract class NodePlugin<
 > {
   pluginType = "node" as const;
   isAddable: boolean;
-  protected declare defaultData: z.infer<TType>;
+  protected declare defaultData: z.infer<TData>;
 
   constructor(
-    Type: TType,
-    typeName: TTypeName,
+    Type: TData,
+    type: TType,
     config: { isAddable: boolean } = { isAddable: true }
   ) {
-    super(mergeTypes(Type, typeName));
+    super(Node.Type(type, Type));
 
-    this.type = typeName;
+    this.type = type;
     this.isAddable = config?.isAddable;
   }
 

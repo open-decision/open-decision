@@ -3,7 +3,7 @@ import { Edge, Tree } from "../type-classes";
 import { z } from "zod";
 
 const isEdgeOfType = <
-  TType extends typeof Edge.Type,
+  TType extends Edge.TType<string>,
   TEdge extends z.infer<TType>
 >(
   edge: TEdge,

@@ -1,15 +1,10 @@
 import { TReadOnlyTreeClient, TTreeClient } from "@open-decision/tree-type";
-import { Input } from "..";
-import { NodePlugin } from "../../../basePlugin";
 import { z } from "zod";
+import { NodePlugin } from "../../../../basePlugin";
 
 export const getInputByNode =
-  <
-    TTypeName extends string,
-    TData extends z.AnyZodObject,
-    TInputType extends ReturnType<typeof Input.Type<TTypeName, TData>>
-  >(
-    nodePlugin: NodePlugin
+  <TType extends string, TData extends z.ZodType>(
+    nodePlugin: NodePlugin<TData, TType>
   ) =>
   (nodeId: string) =>
   (treeClient: TReadOnlyTreeClient | TTreeClient) => {
@@ -18,7 +13,7 @@ export const getInputByNode =
     if (node instanceof Error) throw node;
     if (!node.data.input) return undefined;
 
-    return treeClient.pluginEntity.get.single<TInputType>(
+    return treeClient.pluginEntity.get.single<typeof nodePlugin.Type>(
       "inputs",
       node.data.input
     );

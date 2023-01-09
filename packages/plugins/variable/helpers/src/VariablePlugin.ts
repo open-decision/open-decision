@@ -36,7 +36,7 @@ export class VariablePlugin<
 
     if (!answer) return undefined;
 
-    const parsedAnswer = this.safeParse(answer);
+    const parsedAnswer = this.parse(answer);
 
     return parsedAnswer;
   };

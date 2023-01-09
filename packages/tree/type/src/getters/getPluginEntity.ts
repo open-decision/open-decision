@@ -4,7 +4,10 @@ import { ODProgrammerError } from "@open-decision/type-classes";
 import { findEntityOfKey } from "./findEntityOfKey";
 
 export const getPluginEntity = (tree: Tree.TTree) =>
-  function <TType extends z.ZodTypeAny>(entityKey: string, id: string) {
+  function <TType extends z.ZodType | z.ZodDiscriminatedUnion<string, any>>(
+    entityKey: string,
+    id: string
+  ) {
     if (!tree.pluginEntities)
       throw new ODProgrammerError({
         code: "NO_PLUGIN_ENTITIES_AVAILABLE",

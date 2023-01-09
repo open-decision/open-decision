@@ -10,6 +10,7 @@ import {
   reorderAnswers,
   updateAnswer,
 } from "../../helpers/utils/answerMethods";
+import { updateRequired } from "../../helpers/utils/inputMethods";
 
 export const typeName = "multi-select" as const;
 
@@ -56,6 +57,7 @@ export class MultiSelectInputPlugin extends InputPlugin<
   deleteAnswer = deleteAnswer(this.Type);
 
   getInputsWithAnswers = getInputsWithAnswers(this.Type);
+  updateRequired = updateRequired(this.Type);
 }
 
 export type TMultiSelectInput = z.infer<MultiSelectInputPlugin["Type"]>;

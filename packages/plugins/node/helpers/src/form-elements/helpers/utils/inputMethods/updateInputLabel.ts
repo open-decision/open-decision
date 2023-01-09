@@ -2,7 +2,10 @@ import { TTreeClient } from "@open-decision/tree-type";
 import { z } from "zod";
 
 export const updateInputLabel =
-  <TType extends z.ZodObject<{ label: z.ZodOptional<z.ZodString> }>>(
+  <
+    TPluginType extends z.ZodObject<{ label: z.ZodOptional<z.ZodString> }>,
+    TType extends TPluginType | z.ZodDiscriminatedUnion<string, TPluginType[]>
+  >(
     Type: TType
   ) =>
   (inputId: string, newLabel: string) =>

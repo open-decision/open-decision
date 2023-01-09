@@ -17,11 +17,27 @@ export abstract class Plugin<
     this.Type = Type;
     this.type = this.Type.shape.type.value;
   }
+
+  parse = (input: unknown) => {
+    const parsedInput = this.Type.safeParse(input);
+
+    if (!parsedInput.success) {
+      console.error(parsedInput.error);
+      throw new ODProgrammerError({
+        code: "INVALID_ENTITY_CREATION",
+        message:
+          "The input could not be created. Please check that the data is correct.",
+      });
+    }
+
+    return parsedInput.data;
+  };
 }
 
 export abstract class PluginGroup<
   TName extends string,
-  TType extends z.ZodType
+  TPluginType extends z.AnyZodObject,
+  TType extends z.ZodDiscriminatedUnion<"type", TPluginType[]>
 > {
   name: TName;
   Type: TType;
@@ -29,20 +45,5 @@ export abstract class PluginGroup<
   constructor(name: TName, Type: TType) {
     this.Type = Type;
     this.name = name;
-  }
-
-  safeParse(entity: unknown) {
-    const parsedNode = this.Type.safeParse(entity);
-
-    if (!parsedNode.success) {
-      console.error(parsedNode.error);
-      throw new ODProgrammerError({
-        code: "INVALID_ENTITY_CREATION",
-        message:
-          "The node could not be created. Please check that the data is correct.",
-      });
-    }
-
-    return parsedNode.data;
   }
 }

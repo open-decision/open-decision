@@ -24,7 +24,7 @@ export function InputPlugin({ inputId, nodeId }: InputPluginComponentProps) {
   const treeClient = useTreeClient();
 
   if (!inputId) {
-    const newInput = DecisionNode.inputPlugins.select.plugin.create();
+    const newInput = DecisionNode.inputPlugins.select.plugin.create({});
 
     treeClient.pluginEntity.add("inputs", newInput);
     DecisionNode.connectInputAndNode(nodeId, newInput.id)(treeClient);

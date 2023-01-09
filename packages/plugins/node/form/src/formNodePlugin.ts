@@ -1,6 +1,5 @@
 import {
   addInput,
-  updateInput,
   NodePlugin,
   createFn,
 } from "@open-decision/plugins-node-helpers";
@@ -15,6 +14,9 @@ import {
 } from "./createInputPlugins";
 import { ODProgrammerError } from "@open-decision/type-classes";
 import { fromPairs } from "remeda";
+import { DirectEdgePlugin } from "@open-decision/plugins-edge-direct";
+
+const DirectEdge = new DirectEdgePlugin();
 
 export const typeName = "form" as const;
 
@@ -106,10 +108,10 @@ export class FormNodePlugin extends NodePlugin<
       if (edge instanceof Error) throw edge;
 
       if (!edge?.target && newItem) {
-        const newEdge = treeClient.edges.create({
+        const newEdge = DirectEdge.create({
           source: nodeId,
           target: newItem,
-        });
+        })(treeClient);
 
         if (newEdge instanceof Error) return;
 
@@ -124,7 +126,6 @@ export class FormNodePlugin extends NodePlugin<
     return {
       getInputByNode: getInputByNode(this),
       getNodesByInput: getNodesByInput(this),
-      updateType: updateInput,
       add: addInput,
     };
   }

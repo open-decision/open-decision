@@ -35,18 +35,6 @@ export class DecisionNodePlugin extends NodePlugin<
     this.defaultData = {};
   }
 
-  create: createFn<typeof this.Type> =
-    ({ data, ...rest }) =>
-    (treeClient) => {
-      const newNode = treeClient.nodes.create.node({
-        type: this.typeName,
-        data: { ...this.defaultData, ...data },
-        ...rest,
-      });
-
-      return this.Type.parse(newNode);
-    };
-
   connectInputAndNode =
     (nodeId: string, inputId: string) => (treeClient: TTreeClient) => {
       const node = this.get.single(nodeId)(treeClient);
@@ -111,7 +99,9 @@ export class DecisionNodePlugin extends NodePlugin<
     );
 
     if (node.data.input) {
-      deleteInput([node.data.input])(treeClient);
+      decisionNodeInputPlugins.select.plugin.deleteInput([node.data.input])(
+        treeClient
+      );
     }
   };
 

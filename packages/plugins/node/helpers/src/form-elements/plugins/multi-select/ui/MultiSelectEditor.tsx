@@ -68,6 +68,12 @@ export function MultiSelectInputConfigurator({
         <InputConfig
           inputId={inputId}
           withRequiredOption={withRequiredOption}
+          onLabelChange={(newValue) =>
+            MultiSelect.updateLabel(inputId, newValue)(treeClient)
+          }
+          onRequiredChange={(newValue) =>
+            MultiSelect.updateRequired(inputId, newValue)(treeClient)
+          }
         />
       </Form.Root>
     </Reorder.Group>

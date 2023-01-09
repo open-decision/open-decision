@@ -1,3 +1,4 @@
+import { DirectEdgePlugin } from "@open-decision/plugins-edge-direct";
 import { createFn, NodePlugin } from "@open-decision/plugins-node-helpers";
 import { RichText } from "@open-decision/rich-text-editor";
 import {
@@ -6,6 +7,8 @@ import {
   TTreeClient,
 } from "@open-decision/tree-type";
 import { z } from "zod";
+
+const DirectEdge = new DirectEdgePlugin();
 
 export const typeName = "node-group" as const;
 
@@ -78,10 +81,10 @@ export class GroupNodePlugin extends NodePlugin<
       if (edge instanceof Error) throw edge;
 
       if (!edge?.target && newItem) {
-        const newEdge = treeClient.edges.create({
+        const newEdge = DirectEdge.create({
           source: nodeId,
           target: newItem,
-        });
+        })(treeClient);
 
         if (newEdge instanceof Error) return;
 

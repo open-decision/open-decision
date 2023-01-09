@@ -1,6 +1,3 @@
-import { Input } from "..";
-import { z } from "zod";
-
 export type InputComponentProps = {
   inputId: string;
   withRequiredOption?: boolean;
@@ -16,14 +13,6 @@ export type RendererComponentProps = {
   className?: string;
   children?: React.ReactNode;
 };
-
-export const mergeTypes = <
-  TDataType extends z.ZodType,
-  TTypeName extends string
->(
-  DataType: TDataType,
-  typeName: TTypeName
-) => Input.Type.extend({ data: DataType, type: z.literal(typeName) });
 
 export type BuilderComponent = (
   props: InputComponentProps

@@ -5,8 +5,8 @@ import { Theme } from "./Theme";
 
 export const Type = z.object({
   startNode: z.string(),
-  nodes: Node.Record,
-  edges: Edge.Record,
+  nodes: Node.Record<string>("undetermined", z.any()),
+  edges: Edge.Record<string>("undetermined", z.any()),
   pluginEntities: z.record(z.any()),
   uuid: z.string().uuid().optional(),
   theme: Theme.optional(),

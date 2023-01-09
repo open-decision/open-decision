@@ -40,7 +40,7 @@ export function PathCard({ onNodeCreate, onEdgeCreate, nodeId, edge }: Props) {
   const treeClient = useTreeClient();
 
   const inputAnswers = useTree((treeClient) => {
-    return DecisionNode.getInputByNode(nodeId)(treeClient)?.data.answers;
+    return DecisionNode.inputs.getInputByNode(nodeId)(treeClient)?.data.answers;
   });
 
   const targetName = useTree((treeClient) =>
