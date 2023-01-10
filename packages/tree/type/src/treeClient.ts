@@ -1,9 +1,5 @@
 import { createNode, createChildNode, createEdge } from "./creators";
 import {
-  getNode,
-  getNodes,
-  getEdge,
-  getEdges,
   getEdgesByNode,
   getNodeOptions,
   getNodesByEdge,
@@ -41,6 +37,10 @@ import type {} from "zod";
 import { udpateRendererLabel } from "./mutaters/updateRendererLabel";
 import { Theme } from "./type-classes/Theme";
 import { z } from "zod";
+import { getSingle } from "./getters/getSingle";
+import { getCollection } from "./getters/getCollection";
+import { getAll } from "./getters/getAll";
+import { IEdgePlugin, INodePlugin } from "./plugin";
 
 export class ReadOnlyTreeClient<TTree extends Tree.TTree> {
   tree: Tree.TTree;
@@ -65,9 +65,9 @@ export class ReadOnlyTreeClient<TTree extends Tree.TTree> {
         childNode: createChildNode(this.tree),
       },
       get: {
-        single: getNode(this.tree),
-        collection: getNodes(this.tree),
-        all: () => this.tree.nodes as TTree["nodes"],
+        single: getSingle(this.tree)<INodePlugin>("nodes"),
+        collection: getCollection(this.tree)<INodePlugin>("nodes"),
+        all: getAll(this.tree)<INodePlugin>("nodes"),
         connectableNodes: getConnectableNodes(this.tree),
         children: getChildren(this.tree),
         parents: getParents(this.tree),
@@ -79,25 +79,13 @@ export class ReadOnlyTreeClient<TTree extends Tree.TTree> {
     };
   }
 
-  // get conditions() {
-  //   return {
-  //     create: createCondition,
-  //     get: {
-  //       single: getCondition(this.tree),
-  //       collection: getConditions(this.tree),
-  //       all: getAllConditions(this.tree),
-  //       byEdge: getConditionByEdge(this.tree),
-  //       byNode: getConditionsByNode(this.tree),
-  //     },
-  //   };
-  // }
   get edges() {
     return {
       create: createEdge(this.tree),
       get: {
-        single: getEdge(this.tree),
-        collection: getEdges(this.tree),
-        all: () => this.tree.edges,
+        single: getSingle(this.tree)<IEdgePlugin>("edges"),
+        collection: getCollection(this.tree)<IEdgePlugin>("edges"),
+        all: getAll(this.tree)<IEdgePlugin>("edges"),
         byNode: getEdgesByNode(this.tree),
       },
     };
@@ -134,8 +122,9 @@ export class TreeClient<TTree extends Tree.TTree> {
     return this.ReadOnlyTreeClient.get;
   }
   updateStartNode(startNode: string) {
-    // We only get the node to make sure it exists.
-    getNode(this.tree)(startNode);
+    const node = getSingle(this.tree)("nodes")(startNode);
+
+    if (!node) return;
 
     this.tree.startNode = startNode;
   }

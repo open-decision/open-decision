@@ -1,7 +1,3 @@
-import { Answer, Input } from "../..";
-import { z } from "zod";
+import { IInputPlugin, TAnswer } from "../..";
 
-export type InputWithAnswers = Input.TType<
-  string,
-  z.ZodObject<{ answers: z.ZodArray<typeof Answer> }>
->;
+export type InputWithAnswers = IInputPlugin<any, { answers: TAnswer[] }>;

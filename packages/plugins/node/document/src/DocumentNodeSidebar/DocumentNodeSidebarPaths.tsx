@@ -15,7 +15,7 @@ const DirectEdge = new DirectEdgePlugin();
 type Props = { nodeId: string } & Pick<TNodeSidebarProps, "onNodeCreate">;
 
 export function DocumentNodeSidebarPaths({ nodeId, onNodeCreate }: Props) {
-  const node = useTree(DocumentNode.get.single(nodeId));
+  const node = useTree(DocumentNode.getSingle(nodeId));
 
   const edge = useTree((treeClient) => {
     return Object.values(
@@ -50,7 +50,9 @@ export function DocumentNodeSidebarPaths({ nodeId, onNodeCreate }: Props) {
           nodeId={nodeId}
           edge={edge}
           onNodeCreate={onNodeCreate}
-          onEdgeCreate={DirectEdge.create}
+          onEdgeCreate={({ source, target }) =>
+            DirectEdge.create({ source, target })
+          }
           selectOptions={nodeNames}
         />
       </Form.Root>

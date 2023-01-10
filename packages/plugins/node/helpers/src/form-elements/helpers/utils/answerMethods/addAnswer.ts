@@ -4,10 +4,10 @@ import { TTreeClient } from "@open-decision/tree-type";
 import { InputWithAnswers } from "./sharedTypes";
 
 export const addAnswer =
-  <TType extends InputWithAnswers>(Type: TType) =>
+  <TType extends InputWithAnswers>() =>
   (inputId: string, answer: TAnswer) =>
   (treeClient: TTreeClient) => {
-    const input = getInput(Type)(inputId)(treeClient);
+    const input = getInput<TType>()(inputId)(treeClient);
 
     if (!input) return;
 

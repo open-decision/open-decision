@@ -1,37 +1,15 @@
 import { z } from "zod";
-import { VariablePlugin } from "@open-decision/plugins-variable-helpers";
-import { merge } from "remeda";
+import { IVariablePluginBase, VariablePlugin } from "@open-decision/tree-type";
 
 export const Value = z.undefined();
 
-export const DataType = z.object({});
+export const DataType = z.void();
 
 const typeName = "empty-variable";
 
-export class EmptyVariablePlugin extends VariablePlugin<
-  typeof DataType,
-  typeof typeName
-> {
-  constructor() {
-    super(DataType, typeName);
-  }
+export type IEmptyVariable = IVariablePluginBase<
+  typeof typeName,
+  z.infer<typeof DataType>
+>;
 
-  create = (
-    id: string,
-    name: string,
-    data: z.infer<typeof this.Type>["data"]
-  ): z.infer<typeof this.Type> => {
-    const newVariable = merge(
-      { data },
-      {
-        type: this.type,
-        name,
-        id,
-      }
-    );
-
-    return newVariable;
-  };
-}
-
-export type TEmptyVariable = z.infer<EmptyVariablePlugin["Type"]>;
+export class EmptyVariablePlugin extends VariablePlugin<IEmptyVariable> {}

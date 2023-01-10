@@ -3,13 +3,10 @@ import { TAnswer } from "../../types";
 import { InputWithAnswers } from "./sharedTypes";
 
 export const reorderAnswers =
-  <TType extends InputWithAnswers>(Type: TType) =>
+  <TType extends InputWithAnswers>() =>
   (inputId: string, newAnswers: TAnswer[]) =>
   (treeClient: TTreeClient) => {
-    const input = treeClient.pluginEntity.get.single<typeof Type>(
-      "inputs",
-      inputId
-    );
+    const input = treeClient.pluginEntity.get.single<TType>("inputs", inputId);
 
     if (!input) return;
 

@@ -2,7 +2,7 @@ import { Button, Icon, Form, Separator } from "@open-decision/design-system";
 import * as React from "react";
 import { AnimatePresence, Reorder, useDragControls } from "framer-motion";
 import { CrossCircledIcon } from "@radix-ui/react-icons";
-import { SelectInputPlugin } from "../selectPlugin";
+import { ISelectInput, SelectInputPlugin } from "../selectPlugin";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import {
   InputPrimaryActionSlotProps,
@@ -12,6 +12,7 @@ import {
   DragHandle,
   InputConfig,
 } from "../../../helpers";
+import { ODProgrammerError } from "@open-decision/type-classes";
 
 const SelectInput = new SelectInputPlugin();
 
@@ -37,19 +38,23 @@ export const SelectInputConfigurator = ({
   const treeClient = useTreeClient();
   const ref = React.useRef<HTMLDivElement | null>(null);
 
-  const input = useTree((treeClient) =>
-    treeClient.pluginEntity.get.single<typeof SelectInput.Type>(
+  const input = useTree((treeClient) => {
+    const input = treeClient.pluginEntity.get.single<ISelectInput>(
       "inputs",
       inputId
-    )
-  );
+    );
+
+    if (input instanceof ODProgrammerError) return undefined;
+
+    return input;
+  });
 
   const methods = Form.useForm({
     defaultValues: {
       label: input?.label ?? "",
-      required: [input.data.required ? "required" : ""],
+      required: [input?.data.required ? "required" : ""],
       ...Object.fromEntries(
-        input.data.answers.map((answer) => [answer.id, answer.value])
+        input?.data.answers.map((answer) => [answer.id, answer.value]) ?? []
       ),
     },
   });

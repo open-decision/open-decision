@@ -19,7 +19,7 @@ type Props = {
 export function DecisionNodeSidebarContent({ nodeId }: Props) {
   const t = useTranslations("builder.nodeEditingSidebar");
   const treeClient = useTreeClient();
-  const node = useTree(DecisionNode.get.single(nodeId));
+  const node = useTree(DecisionNode.getSingle(nodeId));
 
   if (node instanceof Error) return null;
 

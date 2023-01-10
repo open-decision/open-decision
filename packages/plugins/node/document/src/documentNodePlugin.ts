@@ -1,6 +1,10 @@
 import { createFn, NodePlugin } from "@open-decision/plugins-node-helpers";
 import { RichText } from "@open-decision/rich-text-editor";
-import { TReadOnlyTreeClient, TTreeClient } from "@open-decision/tree-type";
+import {
+  deleteEntityFn,
+  TReadOnlyTreeClient,
+  TTreeClient,
+} from "@open-decision/tree-type";
 import { z } from "zod";
 
 export const typeName = "document" as const;
@@ -10,14 +14,14 @@ export const DataType = z.object({
   templateUuid: z.string().uuid().optional(),
 });
 
-export class DocumentNodePlugin extends NodePlugin<
-  typeof DataType,
-  typeof typeName
-> {
-  constructor() {
-    super(DataType, typeName);
+export type IDocumentNode = INodePlugin<
+  typeof typeName,
+  z.infer<typeof DataType>
+>;
 
-    this.defaultData = {};
+export class DocumentNodePlugin extends NodePlugin<IDocumentNode> {
+  constructor() {
+    super(typeName);
   }
 
   create: createFn<typeof this.Type> =
@@ -35,7 +39,7 @@ export class DocumentNodePlugin extends NodePlugin<
   getByTemplateUuid =
     (templateUuid: string) =>
     (treeClient: TTreeClient | TReadOnlyTreeClient) => {
-      const nodes = this.get.collection()(treeClient);
+      const nodes = this.getAll(treeClient);
 
       return Object.values(nodes ?? {}).filter(
         (node) => node.data?.templateUuid === templateUuid
@@ -43,9 +47,9 @@ export class DocumentNodePlugin extends NodePlugin<
     };
 
   updateNodeContent =
-    (nodeId: string, content: z.infer<typeof this.Type>["data"]["content"]) =>
+    (nodeId: string, content: IDocumentNode["data"]["content"]) =>
     (treeClient: TTreeClient) => {
-      const node = this.get.single(nodeId)(treeClient);
+      const node = this.getSingle(nodeId)(treeClient);
 
       if (node instanceof Error) throw node;
 
@@ -54,7 +58,7 @@ export class DocumentNodePlugin extends NodePlugin<
 
   updateTemplateUuid =
     (nodeId: string, newTemplateUuid: string) => (treeClient: TTreeClient) => {
-      const node = this.get.single(nodeId)(treeClient);
+      const node = this.getSingle(nodeId)(treeClient);
 
       if (node instanceof Error) throw node;
 
@@ -62,12 +66,10 @@ export class DocumentNodePlugin extends NodePlugin<
     };
 
   deleteTemplateUuid = (nodeId: string) => (treeClient: TTreeClient) => {
-    const node = this.get.single(nodeId)(treeClient);
+    const node = this.getSingle(nodeId)(treeClient);
 
     if (node instanceof Error) throw node;
 
     delete node.data.templateUuid;
   };
 }
-
-export type TDocumentNode = z.infer<DocumentNodePlugin["Type"]>;

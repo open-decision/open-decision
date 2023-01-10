@@ -1,18 +1,16 @@
 import { TReadOnlyTreeClient, TTreeClient } from "@open-decision/tree-type";
-import { NodePlugin } from "../../../../basePlugin";
-import { z } from "zod";
+import { INodePlugin, NodePlugin } from "@open-decision/tree-type";
 import { isEmpty } from "ramda";
 
 export const getNodesByInput =
-  (nodePlugin: NodePlugin) =>
+  <TType extends INodePlugin>(nodePlugin: NodePlugin<TType>) =>
   (inputId: string) =>
   (treeClient: TTreeClient | TReadOnlyTreeClient) => {
-    type TNode = z.infer<typeof nodePlugin.Type>;
-    const nodes = nodePlugin.get.collection()(treeClient);
+    const nodes = nodePlugin.getAll(treeClient);
 
     if (!nodes) return undefined;
 
-    const relatedNodes: Record<string, TNode> = {};
+    const relatedNodes: Record<string, TType> = {};
     for (const key in nodes) {
       const node = nodes[key];
 

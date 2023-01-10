@@ -1,14 +1,9 @@
 import { TReadOnlyTreeClient, TTreeClient } from "@open-decision/tree-type";
-import { z } from "zod";
+import { IInputPlugin } from "../../InputPlugin";
 
 export const getInput =
-  <TType extends z.ZodType | z.ZodDiscriminatedUnion<string, any>>(
-    inputType: TType
-  ) =>
+  <TType extends IInputPlugin>() =>
   (inputId: string) =>
   (treeClient: TReadOnlyTreeClient | TTreeClient) => {
-    return treeClient.pluginEntity.get.single<typeof inputType>(
-      "inputs",
-      inputId
-    );
+    return treeClient.pluginEntity.get.single<TType>("inputs", inputId);
   };

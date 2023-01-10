@@ -1,29 +1,27 @@
-import { SelectInputPluginObject } from "@open-decision/plugins-node-helpers";
+import {
+  ISelectInput,
+  SelectInputPluginObject,
+} from "@open-decision/plugins-node-helpers";
+import { SingleSelectVariablePlugin } from "@open-decision/plugins-variable-select";
 import { match } from "ts-pattern";
-import { z } from "zod";
 
-const InputType = SelectInputPluginObject.plugin.Type;
-
+const SingleSelectVariable = new SingleSelectVariablePlugin();
 export const decisionNodeInputPlugins = {
   [SelectInputPluginObject.type]: SelectInputPluginObject,
 };
 
-export const decisionNodeInputType = InputType;
+export type IDecisionNodeInputs = ISelectInput;
 
 export function createVariableFromInput(
-  input: z.infer<typeof decisionNodeInputType>,
+  input: IDecisionNodeInputs,
   answer: any
 ) {
   return match(input)
     .with({ type: "select" }, (input) =>
-      decisionNodeInputPlugins.select.plugin.variable.create(
-        input.id,
-        input.name ?? "",
-        {
-          value: answer,
-          values: input.data.answers,
-        }
-      )
+      SingleSelectVariable.create(input.id, input.name ?? "", {
+        value: answer,
+        values: input.data.answers,
+      })
     )
     .run();
 }

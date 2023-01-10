@@ -1,17 +1,19 @@
+import { INodePlugin, NodePlugin } from "@open-decision/tree-type";
 import { z } from "zod";
 import { createFn, NodePlugin } from "@open-decision/plugins-node-helpers";
 
 export const typeName = "placeholder" as const;
 export const DataType = z.object({});
 
-export class PlaceholderNodePlugin extends NodePlugin<
-  typeof DataType,
-  typeof typeName
-> {
-  constructor() {
-    super(DataType, typeName);
+export type IPlaceholderNode = INodePlugin<
+  typeof typeName,
+  z.infer<typeof DataType>
+>;
 
-    this.defaultData = {};
+export class PlaceholderNodePlugin extends NodePlugin<IPlaceholderNode> {
+  constructor() {
+    super(typeName);
+
     this.isAddable = false;
   }
 
@@ -27,5 +29,3 @@ export class PlaceholderNodePlugin extends NodePlugin<
       return this.Type.parse(newNode);
     };
 }
-
-export type TPlaceholderNode = z.infer<PlaceholderNodePlugin["Type"]>;

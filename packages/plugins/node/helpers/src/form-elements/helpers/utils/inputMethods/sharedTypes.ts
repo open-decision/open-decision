@@ -1,7 +1,3 @@
-import { Input } from "../..";
-import { z } from "zod";
+import { IInputPlugin } from "../../InputPlugin";
 
-export type InputWithRequired = Input.TType<
-  string,
-  z.ZodObject<{ required: z.ZodBoolean }>
->;
+export type InputWithRequired = IInputPlugin<any, { required: boolean }>;

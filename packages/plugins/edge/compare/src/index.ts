@@ -1,4 +1,4 @@
-import { CompareEdgePlugin, TCompareEdge } from "./plugin";
+import { CompareEdgePlugin, ICompareEdge } from "./plugin";
 import { compareEdgeResolver } from "./resolver";
 
 const plugin = new CompareEdgePlugin();
@@ -9,5 +9,5 @@ export const CompareEdgePluginObject = {
 };
 
 export { CompareEdgePlugin };
-export type { TCompareEdge };
+export type { ICompareEdge };
 export { compareEdgeResolver as resolver };

@@ -2,7 +2,10 @@ import * as React from "react";
 import { Button, Form, Icon, Separator } from "@open-decision/design-system";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { AnimatePresence, Reorder, useDragControls } from "framer-motion";
-import { MultiSelectInputPlugin } from "../multiSelectPlugin";
+import {
+  IMultiSelectInput,
+  MultiSelectInputPlugin,
+} from "../multiSelectPlugin";
 import { TrashIcon } from "@radix-ui/react-icons";
 import {
   InputComponentProps,
@@ -12,6 +15,7 @@ import {
   AddOptionButton,
   InputConfig,
 } from "../../../helpers";
+import { ODProgrammerError } from "@open-decision/type-classes";
 
 const MultiSelect = new MultiSelectInputPlugin();
 
@@ -23,19 +27,22 @@ export function MultiSelectInputConfigurator({
 
   const ref = React.useRef<HTMLDivElement | null>(null);
 
-  const input = useTree((treeClient) =>
-    treeClient.pluginEntity.get.single<typeof MultiSelect.Type>(
+  const input = useTree((treeClient) => {
+    const input = treeClient.pluginEntity.get.single<IMultiSelectInput>(
       "inputs",
       inputId
-    )
-  );
+    );
+    if (input instanceof ODProgrammerError) return undefined;
+
+    return input;
+  });
 
   const methods = Form.useForm({
     defaultValues: {
       label: input?.label ?? "",
-      required: [input.data.required ? "required" : ""],
+      required: [input?.data.required ? "required" : ""],
       ...Object.fromEntries(
-        input.data.answers.map((answer) => [answer.id, answer.value])
+        input?.data.answers.map((answer) => [answer.id, answer.value]) ?? []
       ),
     },
   });

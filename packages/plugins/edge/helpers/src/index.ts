@@ -1,20 +1,19 @@
 import {
-  Edge,
+  EdgePlugin,
+  IEdgePlugin,
   TReadOnlyTreeClient,
   TTreeClient,
 } from "@open-decision/tree-type";
-import { z } from "zod";
 import {
   InterpreterContext,
   EVALUATE_NODE_CONDITIONS,
 } from "@open-decision/interpreter";
 import { InterpreterError } from "@open-decision/type-classes";
-import { EdgePlugin } from "./EdgePlugin";
 
-export type EdgeResolver<TEdge extends Edge.TEdge> = (
+export type EdgeResolver<TEdgePlugin extends IEdgePlugin> = (
   treeClient: TTreeClient | TReadOnlyTreeClient
 ) => (
-  edge: TEdge
+  edge: TEdgePlugin
 ) => (
   context: InterpreterContext,
   event: EVALUATE_NODE_CONDITIONS
@@ -23,14 +22,8 @@ export type EdgeResolver<TEdge extends Edge.TEdge> = (
   | { state: "failure" }
   | { state: "error"; error: InterpreterError };
 
-export type EdgePluginObject<
-  TType extends z.ZodType = any,
-  TTypeName extends string = any,
-  TEdge extends Edge.TEdge = any
-> = {
-  plugin: EdgePlugin<TType, TTypeName>;
-  resolver: EdgeResolver<TEdge>;
+export type EdgePluginObject<TEdgePlugin extends IEdgePlugin = IEdgePlugin> = {
+  plugin: EdgePlugin<TEdgePlugin>;
+  resolver: EdgeResolver<TEdgePlugin>;
   type: string;
 };
-
-export * from "./EdgePlugin";

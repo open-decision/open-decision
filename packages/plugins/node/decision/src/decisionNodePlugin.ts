@@ -1,5 +1,12 @@
 import { RichText } from "@open-decision/rich-text-editor";
-import { TReadOnlyTreeClient, TTreeClient } from "@open-decision/tree-type";
+import {
+  deleteEntityFn,
+  INodePlugin,
+  NodePlugin,
+  NodePluginBaseType,
+  TReadOnlyTreeClient,
+  TTreeClient,
+} from "@open-decision/tree-type";
 import { z } from "zod";
 import {
   addInput,
@@ -12,32 +19,35 @@ import {
 import {
   createVariableFromInput,
   decisionNodeInputPlugins,
-  decisionNodeInputType,
   DecisionNodeVariable,
+  IDecisionNodeInputs,
 } from "./createInputPlugins";
+import { ODProgrammerError } from "@open-decision/type-classes";
 
 export const typeName = "decision" as const;
 
-export const DataType = z.object({
+const DataType = z.object({
   content: RichText.optional(),
   input: z.string().optional(),
 });
 
-export class DecisionNodePlugin extends NodePlugin<
-  typeof DataType,
-  typeof typeName
-> {
-  inputType = decisionNodeInputType;
+export const DecisionNodePluginType = NodePluginBaseType(typeName, DataType);
+
+export type IDecisionNodePlugin = INodePlugin<
+  typeof typeName,
+  z.infer<typeof DataType>
+>;
+
+export class DecisionNodePlugin extends NodePlugin<IDecisionNodePlugin> {
   inputPlugins = decisionNodeInputPlugins;
 
   constructor() {
-    super(DataType, typeName);
-    this.defaultData = {};
+    super(typeName, DecisionNodePluginType);
   }
 
   connectInputAndNode =
     (nodeId: string, inputId: string) => (treeClient: TTreeClient) => {
-      const node = this.get.single(nodeId)(treeClient);
+      const node = this.getSingle(nodeId)(treeClient);
 
       if (node instanceof Error) throw node;
 
@@ -48,7 +58,7 @@ export class DecisionNodePlugin extends NodePlugin<
     };
 
   disconnectInputAndNode = (nodeId: string) => (treeClient: TTreeClient) => {
-    const node = this.get.single(nodeId)(treeClient);
+    const node = this.getSingle(nodeId)(treeClient);
 
     if (node instanceof Error) throw node;
 
@@ -56,9 +66,9 @@ export class DecisionNodePlugin extends NodePlugin<
   };
 
   updateData =
-    (nodeId: string, data: Partial<z.infer<typeof this.Type>["data"]>) =>
+    (nodeId: string, data: Partial<IDecisionNodePlugin["data"]>) =>
     (treeClient: TTreeClient) => {
-      const node = this.get.single(nodeId)(treeClient);
+      const node = this.getSingle(nodeId)(treeClient);
 
       if (node instanceof Error) throw node;
 
@@ -72,43 +82,51 @@ export class DecisionNodePlugin extends NodePlugin<
     return this.updateData(nodeId, { input: newInputId });
   };
   updateNodeContent =
-    (nodeId: string, content: z.infer<typeof this.Type>["data"]["content"]) =>
+    (nodeId: string, content: IDecisionNodePlugin["data"]["content"]) =>
     (treeClient: TTreeClient) => {
-      const node = this.get.single(nodeId)(treeClient);
+      const node = this.getSingle(nodeId)(treeClient);
 
       if (node instanceof Error) throw node;
 
       node.data.content = content;
     };
 
-  delete = (id: string) => (treeClient: TTreeClient) => {
-    const node = this.get.single(id)(treeClient);
+  override delete: deleteEntityFn =
+    (ids: string[]) => (treeClient: TTreeClient) => {
+      const nodes = this.getCollection(ids)(treeClient);
 
-    if (node instanceof Error) throw node;
+      if (!nodes) return;
 
-    treeClient.nodes.delete([id]);
+      treeClient.nodes.delete(ids);
 
-    const edges = treeClient.edges.get.byNode(id);
-    treeClient.edges.delete(
-      [
-        ...Object.values(edges?.source ?? {}),
-        ...Object.values(edges?.target ?? {}),
-      ]
-        .filter((edge) => edge.source === id || edge.target === id)
-        .map((edge) => edge.id)
-    );
+      for (const id in nodes) {
+        const value = nodes[id];
 
-    if (node.data.input) {
-      decisionNodeInputPlugins.select.plugin.deleteInput([node.data.input])(
-        treeClient
-      );
-    }
-  };
+        const edges = treeClient.edges.get.byNode(id);
+        treeClient.edges.delete(
+          [
+            ...Object.values(edges?.source ?? {}),
+            ...Object.values(edges?.target ?? {}),
+          ]
+            .filter((edge) => edge.source === id || edge.target === id)
+            .map((edge) => edge.id)
+        );
+
+        if (value.data.input) {
+          decisionNodeInputPlugins.select.plugin.delete([value.data.input])(
+            treeClient
+          );
+        }
+      }
+    };
 
   getVariableByInput = (inputId: string) => (treeClient: TTreeClient) => {
-    const input = treeClient.pluginEntity.get.single<
-      typeof decisionNodeInputType
-    >("inputs", inputId);
+    const input = treeClient.pluginEntity.get.single<IDecisionNodeInputs>(
+      "inputs",
+      inputId
+    );
+
+    if (input instanceof ODProgrammerError) return undefined;
 
     return input?.id;
   };
@@ -116,16 +134,18 @@ export class DecisionNodePlugin extends NodePlugin<
   createVariable =
     (nodeId: string, answer: string) =>
     (treeClient: TTreeClient | TReadOnlyTreeClient) => {
-      const node = this.get.single(nodeId)(treeClient);
+      const node = this.getSingle(nodeId)(treeClient);
 
       if (node instanceof Error) return undefined;
 
       if (!node.data.input) return;
 
-      const input = treeClient.pluginEntity.get.single<typeof this.inputType>(
+      const input = treeClient.pluginEntity.get.single<IDecisionNodeInputs>(
         "inputs",
         node.data.input
       );
+
+      if (input instanceof ODProgrammerError) return undefined;
 
       const variable = createVariableFromInput(input, answer);
 
@@ -136,5 +156,3 @@ export class DecisionNodePlugin extends NodePlugin<
     return answers[nodeId] as DecisionNodeVariable | undefined;
   };
 }
-
-export type TDecisionNode = z.infer<DecisionNodePlugin["Type"]>;

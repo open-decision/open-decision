@@ -61,6 +61,7 @@ type SidebarProps = {
 };
 
 const PlaceholderNode = new PlaceholderNodePlugin();
+
 export function Sidebar({ nodePlugins, edgePlugins }: SidebarProps) {
   const Sidebars = mapValues(nodePlugins, (plugin) => plugin.Editor.Sidebar);
 
@@ -86,7 +87,9 @@ export function Sidebar({ nodePlugins, edgePlugins }: SidebarProps) {
       {nodeId && SidebarContent ? (
         <SidebarContent
           nodeId={nodeId}
-          onNodeCreate={PlaceholderNode.create}
+          onNodeCreate={({ name }) =>
+            PlaceholderNode.create({ data: {}, position: { x: 0, y: 0 }, name })
+          }
           nodePlugins={nodePlugins}
           edgePlugins={edgePlugins}
         />

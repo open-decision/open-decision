@@ -53,7 +53,7 @@ function RendererComponent({
   ...props
 }: NodeRendererProps) {
   const { treeClient, send, environment } = useInterpreter();
-  const groupNode = GroupNode.get.single(nodeId)(treeClient);
+  const groupNode = GroupNode.getSingle(nodeId)(treeClient);
 
   const subTree = React.useMemo(
     () =>
@@ -118,7 +118,7 @@ const RendererContent = ({
   className,
 }: RendererContentProps) => {
   const { getCurrentNode, state, send } = useInterpreter();
-  const groupNode = useInterpreterTree(GroupNode.get.single(groupNodeId));
+  const groupNode = useInterpreterTree(GroupNode.getSingle(groupNodeId));
 
   const methods = Form.useForm();
 
@@ -195,7 +195,7 @@ type ButtonRowProps = {
 };
 
 const ButtonRow = ({ onClick, groupNodeId }: ButtonRowProps) => {
-  const groupNode = useInterpreterTree(GroupNode.get.single(groupNodeId));
+  const groupNode = useInterpreterTree(GroupNode.getSingle(groupNodeId));
 
   if (groupNode instanceof Error) return null;
 

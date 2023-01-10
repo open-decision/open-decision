@@ -1,33 +1,32 @@
 import { isEmpty } from "ramda";
-import { Edge, Tree } from "../type-classes";
-import { z } from "zod";
+import { Tree } from "../type-classes";
 
-const isEdgeOfType = <
-  TType extends Edge.TType<string>,
-  TEdge extends z.infer<TType>
->(
-  edge: TEdge,
+import { IEdgePlugin } from "../plugin/EdgePlugin";
+import { getSingle } from "./getSingle";
+
+const isEdgeOfType = <TType extends IEdgePlugin>(
+  edge: TType,
   type: string
-): edge is TEdge => edge.type === type;
+): edge is TType => edge.type === type;
 
 export const getEdgesByNode =
   (tree: Tree.TTree) =>
-  <TType extends z.ZodType>(nodeId: string, type?: string, Type?: TType) => {
+  <TType extends IEdgePlugin>(nodeId: string, type?: string) => {
     if (!tree.edges) return undefined;
 
     // We loop over the edges and check if the node is present on the edge.
     const relatedEdges: Record<
       "source" | "target",
-      Record<string, z.infer<TType>> | undefined
+      Record<string, TType> | undefined
     > = {
       source: undefined,
       target: undefined,
     };
 
     for (const key in tree.edges) {
-      const edge = tree.edges[key];
+      const edge = getSingle(tree)<TType>("edges")(key);
 
-      if (Type && type ? isEdgeOfType(edge, type) : true) {
+      if (type ? isEdgeOfType(edge, type) : true) {
         if (edge.source === nodeId) {
           if (!relatedEdges.source) relatedEdges.source = {};
           relatedEdges.source[key] = edge;

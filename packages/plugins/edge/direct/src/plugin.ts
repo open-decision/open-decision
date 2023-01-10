@@ -1,17 +1,14 @@
-import { EdgePlugin } from "@open-decision/plugins-edge-helpers";
+import { IEdgePlugin, EdgePlugin } from "@open-decision/tree-type";
 import { z } from "zod";
 
 export const typeName = "direct" as const;
 
-export const DataType = z.void();
+export const DataType = z.undefined();
 
-export class DirectEdgePlugin extends EdgePlugin<
-  typeof DataType,
-  typeof typeName
-> {
+export type IDirectEdge = IEdgePlugin<typeof typeName, undefined>;
+
+export class DirectEdgePlugin extends EdgePlugin<IDirectEdge> {
   constructor() {
-    super(DataType, typeName);
+    super(typeName);
   }
 }
-
-export type TDirectEdge = z.infer<DirectEdgePlugin["Type"]>;

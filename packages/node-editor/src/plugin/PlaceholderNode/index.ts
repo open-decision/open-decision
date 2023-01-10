@@ -4,7 +4,7 @@ import { PlaceholderNodeSidebar } from "./PlaceholderNodeSidebar";
 import { PlaceholderNodePlugin } from "./placholderNodePlugin";
 
 export { PlaceholderNodePlugin } from "./placholderNodePlugin";
-export type { TPlaceholderNode } from "./placholderNodePlugin";
+export type { IPlaceholderNode } from "./placholderNodePlugin";
 
 const plugin = new PlaceholderNodePlugin();
 

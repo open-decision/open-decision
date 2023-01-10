@@ -1,8 +1,11 @@
 import { ClassNameArrayProp, onNodeCreate } from "@open-decision/design-system";
 import { EdgePluginObject } from "@open-decision/plugins-edge-helpers";
+import {
+  IEntityPluginBase,
+  INodePlugin,
+  NodePlugin,
+} from "@open-decision/tree-type";
 import { NodeProps } from "reactflow";
-import { z } from "zod";
-import { NodePlugin } from "./NodePlugin";
 
 export type NodePluginProps = NodeProps & {
   className?: string;
@@ -36,17 +39,16 @@ export type NodeRendererProps = {
 export type NodeRenderer = (props: NodeRendererProps) => JSX.Element | null;
 
 export type NodePluginObject<
-  TType extends z.ZodType = any,
-  TTypeName extends string = any,
-  TPluginEntities extends z.ZodRawShape = any
+  TType extends INodePlugin = INodePlugin,
+  TPluginEntities extends IEntityPluginBase = IEntityPluginBase
 > = {
   Editor: {
     Node: CanvasNode;
     Sidebar: TNodeSidebar;
   };
   Renderer: NodeRenderer | null;
-  plugin: NodePlugin<TType, TTypeName>;
-  type: TTypeName;
+  plugin: NodePlugin<TType>;
+  type: TType["type"];
   pluginEntities?: TPluginEntities;
   Icon: React.ForwardRefExoticComponent<
     any & React.RefAttributes<SVGSVGElement>

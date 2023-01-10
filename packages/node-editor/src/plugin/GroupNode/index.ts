@@ -5,7 +5,7 @@ import { GroupNodeRenderer } from "./GroupNodeRenderer";
 import { GroupIcon } from "@radix-ui/react-icons";
 
 export { GroupNodePlugin } from "./groupNodePlugin";
-export type { TGroupNode } from "./groupNodePlugin";
+export type { IGroupNode } from "./groupNodePlugin";
 
 const plugin = new GroupNodePlugin();
 

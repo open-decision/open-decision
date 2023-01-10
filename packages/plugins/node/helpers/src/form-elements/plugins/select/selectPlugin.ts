@@ -1,6 +1,5 @@
 import { z } from "zod";
-import { SingleSelectVariablePlugin } from "@open-decision/plugins-variable-select";
-import { Answer, createFn, InputPlugin } from "../../helpers";
+import { Answer, IInputPlugin, InputPlugin, TAnswer } from "../../helpers";
 import {
   addAnswer,
   createAnswer,
@@ -20,43 +19,28 @@ export const DataType = z.object({
   required: z.boolean(),
 });
 
-export type TSelectInput = z.infer<SelectInputPlugin["Type"]>;
-const SingleSelectVariable = new SingleSelectVariablePlugin();
-
-export class SelectInputPlugin extends InputPlugin<
-  typeof DataType,
+export type ISelectInput = IInputPlugin<
   typeof typeName,
-  typeof SingleSelectVariable
-> {
+  { answers: TAnswer[]; required: boolean }
+>;
+
+export class SelectInputPlugin extends InputPlugin<ISelectInput> {
   constructor() {
-    super(DataType, typeName, SingleSelectVariable);
-    this.defaultData = { answers: [], required: false };
+    super("select", { answers: [], required: false });
   }
-
-  create: createFn<typeof this.Type> = (data) => {
-    const newInput = {
-      id: crypto.randomUUID(),
-      type: this.type,
-      required: false,
-      ...data,
-      data: { ...this.defaultData, ...data?.data },
-    };
-
-    return this.parse(newInput);
-  };
 
   createAnswer = createAnswer;
 
-  getAnswer = getAnswer(this.Type);
+  getAnswer = getAnswer<ISelectInput>();
 
-  addAnswer = addAnswer(this.Type);
+  addAnswer = addAnswer<ISelectInput>();
 
-  updateAnswer = updateAnswer(this.Type);
+  updateAnswer = updateAnswer<ISelectInput>();
 
-  reorderAnswers = reorderAnswers(this.Type);
+  reorderAnswers = reorderAnswers<ISelectInput>();
 
-  deleteAnswer = deleteAnswer(this.Type);
+  deleteAnswer = deleteAnswer<ISelectInput>();
 
-  getInputsWithAnswers = getInputsWithAnswers(this.Type);
-  updateRequired = updateRequired(this.Type);
+  getInputsWithAnswers = getInputsWithAnswers<ISelectInput>();
+  updateRequired = updateRequired<ISelectInput>();
 }

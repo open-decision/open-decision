@@ -4,13 +4,17 @@ import {
   createFn,
 } from "@open-decision/plugins-node-helpers";
 import { RichText } from "@open-decision/rich-text-editor";
-import { TReadOnlyTreeClient, TTreeClient } from "@open-decision/tree-type";
+import {
+  NodePlugin,
+  NodePluginBaseType,
+  TReadOnlyTreeClient,
+  TTreeClient,
+} from "@open-decision/tree-type";
 import { z } from "zod";
 import {
   createVariableFromInput,
   formNodeInputPlugins,
-  formNodeInputType,
-  FormNodeVariable,
+  IFormNodeInput,
 } from "./createInputPlugins";
 import { ODProgrammerError } from "@open-decision/type-classes";
 import { fromPairs } from "remeda";
@@ -20,20 +24,20 @@ const DirectEdge = new DirectEdgePlugin();
 
 export const typeName = "form" as const;
 
-export const DataType = z.object({
+const DataType = z.object({
   content: RichText.optional(),
   inputs: z.array(z.string()),
 });
 
-export class FormNodePlugin extends NodePlugin<
-  typeof DataType,
-  typeof typeName
-> {
+export const FormNodePluginType = NodePluginBaseType(typeName, DataType);
+
+export type IFormNodePlugin = z.infer<typeof FormNodePluginType>;
+
+export class FormNodePlugin extends NodePlugin<IFormNodePlugin> {
   inputPlugins = formNodeInputPlugins;
-  inputType = formNodeInputType;
+
   constructor() {
-    super(DataType, typeName);
-    this.defaultData = { inputs: [] };
+    super(typeName, FormNodePluginType, { inputs: [] });
   }
 
   create: createFn<typeof this.Type> =
@@ -49,9 +53,9 @@ export class FormNodePlugin extends NodePlugin<
     };
 
   updateNodeContent =
-    (nodeId: string, content: z.infer<typeof this.Type>["data"]["content"]) =>
+    (nodeId: string, content: IFormNodePlugin["data"]["content"]) =>
     (treeClient: TTreeClient) => {
-      const node = this.get.single(nodeId)(treeClient);
+      const node = this.getSingle(nodeId)(treeClient);
 
       if (node instanceof Error) throw node;
 
@@ -60,7 +64,7 @@ export class FormNodePlugin extends NodePlugin<
 
   reorderInputs =
     (nodeId: string, newInputs: string[]) => (treeClient: TTreeClient) => {
-      const node = this.get.single(nodeId)(treeClient);
+      const node = this.getSingle(nodeId)(treeClient);
 
       if (node instanceof Error) throw node;
 
@@ -69,7 +73,7 @@ export class FormNodePlugin extends NodePlugin<
 
   connectInputAndNode =
     (nodeId: string, inputId: string) => (treeClient: TTreeClient) => {
-      const node = this.get.single(nodeId)(treeClient);
+      const node = this.getSingle(nodeId)(treeClient);
 
       if (node instanceof Error) throw node;
 
@@ -81,7 +85,7 @@ export class FormNodePlugin extends NodePlugin<
 
   disconnectInputAndNode =
     (nodeId: string, inputId: string) => (treeClient: TTreeClient) => {
-      const node = this.get.single(nodeId)(treeClient);
+      const node = this.getSingle(nodeId)(treeClient);
 
       if (node instanceof Error) throw node;
 
@@ -105,10 +109,11 @@ export class FormNodePlugin extends NodePlugin<
     (treeClient: TTreeClient) => {
       const edge = edgeId ? treeClient.edges.get.single(edgeId) : undefined;
 
-      if (edge instanceof Error) throw edge;
+      if (!edge) return;
 
       if (!edge?.target && newItem) {
         const newEdge = DirectEdge.create({
+          data: undefined,
           source: nodeId,
           target: newItem,
         })(treeClient);
@@ -135,9 +140,14 @@ export class FormNodePlugin extends NodePlugin<
     (treeClient: TTreeClient | TReadOnlyTreeClient) => {
       return fromPairs(
         Object.entries(answers).map(([key, answer]) => {
-          const input = treeClient.pluginEntity.get.single<
-            typeof this.inputType
-          >("inputs", key);
+          const input = treeClient.pluginEntity.get.single<IFormNodeInput>(
+            "inputs",
+            key
+          );
+
+          if (input instanceof ODProgrammerError) {
+            throw input;
+          }
 
           const variable = createVariableFromInput(input, answer);
 
@@ -152,16 +162,4 @@ export class FormNodePlugin extends NodePlugin<
         })
       );
     };
-
-  getAnswer =
-    (nodeId: string, answers: any) =>
-    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
-      const node = this.get.single(nodeId)(treeClient);
-      const inputs = this.inputs.getInputByNode(nodeId)(treeClient);
-      const answer = answers[nodeId]?.answers as FormNodeVariable | undefined;
-
-      return;
-    };
 }
-
-export type TFormNode = z.infer<FormNodePlugin["Type"]>;

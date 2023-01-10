@@ -1,22 +1,26 @@
 import { Form, Stack } from "@open-decision/design-system";
 import { useInterpreterTree } from "@open-decision/interpreter-react";
-import { SelectInputPlugin } from "../selectPlugin";
+import { ISelectInput } from "../selectPlugin";
 import { RendererComponentProps, RendererRadioGroup } from "../../../helpers";
-
-const SelectInput = new SelectInputPlugin();
+import { ODProgrammerError } from "@open-decision/type-classes";
 
 export function SelectInputRendererComponent({
   inputId,
   className,
 }: RendererComponentProps) {
   const input = useInterpreterTree((treeClient) => {
-    return treeClient.pluginEntity.get.single<typeof SelectInput.Type>(
+    const input = treeClient.pluginEntity.get.single<ISelectInput>(
       "inputs",
       inputId
     );
+
+    if (input instanceof ODProgrammerError) return undefined;
+    return input;
   });
 
   const { watch } = Form.useFormContext();
+
+  if (!input) return null;
 
   return (
     <Form.Field

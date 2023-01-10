@@ -1,5 +1,6 @@
+import { DirectEdgePlugin } from "@open-decision/plugins-edge-direct";
 import { RichText } from "@open-decision/rich-text-editor";
-import { TTreeClient } from "@open-decision/tree-type";
+import { INodePlugin, NodePlugin, TTreeClient } from "@open-decision/tree-type";
 import { z } from "zod";
 import { createFn, NodePlugin } from "@open-decision/plugins-node-helpers";
 
@@ -10,14 +11,14 @@ export const DataType = z.object({
   target: z.string().optional(),
 });
 
-export class InfoNodePlugin extends NodePlugin<
-  typeof DataType,
-  typeof typeName
-> {
-  constructor() {
-    super(DataType, typeName);
+export type IInfoNodePlugin = INodePlugin<
+  typeof typeName,
+  z.infer<typeof DataType>
+>;
 
-    this.defaultData = {};
+export class InfoNodePlugin extends NodePlugin<IInfoNodePlugin> {
+  constructor() {
+    super(typeName);
   }
 
   create: createFn<typeof this.Type> =
@@ -33,9 +34,9 @@ export class InfoNodePlugin extends NodePlugin<
     };
 
   updateNodeContent =
-    (nodeId: string, content: z.infer<typeof this.Type>["data"]["content"]) =>
+    (nodeId: string, content: IInfoNodePlugin["data"]["content"]) =>
     (treeClient: TTreeClient) => {
-      const node = this.get.single(nodeId)(treeClient);
+      const node = this.getSingle(nodeId)(treeClient);
 
       if (node instanceof Error) throw node;
 
@@ -58,10 +59,11 @@ export class InfoNodePlugin extends NodePlugin<
       if (edge instanceof Error) throw edge;
 
       if (!edge?.target && newItem) {
-        const newEdge = treeClient.edges.create({
+        const newEdge = DirectEdge.create({
+          data: undefined,
           source: nodeId,
           target: newItem,
-        });
+        })(treeClient);
 
         if (newEdge instanceof Error) return;
 
@@ -72,5 +74,3 @@ export class InfoNodePlugin extends NodePlugin<
         treeClient.edges.connect.toTargetNode(edge.id, newItem);
     };
 }
-
-export type TInfoNode = z.infer<InfoNodePlugin["Type"]>;

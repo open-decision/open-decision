@@ -6,11 +6,11 @@ import {
 import { EdgeResolver } from "@open-decision/plugins-edge-helpers";
 import { SingleSelectVariablePlugin } from "@open-decision/plugins-variable-select";
 import { ODProgrammerError } from "@open-decision/type-classes";
-import { TCompareEdge } from "./plugin";
+import { ICompareEdge } from "./plugin";
 
 const SingleSelectVariable = new SingleSelectVariablePlugin();
 
-export const compareEdgeResolver: EdgeResolver<TCompareEdge> =
+export const compareEdgeResolver: EdgeResolver<ICompareEdge> =
   (treeClient) => (edge) => (context) => {
     const currentNode = getCurrentNode(treeClient, context);
 

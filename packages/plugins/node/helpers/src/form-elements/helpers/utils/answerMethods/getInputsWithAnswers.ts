@@ -1,9 +1,8 @@
 import { InputWithAnswers } from "./sharedTypes";
-import { z } from "zod";
 
 export const getInputsWithAnswers =
-  <TType extends InputWithAnswers>(_Type: TType) =>
-  (inputs: z.infer<TType>[]): Record<string, z.infer<TType>> | undefined => {
+  <TType extends InputWithAnswers>() =>
+  (inputs: TType[]): Record<string, TType> | undefined => {
     if (!inputs) return undefined;
 
     const filteredInputs = Object.values(inputs).reduce(
@@ -13,7 +12,7 @@ export const getInputsWithAnswers =
 
         return previousValue;
       },
-      {} as Record<string, z.infer<TType>>
+      {} as Record<string, TType>
     );
 
     if (Object.values(filteredInputs).length === 0) return undefined;

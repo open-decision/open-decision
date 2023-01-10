@@ -1,6 +1,7 @@
 import { labelClasses } from "@open-decision/design-system";
 import { InputDropdown } from "@open-decision/plugins-node-helpers";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
+import { IDecisionNodeInputs } from "../createInputPlugins";
 import { DecisionNodePlugin } from "../decisionNodePlugin";
 
 const DecisionNode = new DecisionNodePlugin();
@@ -15,10 +16,14 @@ export function InputHeader({ children, inputId, nodeId }: InputHeaderProps) {
   const treeClient = useTreeClient();
   const inputType = useTree((treeClient) => {
     if (!inputId) return undefined;
-    return treeClient.pluginEntity.get.single<typeof DecisionNode.inputType>(
+    const input = treeClient.pluginEntity.get.single<IDecisionNodeInputs>(
       "inputs",
       inputId
-    ).type;
+    );
+
+    if (input instanceof Error) return undefined;
+
+    return input.type;
   });
 
   return (
@@ -33,14 +38,12 @@ export function InputHeader({ children, inputId, nodeId }: InputHeaderProps) {
           inputPlugins={DecisionNode.inputPlugins}
           onSelect={(newType) => {
             if (inputType && inputId) {
-              DecisionNode.inputPlugins[inputType].plugin.deleteInput([
-                inputId,
-              ]);
+              DecisionNode.inputPlugins[inputType].plugin.delete([inputId]);
             }
 
             const newInput = DecisionNode.inputPlugins[newType].plugin.create(
               {}
-            );
+            )(treeClient);
             treeClient.pluginEntity.add("inputs", newInput);
             DecisionNode.updateInput(nodeId, newInput.id)(treeClient);
           }}

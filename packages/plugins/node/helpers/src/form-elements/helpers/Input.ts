@@ -4,13 +4,14 @@ export const Type = <TType extends string, TData extends z.ZodType = any>(
   type: TType,
   data: TData
 ) =>
-  z.object({
-    id: z.string().uuid(),
-    type: z.literal(type),
-    label: z.string().optional(),
-    name: z.string().optional(),
-    data: data,
-  });
+  z
+    .object({
+      id: z.string().uuid(),
+      label: z.string().optional(),
+      name: z.string().optional(),
+    })
+    .setKey("type", z.literal(type))
+    .setKey("data", data);
 
 export const Record = <
   TType extends string = string,

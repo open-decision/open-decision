@@ -1,32 +1,13 @@
-import { ODProgrammerError } from "@open-decision/type-classes";
-import { pick } from "remeda";
+import { IEdgePlugin } from "../plugin";
 import { Tree } from "../type-classes";
+import { getSingle } from "./getSingle";
 
-/**
- * Returns a single edge from the tree.
- * @throws {ODProgrammerError} if the edge does not exist
- */
-export const getEdge = (tree: Tree.TTree) => (edgeId: string) => {
-  const edge = tree.edges?.[edgeId];
+export const getEdge =
+  (tree: Tree.TTree) =>
+  <TType extends IEdgePlugin>(edgeId: string) => {
+    const edge = getSingle(tree)<IEdgePlugin>("edges")<TType>(edgeId);
 
-  if (!edge)
-    return new ODProgrammerError({
-      code: "ENTITY_NOT_FOUND",
-      message: "Tried to get an edge that does not exist on the tree.",
-    });
+    if (edge instanceof Error) throw edge;
 
-  return edge;
-};
-
-export const getEdges =
-  <TTree extends Tree.TTree>(tree: TTree) =>
-  (edgeIds?: string[]): TTree["edges"] | undefined => {
-    if (!tree.edges) return undefined;
-
-    if (!edgeIds) return tree.edges;
-
-    const edges = pick(tree.edges, edgeIds);
-    if (!edges) return undefined;
-
-    return edges;
+    return edge;
   };

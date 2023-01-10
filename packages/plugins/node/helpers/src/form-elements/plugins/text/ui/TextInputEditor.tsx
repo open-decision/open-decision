@@ -1,7 +1,8 @@
 import { Form, Separator, Stack } from "@open-decision/design-system";
-import { TextInputPlugin } from "../textPlugin";
+import { ITextInput, TextInputPlugin } from "../textPlugin";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { InputComponentProps, InputConfig } from "../../../helpers";
+import { ODProgrammerError } from "@open-decision/type-classes";
 
 const TextInput = new TextInputPlugin();
 
@@ -11,13 +12,20 @@ export const TextInputEditor = ({
 }: InputComponentProps) => {
   const treeClient = useTreeClient();
 
-  const input = useTree((treeClient) =>
-    treeClient.pluginEntity.get.single<typeof TextInput.Type>("inputs", inputId)
-  );
+  const input = useTree((treeClient) => {
+    const input = treeClient.pluginEntity.get.single<ITextInput>(
+      "inputs",
+      inputId
+    );
+
+    if (input instanceof ODProgrammerError) return undefined;
+
+    return input;
+  });
 
   const methods = Form.useForm({
     defaultValues: {
-      required: [input.data.required ? "required" : ""],
+      required: [input?.data.required ? "required" : ""],
       label: input?.label ?? "",
     },
   });

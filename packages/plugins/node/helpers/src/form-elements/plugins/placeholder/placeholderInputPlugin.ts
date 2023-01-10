@@ -1,35 +1,17 @@
 import { z } from "zod";
-import { createFn, InputPlugin } from "../../helpers";
-import { EmptyVariablePlugin } from "@open-decision/plugins-variable-empty";
+import { IInputPlugin, InputPlugin } from "../../helpers";
 
-export const typeName = "placeholder" as const;
+export const typeName = "placeholder";
 
 export const DataType = z.object({});
 
-const EmptyVariable = new EmptyVariablePlugin();
-
-export class PlaceholderInputPlugin extends InputPlugin<
-  typeof DataType,
+export type IPlaceholderInput = IInputPlugin<
   typeof typeName,
-  typeof EmptyVariable
-> {
+  z.infer<typeof DataType>
+>;
+
+export class PlaceholderInputPlugin extends InputPlugin<IPlaceholderInput> {
   constructor() {
-    super(DataType, typeName, EmptyVariable);
-
-    this.defaultData = {};
+    super(typeName);
   }
-
-  create: createFn<typeof this.Type> = (data) => {
-    const newInput = {
-      id: crypto.randomUUID(),
-      type: this.type,
-      required: false,
-      ...data,
-      data: { ...this.defaultData, ...data?.data },
-    };
-
-    return this.parse(newInput);
-  };
 }
-
-export type TPlaceholderInput = z.infer<PlaceholderInputPlugin["Type"]>;

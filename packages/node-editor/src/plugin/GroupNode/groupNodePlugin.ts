@@ -2,6 +2,8 @@ import { DirectEdgePlugin } from "@open-decision/plugins-edge-direct";
 import { createFn, NodePlugin } from "@open-decision/plugins-node-helpers";
 import { RichText } from "@open-decision/rich-text-editor";
 import {
+  INodePlugin,
+  NodePlugin,
   TReadOnlyTreeClient,
   Tree,
   TTreeClient,
@@ -24,13 +26,12 @@ export const DataType = z
     children: [],
   });
 
-export class GroupNodePlugin extends NodePlugin<
-  typeof DataType,
-  typeof typeName
-> {
+export type IGroupNode = INodePlugin<typeof typeName, z.infer<typeof DataType>>;
+
+export class GroupNodePlugin extends NodePlugin<IGroupNode> {
   constructor() {
-    super(DataType, typeName, { isAddable: false });
-    this.defaultData = { children: [] };
+    super(typeName, { children: [] });
+    this.isAddable = false;
   }
 
   create: createFn<typeof this.Type> =
@@ -48,7 +49,7 @@ export class GroupNodePlugin extends NodePlugin<
   updateTitle =
     (nodeId: string, newTitle: string) =>
     (treeClient: TTreeClient | TReadOnlyTreeClient) => {
-      const node = this.get.single(nodeId)(treeClient);
+      const node = this.getSingle(nodeId)(treeClient);
 
       if (node instanceof Error) throw node;
 
@@ -58,7 +59,7 @@ export class GroupNodePlugin extends NodePlugin<
   updateCta =
     (nodeId: string, newCta: string) =>
     (treeClient: TTreeClient | TReadOnlyTreeClient) => {
-      const node = this.get.single(nodeId)(treeClient);
+      const node = this.getSingle(nodeId)(treeClient);
 
       if (node instanceof Error) throw node;
 
@@ -82,6 +83,7 @@ export class GroupNodePlugin extends NodePlugin<
 
       if (!edge?.target && newItem) {
         const newEdge = DirectEdge.create({
+          data: undefined,
           source: nodeId,
           target: newItem,
         })(treeClient);
@@ -96,14 +98,12 @@ export class GroupNodePlugin extends NodePlugin<
     };
 
   updateNodeContent =
-    (nodeId: string, content: z.infer<typeof this.Type>["data"]["content"]) =>
+    (nodeId: string, content: IGroupNode["data"]["content"]) =>
     (treeClient: TTreeClient) => {
-      const node = this.get.single(nodeId)(treeClient);
+      const node = this.getSingle(nodeId)(treeClient);
 
       if (node instanceof Error) throw node;
 
       node.data.content = content;
     };
 }
-
-export type TGroupNode = z.infer<GroupNodePlugin["Type"]>;

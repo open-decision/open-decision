@@ -17,7 +17,7 @@ const GroupNode = new GroupNodePlugin();
 type Props = { nodeId: string };
 
 export function GroupNodeSidebarContent({ nodeId }: Props) {
-  const node = useTree(GroupNode.get.single(nodeId));
+  const node = useTree(GroupNode.getSingle(nodeId));
   const treeClient = useTreeClient();
 
   const t = useTranslations("builder.nodeEditingSidebar");

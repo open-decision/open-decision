@@ -1,40 +1,14 @@
-import { z } from "zod";
-import { VariablePlugin } from "@open-decision/plugins-variable-helpers";
-import { merge } from "remeda";
-
-export const Value = z.object({ id: z.string().uuid(), value: z.string() });
-
-export const DataType = z.object({
-  values: z.array(Value).default([]),
-  value: z.string().optional(),
-});
+import { IVariablePluginBase, VariablePlugin } from "@open-decision/tree-type";
 
 const typeName = "single-select-variable";
 
-export class SingleSelectVariablePlugin extends VariablePlugin<
-  typeof DataType,
-  typeof typeName
-> {
+export type ISelectVariable = IVariablePluginBase<
+  typeof typeName,
+  { values: { id: string; value: string }[]; value?: string }
+>;
+
+export class SingleSelectVariablePlugin extends VariablePlugin<ISelectVariable> {
   constructor() {
-    super(DataType, typeName);
+    super(typeName);
   }
-
-  create = (
-    id: string,
-    name: string,
-    data: z.infer<typeof this.Type>["data"]
-  ): z.infer<typeof this.Type> => {
-    const newVariable = merge(
-      { data },
-      {
-        type: this.type,
-        name,
-        id,
-      }
-    );
-
-    return newVariable;
-  };
 }
-
-export type TSingleSelectVariable = z.infer<SingleSelectVariablePlugin["Type"]>;

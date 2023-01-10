@@ -1,6 +1,5 @@
 import { z } from "zod";
-import { MultiSelectVariablePlugin } from "@open-decision/plugins-variable-multi-select";
-import { Answer, createFn, InputPlugin } from "../../helpers";
+import { Answer, IInputPlugin, InputPlugin } from "../../helpers";
 import {
   addAnswer,
   createAnswer,
@@ -19,45 +18,28 @@ export const DataType = z.object({
   required: z.boolean(),
 });
 
-const MultiSelectVariable = new MultiSelectVariablePlugin();
-
-export class MultiSelectInputPlugin extends InputPlugin<
-  typeof DataType,
+export type IMultiSelectInput = IInputPlugin<
   typeof typeName,
-  typeof MultiSelectVariable
-> {
+  z.infer<typeof DataType>
+>;
+
+export class MultiSelectInputPlugin extends InputPlugin<IMultiSelectInput> {
   constructor() {
-    super(DataType, typeName, MultiSelectVariable);
-
-    this.defaultData = { answers: [], required: false };
+    super(typeName, { answers: [], required: false });
   }
-
-  create: createFn<typeof this.Type> = (data) => {
-    const newInput = {
-      id: crypto.randomUUID(),
-      type: this.type,
-      required: false,
-      ...data,
-      data: { ...this.defaultData, ...data?.data },
-    };
-
-    return this.parse(newInput);
-  };
 
   createAnswer = createAnswer;
 
-  addAnswer = addAnswer(this.Type);
+  addAnswer = addAnswer<IMultiSelectInput>();
 
-  getAnswer = getAnswer(this.Type);
+  getAnswer = getAnswer<IMultiSelectInput>();
 
-  updateAnswer = updateAnswer(this.Type);
+  updateAnswer = updateAnswer<IMultiSelectInput>();
 
-  reorderAnswers = reorderAnswers(this.Type);
+  reorderAnswers = reorderAnswers<IMultiSelectInput>();
 
-  deleteAnswer = deleteAnswer(this.Type);
+  deleteAnswer = deleteAnswer<IMultiSelectInput>();
 
-  getInputsWithAnswers = getInputsWithAnswers(this.Type);
-  updateRequired = updateRequired(this.Type);
+  getInputsWithAnswers = getInputsWithAnswers<IMultiSelectInput>();
+  updateRequired = updateRequired<IMultiSelectInput>();
 }
-
-export type TMultiSelectInput = z.infer<MultiSelectInputPlugin["Type"]>;

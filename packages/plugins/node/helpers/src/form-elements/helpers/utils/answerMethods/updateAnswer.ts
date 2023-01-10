@@ -4,13 +4,13 @@ import { InputWithAnswers } from "./sharedTypes";
 import { getAnswer } from "./getAnswer";
 
 export const updateAnswer =
-  <TType extends InputWithAnswers>(Type: TType) =>
+  <TType extends InputWithAnswers>() =>
   (inputId: string, answerId: string, newValue: string) =>
   (treeClient: TTreeClient) => {
-    const input = getInput(Type)(inputId)(treeClient);
+    const input = getInput<TType>()(inputId)(treeClient);
     if (!input) return;
 
-    const answer = getAnswer(Type)(input, answerId);
+    const answer = getAnswer<TType>()(input, answerId);
 
     if (!answer) return;
 

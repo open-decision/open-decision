@@ -1,21 +1,14 @@
 import { TTreeClient } from "@open-decision/tree-type";
-import { z } from "zod";
+import { ODProgrammerError } from "@open-decision/type-classes";
+import { IInputPlugin } from "../../InputPlugin";
 
 export const updateInputLabel =
-  <
-    TPluginType extends z.ZodObject<{ label: z.ZodOptional<z.ZodString> }>,
-    TType extends TPluginType | z.ZodDiscriminatedUnion<string, TPluginType[]>
-  >(
-    Type: TType
-  ) =>
+  <TType extends IInputPlugin>() =>
   (inputId: string, newLabel: string) =>
   (treeClient: TTreeClient) => {
-    const input = treeClient.pluginEntity.get.single<typeof Type>(
-      "inputs",
-      inputId
-    );
+    const input = treeClient.pluginEntity.get.single<TType>("inputs", inputId);
 
-    if (!input) return;
+    if (input instanceof ODProgrammerError) return;
 
     input.label = newLabel;
   };

@@ -3,10 +3,13 @@ import {
   SelectInputPluginObject,
   TextInputPluginObject,
   PlaceholderInputPluginObject,
+  IMultiSelectInput,
+  ITextInput,
+  ISelectInput,
+  IPlaceholderInput,
 } from "@open-decision/plugins-node-helpers";
 import { ODProgrammerError } from "@open-decision/type-classes";
 import { match } from "ts-pattern";
-import { z } from "zod";
 
 export const formNodeInputPlugins = {
   [MultiSelectInputPluginObject.type]: MultiSelectInputPluginObject,
@@ -15,17 +18,13 @@ export const formNodeInputPlugins = {
   [PlaceholderInputPluginObject.type]: PlaceholderInputPluginObject,
 };
 
-export const formNodeInputType = z.discriminatedUnion("type", [
-  MultiSelectInputPluginObject.plugin.Type,
-  TextInputPluginObject.plugin.Type,
-  SelectInputPluginObject.plugin.Type,
-  PlaceholderInputPluginObject.plugin.Type,
-]);
+export type IFormNodeInput =
+  | IMultiSelectInput
+  | ITextInput
+  | ISelectInput
+  | IPlaceholderInput;
 
-export function createVariableFromInput(
-  input: z.infer<typeof formNodeInputType>,
-  answer: any
-) {
+export function createVariableFromInput(input: IFormNodeInput, answer: any) {
   return match(input)
     .with({ type: "text" }, (input) => {
       if (answer && typeof answer !== "string")

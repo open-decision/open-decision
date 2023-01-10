@@ -6,23 +6,28 @@ import {
 import { NodeRenderer } from "@open-decision/plugins-node-helpers";
 import { RendererPrimitives } from "@open-decision/renderer";
 import { RichTextRenderer } from "@open-decision/rich-text-editor";
+import { ODProgrammerError } from "@open-decision/type-classes";
+import { IDecisionNodeInputs } from "./createInputPlugins";
 import { DecisionNodePlugin } from "./decisionNodePlugin";
 
 const DecisionNode = new DecisionNodePlugin();
 
 export const DecisionNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
-  const { getAnswers, send, treeClient, state } = useInterpreter();
+  const { getAnswers, send, treeClient } = useInterpreter();
 
-  const node = DecisionNode.get.single(nodeId)(treeClient);
+  const node = DecisionNode.getSingle(nodeId)(treeClient);
   const isError = node instanceof Error;
 
   const inputType = useInterpreterTree((treeClient) => {
     if (isError || !node.data.input) return undefined;
 
-    return treeClient.pluginEntity.get.single<typeof DecisionNode.inputType>(
+    const input = treeClient.pluginEntity.get.single<IDecisionNodeInputs>(
       "inputs",
       node.data.input
-    )?.type;
+    );
+
+    if (input instanceof ODProgrammerError) return undefined;
+    return input.type;
   });
 
   const answer = isError

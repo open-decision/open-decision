@@ -9,7 +9,7 @@ const InfoNode = new InfoNodePlugin();
 
 export const InfoNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
   const { treeClient } = useInterpreter();
-  const node = InfoNode.get.single(nodeId)(treeClient);
+  const node = InfoNode.getSingle(nodeId)(treeClient);
 
   const methods = Form.useForm({});
   const { send } = useInterpreter();

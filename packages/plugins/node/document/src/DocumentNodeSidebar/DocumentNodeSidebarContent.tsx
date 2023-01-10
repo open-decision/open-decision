@@ -25,7 +25,7 @@ export function DocumentNodeSidebarContent({ nodeId }: Props) {
   const t = useTranslations("builder.nodeEditingSidebar");
 
   const node = useTree((treeClient) => {
-    return DocumentNode.get.single(nodeId)(treeClient);
+    return DocumentNode.getSingle(nodeId)(treeClient);
   });
 
   if (node instanceof Error) return null;

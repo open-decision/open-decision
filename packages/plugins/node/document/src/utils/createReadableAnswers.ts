@@ -91,7 +91,7 @@ export function createReadableAnswers(
       }
 
       case "single-select-variable": {
-        const node = DecisionNode.get.single(answerId)(treeClient);
+        const node = DecisionNode.getSingle(answerId)(treeClient);
 
         if (!node) break;
 

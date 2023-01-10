@@ -12,13 +12,14 @@ import {
 import { sidebarCardClasses } from "@open-decision/node-editor";
 import {
   CompareEdgePlugin,
-  TCompareEdge,
+  ICompareEdge,
 } from "@open-decision/plugins-edge-compare";
 import {
   SelectInputPlugin,
   TNodeSidebarProps,
 } from "@open-decision/plugins-node-helpers";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
+import { ODProgrammerError } from "@open-decision/type-classes";
 import { CrossCircledIcon } from "@radix-ui/react-icons";
 import { Controller, useFieldArray } from "react-hook-form";
 import { DecisionNodePlugin } from "../decisionNodePlugin";
@@ -29,7 +30,7 @@ const CompareEdge = new CompareEdgePlugin();
 
 type Props = {
   nodeId: string;
-  edge: TCompareEdge;
+  edge: ICompareEdge;
   onEdgeCreate: onEdgeCreate;
 } & Pick<TNodeSidebarProps, "onNodeCreate">;
 
@@ -40,7 +41,11 @@ export function PathCard({ onNodeCreate, onEdgeCreate, nodeId, edge }: Props) {
   const treeClient = useTreeClient();
 
   const inputAnswers = useTree((treeClient) => {
-    return DecisionNode.inputs.getInputByNode(nodeId)(treeClient)?.data.answers;
+    const input = DecisionNode.inputs.getInputByNode(nodeId)(treeClient);
+
+    if (input instanceof ODProgrammerError) return undefined;
+
+    return input?.data.answers;
   });
 
   const targetName = useTree((treeClient) =>
@@ -67,9 +72,13 @@ export function PathCard({ onNodeCreate, onEdgeCreate, nodeId, edge }: Props) {
     name: edge.id,
   });
 
-  const inputId = useTree(
-    (treeClient) => DecisionNode.getInputByNode(nodeId)(treeClient)?.id
-  );
+  const inputId = useTree((treeClient) => {
+    const input = DecisionNode.inputs.getInputByNode(nodeId)(treeClient);
+
+    if (input instanceof ODProgrammerError) return undefined;
+
+    return input?.id;
+  });
 
   return (
     <section className={stackClasses({}, sidebarCardClasses)}>
