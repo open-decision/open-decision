@@ -7,7 +7,7 @@ import { NodeRenderer } from "@open-decision/plugins-node-helpers";
 import { RendererPrimitives } from "@open-decision/renderer";
 import { RichTextRenderer } from "@open-decision/rich-text-editor";
 import { ODProgrammerError } from "@open-decision/type-classes";
-import { IDecisionNodeInputs } from "./createInputPlugins";
+import { TDecisionNodeInputs } from "./createInputPlugins";
 import { DecisionNodePlugin } from "./decisionNodePlugin";
 
 const DecisionNode = new DecisionNodePlugin();
@@ -21,7 +21,7 @@ export const DecisionNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
   const inputType = useInterpreterTree((treeClient) => {
     if (isError || !node.data.input) return undefined;
 
-    const input = treeClient.pluginEntity.get.single<IDecisionNodeInputs>(
+    const input = treeClient.pluginEntity.get.single<TDecisionNodeInputs>(
       "inputs",
       node.data.input
     );

@@ -1,27 +1,28 @@
 import { createFn, NodePlugin } from "@open-decision/plugins-node-helpers";
 import { RichText } from "@open-decision/rich-text-editor";
 import {
-  deleteEntityFn,
-  TReadOnlyTreeClient,
-  TTreeClient,
+  NodePlugin,
+  NodePluginBaseType,
+  EntityPluginType,
 } from "@open-decision/tree-type";
+import { RichText } from "@open-decision/rich-text-editor";
+import { TReadOnlyTreeClient, TTreeClient } from "@open-decision/tree-type";
 import { z } from "zod";
 
 export const typeName = "document" as const;
 
-export const DataType = z.object({
+const DataType = z.object({
   content: RichText.optional(),
   templateUuid: z.string().uuid().optional(),
 });
 
-export type IDocumentNode = INodePlugin<
-  typeof typeName,
-  z.infer<typeof DataType>
->;
+export const DocumentNodePluginType = NodePluginBaseType(typeName, DataType);
+
+export type IDocumentNode = EntityPluginType<typeof DocumentNodePluginType>;
 
 export class DocumentNodePlugin extends NodePlugin<IDocumentNode> {
   constructor() {
-    super(typeName);
+    super(typeName, DocumentNodePluginType, {});
   }
 
   create: createFn<typeof this.Type> =

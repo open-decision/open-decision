@@ -1,7 +1,7 @@
 import { RichText } from "@open-decision/rich-text-editor";
 import {
   deleteEntityFn,
-  INodePlugin,
+  TNodePlugin,
   NodePlugin,
   NodePluginBaseType,
   TReadOnlyTreeClient,
@@ -20,7 +20,7 @@ import {
   createVariableFromInput,
   decisionNodeInputPlugins,
   DecisionNodeVariable,
-  IDecisionNodeInputs,
+  TDecisionNodeInputs,
 } from "./createInputPlugins";
 import { ODProgrammerError } from "@open-decision/type-classes";
 
@@ -33,16 +33,16 @@ const DataType = z.object({
 
 export const DecisionNodePluginType = NodePluginBaseType(typeName, DataType);
 
-export type IDecisionNodePlugin = INodePlugin<
+export type TDecisionNodePlugin = TNodePlugin<
   typeof typeName,
   z.infer<typeof DataType>
 >;
 
-export class DecisionNodePlugin extends NodePlugin<IDecisionNodePlugin> {
+export class DecisionNodePlugin extends NodePlugin<TDecisionNodePlugin> {
   inputPlugins = decisionNodeInputPlugins;
 
   constructor() {
-    super(typeName, DecisionNodePluginType);
+    super(typeName, DecisionNodePluginType, {});
   }
 
   connectInputAndNode =
@@ -66,7 +66,7 @@ export class DecisionNodePlugin extends NodePlugin<IDecisionNodePlugin> {
   };
 
   updateData =
-    (nodeId: string, data: Partial<IDecisionNodePlugin["data"]>) =>
+    (nodeId: string, data: Partial<TDecisionNodePlugin["data"]>) =>
     (treeClient: TTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 
@@ -82,7 +82,7 @@ export class DecisionNodePlugin extends NodePlugin<IDecisionNodePlugin> {
     return this.updateData(nodeId, { input: newInputId });
   };
   updateNodeContent =
-    (nodeId: string, content: IDecisionNodePlugin["data"]["content"]) =>
+    (nodeId: string, content: TDecisionNodePlugin["data"]["content"]) =>
     (treeClient: TTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 
@@ -121,7 +121,7 @@ export class DecisionNodePlugin extends NodePlugin<IDecisionNodePlugin> {
     };
 
   getVariableByInput = (inputId: string) => (treeClient: TTreeClient) => {
-    const input = treeClient.pluginEntity.get.single<IDecisionNodeInputs>(
+    const input = treeClient.pluginEntity.get.single<TDecisionNodeInputs>(
       "inputs",
       inputId
     );
@@ -140,7 +140,7 @@ export class DecisionNodePlugin extends NodePlugin<IDecisionNodePlugin> {
 
       if (!node.data.input) return;
 
-      const input = treeClient.pluginEntity.get.single<IDecisionNodeInputs>(
+      const input = treeClient.pluginEntity.get.single<TDecisionNodeInputs>(
         "inputs",
         node.data.input
       );

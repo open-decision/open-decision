@@ -3,10 +3,10 @@ import {
   TReadOnlyTreeClient,
   TTreeClient,
 } from "@open-decision/tree-type";
-import { IInputPlugin } from "../../InputPlugin";
+import { TInputPlugin } from "../../InputPlugin";
 
 export const getInputByNode =
-  <TType extends IInputPlugin>(nodePlugin: NodePlugin) =>
+  <TType extends TInputPlugin>(nodePlugin: NodePlugin) =>
   (nodeId: string) =>
   (treeClient: TReadOnlyTreeClient | TTreeClient) => {
     const node = nodePlugin.getSingle(nodeId)(treeClient);

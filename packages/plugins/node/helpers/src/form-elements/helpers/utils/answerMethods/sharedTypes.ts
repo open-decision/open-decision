@@ -1,3 +1,3 @@
-import { IInputPlugin, TAnswer } from "../..";
+import { TInputPlugin, TAnswer } from "../..";
 
-export type InputWithAnswers = IInputPlugin<any, { answers: TAnswer[] }>;
+export type InputWithAnswers = TInputPlugin<any, { answers: TAnswer[] }>;

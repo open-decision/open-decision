@@ -2,7 +2,7 @@ import { DirectEdgePlugin } from "@open-decision/plugins-edge-direct";
 import { createFn, NodePlugin } from "@open-decision/plugins-node-helpers";
 import { RichText } from "@open-decision/rich-text-editor";
 import {
-  INodePlugin,
+  TNodePlugin,
   NodePlugin,
   TReadOnlyTreeClient,
   Tree,
@@ -26,7 +26,7 @@ export const DataType = z
     children: [],
   });
 
-export type IGroupNode = INodePlugin<typeof typeName, z.infer<typeof DataType>>;
+export type IGroupNode = TNodePlugin<typeof typeName, z.infer<typeof DataType>>;
 
 export class GroupNodePlugin extends NodePlugin<IGroupNode> {
   constructor() {

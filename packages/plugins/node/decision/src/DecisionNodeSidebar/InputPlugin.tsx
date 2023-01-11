@@ -4,7 +4,7 @@ import { sidebarCardClasses } from "@open-decision/node-editor";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { DecisionNodePlugin } from "../decisionNodePlugin";
 import { InputHeader } from "./InputHeader";
-import { IDecisionNodeInputs } from "../createInputPlugins";
+import { TDecisionNodeInputs } from "../createInputPlugins";
 import { ODProgrammerError } from "@open-decision/type-classes";
 
 const DecisionNode = new DecisionNodePlugin();
@@ -17,7 +17,7 @@ export type InputPluginComponentProps = {
 export function InputPlugin({ inputId, nodeId }: InputPluginComponentProps) {
   const input = useTree((treeClient) => {
     if (!inputId) return undefined;
-    const input = treeClient.pluginEntity.get.single<IDecisionNodeInputs>(
+    const input = treeClient.pluginEntity.get.single<TDecisionNodeInputs>(
       "inputs",
       inputId
     );

@@ -1,5 +1,5 @@
 export { SelectInputPluginObject, SelectInputPlugin } from "./select";
-export type { ISelectInput } from "./select";
+export type { TSelectInput as ISelectInput } from "./select";
 
 export {
   MultiSelectInputPluginObject,

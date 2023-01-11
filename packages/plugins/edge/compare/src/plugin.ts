@@ -1,24 +1,29 @@
-import { EdgePlugin, IEdgePlugin } from "@open-decision/tree-type";
+import {
+  EdgePlugin,
+  EdgePluginBaseType,
+  EntityPluginType,
+} from "@open-decision/tree-type";
 import { TTreeClient } from "@open-decision/tree-type";
 import { z } from "zod";
 
 export const typeName = "compare" as const;
 
-export const DataType = z.object({
+const DataType = z.object({
   condition: z.object({
     variableId: z.string().uuid(),
     valueIds: z.array(z.string().uuid()),
   }),
 });
 
-export type ICompareEdge = IEdgePlugin<
-  typeof typeName,
-  z.infer<typeof DataType>
->;
+export const CompareEdgePluginType = EdgePluginBaseType(typeName, DataType);
 
-export class CompareEdgePlugin extends EdgePlugin<ICompareEdge> {
+export type TCompareEdge = EntityPluginType<typeof CompareEdgePluginType>;
+
+export class CompareEdgePlugin extends EdgePlugin<TCompareEdge> {
   constructor() {
-    super(typeName, { condition: { variableId: "", valueIds: [] } });
+    super(typeName, CompareEdgePluginType, {
+      condition: { variableId: "", valueIds: [] },
+    });
   }
 
   addValue =

@@ -10,10 +10,10 @@ export const decisionNodeInputPlugins = {
   [SelectInputPluginObject.type]: SelectInputPluginObject,
 };
 
-export type IDecisionNodeInputs = ISelectInput;
+export type TDecisionNodeInputs = ISelectInput;
 
 export function createVariableFromInput(
-  input: IDecisionNodeInputs,
+  input: TDecisionNodeInputs,
   answer: any
 ) {
   return match(input)

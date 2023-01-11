@@ -1,5 +1,6 @@
+import { EntityPluginType } from "@open-decision/tree-type";
 import { z } from "zod";
-import { Answer, IInputPlugin, InputPlugin } from "../../helpers";
+import { Answer, InputPlugin, InputPluginBaseType } from "../../helpers";
 import {
   addAnswer,
   createAnswer,
@@ -13,19 +14,26 @@ import { updateRequired } from "../../helpers/utils/inputMethods";
 
 export const typeName = "multi-select" as const;
 
-export const DataType = z.object({
+const DataType = z.object({
   answers: z.array(Answer),
   required: z.boolean(),
 });
 
-export type IMultiSelectInput = IInputPlugin<
-  typeof typeName,
-  z.infer<typeof DataType>
+export const MultiSelectInputPluginType = InputPluginBaseType(
+  typeName,
+  DataType
+);
+
+export type IMultiSelectInput = EntityPluginType<
+  typeof MultiSelectInputPluginType
 >;
 
 export class MultiSelectInputPlugin extends InputPlugin<IMultiSelectInput> {
   constructor() {
-    super(typeName, { answers: [], required: false });
+    super(typeName, MultiSelectInputPluginType, {
+      answers: [],
+      required: false,
+    });
   }
 
   createAnswer = createAnswer;

@@ -1,9 +1,10 @@
 import {
   EntityPlugin,
-  IEntityPluginBase,
   TTreeClient,
   TReadOnlyTreeClient,
+  EntityPluginBaseType,
 } from "@open-decision/tree-type";
+import { z } from "zod";
 import {
   deleteInput,
   addInput,
@@ -12,19 +13,29 @@ import {
   updateInputLabel,
 } from "./utils/inputMethods";
 
-export interface IInputPlugin<
+export const InputPluginBaseType = <
+  TType extends string,
+  TDataType extends z.ZodType
+>(
+  type: TType,
+  data: TDataType
+) =>
+  EntityPluginBaseType(type, data).extend({
+    label: z.string().optional(),
+    name: z.string().optional(),
+  });
+
+export type TInputPlugin<
   TTypeName extends string = string,
   TDataType = any
-> extends IEntityPluginBase<TTypeName, TDataType> {
-  label?: string;
-  name?: string;
-}
+> = z.infer<
+  ReturnType<typeof InputPluginBaseType<TTypeName, z.ZodType<TDataType>>>
+>;
 
 export abstract class InputPlugin<
-  TType extends IInputPlugin = IInputPlugin
+  TType extends TInputPlugin = TInputPlugin
 > extends EntityPlugin<TType> {
   pluginType = "pluginEntity" as const;
-
   create =
     (
       data: Omit<TType, "id" | "type" | "data"> & {

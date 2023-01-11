@@ -1,15 +1,34 @@
 import { ODError } from "@open-decision/type-classes";
 import { TTreeClient, TReadOnlyTreeClient } from "../treeClient";
-import { IEntityPluginBase, EntityPlugin } from "./EntityPlugin";
+import {
+  TEntityPluginBase,
+  EntityPlugin,
+  EntityPluginBaseType,
+} from "./EntityPlugin";
+import { z } from "zod";
 
-export interface IEdgePlugin<TType extends string = string, TData = any>
-  extends IEntityPluginBase<TType, TData> {
+export const EdgePluginBaseType = <
+  TType extends string,
+  TDataType extends z.ZodType
+>(
+  type: TType,
+  data: TDataType
+) =>
+  EntityPluginBaseType(type, data).extend({
+    source: z.string(),
+    target: z.string().optional(),
+  });
+
+export type TEdgePlugin<
+  TType extends string = string,
+  TData = any
+> = TEntityPluginBase<TType, TData> & {
   source: string;
   target?: string;
-}
+};
 
 export abstract class EdgePlugin<
-  TType extends IEdgePlugin
+  TType extends TEdgePlugin
 > extends EntityPlugin<TType> {
   pluginType = "edges" as const;
 

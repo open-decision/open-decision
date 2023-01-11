@@ -1,7 +1,7 @@
 import { labelClasses } from "@open-decision/design-system";
 import { InputDropdown } from "@open-decision/plugins-node-helpers";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
-import { IDecisionNodeInputs } from "../createInputPlugins";
+import { TDecisionNodeInputs } from "../createInputPlugins";
 import { DecisionNodePlugin } from "../decisionNodePlugin";
 
 const DecisionNode = new DecisionNodePlugin();
@@ -16,7 +16,7 @@ export function InputHeader({ children, inputId, nodeId }: InputHeaderProps) {
   const treeClient = useTreeClient();
   const inputType = useTree((treeClient) => {
     if (!inputId) return undefined;
-    const input = treeClient.pluginEntity.get.single<IDecisionNodeInputs>(
+    const input = treeClient.pluginEntity.get.single<TDecisionNodeInputs>(
       "inputs",
       inputId
     );

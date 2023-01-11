@@ -6,7 +6,7 @@ import {
 import { SelectInputPlugin } from "./selectPlugin";
 
 export * from "./selectPlugin";
-export type { ISelectInput } from "./selectPlugin";
+export type { TSelectInput as ISelectInput } from "./selectPlugin";
 
 const plugin = new SelectInputPlugin();
 

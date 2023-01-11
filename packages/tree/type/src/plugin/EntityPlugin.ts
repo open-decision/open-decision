@@ -2,12 +2,6 @@ import { ODError, ODProgrammerError } from "@open-decision/type-classes";
 import { z } from "zod";
 import { TReadOnlyTreeClient, TTreeClient } from "../treeClient";
 
-export interface IEntityPluginBase<TType extends string = string, TData = any> {
-  type: TType;
-  data: TData;
-  id: string;
-}
-
 export const EntityPluginBaseType = <
   TType extends string,
   TDataType extends z.ZodType
@@ -21,12 +15,17 @@ export const EntityPluginBaseType = <
     data: data,
   });
 
+export type TEntityPluginBase<
+  TType extends string = string,
+  TData = any
+> = z.infer<ReturnType<typeof EntityPluginBaseType<TType, z.ZodType<TData>>>>;
+
 export type deleteEntityFn = (
   ids: string[]
 ) => (treeClient: TTreeClient) => void;
 
 export abstract class EntityPlugin<
-  TType extends IEntityPluginBase = IEntityPluginBase
+  TType extends TEntityPluginBase = TEntityPluginBase
 > {
   type: TType["type"];
   declare defaultData: TType["data"];
@@ -42,6 +41,20 @@ export abstract class EntityPlugin<
     this.Type = Type;
     this.defaultData = defaultData;
   }
+
+  parse = (data: any) => {
+    const parsedData = this.Type.safeParse(data);
+
+    if (!parsedData.success) {
+      return new ODError({
+        code: "VALIDATION_ERROR",
+        message: `The data provided to the entity plugin is not of the correct Type.`,
+        additionalData: { errors: parsedData.error },
+      });
+    }
+
+    return parsedData.data;
+  };
 
   abstract create: (
     data: any
@@ -76,3 +89,5 @@ export abstract class EntityPlugin<
     treeClient: TTreeClient | TReadOnlyTreeClient
   ) => Record<string, TType> | undefined;
 }
+
+export type EntityPluginType<TType extends z.ZodType> = z.infer<TType>;

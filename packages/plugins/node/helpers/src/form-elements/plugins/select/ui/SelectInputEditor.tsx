@@ -2,7 +2,7 @@ import { Button, Icon, Form, Separator } from "@open-decision/design-system";
 import * as React from "react";
 import { AnimatePresence, Reorder, useDragControls } from "framer-motion";
 import { CrossCircledIcon } from "@radix-ui/react-icons";
-import { ISelectInput, SelectInputPlugin } from "../selectPlugin";
+import { TSelectInput, SelectInputPlugin } from "../selectPlugin";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import {
   InputPrimaryActionSlotProps,
@@ -39,7 +39,7 @@ export const SelectInputConfigurator = ({
   const ref = React.useRef<HTMLDivElement | null>(null);
 
   const input = useTree((treeClient) => {
-    const input = treeClient.pluginEntity.get.single<ISelectInput>(
+    const input = treeClient.pluginEntity.get.single<TSelectInput>(
       "inputs",
       inputId
     );

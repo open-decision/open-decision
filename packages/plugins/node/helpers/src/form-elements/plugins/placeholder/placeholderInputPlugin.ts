@@ -1,17 +1,22 @@
+import { EntityPluginType } from "@open-decision/tree-type";
 import { z } from "zod";
-import { IInputPlugin, InputPlugin } from "../../helpers";
+import { InputPlugin, InputPluginBaseType } from "../../helpers";
 
 export const typeName = "placeholder";
 
-export const DataType = z.object({});
+const DataType = z.object({});
 
-export type IPlaceholderInput = IInputPlugin<
-  typeof typeName,
-  z.infer<typeof DataType>
+export const PlaceholderInputPluginType = InputPluginBaseType(
+  typeName,
+  DataType
+);
+
+export type IPlaceholderInput = EntityPluginType<
+  typeof PlaceholderInputPluginType
 >;
 
 export class PlaceholderInputPlugin extends InputPlugin<IPlaceholderInput> {
   constructor() {
-    super(typeName);
+    super(typeName, PlaceholderInputPluginType);
   }
 }

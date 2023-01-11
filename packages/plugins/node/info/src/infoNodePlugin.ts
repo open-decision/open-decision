@@ -1,24 +1,28 @@
 import { DirectEdgePlugin } from "@open-decision/plugins-edge-direct";
 import { RichText } from "@open-decision/rich-text-editor";
-import { INodePlugin, NodePlugin, TTreeClient } from "@open-decision/tree-type";
+import {
+  NodePlugin,
+  TTreeClient,
+  NodePluginBaseType,
+  EntityPluginType,
+} from "@open-decision/tree-type";
 import { z } from "zod";
 import { createFn, NodePlugin } from "@open-decision/plugins-node-helpers";
 
 export const typeName = "info" as const;
 
-export const DataType = z.object({
+const DataType = z.object({
   content: RichText.optional(),
   target: z.string().optional(),
 });
 
-export type IInfoNodePlugin = INodePlugin<
-  typeof typeName,
-  z.infer<typeof DataType>
->;
+export const InfoNodePluginType = NodePluginBaseType(typeName, DataType);
+
+export type IInfoNodePlugin = EntityPluginType<typeof InfoNodePluginType>;
 
 export class InfoNodePlugin extends NodePlugin<IInfoNodePlugin> {
   constructor() {
-    super(typeName);
+    super(typeName, InfoNodePluginType, {});
   }
 
   create: createFn<typeof this.Type> =

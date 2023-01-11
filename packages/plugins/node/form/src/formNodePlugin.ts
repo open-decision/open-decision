@@ -5,6 +5,7 @@ import {
 } from "@open-decision/plugins-node-helpers";
 import { RichText } from "@open-decision/rich-text-editor";
 import {
+  EntityPluginType,
   NodePlugin,
   NodePluginBaseType,
   TReadOnlyTreeClient,
@@ -31,9 +32,9 @@ const DataType = z.object({
 
 export const FormNodePluginType = NodePluginBaseType(typeName, DataType);
 
-export type IFormNodePlugin = z.infer<typeof FormNodePluginType>;
+export type TFormNodePlugin = EntityPluginType<typeof FormNodePluginType>;
 
-export class FormNodePlugin extends NodePlugin<IFormNodePlugin> {
+export class FormNodePlugin extends NodePlugin<TFormNodePlugin> {
   inputPlugins = formNodeInputPlugins;
 
   constructor() {
@@ -53,7 +54,7 @@ export class FormNodePlugin extends NodePlugin<IFormNodePlugin> {
     };
 
   updateNodeContent =
-    (nodeId: string, content: IFormNodePlugin["data"]["content"]) =>
+    (nodeId: string, content: TFormNodePlugin["data"]["content"]) =>
     (treeClient: TTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 

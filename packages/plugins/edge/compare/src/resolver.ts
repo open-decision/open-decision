@@ -6,11 +6,11 @@ import {
 import { EdgeResolver } from "@open-decision/plugins-edge-helpers";
 import { SingleSelectVariablePlugin } from "@open-decision/plugins-variable-select";
 import { ODProgrammerError } from "@open-decision/type-classes";
-import { ICompareEdge } from "./plugin";
+import { TCompareEdge } from "./plugin";
 
 const SingleSelectVariable = new SingleSelectVariablePlugin();
 
-export const compareEdgeResolver: EdgeResolver<ICompareEdge> =
+export const compareEdgeResolver: EdgeResolver<TCompareEdge> =
   (treeClient) => (edge) => (context) => {
     const currentNode = getCurrentNode(treeClient, context);
 
@@ -31,6 +31,8 @@ export const compareEdgeResolver: EdgeResolver<ICompareEdge> =
     // Not finding an answer on the interpreter context is a programmer error.
     if (!existingAnswer) throw new MissingAnswerOnInterpreterContextError();
     const answerOfType = SingleSelectVariable.parse(existingAnswer);
+
+    if (answerOfType instanceof Error) return { state: "failure" };
 
     if (
       !answerOfType.data.value ||

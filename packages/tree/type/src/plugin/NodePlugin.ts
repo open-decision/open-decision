@@ -1,21 +1,23 @@
 import { TTreeClient, TReadOnlyTreeClient } from "../treeClient";
 import {
-  IEntityPluginBase,
+  TEntityPluginBase,
   EntityPlugin,
   deleteEntityFn,
   EntityPluginBaseType,
 } from "./EntityPlugin";
 import { z } from "zod";
 
-export interface INodePlugin<TType extends string = string, TDataType = any>
-  extends IEntityPluginBase<TType, TDataType> {
+export type TNodePlugin<
+  TType extends string = string,
+  TDataType = any
+> = TEntityPluginBase<TType, TDataType> & {
   position: { x: number; y: number };
   name?: string;
   parent?: string;
   final?: true;
   rendererButtonLabel?: string;
   isAddable?: true;
-}
+};
 
 export const NodePluginBaseType = <
   TType extends string,
@@ -34,7 +36,7 @@ export const NodePluginBaseType = <
   });
 
 export abstract class NodePlugin<
-  TType extends INodePlugin = INodePlugin
+  TType extends TNodePlugin = TNodePlugin
 > extends EntityPlugin<TType> {
   pluginType = "nodes" as const;
   isAddable: boolean;
@@ -42,7 +44,7 @@ export abstract class NodePlugin<
   constructor(
     type: TType["type"],
     Type: z.ZodType<TType>,
-    defaultData: TType["data"] = {},
+    defaultData: TType["data"],
     config: { isAddable: boolean } = { isAddable: true }
   ) {
     super(type, Type, defaultData);

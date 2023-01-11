@@ -1,14 +1,28 @@
-import { IVariablePluginBase, VariablePlugin } from "@open-decision/tree-type";
+import {
+  VariablePlugin,
+  VariablePluginBaseType,
+  VariableType,
+} from "@open-decision/tree-type";
+import { z } from "zod";
 
 const typeName = "single-select-variable";
 
-export type ISelectVariable = IVariablePluginBase<
-  typeof typeName,
-  { values: { id: string; value: string }[]; value?: string }
->;
+const Value = z.object({ id: z.string().uuid(), value: z.string() });
+
+const DataType = z.object({
+  values: z.array(Value),
+  value: z.string().optional(),
+});
+
+export const SingleSelectVariableType = VariablePluginBaseType(
+  typeName,
+  DataType
+);
+
+export type ISelectVariable = VariableType<typeof SingleSelectVariableType>;
 
 export class SingleSelectVariablePlugin extends VariablePlugin<ISelectVariable> {
   constructor() {
-    super(typeName);
+    super(typeName, SingleSelectVariableType);
   }
 }

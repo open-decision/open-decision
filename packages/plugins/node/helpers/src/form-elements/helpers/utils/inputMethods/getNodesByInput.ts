@@ -1,9 +1,9 @@
 import { TReadOnlyTreeClient, TTreeClient } from "@open-decision/tree-type";
-import { INodePlugin, NodePlugin } from "@open-decision/tree-type";
+import { TNodePlugin, NodePlugin } from "@open-decision/tree-type";
 import { isEmpty } from "ramda";
 
 export const getNodesByInput =
-  <TType extends INodePlugin>(nodePlugin: NodePlugin<TType>) =>
+  <TType extends TNodePlugin>(nodePlugin: NodePlugin<TType>) =>
   (inputId: string) =>
   (treeClient: TTreeClient | TReadOnlyTreeClient) => {
     const nodes = nodePlugin.getAll(treeClient);

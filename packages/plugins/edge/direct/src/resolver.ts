@@ -1,8 +1,8 @@
 import { MissingEdgeForThruthyConditionError } from "@open-decision/interpreter";
 import { EdgeResolver } from "@open-decision/plugins-edge-helpers";
-import { IDirectEdge } from "./plugin";
+import { TDirectEdge } from "./plugin";
 
-export const directEdgeResolver: EdgeResolver<IDirectEdge> =
+export const directEdgeResolver: EdgeResolver<TDirectEdge> =
   (_treeClient) => (edge) => (_context) => {
     if (!edge.target) return { state: "failure" };
 

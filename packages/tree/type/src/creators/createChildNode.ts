@@ -1,5 +1,5 @@
 import { getSingle } from "../getters/getSingle";
-import { INodePlugin } from "../plugin";
+import { TNodePlugin } from "../plugin";
 import { Node, Tree } from "../type-classes";
 import { createNode } from "./createNode";
 
@@ -7,7 +7,7 @@ export const createChildNode =
   (tree: Tree.TTree) =>
   <TNodeType extends Node.TNode>(nodeId: string, newNode: TNodeType) => {
     // Get the node we want the children for
-    const node = getSingle(tree)<INodePlugin>("nodes")(nodeId);
+    const node = getSingle(tree)<TNodePlugin>("nodes")(nodeId);
 
     if (node instanceof Error) throw node;
 

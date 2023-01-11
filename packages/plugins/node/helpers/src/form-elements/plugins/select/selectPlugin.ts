@@ -1,5 +1,6 @@
+import { EntityPluginType } from "@open-decision/tree-type";
 import { z } from "zod";
-import { Answer, IInputPlugin, InputPlugin, TAnswer } from "../../helpers";
+import { Answer, InputPlugin, InputPluginBaseType } from "../../helpers";
 import {
   addAnswer,
   createAnswer,
@@ -13,34 +14,33 @@ import { updateRequired } from "../../helpers/utils/inputMethods";
 
 export const typeName = "select" as const;
 
-export const DataType = z.object({
+const DataType = z.object({
   answers: z.array(Answer),
   label: z.string().optional(),
   required: z.boolean(),
 });
 
-export type ISelectInput = IInputPlugin<
-  typeof typeName,
-  { answers: TAnswer[]; required: boolean }
->;
+export const SelectInputPluginType = InputPluginBaseType(typeName, DataType);
 
-export class SelectInputPlugin extends InputPlugin<ISelectInput> {
+export type TSelectInput = EntityPluginType<typeof SelectInputPluginType>;
+
+export class SelectInputPlugin extends InputPlugin<TSelectInput> {
   constructor() {
-    super("select", { answers: [], required: false });
+    super("select", SelectInputPluginType, { answers: [], required: false });
   }
 
   createAnswer = createAnswer;
 
-  getAnswer = getAnswer<ISelectInput>();
+  getAnswer = getAnswer<TSelectInput>();
 
-  addAnswer = addAnswer<ISelectInput>();
+  addAnswer = addAnswer<TSelectInput>();
 
-  updateAnswer = updateAnswer<ISelectInput>();
+  updateAnswer = updateAnswer<TSelectInput>();
 
-  reorderAnswers = reorderAnswers<ISelectInput>();
+  reorderAnswers = reorderAnswers<TSelectInput>();
 
-  deleteAnswer = deleteAnswer<ISelectInput>();
+  deleteAnswer = deleteAnswer<TSelectInput>();
 
-  getInputsWithAnswers = getInputsWithAnswers<ISelectInput>();
-  updateRequired = updateRequired<ISelectInput>();
+  getInputsWithAnswers = getInputsWithAnswers<TSelectInput>();
+  updateRequired = updateRequired<TSelectInput>();
 }
