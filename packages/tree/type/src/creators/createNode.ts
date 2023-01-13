@@ -1,5 +1,6 @@
-import { Node } from "../type-classes";
+import { Node, Tree } from "../type-classes";
 import { v4 as uuid } from "uuid";
+import { getNodes } from "../getters";
 
 export type NewNodeData = Partial<Omit<Node.TNode, "id">>;
 
@@ -10,17 +11,23 @@ export type NewNodeData = Partial<Omit<Node.TNode, "id">>;
  * @param type defaults to question
  * @returns the data merged with a unique id
  */
-export const createNode = <TNodeType extends Node.TNode>({
-  position = { x: 0, y: 0 },
-  type = "placeholder",
-  data,
-  name,
-}: Partial<Omit<TNodeType, "id">>) => {
-  return {
-    id: uuid(),
-    position,
-    type,
-    data: data ?? {},
+export const createNode =
+  (tree: Tree.TTree) =>
+  <TNodeType extends Node.TNode>({
+    position = { x: 0, y: 0 },
+    type = "placeholder",
+    data,
     name,
-  } as TNodeType;
-};
+  }: Partial<Omit<TNodeType, "id">>) => {
+    const fallbackName = `Knoten ${
+      Object.keys(getNodes(tree)() ?? {}).length + 1
+    }`;
+
+    return {
+      id: uuid(),
+      position,
+      type,
+      data: data ?? {},
+      name: name ?? fallbackName,
+    } as TNodeType;
+  };

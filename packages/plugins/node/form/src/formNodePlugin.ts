@@ -2,6 +2,7 @@ import {
   addInput,
   updateInput,
   NodePlugin,
+  createFn,
 } from "@open-decision/plugins-node-helpers";
 import { RichText } from "@open-decision/rich-text-editor";
 import { TReadOnlyTreeClient, TTreeClient } from "@open-decision/tree-type";
@@ -32,6 +33,18 @@ export class FormNodePlugin extends NodePlugin<
     super(DataType, typeName);
     this.defaultData = { inputs: [] };
   }
+
+  create: createFn<typeof this.Type> =
+    ({ data, ...rest }) =>
+    (treeClient) => {
+      const newNode = treeClient.nodes.create.node({
+        type: this.typeName,
+        data: { ...this.defaultData, ...data },
+        ...rest,
+      });
+
+      return this.Type.parse(newNode);
+    };
 
   updateNodeContent =
     (nodeId: string, content: z.infer<typeof this.Type>["data"]["content"]) =>

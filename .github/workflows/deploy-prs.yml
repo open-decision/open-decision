@@ -93,7 +93,7 @@ jobs:
         run: flyctl regions set fra ams --app ${{env.APP_NAME}}
       - name: Deploy
         id: deploy
-        run: flyctl deploy --config ${{env.CONFIG}} --app ${{env.APP_NAME}} --region ${{env.FLY_REGION}} --strategy immediate
+        run: flyctl deploy --config ${{env.CONFIG}} --app ${{env.APP_NAME}} --region ${{env.FLY_REGION}}
       - name: Set ressources
         id: resources
         run: flyctl scale memory 512 --app ${{env.APP_NAME}}
@@ -111,24 +111,30 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "yarn"
+      - name: Install Vercel CLI
+        run: yarn add global vercel@latest
 
       - name: Set api endpoint end var
         continue-on-error: true
         run: |
-          yarn dlx vercel env rm NEXT_PUBLIC_OD_API_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} --yes || true || true
-          echo ${{ env.NEXT_PUBLIC_OD_API_ENDPOINT }} |  yarn dlx vercel env add NEXT_PUBLIC_OD_API_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} || true
+          vercel env rm NEXT_PUBLIC_OD_API_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} --yes || true || true
+          echo ${{ env.NEXT_PUBLIC_OD_API_ENDPOINT }} |  vercel env add NEXT_PUBLIC_OD_API_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} || true
 
       - name: Set od app endpoint end var
         continue-on-error: true
         run: |
-          yarn dlx vercel env rm NEXT_PUBLIC_OD_BUILDER_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} --yes || true
-          echo ${{ env.NEXT_PUBLIC_OD_BUILDER_ENDPOINT }} |  yarn dlx vercel env add NEXT_PUBLIC_OD_BUILDER_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} || true
+          vercel env rm NEXT_PUBLIC_OD_BUILDER_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} --yes || true
+          echo ${{ env.NEXT_PUBLIC_OD_BUILDER_ENDPOINT }} |  vercel env add NEXT_PUBLIC_OD_BUILDER_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} || true
 
       - name: Set api websocket endpoint env var
         continue-on-error: true
         run: |
-          yarn dlx vercel env rm NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} --yes || true
-          echo ${{ env.NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT }} | yarn dlx vercel env add NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} || true
+          vercel env rm NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} --yes || true
+          echo ${{ env.NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT }} | vercel env add NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} || true
 
       - name: Deploy to Vercel Action
         uses: BetaHuhn/deploy-to-vercel-action@v1

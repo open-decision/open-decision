@@ -67,7 +67,7 @@ export const SelectInputConfigurator = ({
       }}
     >
       <Form.Root methods={methods}>
-        {input.data.answers?.map((answer) => {
+        {input.data.answers?.map((answer, index) => {
           return (
             <Answer
               answer={answer}
@@ -75,6 +75,7 @@ export const SelectInputConfigurator = ({
               groupRef={ref}
               key={answer.id}
               name={answer.id}
+              index={index}
             />
           );
         })}
@@ -93,9 +94,10 @@ type AnswerProps = {
   inputId: string;
   groupRef: React.MutableRefObject<HTMLDivElement | null>;
   name: string;
+  index: number;
 };
 
-const Answer = ({ answer, inputId, groupRef, name }: AnswerProps) => {
+const Answer = ({ answer, inputId, groupRef, name, index }: AnswerProps) => {
   const treeClient = useTreeClient();
 
   const onChange = React.useCallback(
@@ -130,6 +132,7 @@ const Answer = ({ answer, inputId, groupRef, name }: AnswerProps) => {
             key={answer.id}
             placeholder="Antwort"
             {...register(name, { onChange })}
+            aria-label={`Antwortoption ${index + 1}`}
           />
           <Button
             variant="neutral"

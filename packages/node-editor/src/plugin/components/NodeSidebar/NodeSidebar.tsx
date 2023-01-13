@@ -20,6 +20,10 @@ import {
   TNodeSidebarProps,
 } from "@open-decision/plugins-node-helpers";
 
+const hasContent = (node: any): node is { data: { content: any } } => {
+  return node.data && node.data.content;
+};
+
 export const sidebarPaddingClasses = "p-4";
 
 export const NodeSidebar = ({
@@ -116,7 +120,7 @@ const Header = ({
             <DropdownMenu.Root>
               <DropdownMenu.Trigger asChild>
                 <DropdownMenu.Button variant="neutral">
-                  {nodeNames(node.type as any)}
+                  {nodeNames(`${node.type as any}.short`)}
                 </DropdownMenu.Button>
               </DropdownMenu.Trigger>
               <DropdownMenu.Content align="start">
@@ -124,19 +128,25 @@ const Header = ({
                   <DropdownMenu.Item
                     key={plugin.typeName}
                     onSelect={() => {
-                      const newNode = plugin.create({})(treeClient);
                       const oldNode = treeClient.nodes.get.single(nodeId);
 
                       if (oldNode instanceof Error) throw oldNode;
+                      let oldNodeContent;
 
-                      treeClient.nodes.update.node(nodeId, {
-                        ...newNode,
+                      if (hasContent(oldNode)) {
+                        oldNodeContent = oldNode.data.content;
+                      }
+
+                      const newNode = plugin.create({
+                        data: { content: oldNodeContent },
                         name: oldNode.name,
                         position: oldNode.position,
-                      } as any);
+                      })(treeClient);
+
+                      treeClient.nodes.update.node(nodeId, newNode);
                     }}
                   >
-                    {nodeNames(plugin.typeName)}
+                    {nodeNames(`${plugin.typeName}.short`)}
                   </DropdownMenu.Item>
                 ))}
               </DropdownMenu.Content>

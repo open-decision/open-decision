@@ -33,9 +33,25 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "yarn"
       - name: Install Vercel CLI
         run: yarn add global vercel@latest
-      - name: Remove env variables
-        run: vercel env rm OD_BUILDER_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} --yes
+
+      - name: Remove api endpoint end var
+        continue-on-error: true
+        run: vercel env rm NEXT_PUBLIC_OD_API_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} --yes || true
+
+      - name: Remove od app endpoint end var
+        continue-on-error: true
+        run: vercel env rm NEXT_PUBLIC_OD_BUILDER_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} --yes
+
+      - name: Remove api websocket endpoint env var
+        continue-on-error: true
+        run: vercel env rm NEXT_PUBLIC_OD_WEBSOCKET_ENDPOINT preview ${{ github.head_ref }} --token ${{secrets.VERCEL_TOKEN}} --yes
+
       - name: Remove Builder Deploy
+        continue-on-error: true
         run: vercel alias rm ${{env.OD_BUILDER_ENDPOINT}} --token ${{secrets.VERCEL_TOKEN}} --scope open-decision --yes

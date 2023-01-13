@@ -7,6 +7,7 @@ import {
   updateInput,
   NodePlugin,
   Input,
+  createFn,
 } from "@open-decision/plugins-node-helpers";
 import {
   createVariableFromInput,
@@ -29,10 +30,23 @@ export class DecisionNodePlugin extends NodePlugin<
 > {
   inputType = decisionNodeInputType;
   inputPlugins = decisionNodeInputPlugins;
+
   constructor() {
     super(DataType, typeName);
     this.defaultData = {};
   }
+
+  create: createFn<typeof this.Type> =
+    ({ data, ...rest }) =>
+    (treeClient) => {
+      const newNode = treeClient.nodes.create.node({
+        type: this.typeName,
+        data: { ...this.defaultData, ...data },
+        ...rest,
+      });
+
+      return this.Type.parse(newNode);
+    };
 
   connectInputAndNode =
     (nodeId: string, inputId: string) => (treeClient: TTreeClient) => {

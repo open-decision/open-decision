@@ -13,67 +13,61 @@ export const createDefaultSetOfTrees = async (
   Trees: TreeFixture,
   user: User
 ) => {
-  const activeTree = await Trees.insert(
-    user,
-    Trees.create({
+  const activeTree = await Trees.insert(user, {
+    tree: Trees.create({
       name: "This is an active tree",
       createdAt: new Date("2020-01-01T00:00:00.000Z"),
       updatedAt: new Date("2022-01-01T00:00:00.000Z"),
       status: "ACTIVE",
-    })
-  );
+    }),
+  });
 
-  const activePublishedTree = await Trees.insert(
-    user,
-    Trees.create({
+  const activePublishedTree = await Trees.insert(user, {
+    tree: Trees.create({
       name: "This is an active and published tree",
       createdAt: new Date("2020-01-01T00:00:00.000Z"),
       updatedAt: new Date("2022-01-01T00:00:00.000Z"),
       status: "ACTIVE",
-    })
-  );
+    }),
+  });
 
-  const activeEmptyTree = await Trees.insert(
-    user,
-    Trees.create({
+  const activeEmptyTree = await Trees.insert(user, {
+    tree: Trees.create({
       name: "This is an active and empty tree",
       yDocument: "",
       createdAt: new Date("2021-01-01T00:00:00.000Z"),
       updatedAt: new Date("2020-01-01T00:00:00.000Z"),
       status: "ACTIVE",
-    })
-  );
+    }),
+  });
 
-  const archivedTree = await Trees.insert(
-    user,
-    Trees.create({
+  const archivedTree = await Trees.insert(user, {
+    tree: Trees.create({
       name: "This is an archived tree",
       createdAt: new Date("2020-01-01T00:00:00.000Z"),
       updatedAt: new Date("2022-01-01T00:00:00.000Z"),
       status: "ARCHIVED",
-    })
-  );
+    }),
+  });
 
-  const archivedPublishedTree = await Trees.insert(
-    user,
-    Trees.create({
+  const archivedPublishedTree = await Trees.insert(user, {
+    tree: Trees.create({
       name: "This is an archived and published tree",
       createdAt: new Date("2020-01-01T00:00:00.000Z"),
       updatedAt: new Date("2022-01-01T00:00:00.000Z"),
       status: "ARCHIVED",
-    })
-  );
+    }),
+  });
 
-  const archivedEmptyTree = await Trees.insert(
-    user,
-    Trees.create({
+  const archivedEmptyTree = await Trees.insert(user, {
+    tree: Trees.create({
       name: "This is an archived and empty tree",
       yDocument: "",
       createdAt: new Date("2021-01-01T00:00:00.000Z"),
       updatedAt: new Date("2020-01-01T00:00:00.000Z"),
       status: "ARCHIVED",
-    })
-  );
+    }),
+  });
 
   const publishedTree = await Trees.publish(
     activePublishedTree.uuid,
@@ -107,8 +101,16 @@ export class TreeFixture {
 
   create = createTreeFixture;
 
-  async insert(user: TUser, tree?: PartialTree) {
+  async insert(
+    user: TUser,
+    { tree, empty }: { tree?: PartialTree; empty?: boolean }
+  ) {
     const treeToInsert = tree ?? this.create();
+
+    if (empty) {
+      treeToInsert.yDocument = "";
+    }
+
     await insertTrees(user.uuid, [treeToInsert]);
 
     this.createdTrees.push(treeToInsert.uuid);

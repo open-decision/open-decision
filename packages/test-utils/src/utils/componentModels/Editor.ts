@@ -30,11 +30,13 @@ export class EditorComponent {
     this.deleteNodesDialog = new DeleteNodesDialogComponent(page);
   }
 
-  getNodeLocator(
-    { content, selected = true }: { content?: string; selected?: boolean } = {
-      content: undefined,
-      selected: true,
-    }
+  /**
+   * Returns a locator for a node with the given content. If the node is not selected
+   * the selected = false option needs to be used.
+   */
+  private getNodeLocator(
+    content: string,
+    { selected = true }: { selected?: boolean } = { selected: true }
   ) {
     return this.page.locator(
       `[aria-label="${translate(
@@ -47,17 +49,40 @@ export class EditorComponent {
     );
   }
 
+  /**
+   * Returns a locator for a node with the given content. If the node is not selected
+   * the selected = false option needs to be used.
+   */
+  getSelectedNodeLocator(content: string) {
+    return this.getNodeLocator(content, { selected: true });
+  }
+
+  getUnselectedNodeLocator(content: string) {
+    return this.getNodeLocator(content, { selected: false });
+  }
+
+  getNodeLabelLocator(
+    content: string,
+    { selected = true }: { selected?: boolean } = { selected: true }
+  ) {
+    return this.page.locator(
+      `[aria-label="${translate(
+        de.builder.canvas.questionNode.empty.hiddenLabel
+      )({
+        content: (content?.length ?? 0) > 0,
+        name: content,
+        selected,
+      })}"] > [data-testid="node-label"]`
+    );
+  }
+
   getEdgeLocator(uuid: string) {
     return this.page.locator(`data-test=${uuid}_edge`);
   }
 
-  async selectNode(
-    { content, selected = true }: { content?: string; selected: boolean } = {
-      content: undefined,
-      selected: true,
-    }
-  ) {
-    this.getNodeLocator({ content, selected }).click();
+  /** This will fail if the node is already selected.*/
+  async selectNode(content: string) {
+    await this.getUnselectedNodeLocator(content).click();
   }
 
   getSidebarLocator() {

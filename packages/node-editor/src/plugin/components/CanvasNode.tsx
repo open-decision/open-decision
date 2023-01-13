@@ -1,10 +1,4 @@
-import {
-  Badge,
-  Icon,
-  Stack,
-  textClasses,
-  twMerge,
-} from "@open-decision/design-system";
+import { Stack, textClasses } from "@open-decision/design-system";
 import * as React from "react";
 import { Handle, Position } from "reactflow";
 import { useTranslations } from "next-intl";
@@ -13,22 +7,8 @@ import { StartNodeLabel } from "./StartNodeLabels";
 import { useEditor } from "../../state";
 import { nodeWidth, nodeHeight } from "../../utils/constants";
 import { targetPortClasses, portWidth, sourcePortClasses } from "./Port";
-import { MoonIcon } from "@radix-ui/react-icons";
 import { NodePluginProps } from "@open-decision/plugins-node-helpers";
-
-type Props = { className?: string };
-
-export function FinalNodeLabel({ className }: Props) {
-  const t = useTranslations("builder.nodeEditingSidebar.nodeLabels");
-  return (
-    <Badge className={twMerge("colorScheme-warning", className)}>
-      <Icon>
-        <MoonIcon />
-      </Icon>
-      {t("finalNode")}
-    </Badge>
-  );
-}
+import { FinalNodeLabel } from "./FinalNodeLabel";
 
 const nodeContainerClasses =
   "bg-layer-1 rounded-md border border-gray7 [&[data-connecting=false]:hover]:border-primary9 [&[data-connecting=true][data-connectable=true]]:cursor-crosshair [&[data-connecting=true][data-connectable=false]]:cursor-not-allowed";

@@ -41,7 +41,7 @@
     "test:single": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "playwright test --config=./playwright.config.ts -g '{args.name}' --headed",
+        "command": "PLAYWRIGHT_HTML_REPORT=playwright-report-single playwright test --config=./playwright.config.ts -g '{args.name}' --headed --output=test-single-result",
         "cwd": "apps/e2e"
       },
       "dependsOn": [
@@ -58,7 +58,7 @@
     "test:debug": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "PWDEBUG=1 playwright test --config=./playwright.config.ts -g '{args.name}' --project=chromium",
+        "command": "PWDEBUG=1 PLAYWRIGHT_HTML_REPORT=playwright-report-debug playwright test --config=./playwright.config.ts -g '{args.name}' --project=webkit --output=test-debug-result",
         "cwd": "apps/e2e"
       },
       "dependsOn": [
@@ -72,17 +72,24 @@
         }
       ]
     },
-    "show-trace": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "playwright show-trace",
-        "cwd": "apps/e2e"
-      }
-    },
     "serve": {
       "executor": "nx:run-commands",
       "options": {
         "command": "playwright show-report playwright-report",
+        "cwd": "apps/e2e"
+      }
+    },
+    "serve:debug": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "playwright show-report playwright-debug-report --port=9324",
+        "cwd": "apps/e2e"
+      }
+    },
+    "serve:single": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "playwright show-report playwright-single-report --port=9325",
         "cwd": "apps/e2e"
       }
     },

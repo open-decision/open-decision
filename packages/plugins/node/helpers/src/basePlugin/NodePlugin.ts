@@ -4,10 +4,13 @@ import {
   TReadOnlyTreeClient,
   TTreeClient,
 } from "@open-decision/tree-type";
-import { merge } from "remeda";
 import { z } from "zod";
 import { getNodeCollection } from "./utils/getNodeCollection";
 import { getNodeSingle } from "./utils/getNodeSingle";
+
+export type createFn<TType extends z.ZodType> = (
+  data: Partial<Omit<z.infer<TType>, "id" | "type">>
+) => (treeClient: TTreeClient) => z.infer<TType> & { type: string };
 
 const mergeTypes = <TType extends z.ZodType, TTypeName extends string>(
   Type: TType,
@@ -16,7 +19,7 @@ const mergeTypes = <TType extends z.ZodType, TTypeName extends string>(
 
 export abstract class NodePlugin<
   TType extends z.ZodType = any,
-  TTypeName extends string = any
+  TTypeName extends string = string
 > extends Plugin<
   TTypeName,
   TType,
@@ -37,21 +40,7 @@ export abstract class NodePlugin<
     this.isAddable = config?.isAddable;
   }
 
-  create =
-    (data: Partial<Omit<z.infer<typeof this.Type>, "id" | "type">>) =>
-    (treeClient: TTreeClient) => {
-      const newNode = treeClient.nodes.create.node(
-        merge(
-          {
-            type: this.typeName,
-            data: this.defaultData,
-          },
-          data
-        )
-      );
-
-      return this.Type.parse(newNode);
-    };
+  declare abstract create: createFn<typeof this.Type>;
 
   get get() {
     return {

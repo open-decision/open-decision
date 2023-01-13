@@ -2,3 +2,8 @@ export * from "./DocumentNodeRendererModel";
 export * from "./SingleSelectRendererModel";
 export * from "./TextRendererModel";
 export * from "./GroupNodeModel";
+export * from "./PlaceholderNodeModel";
+export * from "./MultiSelectRendererModel";
+export * from "./DecisionNodeModel";
+export * from "./InfoNodeModel";
+export * from "./NodeSidebarModel/NodeSidebarModel";
