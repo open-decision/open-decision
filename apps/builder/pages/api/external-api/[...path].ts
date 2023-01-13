@@ -1,6 +1,7 @@
-import { safeFetchJSON } from "@open-decision/api-helpers";
+import { safeFetch } from "@open-decision/api-helpers";
 import { APIError, isAPIError } from "@open-decision/type-classes";
 import { NextApiHandler } from "next";
+import { omitBy } from "remeda";
 import { withAuthRefresh } from "../../../utils/auth";
 
 const ProxyAPI: NextApiHandler = async (req, res) => {
@@ -17,21 +18,45 @@ const ProxyAPI: NextApiHandler = async (req, res) => {
       : req.body;
 
   try {
-    const path = req.url?.split("external-api")[1];
-    const { status, data } = await safeFetchJSON(
-      `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1${path}`,
-      {
-        body: req.method === "GET" ? undefined : body,
-        headers,
-        method: req.method,
-      },
-      { origin: "api route" }
-    );
+    if (req.query.path === undefined)
+      throw new APIError({
+        code: "NOT_FOUND",
+        message: "The requested url does not exist.",
+      });
+
+    const queryParams = omitBy(
+      req.query,
+      (value, key) => key === "path" || typeof value !== "string"
+    ) as Record<string, string>;
+
+    const path =
+      typeof req.query.path === "string"
+        ? req.query.path
+        : req.query.path.join("/");
+
+    const response = await safeFetch({
+      apiUrl: `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1`,
+      proxyUrl: `${process.env["NEXT_PUBLIC_OD_BUILDER_ENDPOINT"]}/api/external-api`,
+    })(path, {
+      body: req.method === "GET" ? undefined : body,
+      headers,
+      method: req.method,
+      origin: "api route",
+      proxied: false,
+      searchParams: queryParams,
+    });
+
+    const responseContentType = response.headers.get("Content-Type");
+
+    if (response.status === 204) return res.status(response.status).end();
+
+    if (responseContentType) {
+      res.setHeader("Content-Type", responseContentType);
+    }
 
     res.setHeader("Cache-Control", "no-store");
-    if (status === 204) return res.status(status).end();
 
-    return res.status(status).json(data);
+    return res.status(response.status).send(response.body);
   } catch (error) {
     console.error("general proxy", error);
     const errorToReturn = isAPIError(error)

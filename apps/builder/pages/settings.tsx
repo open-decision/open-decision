@@ -15,8 +15,9 @@ import { ChangePassword } from "../features/Settings/ChangePassword";
 import { DeleteAccount } from "../features/Settings/DeleteAccount";
 import { GetStaticProps } from "next";
 import Head from "next/head";
-import { useUser } from "../features/Auth/useUserQuery";
 import { useTranslations } from "next-intl";
+import { useUser } from "@open-decision/api-react-binding";
+import { APIClient } from "@open-decision/api-client";
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const messages = await import(`@open-decision/translations`).then(
@@ -37,7 +38,11 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 
 export default function SettingsPage() {
   const t = useTranslations("settings");
-  const { data: user, isLoading, isSuccess } = useUser().useUserQuery();
+  const {
+    data: user,
+    isLoading,
+    isSuccess,
+  } = useUser(APIClient).useUserQuery();
 
   if (isLoading) {
     return (

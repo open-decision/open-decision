@@ -1,10 +1,10 @@
 import { deleteCookies } from "../../../../utils/auth";
 import { NextApiHandler } from "next";
-import { directClient } from "@open-decision/api-client";
+import { APIClient } from "@open-decision/api-client";
 
 const logout: NextApiHandler = async (req, res) => {
   req.cookies.refreshToken
-    ? await directClient("client").auth.logout({
+    ? await APIClient.auth.logout({
         body: { refreshToken: req.cookies.refreshToken },
       })
     : null;

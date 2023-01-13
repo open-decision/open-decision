@@ -1,1 +1,1 @@
-export const userRoot = "/user";
+export const userRoot = "user";

@@ -1,25 +1,19 @@
-import { TContext, QueryConfig } from "@open-decision/api-helpers";
+import { FetchFn } from "@open-decision/api-helpers";
 import { templateSingle } from "../../../urls";
 import { TDeleteTemplateSingleInput } from "./input";
-import { deleteTemplateSingleOutput } from "./output";
+import {
+  deleteTemplateSingleOutput,
+  TDeleteTemplateSingleOutput,
+} from "./output";
 
-export const deleteTemplateSingle =
-  (context: TContext) =>
-  async (inputs: TDeleteTemplateSingleInput, config?: QueryConfig) => {
-    let combinedUrl = templateSingle(inputs.params.uuid);
-    const prefix = config?.urlPrefix ?? context.urlPrefix;
-
-    if (prefix) combinedUrl = prefix + combinedUrl;
-
-    return await context.fetchFunction(
-      combinedUrl,
-      {
-        cache: "no-cache",
-        headers: {
-          authorization: `Bearer ${context.token}`,
-          ...context.headers,
-        },
-      },
-      { validation: deleteTemplateSingleOutput, ...context.config }
-    );
-  };
+export const deleteTemplateSingle: FetchFn<
+  TDeleteTemplateSingleInput,
+  TDeleteTemplateSingleOutput
+> = (fetchFunction) => (inputs, config) => {
+  return fetchFunction(templateSingle(inputs.params.uuid), {
+    cache: "no-cache",
+    validation: deleteTemplateSingleOutput,
+    proxied: true,
+    ...config,
+  });
+};

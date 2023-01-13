@@ -3,7 +3,6 @@ import {
   DropdownMenu,
   Icon,
   Separator,
-  Text,
   Tooltip,
 } from "@open-decision/design-system";
 import { Pencil2Icon, DownloadIcon, TrashIcon } from "@radix-ui/react-icons";
@@ -12,7 +11,6 @@ import { DeleteTreeDialog } from "../../features/Dashboard/components/Dialogs/De
 import { UpdateTreeDialog } from "../../features/Dashboard/components/Dialogs/UpdateTreeDialog";
 import { useRouter } from "next/router";
 import { ExportDialog } from "../../features/Builder/components/ExportDialog";
-import { useTreeAPI } from "@open-decision/api-react-binding";
 import { useTranslations } from "next-intl";
 import { ArchiveItem } from "./ArchiveItem";
 import { PublishItem } from "./PublishItem";
@@ -25,11 +23,11 @@ type ItemRendererProps = {
 type Props = {
   className?: string;
   children?: React.ReactNode;
-  tree: string | TGetTreeOutput;
   Items?: (props: ItemRendererProps) => React.ReactNode;
+  tree: TGetTreeOutput;
 };
 
-export function ProjectMenu({ className, tree, children, Items }: Props) {
+export function ProjectMenu({ className, children, Items, tree }: Props) {
   const t = useTranslations("common");
   const router = useRouter();
 
@@ -43,37 +41,12 @@ export function ProjectMenu({ className, tree, children, Items }: Props) {
     "export" | "update" | "delete" | undefined
   >(undefined);
 
-  const { data, isLoading, isError, error } = useTreeAPI().useTreeQuery(
-    tree as string,
-    {
-      select: ({ data }) => ({
-        name: data.name,
-        isPublished: data.publishedTrees.length > 0,
-        uuid: data.uuid,
-        publishedTree: {
-          uuid: data.publishedTrees[0]?.uuid,
-        },
-        status: data.status,
-      }),
-      enabled: typeof tree === "string",
-      initialData:
-        typeof tree === "object" ? { data: tree, status: 200 } : undefined,
-    }
-  );
-
-  if (isLoading)
-    return React.isValidElement(children) ? (
-      children
-    ) : (
-      <Text className="min-w-max">Projekt lädt...</Text>
-    );
-
-  if (isError) throw error;
+  const isPublished = tree.publishedTrees.length > 0;
 
   const dialogs = {
     update: () => (
       <UpdateTreeDialog
-        treeId={data.uuid}
+        treeId={tree.uuid}
         open={openDialog === "update"}
         onSuccess={() => {
           setOpenDialog(undefined);
@@ -87,8 +60,8 @@ export function ProjectMenu({ className, tree, children, Items }: Props) {
     ),
     export: () => (
       <ExportDialog
-        treeName={data.name}
-        treeId={data.uuid}
+        treeName={tree.name}
+        treeId={tree.uuid}
         open={openDialog === "export"}
         onSuccess={() => {
           setOpenDialog(undefined);
@@ -102,7 +75,7 @@ export function ProjectMenu({ className, tree, children, Items }: Props) {
     ),
     delete: () => (
       <DeleteTreeDialog
-        tree={data}
+        tree={tree}
         onDelete={() => router.push("/")}
         open={openDialog === "delete"}
         onSuccess={() => {
@@ -125,7 +98,7 @@ export function ProjectMenu({ className, tree, children, Items }: Props) {
           {React.isValidElement(children) ? (
             children
           ) : (
-            <MenuButton label={data.name} className={className} />
+            <MenuButton label={tree.name} className={className} />
           )}
         </DropdownMenu.Trigger>
         <DropdownMenu.Content sideOffset={15} alignOffset={7} align="start">
@@ -154,12 +127,12 @@ export function ProjectMenu({ className, tree, children, Items }: Props) {
             {t("projectMenu.export")}
           </DropdownMenu.Item>
           <PublishItem
-            treeName={data.name}
-            treeId={data.uuid}
-            publishedTreeId={data.publishedTree.uuid}
+            treeName={tree.name}
+            treeId={tree.uuid}
+            publishedTreeId={tree.publishedTrees[0]?.uuid}
           />
-          <ArchiveItem treeId={data.uuid} status={data.status} />
-          <Tooltip.Root open={!data.isPublished ? false : undefined}>
+          <ArchiveItem treeId={tree.uuid} status={tree.status} />
+          <Tooltip.Root open={!isPublished ? false : undefined}>
             <Tooltip.Trigger asChild>
               <DropdownMenu.Item
                 onSelect={() => {
@@ -168,7 +141,7 @@ export function ProjectMenu({ className, tree, children, Items }: Props) {
                 }}
                 ref={deleteItemRef}
                 className="colorScheme-danger"
-                disabled={data.isPublished}
+                disabled={isPublished}
               >
                 <Icon className="mt-[2px]">
                   <TrashIcon />

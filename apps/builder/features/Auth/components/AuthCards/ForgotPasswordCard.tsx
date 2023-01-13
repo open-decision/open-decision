@@ -2,7 +2,6 @@ import { Icon, linkClasses } from "@open-decision/design-system";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
 import * as React from "react";
-import { useForgotPasswordMutation } from "../../mutations/useForgotPasswordMutation";
 import { ForgotPasswordForm } from "../AuthForms/ForgotPasswordForm";
 import NextLink from "next/link";
 import {
@@ -12,6 +11,7 @@ import {
   headerClasses,
   headingClasses,
 } from "./AuthCard";
+import { useAuthAPI } from "@open-decision/api-react-binding";
 
 export function ForgotPasswordCard() {
   const t = useTranslations("forgotPassword");
@@ -20,7 +20,7 @@ export function ForgotPasswordCard() {
     error,
     isLoading,
     isSuccess,
-  } = useForgotPasswordMutation();
+  } = useAuthAPI().useForgotPasswordMutation();
 
   return (
     <div className={containerClasses}>

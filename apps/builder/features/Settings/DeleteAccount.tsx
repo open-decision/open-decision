@@ -7,14 +7,15 @@ import {
 import { cardClasses } from "../../components/Card";
 import { VerifiedSettingsChange } from "./VerifiedSettingsChange";
 import { TGetUserOutput } from "@open-decision/api-specification";
-import { useUser } from "../Auth/useUserQuery";
 import { useTranslations } from "next-intl";
+import { useUser } from "@open-decision/api-react-binding";
+import { APIClient } from "@open-decision/api-client";
 
 type Props = { user: TGetUserOutput };
 
 export function DeleteAccount({ user }: Props) {
   const t = useTranslations("settings.account.deleteAccount");
-  const { mutate, isLoading } = useUser().useDeleteUserMutation();
+  const { mutate, isLoading } = useUser(APIClient).useDeleteUserMutation();
 
   const [open, setOpen] = React.useState(false);
 

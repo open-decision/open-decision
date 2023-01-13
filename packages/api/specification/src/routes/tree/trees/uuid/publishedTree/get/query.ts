@@ -1,28 +1,22 @@
-import { TContext, QueryConfig } from "@open-decision/api-helpers";
+import { FetchFn } from "@open-decision/api-helpers";
 import { publishedTreesOfTreesCollection } from "../../../../urls";
 import { TGetPublishedTreeOfTreeInput } from "./input";
-import { getPublishedTreesOfTreeOutput } from "./output";
+import {
+  getPublishedTreesOfTreeOutput,
+  TGetPublishedTreesOfTreeOutput,
+} from "./output";
 
-export const getPublishedTreesOfTree =
-  (context: TContext) =>
-  async (inputs: TGetPublishedTreeOfTreeInput, config?: QueryConfig) => {
-    let combinedUrl = publishedTreesOfTreesCollection(inputs.params?.treeUuid);
-    const prefix = config?.urlPrefix ?? context.urlPrefix;
-
-    if (prefix) combinedUrl = prefix + combinedUrl;
-
-    return await context.fetchFunction(
-      combinedUrl,
-      {
-        cache: "no-cache",
-        headers: {
-          authorization: `Bearer ${context.token}`,
-          ...context.headers,
-        },
-      },
-      {
-        validation: getPublishedTreesOfTreeOutput,
-        ...context.config,
-      }
-    );
-  };
+export const getPublishedTreesOfTreeContent: FetchFn<
+  TGetPublishedTreeOfTreeInput,
+  TGetPublishedTreesOfTreeOutput
+> = (fetchFunction) => (inputs, config) => {
+  return fetchFunction(
+    publishedTreesOfTreesCollection(inputs.params?.treeUuid),
+    {
+      cache: "no-cache",
+      validation: getPublishedTreesOfTreeOutput,
+      proxied: true,
+      ...config,
+    }
+  );
+};

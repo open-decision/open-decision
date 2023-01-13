@@ -3281,6 +3281,7 @@ __metadata:
   resolution: "@open-decision/api-helpers@workspace:packages/api/helpers"
   dependencies:
     "@types/validator": ^13.7.10
+    ky: ^0.33.1
     tslib: ^2.4.1
     validator: ^13.7.0
     zod: ^3.20.2
@@ -3951,15 +3952,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@playwright/test@npm:^1.29.1":
-  version: 1.29.1
-  resolution: "@playwright/test@npm:1.29.1"
+"@playwright/test@npm:^1.29.2":
+  version: 1.29.2
+  resolution: "@playwright/test@npm:1.29.2"
   dependencies:
     "@types/node": "*"
-    playwright-core: 1.29.1
+    playwright-core: 1.29.2
   bin:
     playwright: cli.js
-  checksum: c4424ee09f6589a296a3a78402f8c9eac841f3e5f44d96e3a2ba07aaa00d53ee9c10cc96379b304743a9e70f231df0ded0ad2fc197f412ada67b4cf17ee24b0f
+  checksum: 614cd4ed3baa4e41a6c7865f3c49733caef2c9d5a1aae5832b3d145ffdb0be2dd9d30136c0cb8aed5f9d452782baf2f380e5b12092958bf9fa7578a6d5fa61bf
   languageName: node
   linkType: hard
 
@@ -13303,6 +13304,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ky@npm:^0.33.1":
+  version: 0.33.1
+  resolution: "ky@npm:0.33.1"
+  checksum: 47a4b74fd6cb4b80b4fbff1d5500d082e2f437955a3abea70690fa4f080910e4e035e10e1b91f695479e99fe3e95a8e32daa1a7e4e9364386bd562a3d4cff21f
+  languageName: node
+  linkType: hard
+
 "language-subtag-registry@npm:~0.3.2":
   version: 0.3.22
   resolution: "language-subtag-registry@npm:0.3.22"
@@ -14823,7 +14831,7 @@ __metadata:
     "@nrwl/webpack": 15.4.4
     "@nrwl/workspace": 15.4.4
     "@nxext/vitest": ^15.0.0
-    "@playwright/test": ^1.29.1
+    "@playwright/test": ^1.29.2
     "@swc/cli": ~0.1.57
     "@swc/core": ^1.3.19
     "@swc/helpers": ^0.4.14
@@ -15224,12 +15232,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"playwright-core@npm:1.29.1":
-  version: 1.29.1
-  resolution: "playwright-core@npm:1.29.1"
+"playwright-core@npm:1.29.2":
+  version: 1.29.2
+  resolution: "playwright-core@npm:1.29.2"
   bin:
     playwright: cli.js
-  checksum: e1c8423db4d28f44e5365a353f321b04a07709c8bf26d0c908f06d2c2669f715315170f84ca98a532951c2ac6324f5f48f651dca1abe43092c7637bdb4703303
+  checksum: 19e00e162a24eb99878408518930346c1d2c8ce83bb02993e3dd890c99df4530240cfebe4ec4e5aca01656462695b6328fb8f913cf2e229c2c73941623ac524e
   languageName: node
   linkType: hard
 

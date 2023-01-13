@@ -7,10 +7,7 @@ import {
   TGetTreeOutput,
   TGetTreesOutput,
   TUpdateTreeInput,
-  TDeleteTreeOutput,
-  TUpdateTreeOutput,
   TCreatePublishedTreeOutput,
-  TDeletePublishedTreeOutput,
   TGetTreeDataOutput,
   TGetTreePreviewOutput,
 } from "@open-decision/api-specification";
@@ -21,17 +18,18 @@ import {
   UseMutationOptions,
   useQuery,
   useQueryClient,
+  UseQueryOptions,
 } from "@tanstack/react-query";
-import { Node, Tree, TreeClient } from "@open-decision/tree-type";
+import { Node, TreeClient } from "@open-decision/tree-type";
 import * as Y from "yjs";
 import { IndexeddbPersistence } from "y-indexeddb";
 import { PlaceholderNodePlugin } from "@open-decision/node-editor";
-import { FetchJSONReturn } from "@open-decision/api-helpers";
+import { FetchResponse } from "@open-decision/api-helpers";
 import {
   NotificationTemplate,
   useNotificationTemplate,
 } from "@open-decision/design-system";
-import { directClient, proxiedClient } from "@open-decision/api-client";
+import { APIClient, TClient } from "@open-decision/api-client";
 
 const PlaceholderNode = new PlaceholderNodePlugin();
 
@@ -52,104 +50,109 @@ export const invalidateTrees =
   };
 
 export type useDeleteOptions = UseMutationOptions<
-  FetchJSONReturn<TDeleteTreeOutput>,
-  APIError<void>,
+  FetchResponse<Response, void>,
+  APIError,
   TDeleteTreeInput
 >;
 
 export type useCreateOptions = UseMutationOptions<
-  FetchJSONReturn<TCreateTreeOutput>,
-  APIError<TCreateTreeOutput>,
+  FetchResponse<Response, TCreateTreeOutput>,
+  APIError,
   TCreateTreeInput
 >;
 
 export type useUpdateOptions = UseMutationOptions<
-  FetchJSONReturn<TUpdateTreeOutput>,
-  APIError<void>,
+  FetchResponse<Response, void>,
+  APIError,
   TUpdateTreeInput
 >;
 
 export type useArchiveOptions = UseMutationOptions<
-  FetchJSONReturn<TUpdateTreeOutput>,
-  APIError<void>,
+  FetchResponse<Response, void>,
+  APIError,
   Pick<TUpdateTreeInput, "params">
 >;
 
 export type usePublishOptions = UseMutationOptions<
-  FetchJSONReturn<TCreatePublishedTreeOutput>,
-  APIError<void>,
+  FetchResponse<Response, TCreatePublishedTreeOutput>,
+  APIError,
   TCreatePublishedTreeInput
 >;
 
 export type useUnpublishOptions = UseMutationOptions<
-  FetchJSONReturn<TDeletePublishedTreeOutput>,
-  APIError<void>,
+  FetchResponse<Response, void>,
+  APIError,
   TDeletePublishedTreeInput
+>;
+
+export type useTreesQueryOptions = UseQueryOptions<
+  FetchResponse<Response, TGetTreesOutput>,
+  APIError,
+  TGetTreesOutput,
+  typeof treesQueryKey
+>;
+
+export type useTreeQueryOptions = UseQueryOptions<
+  FetchResponse<Response, TGetTreeOutput>,
+  APIError,
+  TGetTreeOutput,
+  ReturnType<typeof treeQueryKey>
+>;
+
+export type useTreeDataQueryOptions = UseQueryOptions<
+  FetchResponse<Response, TGetTreeDataOutput>,
+  APIError,
+  TGetTreeDataOutput,
+  ReturnType<typeof treeDataQueryKey>
+>;
+
+export type useTreePreviewQueryOptions = UseQueryOptions<
+  FetchResponse<Response, TGetTreePreviewOutput>,
+  APIError,
+  TGetTreePreviewOutput,
+  ReturnType<typeof treeDataQueryKey>
 >;
 
 export type useExportOptions = UseMutationOptions<
   string,
-  APIError<void>,
+  APIError,
   { name: string }
 >;
 
-export const useTreeAPI = () => {
+export const useTreeAPI = (client: TClient = APIClient) => {
   const queryClient = useQueryClient();
   const addNotificationFromTemplate = useNotificationTemplate();
 
-  const useTreesQuery = <TData = FetchJSONReturn<TGetTreesOutput>>(options?: {
-    staleTime?: number;
-    select?: (data: FetchJSONReturn<TGetTreesOutput>) => TData;
-  }) => {
+  const useTreesQuery = (options?: useTreesQueryOptions) => {
     return useQuery(
       treesQueryKey,
-      () => proxiedClient("client").trees.getCollection({}),
+      () => client.trees.private.getCollection({}),
       options
     );
   };
 
-  const useTreeQuery = <TData = FetchJSONReturn<TGetTreeOutput>>(
-    uuid: string,
-    options?: {
-      select?: (data: FetchJSONReturn<TGetTreeOutput>) => TData;
-      staleTime?: number;
-      enabled?: boolean;
-      initialData?: FetchJSONReturn<TGetTreeOutput>;
-      onSuccess?: (data: TData) => void;
-    }
-  ) =>
+  const useTreeQuery = (uuid: string, options?: useTreeQueryOptions) =>
     useQuery(
       treeQueryKey(uuid),
-      () => proxiedClient("client").trees.getSingle({ params: { uuid } }),
+      () => client.trees.private.getSingle({ params: { uuid } }),
       options
     );
 
-  const useTreeData = <TData = FetchJSONReturn<TGetTreeDataOutput>>(
-    uuid: string,
-    options?: {
-      staleTime?: number;
-      select?: (data: FetchJSONReturn<Tree.TTree>) => TData;
-      enabled?: boolean;
-    }
-  ) => {
+  const useTreeData = (uuid: string, options?: useTreeDataQueryOptions) => {
     return useQuery(
       treeDataQueryKey(uuid),
-      () => directClient("client").trees.data.get({ params: { uuid } }),
+      () => client.trees.private.getContent({ params: { uuid } }),
       options
     );
   };
 
-  const useTreePreview = <TData = FetchJSONReturn<TGetTreePreviewOutput>>(
+  const useSharedTreeData = (
     uuid: string,
-    options?: {
-      staleTime?: number;
-      select?: (data: FetchJSONReturn<Tree.TTree>) => TData;
-      enabled?: boolean;
-    }
+    options?: useTreePreviewQueryOptions
   ) => {
     return useQuery(
       treeDataQueryKey(uuid),
-      () => proxiedClient("client").trees.data.getPreview({ params: { uuid } }),
+      () => client.trees.shared.getContent({ params: { uuid } }),
       {
         ...options,
         retry: (failureCount, error) => {
@@ -172,7 +175,7 @@ export const useTreeAPI = () => {
     return useMutation(
       ["createTree"],
       async (data) => {
-        const response = await proxiedClient("client").trees.create(data);
+        const response = await client.trees.private.create(data);
         const yDoc = new Y.Doc();
         new IndexeddbPersistence(response.data.uuid, yDoc);
 
@@ -223,18 +226,18 @@ export const useTreeAPI = () => {
     useMutation(
       ["deleteTree"],
       async (data) => {
-        return proxiedClient("client").trees.delete(data);
+        return client.trees.private.delete(data);
       },
       {
         ...options,
-        onSuccess: async (...params) => {
+        onSuccess: (...params) => {
           if (notification !== false) {
             addNotificationFromTemplate(notification ?? "deleteProject");
           }
 
           return onSuccess?.(...params);
         },
-        onSettled: async (...params) => {
+        onSettled: (...params) => {
           invalidateTrees(queryClient)();
           return onSettled?.(...params);
         },
@@ -252,7 +255,7 @@ export const useTreeAPI = () => {
     useMutation(
       ["updateTree"],
       (data) => {
-        return proxiedClient("client").trees.update(data);
+        return client.trees.private.update(data);
       },
       {
         ...options,
@@ -279,7 +282,7 @@ export const useTreeAPI = () => {
     useMutation(
       ["unarchiveTree"],
       ({ params }) =>
-        proxiedClient("client").trees.update({
+        client.trees.private.update({
           body: { status: "ACTIVE" },
           params,
         }),
@@ -307,7 +310,7 @@ export const useTreeAPI = () => {
     useMutation(
       ["archiveTree"],
       ({ params }) =>
-        proxiedClient("client").trees.update({
+        client.trees.private.update({
           body: { status: "ARCHIVED" },
           params,
         }),
@@ -333,31 +336,27 @@ export const useTreeAPI = () => {
     onSettled,
     ...options
   }: usePublishOptions & { notification?: NotificationTemplate } = {}) =>
-    useMutation(
-      ["publishTree"],
-      (data) => proxiedClient("client").trees.publishedTrees.create(data),
-      {
-        ...options,
-        onSuccess: (...params) => {
-          if (notification !== false) {
-            addNotificationFromTemplate(notification ?? "published");
-          }
+    useMutation(["publishTree"], (data) => client.trees.private.publish(data), {
+      ...options,
+      onSuccess: (...params) => {
+        if (notification !== false) {
+          addNotificationFromTemplate(notification ?? "published");
+        }
 
-          return onSuccess?.(...params);
-        },
-        onSettled: (...params) => {
-          invalidateTrees(queryClient)(params[2].params.treeUuid);
-          return onSettled;
-        },
-        retry: (failureCount, error) => {
-          if (isAPIError(error) && error.code === "NO_TREE_DATA") {
-            return false;
-          }
+        return onSuccess?.(...params);
+      },
+      onSettled: (...params) => {
+        invalidateTrees(queryClient)(params[2].params.treeUuid);
+        return onSettled;
+      },
+      retry: (failureCount, error) => {
+        if (isAPIError(error) && error.code === "NO_TREE_DATA") {
+          return false;
+        }
 
-          return failureCount < 3;
-        },
-      }
-    );
+        return failureCount < 3;
+      },
+    });
 
   const useUnPublish = ({
     notification,
@@ -368,7 +367,7 @@ export const useTreeAPI = () => {
     useMutation(
       ["unpublishTree"],
       (data) => {
-        return proxiedClient("client").publishedTrees.delete(data);
+        return client.trees.private.unpublish(data);
       },
       {
         ...options,
@@ -400,11 +399,11 @@ export const useTreeAPI = () => {
     return useMutation(
       ["exportTree"],
       async (data) => {
-        const { data: treeData } = await proxiedClient("client").trees.data.get(
-          {
-            params: { uuid },
-          }
-        );
+        const { data: treeData } = await client.trees.private.getContent({
+          params: { uuid },
+        });
+
+        delete treeData.uuid;
 
         return new Promise<string>((resolve) => {
           return setTimeout(() => {
@@ -414,7 +413,7 @@ export const useTreeAPI = () => {
             });
 
             return resolve(URL.createObjectURL(file));
-          }, 2000);
+          }, 1000);
         });
       },
       {
@@ -441,6 +440,6 @@ export const useTreeAPI = () => {
     usePublish,
     useUnPublish,
     useExport,
-    useTreePreview,
+    useTreePreview: useSharedTreeData,
   };
 };

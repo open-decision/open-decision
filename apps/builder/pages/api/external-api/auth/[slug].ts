@@ -1,4 +1,4 @@
-import { safeFetchJSON } from "@open-decision/api-helpers";
+import { safeFetchWithParse } from "@open-decision/api-helpers";
 import { loginOutput } from "@open-decision/api-specification";
 import { setCookieHeaders } from "../../../../utils/auth";
 import type { NextApiHandler } from "next";
@@ -6,22 +6,21 @@ import { APIError, isAPIError } from "@open-decision/type-classes";
 
 const authCatch: NextApiHandler = async (req, res) => {
   try {
-    const authResponse = await safeFetchJSON(
-      `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1/auth/${req.query["slug"]}`,
-      {
-        body: JSON.stringify(req.body),
-        method: req.method,
-        headers: {
-          "Content-Type": req.headers["content-type"] ?? "application/json",
-        },
-      },
-      { validation: loginOutput, origin: "api route" }
-    );
+    const { response, data } = await safeFetchWithParse({
+      apiUrl: `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1`,
+      proxyUrl: `${process.env["NEXT_PUBLIC_OD_BUILDER_ENDPOINT"]}/api/external-api`,
+    })(`auth/${req.query["slug"]}`, {
+      json: req.body,
+      method: req.method,
+      validation: loginOutput,
+      origin: "api route",
+      proxied: false,
+    });
 
-    setCookieHeaders(req, res, authResponse.data);
+    setCookieHeaders(req, res, data);
 
     res.setHeader("Cache-Control", "no-store");
-    return res.status(authResponse.status).json(authResponse.data.user);
+    return res.status(response.status).json(data);
   } catch (error) {
     console.error("authCatch", error);
     if (isAPIError(error)) {

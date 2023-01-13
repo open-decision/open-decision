@@ -1,35 +1,44 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { proxiedClient } from "@open-decision/api-client";
 import { APIError } from "@open-decision/type-classes";
 import { TUpdateUserInput } from "@open-decision/api-specification";
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
-import { useLogoutMutation } from "./mutations/useLogoutMutation";
+import { useRouter } from "next/router";
+import { TClient } from "@open-decision/api-client";
+import { useAuthAPI } from "./useAuthAPI";
+
+export type UseUpdateUserMutationOptions = UseMutationOptions<
+  any,
+  APIError,
+  TUpdateUserInput["body"]
+>;
+
+export type UseDeleteUserMutationOptions = UseMutationOptions<
+  any,
+  APIError,
+  void
+>;
 
 export const userQueryKey = ["user"];
 
-export const useUser = () => {
+export const useUser = (client: TClient) => {
   const queryClient = useQueryClient();
 
   const useUserQuery = () =>
-    useQuery(userQueryKey, () => proxiedClient("client").user.getUser(), {
+    useQuery(userQueryKey, () => client.user.getUser(), {
       staleTime: Infinity,
       select(response) {
         return response.data;
       },
     });
 
-  const useUserUpdateMutation = ({
+  const useUpdateUserMutation = ({
     onSuccess,
     ...options
-  }: UseMutationOptions<
-    unknown,
-    APIError<TUpdateUserInput>,
-    Partial<TUpdateUserInput["body"]>
-  >) => {
+  }: UseUpdateUserMutationOptions) => {
     return useMutation(
       ["updateUser"],
-      (data: Partial<TUpdateUserInput["body"]>) => {
-        return proxiedClient("client").user.updateUser({ body: data });
+      (data) => {
+        return client.user.updateUser({ body: data });
       },
       {
         onSuccess: (...params) => {
@@ -41,13 +50,16 @@ export const useUser = () => {
     );
   };
 
-  const useDeleteUserMutation = (options?: UseMutationOptions) => {
-    const { mutate: logout } = useLogoutMutation();
+  const useDeleteUserMutation = (options?: UseDeleteUserMutationOptions) => {
+    const router = useRouter();
+    const { mutate: logout } = useAuthAPI().useLogoutMutation({
+      onSuccess: () => router.push("/auth/login"),
+    });
 
     return useMutation(
       ["deleteUser"],
       () => {
-        return proxiedClient("client").user.deleteUser();
+        return client.user.deleteUser();
       },
       {
         onSettled: (_data, _error, _variables, _context) => logout(),
@@ -58,7 +70,7 @@ export const useUser = () => {
 
   return {
     useUserQuery,
-    useUserUpdateMutation,
+    useUserUpdateMutation: useUpdateUserMutation,
     useDeleteUserMutation,
   };
 };

@@ -1,5 +1,5 @@
-import { proxiedClient } from "@open-decision/api-client";
-import { FetchJSONReturn } from "@open-decision/api-helpers";
+import { APIClient } from "@open-decision/api-client";
+import { FetchResponse } from "@open-decision/api-helpers";
 import { invalidateTrees } from "@open-decision/api-react-binding";
 import { TCreateTreeOutput } from "@open-decision/api-specification";
 import {
@@ -17,7 +17,7 @@ import { z } from "zod";
 import { createYjsDocumentIndexedDB } from "./utils/createYjsDocumentIndexedDB";
 
 export type useImportOptions = UseMutationOptions<
-  FetchJSONReturn<TCreateTreeOutput>,
+  FetchResponse<Response, TCreateTreeOutput>,
   ODError,
   { event: ProgressEvent<FileReader> }
 >;
@@ -54,7 +54,7 @@ export const useImport = ({
 
         const data = validatedResult.data;
 
-        const response = await proxiedClient("client").trees.create({
+        const response = await APIClient.trees.private.create({
           body: { name: data.name },
         });
 

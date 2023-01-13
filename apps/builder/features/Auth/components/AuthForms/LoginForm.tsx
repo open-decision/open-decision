@@ -1,10 +1,10 @@
+import { useAuthAPI } from "@open-decision/api-react-binding";
 import { Form, Stack, SubmitButton } from "@open-decision/design-system";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/router";
 import { EmailField } from "../../../../components/EmailInput";
 import { ErrorMessage } from "../../../../components/Error/ErrorMessage";
 import { PasswordInput } from "../../../../components/PasswordInput";
-import { useLoginMutation } from "../../mutations/useLoginMutation";
 
 export function LoginForm() {
   const t = useTranslations();
@@ -20,11 +20,11 @@ export function LoginForm() {
     mutate: login,
     error,
     isLoading,
-  } = useLoginMutation({
+  } = useAuthAPI().useLoginMutation({
     onSuccess: () => {
-      return router.push("/");
+      router.push("/");
     },
-    onError: (error) => {
+    onError: (error: any) => {
       methods.setError("email", {
         message: error.errors?.body?.email?._errors[0],
       });

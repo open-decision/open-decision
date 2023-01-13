@@ -36,7 +36,7 @@ export interface Typegen0 {
   eventsCausingGuards: {
     canGoBack: "GO_BACK";
     canGoForward: "GO_FORWARD";
-    notInPreview: "EVALUATE_NODE_CONDITIONS";
+    isInteractive: "EVALUATE_NODE_CONDITIONS";
   };
   eventsCausingServices: {
     resolveConditions: "EVALUATE_NODE_CONDITIONS";

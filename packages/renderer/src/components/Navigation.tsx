@@ -9,21 +9,20 @@ type Props = {
 };
 
 export function Navigation({ className, successButtonLabel }: Props) {
-  const { environment } = useInterpreter();
-  const { send, canGoBack, canGoForward } = useInterpreter();
+  const { isInteractive } = useInterpreter();
+  const { send, canGoBack } = useInterpreter();
 
-  const isPreview = environment === "preview";
   const [open, setOpen] = React.useState(false);
 
   return (
-    <Tooltip.Root open={isPreview && open} onOpenChange={setOpen}>
+    <Tooltip.Root open={!isInteractive && open} onOpenChange={setOpen}>
       <Tooltip.Trigger asChild>
         <Row classNames={["p-2 max-w-max gap-2 rounded-md", className]}>
           <Button
             variant="neutral"
             onClick={() => send("GO_BACK")}
-            disabled={!canGoBack || isPreview}
-            className={isPreview ? "pointer-events-none" : ""}
+            disabled={!canGoBack || !isInteractive}
+            className={isInteractive ? "" : "pointer-events-none"}
           >
             <Icon label="Zurück">
               <ArrowLeftIcon />
@@ -32,7 +31,7 @@ export function Navigation({ className, successButtonLabel }: Props) {
           </Button>
           <Form.SubmitButton
             form="form"
-            className={isPreview ? "pointer-events-none" : ""}
+            className={isInteractive ? "" : "pointer-events-none"}
           >
             {successButtonLabel ? successButtonLabel : "Zum nächsten Schritt"}
             <Icon label="Vorwärts">

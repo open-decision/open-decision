@@ -1,27 +1,20 @@
-import { TContext, QueryConfig } from "@open-decision/api-helpers";
+import { FetchFn } from "@open-decision/api-helpers";
 import { templateRequestUploadToken } from "../../../urls";
 import { TRequestTemplateUploadInput } from "./input";
-import { requestTemplateUploadOutput } from "./output";
+import {
+  requestTemplateUploadOutput,
+  TRequestTemplateUploadOutput,
+} from "./output";
 
-export const requestTemplateUpload =
-  (context: TContext) =>
-  async (inputs: TRequestTemplateUploadInput, config?: QueryConfig) => {
-    let combinedUrl = templateRequestUploadToken;
-    const prefix = config?.urlPrefix ?? context.urlPrefix;
-
-    if (prefix) combinedUrl = prefix + combinedUrl;
-
-    return await context.fetchFunction(
-      combinedUrl,
-      {
-        body: JSON.stringify(inputs.body),
-        method: "POST",
-        headers: {
-          authorization: `Bearer ${context.token}`,
-          "Content-Type": "application/json",
-          ...context.headers,
-        },
-      },
-      { validation: requestTemplateUploadOutput, ...context.config }
-    );
-  };
+export const requestTemplateUpload: FetchFn<
+  TRequestTemplateUploadInput,
+  TRequestTemplateUploadOutput
+> = (fetchFunction) => (inputs, config) => {
+  return fetchFunction(templateRequestUploadToken, {
+    json: inputs.body,
+    method: "POST",
+    validation: requestTemplateUploadOutput,
+    proxied: true,
+    ...config,
+  });
+};

@@ -1,6 +1,7 @@
 import { expect } from "@playwright/test";
 import { de } from "@open-decision/translations";
 import { createUserFixture, pwTest } from "@open-decision/test-utils";
+import { APIError } from "@open-decision/type-classes";
 
 pwTest.describe.configure({ mode: "parallel" });
 
@@ -29,12 +30,11 @@ pwTest.describe("builder login valid credentials", () => {
   pwTest(
     "should show generic error message when request fails due to server error",
     async ({ loginPage }) => {
-      await loginPage.page.route("**/auth/login", async (route) => {
-        const response = await loginPage.page.request.fetch(route.request());
-
+      await loginPage.page.route("**/auth/login", (route) => {
         route.fulfill({
-          response,
           status: 500,
+          contentType: "application/json",
+          body: JSON.stringify(new APIError({ code: "UNEXPECTED_ERROR" })),
         });
       });
 

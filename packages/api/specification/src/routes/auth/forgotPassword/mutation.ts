@@ -1,25 +1,12 @@
-import { TContext, prefixUrl, QueryConfig } from "@open-decision/api-helpers";
+import { FetchFn } from "@open-decision/api-helpers";
 import { forgotPasswordUrl } from "../urls";
 import { TForgotPasswordInput } from "./input";
-import { forgotPasswordOutput } from "./output";
 
-export const forgotPassword =
-  (context: TContext) =>
-  async (inputs: TForgotPasswordInput, config?: QueryConfig) => {
-    const combinedUrl = prefixUrl(
-      forgotPasswordUrl,
-      config?.urlPrefix ?? context.urlPrefix
-    );
-
-    return await context.fetchFunction(
-      combinedUrl,
-      {
-        body: JSON.stringify(inputs.body),
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-      { validation: forgotPasswordOutput, ...context.config }
-    );
-  };
+export const forgotPassword: FetchFn<TForgotPasswordInput, void> =
+  (fetchFunction) => (inputs, config) =>
+    fetchFunction(forgotPasswordUrl, {
+      json: inputs.body,
+      method: "POST",
+      proxied: true,
+      ...config,
+    });

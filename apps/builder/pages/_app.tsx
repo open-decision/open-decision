@@ -8,10 +8,10 @@ import { Hydrate, QueryClientProvider } from "@tanstack/react-query";
 import { NextPage } from "next";
 import { NextIntlProvider, useTranslations } from "next-intl";
 import { useUrlNotification } from "../utils/useUrlNotification";
-import { convertToODError } from "@open-decision/type-classes";
+import { convertToODError, isAPIError } from "@open-decision/type-classes";
 import { FullPageErrorFallback } from "../components/Error/FullPageErrorFallback";
 import { AnimatePresence, motion, Variants } from "framer-motion";
-import { Router } from "next/router";
+import { Router, useRouter } from "next/router";
 import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 import "reactflow/dist/style.css";
 import "@open-decision/design-system/index.css";
@@ -38,8 +38,26 @@ type AppPropsWithLayout = {
   pageProps: any;
 };
 
-const ErrorFallback = ({ error }: FallbackProps) => {
-  return <FullPageErrorFallback error={convertToODError(error)} />;
+const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
+  const router = useRouter();
+
+  const isUnauthenticated =
+    isAPIError(error) && error.code === "UNAUTHENTICATED";
+
+  React.useEffect(() => {
+    async function redirectToLogin() {
+      if (isUnauthenticated) {
+        await router.push("/auth/login");
+        resetErrorBoundary();
+      }
+    }
+
+    redirectToLogin();
+  }, [error, isUnauthenticated, resetErrorBoundary, router]);
+
+  return isUnauthenticated ? null : (
+    <FullPageErrorFallback error={convertToODError(error)} />
+  );
 };
 
 function App({ Component, pageProps }: AppPropsWithLayout): JSX.Element {

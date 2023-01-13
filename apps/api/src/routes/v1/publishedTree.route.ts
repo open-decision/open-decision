@@ -8,11 +8,11 @@ import { auth } from "../../middlewares/auth";
 const publishedTreeRouter = express.Router();
 
 publishedTreeRouter
-  .route(publishedTreesRoot)
+  .route(`/${publishedTreesRoot}`)
   .get(publishController.getPublishedTrees);
 
 publishedTreeRouter
-  .route(publishedTreesSingle(":uuid"))
+  .route(`/${publishedTreesSingle(":uuid")}`)
   .get(publishController.getPublishedTree)
   .delete(auth(), publishController.deletePublishedTree);
 

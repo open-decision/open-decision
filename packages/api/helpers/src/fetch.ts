@@ -1,101 +1,66 @@
 import { APIError, isAPIError } from "@open-decision/type-classes";
-import {
-  FetchBlobFunction,
-  FetchJSONFunction,
-} from "./fetchClientFunctionHelpers";
+import { KyResponse } from "ky";
 import { z } from "zod";
+import {
+  ClientFetchFn,
+  ClientFetchFnWithParse,
+} from "./fetchClientFunctionHelpers";
 
-const getResponseData = async (response: Response) => {
-  let data;
-  const contentType = response.headers.get("content-type");
-  if (contentType?.includes("application/json") && response.status !== 204) {
-    data = await response.json();
-  }
-
-  return data;
-};
-
-export const safeFetch = async (
-  url: string,
-  { body, headers, ...options }: RequestInit,
-  { retry = 0 }: { retry?: number; origin: string }
-) => {
-  let retries = 0;
-
-  const fetchFn = async (): Promise<Response> => {
-    try {
-      return (await Promise.race([
-        fetch(url, {
-          headers,
-          body,
-          ...options,
-        }),
-        new Promise((_, reject) =>
-          setTimeout(() => reject(new Error("Timeout")), 10000)
-        ),
-      ])) as Response;
-    } catch (error) {
-      if (retries < retry) {
-        retries++;
-        return await fetchFn();
-      } else {
-        throw new APIError({
-          code: "OFFLINE",
-          message:
-            error instanceof Error ? error.message : "Error without message",
-        });
-      }
-    }
-  };
-
-  let response = await fetchFn();
+export const safeFetch: ClientFetchFn = (config) => async (url, options) => {
+  const ky = await import("ky");
+  const { HTTPError } = await import("ky");
 
   try {
-    if (response.status >= 400 && response.status < 500) {
-      throw await getResponseData(response);
-    }
-
-    if (response.status >= 500) {
-      if (retries < retry) {
-        retries++;
-        response = await fetchFn();
-      } else {
-        throw await getResponseData(response);
-      }
-    }
-
-    return response;
-  } catch (error) {
-    console.error(error);
-    if (isAPIError(error)) throw error;
-    if (error instanceof z.ZodError) throw error;
-
-    throw new APIError({
-      code: "UNEXPECTED_ERROR",
-      message: "Something unexpected happened when fetching from the API.",
+    return await ky.default(url, {
+      retry: 0,
+      ...config,
+      ...options,
+      headers: {
+        authorization: options.proxied ? `Bearer ${config?.token}` : "",
+        ...config?.headers,
+        ...options.headers,
+      },
+      prefixUrl: options.proxied ? config?.proxyUrl : config?.apiUrl,
+      hooks: {
+        ...config?.hooks,
+        ...options.hooks,
+      },
     });
+  } catch (error) {
+    if (!(error instanceof HTTPError)) {
+      // This catches all unknown errors
+      throw new APIError({
+        code: "OFFLINE",
+        additionalData: { error },
+      });
+    }
+
+    const errorResponse = await error.response.json();
+
+    if (!isAPIError(errorResponse)) {
+      throw new APIError({
+        code: "UNEXPECTED_ERROR",
+        additionalData: { errorResponse, error },
+      });
+    }
+
+    throw errorResponse;
   }
 };
 
-export const safeFetchJSON: FetchJSONFunction = async (...params) => {
-  const response = await safeFetch(...params);
+export const parseResponse = <TValidation extends z.ZodType>(
+  response: KyResponse,
+  validation: TValidation
+) => {
+  const json = response.json();
+  return validation.parse(json);
+};
 
-  const data = await getResponseData(response);
+export const safeFetchWithParse: ClientFetchFnWithParse =
+  (context) => async (url, config) => {
+    const response = await safeFetch(context)(url, config);
 
-  if (!data) {
-    return { data: response, status: response.status };
-  }
+    const json = config.validation ? await response.json() : "";
 
-  const parsedData = params[2].validation?.parse(data) ?? data;
-
-  return {
-    data: parsedData,
-    status: response.status,
+    return { response, data: config.validation?.parse(json) ?? "" };
   };
-};
-
-export const safeFetchBlob: FetchBlobFunction = async (...params) => {
-  const response = await safeFetch(...params);
-
-  return { data: await response.blob(), status: response.status };
-};

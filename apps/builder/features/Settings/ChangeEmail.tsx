@@ -3,9 +3,10 @@ import { Heading, Form, addNotification } from "@open-decision/design-system";
 import { cardClasses } from "../../components/Card";
 import { VerifiedSettingsChange } from "./VerifiedSettingsChange";
 import { TGetUserOutput } from "@open-decision/api-specification";
-import { useUser } from "../Auth/useUserQuery";
 import { EmailField } from "../../components/EmailInput";
 import { useTranslations } from "next-intl";
+import { useUser } from "@open-decision/api-react-binding";
+import { APIClient } from "@open-decision/api-client";
 
 type Props = { user: TGetUserOutput };
 
@@ -17,7 +18,7 @@ export function ChangeEmail({ user }: Props) {
     },
   });
 
-  const { mutate, isLoading } = useUser().useUserUpdateMutation({
+  const { mutate, isLoading } = useUser(APIClient).useUserUpdateMutation({
     onError: (error) => {
       methods.setError("newEmail", { message: error.message });
     },

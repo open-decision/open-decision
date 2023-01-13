@@ -40,6 +40,7 @@ export const generateDocumentForPrototype = catchAsync(
         code: "DOC_GENERATION_NOT_CONFIGURED",
       });
     }
+
     const reqData = await validateRequest(validations.getDocumentSingleInput)(
       req
     );

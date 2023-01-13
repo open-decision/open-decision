@@ -1,28 +1,15 @@
-import { TContext, prefixUrl, QueryConfig } from "@open-decision/api-helpers";
+import { FetchFn } from "@open-decision/api-helpers";
 import { refreshTokenUrl } from "../urls";
 import { TRefreshTokenInput } from "./input";
-import { refreshTokenOutput } from "./output";
+import { refreshTokenOutput, TRefreshTokenOutput } from "./output";
 
-export const refreshToken =
-  (context: TContext) =>
-  async (inputs: TRefreshTokenInput, config?: QueryConfig) => {
-    const combinedUrl = prefixUrl(
-      refreshTokenUrl,
-      config?.urlPrefix ?? context.urlPrefix
-    );
-
-    return await context.fetchFunction(
-      combinedUrl,
-      {
-        body: JSON.stringify(inputs.body),
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-      {
-        validation: refreshTokenOutput.passthrough(),
-        ...context.config,
-      }
-    );
+export const refreshToken: FetchFn<TRefreshTokenInput, TRefreshTokenOutput> =
+  (fetchFunction) => (inputs, config) => {
+    return fetchFunction(refreshTokenUrl, {
+      validation: refreshTokenOutput.passthrough(),
+      json: inputs.body,
+      method: "POST",
+      proxied: true,
+      ...config,
+    });
   };

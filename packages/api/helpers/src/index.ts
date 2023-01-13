@@ -1,13 +1,10 @@
 export * from "./fetch";
 export type {
-  TContext,
-  TJWT,
-  QueryConfig,
-  FetchBlobFunction,
-  FetchJSONFunction,
-  FetchFunctions,
-  FetchBlobReturn,
-  FetchJSONReturn,
+  TClientConfig,
+  TQueryConfig as QueryConfig,
+  FetchFn,
+  ClientFetchFn,
+  FetchResponse,
+  ClientFetchFnWithParse,
 } from "./fetchClientFunctionHelpers";
-export { prefixUrl } from "./prefixUrl";
-export { AuthHeader } from "./fetchClientFunctionHelpers";
+export { createPrefixedUrl } from "./createPrefixedUrl";

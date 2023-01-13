@@ -18,7 +18,8 @@ export function SidebarPreview({ nodePlugins, edgePlugins }: Props) {
   return (
     <Tabs.Content value="Vorschau" className="h-full">
       <Renderer.Root
-        environment="preview"
+        isInteractive={false}
+        environment="private"
         edgePlugins={edgePlugins}
         tree={tree}
         initialNode={selectedNodeIds[0]}

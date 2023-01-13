@@ -1,90 +1,14 @@
-import {
-  Form,
-  Stack,
-  Row,
-  InfoBox,
-  linkClasses,
-} from "@open-decision/design-system";
-import { useMutation, UseMutationOptions } from "@tanstack/react-query";
-import { useRegisterMutation } from "../../mutations/useRegisterMutation";
+import { Form, Stack, Row, linkClasses } from "@open-decision/design-system";
 import { useRouter } from "next/router";
-import { safeFetchJSON } from "@open-decision/api-helpers";
 import { useTranslations } from "next-intl";
 import { EmailField } from "../../../../components/EmailInput";
 import { PasswordInput } from "../../../../components/PasswordInput";
 import { ErrorMessage } from "../../../../components/Error/ErrorMessage";
 import { APIErrors, isAPIError } from "@open-decision/type-classes";
 import Link from "next/link";
+import { useAuthAPI } from "@open-decision/api-react-binding";
 
-type Data = { email: string };
-
-const useIsOnWhiteListQuery = (
-  options?: UseMutationOptions<unknown, unknown, Data>
-) =>
-  useMutation(
-    ["isOnWhiteList"],
-    async (data: Data) => {
-      const result = await safeFetchJSON(
-        `/users/is-whitelisted`,
-        {
-          body: JSON.stringify(data),
-          method: "POST",
-        },
-        { origin: "client" }
-      );
-
-      if (!result.data.isWhitelisted) throw new Error();
-
-      return result.data;
-    },
-    { ...options }
-  );
-
-export function CombinedRegisterForm() {
-  const t = useTranslations();
-
-  const methods = Form.useForm({
-    defaultValues: {
-      email: "",
-    },
-  });
-
-  const { mutate, isSuccess, isError, isLoading, variables } =
-    useIsOnWhiteListQuery();
-
-  // Here we show the RegisterForm either when the below process has happened or directly if the
-  // whitelist feature is deactivated
-  if (
-    (isSuccess && variables?.email) ||
-    !!process.env["NEXT_PUBLIC_FEATURE_WHITELIST"]
-  )
-    return <RegisterForm email={variables?.email} />;
-
-  if (isError) {
-    return (
-      <InfoBox
-        content={t("register.unauthorizedAccountCreation.content")}
-        title={t("register.unauthorizedAccountCreation.title")}
-        variant="info"
-      />
-    );
-  }
-
-  return (
-    <Form.Root
-      methods={methods}
-      onSubmit={methods.handleSubmit((values) => mutate(values))}
-      className="flex flex-col"
-    >
-      <EmailField />
-      <Form.SubmitButton isLoading={isLoading} className="mt-6">
-        {t("register.submitButton")}
-      </Form.SubmitButton>
-    </Form.Root>
-  );
-}
-
-function RegisterForm({ email }: { email?: string }) {
+export function RegisterForm({ email }: { email?: string }) {
   const t = useTranslations();
 
   const methods = Form.useForm<{
@@ -105,7 +29,7 @@ function RegisterForm({ email }: { email?: string }) {
     error,
     isLoading,
     isError,
-  } = useRegisterMutation({
+  } = useAuthAPI().useRegisterMutation({
     retry: (failureCount, error) => {
       if (isAPIError(error) && error.code === "EMAIL_ALREADY_USED") {
         return false;
@@ -114,7 +38,7 @@ function RegisterForm({ email }: { email?: string }) {
       return failureCount < 3;
     },
     onSuccess: () => router.push("/"),
-    onError: (error) => {
+    onError: (error: any) => {
       const passwordFieldError = error?.errors?.body?.password
         ?._errors[0] as keyof typeof APIErrors;
       const emailFieldError = error?.errors?.body?.email

@@ -1,13 +1,17 @@
+import { useAuthAPI } from "@open-decision/api-react-binding";
 import { DropdownMenu, Icon } from "@open-decision/design-system";
 import { ExitIcon, GearIcon } from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { useLogoutMutation } from "../../features/Auth/mutations/useLogoutMutation";
+import { useRouter } from "next/router";
 import { MenuButton } from "./MenuButton";
 
 export function UserMenu() {
   const t = useTranslations();
-  const { mutate: logout } = useLogoutMutation();
+  const router = useRouter();
+  const { mutate: logout } = useAuthAPI().useLogoutMutation({
+    onSuccess: () => router.push("auth/login"),
+  });
 
   return (
     <DropdownMenu.Root>

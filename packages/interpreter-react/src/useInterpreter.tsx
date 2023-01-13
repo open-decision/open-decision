@@ -80,6 +80,7 @@ type Context = {
   service: InterpreterService;
   tree: Tree.TTree;
   environment: InterpreterOptions["environment"];
+  isInteractive: boolean;
 };
 
 const MachineContext = React.createContext<Context | null>(null);
@@ -127,6 +128,7 @@ export function InterpreterProvider({
         service,
         tree,
         environment: options.environment,
+        isInteractive: options?.isInteractive ?? true,
       }}
     >
       {children}
@@ -150,7 +152,7 @@ export function useInterpreterService() {
 }
 
 export function useInterpreter() {
-  const { service, tree, environment } = useInterpreterService();
+  const { service, tree, environment, isInteractive } = useInterpreterService();
 
   const [state, send] = useActor(service);
 
@@ -158,7 +160,7 @@ export function useInterpreter() {
     return createInterpreterMethods(state.context, tree);
   }, [state.context, tree]);
 
-  return { state, send, tree, environment, ...methods };
+  return { state, send, tree, environment, isInteractive, ...methods };
 }
 
 export function useInterpreterTree<TReturn>(

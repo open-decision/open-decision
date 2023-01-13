@@ -1,25 +1,18 @@
-import { TContext, QueryConfig } from "@open-decision/api-helpers";
+import { QueryConfig, FetchFn } from "@open-decision/api-helpers";
 import { templateSingle } from "../../../urls";
 import { TGetTemplateSingleInput } from "./input";
-import { getTemplateSingleOutput } from "./output";
+import { getTemplateSingleOutput, TGetTemplateSingleOutput } from "./output";
 
-export const getTemplateSingle =
-  (context: TContext) =>
-  async (inputs: TGetTemplateSingleInput, config?: QueryConfig) => {
-    let combinedUrl = templateSingle(inputs.params.uuid);
-    const prefix = config?.urlPrefix ?? context.urlPrefix;
-
-    if (prefix) combinedUrl = prefix + combinedUrl;
-
-    return await context.fetchFunction(
-      combinedUrl,
-      {
-        cache: "no-cache",
-        headers: {
-          authorization: `Bearer ${context.token}`,
-          ...context.headers,
-        },
-      },
-      { validation: getTemplateSingleOutput, ...context.config }
-    );
+export const getTemplateSingle: FetchFn<
+  TGetTemplateSingleInput,
+  TGetTemplateSingleOutput
+> =
+  (fetchFunction) =>
+  (inputs: TGetTemplateSingleInput, config?: QueryConfig) => {
+    return fetchFunction(templateSingle(inputs.params.uuid), {
+      cache: "no-cache",
+      validation: getTemplateSingleOutput,
+      proxied: true,
+      ...config,
+    });
   };

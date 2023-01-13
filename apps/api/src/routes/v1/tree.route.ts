@@ -11,24 +11,24 @@ import { auth } from "../../middlewares/auth";
 const treeRouter = express.Router();
 
 treeRouter
-  .route(treesRoot)
+  .route(`/${treesRoot}`)
   .get(auth(), treeController.getDecisionTreeCollection)
   .post(auth(), treeController.createDecisionTree);
 
 treeRouter
-  .route(treesSingle(":uuid"))
+  .route(`/${treesSingle(":uuid")}`)
   .get(auth(), treeController.getDecisionTree)
   .patch(auth(), treeController.updateDecisionTree)
   .delete(auth(), treeController.deleteDecisionTree);
 
 treeRouter
-  .route(treeDataSingle(":uuid"))
+  .route(`/${treeDataSingle(":uuid")}`)
   .get(auth(), treeController.getCurrentTreeData);
 
-treeRouter.route(treePreview(":uuid")).get(treeController.getTreePreview);
+treeRouter.route(`/${treePreview(":uuid")}`).get(treeController.getTreePreview);
 
 treeRouter
-  .route(publishedTreesOfTreesCollection(":treeUuid"))
+  .route(`/${publishedTreesOfTreesCollection(":treeUuid")}`)
   .get(auth(), treeController.getPublishedTrees)
   .post(auth(), treeController.createPublishedTree);
 

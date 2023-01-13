@@ -3,7 +3,7 @@ import { Page } from "@playwright/test";
 import { TreeFixture } from "../../fixtures/Tree";
 import { UserFixture } from "../../fixtures/User";
 import { RendererComponent } from "../componentModels/RendererComponent";
-import { proxiedPlaywrightOD } from "../playwright/odClient";
+import { proxiedPlaywrightOD } from "../playwright/APIClient";
 import { createDashboardPage } from "./DashboardPage";
 
 export interface PublishedPageFixtures {

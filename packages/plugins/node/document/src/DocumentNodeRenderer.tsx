@@ -13,18 +13,8 @@ import { DocumentNodePlugin } from "./documentNodePlugin";
 import { createReadableAnswers } from "./utils/createReadableAnswers";
 import { isODError, ODError } from "@open-decision/type-classes";
 import { useTranslations } from "next-intl";
-import { safeFetchBlob } from "@open-decision/api-helpers";
-import { client } from "@open-decision/api-client";
 import { NodeRenderer } from "@open-decision/plugins-node-helpers";
-
-export const proxiedClient = client({
-  urlPrefix: `${process.env["NEXT_PUBLIC_OD_BUILDER_ENDPOINT"]}/api/external-api`,
-  fetchFunction: safeFetchBlob,
-  headers: {
-    credentials: "include",
-  },
-  config: { origin: "client" },
-});
+import { APIClient } from "@open-decision/api-client";
 
 const DocumentNode = new DocumentNodePlugin();
 export const DocumentNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
@@ -54,7 +44,7 @@ export const DocumentNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
         });
       }
 
-      const response = await proxiedClient.file.document.get[environment]({
+      const response = await APIClient.trees[environment].generateDocument({
         params: { uuid: node.data.templateUuid },
         body: { variables: readableAnswers },
       });

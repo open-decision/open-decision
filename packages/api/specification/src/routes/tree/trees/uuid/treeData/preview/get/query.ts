@@ -1,19 +1,16 @@
-import { TContext, QueryConfig } from "@open-decision/api-helpers";
+import { FetchFn } from "@open-decision/api-helpers";
 import { treePreview } from "../../../../../urls";
 import { TGetTreePreviewInput } from "./input";
-import { getTreePreviewOutput } from "./output";
+import { getTreePreviewOutput, TGetTreePreviewOutput } from "./output";
 
-export const getTreePreview =
-  (context: TContext) =>
-  async (inputs: TGetTreePreviewInput, config?: QueryConfig) => {
-    let combinedUrl = treePreview(inputs.params.uuid);
-    const prefix = config?.urlPrefix ?? context.urlPrefix;
-
-    if (prefix) combinedUrl = prefix + combinedUrl;
-
-    return await context.fetchFunction(
-      combinedUrl,
-      { cache: "no-cache" },
-      { validation: getTreePreviewOutput, ...context.config }
-    );
-  };
+export const getSharedTreeContent: FetchFn<
+  TGetTreePreviewInput,
+  TGetTreePreviewOutput
+> = (fetchFunction) => (inputs, config) => {
+  return fetchFunction(treePreview(inputs.params.uuid), {
+    cache: "no-cache",
+    validation: getTreePreviewOutput,
+    proxied: false,
+    ...config,
+  });
+};

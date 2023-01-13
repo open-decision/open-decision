@@ -1,9 +1,8 @@
-import { safeFetchJSON } from "@open-decision/api-helpers";
+import { APIClient } from "@open-decision/api-client";
 import { ODProgrammerError } from "@open-decision/type-classes";
 import { assign, createMachine, Interpreter } from "xstate";
 import { WebsocketProvider } from "y-websocket";
 import { Doc } from "yjs";
-import { z } from "zod";
 
 type Context = {
   id?: string;
@@ -100,15 +99,7 @@ export const websocketMachine = createMachine(
       authenticate: async (_context, _event) => {
         const {
           data: { token },
-        } = await safeFetchJSON(
-          "/api/external-api/auth/getToken",
-          {},
-          {
-            validation: z.object({ token: z.string() }),
-            retry: 3,
-            origin: "websocket client",
-          }
-        );
+        } = await APIClient.auth.getToken();
 
         return { token };
       },
