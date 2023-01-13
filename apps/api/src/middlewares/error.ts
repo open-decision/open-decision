@@ -5,6 +5,7 @@ import { Prisma } from "@prisma/client";
 import http from "http";
 import { APIError } from "@open-decision/type-classes";
 import { de } from "@open-decision/translations";
+import { logger } from "../config/logger";
 
 export const errorConverter = (
   err: any,
@@ -49,6 +50,7 @@ export const errorHandler = (
     err.message ?? de.common.errors[err.code ?? "INTERNAL_SERVER_ERROR"].long;
 
   if (config.NODE_ENV === "production" && !err.isOperational) {
+    logger.error(`${err.code}: ${err.message}`);
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
       statusCode: 500,
       message: http.STATUS_CODES[httpStatus.INTERNAL_SERVER_ERROR],

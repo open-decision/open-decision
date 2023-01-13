@@ -52,7 +52,7 @@ export async function createPrototypePage(page: Page) {
   const user = await User.insert();
 
   const treeToInsert = Tree.create({ hasPreview: true });
-  const tree = await Tree.insert(user, treeToInsert);
+  const tree = await Tree.insert(user, { tree: treeToInsert });
 
   await page.request.post(`/api/external-api/auth/login`, {
     data: { email: user.email, password: user.password },
@@ -60,12 +60,9 @@ export async function createPrototypePage(page: Page) {
 
   const editorPage = new EditorPage(page, user, tree, { User, Tree });
 
-  await editorPage.goto(tree.uuid);
+  await editorPage.goto();
 
-  await editorPage.editor.selectNode({
-    content: "Vertrag generieren",
-    selected: false,
-  });
+  await editorPage.editor.selectNode("Vertrag generieren");
 
   const DocumentNode = new DocumentNodeModel(page);
 

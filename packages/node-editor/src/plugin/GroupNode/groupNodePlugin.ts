@@ -1,4 +1,4 @@
-import { NodePlugin } from "@open-decision/plugins-node-helpers";
+import { createFn, NodePlugin } from "@open-decision/plugins-node-helpers";
 import { RichText } from "@open-decision/rich-text-editor";
 import {
   TReadOnlyTreeClient,
@@ -29,6 +29,18 @@ export class GroupNodePlugin extends NodePlugin<
     super(DataType, typeName, { isAddable: false });
     this.defaultData = { children: [] };
   }
+
+  create: createFn<typeof this.Type> =
+    ({ data, ...rest }) =>
+    (treeClient) => {
+      const newNode = treeClient.nodes.create.node({
+        type: this.typeName,
+        data: { ...this.defaultData, ...data },
+        ...rest,
+      });
+
+      return this.Type.parse(newNode);
+    };
 
   updateTitle =
     (nodeId: string, newTitle: string) =>

@@ -98,12 +98,15 @@ export default {
       "Ein veröffentlichter Baum kann nicht gelöscht werden. Bitte unveröffentliche den Baum erst.",
   },
   nodeNames: {
-    decision: "Entscheidung",
-    form: "Formular",
-    "node-group": "Gruppe",
-    info: "Information",
-    document: "Dokumentengenerierung",
-    placeholder: "Platzhalter",
+    decision: { short: "Entscheidung", long: "Entscheidungsknoten" },
+    form: { short: "Formular", long: "Formularknoten" },
+    "node-group": { short: "Gruppe", long: "Gruppenknoten" },
+    info: { short: "Information", long: "Informationsknoten" },
+    document: {
+      short: "Dokumentengenerierung",
+      long: "Dokumentengenerierungsknoten",
+    },
+    placeholder: { short: "Platzhalter", long: "Platzhalterknoten" },
   },
   inputNames: {
     select: "Einfachauswahl",

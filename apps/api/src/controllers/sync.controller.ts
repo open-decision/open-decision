@@ -23,14 +23,12 @@ wss.on("connection", (websocket, request) => {
 export const websocketUpgradeHandler = catchAsyncWebsocket(
   async (request, socket, head) => {
     wsAuth(request, async function next(err, client) {
-      logger.info(
-        `${socket.remoteAddress}:wss ${request.url?.split("?auth")[0]} upgrade`
-      );
+      logger.http(`websocket ${request.url?.split("?auth")[0]} upgrade`);
 
       if (!request.url?.startsWith("/v1/builder-sync/")) {
         socket.write("HTTP/1.1 404 Not found\r\n\r\n");
         logger.error(
-          `${socket.remoteAddress}:wss ${request.url} Server only accepts websocket connections to /v1/builder-sync/`
+          `websocket ${request.url} Server only accepts websocket connections to /v1/builder-sync/`
         );
         socket.destroy();
         return;
@@ -39,7 +37,7 @@ export const websocketUpgradeHandler = catchAsyncWebsocket(
       if (err || !client) {
         socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
         logger.error(
-          `${socket.remoteAddress}:wss ${request.url} Unauthorized websocket connection`
+          `websocket ${request.url} Unauthorized websocket connection`
         );
         socket.destroy();
         return;
@@ -51,7 +49,7 @@ export const websocketUpgradeHandler = catchAsyncWebsocket(
       if (!(await hasPermissionsForTree(client.uuid, treeUuid))) {
         socket.write("HTTP/1.1 403 Forbidden\r\n\r\n");
         logger.error(
-          `${socket.remoteAddress}:wss ${request.url} User is not authorized to access this tree`
+          `websocket ${request.url} User is not authorized to access this tree`
         );
         socket.destroy();
         return;
@@ -59,7 +57,7 @@ export const websocketUpgradeHandler = catchAsyncWebsocket(
 
       wss.handleUpgrade(request, socket, head, function done(ws) {
         wss.emit("connection", ws, request);
-        logger.info(`${socket.remoteAddress}:wss /v1/builder-sync connected`);
+        logger.http(`websocket /v1/builder-sync connected`);
       });
     });
   }

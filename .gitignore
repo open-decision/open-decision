@@ -85,6 +85,6 @@ coverage/utils/index.html
 coverage/validations/env.validation.ts.html
 coverage/validations/index.html
 coverage/validations/mailserver.validation.ts.html
-test-results
-playwright-report
+test-results*
+playwright-report*
 sessions

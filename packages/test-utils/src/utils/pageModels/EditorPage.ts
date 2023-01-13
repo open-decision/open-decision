@@ -32,8 +32,8 @@ export class EditorPage {
     this.notification = new NotificationComponent(page);
   }
 
-  async goto(treeUuid: string) {
-    await this.page.goto(`/builder/${treeUuid}`);
+  async goto() {
+    await this.page.goto(`/builder/${this.tree.uuid}`);
   }
 
   async cleanup() {
@@ -42,7 +42,10 @@ export class EditorPage {
   }
 }
 
-export async function createEditorPage(page: Page) {
+export async function createEditorPage(
+  page: Page,
+  { emptyTree }: { emptyTree?: boolean } = { emptyTree: false }
+) {
   const User = new UserFixture();
   const Tree = new TreeFixture(await proxiedPlaywrightOD(page.request));
   const user = await User.insert();
@@ -51,7 +54,7 @@ export async function createEditorPage(page: Page) {
     data: { email: user.email, password: user.password },
   });
 
-  const tree = await Tree.insert(user);
+  const tree = await Tree.insert(user, { empty: emptyTree });
 
   return new EditorPage(page, user, tree, { User, Tree });
 }

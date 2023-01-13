@@ -4,7 +4,7 @@ import helmet from "helmet";
 import cors from "cors";
 import compression from "compression";
 
-import { morganErrorHandler, morganHandler } from "./config/morgan";
+import { morganHandler } from "./config/morgan";
 import config from "./config/config";
 import { errorConverter, errorHandler } from "./middlewares/error";
 import { authLimiter } from "./middlewares/rateLimiter";
@@ -13,10 +13,7 @@ import { APIError } from "@open-decision/type-classes";
 
 export const app = express();
 
-if (config.NODE_ENV !== "test") {
-  app.use(morganHandler);
-  app.use(morganErrorHandler);
-}
+app.use(morganHandler);
 
 // parse request cookies
 app.use(cookieParser());

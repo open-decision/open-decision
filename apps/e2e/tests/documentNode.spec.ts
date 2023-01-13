@@ -166,6 +166,7 @@ pwTest.describe.configure({ mode: "parallel" });
 pwTest(
   "should generate document from auroa project",
   async ({ prototypePage }) => {
+    pwTest.slow();
     await fillAuroaTree(prototypePage);
 
     const downloadPromise = prototypePage.page.waitForEvent("download");
@@ -186,6 +187,7 @@ pwTest(
 pwTest(
   "should generate document for shared prototype",
   async ({ sharedPrototypePage }) => {
+    pwTest.slow();
     await fillAuroaTree(sharedPrototypePage);
 
     const downloadPromise = sharedPrototypePage.page.waitForEvent("download");
@@ -204,10 +206,7 @@ pwTest(
 );
 
 pwTest("should upload template", async ({ editorPage }) => {
-  await editorPage.editor.selectNode({
-    content: "Vertrag generieren",
-    selected: false,
-  });
+  await editorPage.editor.selectNode("Vertrag generieren");
 
   const DocumentNode = new DocumentNodeModel(editorPage.page);
 

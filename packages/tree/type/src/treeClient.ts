@@ -60,7 +60,10 @@ export class ReadOnlyTreeClient<TTree extends Tree.TTree> {
 
   get nodes() {
     return {
-      create: { node: createNode, childNode: createChildNode(this.tree) },
+      create: {
+        node: createNode(this.tree),
+        childNode: createChildNode(this.tree),
+      },
       get: {
         single: getNode(this.tree),
         collection: getNodes(this.tree),

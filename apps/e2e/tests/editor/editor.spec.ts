@@ -8,20 +8,15 @@ import {
 
 pwTest.describe.configure({ mode: "parallel" });
 
-pwTest(
-  "should be able to create new node",
-  async ({ editorPage: nodeEditorPage }) => {
-    await nodeEditorPage.editor.createNodeButton.click();
+pwTest("should be able to create new node", async ({ emptyEditorPage }) => {
+  await emptyEditorPage.editor.createNodeButton.click();
 
-    await expect(nodeEditorPage.editor.getSidebarLocator()).toBeVisible();
+  await expect(emptyEditorPage.editor.getSidebarLocator()).toBeVisible();
 
-    await expect(
-      nodeEditorPage.editor.getNodeLocator({
-        selected: true,
-      })
-    ).toBeVisible();
-  }
-);
+  await expect(
+    emptyEditorPage.editor.getSelectedNodeLocator("Knoten 1")
+  ).toBeVisible();
+});
 
 pwTest.describe("node search", () => {
   pwTest(
@@ -40,10 +35,7 @@ pwTest.describe("node search", () => {
       );
 
       await expect(
-        nodeEditorPage.editor.getNodeLocator({
-          content: "Willkommen",
-          selected: true,
-        })
+        nodeEditorPage.editor.getSelectedNodeLocator("Willkommen")
       ).toBeVisible();
     }
   );
@@ -63,10 +55,9 @@ pwTest.describe("node search", () => {
       );
 
       await expect(
-        nodeEditorPage.editor.getNodeLocator({
-          content: "Nicht existierender Knoten",
-          selected: true,
-        })
+        nodeEditorPage.editor.getSelectedNodeLocator(
+          "Nicht existierender Knoten"
+        )
       ).toBeVisible();
     }
   );
@@ -110,13 +101,8 @@ pwTest.describe("canvas", () => {
     "should be able to drag nodes around",
     async ({ editorPage: nodeEditorPage }) => {
       await nodeEditorPage.editor
-        .getNodeLocator({ content: "Willkommen", selected: false })
-        .dragTo(
-          nodeEditorPage.editor.getNodeLocator({
-            content: "Lizenzart",
-            selected: false,
-          })
-        );
+        .getUnselectedNodeLocator("Willkommen")
+        .dragTo(nodeEditorPage.editor.getUnselectedNodeLocator("Lizenzart"));
 
       await expect(nodeEditorPage.editor.canvas).toHaveScreenshot();
     }
@@ -125,10 +111,7 @@ pwTest.describe("canvas", () => {
   pwTest(
     "should be able to delete node with the backspace key",
     async ({ editorPage: nodeEditorPage }) => {
-      await nodeEditorPage.editor.selectNode({
-        content: "Info Angestellte",
-        selected: false,
-      });
+      await nodeEditorPage.editor.selectNode("Info Angestellte");
       await nodeEditorPage.page.waitForTimeout(200);
 
       await nodeEditorPage.page.keyboard.press("Backspace");
@@ -137,10 +120,7 @@ pwTest.describe("canvas", () => {
       await nodeEditorPage.editor.deleteNodesDialog.confirm();
 
       await expect(
-        nodeEditorPage.editor.getNodeLocator({
-          content: "Info Angestellte",
-          selected: false,
-        })
+        nodeEditorPage.editor.getUnselectedNodeLocator("Info Angestellte")
       ).not.toBeVisible();
 
       await expect(
@@ -152,10 +132,7 @@ pwTest.describe("canvas", () => {
   );
 
   pwTest("should not be able to delete start node", async ({ editorPage }) => {
-    await editorPage.editor.selectNode({
-      content: "Willkommen",
-      selected: false,
-    });
+    await editorPage.editor.selectNode("Willkommen");
 
     await editorPage.page.waitForTimeout(500);
 
@@ -173,25 +150,16 @@ pwTest.describe("canvas", () => {
   pwTest(
     "should be able to deselect a node",
     async ({ editorPage: nodeEditorPage }) => {
-      await nodeEditorPage.editor.selectNode({
-        content: "Willkommen",
-        selected: false,
-      });
+      await nodeEditorPage.editor.selectNode("Willkommen");
 
       await expect(
-        nodeEditorPage.editor.getNodeLocator({
-          content: "Willkommen",
-          selected: true,
-        })
+        nodeEditorPage.editor.getSelectedNodeLocator("Willkommen")
       ).toBeVisible();
 
       await nodeEditorPage.editor.canvas.click();
 
       await expect(
-        nodeEditorPage.editor.getNodeLocator({
-          content: "Willkommen",
-          selected: false,
-        })
+        nodeEditorPage.editor.getUnselectedNodeLocator("Willkommen")
       ).toBeVisible();
     }
   );

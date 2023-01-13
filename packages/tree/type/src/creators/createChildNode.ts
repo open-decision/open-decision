@@ -21,7 +21,7 @@ export const createChildNode =
       y: node.position.y + 80 + 50,
     };
 
-    return createNode({
+    return createNode(tree)({
       ...newNode,
       position,
     });

@@ -14,6 +14,7 @@ type Fixtures = {
   loginPage: LoginPage;
   forgotPasswordPage: ForgotPasswordPage;
   editorPage: EditorPage;
+  emptyEditorPage: EditorPage;
   prototypePage: PrototypePage;
   sharedPrototypePage: SharedPrototypePage;
   publishedPage: PublishedPage;
@@ -63,8 +64,16 @@ export const pwTest = base.extend<Fixtures>({
   },
   editorPage: async ({ page }, use) => {
     const nodeEditorPage = await createEditorPage(page);
-    await nodeEditorPage.goto(nodeEditorPage.tree.uuid);
+    await nodeEditorPage.goto();
     await nodeEditorPage.editor.fitViewButton.click();
+
+    await use(nodeEditorPage);
+
+    await nodeEditorPage.cleanup();
+  },
+  emptyEditorPage: async ({ page }, use) => {
+    const nodeEditorPage = await createEditorPage(page, { emptyTree: true });
+    await nodeEditorPage.goto();
 
     await use(nodeEditorPage);
 
@@ -72,6 +81,7 @@ export const pwTest = base.extend<Fixtures>({
   },
   prototypePage: async ({ page }, use) => {
     const prototypePage = await createPrototypePage(page);
+
     await prototypePage.goto();
 
     await use(prototypePage);
@@ -79,12 +89,13 @@ export const pwTest = base.extend<Fixtures>({
     await prototypePage.cleanup();
   },
   sharedPrototypePage: async ({ page, context }, use) => {
-    const prototypePage = await createSharedPrototypePage(page, context);
-    await prototypePage.goto();
+    const sharedPrototypePage = await createSharedPrototypePage(page, context);
 
-    await use(prototypePage);
+    await sharedPrototypePage.goto();
 
-    await prototypePage.cleanup();
+    await use(sharedPrototypePage);
+
+    await sharedPrototypePage.cleanup();
   },
   publishedPage: async ({ page }, use) => {
     const publishedPage = await createPublishedPage(page);

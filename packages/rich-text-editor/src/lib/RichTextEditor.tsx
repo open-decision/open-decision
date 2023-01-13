@@ -39,11 +39,17 @@ export const RichTextEditor = ({
       {typeof Label === "string" ? (
         <label
           className={headingClasses({ size: "extra-small" }, "m-0 mb-3 block")}
+          onClick={() =>
+            editor?.commands.focus("end", { scrollIntoView: true })
+          }
         >
           {Label}
         </label>
       ) : (
-        Label?.({ onClick: () => editor?.commands.focus() })
+        Label?.({
+          onClick: () =>
+            editor?.commands.focus("end", { scrollIntoView: true }),
+        })
       )}
       <div
         className="grid"
