@@ -6,3 +6,4 @@ export * from "./NodeSearch";
 export * from "./NotificationComponent";
 export * from "./ProjectMenuComponent";
 export * from "./PrototypeDialogComponent";
+export * from "./PageErrorComponent";

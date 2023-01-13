@@ -6,6 +6,7 @@ import { LoginPage } from "./pageModels/LoginPage";
 import { RegisterPage } from "./pageModels/RegisterPage";
 import { createPrototypePage, PrototypePage } from "./pageModels/PrototypePage";
 import { createPublishedPage, PublishedPage } from "./pageModels/PublishedPage";
+import { createSharedPrototypePage, SharedPrototypePage } from "./pageModels";
 
 type Fixtures = {
   dashboardPage: DashboardPage;
@@ -14,6 +15,7 @@ type Fixtures = {
   forgotPasswordPage: ForgotPasswordPage;
   editorPage: EditorPage;
   prototypePage: PrototypePage;
+  sharedPrototypePage: SharedPrototypePage;
   publishedPage: PublishedPage;
   _autoSnapshotSuffix: void;
 };
@@ -70,6 +72,14 @@ export const pwTest = base.extend<Fixtures>({
   },
   prototypePage: async ({ page }, use) => {
     const prototypePage = await createPrototypePage(page);
+    await prototypePage.goto();
+
+    await use(prototypePage);
+
+    await prototypePage.cleanup();
+  },
+  sharedPrototypePage: async ({ page, context }, use) => {
+    const prototypePage = await createSharedPrototypePage(page, context);
     await prototypePage.goto();
 
     await use(prototypePage);

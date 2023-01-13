@@ -1,4 +1,4 @@
-export const fileRoot = "/file";
+export const fileRoot = "file";
 
 export const documentRoot = `${fileRoot}/document`;
 export const documentPreviewSingle = (documentUuid: string) =>

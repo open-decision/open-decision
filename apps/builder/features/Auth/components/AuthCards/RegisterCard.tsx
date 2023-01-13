@@ -1,7 +1,7 @@
 import { Link, linkClasses } from "@open-decision/design-system";
 import { useTranslations } from "next-intl";
 import * as React from "react";
-import { CombinedRegisterForm } from "../AuthForms/RegisterForm";
+import { RegisterForm } from "../AuthForms/RegisterForm";
 import {
   containerClasses,
   headerClasses,
@@ -20,7 +20,7 @@ export function RegisterCard() {
         <p className={descriptionClasses}>{t("description")}</p>
       </header>
       <main>
-        <CombinedRegisterForm />
+        <RegisterForm />
       </main>
       <footer className={footerClasses}>
         {t("loginQuestion")}{" "}

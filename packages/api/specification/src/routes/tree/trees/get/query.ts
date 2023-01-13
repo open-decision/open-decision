@@ -1,28 +1,15 @@
-import { TContext, QueryConfig } from "@open-decision/api-helpers";
+import { FetchFn } from "@open-decision/api-helpers";
 import { treesRoot } from "../../urls";
-import { TGetTreesInput, getTreesOutput } from ".";
+import { TGetTreesInput, getTreesOutput, TGetTreesOutput } from ".";
 
-export const getTrees =
-  (context: TContext) =>
-  async (inputs?: TGetTreesInput, config?: QueryConfig) => {
-    let combinedUrl = treesRoot;
-    const prefix = config?.urlPrefix ?? context.urlPrefix;
-
-    if (prefix) combinedUrl = prefix + combinedUrl;
-
-    if (inputs?.query) {
-      combinedUrl = combinedUrl + `?${new URLSearchParams(inputs.query)}`;
-    }
-
-    return await context.fetchFunction(
-      combinedUrl,
-      {
-        cache: "no-cache",
-        headers: {
-          authorization: `Bearer ${context.token}`,
-          ...context.headers,
-        },
-      },
-      { validation: getTreesOutput, ...context.config }
-    );
+export const getTrees: FetchFn<TGetTreesInput, TGetTreesOutput> =
+  (fetchFunction) => (inputs, config) => {
+    return fetchFunction(treesRoot, {
+      cache: "no-cache",
+      searchParams: inputs.query,
+      method: "GET",
+      validation: getTreesOutput,
+      proxied: true,
+      ...config,
+    });
   };

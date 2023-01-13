@@ -3,9 +3,10 @@ import { Heading, Form, addNotification } from "@open-decision/design-system";
 import { cardClasses } from "../../components/Card";
 import { VerifiedSettingsChange } from "./VerifiedSettingsChange";
 import { TGetUserOutput } from "@open-decision/api-specification";
-import { useUser } from "../Auth/useUserQuery";
 import { useTranslations } from "next-intl";
 import { PasswordInput } from "../../components/PasswordInput";
+import { APIClient } from "@open-decision/api-client";
+import { useUser } from "@open-decision/api-react-binding";
 
 type Props = { user: TGetUserOutput };
 
@@ -17,8 +18,8 @@ export function ChangePassword({ user }: Props) {
     },
   });
 
-  const { mutate, isLoading } = useUser().useUserUpdateMutation({
-    onError: (error) => {
+  const { mutate, isLoading } = useUser(APIClient).useUserUpdateMutation({
+    onError: (error: any) => {
       methods.setError("newPassword", {
         message: error.errors?.body?.password?._errors[0],
       });

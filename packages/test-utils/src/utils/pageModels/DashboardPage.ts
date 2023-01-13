@@ -6,7 +6,7 @@ import { NotificationComponent } from "../componentModels/NotificationComponent"
 import { ProjectMenuComponent } from "../componentModels/ProjectMenuComponent";
 import { TUser, UserFixture } from "../../fixtures/User";
 import { TreeFixture, createDefaultSetOfTrees } from "../../fixtures/Tree";
-import { proxiedPlaywrightOD } from "../playwright/odClient";
+import { proxiedPlaywrightOD } from "../playwright/APIClient";
 import { PartialTree } from "../../fixtures";
 import { TCreatePublishedTreeOutput } from "@open-decision/api-specification";
 

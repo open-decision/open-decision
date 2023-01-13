@@ -62,7 +62,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       nullGetter: nullGetter,
     });
   } catch (e) {
-    return res.send({});
+    return res.status(500).send({});
   }
   // Render the document
   doc.render(reqData.variables);

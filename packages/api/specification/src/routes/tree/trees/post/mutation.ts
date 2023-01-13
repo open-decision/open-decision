@@ -1,27 +1,15 @@
-import { TContext, QueryConfig } from "@open-decision/api-helpers";
+import { FetchFn } from "@open-decision/api-helpers";
 import { treesRoot } from "../../urls";
 import { TCreateTreeInput } from "./input";
-import { createTreeOutput } from "./output";
+import { createTreeOutput, TCreateTreeOutput } from "./output";
 
-export const createTree =
-  (context: TContext) =>
-  async (inputs: TCreateTreeInput, config?: QueryConfig) => {
-    let combinedUrl = treesRoot;
-    const prefix = config?.urlPrefix ?? context.urlPrefix;
-
-    if (prefix) combinedUrl = prefix + combinedUrl;
-
-    return await context.fetchFunction(
-      combinedUrl,
-      {
-        body: JSON.stringify(inputs.body),
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `Bearer ${context.token}`,
-          ...context.headers,
-        },
-      },
-      { validation: createTreeOutput, ...context.config }
-    );
+export const createTree: FetchFn<TCreateTreeInput, TCreateTreeOutput> =
+  (fetchFunction) => (inputs, config) => {
+    return fetchFunction(treesRoot, {
+      json: inputs.body,
+      method: "POST",
+      validation: createTreeOutput,
+      proxied: true,
+      ...config,
+    });
   };

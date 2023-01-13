@@ -1,4 +1,4 @@
-export const treesRoot = "/trees";
+export const treesRoot = "trees";
 
 export const treesSingle = (treeUuid: string) => `${treesRoot}/${treeUuid}`;
 
@@ -8,7 +8,7 @@ export const treeDataSingle = (treeUuid: string) =>
 export const treePreview = (treeUuid: string) =>
   `${treesSingle(treeUuid)}/prototype`;
 
-export const publishedTreesRoot = "/publishedTrees";
+export const publishedTreesRoot = "publishedTrees";
 export const publishedTreesSingle = (publishedTreesUuid: string) =>
   `${publishedTreesRoot}/${publishedTreesUuid}`;
 

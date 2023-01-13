@@ -5,7 +5,7 @@ import { TUser, UserFixture } from "../../fixtures/User";
 import { EditorHeaderComponent } from "../componentModels/EditorHeaderComponent";
 import { EditorComponent } from "../componentModels/Editor";
 import { NotificationComponent } from "../componentModels/NotificationComponent";
-import { proxiedPlaywrightOD } from "../playwright/odClient";
+import { proxiedPlaywrightOD } from "../playwright/APIClient";
 
 export class EditorPage {
   readonly page: Page;

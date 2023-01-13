@@ -1,4 +1,4 @@
-export const authRoot = "/auth";
+export const authRoot = "auth";
 export const loginUrl = `${authRoot}/login`;
 export const forgotPasswordUrl = `${authRoot}/forgot-password`;
 export const logoutUrl = `${authRoot}/logout`;
@@ -6,3 +6,5 @@ export const refreshTokenUrl = `${authRoot}/refresh-tokens`;
 export const registerUrl = `${authRoot}/register`;
 export const resetPasswordUrl = `${authRoot}/reset-password`;
 export const verifyEmailUrl = `${authRoot}/verify-email`;
+export const getTokenUrl = `${authRoot}/getToken`;
+export const verifyLoginUrl = `${authRoot}/verifyLogin`;

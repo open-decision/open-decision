@@ -1,4 +1,4 @@
-import { directClient } from "@open-decision/api-client";
+import { APIClient } from "@open-decision/api-client";
 import { TLoginOutput } from "@open-decision/api-specification";
 import { APIError, isAPIError } from "@open-decision/type-classes";
 import { serialize } from "cookie";
@@ -56,9 +56,7 @@ export const withAuthRefresh =
     // When there is a valid refreshToken we can use it to refresh the token
     try {
       if (refreshToken) {
-        const { data: authData } = await directClient(
-          "api auth refresh"
-        ).auth.refreshToken({
+        const { data: authData } = await APIClient.auth.refreshToken({
           body: { refreshToken },
         });
 

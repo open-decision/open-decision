@@ -117,7 +117,7 @@ export class TreeFixture {
   }
 
   async publish(treeUuid: string, name?: string) {
-    const publishedTree = await this.odClient.trees.publishedTrees.create({
+    const publishedTree = await this.odClient.trees.private.publish({
       params: { treeUuid },
       body: { name: name ?? "Published Tree" },
     });

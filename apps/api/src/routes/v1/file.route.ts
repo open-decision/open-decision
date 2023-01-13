@@ -24,54 +24,54 @@ const upload = multer({
 });
 
 fileRouter.post(
-  templateRequestUploadToken,
+  `/${templateRequestUploadToken}`,
   auth(),
   documentTemplateController.requestDocumentTemplateUpload
 );
 
 fileRouter.post(
-  templateUploadRoot,
+  `/${templateUploadRoot}`,
   upload.single("template"),
   documentTemplateController.uploadDocumentTemplate
 );
 
 fileRouter.get(
-  templateDownloadUrlSingle(":uuid"),
+  `/${templateDownloadUrlSingle(":uuid")}`,
   auth(),
   documentTemplateController.getTemplateDownloadUrl
 );
 
 fileRouter.get(
-  templateSingle(":uuid"),
+  `/${templateSingle(":uuid")}`,
   auth(),
   documentTemplateController.getSingleDocumentMetadata
 );
 
 fileRouter.delete(
-  templateSingle(":uuid"),
+  `/${templateSingle(":uuid")}`,
   auth(),
   documentTemplateController.deleteDocumentTemplate
 );
 
 fileRouter.get(
-  templateRoot,
+  `/${templateRoot}`,
   auth(),
   documentTemplateController.getDocumentTemplateCollection
 );
 
 fileRouter.post(
-  documentPreviewSingle(":uuid"),
+  `/${documentPreviewSingle(":uuid")}`,
   auth(),
   documentGenerationController.generateDocumentForPreview
 );
 
 fileRouter.post(
-  documentPrototypeSingle(":uuid"),
+  `/${documentPrototypeSingle(":uuid")}`,
   documentGenerationController.generateDocumentForPrototype
 );
 
 fileRouter.post(
-  documentPublishedSingle(":uuid"),
+  `/${documentPublishedSingle(":uuid")}`,
   documentGenerationController.generateDocumentForPublishedTree
 );
 

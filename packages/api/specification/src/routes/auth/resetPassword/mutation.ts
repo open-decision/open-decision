@@ -1,25 +1,17 @@
-import { TContext, prefixUrl, QueryConfig } from "@open-decision/api-helpers";
+import { FetchFn } from "@open-decision/api-helpers";
 import { resetPasswordUrl } from "../urls";
 import { TResetPasswordInput } from "./input";
-import { resetPasswordOutput } from "./output";
+import { resetPasswordOutput, TResetPasswordOutput } from "./output";
 
-export const resetPassword =
-  (context: TContext) =>
-  async (inputs: TResetPasswordInput, config?: QueryConfig) => {
-    const combinedUrl = prefixUrl(
-      resetPasswordUrl,
-      config?.urlPrefix ?? context.urlPrefix
-    );
-
-    return await context.fetchFunction(
-      combinedUrl,
-      {
-        body: JSON.stringify(inputs.body),
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-      { validation: resetPasswordOutput, ...context.config }
-    );
-  };
+export const resetPassword: FetchFn<
+  TResetPasswordInput,
+  TResetPasswordOutput
+> = (fetchFunction) => (inputs, config) => {
+  return fetchFunction(resetPasswordUrl, {
+    validation: resetPasswordOutput,
+    json: inputs.body,
+    method: "POST",
+    proxied: true,
+    ...config,
+  });
+};

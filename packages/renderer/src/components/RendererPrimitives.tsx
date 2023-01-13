@@ -71,14 +71,6 @@ export function Container({
   );
 }
 
-export const SubmitButton = () => {
-  return (
-    <SystemForm.SubmitButton className="self-end mt-2 font-large-text">
-      Weiter
-    </SystemForm.SubmitButton>
-  );
-};
-
 type RendererFormProps<TFieldValues extends SystemForm.FieldValues> = {
   children?: React.ReactNode;
 } & SystemForm.RootProps<TFieldValues>;

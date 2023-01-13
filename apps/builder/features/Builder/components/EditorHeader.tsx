@@ -2,6 +2,7 @@ import {
   DropdownMenu,
   FileInput,
   Icon,
+  LoadingSpinner,
   Row,
   useNotificationTemplate,
 } from "@open-decision/design-system";
@@ -18,6 +19,7 @@ import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { useTranslations } from "next-intl";
 import { PrototypButton } from "./PrototypButton";
 import themeTemplate from "./theme-template.json";
+import { useTreeAPI } from "@open-decision/api-react-binding";
 
 type HeaderProps = {
   className?: string;
@@ -39,12 +41,32 @@ export const EditorHeader = ({ className, treeId, children }: HeaderProps) => {
   });
   const templateFileLink = URL.createObjectURL(templateFile);
 
+  const {
+    data: tree,
+    isLoading,
+    isError,
+    error,
+  } = useTreeAPI().useTreeQuery(treeId, {
+    select: (data) => data.data,
+  });
+
+  if (isLoading)
+    return (
+      <BaseHeader className={className}>
+        <Row className="w-full justify-center">
+          <LoadingSpinner />
+        </Row>
+      </BaseHeader>
+    );
+
+  if (isError) throw error;
+
   return (
     <BaseHeader
       className={className}
       LogoSlot={
         <ProjectMenu
-          tree={treeId}
+          tree={tree}
           Items={({ setDropdownOpen }) => {
             return (
               <>
@@ -127,7 +149,7 @@ export const EditorHeader = ({ className, treeId, children }: HeaderProps) => {
     >
       <Row className="gap-3 items-center w-full justify-between">
         <NodeSearch />
-        <PrototypButton treeId={treeId} />
+        <PrototypButton treeId={treeId} hasPreview={tree.hasPreview} />
       </Row>
       {children}
     </BaseHeader>

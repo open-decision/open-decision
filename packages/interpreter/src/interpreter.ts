@@ -58,7 +58,8 @@ export type InterpreterOptions = {
   onSelectedNodeChange?: (nextNodeIs: string) => void;
   initialNode?: string;
   onDone?: (context: InterpreterContext) => void;
-  environment: "preview" | "prototype" | "public";
+  environment: "private" | "shared" | "published";
+  isInteractive?: boolean;
 };
 
 export const createInterpreterMachine = (
@@ -70,9 +71,9 @@ export const createInterpreterMachine = (
     onSelectedNodeChange,
     initialNode,
     onDone,
-    environment,
+    isInteractive,
   }: InterpreterOptions = {
-    environment: "preview",
+    environment: "private",
   }
 ) => {
   const decodedJSON = TreeType.safeParse(json);
@@ -118,7 +119,7 @@ export const createInterpreterMachine = (
             },
             EVALUATE_NODE_CONDITIONS: {
               target: "interpreting",
-              cond: "notInPreview",
+              cond: "isInteractive",
             },
             GO_BACK: {
               cond: "canGoBack",
@@ -252,7 +253,7 @@ export const createInterpreterMachine = (
       guards: {
         canGoBack,
         canGoForward,
-        notInPreview: () => environment !== "preview",
+        isInteractive: () => isInteractive ?? true,
       },
     }
   );

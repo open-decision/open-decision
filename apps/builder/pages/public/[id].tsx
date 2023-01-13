@@ -66,7 +66,7 @@ export default function Page({ treeId }: PageProps) {
       </Head>
       <Layout>
         <Renderer.Root
-          environment="public"
+          environment="published"
           edgePlugins={edgePlugins}
           tree={data}
           onError={(error) =>

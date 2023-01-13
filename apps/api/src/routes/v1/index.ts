@@ -10,8 +10,8 @@ import { authRoot, userRoot } from "@open-decision/api-specification";
 const router = express.Router();
 
 const defaultRoutes = [
-  { path: authRoot, route: authRouter },
-  { path: userRoot, route: userRouter },
+  { path: `/${authRoot}`, route: authRouter },
+  { path: `/${userRoot}`, route: userRouter },
   { path: "/users", route: usersRouter },
 ];
 

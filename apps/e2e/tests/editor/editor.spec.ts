@@ -133,6 +133,7 @@ pwTest.describe("canvas", () => {
 
       await nodeEditorPage.page.keyboard.press("Backspace");
 
+      await nodeEditorPage.page.waitForTimeout(200);
       await nodeEditorPage.editor.deleteNodesDialog.confirm();
 
       await expect(

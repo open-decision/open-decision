@@ -1,10 +1,10 @@
+import { useAuthAPI } from "@open-decision/api-react-binding";
 import { addNotification, Form } from "@open-decision/design-system";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/router";
 import * as React from "react";
 import { ErrorMessage } from "../../../../components/Error/ErrorMessage";
 import { PasswordInput } from "../../../../components/PasswordInput";
-import { useResetPasswordMutation } from "../../mutations/useResetPasswordMutation";
 
 type Props = { token: string };
 
@@ -15,13 +15,14 @@ export function ResetPasswordForm({ token }: Props) {
     mutate: resetPassword,
     error,
     isLoading,
-  } = useResetPasswordMutation({
+  } = useAuthAPI().useResetPasswordMutation({
     onSuccess: () => {
-      router.push("/");
       addNotification({
         title: "Erfolgreich Passwort geändert",
         variant: "success",
       });
+
+      return router.push("/");
     },
   });
   const methods = Form.useForm({

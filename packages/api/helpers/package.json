@@ -1,10 +1,11 @@
 {
   "name": "@open-decision/api-helpers",
   "version": "0.0.1",
-  "type": "commonjs",
+  "type": "module",
   "main": "src/index.js",
   "dependencies": {
     "@types/validator": "^13.7.10",
+    "ky": "^0.33.1",
     "tslib": "^2.4.1",
     "validator": "^13.7.0",
     "zod": "^3.20.2"

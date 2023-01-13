@@ -19,20 +19,18 @@ import NextLink from "next/link";
 import { useNotificationTemplate } from "@open-decision/design-system";
 import { useTreeAPI } from "@open-decision/api-react-binding";
 
-type Props = { treeId: string };
+type Props = { treeId: string; hasPreview: boolean };
 
-export function PrototypButton({ treeId }: Props) {
-  const { data: hasPreview } = useTreeAPI().useTreeQuery(treeId, {
-    select: (data) => data.data.hasPreview,
-  });
-
-  const { mutate: updateTree, isLoading } = useTreeAPI().useUpdate({
+export function PrototypButton({ treeId, hasPreview }: Props) {
+  const { mutate: updateTree, isLoading: isUpdating } = useTreeAPI().useUpdate({
     notification: false,
     onSuccess: (_, { body: { hasPreview } }) => {
       hasPreview
         ? addNotification({
             title: notificationMessages("enablePreview.title"),
-            content: notificationMessages("enablePreview.content", { link }),
+            content: notificationMessages("enablePreview.content", {
+              link: sharingLink,
+            }),
             duration: 5,
             variant: "success",
           })
@@ -43,6 +41,7 @@ export function PrototypButton({ treeId }: Props) {
   const methods = Form.useForm({
     defaultValues: { preview: hasPreview },
   });
+
   const t = useTranslations("builder.header.prototypeButton");
   const notificationMessages = useTranslations("common.notifications");
   const common = useTranslations("common");
@@ -50,6 +49,12 @@ export function PrototypButton({ treeId }: Props) {
 
   const link =
     `${process.env["NEXT_PUBLIC_OD_BUILDER_ENDPOINT"]}/builder/${treeId}/prototype`.replace(
+      " ",
+      ""
+    );
+
+  const sharingLink =
+    `${process.env["NEXT_PUBLIC_OD_BUILDER_ENDPOINT"]}/shared/prototype/${treeId}`.replace(
       " ",
       ""
     );
@@ -94,10 +99,10 @@ export function PrototypButton({ treeId }: Props) {
                         });
                       },
                     })}
-                    disabled={isLoading}
+                    disabled={isUpdating}
                   />
                 </Form.Field>
-                {isLoading ? <LoadingSpinner /> : null}
+                {isUpdating ? <LoadingSpinner /> : null}
               </Row>
             </Form.Root>
             <Button
@@ -106,7 +111,7 @@ export function PrototypButton({ treeId }: Props) {
               size="small"
               onClick={() => {
                 addNotificationFromTemplate("copyLink");
-                navigator.clipboard.writeText(link);
+                navigator.clipboard.writeText(sharingLink);
               }}
             >
               <Icon>

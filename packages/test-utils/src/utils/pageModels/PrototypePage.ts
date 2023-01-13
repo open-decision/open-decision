@@ -6,7 +6,7 @@ import { TreeFixture } from "../../fixtures/Tree";
 import { TUser, UserFixture } from "../../fixtures/User";
 import { NotificationComponent } from "../componentModels";
 import { RendererComponent } from "../componentModels/RendererComponent";
-import { proxiedPlaywrightOD } from "../playwright/odClient";
+import { proxiedPlaywrightOD } from "../playwright/APIClient";
 import { DocumentNodeModel } from "../pluginModels";
 import { EditorPage } from "./EditorPage";
 

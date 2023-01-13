@@ -1,4 +1,4 @@
-import { FetchJSONReturn } from "@open-decision/api-helpers";
+import { FetchResponse } from "@open-decision/api-helpers";
 import {
   TCreateTemplateOutput,
   TDeleteTemplateSingleOutput,
@@ -10,8 +10,9 @@ import {
   UseMutationOptions,
   useQuery,
   useQueryClient,
+  UseQueryOptions,
 } from "@tanstack/react-query";
-import { proxiedClient, directClient } from "@open-decision/api-client";
+import { APIClient, TClient } from "@open-decision/api-client";
 import {
   NotificationTemplate,
   useNotificationTemplate,
@@ -19,8 +20,8 @@ import {
 import { APIError } from "@open-decision/type-classes";
 
 export type useCreateTemplateOptions = UseMutationOptions<
-  FetchJSONReturn<TCreateTemplateOutput>,
-  APIError<void>,
+  FetchResponse<Response, TCreateTemplateOutput>,
+  APIError,
   {
     template: File;
     treeUuid: string;
@@ -29,20 +30,27 @@ export type useCreateTemplateOptions = UseMutationOptions<
   }
 >;
 export type useDeleteTemplateOptions = UseMutationOptions<
-  FetchJSONReturn<TDeleteTemplateSingleOutput>,
-  APIError<void>,
+  FetchResponse<Response, TDeleteTemplateSingleOutput>,
+  APIError,
   { templateUuid: string }
 >;
 
 export type useUpdateTemplateOptions = UseMutationOptions<
-  FetchJSONReturn<TDeleteTemplateSingleOutput>,
-  APIError<void>,
+  FetchResponse<Response, TDeleteTemplateSingleOutput>,
+  APIError,
   {
     templateUuid: string;
     template: File;
     treeUuid: string;
     displayName: string;
   }
+>;
+
+export type useTemplateQueryOptions = UseQueryOptions<
+  FetchResponse<Response, TGetTemplateSingleOutput>,
+  APIError,
+  TGetTemplateSingleOutput,
+  ReturnType<typeof templateQueryKey>
 >;
 
 export const templateQueryKeys = ["Templates"] as const;
@@ -59,21 +67,18 @@ export const invalidateTemplates =
     queryClient.invalidateQueries(templateQueryKeys);
   };
 
-export const useTemplateAPI = () => {
+export const useTemplateAPI = (client: TClient = APIClient) => {
   const queryClient = useQueryClient();
   const addNotificationFromTemplate = useNotificationTemplate();
 
-  const useTemplateQuery = <TData = FetchJSONReturn<TGetTemplateSingleOutput>>(
+  const useTemplateQuery = (
     templateUuid: string,
-    options?: {
-      staleTime?: number;
-      select?: (data: FetchJSONReturn<TGetTemplateSingleOutput>) => TData;
-    }
+    options?: useTemplateQueryOptions
   ) => {
     return useQuery(
       templateQueryKey(templateUuid),
       () =>
-        proxiedClient("client").file.template.getSingle({
+        client.trees.private.template.getSingle({
           params: { uuid: templateUuid },
         }),
       options
@@ -91,13 +96,11 @@ export const useTemplateAPI = () => {
     return useMutation(
       ["createTemplate"],
       async ({ template, treeUuid, displayName, templateUuid }) => {
-        const token = await proxiedClient(
-          "client"
-        ).file.template.create.request({
+        const token = await client.trees.private.template.create.request({
           body: { treeUuid, templateUuid },
         });
 
-        return await directClient("client").file.template.create.upload({
+        return await client.trees.private.template.create.upload({
           body: {
             template,
             displayName,
@@ -134,7 +137,7 @@ export const useTemplateAPI = () => {
     return useMutation(
       ["deleteTemplate"],
       async ({ templateUuid }) => {
-        return await proxiedClient("client").file.template.delete({
+        return await client.trees.private.template.delete({
           params: { uuid: templateUuid },
         });
       },

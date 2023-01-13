@@ -1,17 +1,21 @@
-import { TContext, FetchFunctions } from "@open-decision/api-helpers";
+import {
+  ClientFetchFnWithParse,
+  safeFetchWithParse,
+  TClientConfig,
+} from "@open-decision/api-helpers";
 import {
   deletePublishedTree,
   getPublishedTree,
   getPublishedTrees,
-  getTreeData,
+  getPrivateTreeContent,
   createPublishedTreeOfTree,
   createTree,
   deleteTree,
-  getPublishedTreesOfTree,
+  getPublishedTreesOfTreeContent,
   getTree,
   getTrees,
   updateTree,
-  getTreePreview,
+  getSharedTreeContent,
   login,
   logout,
   register,
@@ -22,9 +26,9 @@ import {
   deleteUser,
   getUser,
   updateUser,
-  getDocumentPreviewSingle,
-  getDocumentPublishedSingle,
-  getDocumentPrototypeSingle,
+  getPrivateDocument,
+  getPublishedDocument,
+  getSharedDocument,
   getTemplateCollection,
   createTemplate,
   getTemplateSingle,
@@ -32,70 +36,70 @@ import {
   deleteTemplateSingle,
   getTemplateFileUrlSingle,
   requestTemplateUpload,
+  getToken,
+  verifyLogin,
 } from "@open-decision/api-specification";
 
-export const client = <FetchFunction extends FetchFunctions>(
-  context: TContext<FetchFunction>
-) => {
-  return {
-    auth: {
-      login: login(context),
-      register: register(context),
-      refreshToken: refreshToken(context),
-      resetPassword: resetPassword(context),
-      forgotPassword: forgotPassword(context),
-      verifyEmail: verifyEmail(context),
-      logout: logout(context),
-    },
-    trees: {
-      getSingle: getTree(context),
-      getCollection: getTrees(context),
-      create: createTree(context),
-      delete: deleteTree(context),
-      update: updateTree(context),
-      data: {
-        get: getTreeData(context),
-        getPreview: getTreePreview(context),
-      },
-      publishedTrees: {
-        get: getPublishedTreesOfTree(context),
-        create: createPublishedTreeOfTree(context),
-      },
-    },
-    publishedTrees: {
-      getCollection: getPublishedTrees(context),
-      getSingle: getPublishedTree(context),
-      delete: deletePublishedTree(context),
-    },
-    user: {
-      getUser: getUser(context),
-      updateUser: updateUser(context),
-      deleteUser: deleteUser(context),
-    },
-    file: {
-      document: {
-        get: {
-          preview: getDocumentPreviewSingle(context),
-          prototype: getDocumentPrototypeSingle(context),
-          public: getDocumentPublishedSingle(context),
-        },
-      },
-      template: {
-        getSingle: getTemplateSingle(context),
-        getCollection: getTemplateCollection(context),
-        create: {
-          request: requestTemplateUpload(context),
-          upload: createTemplate(context),
-        },
-        update: {
-          request: requestTemplateUpload(context),
-          upload: updateTemplate(context),
-        },
-        delete: deleteTemplateSingle(context),
-        getFileUrl: getTemplateFileUrlSingle(context),
-      },
-    },
-  };
-};
+export const createAPIClient =
+  (context: TClientConfig) =>
+  (baseFetchFunction: ClientFetchFnWithParse = safeFetchWithParse) => {
+    const fetchFunction = baseFetchFunction(context);
 
-export type TClient = ReturnType<typeof client>;
+    return {
+      auth: {
+        login: login(fetchFunction, context),
+        register: register(fetchFunction, context),
+        refreshToken: refreshToken(fetchFunction, context),
+        resetPassword: resetPassword(fetchFunction, context),
+        forgotPassword: forgotPassword(fetchFunction, context),
+        verifyEmail: verifyEmail(fetchFunction, context),
+        logout: logout(fetchFunction, context),
+        getToken: getToken(fetchFunction, context),
+        verifyLogin: verifyLogin(fetchFunction, context),
+      },
+      trees: {
+        private: {
+          template: {
+            getSingle: getTemplateSingle(fetchFunction, context),
+            getCollection: getTemplateCollection(fetchFunction, context),
+            create: {
+              request: requestTemplateUpload(fetchFunction, context),
+              upload: createTemplate(fetchFunction, context),
+            },
+            update: {
+              request: requestTemplateUpload(fetchFunction, context),
+              upload: updateTemplate(fetchFunction, context),
+            },
+            delete: deleteTemplateSingle(fetchFunction, context),
+            getFileUrl: getTemplateFileUrlSingle(fetchFunction, context),
+          },
+          generateDocument: getPrivateDocument(fetchFunction, context),
+          getSingle: getTree(fetchFunction, context),
+          getCollection: getTrees(fetchFunction, context),
+          create: createTree(fetchFunction, context),
+          delete: deleteTree(fetchFunction, context),
+          update: updateTree(fetchFunction, context),
+          publish: createPublishedTreeOfTree(fetchFunction, context),
+          getContent: getPrivateTreeContent(fetchFunction, context),
+          unpublish: deletePublishedTree(fetchFunction, context),
+        },
+        shared: {
+          getContent: getSharedTreeContent(fetchFunction, context),
+          generateDocument: getSharedDocument(fetchFunction, context),
+        },
+        published: {
+          getContent: getPublishedTreesOfTreeContent(fetchFunction, context),
+          getSingle: getPublishedTree(fetchFunction, context),
+          getCollection: getPublishedTrees(fetchFunction, context),
+          generateDocument: getPublishedDocument(fetchFunction, context),
+        },
+      },
+      user: {
+        getUser: getUser(fetchFunction, context),
+        updateUser: updateUser(fetchFunction, context),
+        deleteUser: deleteUser(fetchFunction, context),
+      },
+    };
+  };
+
+export type TClient = ReturnType<ReturnType<typeof createAPIClient>>;

@@ -5,12 +5,10 @@ import {
 import { isAPIError, isODError } from "@open-decision/type-classes";
 import { QueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/router";
 import * as React from "react";
 
 export function useQueryClient() {
   const t = useTranslations("common.errors");
-  const router = useRouter();
   const addNotificationFromTemplate = useNotificationTemplate();
 
   const [state] = React.useState(
@@ -21,6 +19,7 @@ export function useQueryClient() {
             retry: (failureCount, error) => {
               if (isAPIError(error) && error.code === "UNAUTHENTICATED") {
                 console.log(error);
+
                 return false;
               }
 
@@ -41,14 +40,9 @@ export function useQueryClient() {
                   variant: "danger",
                 });
               }
-              // If we get an unauthenticated API error we want to show a notification and
-              // redirect the user to the login page.
+              // If we get an unauthenticated API error we want to show a notification.
               if (error.code === "UNAUTHENTICATED") {
-                if (typeof window != "undefined") {
-                  router.push("/auth/login");
-                }
-
-                return addNotificationFromTemplate("loginExpired");
+                addNotificationFromTemplate("loginExpired");
               }
             },
           },
@@ -72,14 +66,9 @@ export function useQueryClient() {
                 });
               }
 
-              // If we get an unauthenticated API error we want to show a notification and
-              // redirect the user to the login page.
+              // If we get an unauthenticated API error we want to show a notification
               if (error.code === "UNAUTHENTICATED") {
-                if (typeof window != "undefined") {
-                  router.push("/auth/login");
-                }
-
-                return addNotificationFromTemplate("loginExpired");
+                addNotificationFromTemplate("loginExpired");
               }
 
               return addNotification({

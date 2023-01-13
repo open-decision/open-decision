@@ -1,4 +1,4 @@
-export { client } from "./client";
+export { createAPIClient } from "./client";
 export type { TClient } from "./client";
 
-export { directClient, proxiedClient } from "./odClient";
+export { APIClient } from "./APIClient";

@@ -42,19 +42,21 @@ export default function VorschauPage({ treeId }: PageProps) {
   const t = useTranslations("renderer.preview");
 
   const { isLoading, isPaused, data, error, isSuccess } =
-    useTreeAPI().useTreePreview(treeId, {
+    useTreeAPI().useTreeData(treeId, {
       select: (result) => result.data,
     });
 
   const treeClientWithPlugins = data
     ? createTreeClientWithPlugins(data)
     : undefined;
+
   if (isPaused || isLoading)
     return (
       <Stack className="h-full" center>
         <LoadingSpinner />
       </Stack>
     );
+
   if (!isSuccess || !treeClientWithPlugins) throw error;
 
   return (
@@ -65,7 +67,7 @@ export default function VorschauPage({ treeId }: PageProps) {
       <Renderer.Root
         tree={data}
         edgePlugins={treeClientWithPlugins.edgePlugins}
-        environment="prototype"
+        environment="private"
       >
         <Stack center className="bg-layer-2 h-full">
           <Renderer.View

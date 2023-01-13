@@ -1,4 +1,4 @@
-import { safeFetchJSON } from "@open-decision/api-helpers";
+import { safeFetchWithParse } from "@open-decision/api-helpers";
 import { loginOutput } from "@open-decision/api-specification";
 import { setCookieHeaders } from "../../../../utils/auth";
 import { NextApiHandler } from "next";
@@ -6,14 +6,16 @@ import { APIError, isAPIError } from "@open-decision/type-classes";
 
 const verifyLogin: NextApiHandler = async (req, res) => {
   try {
-    const authResponse = await safeFetchJSON(
-      `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1/auth/login`,
-      {
-        body: JSON.stringify(req.body),
-        method: req.method,
-      },
-      { validation: loginOutput, origin: "client" }
-    );
+    const authResponse = await safeFetchWithParse({
+      apiUrl: `${process.env["NEXT_PUBLIC_OD_API_ENDPOINT"]}/v1`,
+      proxyUrl: `${process.env["NEXT_PUBLIC_OD_BUILDER_ENDPOINT"]}/api/external-api`,
+    })(`auth/login`, {
+      json: req.body,
+      method: req.method,
+      validation: loginOutput,
+      origin: "client",
+      proxied: false,
+    });
 
     setCookieHeaders(req, res, authResponse.data);
 
