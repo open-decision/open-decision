@@ -30,11 +30,11 @@ export abstract class EntityPlugin<
   type: TType["type"];
   declare defaultData: TType["data"];
   declare abstract pluginType: "edges" | "nodes" | "pluginEntity";
-  declare Type: z.ZodType<TType>;
+  declare Type: ReturnType<typeof EntityPluginBaseType>;
 
   constructor(
     typeName: TType["type"],
-    Type: z.ZodType<TType>,
+    Type: ReturnType<typeof EntityPluginBaseType>,
     defaultData: TType["data"] = {}
   ) {
     this.type = typeName;

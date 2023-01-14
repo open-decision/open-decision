@@ -1,28 +1,25 @@
 import { RichText } from "@open-decision/rich-text-editor";
 import {
   deleteEntityFn,
-  TNodePlugin,
-  NodePlugin,
   NodePluginBaseType,
   TReadOnlyTreeClient,
   TTreeClient,
+  NodePlugin,
+  EntityPluginType,
 } from "@open-decision/tree-type";
 import { z } from "zod";
 import {
-  addInput,
-  deleteInput,
-  updateInput,
-  NodePlugin,
-  Input,
-  createFn,
-} from "@open-decision/plugins-node-helpers";
-import {
   createVariableFromInput,
-  decisionNodeInputPlugins,
+  DecisionNodeInputPlugins,
   DecisionNodeVariable,
   TDecisionNodeInputs,
 } from "./createInputPlugins";
 import { ODProgrammerError } from "@open-decision/type-classes";
+import {
+  addInput,
+  getInputByNode,
+  getNodesByInput,
+} from "@open-decision/plugins-node-helpers";
 
 export const typeName = "decision" as const;
 
@@ -33,17 +30,23 @@ const DataType = z.object({
 
 export const DecisionNodePluginType = NodePluginBaseType(typeName, DataType);
 
-export type TDecisionNodePlugin = TNodePlugin<
-  typeof typeName,
-  z.infer<typeof DataType>
+export type TDecisionNodePlugin = EntityPluginType<
+  typeof DecisionNodePluginType
 >;
 
 export class DecisionNodePlugin extends NodePlugin<TDecisionNodePlugin> {
-  inputPlugins = decisionNodeInputPlugins;
+  inputPlugins = DecisionNodeInputPlugins;
 
   constructor() {
     super(typeName, DecisionNodePluginType, {});
   }
+
+  inputs = {
+    getByNode: getInputByNode<TDecisionNodeInputs>(this),
+    add: addInput,
+  };
+
+  getByInput = getNodesByInput(this);
 
   connectInputAndNode =
     (nodeId: string, inputId: string) => (treeClient: TTreeClient) => {
@@ -113,7 +116,7 @@ export class DecisionNodePlugin extends NodePlugin<TDecisionNodePlugin> {
         );
 
         if (value.data.input) {
-          decisionNodeInputPlugins.select.plugin.delete([value.data.input])(
+          DecisionNodeInputPlugins.select.plugin.delete([value.data.input])(
             treeClient
           );
         }

@@ -34,11 +34,9 @@ export const PlaceholderNodeSidebar: TNodeSidebar = ({
               classNames={[sidebarCardClasses, "items-center justify-between"]}
               key={plugin.type}
             >
-              <Heading size="extra-small">
-                {t(`${plugin.typeName}.short`)}
-              </Heading>
+              <Heading size="extra-small">{t(`${plugin.type}.short`)}</Heading>
               <Button
-                aria-label={`Erstelle ${t(`${plugin.typeName}.long`)}`}
+                aria-label={`Erstelle ${t(`${plugin.type}.long`)}`}
                 size="small"
                 variant="secondary"
                 onClick={() => {

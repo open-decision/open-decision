@@ -1,12 +1,12 @@
 import { DirectEdgePlugin } from "@open-decision/plugins-edge-direct";
-import { createFn, NodePlugin } from "@open-decision/plugins-node-helpers";
 import { RichText } from "@open-decision/rich-text-editor";
 import {
-  TNodePlugin,
   NodePlugin,
   TReadOnlyTreeClient,
   Tree,
   TTreeClient,
+  NodePluginBaseType,
+  EntityPluginType,
 } from "@open-decision/tree-type";
 import { z } from "zod";
 
@@ -14,37 +14,23 @@ const DirectEdge = new DirectEdgePlugin();
 
 export const typeName = "node-group" as const;
 
-export const DataType = z
-  .object({
-    children: z.array(z.string()),
-    content: RichText.optional(),
-    cta: z.string().optional(),
-    tree: Tree.Type.optional(),
-    title: z.string().optional(),
-  })
-  .default({
-    children: [],
-  });
+const DataType = z.object({
+  children: z.array(z.string()),
+  content: RichText.optional(),
+  cta: z.string().optional(),
+  tree: Tree.Type.optional(),
+  title: z.string().optional(),
+});
 
-export type IGroupNode = TNodePlugin<typeof typeName, z.infer<typeof DataType>>;
+export const GroupNodePluginType = NodePluginBaseType(typeName, DataType);
 
-export class GroupNodePlugin extends NodePlugin<IGroupNode> {
+export type TGroupNode = EntityPluginType<typeof GroupNodePluginType>;
+
+export class GroupNodePlugin extends NodePlugin<TGroupNode> {
   constructor() {
-    super(typeName, { children: [] });
+    super(typeName, GroupNodePluginType, { children: [] });
     this.isAddable = false;
   }
-
-  create: createFn<typeof this.Type> =
-    ({ data, ...rest }) =>
-    (treeClient) => {
-      const newNode = treeClient.nodes.create.node({
-        type: this.typeName,
-        data: { ...this.defaultData, ...data },
-        ...rest,
-      });
-
-      return this.Type.parse(newNode);
-    };
 
   updateTitle =
     (nodeId: string, newTitle: string) =>
@@ -98,7 +84,7 @@ export class GroupNodePlugin extends NodePlugin<IGroupNode> {
     };
 
   updateNodeContent =
-    (nodeId: string, content: IGroupNode["data"]["content"]) =>
+    (nodeId: string, content: TGroupNode["data"]["content"]) =>
     (treeClient: TTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 

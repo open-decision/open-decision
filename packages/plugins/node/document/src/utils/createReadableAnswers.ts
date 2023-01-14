@@ -191,7 +191,7 @@ const createReadableGroupAnswer = (
 ) => {
   const result: GroupAnswerType = [];
 
-  const groupNode = GroupNode.get.single(nodeId)(treeClient);
+  const groupNode = GroupNode.getSingle(nodeId)(treeClient);
 
   if (groupNode instanceof Error) return undefined;
   if (!groupNode.data.tree) return undefined;
@@ -216,7 +216,7 @@ const createReadableGroupAnswer = (
         }
 
         case "single-select-variable": {
-          const nodes = DecisionNode.getNodesByInput(answerId)(subTreeClient);
+          const nodes = DecisionNode.getByInput(answerId)(subTreeClient);
 
           if (!nodes) break;
 

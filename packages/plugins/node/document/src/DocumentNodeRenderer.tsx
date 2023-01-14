@@ -26,7 +26,7 @@ export const DocumentNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
     },
   } = useInterpreter();
 
-  const node = DocumentNode.get.single(nodeId)(treeClient);
+  const node = DocumentNode.getSingle(nodeId)(treeClient);
   const readableAnswers = createReadableAnswers(answers, treeClient);
 
   const t = useTranslations("common.errors");

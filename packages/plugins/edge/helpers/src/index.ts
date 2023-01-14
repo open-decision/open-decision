@@ -1,8 +1,8 @@
 import {
   EdgePlugin,
-  TEdgePlugin,
   TReadOnlyTreeClient,
   TTreeClient,
+  TEdgePlugin,
 } from "@open-decision/tree-type";
 import {
   InterpreterContext,
@@ -10,10 +10,10 @@ import {
 } from "@open-decision/interpreter";
 import { InterpreterError } from "@open-decision/type-classes";
 
-export type EdgeResolver<TEdgePlugin extends TEdgePlugin> = (
+export type EdgeResolver<TType extends TEdgePlugin> = (
   treeClient: TTreeClient | TReadOnlyTreeClient
 ) => (
-  edge: TEdgePlugin
+  edge: TType
 ) => (
   context: InterpreterContext,
   event: EVALUATE_NODE_CONDITIONS
@@ -22,8 +22,8 @@ export type EdgeResolver<TEdgePlugin extends TEdgePlugin> = (
   | { state: "failure" }
   | { state: "error"; error: InterpreterError };
 
-export type EdgePluginObject<TEdgePlugin extends TEdgePlugin = TEdgePlugin> = {
-  plugin: EdgePlugin<TEdgePlugin>;
-  resolver: EdgeResolver<TEdgePlugin>;
+export type EdgePluginObject<TType extends TEdgePlugin = TEdgePlugin> = {
+  plugin: EdgePlugin<TType>;
+  resolver: EdgeResolver<TType>;
   type: string;
 };

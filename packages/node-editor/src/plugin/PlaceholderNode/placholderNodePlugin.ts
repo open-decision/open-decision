@@ -1,31 +1,23 @@
-import { TNodePlugin, NodePlugin } from "@open-decision/tree-type";
+import {
+  NodePlugin,
+  EntityPluginType,
+  NodePluginBaseType,
+} from "@open-decision/tree-type";
 import { z } from "zod";
-import { createFn, NodePlugin } from "@open-decision/plugins-node-helpers";
 
 export const typeName = "placeholder" as const;
-export const DataType = z.object({});
+const DataType = z.object({});
 
-export type IPlaceholderNode = TNodePlugin<
-  typeof typeName,
-  z.infer<typeof DataType>
+export const PlaceholderNodePluginType = NodePluginBaseType(typeName, DataType);
+
+export type IPlaceholderNode = EntityPluginType<
+  typeof PlaceholderNodePluginType
 >;
 
 export class PlaceholderNodePlugin extends NodePlugin<IPlaceholderNode> {
   constructor() {
-    super(typeName);
+    super(typeName, PlaceholderNodePluginType, {});
 
     this.isAddable = false;
   }
-
-  create: createFn<typeof this.Type> =
-    ({ data, ...rest }) =>
-    (treeClient) => {
-      const newNode = treeClient.nodes.create.node({
-        type: this.typeName,
-        data: { ...this.defaultData, ...data },
-        ...rest,
-      });
-
-      return this.Type.parse(newNode);
-    };
 }

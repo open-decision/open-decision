@@ -128,10 +128,6 @@ const Header = ({
                   <DropdownMenu.Item
                     key={plugin.type}
                     onSelect={() => {
-                      const newNode = plugin.create({
-                        data: {},
-                        position: { x: 0, y: 0 },
-                      })(treeClient);
                       const oldNode = treeClient.nodes.get.single(nodeId);
 
                       if (oldNode instanceof Error) throw oldNode;
@@ -150,7 +146,7 @@ const Header = ({
                       treeClient.nodes.update.node(nodeId, newNode);
                     }}
                   >
-                    {nodeNames(`${plugin.typeName}.short`)}
+                    {nodeNames(`${plugin.type}.short`)}
                   </DropdownMenu.Item>
                 ))}
               </DropdownMenu.Content>

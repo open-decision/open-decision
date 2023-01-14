@@ -11,7 +11,7 @@ const DirectEdge = new DirectEdgePlugin();
 type Props = { nodeId: string } & Pick<TNodeSidebarProps, "onNodeCreate">;
 
 export function GroupNodeSidebarPaths({ nodeId, onNodeCreate }: Props) {
-  const node = useTree(GroupNode.get.single(nodeId));
+  const node = useTree(GroupNode.getSingle(nodeId));
 
   const edge = useTree((treeClient) => {
     return Object.values(

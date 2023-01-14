@@ -41,7 +41,7 @@ export function PathCard({ onNodeCreate, onEdgeCreate, nodeId, edge }: Props) {
   const treeClient = useTreeClient();
 
   const inputAnswers = useTree((treeClient) => {
-    const input = DecisionNode.inputs.getInputByNode(nodeId)(treeClient);
+    const input = DecisionNode.inputs.getByNode(nodeId)(treeClient);
 
     if (input instanceof ODProgrammerError) return undefined;
 
@@ -73,7 +73,7 @@ export function PathCard({ onNodeCreate, onEdgeCreate, nodeId, edge }: Props) {
   });
 
   const inputId = useTree((treeClient) => {
-    const input = DecisionNode.inputs.getInputByNode(nodeId)(treeClient);
+    const input = DecisionNode.inputs.getByNode(nodeId)(treeClient);
 
     if (input instanceof ODProgrammerError) return undefined;
 

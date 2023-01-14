@@ -1,6 +1,6 @@
 import { Node, Tree } from "../type-classes";
 import { v4 as uuid } from "uuid";
-import { getNodes } from "../getters";
+import { getAll } from "../getters/getAll";
 
 export type NewNodeData = Partial<Omit<Node.TNode, "id">>;
 
@@ -20,7 +20,7 @@ export const createNode =
     name,
   }: Partial<Omit<TNodeType, "id">>) => {
     const fallbackName = `Knoten ${
-      Object.keys(getNodes(tree)() ?? {}).length + 1
+      Object.keys(getAll(tree)("nodes") ?? {}).length + 1
     }`;
 
     return {

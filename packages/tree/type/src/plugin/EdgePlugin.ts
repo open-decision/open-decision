@@ -28,7 +28,7 @@ export type TEdgePlugin<
 };
 
 export abstract class EdgePlugin<
-  TType extends TEdgePlugin
+  TType extends TEdgePlugin = TEdgePlugin
 > extends EntityPlugin<TType> {
   pluginType = "edges" as const;
 

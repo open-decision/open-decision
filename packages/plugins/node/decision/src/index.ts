@@ -4,8 +4,10 @@ import { DecisionNodePlugin } from "./decisionNodePlugin";
 import { DecisionNodeSidebar } from "./DecisionNodeSidebar/DecisionNodeSidebar";
 import { DecisionNodeRenderer } from "./DecisionNodeRenderer";
 import { Pencil1Icon } from "@radix-ui/react-icons";
+import { DecisionNodeInputType } from "./createInputPlugins";
 
 export * from "./decisionNodePlugin";
+
 const plugin = new DecisionNodePlugin();
 
 export const DecisionNodePluginObject = {
@@ -16,6 +18,6 @@ export const DecisionNodePluginObject = {
   },
   Renderer: DecisionNodeRenderer,
   type: plugin.type,
-  pluginEntities: { inputs: z.record(plugin.inputType) },
+  pluginEntities: { inputs: z.record(DecisionNodeInputType) },
   Icon: Pencil1Icon,
 };

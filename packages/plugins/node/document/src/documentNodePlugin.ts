@@ -1,11 +1,9 @@
-import { createFn, NodePlugin } from "@open-decision/plugins-node-helpers";
 import { RichText } from "@open-decision/rich-text-editor";
 import {
   NodePlugin,
   NodePluginBaseType,
   EntityPluginType,
 } from "@open-decision/tree-type";
-import { RichText } from "@open-decision/rich-text-editor";
 import { TReadOnlyTreeClient, TTreeClient } from "@open-decision/tree-type";
 import { z } from "zod";
 
@@ -24,18 +22,6 @@ export class DocumentNodePlugin extends NodePlugin<IDocumentNode> {
   constructor() {
     super(typeName, DocumentNodePluginType, {});
   }
-
-  create: createFn<typeof this.Type> =
-    ({ data, ...rest }) =>
-    (treeClient) => {
-      const newNode = treeClient.nodes.create.node({
-        type: this.typeName,
-        data: { ...this.defaultData, ...data },
-        ...rest,
-      });
-
-      return this.Type.parse(newNode);
-    };
 
   getByTemplateUuid =
     (templateUuid: string) =>

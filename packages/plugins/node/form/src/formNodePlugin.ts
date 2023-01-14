@@ -1,7 +1,7 @@
 import {
   addInput,
-  NodePlugin,
-  createFn,
+  getInputByNode,
+  getNodesByInput,
 } from "@open-decision/plugins-node-helpers";
 import { RichText } from "@open-decision/rich-text-editor";
 import {
@@ -40,18 +40,6 @@ export class FormNodePlugin extends NodePlugin<TFormNodePlugin> {
   constructor() {
     super(typeName, FormNodePluginType, { inputs: [] });
   }
-
-  create: createFn<typeof this.Type> =
-    ({ data, ...rest }) =>
-    (treeClient) => {
-      const newNode = treeClient.nodes.create.node({
-        type: this.typeName,
-        data: { ...this.defaultData, ...data },
-        ...rest,
-      });
-
-      return this.Type.parse(newNode);
-    };
 
   updateNodeContent =
     (nodeId: string, content: TFormNodePlugin["data"]["content"]) =>
@@ -130,11 +118,12 @@ export class FormNodePlugin extends NodePlugin<TFormNodePlugin> {
 
   get inputs() {
     return {
-      getInputByNode: getInputByNode(this),
-      getNodesByInput: getNodesByInput(this),
+      getByNode: getInputByNode(this),
       add: addInput,
     };
   }
+
+  getByInput = getNodesByInput(this);
 
   createVariable =
     (answers: Record<string, string | string[] | undefined>) =>

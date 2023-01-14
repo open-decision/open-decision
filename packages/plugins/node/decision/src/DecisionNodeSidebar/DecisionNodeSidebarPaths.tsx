@@ -18,7 +18,7 @@ export function DecisionNodeSidebarPaths({ nodeId, onNodeCreate }: Props) {
   const treeClient = useTreeClient();
 
   const edges = useTree((treeClient) => {
-    return CompareEdge.get.byNode(nodeId)(treeClient);
+    return CompareEdge.getByNode(nodeId)(treeClient);
   });
 
   return (

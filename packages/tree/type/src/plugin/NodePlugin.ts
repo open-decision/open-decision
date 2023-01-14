@@ -54,14 +54,16 @@ export abstract class NodePlugin<
 
   create =
     (
-      data: Omit<TType, "id" | "type" | "data"> & {
+      data: Omit<TType, "id" | "type" | "data" | "position"> & {
         data?: Partial<TType["data"]>;
+        position?: TType["position"];
       }
     ) =>
     (_treeClient: TTreeClient | TReadOnlyTreeClient) => {
       return {
         id: crypto.randomUUID(),
         type: this.type,
+        position: { x: 0, y: 0 },
         ...data,
         data: { ...this.defaultData, ...data.data },
       } as TType;
