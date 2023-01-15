@@ -42,5 +42,6 @@ export class SelectInputPlugin extends InputPlugin<TSelectInput> {
   deleteAnswer = deleteAnswer<TSelectInput>();
 
   getInputsWithAnswers = getInputsWithAnswers<TSelectInput>();
+
   updateRequired = updateRequired<TSelectInput>();
 }

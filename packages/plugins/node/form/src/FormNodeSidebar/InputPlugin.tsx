@@ -17,6 +17,7 @@ import { Reorder, useDragControls } from "framer-motion";
 import React from "react";
 import { FormNodePlugin } from "../formNodePlugin";
 import { PlaceholderInputPlugin } from "@open-decision/plugins-node-helpers";
+import { TFormNodeInput } from "../FormNodeInputs";
 
 const FormNode = new FormNodePlugin();
 const PlaceholderInput = new PlaceholderInputPlugin();
@@ -54,7 +55,7 @@ export function InputPlugin({ inputIds, nodeId }: InputPluginComponentProps) {
       })}
       <SidebarButton
         onClick={() => {
-          const input = PlaceholderInput.create({});
+          const input = PlaceholderInput.create({})(treeClient);
           FormNode.inputs.add(input)(treeClient);
           FormNode.connectInputAndNode(nodeId, input.id)(treeClient);
         }}
@@ -74,13 +75,11 @@ const InputItem = ({ inputId, dragGroupRef, nodeId }: InputItemProps) => {
   const treeClient = useTreeClient();
 
   const input = useTree((treeClient) => {
-    return treeClient.pluginEntity.get.single<typeof FormNode.inputType>(
+    return treeClient.pluginEntity.get.single<TFormNodeInput>(
       "inputs",
       inputId
     );
   });
-
-  const InputComponents = FormNode.inputPlugins[input.type].BuilderComponent;
 
   const controls = useDragControls();
 
@@ -88,6 +87,10 @@ const InputItem = ({ inputId, dragGroupRef, nodeId }: InputItemProps) => {
     FormNode.disconnectInputAndNode(nodeId, inputId)(treeClient);
     treeClient.pluginEntity.delete("inputs", inputId);
   }, [inputId, nodeId, treeClient]);
+
+  if (input instanceof Error) return null;
+
+  const InputComponents = FormNode.inputPlugins[input.type].BuilderComponent;
 
   return (
     <Reorder.Item
@@ -117,9 +120,11 @@ const InputItem = ({ inputId, dragGroupRef, nodeId }: InputItemProps) => {
             currentType={input.type}
             inputPlugins={FormNode.inputPlugins}
             onSelect={(newType) => {
-              const newInput = FormNode.inputPlugins[newType].plugin.create({});
+              const newInput = FormNode.inputPlugins[newType].plugin.create({})(
+                treeClient
+              );
 
-              FormNode.inputPlugins[input.type].plugin.updateInput(
+              FormNode.inputPlugins[input.type].plugin.update(
                 inputId,
                 newInput
               )(treeClient);

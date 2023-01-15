@@ -1,11 +1,11 @@
-import { ODError, ODProgrammerError } from "@open-decision/type-classes";
+import { ODError } from "@open-decision/type-classes";
 import { z } from "zod";
 import { TReadOnlyTreeClient, TTreeClient } from "../treeClient";
 import { NodePlugin, TNodePlugin } from "./NodePlugin";
 
 export abstract class NodePluginWithVariable<
   TType extends TNodePlugin = TNodePlugin,
-  TVariable extends z.ZodType = z.ZodType
+  TVariable extends z.AnyZodObject = z.AnyZodObject
 > extends NodePlugin<TType> {
   declare abstract VariableType: TVariable;
 
@@ -31,5 +31,5 @@ export abstract class NodePluginWithVariable<
     answer: any
   ) => (
     treeClient: TTreeClient | TReadOnlyTreeClient
-  ) => readonly [string, z.infer<TVariable>] | ODProgrammerError | undefined;
+  ) => z.infer<TVariable> | undefined;
 }

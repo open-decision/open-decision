@@ -11,6 +11,7 @@ import {
   getInput,
   getInputs,
   updateInputLabel,
+  updateInput,
 } from "./utils/inputMethods";
 
 export const InputPluginBaseType = <
@@ -52,6 +53,7 @@ export abstract class InputPlugin<
     };
 
   addInput = addInput;
+  update = updateInput;
   updateLabel = updateInputLabel<TType>();
   delete = deleteInput;
   getSingle = getInput<TType>();

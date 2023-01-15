@@ -1,6 +1,6 @@
 {
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/plugins/variable/multi-select/src",
+  "sourceRoot": "packages/plugins/variable/list/src",
   "projectType": "library",
   "tags": [],
   "targets": {
@@ -8,10 +8,10 @@
       "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/packages/plugins/variable/multi-select",
-        "main": "packages/plugins/variable/multi-select/src/index.ts",
-        "tsConfig": "packages/plugins/variable/multi-select/tsconfig.lib.json",
-        "assets": ["packages/plugins/variable/multi-select/*.md"]
+        "outputPath": "dist/packages/plugins/variable/list",
+        "main": "packages/plugins/variable/list/src/index.ts",
+        "tsConfig": "packages/plugins/variable/list/tsconfig.lib.json",
+        "assets": ["packages/plugins/variable/list/*.md"]
       }
     },
     "lint": {
@@ -19,7 +19,7 @@
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": [
-          "packages/plugins/variable/multi-select/**/*.{ts,tsx,js,jsx}"
+          "packages/plugins/variable/list/**/*.{ts,tsx,js,jsx}"
         ]
       }
     },
@@ -33,5 +33,5 @@
       }
     }
   },
-  "name": "plugins-variable-multi-select"
+  "name": "plugins-variable-list"
 }

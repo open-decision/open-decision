@@ -33,7 +33,7 @@ export const DecisionNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
 
   const answer = isError
     ? undefined
-    : DecisionNode.getVariable(node.id, getAnswers())(treeClient);
+    : DecisionNode.getVariable(node.id, getAnswers());
 
   const methods = Form.useForm<{ [x: string]: string }>({
     defaultValues:
@@ -54,7 +54,7 @@ export const DecisionNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
 
     send({
       type: "ADD_USER_ANSWER",
-      answer: variable,
+      answer: { [variable[0]]: variable[1] },
     });
 
     send("EVALUATE_NODE_CONDITIONS");

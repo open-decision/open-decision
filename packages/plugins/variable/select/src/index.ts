@@ -5,7 +5,7 @@ import {
 } from "@open-decision/tree-type";
 import { z } from "zod";
 
-const typeName = "single-select-variable";
+const typeName = "select";
 
 const Value = z.object({ id: z.string().uuid(), value: z.string() });
 
@@ -14,18 +14,25 @@ const DataType = z.object({
   value: z.string().optional(),
 });
 
-export const SelectVariablePluginType = VariablePluginBaseType(
-  typeName,
-  DataType
-);
+export const SelectVariableType = VariablePluginBaseType(typeName, DataType);
 
-export type TSelectVariable = VariableType<typeof SelectVariablePluginType>;
+export type TSelectVariable = VariableType<typeof SelectVariableType>;
 
 export class SelectVariablePlugin extends VariablePlugin<
   TSelectVariable,
-  typeof SelectVariablePluginType
+  typeof SelectVariableType
 > {
   constructor() {
-    super(typeName, SelectVariablePluginType, { values: [] });
+    super(typeName, SelectVariableType);
   }
+
+  create = (
+    data: Partial<Omit<TSelectVariable, "type">> & Pick<TSelectVariable, "id">
+  ) => {
+    return {
+      type: this.type,
+      values: [],
+      ...data,
+    } satisfies TSelectVariable;
+  };
 }

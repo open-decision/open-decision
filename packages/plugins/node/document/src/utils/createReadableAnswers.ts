@@ -1,5 +1,5 @@
 import { TAnswer } from "@open-decision/interpreter";
-import { MultiSelectVariablePlugin } from "@open-decision/plugins-variable-multi-select";
+import { ListVariablePlugin } from "packages/plugins/variable/list/src";
 import { SelectVariablePlugin } from "@open-decision/plugins-variable-select";
 import { TextVariablePlugin } from "@open-decision/plugins-variable-text";
 import { z } from "zod";
@@ -18,7 +18,7 @@ const DecisionNode = new DecisionNodePlugin();
 const GroupNode = new GroupNodePlugin();
 
 const SingleSelectVariable = new SelectVariablePlugin();
-const MultiSelectVariable = new MultiSelectVariablePlugin();
+const MultiSelectVariable = new ListVariablePlugin();
 const TextVariable = new TextVariablePlugin();
 
 const FormAnswer = z.object({

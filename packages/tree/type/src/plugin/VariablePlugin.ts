@@ -1,25 +1,27 @@
-import { ODError, ODProgrammerError } from "@open-decision/type-classes";
+import { ODError } from "@open-decision/type-classes";
 import { z } from "zod";
-import { TNodePlugin } from "./NodePlugin";
 
 export const VariablePluginBaseType = <
   TType extends string,
-  TDataType extends z.ZodType
+  TValue extends z.ZodTypeAny,
+  TDataType extends z.ZodObject<{ value: TValue }>
 >(
   type: TType,
   data: TDataType
 ) =>
-  z.object({
-    id: z.string().uuid(),
-    type: z.literal(type),
-    data: data,
-    name: z.string().optional(),
-  });
+  z
+    .object({
+      id: z.string().uuid(),
+      type: z.literal(type),
+      name: z.string().optional(),
+    })
+    .merge(data);
 
 export type TVariablePluginBase<
   TType extends string = string,
-  TData = any
-> = z.infer<ReturnType<typeof VariablePluginBaseType<TType, z.ZodType<TData>>>>;
+  TValue extends z.ZodTypeAny = z.ZodTypeAny,
+  TData extends z.ZodObject<{ value: TValue }> = z.ZodObject<{ value: TValue }>
+> = z.infer<ReturnType<typeof VariablePluginBaseType<TType, TValue, TData>>>;
 
 export abstract class VariablePlugin<
   TType extends TVariablePluginBase = TVariablePluginBase,
@@ -28,16 +30,10 @@ export abstract class VariablePlugin<
   pluginType = "variable" as const;
   type: TType["type"];
   declare Type: TZodType;
-  declare defaultData: TType["data"];
 
-  constructor(
-    type: TType["type"],
-    Type: TZodType,
-    defaultData: TType["data"] = {}
-  ) {
+  constructor(type: TType["type"], Type: TZodType) {
     this.type = type;
     this.Type = Type;
-    this.defaultData = defaultData;
   }
 
   parse = (data: any) => {
@@ -54,27 +50,9 @@ export abstract class VariablePlugin<
     return parsedData.data;
   };
 
-  create = (node: TNodePlugin, data: TType["data"], readable = false) => {
-    const variable = {
-      id: node.id,
-      type: this.type,
-      name: node.name,
-      data: { ...this.defaultData, ...data },
-    };
-
-    if (readable) {
-      if (!node.name)
-        return new ODProgrammerError({
-          code: "MISSING_NAME",
-          message:
-            "You cannot create a readable variable when the node does not have a name.",
-        });
-
-      return [this.createReadableKey(node.name), variable] as const;
-    }
-
-    return [node.id, variable] as const;
-  };
+  abstract create: (
+    data: Partial<Omit<TType, "type">> & Pick<TType, "id">
+  ) => TType;
 
   createReadableKey = (key: string) =>
     key

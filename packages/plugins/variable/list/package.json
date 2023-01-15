@@ -1,5 +1,5 @@
 {
-  "name": "@open-decision/plugins-variable-multi-select",
+  "name": "@open-decision/plugins-variable-list",
   "version": "0.0.1",
   "main": "src/index.js",
   "dependencies": {

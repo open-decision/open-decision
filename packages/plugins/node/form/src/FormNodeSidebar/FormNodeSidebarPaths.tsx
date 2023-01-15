@@ -10,9 +10,7 @@ type Props = Pick<TNodeSidebarProps, "onNodeCreate" | "nodeId">;
 export function FormNodeSidebarPaths({ nodeId, onNodeCreate }: Props) {
   const edge = useTree(
     (treeClient) =>
-      Object.values(
-        DirectEdge.get.byNode(nodeId)(treeClient)?.source ?? {}
-      )?.[0]
+      Object.values(DirectEdge.getByNode(nodeId)(treeClient)?.source ?? {})?.[0]
   );
 
   const nodeNames = useTree((treeClient) =>

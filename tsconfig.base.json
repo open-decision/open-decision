@@ -77,8 +77,11 @@
       "@open-decision/plugins-variable-helpers": [
         "packages/plugins/variable/helpers/src/index.ts"
       ],
-      "@open-decision/plugins-variable-multi-select": [
-        "packages/plugins/variable/multi-select/src/index.ts"
+      "@open-decision/plugins-variable-list": [
+        "packages/plugins/variable/list/src/index.ts"
+      ],
+      "@open-decision/plugins-variable-record": [
+        "packages/plugins/variable/record/src/index.ts"
       ],
       "@open-decision/plugins-variable-empty": [
         "packages/plugins/variable/empty/src/index.ts"

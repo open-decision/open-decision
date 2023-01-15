@@ -6,21 +6,31 @@ import {
 import { RichText } from "@open-decision/rich-text-editor";
 import {
   EntityPluginType,
+  NodePlugin,
   NodePluginBaseType,
-  NodePluginWithVariable,
   TReadOnlyTreeClient,
   TTreeClient,
 } from "@open-decision/tree-type";
 import { z } from "zod";
 import { ODProgrammerError } from "@open-decision/type-classes";
 import { DirectEdgePlugin } from "@open-decision/plugins-edge-direct";
-import {
-  createVariableFromInput,
-  FormNodeVariableType,
-  TFormNodeVariable,
-} from "./FormNodeVariable";
 import { formNodeInputPlugins, TFormNodeInput } from "./FormNodeInputs";
+import {
+  RecordVariablePlugin,
+  TRecordVariable,
+} from "@open-decision/plugins-variable-record";
+import { match } from "ts-pattern";
+import { EmptyVariablePlugin } from "@open-decision/plugins-variable-empty";
+import { ListVariablePlugin } from "@open-decision/plugins-variable-list";
+import { SelectVariablePlugin } from "@open-decision/plugins-variable-select";
+import { TextVariablePlugin } from "@open-decision/plugins-variable-text";
 
+const TextVariable = new TextVariablePlugin();
+const SelectVariable = new SelectVariablePlugin();
+const ListVariable = new ListVariablePlugin();
+const EmptyVariable = new EmptyVariablePlugin();
+
+const RecordVariable = new RecordVariablePlugin();
 const DirectEdge = new DirectEdgePlugin();
 
 export const typeName = "form" as const;
@@ -34,17 +44,12 @@ export const FormNodePluginType = NodePluginBaseType(typeName, DataType);
 
 export type TFormNode = EntityPluginType<typeof FormNodePluginType>;
 
-export class FormNodePlugin extends NodePluginWithVariable<
-  TFormNode,
-  typeof FormNodeVariableType
-> {
+export class FormNodePlugin extends NodePlugin<TFormNode> {
   inputPlugins = formNodeInputPlugins;
 
   constructor() {
     super(typeName, FormNodePluginType, { inputs: [] });
   }
-
-  VariableType = FormNodeVariableType;
 
   updateNodeContent =
     (nodeId: string, content: TFormNode["data"]["content"]) =>
@@ -131,17 +136,13 @@ export class FormNodePlugin extends NodePluginWithVariable<
   getByInput = getNodesByInput(this);
 
   createVariable =
-    (
-      nodeId: string,
-      answer: Record<string, string | string[] | undefined>,
-      readable = false
-    ) =>
+    (nodeId: string, answer: any) =>
     (treeClient: TTreeClient | TReadOnlyTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 
       if (node instanceof Error) return undefined;
 
-      const variables: TFormNodeVariable = {};
+      const variables: TRecordVariable["value"] = {};
 
       for (const key in answer) {
         const value = answer[key];
@@ -153,13 +154,38 @@ export class FormNodePlugin extends NodePluginWithVariable<
 
         if (input instanceof ODProgrammerError) continue;
 
-        const variable = createVariableFromInput(node, input, value, readable);
+        const variable = match(input)
+          .with({ type: "text" }, () =>
+            TextVariable.create({ value, id: input.id })
+          )
+          .with({ type: "select" }, (input) =>
+            SelectVariable.create({
+              values: input.data.answers,
+              value,
+              id: input.id,
+            })
+          )
+          .with({ type: "multi-select" }, (input) =>
+            ListVariable.create({
+              values: input.data.answers,
+              value,
+              id: input.id,
+            })
+          )
+          .with({ type: "placeholder" }, () =>
+            EmptyVariable.create({ id: input.id })
+          )
+          .run();
 
         if (variable instanceof ODProgrammerError) continue;
 
-        variables[variable[0]] = variable[1];
+        variables[input.id] = variable;
       }
 
-      return [node.id, variables] as const;
+      return RecordVariable.create({
+        value: variables,
+        name: node.name,
+        id: nodeId,
+      });
     };
 }

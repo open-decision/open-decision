@@ -13,7 +13,7 @@ export function FormNodeSidebarContent({ nodeId }: Props) {
   const t = useTranslations("builder.nodeEditingSidebar");
   const treeClient = useTreeClient();
 
-  const node = useTree(FormNode.get.single(nodeId));
+  const node = useTree(FormNode.getSingle(nodeId));
 
   if (node instanceof Error) return null;
 
