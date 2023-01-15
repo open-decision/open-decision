@@ -19,10 +19,13 @@ export const MultiSelectVariableType = VariablePluginBaseType(
   DataType
 );
 
-export type IMultiSelectVariable = VariableType<typeof MultiSelectVariableType>;
+export type TMultiSelectVariable = VariableType<typeof MultiSelectVariableType>;
 
-export class MultiSelectVariablePlugin extends VariablePlugin<IMultiSelectVariable> {
+export class MultiSelectVariablePlugin extends VariablePlugin<
+  TMultiSelectVariable,
+  typeof MultiSelectVariableType
+> {
   constructor() {
-    super(typeName, MultiSelectVariableType);
+    super(typeName, MultiSelectVariableType, { values: [] });
   }
 }

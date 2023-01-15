@@ -1,14 +1,27 @@
-import { IVariablePluginBase, VariablePlugin } from "@open-decision/tree-type";
+import {
+  VariablePlugin,
+  VariablePluginBaseType,
+  VariableType,
+} from "@open-decision/tree-type";
+import { z } from "zod";
 
 const typeName = "text-variable";
 
-export type ITextVariable = IVariablePluginBase<
-  typeof typeName,
-  { value?: string }
->;
+const DataType = z.object({
+  value: z.string().optional(),
+});
 
-export class TextVariablePlugin extends VariablePlugin<ITextVariable> {
+export const TextVariablePluginType = VariablePluginBaseType(
+  typeName,
+  DataType
+);
+export type TTextVariable = VariableType<typeof TextVariablePluginType>;
+
+export class TextVariablePlugin extends VariablePlugin<
+  TTextVariable,
+  typeof TextVariablePluginType
+> {
   constructor() {
-    super(typeName);
+    super(typeName, TextVariablePluginType, {});
   }
 }

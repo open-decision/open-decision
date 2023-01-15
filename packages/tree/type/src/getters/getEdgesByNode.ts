@@ -26,6 +26,8 @@ export const getEdgesByNode =
     for (const key in tree.edges) {
       const edge = getSingle(tree)<TType>("edges")(key);
 
+      if (edge instanceof Error) continue;
+
       if (type ? isEdgeOfType(edge, type) : true) {
         if (edge.source === nodeId) {
           if (!relatedEdges.source) relatedEdges.source = {};

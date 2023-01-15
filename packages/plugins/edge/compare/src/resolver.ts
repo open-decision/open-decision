@@ -4,11 +4,11 @@ import {
   MissingEdgeForThruthyConditionError,
 } from "@open-decision/interpreter";
 import { EdgeResolver } from "@open-decision/plugins-edge-helpers";
-import { SingleSelectVariablePlugin } from "@open-decision/plugins-variable-select";
+import { SelectVariablePlugin } from "@open-decision/plugins-variable-select";
 import { ODProgrammerError } from "@open-decision/type-classes";
 import { TCompareEdge } from "./plugin";
 
-const SingleSelectVariable = new SingleSelectVariablePlugin();
+const SingleSelectVariable = new SelectVariablePlugin();
 
 export const compareEdgeResolver: EdgeResolver<TCompareEdge> =
   (treeClient) => (edge) => (context) => {

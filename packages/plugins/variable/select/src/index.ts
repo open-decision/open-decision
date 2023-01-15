@@ -14,15 +14,18 @@ const DataType = z.object({
   value: z.string().optional(),
 });
 
-export const SingleSelectVariableType = VariablePluginBaseType(
+export const SelectVariablePluginType = VariablePluginBaseType(
   typeName,
   DataType
 );
 
-export type ISelectVariable = VariableType<typeof SingleSelectVariableType>;
+export type TSelectVariable = VariableType<typeof SelectVariablePluginType>;
 
-export class SingleSelectVariablePlugin extends VariablePlugin<ISelectVariable> {
+export class SelectVariablePlugin extends VariablePlugin<
+  TSelectVariable,
+  typeof SelectVariablePluginType
+> {
   constructor() {
-    super(typeName, SingleSelectVariableType);
+    super(typeName, SelectVariablePluginType, { values: [] });
   }
 }

@@ -1,3 +1,3 @@
 import { TInputPlugin } from "../../InputPlugin";
 
-export type InputWithRequired = TInputPlugin<any, { required: boolean }>;
+export type InputWithRequired = TInputPlugin<string, { required: boolean }>;

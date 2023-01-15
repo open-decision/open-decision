@@ -8,7 +8,7 @@ export const reorderAnswers =
   (treeClient: TTreeClient) => {
     const input = treeClient.pluginEntity.get.single<TType>("inputs", inputId);
 
-    if (!input) return;
+    if (input instanceof Error) return;
 
     input.data.answers = newAnswers;
   };

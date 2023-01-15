@@ -1,16 +1,14 @@
 import { z } from "zod";
-import {
-  VariablePlugin,
-  VariablePluginBaseType,
-  VariableType,
-} from "@open-decision/tree-type";
+import { VariablePlugin, VariableType } from "@open-decision/tree-type";
 
 const DataType = z.object({});
 
 const typeName = "empty-variable";
 
-export const EmptyVariableType = VariablePluginBaseType(typeName, DataType);
+export type IEmptyVariable = VariableType<EmptyVariablePlugin["Type"]>;
 
-export type IEmptyVariable = VariableType<typeof EmptyVariableType>;
-
-export class EmptyVariablePlugin extends VariablePlugin<IEmptyVariable> {}
+export class EmptyVariablePlugin extends VariablePlugin {
+  constructor() {
+    super(typeName, DataType, {});
+  }
+}

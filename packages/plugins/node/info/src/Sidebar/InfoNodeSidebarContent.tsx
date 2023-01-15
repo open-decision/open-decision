@@ -17,7 +17,7 @@ export function InfoNodeSidebarContent({ nodeId }: Props) {
   const t = useTranslations("builder.nodeEditingSidebar");
 
   const content = useTree((treeClient) => {
-    const node = InfoNode.get.single(nodeId)(treeClient);
+    const node = InfoNode.getSingle(nodeId)(treeClient);
 
     if (node instanceof Error) return undefined;
 

@@ -6,20 +6,20 @@ import {
 import { RichText } from "@open-decision/rich-text-editor";
 import {
   EntityPluginType,
-  NodePlugin,
   NodePluginBaseType,
+  NodePluginWithVariable,
   TReadOnlyTreeClient,
   TTreeClient,
 } from "@open-decision/tree-type";
 import { z } from "zod";
+import { ODProgrammerError } from "@open-decision/type-classes";
+import { DirectEdgePlugin } from "@open-decision/plugins-edge-direct";
 import {
   createVariableFromInput,
-  formNodeInputPlugins,
-  IFormNodeInput,
-} from "./createInputPlugins";
-import { ODProgrammerError } from "@open-decision/type-classes";
-import { fromPairs } from "remeda";
-import { DirectEdgePlugin } from "@open-decision/plugins-edge-direct";
+  FormNodeVariableType,
+  TFormNodeVariable,
+} from "./FormNodeVariable";
+import { formNodeInputPlugins, TFormNodeInput } from "./FormNodeInputs";
 
 const DirectEdge = new DirectEdgePlugin();
 
@@ -32,17 +32,22 @@ const DataType = z.object({
 
 export const FormNodePluginType = NodePluginBaseType(typeName, DataType);
 
-export type TFormNodePlugin = EntityPluginType<typeof FormNodePluginType>;
+export type TFormNode = EntityPluginType<typeof FormNodePluginType>;
 
-export class FormNodePlugin extends NodePlugin<TFormNodePlugin> {
+export class FormNodePlugin extends NodePluginWithVariable<
+  TFormNode,
+  typeof FormNodeVariableType
+> {
   inputPlugins = formNodeInputPlugins;
 
   constructor() {
     super(typeName, FormNodePluginType, { inputs: [] });
   }
 
+  VariableType = FormNodeVariableType;
+
   updateNodeContent =
-    (nodeId: string, content: TFormNodePlugin["data"]["content"]) =>
+    (nodeId: string, content: TFormNode["data"]["content"]) =>
     (treeClient: TTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 
@@ -98,7 +103,7 @@ export class FormNodePlugin extends NodePlugin<TFormNodePlugin> {
     (treeClient: TTreeClient) => {
       const edge = edgeId ? treeClient.edges.get.single(edgeId) : undefined;
 
-      if (!edge) return;
+      if (edge instanceof Error) return;
 
       if (!edge?.target && newItem) {
         const newEdge = DirectEdge.create({
@@ -126,30 +131,35 @@ export class FormNodePlugin extends NodePlugin<TFormNodePlugin> {
   getByInput = getNodesByInput(this);
 
   createVariable =
-    (answers: Record<string, string | string[] | undefined>) =>
+    (
+      nodeId: string,
+      answer: Record<string, string | string[] | undefined>,
+      readable = false
+    ) =>
     (treeClient: TTreeClient | TReadOnlyTreeClient) => {
-      return fromPairs(
-        Object.entries(answers).map(([key, answer]) => {
-          const input = treeClient.pluginEntity.get.single<IFormNodeInput>(
-            "inputs",
-            key
-          );
+      const node = this.getSingle(nodeId)(treeClient);
 
-          if (input instanceof ODProgrammerError) {
-            throw input;
-          }
+      if (node instanceof Error) return undefined;
 
-          const variable = createVariableFromInput(input, answer);
+      const variables: TFormNodeVariable = {};
 
-          if (!variable)
-            throw new ODProgrammerError({
-              code: "INVALID_INPUT_TYPE",
-              message:
-                "You have provided an input of a type that the form node does not support.",
-            });
+      for (const key in answer) {
+        const value = answer[key];
 
-          return [variable.id, variable];
-        })
-      );
+        const input = treeClient.pluginEntity.get.single<TFormNodeInput>(
+          "inputs",
+          key
+        );
+
+        if (input instanceof ODProgrammerError) continue;
+
+        const variable = createVariableFromInput(node, input, value, readable);
+
+        if (variable instanceof ODProgrammerError) continue;
+
+        variables[variable[0]] = variable[1];
+      }
+
+      return [node.id, variables] as const;
     };
 }

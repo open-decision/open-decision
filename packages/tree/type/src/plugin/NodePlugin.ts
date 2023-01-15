@@ -39,18 +39,6 @@ export abstract class NodePlugin<
   TType extends TNodePlugin = TNodePlugin
 > extends EntityPlugin<TType> {
   pluginType = "nodes" as const;
-  isAddable: boolean;
-
-  constructor(
-    type: TType["type"],
-    Type: z.ZodType<TType>,
-    defaultData: TType["data"],
-    config: { isAddable: boolean } = { isAddable: true }
-  ) {
-    super(type, Type, defaultData);
-
-    this.isAddable = config?.isAddable;
-  }
 
   create =
     (
@@ -72,17 +60,22 @@ export abstract class NodePlugin<
   getSingle =
     (nodeId: string) => (treeClient: TTreeClient | TReadOnlyTreeClient) =>
       treeClient.nodes.get.single<TType>(nodeId);
+
   getCollection =
     (nodeIds: string[]) => (treeClient: TTreeClient | TReadOnlyTreeClient) =>
       treeClient.nodes.get.collection<TType>(nodeIds);
+
   getAll = (treeClient: TTreeClient | TReadOnlyTreeClient) =>
     treeClient.nodes.get.all<TType>();
+
   subscribeSingle =
     (nodeId: string) => (treeClient: TTreeClient | TReadOnlyTreeClient) =>
       treeClient.nodes.get.single<TType>(nodeId);
+
   subscribeCollection =
     (nodeIds: string[]) => (treeClient: TTreeClient | TReadOnlyTreeClient) =>
       treeClient.nodes.get.collection<TType>(nodeIds);
+
   subscribeAll = (treeClient: TTreeClient | TReadOnlyTreeClient) =>
     treeClient.nodes.get.all<TType>();
 

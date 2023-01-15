@@ -9,7 +9,7 @@ export const addAnswer =
   (treeClient: TTreeClient) => {
     const input = getInput<TType>()(inputId)(treeClient);
 
-    if (!input) return;
+    if (input instanceof Error) return;
 
     if (!input.data.answers) input.data.answers = [];
 

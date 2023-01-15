@@ -1,5 +1,5 @@
 import { Form, Separator, Stack } from "@open-decision/design-system";
-import { ITextInput, TextInputPlugin } from "../textPlugin";
+import { TTextInput, TextInputPlugin } from "../textPlugin";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { InputComponentProps, InputConfig } from "../../../helpers";
 import { ODProgrammerError } from "@open-decision/type-classes";
@@ -13,7 +13,7 @@ export const TextInputEditor = ({
   const treeClient = useTreeClient();
 
   const input = useTree((treeClient) => {
-    const input = treeClient.pluginEntity.get.single<ITextInput>(
+    const input = treeClient.pluginEntity.get.single<TTextInput>(
       "inputs",
       inputId
     );

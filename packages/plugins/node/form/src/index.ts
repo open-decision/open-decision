@@ -4,6 +4,7 @@ import { FormNodePlugin } from "./formNodePlugin";
 import { FormNodeSidebar } from "./FormNodeSidebar/FormNodeSidebar";
 import { FormNodeRenderer } from "./FormNodeRenderer";
 import { IdCardIcon } from "@radix-ui/react-icons";
+import { FormNodeInputType } from "./FormNodeInputs";
 
 export * from "./formNodePlugin";
 const plugin = new FormNodePlugin();
@@ -16,8 +17,6 @@ export const FormNodePluginObject = {
   },
   Renderer: FormNodeRenderer,
   type: plugin.type,
-  pluginEntities: { inputs: z.record(plugin.inputType) },
+  pluginEntities: { inputs: z.record(FormNodeInputType) },
   Icon: IdCardIcon,
 };
-
-export { formNodeInputType } from "./createInputPlugins";

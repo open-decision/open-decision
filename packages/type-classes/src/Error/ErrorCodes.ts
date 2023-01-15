@@ -27,6 +27,7 @@ export const ProgrammerErrors = [
   "MISSING_INPUT_ON_DECISION_NODE",
   "INVALID_TOKEN_PAYLOAD",
   "FETCH_BLOB_FUNCTION_NOT_PROVIDED",
+  "MISSING_NAME",
 ] as const;
 
 export const InterpreterErrors = [

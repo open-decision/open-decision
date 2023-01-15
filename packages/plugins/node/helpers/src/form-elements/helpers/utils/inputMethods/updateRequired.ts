@@ -7,5 +7,7 @@ export const updateRequired =
   (treeClient: TTreeClient) => {
     const input = treeClient.pluginEntity.get.single<TType>("inputs", inputId);
 
+    if (input instanceof Error) return;
+
     input.data.required = newValue;
   };

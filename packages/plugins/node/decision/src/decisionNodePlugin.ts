@@ -4,14 +4,12 @@ import {
   NodePluginBaseType,
   TReadOnlyTreeClient,
   TTreeClient,
-  NodePlugin,
   EntityPluginType,
+  NodePluginWithVariable,
 } from "@open-decision/tree-type";
 import { z } from "zod";
 import {
-  createVariableFromInput,
   DecisionNodeInputPlugins,
-  DecisionNodeVariable,
   TDecisionNodeInputs,
 } from "./createInputPlugins";
 import { ODProgrammerError } from "@open-decision/type-classes";
@@ -20,6 +18,10 @@ import {
   getInputByNode,
   getNodesByInput,
 } from "@open-decision/plugins-node-helpers";
+import { SelectVariablePlugin } from "@open-decision/plugins-variable-select";
+import { match } from "ts-pattern";
+
+const SelectVariable = new SelectVariablePlugin();
 
 export const typeName = "decision" as const;
 
@@ -30,16 +32,20 @@ const DataType = z.object({
 
 export const DecisionNodePluginType = NodePluginBaseType(typeName, DataType);
 
-export type TDecisionNodePlugin = EntityPluginType<
-  typeof DecisionNodePluginType
->;
+export type TDecisionNode = EntityPluginType<typeof DecisionNodePluginType>;
+export type TDecisionNodeVariable = z.infer<DecisionNodePlugin["VariableType"]>;
 
-export class DecisionNodePlugin extends NodePlugin<TDecisionNodePlugin> {
+export class DecisionNodePlugin extends NodePluginWithVariable<
+  TDecisionNode,
+  typeof SelectVariable.Type
+> {
   inputPlugins = DecisionNodeInputPlugins;
 
   constructor() {
     super(typeName, DecisionNodePluginType, {});
   }
+
+  VariableType = SelectVariable.Type;
 
   inputs = {
     getByNode: getInputByNode<TDecisionNodeInputs>(this),
@@ -69,7 +75,7 @@ export class DecisionNodePlugin extends NodePlugin<TDecisionNodePlugin> {
   };
 
   updateData =
-    (nodeId: string, data: Partial<TDecisionNodePlugin["data"]>) =>
+    (nodeId: string, data: Partial<TDecisionNode["data"]>) =>
     (treeClient: TTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 
@@ -84,8 +90,9 @@ export class DecisionNodePlugin extends NodePlugin<TDecisionNodePlugin> {
   updateInput = (nodeId: string, newInputId: string) => {
     return this.updateData(nodeId, { input: newInputId });
   };
+
   updateNodeContent =
-    (nodeId: string, content: TDecisionNodePlugin["data"]["content"]) =>
+    (nodeId: string, content: TDecisionNode["data"]["content"]) =>
     (treeClient: TTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 
@@ -123,39 +130,28 @@ export class DecisionNodePlugin extends NodePlugin<TDecisionNodePlugin> {
       }
     };
 
-  getVariableByInput = (inputId: string) => (treeClient: TTreeClient) => {
-    const input = treeClient.pluginEntity.get.single<TDecisionNodeInputs>(
-      "inputs",
-      inputId
-    );
-
-    if (input instanceof ODProgrammerError) return undefined;
-
-    return input?.id;
-  };
-
   createVariable =
     (nodeId: string, answer: string) =>
     (treeClient: TTreeClient | TReadOnlyTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 
-      if (node instanceof Error) return undefined;
-
-      if (!node.data.input) return;
+      if (node instanceof Error) return node;
+      if (!node.data.input) return undefined;
 
       const input = treeClient.pluginEntity.get.single<TDecisionNodeInputs>(
         "inputs",
         node.data.input
       );
 
-      if (input instanceof ODProgrammerError) return undefined;
+      if (input instanceof ODProgrammerError) return input;
 
-      const variable = createVariableFromInput(input, answer);
-
-      return variable;
+      return match(input)
+        .with({ type: "select" }, (input) =>
+          SelectVariable.create(node, {
+            value: answer,
+            values: input.data.answers,
+          })
+        )
+        .run();
     };
-
-  getAnswer = (nodeId: string, answers: any) => {
-    return answers[nodeId] as DecisionNodeVariable | undefined;
-  };
 }

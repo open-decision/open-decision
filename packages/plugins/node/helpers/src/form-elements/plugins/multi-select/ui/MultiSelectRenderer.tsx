@@ -1,4 +1,4 @@
-import { IMultiSelectInput } from "../multiSelectPlugin";
+import { TMultiSelectInput } from "../multiSelectPlugin";
 
 import { Form, Stack } from "@open-decision/design-system";
 import { useInterpreterTree } from "@open-decision/interpreter-react";
@@ -7,7 +7,7 @@ import { ODProgrammerError } from "@open-decision/type-classes";
 
 export function MultiSelectInputRenderer({ inputId }: RendererComponentProps) {
   const input = useInterpreterTree((treeClient) => {
-    const input = treeClient.pluginEntity.get.single<IMultiSelectInput>(
+    const input = treeClient.pluginEntity.get.single<TMultiSelectInput>(
       "inputs",
       inputId
     );

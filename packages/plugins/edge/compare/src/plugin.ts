@@ -30,6 +30,8 @@ export class CompareEdgePlugin extends EdgePlugin<TCompareEdge> {
     (edgeId: string, newValue: string) => (treeClient: TTreeClient) => {
       const edge = this.getSingle(edgeId)(treeClient);
 
+      if (edge instanceof Error) return;
+
       edge.data.condition?.valueIds.push(newValue);
     };
 
@@ -38,12 +40,16 @@ export class CompareEdgePlugin extends EdgePlugin<TCompareEdge> {
     (treeClient: TTreeClient) => {
       const edge = this.getSingle(edgeId)(treeClient);
 
+      if (edge instanceof Error) return;
+
       edge.data.condition.valueIds[index] = newValue;
     };
 
   removeValue =
     (edgeId: string, index: number) => (treeClient: TTreeClient) => {
       const edge = this.getSingle(edgeId)(treeClient);
+
+      if (edge instanceof Error) return;
 
       edge.data.condition.valueIds.splice(index, 1);
     };

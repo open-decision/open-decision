@@ -11,11 +11,11 @@ export const PlaceholderInputPluginType = InputPluginBaseType(
   DataType
 );
 
-export type IPlaceholderInput = EntityPluginType<
+export type TPlaceholderInput = EntityPluginType<
   typeof PlaceholderInputPluginType
 >;
 
-export class PlaceholderInputPlugin extends InputPlugin<IPlaceholderInput> {
+export class PlaceholderInputPlugin extends InputPlugin<TPlaceholderInput> {
   constructor() {
     super(typeName, PlaceholderInputPluginType);
   }

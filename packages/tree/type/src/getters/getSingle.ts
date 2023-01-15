@@ -1,9 +1,17 @@
 import { pathOr } from "remeda";
 import { TEntityPluginBase } from "../plugin";
 import { Tree } from "../type-classes";
+import { lookupEntityOfKey } from "./findEntityOfKey";
 
 export const getSingle =
   (tree: Tree.TTree) =>
-  <IEntityBase extends TEntityPluginBase>(entity: keyof Tree.TTree) =>
-  <TType extends IEntityBase>(id: string) =>
-    pathOr(tree, [entity, id], undefined) as TType;
+  <IEntityBase extends TEntityPluginBase>(entityCollection: keyof Tree.TTree) =>
+  <TType extends IEntityBase>(id: string) => {
+    const entity = pathOr(tree, [entityCollection, id], undefined);
+
+    if (!entity) {
+      return lookupEntityOfKey(entityCollection)(tree, id);
+    }
+
+    return entity as TType;
+  };

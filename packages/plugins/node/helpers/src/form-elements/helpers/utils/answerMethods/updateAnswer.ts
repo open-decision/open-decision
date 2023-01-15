@@ -8,7 +8,7 @@ export const updateAnswer =
   (inputId: string, answerId: string, newValue: string) =>
   (treeClient: TTreeClient) => {
     const input = getInput<TType>()(inputId)(treeClient);
-    if (!input) return;
+    if (input instanceof Error) return;
 
     const answer = getAnswer<TType>()(input, answerId);
 

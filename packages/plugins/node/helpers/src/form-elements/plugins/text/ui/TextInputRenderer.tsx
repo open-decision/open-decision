@@ -2,11 +2,11 @@ import { Form } from "@open-decision/design-system";
 import { useInterpreterTree } from "@open-decision/interpreter-react";
 import { ODProgrammerError } from "@open-decision/type-classes";
 import { RendererComponentProps } from "../../../helpers";
-import { ITextInput } from "../textPlugin";
+import { TTextInput } from "../textPlugin";
 
 export function TextInputRenderer({ inputId }: RendererComponentProps) {
   const input = useInterpreterTree((treeClient) => {
-    const input = treeClient.pluginEntity.get.single<ITextInput>(
+    const input = treeClient.pluginEntity.get.single<TTextInput>(
       "inputs",
       inputId
     );

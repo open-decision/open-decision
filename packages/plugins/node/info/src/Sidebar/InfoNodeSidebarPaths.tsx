@@ -10,9 +10,7 @@ type Props = Pick<TNodeSidebarProps, "nodeId" | "onNodeCreate">;
 export function InfoNodeSidebarPaths({ nodeId, onNodeCreate }: Props) {
   const edge = useTree(
     (treeClient) =>
-      Object.values(
-        DirectEdge.get.byNode(nodeId)(treeClient)?.source ?? {}
-      )?.[0]
+      Object.values(DirectEdge.getByNode(nodeId)(treeClient)?.source ?? {})?.[0]
   );
 
   const nodeNames = useTree((treeClient) =>

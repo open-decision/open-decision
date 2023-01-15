@@ -1,6 +1,6 @@
 import { TAnswer } from "@open-decision/interpreter";
 import { MultiSelectVariablePlugin } from "@open-decision/plugins-variable-multi-select";
-import { SingleSelectVariablePlugin } from "@open-decision/plugins-variable-select";
+import { SelectVariablePlugin } from "@open-decision/plugins-variable-select";
 import { TextVariablePlugin } from "@open-decision/plugins-variable-text";
 import { z } from "zod";
 import { ODProgrammerError } from "@open-decision/type-classes";
@@ -17,7 +17,7 @@ import { GroupNodePlugin } from "@open-decision/node-editor";
 const DecisionNode = new DecisionNodePlugin();
 const GroupNode = new GroupNodePlugin();
 
-const SingleSelectVariable = new SingleSelectVariablePlugin();
+const SingleSelectVariable = new SelectVariablePlugin();
 const MultiSelectVariable = new MultiSelectVariablePlugin();
 const TextVariable = new TextVariablePlugin();
 

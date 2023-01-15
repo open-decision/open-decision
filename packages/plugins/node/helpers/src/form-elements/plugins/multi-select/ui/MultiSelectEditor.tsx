@@ -3,7 +3,7 @@ import { Button, Form, Icon, Separator } from "@open-decision/design-system";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { AnimatePresence, Reorder, useDragControls } from "framer-motion";
 import {
-  IMultiSelectInput,
+  TMultiSelectInput,
   MultiSelectInputPlugin,
 } from "../multiSelectPlugin";
 import { TrashIcon } from "@radix-ui/react-icons";
@@ -28,7 +28,7 @@ export function MultiSelectInputConfigurator({
   const ref = React.useRef<HTMLDivElement | null>(null);
 
   const input = useTree((treeClient) => {
-    const input = treeClient.pluginEntity.get.single<IMultiSelectInput>(
+    const input = treeClient.pluginEntity.get.single<TMultiSelectInput>(
       "inputs",
       inputId
     );

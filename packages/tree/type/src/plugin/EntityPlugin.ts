@@ -30,11 +30,23 @@ export abstract class EntityPlugin<
   type: TType["type"];
   declare defaultData: TType["data"];
   declare abstract pluginType: "edges" | "nodes" | "pluginEntity";
-  declare Type: ReturnType<typeof EntityPluginBaseType>;
+  declare isAddable: boolean;
+
+  declare Type: ReturnType<
+    typeof EntityPluginBaseType<
+      TEntityPluginBase["type"],
+      TEntityPluginBase["data"]
+    >
+  >;
 
   constructor(
     typeName: TType["type"],
-    Type: ReturnType<typeof EntityPluginBaseType>,
+    Type: ReturnType<
+      typeof EntityPluginBaseType<
+        TEntityPluginBase["type"],
+        TEntityPluginBase["data"]
+      >
+    >,
     defaultData: TType["data"] = {}
   ) {
     this.type = typeName;
@@ -59,13 +71,17 @@ export abstract class EntityPlugin<
   abstract create: (
     data: any
   ) => (treeClient: TTreeClient) => TType | ODError | ODProgrammerError;
+
   abstract delete: deleteEntityFn;
 
   abstract getSingle: (
     id: string
   ) => (
     treeClient: TTreeClient | TReadOnlyTreeClient
-  ) => TType | ODProgrammerError;
+  ) =>
+    | TType
+    | ODProgrammerError<"ENTITY_NOT_FOUND">
+    | ODProgrammerError<"ENTITY_FOUND_ON_DIFFERENT_ENTITY_KEY">;
 
   abstract getCollection: (
     ids: string[]
@@ -79,7 +95,12 @@ export abstract class EntityPlugin<
 
   abstract subscribeSingle: (
     id: string
-  ) => (treeClient: TReadOnlyTreeClient) => TType | ODProgrammerError;
+  ) => (
+    treeClient: TReadOnlyTreeClient
+  ) =>
+    | TType
+    | ODProgrammerError<"ENTITY_NOT_FOUND">
+    | ODProgrammerError<"ENTITY_FOUND_ON_DIFFERENT_ENTITY_KEY">;
 
   abstract subscribeCollection: (
     ids: string[]

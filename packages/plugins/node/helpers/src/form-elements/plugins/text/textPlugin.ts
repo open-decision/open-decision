@@ -9,14 +9,14 @@ const DataType = z.object({ required: z.boolean() });
 
 export const TextInputPluginType = InputPluginBaseType(typeName, DataType);
 
-export type ITextInput = EntityPluginType<typeof TextInputPluginType>;
+export type TTextInput = EntityPluginType<typeof TextInputPluginType>;
 
-export class TextInputPlugin extends InputPlugin<ITextInput> {
+export class TextInputPlugin extends InputPlugin<TTextInput> {
   constructor() {
     super(typeName, TextInputPluginType, { required: false });
 
     this.defaultData = { required: false };
   }
 
-  updateRequired = updateRequired<ITextInput>();
+  updateRequired = updateRequired<TTextInput>();
 }

@@ -9,6 +9,7 @@ import { RichTextRenderer } from "@open-decision/rich-text-editor";
 import { ODProgrammerError } from "@open-decision/type-classes";
 import { TDecisionNodeInputs } from "./createInputPlugins";
 import { DecisionNodePlugin } from "./decisionNodePlugin";
+import { isError as isErrorGuard } from "remeda";
 
 const DecisionNode = new DecisionNodePlugin();
 
@@ -32,28 +33,28 @@ export const DecisionNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
 
   const answer = isError
     ? undefined
-    : DecisionNode.getAnswer(node.id, getAnswers());
+    : DecisionNode.getVariable(node.id, getAnswers())(treeClient);
 
   const methods = Form.useForm<{ [x: string]: string }>({
     defaultValues:
-      !isError && answer && node.data.input
-        ? { [node.data.input]: answer.data.value }
+      !isError && !isErrorGuard(answer) && node.data.input
+        ? { [node.data.input]: answer?.data.value }
         : {},
   });
 
   const onSubmit = methods.handleSubmit((values) => {
     if (isError || !node.data.input) return;
 
-    const answer = DecisionNode.createVariable(
+    const variable = DecisionNode.createVariable(
       node.id,
       values[node.data.input]
     )(treeClient);
 
-    if (!answer) return;
+    if (!variable || variable instanceof Error) return;
 
     send({
       type: "ADD_USER_ANSWER",
-      answer: { [node.id]: answer },
+      answer: variable,
     });
 
     send("EVALUATE_NODE_CONDITIONS");

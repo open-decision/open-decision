@@ -24,11 +24,11 @@ export const MultiSelectInputPluginType = InputPluginBaseType(
   DataType
 );
 
-export type IMultiSelectInput = EntityPluginType<
+export type TMultiSelectInput = EntityPluginType<
   typeof MultiSelectInputPluginType
 >;
 
-export class MultiSelectInputPlugin extends InputPlugin<IMultiSelectInput> {
+export class MultiSelectInputPlugin extends InputPlugin<TMultiSelectInput> {
   constructor() {
     super(typeName, MultiSelectInputPluginType, {
       answers: [],
@@ -38,16 +38,16 @@ export class MultiSelectInputPlugin extends InputPlugin<IMultiSelectInput> {
 
   createAnswer = createAnswer;
 
-  addAnswer = addAnswer<IMultiSelectInput>();
+  addAnswer = addAnswer<TMultiSelectInput>();
 
-  getAnswer = getAnswer<IMultiSelectInput>();
+  getAnswer = getAnswer<TMultiSelectInput>();
 
-  updateAnswer = updateAnswer<IMultiSelectInput>();
+  updateAnswer = updateAnswer<TMultiSelectInput>();
 
-  reorderAnswers = reorderAnswers<IMultiSelectInput>();
+  reorderAnswers = reorderAnswers<TMultiSelectInput>();
 
-  deleteAnswer = deleteAnswer<IMultiSelectInput>();
+  deleteAnswer = deleteAnswer<TMultiSelectInput>();
 
-  getInputsWithAnswers = getInputsWithAnswers<IMultiSelectInput>();
-  updateRequired = updateRequired<IMultiSelectInput>();
+  getInputsWithAnswers = getInputsWithAnswers<TMultiSelectInput>();
+  updateRequired = updateRequired<TMultiSelectInput>();
 }

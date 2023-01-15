@@ -7,7 +7,8 @@ import {
   EntityPluginType,
 } from "@open-decision/tree-type";
 import { z } from "zod";
-import { createFn, NodePlugin } from "@open-decision/plugins-node-helpers";
+
+const DirectEdge = new DirectEdgePlugin();
 
 export const typeName = "info" as const;
 
@@ -24,18 +25,6 @@ export class InfoNodePlugin extends NodePlugin<IInfoNodePlugin> {
   constructor() {
     super(typeName, InfoNodePluginType, {});
   }
-
-  create: createFn<typeof this.Type> =
-    ({ data, ...rest }) =>
-    (treeClient) => {
-      const newNode = treeClient.nodes.create.node({
-        type: this.typeName,
-        data: { ...this.defaultData, ...data },
-        ...rest,
-      });
-
-      return this.Type.parse(newNode);
-    };
 
   updateNodeContent =
     (nodeId: string, content: IInfoNodePlugin["data"]["content"]) =>

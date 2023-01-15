@@ -42,17 +42,25 @@ export class ODError<
   }
 }
 
-export type ODProgrammerErrorConstructorParameters = {
+export type ODProgrammerErrorConstructorParameters<
+  TCode extends TProgrammerErrors
+> = {
   link?: string;
-  code: TProgrammerErrors;
+  code: TCode;
   message?: string;
 };
 
-export class ODProgrammerError extends Error {
+export class ODProgrammerError<
+  TCode extends TProgrammerErrors = TProgrammerErrors
+> extends Error {
   link?: string;
-  code?: TProgrammerErrors;
+  code?: TCode;
 
-  constructor({ link, code, message }: ODProgrammerErrorConstructorParameters) {
+  constructor({
+    link,
+    code,
+    message,
+  }: ODProgrammerErrorConstructorParameters<TCode>) {
     super(message);
     this.code = code;
     this.link = link;
