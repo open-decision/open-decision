@@ -6,6 +6,7 @@ import {
   EntityPluginBaseType,
 } from "./EntityPlugin";
 import { z } from "zod";
+import { VariablePluginBaseType } from "./VariablePlugin";
 
 export type TNodePlugin<
   TType extends string = string,
@@ -36,9 +37,29 @@ export const NodePluginBaseType = <
   });
 
 export abstract class NodePlugin<
-  TType extends TNodePlugin = TNodePlugin
+  TType extends TNodePlugin = TNodePlugin,
+  TVariableType extends ReturnType<typeof VariablePluginBaseType> = ReturnType<
+    typeof VariablePluginBaseType
+  >
 > extends EntityPlugin<TType> {
   pluginType = "nodes" as const;
+  declare VariableType: TVariableType;
+
+  constructor(
+    typeName: TType["type"],
+    Type: ReturnType<
+      typeof NodePluginBaseType<
+        TEntityPluginBase["type"],
+        TEntityPluginBase["data"]
+      >
+    >,
+    VariableType: TVariableType,
+    defaultData: TType["data"] = {}
+  ) {
+    super(typeName, Type, defaultData);
+
+    this.VariableType = VariableType;
+  }
 
   create =
     (
@@ -82,4 +103,6 @@ export abstract class NodePlugin<
   delete: deleteEntityFn = (nodeIds) => (treeClient) => {
     treeClient.nodes.delete(nodeIds);
   };
+
+  abstract getVariable: () => z.infer<TVariableType>;
 }
