@@ -7,7 +7,7 @@ import {
 import { Renderer, RendererPrimitives } from "@open-decision/renderer";
 import { RichTextRenderer } from "@open-decision/rich-text-editor";
 import { clone } from "remeda";
-import { GroupNodePlugin } from "./groupNodePlugin";
+import { GroupNodePlugin } from "./GroupNodePlugin";
 import { createSubTree } from "./utils/createSubtree";
 import {
   Button,
@@ -79,14 +79,16 @@ function RendererComponent({
       >
         <RendererContent
           onDone={() => {
+            const variable = GroupNode.createVariable(
+              nodeId,
+              iterationResults
+            )(treeClient);
+
+            if (!variable) return;
+
             send({
               type: "ADD_USER_ANSWER",
-              answer: {
-                [groupNode.id]: {
-                  type: "group",
-                  answers: iterationResults.map((result) => result.answers),
-                },
-              },
+              answer: variable,
             });
             send({ type: "EVALUATE_NODE_CONDITIONS" });
           }}
@@ -131,11 +133,8 @@ const RendererContent = ({
         onSubmit={methods.handleSubmit(onDone)}
       >
         <RendererPrimitives.ContentArea>
-          {groupNode.data.content ? (
-            <RichTextRenderer
-              content={groupNode.data.content}
-              className="px-0"
-            />
+          {groupNode.content ? (
+            <RichTextRenderer content={groupNode.content} className="px-0" />
           ) : null}
         </RendererPrimitives.ContentArea>
         <Heading size="small" as="h3">
@@ -144,7 +143,7 @@ const RendererContent = ({
         <ol className={stackClasses({}, ["gap-4 mb-4"])}>
           {iterationResults.map((_, index) => (
             <li className={textClasses({ size: "large" })} key={index}>
-              {groupNode.data.title ?? "Ausfüllung"}
+              {groupNode.title ?? "Ausfüllung"}
             </li>
           ))}
         </ol>
@@ -163,11 +162,8 @@ const RendererContent = ({
     return (
       <RendererPrimitives.Form methods={methods}>
         <RendererPrimitives.ContentArea>
-          {groupNode.data.content ? (
-            <RichTextRenderer
-              content={groupNode.data.content}
-              className="px-0"
-            />
+          {groupNode.content ? (
+            <RichTextRenderer content={groupNode.content} className="px-0" />
           ) : null}
         </RendererPrimitives.ContentArea>
         <ButtonRow
@@ -205,7 +201,7 @@ const ButtonRow = ({ onClick, groupNodeId }: ButtonRowProps) => {
         <Icon>
           <PlusIcon />
         </Icon>
-        {`${groupNode.data.cta ?? "Antwort"} hinzufügen`}
+        {`${groupNode.cta ?? "Antwort"} hinzufügen`}
       </Button>
     </Row>
   );

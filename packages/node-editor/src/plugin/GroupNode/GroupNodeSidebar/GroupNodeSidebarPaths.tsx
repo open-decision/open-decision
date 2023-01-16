@@ -3,7 +3,7 @@ import { Form, TargetSelector } from "@open-decision/design-system";
 import { DirectEdgePlugin } from "@open-decision/plugins-edge-direct";
 import { TNodeSidebarProps } from "@open-decision/plugins-node-helpers";
 import { useTree } from "@open-decision/tree-sync";
-import { GroupNodePlugin } from "../groupNodePlugin";
+import { GroupNodePlugin } from "../GroupNodePlugin";
 
 const GroupNode = new GroupNodePlugin();
 const DirectEdge = new DirectEdgePlugin();

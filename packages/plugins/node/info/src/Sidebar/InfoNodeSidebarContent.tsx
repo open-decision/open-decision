@@ -2,7 +2,7 @@ import { stackClasses, Tabs } from "@open-decision/design-system";
 import * as React from "react";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { useTranslations } from "next-intl";
-import { InfoNodePlugin } from "../infoNodePlugin";
+import { InfoNodePlugin } from "../InfoNodePlugin";
 import { RichTextEditor } from "@open-decision/rich-text-editor";
 
 const InfoNode = new InfoNodePlugin();
@@ -21,7 +21,7 @@ export function InfoNodeSidebarContent({ nodeId }: Props) {
 
     if (node instanceof Error) return undefined;
 
-    return node.data.content;
+    return node.content;
   });
 
   return (

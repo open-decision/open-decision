@@ -7,8 +7,7 @@ export const getInputsWithAnswers =
 
     const filteredInputs = Object.values(inputs).reduce(
       function filterInputsWithoutAnswer(previousValue, input) {
-        if ((input.data.answers?.length ?? 0) > 0)
-          previousValue[input.id] = input;
+        if ((input.answers?.length ?? 0) > 0) previousValue[input.id] = input;
 
         return previousValue;
       },

@@ -7,7 +7,7 @@ import {
 import { RichTextEditor } from "@open-decision/rich-text-editor";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { useTranslations } from "next-intl";
-import { DecisionNodePlugin } from "../decisionNodePlugin";
+import { DecisionNodePlugin } from "../DecisionNodePlugin";
 import { InputPlugin } from "./InputPlugin";
 
 const DecisionNode = new DecisionNodePlugin();
@@ -34,14 +34,14 @@ export function DecisionNodeSidebarContent({ nodeId }: Props) {
           onUpdate={({ editor }) =>
             DecisionNode.updateNodeContent(nodeId, editor.getJSON())(treeClient)
           }
-          content={node.data.content}
+          content={node.content}
           Label={t("richTextEditor.label")}
           maxHeight={400}
         />
       </section>
       <Stack className="gap-2">
         <Heading size="extra-small">Inputs</Heading>
-        <InputPlugin inputId={node.data.input} nodeId={nodeId} />
+        <InputPlugin inputId={node.input} nodeId={nodeId} />
       </Stack>
     </Tabs.Content>
   );

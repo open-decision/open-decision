@@ -1,5 +1,4 @@
 import { TAnswer } from "@open-decision/interpreter";
-import { ListVariablePlugin } from "packages/plugins/variable/list/src";
 import { SelectVariablePlugin } from "@open-decision/plugins-variable-select";
 import { TextVariablePlugin } from "@open-decision/plugins-variable-text";
 import { z } from "zod";

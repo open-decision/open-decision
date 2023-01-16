@@ -8,7 +8,7 @@ import { RendererPrimitives } from "@open-decision/renderer";
 import { RichTextRenderer } from "@open-decision/rich-text-editor";
 import { mapValues } from "remeda";
 import { TFormNodeInput } from "./FormNodeInputs";
-import { FormNodePlugin } from "./formNodePlugin";
+import { FormNodePlugin } from "./FormNodePlugin";
 
 const FormNode = new FormNodePlugin();
 
@@ -18,19 +18,21 @@ export const FormNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
   const node = FormNode.getSingle(nodeId)(treeClient);
 
   const inputs = useInterpreterTree((treeClient) => {
-    if (node instanceof Error || !node.data.inputs) return undefined;
+    if (node instanceof Error || !node.inputs) return undefined;
 
     return treeClient.pluginEntity.get.collection<TFormNodeInput>(
       "inputs",
-      node.data.inputs
+      node.inputs
     );
   });
 
   const answer =
-    node instanceof Error ? {} : FormNode.getVariable(node.id, getAnswers());
+    node instanceof Error
+      ? undefined
+      : FormNode.getVariable(node.id, getAnswers());
 
   const methods = Form.useForm({
-    defaultValues: mapValues(answer ?? {}, (value) => value?.data.value),
+    defaultValues: mapValues(answer?.value ?? {}, (value) => value?.value),
   });
 
   if (node instanceof Error) return null;
@@ -53,8 +55,8 @@ export const FormNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
       {...props}
     >
       <RendererPrimitives.ContentArea>
-        {node.data.content ? (
-          <RichTextRenderer content={node.data.content} key={node.id} />
+        {node.content ? (
+          <RichTextRenderer content={node.content} key={node.id} />
         ) : null}
         <RendererPrimitives.Form methods={methods} onSubmit={onSubmit}>
           {Object.values(inputs ?? {}).map((input) => {

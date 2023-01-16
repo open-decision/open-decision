@@ -11,7 +11,7 @@ export const addAnswer =
 
     if (input instanceof Error) return;
 
-    if (!input.data.answers) input.data.answers = [];
+    if (!input.answers) input.answers = [];
 
-    input.data.answers.push(answer);
+    input.answers.push(answer);
   };

@@ -1,9 +1,10 @@
 import { TReadOnlyTreeClient, TTreeClient } from "@open-decision/tree-type";
-import { TNodePlugin, NodePlugin } from "@open-decision/tree-type";
+import { NodePlugin } from "@open-decision/tree-type";
 import { isEmpty } from "ramda";
+import { NodeWithInput } from "./sharedTypes";
 
 export const getNodesByInput =
-  <TType extends TNodePlugin>(nodePlugin: NodePlugin<TType>) =>
+  <TType extends NodeWithInput>(nodePlugin: NodePlugin<TType>) =>
   (inputId: string) =>
   (treeClient: TTreeClient | TReadOnlyTreeClient) => {
     const nodes = nodePlugin.getAll(treeClient);
@@ -14,7 +15,7 @@ export const getNodesByInput =
     for (const key in nodes) {
       const node = nodes[key];
 
-      if (node.data.input === inputId) {
+      if (node.input === inputId) {
         relatedNodes[key] = node;
       }
     }

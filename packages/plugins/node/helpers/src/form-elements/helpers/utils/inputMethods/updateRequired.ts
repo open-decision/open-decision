@@ -9,5 +9,5 @@ export const updateRequired =
 
     if (input instanceof Error) return;
 
-    input.data.required = newValue;
+    input.required = newValue;
   };

@@ -2,9 +2,8 @@ import {
   EntityPlugin,
   TTreeClient,
   TReadOnlyTreeClient,
-  EntityPluginBaseType,
+  IEntityPluginBase,
 } from "@open-decision/tree-type";
-import { z } from "zod";
 import {
   deleteInput,
   addInput,
@@ -14,43 +13,18 @@ import {
   updateInput,
 } from "./utils/inputMethods";
 
-export const InputPluginBaseType = <
-  TType extends string,
-  TDataType extends z.ZodType
->(
-  type: TType,
-  data: TDataType
-) =>
-  EntityPluginBaseType(type, data).extend({
-    label: z.string().optional(),
-    name: z.string().optional(),
-  });
-
-export type TInputPlugin<
-  TTypeName extends string = string,
-  TDataType = any
-> = z.infer<
-  ReturnType<typeof InputPluginBaseType<TTypeName, z.ZodType<TDataType>>>
->;
+export interface IInputPlugin<TTypeName extends string = string>
+  extends IEntityPluginBase<TTypeName> {
+  label?: string;
+  name?: string;
+}
 
 export abstract class InputPlugin<
-  TType extends TInputPlugin = TInputPlugin
+  TType extends IInputPlugin = IInputPlugin
 > extends EntityPlugin<TType> {
   pluginType = "pluginEntity" as const;
-  create =
-    (
-      data: Omit<TType, "id" | "type" | "data"> & {
-        data?: Partial<TType["data"]>;
-      }
-    ) =>
-    (_treeClient: TTreeClient | TReadOnlyTreeClient) => {
-      return {
-        id: crypto.randomUUID(),
-        type: this.type,
-        ...data,
-        data: { ...this.defaultData, ...data?.data },
-      } as TType;
-    };
+
+  abstract create: (data: any) => (treeClient: TTreeClient) => TType;
 
   addInput = addInput;
   update = updateInput;

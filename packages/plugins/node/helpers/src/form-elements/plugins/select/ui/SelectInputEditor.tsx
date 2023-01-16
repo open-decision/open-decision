@@ -2,7 +2,7 @@ import { Button, Icon, Form, Separator } from "@open-decision/design-system";
 import * as React from "react";
 import { AnimatePresence, Reorder, useDragControls } from "framer-motion";
 import { CrossCircledIcon } from "@radix-ui/react-icons";
-import { TSelectInput, SelectInputPlugin } from "../selectPlugin";
+import { ISelectInput, SelectInputPlugin } from "../SelectInputPlugin";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import {
   InputPrimaryActionSlotProps,
@@ -39,7 +39,7 @@ export const SelectInputConfigurator = ({
   const ref = React.useRef<HTMLDivElement | null>(null);
 
   const input = useTree((treeClient) => {
-    const input = treeClient.pluginEntity.get.single<TSelectInput>(
+    const input = treeClient.pluginEntity.get.single<ISelectInput>(
       "inputs",
       inputId
     );
@@ -52,9 +52,9 @@ export const SelectInputConfigurator = ({
   const methods = Form.useForm({
     defaultValues: {
       label: input?.label ?? "",
-      required: [input?.data.required ? "required" : ""],
+      required: [input?.required ? "required" : ""],
       ...Object.fromEntries(
-        input?.data.answers.map((answer) => [answer.id, answer.value]) ?? []
+        input?.answers.map((answer) => [answer.id, answer.value]) ?? []
       ),
     },
   });
@@ -66,13 +66,13 @@ export const SelectInputConfigurator = ({
       className="list-none p-0 grid"
       ref={ref}
       axis="y"
-      values={input.data.answers ?? []}
+      values={input.answers ?? []}
       onReorder={(newOrder) => {
         SelectInput.reorderAnswers(input.id, newOrder)(treeClient);
       }}
     >
       <Form.Root methods={methods}>
-        {input.data.answers?.map((answer, index) => {
+        {input.answers?.map((answer, index) => {
           return (
             <Answer
               answer={answer}

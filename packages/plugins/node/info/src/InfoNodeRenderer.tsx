@@ -3,7 +3,7 @@ import { useInterpreter } from "@open-decision/interpreter-react";
 import { NodeRenderer } from "@open-decision/plugins-node-helpers";
 import { RendererPrimitives } from "@open-decision/renderer";
 import { RichTextRenderer } from "@open-decision/rich-text-editor";
-import { InfoNodePlugin } from "./infoNodePlugin";
+import { InfoNodePlugin } from "./InfoNodePlugin";
 
 const InfoNode = new InfoNodePlugin();
 
@@ -23,9 +23,9 @@ export const InfoNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
       {...props}
     >
       <RendererPrimitives.ContentArea>
-        {node.data.content ? (
+        {node.content ? (
           <RichTextRenderer
-            content={node.data.content}
+            content={node.content}
             key={node.id}
             className="px-0"
           />

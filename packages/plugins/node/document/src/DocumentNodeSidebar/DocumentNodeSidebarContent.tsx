@@ -13,7 +13,7 @@ import { sidebarCardClasses } from "@open-decision/node-editor";
 import { RichTextEditor } from "@open-decision/rich-text-editor";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { useTranslations } from "next-intl";
-import { DocumentNodePlugin } from "../documentNodePlugin";
+import { DocumentNodePlugin } from "../DocumentNodePlugin";
 import { Cross1Icon } from "@radix-ui/react-icons";
 
 const DocumentNode = new DocumentNodePlugin();
@@ -43,12 +43,12 @@ export function DocumentNodeSidebarContent({ nodeId }: Props) {
                 editor.getJSON()
               )(treeClient)
             }
-            content={node.data.content}
+            content={node.content}
             Label={t("richTextEditor.label")}
           />
         </section>
-        {node.data.templateUuid ? (
-          <TemplateCard templateUuid={node.data.templateUuid} nodeId={nodeId} />
+        {node.templateUuid ? (
+          <TemplateCard templateUuid={node.templateUuid} nodeId={nodeId} />
         ) : (
           <EmptyTemplateCard nodeId={nodeId} />
         )}

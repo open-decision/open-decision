@@ -1,37 +1,24 @@
-import {
-  VariablePlugin,
-  VariablePluginBaseType,
-  VariableType,
-} from "@open-decision/tree-type";
-import { z } from "zod";
+import { IVariablePlugin, VariablePlugin } from "@open-decision/tree-type";
 
 const typeName = "list";
 
-const Value = z.object({ id: z.string().uuid(), value: z.string() });
+export interface IListVariable extends IVariablePlugin<typeof typeName> {
+  values: { id: string; value: string }[];
+  value?: string[];
+}
 
-const DataType = z.object({
-  values: z.array(Value).optional(),
-  value: z.array(z.string()).optional(),
-});
-
-export const ListVariableType = VariablePluginBaseType(typeName, DataType);
-
-export type TListVariable = VariableType<typeof ListVariableType>;
-
-export class ListVariablePlugin extends VariablePlugin<
-  TListVariable,
-  typeof ListVariableType
-> {
+export class ListVariablePlugin extends VariablePlugin<IListVariable> {
   constructor() {
-    super(typeName, ListVariableType);
+    super(typeName);
   }
 
   create = (
-    data: Partial<Omit<TListVariable, "type">> & Pick<TListVariable, "id">
+    data: Partial<Omit<IListVariable, "type">> & Pick<IListVariable, "id">
   ) => {
     return {
       type: this.type,
+      values: [],
       ...data,
-    } satisfies TListVariable;
+    } satisfies IListVariable;
   };
 }

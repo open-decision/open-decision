@@ -3,10 +3,10 @@ import {
   SelectInputConfigurator,
   SelectInputPrimaryActionSlot,
 } from "./ui/SelectInputEditor";
-import { SelectInputPlugin } from "./selectPlugin";
+import { SelectInputPlugin } from "./SelectInputPlugin";
 
-export * from "./selectPlugin";
-export type { TSelectInput as ISelectInput } from "./selectPlugin";
+export * from "./SelectInputPlugin";
+export type { ISelectInput as ISelectInput } from "./SelectInputPlugin";
 
 const plugin = new SelectInputPlugin();
 

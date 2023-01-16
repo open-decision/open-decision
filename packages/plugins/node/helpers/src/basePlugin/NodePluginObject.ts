@@ -1,8 +1,8 @@
 import { ClassNameArrayProp, onNodeCreate } from "@open-decision/design-system";
 import { EdgePluginObject } from "@open-decision/plugins-edge-helpers";
 import {
-  TEntityPluginBase,
-  TNodePlugin,
+  IEntityPluginBase,
+  INodePlugin,
   NodePlugin,
 } from "@open-decision/tree-type";
 import { NodeProps } from "reactflow";
@@ -39,8 +39,8 @@ export type NodeRendererProps = {
 export type NodeRenderer = (props: NodeRendererProps) => JSX.Element | null;
 
 export type NodePluginObject<
-  TType extends TNodePlugin = TNodePlugin,
-  TPluginEntities extends TEntityPluginBase = TEntityPluginBase
+  TType extends INodePlugin = INodePlugin,
+  TPluginEntities extends IEntityPluginBase = IEntityPluginBase
 > = {
   Editor: {
     Node: CanvasNode;

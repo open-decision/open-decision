@@ -1,17 +1,17 @@
 import { isEmpty } from "ramda";
 import { Tree } from "../type-classes";
 
-import { TEdgePlugin } from "../plugin/EdgePlugin";
+import { IEdgePlugin } from "../plugin/EdgePlugin";
 import { getSingle } from "./getSingle";
 
-const isEdgeOfType = <TType extends TEdgePlugin>(
+const isEdgeOfType = <TType extends IEdgePlugin>(
   edge: TType,
   type: string
 ): edge is TType => edge.type === type;
 
 export const getEdgesByNode =
   (tree: Tree.TTree) =>
-  <TType extends TEdgePlugin>(nodeId: string, type?: string) => {
+  <TType extends IEdgePlugin>(nodeId: string, type?: string) => {
     if (!tree.edges) return undefined;
 
     // We loop over the edges and check if the node is present on the edge.

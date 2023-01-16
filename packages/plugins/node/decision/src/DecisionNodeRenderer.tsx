@@ -8,8 +8,7 @@ import { RendererPrimitives } from "@open-decision/renderer";
 import { RichTextRenderer } from "@open-decision/rich-text-editor";
 import { ODProgrammerError } from "@open-decision/type-classes";
 import { TDecisionNodeInputs } from "./createInputPlugins";
-import { DecisionNodePlugin } from "./decisionNodePlugin";
-import { isError as isErrorGuard } from "remeda";
+import { DecisionNodePlugin } from "./DecisionNodePlugin";
 
 const DecisionNode = new DecisionNodePlugin();
 
@@ -20,11 +19,11 @@ export const DecisionNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
   const isError = node instanceof Error;
 
   const inputType = useInterpreterTree((treeClient) => {
-    if (isError || !node.data.input) return undefined;
+    if (isError || !node.input) return undefined;
 
     const input = treeClient.pluginEntity.get.single<TDecisionNodeInputs>(
       "inputs",
-      node.data.input
+      node.input
     );
 
     if (input instanceof ODProgrammerError) return undefined;
@@ -37,30 +36,28 @@ export const DecisionNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
 
   const methods = Form.useForm<{ [x: string]: string }>({
     defaultValues:
-      !isError && !isErrorGuard(answer) && node.data.input
-        ? { [node.data.input]: answer?.data.value }
-        : {},
+      !isError && answer && node.input ? { [node.input]: answer?.value } : {},
   });
 
   const onSubmit = methods.handleSubmit((values) => {
-    if (isError || !node.data.input) return;
+    if (isError || !node.input) return;
 
     const variable = DecisionNode.createVariable(
       node.id,
-      values[node.data.input]
+      values[node.input]
     )(treeClient);
 
     if (!variable || variable instanceof Error) return;
 
     send({
       type: "ADD_USER_ANSWER",
-      answer: { [variable[0]]: variable[1] },
+      answer: { [variable.id]: variable },
     });
 
     send("EVALUATE_NODE_CONDITIONS");
   });
 
-  if (isError || !inputType || !node.data.input) return null;
+  if (isError || !inputType || !node.input) return null;
 
   const FormElement = DecisionNode.inputPlugins[inputType].RendererComponent;
 
@@ -71,15 +68,15 @@ export const DecisionNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
       {...props}
     >
       <RendererPrimitives.ContentArea>
-        {node.data.content ? (
+        {node.content ? (
           <RichTextRenderer
-            content={node.data.content}
+            content={node.content}
             key={node.id}
             className="px-0"
           />
         ) : null}
         <RendererPrimitives.Form methods={methods} onSubmit={onSubmit}>
-          <FormElement inputId={node.data.input} />
+          <FormElement inputId={node.input} />
         </RendererPrimitives.Form>
       </RendererPrimitives.ContentArea>
     </RendererPrimitives.Container>

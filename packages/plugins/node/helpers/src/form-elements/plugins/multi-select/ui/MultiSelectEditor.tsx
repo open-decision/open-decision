@@ -3,9 +3,9 @@ import { Button, Form, Icon, Separator } from "@open-decision/design-system";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { AnimatePresence, Reorder, useDragControls } from "framer-motion";
 import {
-  TMultiSelectInput,
+  IMultiSelectInput,
   MultiSelectInputPlugin,
-} from "../multiSelectPlugin";
+} from "../MultiSelectPlugin";
 import { TrashIcon } from "@radix-ui/react-icons";
 import {
   InputComponentProps,
@@ -28,7 +28,7 @@ export function MultiSelectInputConfigurator({
   const ref = React.useRef<HTMLDivElement | null>(null);
 
   const input = useTree((treeClient) => {
-    const input = treeClient.pluginEntity.get.single<TMultiSelectInput>(
+    const input = treeClient.pluginEntity.get.single<IMultiSelectInput>(
       "inputs",
       inputId
     );
@@ -40,9 +40,9 @@ export function MultiSelectInputConfigurator({
   const methods = Form.useForm({
     defaultValues: {
       label: input?.label ?? "",
-      required: [input?.data.required ? "required" : ""],
+      required: [input?.required ? "required" : ""],
       ...Object.fromEntries(
-        input?.data.answers.map((answer) => [answer.id, answer.value]) ?? []
+        input?.answers.map((answer) => [answer.id, answer.value]) ?? []
       ),
     },
   });
@@ -54,13 +54,13 @@ export function MultiSelectInputConfigurator({
       className="list-none p-0 grid"
       ref={ref}
       axis="y"
-      values={input.data.answers ?? []}
+      values={input.answers ?? []}
       onReorder={(newOrder) => {
         return MultiSelect.reorderAnswers(input.id, newOrder)(treeClient);
       }}
     >
       <Form.Root methods={methods}>
-        {input.data.answers.map((answer) => {
+        {input.answers.map((answer) => {
           return (
             <Answer
               groupRef={ref}

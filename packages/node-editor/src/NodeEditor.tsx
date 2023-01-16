@@ -88,7 +88,7 @@ export function Sidebar({ nodePlugins, edgePlugins }: SidebarProps) {
         <SidebarContent
           nodeId={nodeId}
           onNodeCreate={({ name }) =>
-            PlaceholderNode.create({ data: {}, position: { x: 0, y: 0 }, name })
+            PlaceholderNode.create({ position: { x: 0, y: 0 }, name })
           }
           nodePlugins={nodePlugins}
           edgePlugins={edgePlugins}

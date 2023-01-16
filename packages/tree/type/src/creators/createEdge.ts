@@ -3,14 +3,12 @@ import { v4 as uuid } from "uuid";
 import { isValidEdge } from "../validators";
 import { ODError } from "@open-decision/type-classes";
 
-export type NewEdgeData = Omit<Edge.TEdge, "id">;
-
 /**
  * Used to create a valid new edge. This needs the full tree to make sure the edge is valid.
  */
 export const createEdge =
   (tree: Tree.TTree) =>
-  <TEdgeType extends Edge.TEdge>(edge: NewEdgeData) => {
+  <TEdgeType extends Edge.TEdge>(edge: Omit<TEdgeType, "id">) => {
     // Make sure the edge does not connect the node to itself.
     if (edge.source === edge.target)
       return new ODError({

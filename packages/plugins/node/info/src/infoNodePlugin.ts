@@ -1,39 +1,48 @@
 import { DirectEdgePlugin } from "@open-decision/plugins-edge-direct";
-import { RichText } from "@open-decision/rich-text-editor";
+import { TRichText } from "@open-decision/rich-text-editor";
 import {
   NodePlugin,
   TTreeClient,
-  NodePluginBaseType,
-  EntityPluginType,
+  INodePlugin,
+  TReadOnlyTreeClient,
 } from "@open-decision/tree-type";
-import { z } from "zod";
 
 const DirectEdge = new DirectEdgePlugin();
 
 export const typeName = "info" as const;
 
-const DataType = z.object({
-  content: RichText.optional(),
-  target: z.string().optional(),
-});
-
-export const InfoNodePluginType = NodePluginBaseType(typeName, DataType);
-
-export type IInfoNodePlugin = EntityPluginType<typeof InfoNodePluginType>;
+export interface IInfoNodePlugin extends INodePlugin<typeof typeName> {
+  content?: TRichText;
+  target?: string;
+}
 
 export class InfoNodePlugin extends NodePlugin<IInfoNodePlugin> {
   constructor() {
-    super(typeName, InfoNodePluginType, {});
+    super(typeName);
   }
 
+  create =
+    ({
+      position = { x: 0, y: 0 },
+      ...data
+    }: Omit<IInfoNodePlugin, "id" | "type">) =>
+    (_treeClient: TTreeClient | TReadOnlyTreeClient) => {
+      return {
+        id: crypto.randomUUID(),
+        type: this.type,
+        position,
+        ...data,
+      } satisfies IInfoNodePlugin;
+    };
+
   updateNodeContent =
-    (nodeId: string, content: IInfoNodePlugin["data"]["content"]) =>
+    (nodeId: string, content: IInfoNodePlugin["content"]) =>
     (treeClient: TTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 
       if (node instanceof Error) throw node;
 
-      node.data.content = content;
+      node.content = content;
     };
 
   updateTarget =
@@ -53,7 +62,6 @@ export class InfoNodePlugin extends NodePlugin<IInfoNodePlugin> {
 
       if (!edge?.target && newItem) {
         const newEdge = DirectEdge.create({
-          data: undefined,
           source: nodeId,
           target: newItem,
         })(treeClient);

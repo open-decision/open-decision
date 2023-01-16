@@ -9,7 +9,7 @@ import { useInterpreter } from "@open-decision/interpreter-react";
 import { useMutation } from "@tanstack/react-query";
 import { RichTextRenderer } from "@open-decision/rich-text-editor";
 import { RendererPrimitives } from "@open-decision/renderer";
-import { DocumentNodePlugin } from "./documentNodePlugin";
+import { DocumentNodePlugin } from "./DocumentNodePlugin";
 import { createReadableAnswers } from "./utils/createReadableAnswers";
 import { isODError, ODError } from "@open-decision/type-classes";
 import { useTranslations } from "next-intl";
@@ -37,7 +37,7 @@ export const DocumentNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
     async () => {
       if (node instanceof Error) throw node;
 
-      if (!node.data.templateUuid) {
+      if (!node.templateUuid) {
         throw new ODError({
           code: "MISSING_TEMPLATE_UUID",
           message: "Missing template uuid to generate document.",
@@ -83,9 +83,9 @@ export const DocumentNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
       {...props}
     >
       <RendererPrimitives.ContentArea>
-        {node.data.content ? (
+        {node.content ? (
           <RichTextRenderer
-            content={node.data.content}
+            content={node.content}
             key={node.id}
             className="px-0"
           />

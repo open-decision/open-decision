@@ -191,7 +191,6 @@ export const useTreeAPI = (client: TClient = APIClient) => {
 
         const node = PlaceholderNode.create({
           position: { x: 0, y: 0 },
-          data: {},
         })(treeClient);
         const yNode = new Y.Map<Node.TRecord>([[node.id, node]]);
 

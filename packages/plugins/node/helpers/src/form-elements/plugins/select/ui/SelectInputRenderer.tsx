@@ -1,6 +1,6 @@
 import { Form, Stack } from "@open-decision/design-system";
 import { useInterpreterTree } from "@open-decision/interpreter-react";
-import { TSelectInput } from "../selectPlugin";
+import { ISelectInput } from "../SelectInputPlugin";
 import { RendererComponentProps, RendererRadioGroup } from "../../../helpers";
 import { ODProgrammerError } from "@open-decision/type-classes";
 
@@ -9,7 +9,7 @@ export function SelectInputRendererComponent({
   className,
 }: RendererComponentProps) {
   const input = useInterpreterTree((treeClient) => {
-    const input = treeClient.pluginEntity.get.single<TSelectInput>(
+    const input = treeClient.pluginEntity.get.single<ISelectInput>(
       "inputs",
       inputId
     );
@@ -33,7 +33,7 @@ export function SelectInputRendererComponent({
         <RendererRadioGroup
           required
           name={input.id}
-          answers={input.data.answers}
+          answers={input.answers}
           key={inputId}
           activeValue={watch(inputId)}
         />

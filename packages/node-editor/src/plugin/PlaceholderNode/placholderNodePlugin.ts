@@ -1,23 +1,32 @@
 import {
   NodePlugin,
-  EntityPluginType,
-  NodePluginBaseType,
+  INodePlugin,
+  TTreeClient,
+  TReadOnlyTreeClient,
 } from "@open-decision/tree-type";
-import { z } from "zod";
 
 export const typeName = "placeholder" as const;
-const DataType = z.object({});
 
-export const PlaceholderNodePluginType = NodePluginBaseType(typeName, DataType);
-
-export type IPlaceholderNode = EntityPluginType<
-  typeof PlaceholderNodePluginType
->;
+export type IPlaceholderNode = INodePlugin<typeof typeName>;
 
 export class PlaceholderNodePlugin extends NodePlugin<IPlaceholderNode> {
   constructor() {
-    super(typeName, PlaceholderNodePluginType, {});
+    super(typeName);
 
     this.isAddable = false;
   }
+
+  create =
+    ({
+      position = { x: 0, y: 0 },
+      ...data
+    }: Omit<IPlaceholderNode, "id" | "type">) =>
+    (_treeClient: TTreeClient | TReadOnlyTreeClient) => {
+      return {
+        id: crypto.randomUUID(),
+        type: this.type,
+        position,
+        ...data,
+      } satisfies IPlaceholderNode;
+    };
 }

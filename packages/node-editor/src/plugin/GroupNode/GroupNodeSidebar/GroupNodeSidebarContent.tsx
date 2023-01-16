@@ -10,7 +10,7 @@ import { RichTextEditor } from "@open-decision/rich-text-editor";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { useTranslations } from "next-intl";
 import { sidebarCardClasses } from "../../components";
-import { GroupNodePlugin } from "../groupNodePlugin";
+import { GroupNodePlugin } from "../GroupNodePlugin";
 
 const GroupNode = new GroupNodePlugin();
 
@@ -27,8 +27,8 @@ export function GroupNodeSidebarContent({ nodeId }: Props) {
       node instanceof Error
         ? {}
         : {
-            title: node.data?.title ?? "",
-            cta: node.data?.cta ?? "",
+            title: node?.title ?? "",
+            cta: node?.cta ?? "",
           },
   });
 
@@ -42,7 +42,7 @@ export function GroupNodeSidebarContent({ nodeId }: Props) {
           onUpdate={({ editor }) =>
             GroupNode.updateNodeContent(nodeId, editor.getJSON())(treeClient)
           }
-          content={node.data.content}
+          content={node.content}
           Label={(props) => (
             <Label className="m-0 mb-3 block" {...props}>
               {t("richTextEditor.label")}

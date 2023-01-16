@@ -1,36 +1,50 @@
 import { DirectEdgePlugin } from "@open-decision/plugins-edge-direct";
-import { RichText } from "@open-decision/rich-text-editor";
 import {
   NodePlugin,
   TReadOnlyTreeClient,
   Tree,
   TTreeClient,
-  NodePluginBaseType,
-  EntityPluginType,
+  INodePlugin,
+  NodePluginWithVariable,
+  IVariablePlugin,
 } from "@open-decision/tree-type";
-import { z } from "zod";
+import { TRichText } from "@open-decision/rich-text-editor";
+import { InterpreterContext } from "@open-decision/interpreter";
 
 const DirectEdge = new DirectEdgePlugin();
 
-export const typeName = "node-group" as const;
+export interface IGroupNodeVariable extends IVariablePlugin<"group"> {
+  value: Record<string, IVariablePlugin<string>>[];
+}
 
-const DataType = z.object({
-  children: z.array(z.string()),
-  content: RichText.optional(),
-  cta: z.string().optional(),
-  tree: Tree.Type.optional(),
-  title: z.string().optional(),
-});
+export const typeName = "group" as const;
 
-export const GroupNodePluginType = NodePluginBaseType(typeName, DataType);
+export interface IGroupNode extends INodePlugin<typeof typeName> {
+  content?: TRichText;
+  cta?: string;
+  tree?: Tree.TTree;
+  title?: string;
+}
 
-export type TGroupNode = EntityPluginType<typeof GroupNodePluginType>;
-
-export class GroupNodePlugin extends NodePlugin<TGroupNode> {
+export class GroupNodePlugin
+  extends NodePlugin<IGroupNode>
+  implements NodePluginWithVariable<IGroupNodeVariable>
+{
   constructor() {
-    super(typeName, GroupNodePluginType, { children: [] });
+    super(typeName);
     this.isAddable = false;
   }
+
+  create =
+    ({ position = { x: 0, y: 0 }, ...data }: Omit<IGroupNode, "id" | "type">) =>
+    (_treeClient: TTreeClient | TReadOnlyTreeClient) => {
+      return {
+        id: crypto.randomUUID(),
+        type: this.type,
+        position,
+        ...data,
+      } satisfies IGroupNode;
+    };
 
   updateTitle =
     (nodeId: string, newTitle: string) =>
@@ -39,7 +53,7 @@ export class GroupNodePlugin extends NodePlugin<TGroupNode> {
 
       if (node instanceof Error) throw node;
 
-      node.data.title = newTitle;
+      node.title = newTitle;
     };
 
   updateCta =
@@ -49,7 +63,7 @@ export class GroupNodePlugin extends NodePlugin<TGroupNode> {
 
       if (node instanceof Error) throw node;
 
-      node.data.cta = newCta;
+      node.cta = newCta;
     };
 
   updateTarget =
@@ -69,7 +83,6 @@ export class GroupNodePlugin extends NodePlugin<TGroupNode> {
 
       if (!edge?.target && newItem) {
         const newEdge = DirectEdge.create({
-          data: undefined,
           source: nodeId,
           target: newItem,
         })(treeClient);
@@ -84,12 +97,31 @@ export class GroupNodePlugin extends NodePlugin<TGroupNode> {
     };
 
   updateNodeContent =
-    (nodeId: string, content: TGroupNode["data"]["content"]) =>
+    (nodeId: string, content: IGroupNode["content"]) =>
     (treeClient: TTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 
       if (node instanceof Error) throw node;
 
-      node.data.content = content;
+      node.content = content;
+    };
+
+  getVariable = (nodeId: string, answers: any) => {
+    return answers[nodeId] as IGroupNodeVariable | undefined;
+  };
+
+  createVariable =
+    (nodeId: string, answer: InterpreterContext[]) =>
+    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
+      const node = treeClient.nodes.get.single<IGroupNode>(nodeId);
+
+      if (node instanceof Error) return;
+
+      return {
+        id: nodeId,
+        type: this.type,
+        name: node.name,
+        value: answer.map((answer) => answer.answers),
+      } satisfies IGroupNodeVariable;
     };
 }

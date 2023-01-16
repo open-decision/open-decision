@@ -1,8 +1,8 @@
 import { TTreeClient, TReadOnlyTreeClient } from "@open-decision/tree-type";
-import { TInputPlugin } from "../../InputPlugin";
+import { IInputPlugin } from "../../InputPlugin";
 
 export const getInputs =
-  <TType extends TInputPlugin>() =>
+  <TType extends IInputPlugin>() =>
   (inputIds: string[]) =>
   (treeClient: TTreeClient | TReadOnlyTreeClient) => {
     return treeClient.pluginEntity.get.collection<TType>("inputs", inputIds);

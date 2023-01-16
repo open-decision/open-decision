@@ -22,4 +22,4 @@ export const RichText: z.ZodSchema<JSONContent> = z.lazy(() =>
   )
 );
 
-export type TRichText = z.infer<typeof RichText>;
+export type TRichText = JSONContent;

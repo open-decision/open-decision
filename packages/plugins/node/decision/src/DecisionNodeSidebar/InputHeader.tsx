@@ -2,7 +2,7 @@ import { labelClasses } from "@open-decision/design-system";
 import { InputDropdown } from "@open-decision/plugins-node-helpers";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { TDecisionNodeInputs } from "../createInputPlugins";
-import { DecisionNodePlugin } from "../decisionNodePlugin";
+import { DecisionNodePlugin } from "../DecisionNodePlugin";
 
 const DecisionNode = new DecisionNodePlugin();
 

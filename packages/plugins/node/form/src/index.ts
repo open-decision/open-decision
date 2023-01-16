@@ -1,12 +1,12 @@
 import { z } from "zod";
 import { FormCanvasNode } from "./FormCanvasNode";
-import { FormNodePlugin } from "./formNodePlugin";
+import { FormNodePlugin } from "./FormNodePlugin";
 import { FormNodeSidebar } from "./FormNodeSidebar/FormNodeSidebar";
 import { FormNodeRenderer } from "./FormNodeRenderer";
 import { IdCardIcon } from "@radix-ui/react-icons";
 import { FormNodeInputType } from "./FormNodeInputs";
 
-export * from "./formNodePlugin";
+export * from "./FormNodePlugin";
 const plugin = new FormNodePlugin();
 
 export const FormNodePluginObject = {

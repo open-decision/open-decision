@@ -33,7 +33,7 @@ export function DecisionNodeSidebarPaths({ nodeId, onNodeCreate }: Props) {
             CompareEdge.create({
               source,
               target,
-              data: { condition: { variableId: nodeId, valueIds: [] } },
+              condition: { variableId: nodeId, valueIds: [] },
             })
           }
         />
@@ -42,7 +42,7 @@ export function DecisionNodeSidebarPaths({ nodeId, onNodeCreate }: Props) {
         onClick={() => {
           const newEdge = CompareEdge.create({
             source: nodeId,
-            data: { condition: { variableId: nodeId, valueIds: [] } },
+            condition: { variableId: nodeId, valueIds: [] },
           })(treeClient);
 
           if (newEdge instanceof ODError) return;

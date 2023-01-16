@@ -1,22 +1,22 @@
-import { EntityPluginType } from "@open-decision/tree-type";
-import { z } from "zod";
-import { InputPlugin, InputPluginBaseType } from "../../helpers";
+import { TReadOnlyTreeClient, TTreeClient } from "@open-decision/tree-type";
+import { IInputPlugin, InputPlugin } from "../../helpers";
 
 export const typeName = "placeholder";
 
-const DataType = z.object({});
+export type IPlaceholderInput = IInputPlugin<typeof typeName>;
 
-export const PlaceholderInputPluginType = InputPluginBaseType(
-  typeName,
-  DataType
-);
-
-export type TPlaceholderInput = EntityPluginType<
-  typeof PlaceholderInputPluginType
->;
-
-export class PlaceholderInputPlugin extends InputPlugin<TPlaceholderInput> {
+export class PlaceholderInputPlugin extends InputPlugin<IPlaceholderInput> {
   constructor() {
-    super(typeName, PlaceholderInputPluginType);
+    super(typeName);
   }
+
+  create =
+    (data: Partial<Omit<IPlaceholderInput, "id" | "type">>) =>
+    (_treeClient: TTreeClient | TReadOnlyTreeClient) => {
+      return {
+        id: crypto.randomUUID(),
+        type: this.type,
+        ...data,
+      } satisfies IPlaceholderInput;
+    };
 }

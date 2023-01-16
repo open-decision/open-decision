@@ -1,55 +1,22 @@
-import { ODError } from "@open-decision/type-classes";
-import { z } from "zod";
-
-export const VariablePluginBaseType = <
-  TType extends string,
-  TValue extends z.ZodTypeAny,
-  TDataType extends z.ZodObject<{ value: TValue }>
->(
-  type: TType,
-  data: TDataType
-) =>
-  z
-    .object({
-      id: z.string().uuid(),
-      type: z.literal(type),
-      name: z.string().optional(),
-    })
-    .merge(data);
-
-export type TVariablePluginBase<
-  TType extends string = string,
-  TValue extends z.ZodTypeAny = z.ZodTypeAny,
-  TData extends z.ZodObject<{ value: TValue }> = z.ZodObject<{ value: TValue }>
-> = z.infer<ReturnType<typeof VariablePluginBaseType<TType, TValue, TData>>>;
+export interface IVariablePlugin<TType extends string = string> {
+  id: string;
+  type: TType;
+  name?: string;
+}
 
 export abstract class VariablePlugin<
-  TType extends TVariablePluginBase = TVariablePluginBase,
-  TZodType extends z.AnyZodObject = z.AnyZodObject
+  TType extends IVariablePlugin = IVariablePlugin
 > {
   pluginType = "variable" as const;
   type: TType["type"];
-  declare Type: TZodType;
 
-  constructor(type: TType["type"], Type: TZodType) {
+  constructor(type: TType["type"]) {
     this.type = type;
-    this.Type = Type;
   }
 
-  parse = (data: any) => {
-    const parsedData = this.Type.safeParse(data);
-
-    if (!parsedData.success) {
-      return new ODError({
-        code: "VALIDATION_ERROR",
-        message: `The data provided to the variable plugin is not of the correct Type.`,
-        additionalData: { errors: parsedData.error },
-      });
-    }
-
-    return parsedData.data;
+  get = (id: string, answers: any) => {
+    return answers[id] as TType | undefined;
   };
-
   abstract create: (
     data: Partial<Omit<TType, "type">> & Pick<TType, "id">
   ) => TType;
@@ -67,5 +34,3 @@ export abstract class VariablePlugin<
       .replace(/\u00dc/g, "Ue")
       .replace(/\W/g, "");
 }
-
-export type VariableType<TZodType extends z.ZodType> = z.infer<TZodType>;

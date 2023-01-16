@@ -1,3 +1,5 @@
-import { TInputPlugin, TAnswer } from "../..";
+import { IInputPlugin, TAnswer } from "../..";
 
-export type InputWithAnswers = TInputPlugin<string, { answers: TAnswer[] }>;
+export interface InputWithAnswers extends IInputPlugin<string> {
+  answers: TAnswer[];
+}

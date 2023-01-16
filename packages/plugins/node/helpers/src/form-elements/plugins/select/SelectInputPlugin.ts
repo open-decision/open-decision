@@ -11,14 +11,15 @@ import {
 } from "../../helpers/utils/answerMethods";
 import { updateRequired } from "../../helpers/utils/inputMethods";
 
-export const typeName = "multi-select" as const;
+export const typeName = "select" as const;
 
-export interface IMultiSelectInput extends IInputPlugin<typeof typeName> {
+export interface ISelectInput extends IInputPlugin<typeof typeName> {
   answers: TAnswer[];
+  label?: string;
   required: boolean;
 }
 
-export class MultiSelectInputPlugin extends InputPlugin<IMultiSelectInput> {
+export class SelectInputPlugin extends InputPlugin<ISelectInput> {
   constructor() {
     super(typeName);
   }
@@ -28,7 +29,7 @@ export class MultiSelectInputPlugin extends InputPlugin<IMultiSelectInput> {
       answers = [],
       required = false,
       ...data
-    }: Partial<Omit<IMultiSelectInput, "id" | "type">>) =>
+    }: Partial<Omit<ISelectInput, "id" | "type">>) =>
     (_treeClient: TTreeClient | TReadOnlyTreeClient) => {
       return {
         id: crypto.randomUUID(),
@@ -36,22 +37,22 @@ export class MultiSelectInputPlugin extends InputPlugin<IMultiSelectInput> {
         answers,
         required,
         ...data,
-      } satisfies IMultiSelectInput;
+      } satisfies ISelectInput;
     };
 
   createAnswer = createAnswer;
 
-  addAnswer = addAnswer<IMultiSelectInput>();
+  getAnswer = getAnswer<ISelectInput>();
 
-  getAnswer = getAnswer<IMultiSelectInput>();
+  addAnswer = addAnswer<ISelectInput>();
 
-  updateAnswer = updateAnswer<IMultiSelectInput>();
+  updateAnswer = updateAnswer<ISelectInput>();
 
-  reorderAnswers = reorderAnswers<IMultiSelectInput>();
+  reorderAnswers = reorderAnswers<ISelectInput>();
 
-  deleteAnswer = deleteAnswer<IMultiSelectInput>();
+  deleteAnswer = deleteAnswer<ISelectInput>();
 
-  getInputsWithAnswers = getInputsWithAnswers<IMultiSelectInput>();
+  getInputsWithAnswers = getInputsWithAnswers<ISelectInput>();
 
-  updateRequired = updateRequired<IMultiSelectInput>();
+  updateRequired = updateRequired<ISelectInput>();
 }

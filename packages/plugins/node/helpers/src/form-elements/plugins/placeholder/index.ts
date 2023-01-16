@@ -1,7 +1,7 @@
+import { PlaceholderInputPlugin } from "./PlaceholderInputPlugin";
 import { PlaceholderInputRenderer } from "./ui/PlaceholderRenderer";
-import { PlaceholderInputPlugin } from "./placeholderInputPlugin";
 
-export * from "./placeholderInputPlugin";
+export * from "./PlaceholderInputPlugin";
 
 const plugin = new PlaceholderInputPlugin();
 

@@ -1,11 +1,11 @@
-import { GroupNodePlugin } from "./groupNodePlugin";
+import { GroupNodePlugin } from "./GroupNodePlugin";
 import { GroupNodeSidebar } from "./GroupNodeSidebar/GroupNodeSidebar";
 import { GroupCanvasNode } from "./GroupCanvasNode";
 import { GroupNodeRenderer } from "./GroupNodeRenderer";
 import { GroupIcon } from "@radix-ui/react-icons";
 
-export { GroupNodePlugin } from "./groupNodePlugin";
-export type { TGroupNode as IGroupNode } from "./groupNodePlugin";
+export { GroupNodePlugin } from "./GroupNodePlugin";
+export type { IGroupNode as IGroupNode } from "./GroupNodePlugin";
 
 const plugin = new GroupNodePlugin();
 

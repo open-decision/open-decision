@@ -1,5 +1,5 @@
 import { useTreeClient } from "@open-decision/tree-sync";
-import { Edge, TNodePlugin, Node, TTreeClient } from "@open-decision/tree-type";
+import { Edge, INodePlugin, Node, TTreeClient } from "@open-decision/tree-type";
 import { ODError } from "@open-decision/type-classes";
 import { useTranslations } from "next-intl";
 import { Controller } from "react-hook-form";
@@ -8,7 +8,7 @@ import { Row } from "../Layout";
 import { addNotification } from "../Notifications";
 
 export type onNodeCreate = (
-  data: Pick<TNodePlugin, "name">
+  data: Pick<INodePlugin, "name">
 ) => (treeClient: TTreeClient) => Node.TNode;
 
 export type onEdgeCreate = (

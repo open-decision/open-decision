@@ -1,4 +1,4 @@
-import { TMultiSelectInput } from "../multiSelectPlugin";
+import { IMultiSelectInput } from "../MultiSelectPlugin";
 
 import { Form, Stack } from "@open-decision/design-system";
 import { useInterpreterTree } from "@open-decision/interpreter-react";
@@ -7,7 +7,7 @@ import { ODProgrammerError } from "@open-decision/type-classes";
 
 export function MultiSelectInputRenderer({ inputId }: RendererComponentProps) {
   const input = useInterpreterTree((treeClient) => {
-    const input = treeClient.pluginEntity.get.single<TMultiSelectInput>(
+    const input = treeClient.pluginEntity.get.single<IMultiSelectInput>(
       "inputs",
       inputId
     );
@@ -24,10 +24,10 @@ export function MultiSelectInputRenderer({ inputId }: RendererComponentProps) {
     <Form.Field
       Label={input.label ?? "Mehrfacheingabe"}
       name={inputId}
-      required={input.data.required}
+      required={input.required}
     >
       <Stack className="gap-2">
-        {input.data.answers.map((answer) => {
+        {input.answers.map((answer) => {
           return (
             <CheckboxElement
               {...register(inputId)}

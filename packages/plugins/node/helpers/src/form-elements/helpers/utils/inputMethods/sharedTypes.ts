@@ -1,3 +1,10 @@
-import { TInputPlugin } from "../../InputPlugin";
+import { INodePlugin } from "@open-decision/tree-type";
+import { IInputPlugin } from "../../InputPlugin";
 
-export type InputWithRequired = TInputPlugin<string, { required: boolean }>;
+export interface InputWithRequired extends IInputPlugin<string> {
+  required: boolean;
+}
+
+export interface NodeWithInput extends INodePlugin<string> {
+  input?: string;
+}

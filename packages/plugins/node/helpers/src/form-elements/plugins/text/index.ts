@@ -1,8 +1,8 @@
 import { TextInputEditor } from "./ui/TextInputEditor";
-import { TextInputPlugin } from "./textPlugin";
+import { TextInputPlugin } from "./TextInputPlugin";
 import { TextInputRenderer } from "./ui/TextInputRenderer";
 
-export * from "./textPlugin";
+export * from "./TextInputPlugin";
 
 const plugin = new TextInputPlugin();
 export const TextInputPluginObject = {

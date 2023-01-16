@@ -10,5 +10,5 @@ export const reorderAnswers =
 
     if (input instanceof Error) return;
 
-    input.data.answers = newAnswers;
+    input.answers = newAnswers;
   };

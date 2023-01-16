@@ -1,56 +1,19 @@
 import { ODError } from "@open-decision/type-classes";
 import { TTreeClient, TReadOnlyTreeClient } from "../treeClient";
-import {
-  TEntityPluginBase,
-  EntityPlugin,
-  EntityPluginBaseType,
-} from "./EntityPlugin";
-import { z } from "zod";
+import { IEntityPluginBase, EntityPlugin } from "./EntityPlugin";
 
-export const EdgePluginBaseType = <
-  TType extends string,
-  TDataType extends z.ZodType
->(
-  type: TType,
-  data: TDataType
-) =>
-  EntityPluginBaseType(type, data).extend({
-    source: z.string(),
-    target: z.string().optional(),
-  });
-
-export type TEdgePlugin<
-  TType extends string = string,
-  TData = any
-> = TEntityPluginBase<TType, TData> & {
+export interface IEdgePlugin<TType extends string = string>
+  extends IEntityPluginBase<TType> {
   source: string;
   target?: string;
-};
+}
 
 export abstract class EdgePlugin<
-  TType extends TEdgePlugin = TEdgePlugin
+  TType extends IEdgePlugin = IEdgePlugin
 > extends EntityPlugin<TType> {
   pluginType = "edges" as const;
 
-  create =
-    (
-      data: Omit<TType, "id" | "type" | "data"> & {
-        data?: Partial<TType["data"]>;
-      }
-    ) =>
-    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
-      const newEdge = treeClient.edges.create({
-        type: this.type,
-        ...data,
-        data: { ...this.defaultData, ...data.data },
-      });
-
-      if (newEdge instanceof ODError) {
-        return newEdge;
-      }
-
-      return newEdge as TType;
-    };
+  abstract create: (data: any) => (treeClient: TTreeClient) => TType | ODError;
 
   delete = (ids: string[]) => (treeClient: TTreeClient) => {
     treeClient.edges.delete(ids);

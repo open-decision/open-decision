@@ -40,7 +40,7 @@ import { z } from "zod";
 import { getSingle } from "./getters/getSingle";
 import { getCollection } from "./getters/getCollection";
 import { getAll } from "./getters/getAll";
-import { TEdgePlugin, TNodePlugin } from "./plugin";
+import { IEdgePlugin, INodePlugin } from "./plugin";
 
 export class ReadOnlyTreeClient<TTree extends Tree.TTree> {
   tree: Tree.TTree;
@@ -65,9 +65,9 @@ export class ReadOnlyTreeClient<TTree extends Tree.TTree> {
         childNode: createChildNode(this.tree),
       },
       get: {
-        single: getSingle(this.tree)<TNodePlugin>("nodes"),
-        collection: getCollection(this.tree)<TNodePlugin>("nodes"),
-        all: getAll(this.tree)<TNodePlugin>("nodes"),
+        single: getSingle(this.tree)<INodePlugin>("nodes"),
+        collection: getCollection(this.tree)<INodePlugin>("nodes"),
+        all: getAll(this.tree)<INodePlugin>("nodes"),
         connectableNodes: getConnectableNodes(this.tree),
         children: getChildren(this.tree),
         parents: getParents(this.tree),
@@ -83,9 +83,9 @@ export class ReadOnlyTreeClient<TTree extends Tree.TTree> {
     return {
       create: createEdge(this.tree),
       get: {
-        single: getSingle(this.tree)<TEdgePlugin>("edges"),
-        collection: getCollection(this.tree)<TEdgePlugin>("edges"),
-        all: getAll(this.tree)<TEdgePlugin>("edges"),
+        single: getSingle(this.tree)<IEdgePlugin>("edges"),
+        collection: getCollection(this.tree)<IEdgePlugin>("edges"),
+        all: getAll(this.tree)<IEdgePlugin>("edges"),
         byNode: getEdgesByNode(this.tree),
       },
     };

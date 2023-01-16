@@ -1,10 +1,10 @@
 import { Tree } from "../type-classes";
 import { pick } from "remeda";
-import { TEntityPluginBase } from "../plugin/EntityPlugin";
+import { IEntityPluginBase } from "../plugin/EntityPlugin";
 
 export const getPluginEntities =
   (tree: Tree.TTree) =>
-  <TType extends TEntityPluginBase>(entityKey: string, ids: string[]) => {
+  <TType extends IEntityPluginBase>(entityKey: string, ids: string[]) => {
     if (!tree.pluginEntities) return undefined;
     if (!tree.pluginEntities[entityKey]) return undefined;
 

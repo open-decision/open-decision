@@ -15,7 +15,7 @@ import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { CrossCircledIcon } from "@radix-ui/react-icons";
 import { Reorder, useDragControls } from "framer-motion";
 import React from "react";
-import { FormNodePlugin } from "../formNodePlugin";
+import { FormNodePlugin } from "../FormNodePlugin";
 import { PlaceholderInputPlugin } from "@open-decision/plugins-node-helpers";
 import { TFormNodeInput } from "../FormNodeInputs";
 

@@ -3,15 +3,13 @@ import {
   getInputByNode,
   getNodesByInput,
 } from "@open-decision/plugins-node-helpers";
-import { RichText } from "@open-decision/rich-text-editor";
 import {
-  EntityPluginType,
+  INodePlugin,
   NodePlugin,
-  NodePluginBaseType,
+  NodePluginWithVariable,
   TReadOnlyTreeClient,
   TTreeClient,
 } from "@open-decision/tree-type";
-import { z } from "zod";
 import { ODProgrammerError } from "@open-decision/type-classes";
 import { DirectEdgePlugin } from "@open-decision/plugins-edge-direct";
 import { formNodeInputPlugins, TFormNodeInput } from "./FormNodeInputs";
@@ -24,6 +22,7 @@ import { EmptyVariablePlugin } from "@open-decision/plugins-variable-empty";
 import { ListVariablePlugin } from "@open-decision/plugins-variable-list";
 import { SelectVariablePlugin } from "@open-decision/plugins-variable-select";
 import { TextVariablePlugin } from "@open-decision/plugins-variable-text";
+import { TRichText } from "@open-decision/rich-text-editor";
 
 const TextVariable = new TextVariablePlugin();
 const SelectVariable = new SelectVariablePlugin();
@@ -33,32 +32,44 @@ const EmptyVariable = new EmptyVariablePlugin();
 const RecordVariable = new RecordVariablePlugin();
 const DirectEdge = new DirectEdgePlugin();
 
+export type TFormNodeVariable = TRecordVariable;
+
 export const typeName = "form" as const;
 
-const DataType = z.object({
-  content: RichText.optional(),
-  inputs: z.array(z.string()),
-});
+export interface IFormNode extends INodePlugin<typeof typeName> {
+  content?: TRichText;
+  inputs: string[];
+}
 
-export const FormNodePluginType = NodePluginBaseType(typeName, DataType);
-
-export type TFormNode = EntityPluginType<typeof FormNodePluginType>;
-
-export class FormNodePlugin extends NodePlugin<TFormNode> {
+export class FormNodePlugin
+  extends NodePlugin<IFormNode>
+  implements NodePluginWithVariable<TFormNodeVariable>
+{
   inputPlugins = formNodeInputPlugins;
 
   constructor() {
-    super(typeName, FormNodePluginType, { inputs: [] });
+    super(typeName);
   }
 
+  create =
+    ({ position = { x: 0, y: 0 }, ...data }: Omit<IFormNode, "id" | "type">) =>
+    (_treeClient: TTreeClient | TReadOnlyTreeClient) => {
+      return {
+        id: crypto.randomUUID(),
+        type: this.type,
+        position,
+        ...data,
+      } satisfies IFormNode;
+    };
+
   updateNodeContent =
-    (nodeId: string, content: TFormNode["data"]["content"]) =>
+    (nodeId: string, content: IFormNode["content"]) =>
     (treeClient: TTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 
       if (node instanceof Error) throw node;
 
-      node.data.content = content;
+      node.content = content;
     };
 
   reorderInputs =
@@ -67,7 +78,7 @@ export class FormNodePlugin extends NodePlugin<TFormNode> {
 
       if (node instanceof Error) throw node;
 
-      node.data.inputs = newInputs;
+      node.inputs = newInputs;
     };
 
   connectInputAndNode =
@@ -79,7 +90,7 @@ export class FormNodePlugin extends NodePlugin<TFormNode> {
       // We get the input just to validate that it exists.
       treeClient.pluginEntity.get.single("inputs", inputId);
 
-      node.data.inputs.push(inputId);
+      node.inputs.push(inputId);
     };
 
   disconnectInputAndNode =
@@ -88,11 +99,11 @@ export class FormNodePlugin extends NodePlugin<TFormNode> {
 
       if (node instanceof Error) throw node;
 
-      const inputIndex = node.data.inputs?.findIndex((id) => id === inputId);
+      const inputIndex = node.inputs?.findIndex((id) => id === inputId);
 
       if (!(inputIndex !== null)) return;
 
-      node.data.inputs?.splice(inputIndex, 1);
+      node.inputs?.splice(inputIndex, 1);
     };
 
   updateTarget =
@@ -112,7 +123,6 @@ export class FormNodePlugin extends NodePlugin<TFormNode> {
 
       if (!edge?.target && newItem) {
         const newEdge = DirectEdge.create({
-          data: undefined,
           source: nodeId,
           target: newItem,
         })(treeClient);
@@ -128,12 +138,16 @@ export class FormNodePlugin extends NodePlugin<TFormNode> {
 
   get inputs() {
     return {
-      getByNode: getInputByNode(this),
+      getByNode: getInputByNode<IFormNode, TFormNodeInput>(this),
       add: addInput,
     };
   }
 
   getByInput = getNodesByInput(this);
+
+  getVariable = (nodeId: string, answers: any) => {
+    return answers[nodeId] as TFormNodeVariable | undefined;
+  };
 
   createVariable =
     (nodeId: string, answer: any) =>
@@ -160,14 +174,14 @@ export class FormNodePlugin extends NodePlugin<TFormNode> {
           )
           .with({ type: "select" }, (input) =>
             SelectVariable.create({
-              values: input.data.answers,
+              values: input.answers,
               value,
               id: input.id,
             })
           )
           .with({ type: "multi-select" }, (input) =>
             ListVariable.create({
-              values: input.data.answers,
+              values: input.answers,
               value,
               id: input.id,
             })

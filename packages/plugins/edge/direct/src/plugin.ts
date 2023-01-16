@@ -1,20 +1,32 @@
 import {
   EdgePlugin,
-  EdgePluginBaseType,
-  EntityPluginType,
+  IEdgePlugin,
+  TReadOnlyTreeClient,
+  TTreeClient,
 } from "@open-decision/tree-type";
-import { z } from "zod";
+import { ODError } from "@open-decision/type-classes";
 
 export const typeName = "direct" as const;
 
-const DataType = z.object({});
+export type IDirectEdge = IEdgePlugin<typeof typeName>;
 
-export const DirectEdgePluginType = EdgePluginBaseType(typeName, DataType);
-
-export type TDirectEdge = EntityPluginType<typeof DirectEdgePluginType>;
-
-export class DirectEdgePlugin extends EdgePlugin<TDirectEdge> {
+export class DirectEdgePlugin extends EdgePlugin<IDirectEdge> {
   constructor() {
-    super(typeName, DirectEdgePluginType);
+    super(typeName);
   }
+
+  create =
+    (data: Omit<IDirectEdge, "id" | "type">) =>
+    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
+      const newEdge = treeClient.edges.create<IDirectEdge>({
+        type: this.type,
+        ...data,
+      });
+
+      if (newEdge instanceof ODError) {
+        return newEdge;
+      }
+
+      return newEdge satisfies IDirectEdge;
+    };
 }

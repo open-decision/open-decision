@@ -3717,9 +3717,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@open-decision/plugins-variable-multi-select@workspace:packages/plugins/variable/multi-select":
+"@open-decision/plugins-variable-list@workspace:packages/plugins/variable/list":
   version: 0.0.0-use.local
-  resolution: "@open-decision/plugins-variable-multi-select@workspace:packages/plugins/variable/multi-select"
+  resolution: "@open-decision/plugins-variable-list@workspace:packages/plugins/variable/list"
+  dependencies:
+    zod: ^3.20.2
+  languageName: unknown
+  linkType: soft
+
+"@open-decision/plugins-variable-record@workspace:packages/plugins/variable/record":
+  version: 0.0.0-use.local
+  resolution: "@open-decision/plugins-variable-record@workspace:packages/plugins/variable/record"
   dependencies:
     zod: ^3.20.2
   languageName: unknown

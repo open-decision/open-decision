@@ -1,6 +1,6 @@
 import { DocumentCanvasNode } from "./DocumentCanvasNode";
 import { DocumentNodeSidebar } from "./DocumentNodeSidebar/DocumentNodeSidebar";
-import { DocumentNodePlugin } from "./documentNodePlugin";
+import { DocumentNodePlugin } from "./DocumentNodePlugin";
 import { DocumentNodeRenderer } from "./DocumentNodeRenderer";
 import { FileTextIcon } from "@radix-ui/react-icons";
 

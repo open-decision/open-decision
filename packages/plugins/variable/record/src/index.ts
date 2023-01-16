@@ -1,37 +1,24 @@
-import {
-  VariablePlugin,
-  VariablePluginBaseType,
-  VariableType,
-} from "@open-decision/tree-type";
-import { z } from "zod";
-import { TextVariableType } from "@open-decision/plugins-variable-text";
-import { SelectVariableType } from "@open-decision/plugins-variable-select";
-import { ListVariableType } from "@open-decision/plugins-variable-list";
-import { EmptyVariableType } from "@open-decision/plugins-variable-empty";
-
-const RecordContentType = z.discriminatedUnion("type", [
-  TextVariableType,
-  SelectVariableType,
-  ListVariableType,
-  EmptyVariableType,
-]);
+import { IEmptyVariable } from "@open-decision/plugins-variable-empty";
+import { IListVariable } from "@open-decision/plugins-variable-list";
+import { ISelectVariable } from "@open-decision/plugins-variable-select";
+import { ITextVariable } from "@open-decision/plugins-variable-text";
+import { IVariablePlugin, VariablePlugin } from "@open-decision/tree-type";
 
 const typeName = "record";
 
-const DataType = z.object({
-  value: z.record(RecordContentType).optional(),
-});
+type TRecordContent =
+  | ITextVariable
+  | ISelectVariable
+  | IListVariable
+  | IEmptyVariable;
 
-export const RecordVariableType = VariablePluginBaseType(typeName, DataType);
+export interface TRecordVariable extends IVariablePlugin<typeof typeName> {
+  value?: Record<string, TRecordContent>;
+}
 
-export type TRecordVariable = VariableType<typeof RecordVariableType>;
-
-export class RecordVariablePlugin extends VariablePlugin<
-  TRecordVariable,
-  typeof RecordVariableType
-> {
+export class RecordVariablePlugin extends VariablePlugin<TRecordVariable> {
   constructor() {
-    super(typeName, RecordVariableType);
+    super(typeName);
   }
 
   create = (

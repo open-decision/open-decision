@@ -1,12 +1,12 @@
 import { isEmpty } from "ramda";
 import { pick } from "remeda";
-import { TEntityPluginBase } from "../plugin";
+import { IEntityPluginBase } from "../plugin";
 import { Tree } from "../type-classes";
 import { ObtainKeys } from "../types";
 
 export const getCollection =
   (tree: Tree.TTree) =>
-  <IEntityBase extends TEntityPluginBase>(
+  <IEntityBase extends IEntityPluginBase>(
     entity: ObtainKeys<Tree.TTree, Record<string, any>> = "nodes"
   ) =>
   <TType extends IEntityBase>(ids: string[]) => {

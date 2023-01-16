@@ -1,30 +1,39 @@
 import {
   EdgePlugin,
-  EdgePluginBaseType,
-  EntityPluginType,
+  IEdgePlugin,
+  TReadOnlyTreeClient,
 } from "@open-decision/tree-type";
 import { TTreeClient } from "@open-decision/tree-type";
-import { z } from "zod";
+import { ODError } from "@open-decision/type-classes";
 
 export const typeName = "compare" as const;
 
-const DataType = z.object({
-  condition: z.object({
-    variableId: z.string().uuid(),
-    valueIds: z.array(z.string().uuid()),
-  }),
-});
+export interface ICompareEdge extends IEdgePlugin<typeof typeName> {
+  condition: {
+    variableId: string;
+    valueIds: string[];
+  };
+}
 
-export const CompareEdgePluginType = EdgePluginBaseType(typeName, DataType);
-
-export type TCompareEdge = EntityPluginType<typeof CompareEdgePluginType>;
-
-export class CompareEdgePlugin extends EdgePlugin<TCompareEdge> {
+export class CompareEdgePlugin extends EdgePlugin<ICompareEdge> {
   constructor() {
-    super(typeName, CompareEdgePluginType, {
-      condition: { variableId: "", valueIds: [] },
-    });
+    super(typeName);
   }
+
+  create =
+    (data: Omit<ICompareEdge, "id" | "type">) =>
+    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
+      const newEdge = treeClient.edges.create<ICompareEdge>({
+        type: this.type,
+        ...data,
+      });
+
+      if (newEdge instanceof ODError) {
+        return newEdge;
+      }
+
+      return newEdge satisfies ICompareEdge;
+    };
 
   addValue =
     (edgeId: string, newValue: string) => (treeClient: TTreeClient) => {
@@ -32,7 +41,7 @@ export class CompareEdgePlugin extends EdgePlugin<TCompareEdge> {
 
       if (edge instanceof Error) return;
 
-      edge.data.condition?.valueIds.push(newValue);
+      edge.condition?.valueIds.push(newValue);
     };
 
   updateValue =
@@ -42,7 +51,7 @@ export class CompareEdgePlugin extends EdgePlugin<TCompareEdge> {
 
       if (edge instanceof Error) return;
 
-      edge.data.condition.valueIds[index] = newValue;
+      edge.condition.valueIds[index] = newValue;
     };
 
   removeValue =
@@ -51,6 +60,6 @@ export class CompareEdgePlugin extends EdgePlugin<TCompareEdge> {
 
       if (edge instanceof Error) return;
 
-      edge.data.condition.valueIds.splice(index, 1);
+      edge.condition.valueIds.splice(index, 1);
     };
 }

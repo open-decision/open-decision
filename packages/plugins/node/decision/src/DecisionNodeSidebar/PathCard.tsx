@@ -22,7 +22,7 @@ import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { ODProgrammerError } from "@open-decision/type-classes";
 import { CrossCircledIcon } from "@radix-ui/react-icons";
 import { Controller, useFieldArray } from "react-hook-form";
-import { DecisionNodePlugin } from "../decisionNodePlugin";
+import { DecisionNodePlugin } from "../DecisionNodePlugin";
 
 const DecisionNode = new DecisionNodePlugin();
 const SelectInput = new SelectInputPlugin();
@@ -45,7 +45,7 @@ export function PathCard({ onNodeCreate, onEdgeCreate, nodeId, edge }: Props) {
 
     if (input instanceof ODProgrammerError) return undefined;
 
-    return input?.data.answers;
+    return input?.answers;
   });
 
   const targetName = useTree((treeClient) =>
@@ -61,7 +61,7 @@ export function PathCard({ onNodeCreate, onEdgeCreate, nodeId, edge }: Props) {
 
   const conditionFormMethods = Form.useForm({
     defaultValues: {
-      [edge.id]: edge.data.condition.valueIds.map((valueId) => ({
+      [edge.id]: edge.condition.valueIds.map((valueId) => ({
         value: inputAnswers?.find((answer) => answer.id === valueId)?.value,
       })),
     },

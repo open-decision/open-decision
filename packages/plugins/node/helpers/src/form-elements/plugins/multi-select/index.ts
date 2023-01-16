@@ -3,9 +3,9 @@ import {
   MultiSelectInputConfigurator,
   MultiSelectInputPrimaryActionSlot,
 } from "./ui/MultiSelectEditor";
-import { MultiSelectInputPlugin } from "./multiSelectPlugin";
+import { MultiSelectInputPlugin } from "./MultiSelectPlugin";
 
-export * from "./multiSelectPlugin";
+export * from "./MultiSelectPlugin";
 
 const plugin = new MultiSelectInputPlugin();
 

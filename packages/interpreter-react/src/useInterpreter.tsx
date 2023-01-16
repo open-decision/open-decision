@@ -15,7 +15,7 @@ import { InterpreterOptions as XStateInterpreterOptions } from "xstate";
 import { UseMachineOptions } from "@xstate/react/lib/types";
 import { ErrorCard, Stack } from "@open-decision/design-system";
 import {
-  TEdgePlugin,
+  IEdgePlugin,
   ReadOnlyTreeClient,
   TReadOnlyTreeClient,
   Tree,
@@ -26,7 +26,7 @@ function createResolver(
   treeClient: TReadOnlyTreeClient,
   edgePlugins: Record<string, EdgePluginObject>
 ) {
-  const resolvers = (edge: TEdgePlugin) => {
+  const resolvers = (edge: IEdgePlugin) => {
     const edgeResolver = edgePlugins[edge.type].resolver(treeClient);
 
     if (!edgeResolver) {

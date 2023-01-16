@@ -11,11 +11,9 @@ export const deleteAnswer =
 
     if (input instanceof ODProgrammerError) return;
 
-    const answerIndex = input.data.answers?.findIndex(
-      ({ id }) => id === answerId
-    );
+    const answerIndex = input.answers?.findIndex(({ id }) => id === answerId);
 
     if (!(answerIndex !== null)) return;
 
-    input.data.answers?.splice(answerIndex, 1);
+    input.answers?.splice(answerIndex, 1);
   };

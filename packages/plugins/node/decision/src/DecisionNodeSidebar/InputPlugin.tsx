@@ -2,7 +2,7 @@ import * as React from "react";
 import { Stack, stackClasses } from "@open-decision/design-system";
 import { sidebarCardClasses } from "@open-decision/node-editor";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
-import { DecisionNodePlugin } from "../decisionNodePlugin";
+import { DecisionNodePlugin } from "../DecisionNodePlugin";
 import { InputHeader } from "./InputHeader";
 import { TDecisionNodeInputs } from "../createInputPlugins";
 import { ODProgrammerError } from "@open-decision/type-classes";

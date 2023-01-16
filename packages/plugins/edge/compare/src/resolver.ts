@@ -6,11 +6,11 @@ import {
 import { EdgeResolver } from "@open-decision/plugins-edge-helpers";
 import { SelectVariablePlugin } from "@open-decision/plugins-variable-select";
 import { ODProgrammerError } from "@open-decision/type-classes";
-import { TCompareEdge } from "./plugin";
+import { ICompareEdge } from "./plugin";
 
-const SingleSelectVariable = new SelectVariablePlugin();
+const SelectVariable = new SelectVariablePlugin();
 
-export const compareEdgeResolver: EdgeResolver<TCompareEdge> =
+export const compareEdgeResolver: EdgeResolver<ICompareEdge> =
   (treeClient) => (edge) => (context) => {
     const currentNode = getCurrentNode(treeClient, context);
 
@@ -20,23 +20,20 @@ export const compareEdgeResolver: EdgeResolver<TCompareEdge> =
         message: "Interpreter has no current node that is on the tree.",
       });
 
-    const condition = edge.data.condition;
+    const condition = edge.condition;
 
     if (!condition || !edge.target) return { state: "failure" };
 
     // Get a possibly existing answer from the interpreter context
-    const existingAnswer = context.answers[currentNode.id];
+    const existingAnswer = SelectVariable.get(currentNode.id, context.answers);
 
     // We expect there to be an answer on the interpreter context.
     // Not finding an answer on the interpreter context is a programmer error.
     if (!existingAnswer) throw new MissingAnswerOnInterpreterContextError();
-    const answerOfType = SingleSelectVariable.parse(existingAnswer);
-
-    if (answerOfType instanceof Error) return { state: "failure" };
 
     if (
-      !answerOfType.data.value ||
-      !condition.valueIds.includes(answerOfType.data.value)
+      !existingAnswer.value ||
+      !condition.valueIds.includes(existingAnswer.value)
     )
       return { state: "failure" };
 

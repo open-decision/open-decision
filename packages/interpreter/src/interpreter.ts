@@ -1,4 +1,4 @@
-import { Tree } from "@open-decision/tree-type";
+import { IVariablePlugin, Tree } from "@open-decision/tree-type";
 import { assign, createMachine, Interpreter, Sender } from "xstate";
 import {
   InvalidTreeError,
@@ -26,15 +26,13 @@ export type InterpreterErrors =
   | MissingEdgeForThruthyConditionError
   | NoTruthyConditionError;
 
-export type TAnswer = { [id: string]: { [x: string]: unknown } };
-
 export type InterpreterContext = {
   history: { nodes: string[]; position: number };
-  answers: TAnswer;
+  answers: Record<string, IVariablePlugin>;
 };
 
 export type InterpreterEvents =
-  | { type: "ADD_USER_ANSWER"; answer: TAnswer }
+  | { type: "ADD_USER_ANSWER"; answer: IVariablePlugin }
   | { type: "RESET" }
   | { type: "DONE" }
   | { type: "GO_BACK" }
@@ -98,8 +96,8 @@ export const createInterpreterMachine = (
           nodes: [startNode],
           position: 0,
         },
-        answers: {} as TAnswer,
-      },
+        answers: {},
+      } as InterpreterContext,
       id: "interpreter",
       initial: "idle",
       on: {
@@ -170,13 +168,13 @@ export const createInterpreterMachine = (
           answers: (context, event) => {
             return {
               ...context.answers,
-              ...event.answer,
+              [event.answer.id]: event.answer,
             };
           },
         }),
         resetToInitialContext: assign((_context, _event) => ({
           history: { nodes: [startNode], position: 0 },
-          answers: {} as TAnswer,
+          answers: {},
           Error: undefined,
         })),
         goBack: assign((context) => {

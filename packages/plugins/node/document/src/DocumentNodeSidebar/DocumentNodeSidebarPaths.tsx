@@ -7,7 +7,7 @@ import {
 import { DirectEdgePlugin } from "@open-decision/plugins-edge-direct";
 import { TNodeSidebarProps } from "@open-decision/plugins-node-helpers";
 import { useTree } from "@open-decision/tree-sync";
-import { DocumentNodePlugin } from "../documentNodePlugin";
+import { DocumentNodePlugin } from "../DocumentNodePlugin";
 
 const DocumentNode = new DocumentNodePlugin();
 const DirectEdge = new DirectEdgePlugin();
