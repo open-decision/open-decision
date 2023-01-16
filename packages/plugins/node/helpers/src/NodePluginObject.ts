@@ -4,8 +4,10 @@ import {
   IEntityPluginBase,
   INodePlugin,
   NodePlugin,
+  NodePluginWithVariable,
 } from "@open-decision/tree-type";
 import { NodeProps } from "reactflow";
+import { mapValues, omitBy, pickBy } from "remeda";
 
 export type NodePluginProps = NodeProps & {
   className?: string;
@@ -22,7 +24,7 @@ export type TNodeSidebarProps = {
   initialTab?: string;
   hasPreview?: boolean;
   edgePlugins: Record<string, EdgePluginObject>;
-  nodePlugins: Record<string, NodePluginObject>;
+  nodePlugins: TNodePluginGroup;
 };
 
 export type TNodeSidebar = (props: TNodeSidebarProps) => JSX.Element | null;
@@ -32,25 +34,54 @@ export type NodeRendererProps = {
   className?: string;
   withNavigation?: boolean;
   classNames?: ClassNameArrayProp;
-  nodePlugins: Record<string, NodePluginObject>;
+  nodePlugins: TNodePluginGroup;
   edgePlugins: Record<string, EdgePluginObject>;
 };
 
 export type NodeRenderer = (props: NodeRendererProps) => JSX.Element | null;
 
-export type NodePluginObject<
+export interface NodePluginObject<
   TType extends INodePlugin = INodePlugin,
   TPluginEntities extends IEntityPluginBase = IEntityPluginBase
-> = {
+> {
   Editor: {
     Node: CanvasNode;
     Sidebar: TNodeSidebar;
   };
   Renderer: NodeRenderer | null;
-  plugin: NodePlugin<TType>;
   type: TType["type"];
   pluginEntities?: TPluginEntities;
   Icon: React.ForwardRefExoticComponent<
     any & React.RefAttributes<SVGSVGElement>
   >;
+  plugin: NodePlugin<TType> | NodePluginWithVariable<TType>;
+}
+
+export interface NodePluginObjectWithVariable<
+  TType extends INodePlugin = INodePlugin,
+  TPluginEntities extends IEntityPluginBase = IEntityPluginBase
+> extends NodePluginObject<TType, TPluginEntities> {
+  plugin: NodePluginWithVariable<TType>;
+}
+
+export const createNodePluginGroup = (
+  nodePlugins: Record<string, NodePluginObject>
+) => {
+  const plugins = mapValues(nodePlugins, (plugin) => plugin.plugin);
+
+  const pluginsWithVariable = pickBy(
+    plugins,
+    (plugin) => plugin instanceof NodePluginWithVariable
+  ) as Record<string, NodePluginWithVariable>;
+
+  const addablePlugins = omitBy(plugins, (plugin) => !plugin.isAddable);
+
+  return {
+    plugins,
+    pluginsWithVariable,
+    pluginObjects: nodePlugins,
+    addablePlugins,
+  };
 };
+
+export type TNodePluginGroup = ReturnType<typeof createNodePluginGroup>;

@@ -5,7 +5,6 @@ import {
 } from "@open-decision/plugins-node-helpers";
 import {
   INodePlugin,
-  NodePlugin,
   NodePluginWithVariable,
   TReadOnlyTreeClient,
   TTreeClient,
@@ -41,10 +40,10 @@ export interface IFormNode extends INodePlugin<typeof typeName> {
   inputs: string[];
 }
 
-export class FormNodePlugin
-  extends NodePlugin<IFormNode>
-  implements NodePluginWithVariable<TFormNodeVariable>
-{
+export class FormNodePlugin extends NodePluginWithVariable<
+  IFormNode,
+  TFormNodeVariable
+> {
   inputPlugins = formNodeInputPlugins;
 
   constructor() {

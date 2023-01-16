@@ -17,18 +17,7 @@ export interface INodePlugin<TType extends string = string>
   isAddable?: true;
 }
 
-export interface NodePluginWithVariable<TVariableType extends IVariablePlugin> {
-  getVariable: (nodeId: string, answers: any) => TVariableType | undefined;
-
-  createVariable: (
-    nodeId: string,
-    answer: any
-  ) => (
-    treeClient: TTreeClient | TReadOnlyTreeClient
-  ) => TVariableType | ODError | ODProgrammerError | undefined;
-}
-
-export abstract class NodePlugin<
+abstract class BaseNodePlugin<
   TType extends INodePlugin = INodePlugin
 > extends EntityPlugin<TType> {
   pluginType = "nodes" as const;
@@ -60,4 +49,47 @@ export abstract class NodePlugin<
   delete: deleteEntityFn = (nodeIds) => (treeClient) => {
     treeClient.nodes.delete(nodeIds);
   };
+
+  createReadableKey = (key: string) =>
+    key
+      .split(" ")
+      .join("_")
+      .replace(/\u00df/g, "ss")
+      .replace(/\u00e4/g, "ae")
+      .replace(/\u00f6/g, "oe")
+      .replace(/\u00fc/g, "ue")
+      .replace(/\u00c4/g, "Ae")
+      .replace(/\u00d6/g, "Oe")
+      .replace(/\u00dc/g, "Ue")
+      .replace(/\W/g, "");
+}
+
+export abstract class NodePlugin<
+  TType extends INodePlugin = INodePlugin
+> extends BaseNodePlugin<TType> {}
+
+export abstract class NodePluginWithVariable<
+  TType extends INodePlugin = INodePlugin,
+  TVariableType extends IVariablePlugin = IVariablePlugin
+> extends BaseNodePlugin<TType> {
+  hasVariable = true;
+
+  abstract getVariable: (
+    nodeId: string,
+    answers: any
+  ) => TVariableType | undefined;
+
+  abstract createVariable: (
+    nodeId: string,
+    answer: any
+  ) => (
+    treeClient: TTreeClient | TReadOnlyTreeClient
+  ) => TVariableType | ODError | ODProgrammerError | undefined;
+
+  abstract createReadableVariable: (
+    nodeId: string,
+    answer: any
+  ) => (
+    treeClient: TTreeClient | TReadOnlyTreeClient
+  ) => TVariableType | ODError | ODProgrammerError | undefined;
 }

@@ -1,4 +1,4 @@
-import { TAnswer } from "../..";
+import { TAnswer } from "../../types/answer";
 import { getInput } from "../inputMethods";
 import { TTreeClient } from "@open-decision/tree-type";
 import { InputWithAnswers } from "./sharedTypes";

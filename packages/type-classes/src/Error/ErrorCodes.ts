@@ -28,6 +28,7 @@ export const ProgrammerErrors = [
   "INVALID_TOKEN_PAYLOAD",
   "FETCH_BLOB_FUNCTION_NOT_PROVIDED",
   "MISSING_NAME",
+  "NODE_WITHOUT_INPUT",
 ] as const;
 
 export const InterpreterErrors = [

@@ -1,11 +1,11 @@
 import { Tree } from "../type-classes";
-import { z } from "zod";
+import { IEntityPluginBase } from "../plugin";
 
 export const getEntirePluginEntity =
   (tree: Tree.TTree) =>
-  <TType extends z.ZodTypeAny>(entityKey: string) => {
+  <TType extends IEntityPluginBase>(entityKey: string) => {
     if (!tree.pluginEntities) return undefined;
     const data = tree.pluginEntities[entityKey];
 
-    return data as Record<string, z.infer<TType>>;
+    return data as Record<string, TType>;
   };

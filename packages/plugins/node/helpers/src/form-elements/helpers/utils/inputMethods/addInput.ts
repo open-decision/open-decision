@@ -1,5 +1,5 @@
 import { TTreeClient } from "@open-decision/tree-type";
-import { Input } from "../..";
+import { IInputPlugin } from "../../InputPlugin";
 
 /**
  * Always adds a new Input to the tree. There are no rules so this
@@ -7,6 +7,6 @@ import { Input } from "../..";
  *
  * @param input to be added to the tree
  */
-export const addInput = (input: Input.TInput) => (treeClient: TTreeClient) => {
+export const addInput = (input: IInputPlugin) => (treeClient: TTreeClient) => {
   treeClient.pluginEntity.add("inputs", input);
 };

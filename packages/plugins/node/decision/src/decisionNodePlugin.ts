@@ -3,7 +3,6 @@ import {
   TReadOnlyTreeClient,
   TTreeClient,
   INodePlugin,
-  NodePlugin,
   NodePluginWithVariable,
 } from "@open-decision/tree-type";
 import {
@@ -24,6 +23,7 @@ import { match } from "ts-pattern";
 import { TRichText } from "@open-decision/rich-text-editor";
 
 const SelectVariable = new SelectVariablePlugin();
+
 export type TDecisionNodeVariable = ISelectVariable;
 
 export const typeName = "decision" as const;
@@ -33,10 +33,10 @@ export interface IDecisionNode extends INodePlugin<typeof typeName> {
   input?: string;
 }
 
-export class DecisionNodePlugin
-  extends NodePlugin<IDecisionNode>
-  implements NodePluginWithVariable<TDecisionNodeVariable>
-{
+export class DecisionNodePlugin extends NodePluginWithVariable<
+  IDecisionNode,
+  TDecisionNodeVariable
+> {
   inputPlugins = DecisionNodeInputPlugins;
 
   constructor() {
@@ -136,13 +136,13 @@ export class DecisionNodePlugin
     return answers[nodeId] as TDecisionNodeVariable;
   };
 
-  createVariable =
-    (nodeId: string, answer: string) =>
-    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
+  private getVariableData =
+    (nodeId: string) => (treeClient: TTreeClient | TReadOnlyTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 
       if (node instanceof Error) return node;
-      if (!node.input) return undefined;
+      if (!node.input)
+        return new ODProgrammerError({ code: "NODE_WITHOUT_INPUT" });
 
       const input = treeClient.pluginEntity.get.single<TDecisionNodeInputs>(
         "inputs",
@@ -151,14 +151,54 @@ export class DecisionNodePlugin
 
       if (input instanceof ODProgrammerError) return input;
 
-      return match(input)
+      return { node, input };
+    };
+
+  createVariable =
+    (nodeId: string, answer: string) =>
+    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
+      const data = this.getVariableData(nodeId)(treeClient);
+
+      if (data instanceof Error) return data;
+
+      return match(data.input)
         .with({ type: "select" }, (input) =>
           SelectVariable.create({
-            id: node.id,
+            id: data.node.id,
             value: answer,
             values: input.answers,
           })
         )
+        .run();
+    };
+
+  createReadableVariable =
+    (nodeId: string, answer: string) =>
+    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
+      const data = this.getVariableData(nodeId)(treeClient);
+
+      if (data instanceof Error) return data;
+
+      return match(data.input)
+        .with({ type: "select" }, (input) => {
+          const value = input.answers.find(
+            (inputAnswer) => answer === inputAnswer.id
+          )?.value;
+
+          if (!value)
+            return new ODProgrammerError({
+              code: "REQUESTED_ANSWER_DOES_NOT_EXIST_ON_INPUT",
+            });
+
+          if (!data.node.name)
+            return new ODProgrammerError({ code: "MISSING_NAME" });
+
+          return SelectVariable.create({
+            id: this.createReadableKey(data.node.name),
+            value: answer,
+            values: input.answers,
+          });
+        })
         .run();
     };
 }

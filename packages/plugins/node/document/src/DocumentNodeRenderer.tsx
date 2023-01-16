@@ -10,14 +10,19 @@ import { useMutation } from "@tanstack/react-query";
 import { RichTextRenderer } from "@open-decision/rich-text-editor";
 import { RendererPrimitives } from "@open-decision/renderer";
 import { DocumentNodePlugin } from "./DocumentNodePlugin";
-import { createReadableAnswers } from "./utils/createReadableAnswers";
 import { isODError, ODError } from "@open-decision/type-classes";
 import { useTranslations } from "next-intl";
 import { NodeRenderer } from "@open-decision/plugins-node-helpers";
 import { APIClient } from "@open-decision/api-client";
+import { mapValues } from "remeda";
 
 const DocumentNode = new DocumentNodePlugin();
-export const DocumentNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
+
+export const DocumentNodeRenderer: NodeRenderer = ({
+  nodeId,
+  nodePlugins,
+  ...props
+}) => {
   const {
     treeClient,
     environment,
@@ -27,7 +32,6 @@ export const DocumentNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
   } = useInterpreter();
 
   const node = DocumentNode.getSingle(nodeId)(treeClient);
-  const readableAnswers = createReadableAnswers(answers, treeClient);
 
   const t = useTranslations("common.errors");
 
@@ -44,8 +48,15 @@ export const DocumentNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
         });
       }
 
+      const readableAnswers = mapValues(answers, (answer) =>
+        nodePlugins.pluginsWithVariable[answer.type].createVariable(
+          nodeId,
+          answer
+        )(treeClient)
+      );
+
       const { response } = await APIClient.trees[environment].generateDocument({
-        params: { uuid: node.data.templateUuid },
+        params: { uuid: node.templateUuid },
         body: { variables: readableAnswers },
       });
 
