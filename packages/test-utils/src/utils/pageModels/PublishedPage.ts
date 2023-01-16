@@ -1,5 +1,5 @@
 import { TCreatePublishedTreeOutput } from "@open-decision/api-specification";
-import { Page } from "@playwright/test";
+import { BrowserContext, Page } from "@playwright/test";
 import { TreeFixture } from "../../fixtures/Tree";
 import { UserFixture } from "../../fixtures/User";
 import { RendererComponent } from "../componentModels/RendererComponent";
@@ -42,13 +42,15 @@ export class PublishedPage {
   }
 }
 
-export const createPublishedPage = async (page: Page) => {
+export const createPublishedPage = async (page: Page, context: BrowserContext) => {
   const UserClass = new UserFixture();
   const TreeClass = new TreeFixture(await proxiedPlaywrightOD(page.request));
   const dashboardPage = await createDashboardPage(page, {
     Tree: TreeClass,
     User: UserClass,
   });
+
+  await context.clearCookies()
 
   return new PublishedPage(
     page,
