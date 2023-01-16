@@ -97,8 +97,8 @@ export const pwTest = base.extend<Fixtures>({
 
     await sharedPrototypePage.cleanup();
   },
-  publishedPage: async ({ page }, use) => {
-    const publishedPage = await createPublishedPage(page);
+  publishedPage: async ({ page, context }, use) => {
+    const publishedPage = await createPublishedPage(page, context);
     await publishedPage.goto();
 
     await use(publishedPage);

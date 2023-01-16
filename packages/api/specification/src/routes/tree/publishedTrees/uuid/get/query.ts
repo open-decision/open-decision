@@ -10,7 +10,7 @@ export const getPublishedTree: FetchFn<
   (fetchFunction) => (inputs: TGetPublishedTreeInput, config?: QueryConfig) => {
     return fetchFunction(publishedTreesSingle(inputs.params.uuid), {
       validation: getPublishedTreeOutput,
-      proxied: true,
+      proxied: false,
       ...config,
     });
   };

@@ -15,7 +15,7 @@ export const getPublishedTreesOfTreeContent: FetchFn<
     {
       cache: "no-cache",
       validation: getPublishedTreesOfTreeOutput,
-      proxied: true,
+      proxied: false,
       ...config,
     }
   );

@@ -10,7 +10,7 @@ export const getPublishedTrees: FetchFn<
   return fetchFunction(publishedTreesRoot, {
     cache: "no-cache",
     validation: getPublishedTreesOutput,
-    proxied: true,
+    proxied: false,
     ...config,
   });
 };
