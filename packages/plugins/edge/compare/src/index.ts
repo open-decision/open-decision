@@ -1,7 +1,5 @@
-import {
-  createEdgePluginObject,
-  ZEdgePlugin,
-} from "@open-decision/plugins-edge-helpers";
+import { createEdgePluginObject } from "@open-decision/plugins-edge-helpers";
+import { ZEdgePlugin } from "@open-decision/tree-type";
 import { z } from "zod";
 import { CompareEdgePlugin, ICompareEdge } from "./plugin";
 import { compareEdgeResolver } from "./resolver";

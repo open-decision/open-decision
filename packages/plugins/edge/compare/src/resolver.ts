@@ -14,11 +14,8 @@ export const compareEdgeResolver: EdgeResolver<ICompareEdge> =
   (treeClient) => (edge) => (context) => {
     const currentNode = getCurrentNode(treeClient, context);
 
-    if (!currentNode)
-      throw new ODProgrammerError({
-        code: "INTERPRETER_WITHOUT_CURRENT_NODE",
-        message: "Interpreter has no current node that is on the tree.",
-      });
+    if (currentNode instanceof ODProgrammerError)
+      return { state: "error", error: currentNode };
 
     const condition = edge.condition;
 

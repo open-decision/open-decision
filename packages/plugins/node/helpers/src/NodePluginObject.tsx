@@ -1,7 +1,6 @@
 import { ClassNameArrayProp, onNodeCreate } from "@open-decision/design-system";
 import { EdgePluginObject } from "@open-decision/plugins-edge-helpers";
 import {
-  EntityPlugin,
   INodePlugin,
   isNodeId,
   NodePlugin,
@@ -46,10 +45,7 @@ export type NodeRenderer = (props: NodeRendererProps) => JSX.Element | null;
 
 export interface NodePluginObject<
   TType extends INodePlugin = INodePlugin,
-  TPluginEntities extends Record<
-    string,
-    EntityPlugin | Record<string, EntityPlugin>
-  > = Record<string, EntityPlugin | Record<string, EntityPlugin>>
+  TPluginEntities extends string[] = string[]
 > {
   Editor: {
     Node: CanvasNode;
@@ -66,20 +62,14 @@ export interface NodePluginObject<
 
 export interface NodePluginObjectWithVariable<
   TType extends INodePlugin = INodePlugin,
-  TPluginEntities extends Record<
-    string,
-    EntityPlugin | Record<string, EntityPlugin>
-  > = Record<string, EntityPlugin | Record<string, EntityPlugin>>
+  TPluginEntities extends string[] = string[]
 > extends NodePluginObject<TType, TPluginEntities> {
   plugin: NodePluginWithVariable<TType>;
 }
 
 export const createNodePluginObject = <
   TType extends INodePlugin = INodePlugin,
-  TPluginEntities extends Record<
-    string,
-    EntityPlugin | Record<string, EntityPlugin>
-  > = Record<string, EntityPlugin | Record<string, EntityPlugin>>
+  TPluginEntities extends string[] = string[]
 >(
   pluginObj: NodePluginObject<TType, TPluginEntities>
 ) => {
