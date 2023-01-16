@@ -19,4 +19,8 @@ export class TextVariablePlugin extends VariablePlugin<ITextVariable> {
       ...data,
     } satisfies ITextVariable;
   };
+
+  createReadable = (variable: ITextVariable) => {
+    return variable;
+  };
 }

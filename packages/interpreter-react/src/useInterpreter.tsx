@@ -44,7 +44,7 @@ function createResolver(
   const resolver: Resolver = (context, event) => (callback) => {
     const currentNode = getCurrentNode(treeClient, context);
 
-    if (currentNode instanceof Error)
+    if (currentNode instanceof ODProgrammerError)
       return callback({ type: "INVALID_INTERPRETATION", error: currentNode });
 
     if (currentNode.final) {

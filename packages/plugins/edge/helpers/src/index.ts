@@ -9,7 +9,7 @@ import {
   InterpreterContext,
   EVALUATE_NODE_CONDITIONS,
 } from "@open-decision/interpreter";
-import { InterpreterError } from "@open-decision/type-classes";
+import { ODProgrammerError } from "@open-decision/type-classes";
 import { z } from "zod";
 
 export type EdgeResolver<TType extends IEdgePlugin> = (
@@ -22,7 +22,7 @@ export type EdgeResolver<TType extends IEdgePlugin> = (
 ) =>
   | { state: "success"; target: TNodeId }
   | { state: "failure" }
-  | { state: "error"; error: InterpreterError };
+  | { state: "error"; error: ODProgrammerError };
 
 export type EdgePluginObject<TType extends IEdgePlugin = IEdgePlugin> = {
   plugin: EdgePlugin<TType>;

@@ -38,6 +38,10 @@ export abstract class VariablePlugin<
     data: Partial<Omit<TType, "type">> & Pick<TType, "id">
   ) => TType;
 
+  abstract createReadable: (
+    variable: TType
+  ) => IReadableVariablePlugin<TType> | undefined;
+
   createReadableKey = (key: string) =>
     key
       .split(" ")

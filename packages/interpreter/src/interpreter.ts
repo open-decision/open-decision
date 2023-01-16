@@ -3,7 +3,7 @@ import { assign, createMachine, Interpreter, Sender } from "xstate";
 import { InvalidTreeError } from "./errors";
 import { canGoBack, canGoForward } from "./methods";
 import { z } from "zod";
-import { ODError } from "@open-decision/type-classes";
+import { ODProgrammerError } from "@open-decision/type-classes";
 
 export type Resolver = (
   context: InterpreterContext,
@@ -16,7 +16,7 @@ export type EVALUATE_NODE_CONDITIONS = {
 
 type ResolverEvents =
   | { type: "VALID_INTERPRETATION"; target: TNodeId }
-  | { type: "INVALID_INTERPRETATION"; error: ODError }
+  | { type: "INVALID_INTERPRETATION"; error: ODProgrammerError }
   | { type: "FINAL_INTERPRETATION" };
 
 export type InterpreterContext = {
@@ -45,7 +45,7 @@ export type InterpreterService = Interpreter<
 >;
 
 export type InterpreterOptions = {
-  onError?: (error: ODError) => void;
+  onError?: (error: ODProgrammerError) => void;
   onSelectedNodeChange?: (nextNodeId: TNodeId) => void;
   initialNode?: TNodeId;
   onDone?: (context: InterpreterContext) => void;

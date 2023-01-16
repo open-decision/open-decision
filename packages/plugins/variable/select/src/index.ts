@@ -1,19 +1,18 @@
 import {
   IReadableVariablePlugin,
   IVariablePlugin,
-  TId,
   VariablePlugin,
 } from "@open-decision/tree-type";
 
 const typeName = "select";
 
 export interface ISelectVariable extends IVariablePlugin<typeof typeName> {
-  values: { id: TId; value: string }[];
-  value?: TId;
+  values: { id: string; value: string }[];
+  value?: string;
 }
 
 export interface IReadableSelectVariable extends IReadableVariablePlugin {
-  values: { id: TId; value: string }[];
+  values: { id: string; value: string }[];
   value?: string;
 }
 
