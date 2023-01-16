@@ -1,5 +1,5 @@
-import { MissingEdgeForThruthyConditionError } from "@open-decision/interpreter";
 import { EdgeResolver } from "@open-decision/plugins-edge-helpers";
+import { ODError } from "@open-decision/type-classes";
 import { IDirectEdge } from "./plugin";
 
 export const directEdgeResolver: EdgeResolver<IDirectEdge> =
@@ -8,5 +8,8 @@ export const directEdgeResolver: EdgeResolver<IDirectEdge> =
 
     if (edge) return { state: "success", target: edge.target };
 
-    return { state: "error", error: new MissingEdgeForThruthyConditionError() };
+    return {
+      state: "error",
+      error: new ODError({ code: "MISSING_STARTNODE" }),
+    };
   };

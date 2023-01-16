@@ -1,7 +1,13 @@
 import { DirectEdgePlugin } from "@open-decision/plugins-edge-direct";
-import { INodePlugin, NodePlugin } from "@open-decision/plugins-node-helpers";
 import { TRichText } from "@open-decision/rich-text-editor";
-import { TTreeClient, TReadOnlyTreeClient } from "@open-decision/tree-type";
+import {
+  TTreeClient,
+  TReadOnlyTreeClient,
+  NodePlugin,
+  INodePlugin,
+  TNodeId,
+  TEdgeId,
+} from "@open-decision/tree-type";
 
 const DirectEdge = new DirectEdgePlugin();
 
@@ -24,7 +30,7 @@ export class InfoNodePlugin extends NodePlugin<IInfoNodePlugin> {
     }: Omit<IInfoNodePlugin, "id" | "type">) =>
     (_treeClient: TTreeClient | TReadOnlyTreeClient) => {
       return {
-        id: crypto.randomUUID(),
+        id: `nodes_${crypto.randomUUID()}`,
         type: this.type,
         position,
         ...data,
@@ -32,11 +38,11 @@ export class InfoNodePlugin extends NodePlugin<IInfoNodePlugin> {
     };
 
   updateNodeContent =
-    (nodeId: string, content: IInfoNodePlugin["content"]) =>
+    (nodeId: TNodeId, content: IInfoNodePlugin["content"]) =>
     (treeClient: TTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 
-      if (node instanceof Error) throw node;
+      if (!node) return;
 
       node.content = content;
     };
@@ -47,9 +53,9 @@ export class InfoNodePlugin extends NodePlugin<IInfoNodePlugin> {
       newItem,
       edgeId,
     }: {
-      nodeId: string;
-      newItem: string;
-      edgeId?: string;
+      nodeId: TNodeId;
+      newItem: TNodeId;
+      edgeId?: TEdgeId;
     }) =>
     (treeClient: TTreeClient) => {
       const edge = edgeId ? treeClient.edges.get.single(edgeId) : undefined;

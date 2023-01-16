@@ -4,11 +4,12 @@ import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { useTranslations } from "next-intl";
 import { InfoNodePlugin } from "../InfoNodePlugin";
 import { RichTextEditor } from "@open-decision/rich-text-editor";
+import { TNodeId } from "@open-decision/tree-type";
 
 const InfoNode = new InfoNodePlugin();
 
 type Props = {
-  nodeId: string;
+  nodeId: TNodeId;
 };
 
 export function InfoNodeSidebarContent({ nodeId }: Props) {
@@ -19,7 +20,7 @@ export function InfoNodeSidebarContent({ nodeId }: Props) {
   const content = useTree((treeClient) => {
     const node = InfoNode.getSingle(nodeId)(treeClient);
 
-    if (node instanceof Error) return undefined;
+    if (!node) return undefined;
 
     return node.content;
   });

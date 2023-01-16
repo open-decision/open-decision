@@ -16,6 +16,7 @@ import {
   InputPrimaryActionSlot,
   TAnswer,
 } from "../../../helpers/types";
+import { isNodeId } from "@open-decision/tree-type";
 
 const SelectInput = new SelectInputPlugin();
 
@@ -115,12 +116,15 @@ const Answer = ({ answer, inputId, groupRef, name, index }: AnswerProps) => {
   const treeClient = useTreeClient();
 
   const onChange = React.useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) =>
-      SelectInput.updateAnswer(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (!isNodeId(event.target.value)) return;
+
+      return SelectInput.updateAnswer(
         inputId,
         answer.id,
         event.target.value
-      )(treeClient),
+      )(treeClient);
+    },
     [answer.id, inputId, treeClient]
   );
 
