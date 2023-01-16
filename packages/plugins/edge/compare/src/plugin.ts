@@ -1,5 +1,9 @@
-import { IEdgePlugin, EdgePlugin } from "@open-decision/plugins-edge-helpers";
-import { TReadOnlyTreeClient } from "@open-decision/tree-type";
+import {
+  EdgePlugin,
+  IEdgePlugin,
+  TEdgeId,
+  TReadOnlyTreeClient,
+} from "@open-decision/tree-type";
 import { TTreeClient } from "@open-decision/tree-type";
 import { ODError } from "@open-decision/type-classes";
 
@@ -33,29 +37,29 @@ export class CompareEdgePlugin extends EdgePlugin<ICompareEdge> {
     };
 
   addValue =
-    (edgeId: string, newValue: string) => (treeClient: TTreeClient) => {
+    (edgeId: TEdgeId, newValue: string) => (treeClient: TTreeClient) => {
       const edge = this.getSingle(edgeId)(treeClient);
 
-      if (edge instanceof Error) return;
+      if (!edge) return;
 
       edge.condition?.valueIds.push(newValue);
     };
 
   updateValue =
-    (edgeId: string, index: number, newValue: string) =>
+    (edgeId: TEdgeId, index: number, newValue: string) =>
     (treeClient: TTreeClient) => {
       const edge = this.getSingle(edgeId)(treeClient);
 
-      if (edge instanceof Error) return;
+      if (!edge) return;
 
       edge.condition.valueIds[index] = newValue;
     };
 
   removeValue =
-    (edgeId: string, index: number) => (treeClient: TTreeClient) => {
+    (edgeId: TEdgeId, index: number) => (treeClient: TTreeClient) => {
       const edge = this.getSingle(edgeId)(treeClient);
 
-      if (edge instanceof Error) return;
+      if (!edge) return;
 
       edge.condition.valueIds.splice(index, 1);
     };

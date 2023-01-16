@@ -1,32 +1,27 @@
 import { Button, DropdownMenu } from "@open-decision/design-system";
 import { useTranslations } from "next-intl";
-import { InputPluginObject } from "../types/InputPluginObject";
 
-export type InputDropdownProps<
-  TInputPlugins extends Record<string, InputPluginObject>
-> = {
-  onSelect: (type: keyof TInputPlugins) => void;
-  inputPlugins: TInputPlugins;
+export type InputDropdownProps<TInputTypes extends string[]> = {
+  onSelect: (type: TInputTypes[number]) => void;
+  inputPlugins: TInputTypes;
   currentType?: string;
 } & Omit<DropdownMenu.DropdownButtonProps, "onSelect">;
 
-export function InputDropdown<
-  TInputPlugins extends Record<string, InputPluginObject>
->({
+export function InputDropdown<TInputTypes extends string[]>({
   onSelect,
   inputPlugins,
   className,
   classNames,
   currentType,
   ...props
-}: InputDropdownProps<TInputPlugins>) {
+}: InputDropdownProps<TInputTypes>) {
   const t = useTranslations("common.inputNames");
 
-  const relevantInputPlugins = Object.values(inputPlugins).filter(
-    (plugin) => plugin.plugin.type !== "placeholder"
+  const relevantInputTypes = Object.values(inputPlugins).filter(
+    (type) => type !== "placeholder"
   );
 
-  return Object.values(relevantInputPlugins).length === 1 ? (
+  return Object.values(relevantInputTypes).length === 1 ? (
     <Button
       disabled
       variant="neutral"
@@ -49,15 +44,15 @@ export function InputDropdown<
         </DropdownMenu.Button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content align="start">
-        {relevantInputPlugins.map((plugin) => {
+        {relevantInputTypes.map((type) => {
           return (
             <DropdownMenu.Item
-              key={plugin.type}
+              key={type}
               onSelect={() => {
-                onSelect(plugin.type);
+                onSelect(type);
               }}
             >
-              {t(plugin.type as any)}
+              {t(type as any)}
             </DropdownMenu.Item>
           );
         })}

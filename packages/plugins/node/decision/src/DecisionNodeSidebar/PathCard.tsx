@@ -19,6 +19,7 @@ import {
   TNodeSidebarProps,
 } from "@open-decision/plugins-node-helpers";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
+import { TNodeId } from "@open-decision/tree-type";
 import { ODProgrammerError } from "@open-decision/type-classes";
 import { CrossCircledIcon } from "@radix-ui/react-icons";
 import { Controller, useFieldArray } from "react-hook-form";
@@ -29,7 +30,7 @@ const SelectInput = new SelectInputPlugin();
 const CompareEdge = new CompareEdgePlugin();
 
 type Props = {
-  nodeId: string;
+  nodeId: TNodeId;
   edge: ICompareEdge;
   onEdgeCreate: onEdgeCreate;
 } & Pick<TNodeSidebarProps, "onNodeCreate">;
@@ -153,10 +154,15 @@ export function PathCard({ onNodeCreate, onEdgeCreate, nodeId, edge }: Props) {
                       )(treeClient);
                     }}
                     selectOptions={
-                      inputAnswers?.map((answer) => ({
-                        id: answer.id,
-                        name: answer.value,
-                      })) ?? []
+                      inputAnswers
+                        ?.map((answer) => ({
+                          id: answer.id,
+                          name: answer.value,
+                        }))
+                        .filter(
+                          (answer): answer is { id: string; name: string } =>
+                            !!answer.name
+                        ) ?? []
                     }
                     className="flex-1"
                     selectPlaceholder="Antwort auswählen..."

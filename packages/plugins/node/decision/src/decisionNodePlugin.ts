@@ -124,7 +124,9 @@ export class DecisionNodePlugin extends NodePluginWithVariable<
       );
 
       if (value.input) {
-        DecisionNodeInputPlugins.select.delete([value.input])(treeClient);
+        DecisionNodeInputPlugins.plugins.select.delete([value.input])(
+          treeClient
+        );
       }
     });
   };
@@ -152,7 +154,7 @@ export class DecisionNodePlugin extends NodePluginWithVariable<
     };
 
   createVariable =
-    (nodeId: TNodeId, answer: TNodeId) =>
+    (nodeId: TNodeId, answer: string) =>
     (treeClient: TTreeClient | TReadOnlyTreeClient) => {
       const data = this.getVariableData(nodeId)(treeClient);
 

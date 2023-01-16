@@ -5,6 +5,7 @@ import {
   IEntityPluginBase,
   ZEntityPluginBase,
 } from "@open-decision/tree-type";
+import { keys, mapValues } from "remeda";
 import { z } from "zod";
 import {
   InputConfigurator,
@@ -77,4 +78,26 @@ export const createInputPluginObject = <
   pluginObj: InputPluginObject<TType>
 ) => {
   return pluginObj satisfies InputPluginObject<TType>;
+};
+
+export const createInputPluginGroup = <
+  TInputPlugins extends Record<string, InputPluginObject>
+>(
+  inputPlugins: TInputPlugins
+) => {
+  const plugins = mapValues(inputPlugins, (plugin) => plugin.plugin);
+  const Builder = mapValues(inputPlugins, (plugin) => plugin.BuilderComponent);
+  const Renderer = mapValues(
+    inputPlugins,
+    (plugin) => plugin.RendererComponent
+  );
+  const types = keys.strict(inputPlugins);
+
+  return {
+    types,
+    pluginObjects: inputPlugins,
+    plugins,
+    Builder,
+    Renderer,
+  };
 };

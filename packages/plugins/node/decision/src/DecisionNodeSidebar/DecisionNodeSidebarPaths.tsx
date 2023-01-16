@@ -4,13 +4,14 @@ import { CompareEdgePlugin } from "@open-decision/plugins-edge-compare";
 import { EdgePluginObject } from "@open-decision/plugins-edge-helpers";
 import { TNodeSidebarProps } from "@open-decision/plugins-node-helpers";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
+import { TNodeId } from "@open-decision/tree-type";
 import { ODError } from "@open-decision/type-classes";
 import { PathCard } from "./PathCard";
 
 const CompareEdge = new CompareEdgePlugin();
 
 type Props = {
-  nodeId: string;
+  nodeId: TNodeId;
   edgePlugins: Record<string, EdgePluginObject>;
 } & Pick<TNodeSidebarProps, "onNodeCreate">;
 

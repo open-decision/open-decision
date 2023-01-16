@@ -1,6 +1,7 @@
 import { labelClasses } from "@open-decision/design-system";
-import { InputDropdown } from "@open-decision/plugins-node-helpers";
+import { InputDropdown, TInputId } from "@open-decision/plugins-node-helpers";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
+import { TNodeId } from "@open-decision/tree-type";
 import { TDecisionNodeInputs } from "../createInputPlugins";
 import { DecisionNodePlugin } from "../DecisionNodePlugin";
 
@@ -8,8 +9,8 @@ const DecisionNode = new DecisionNodePlugin();
 
 export type InputHeaderProps = {
   children?: React.ReactNode;
-  inputId?: string;
-  nodeId: string;
+  inputId?: TInputId;
+  nodeId: TNodeId;
 };
 
 export function InputHeader({ children, inputId, nodeId }: InputHeaderProps) {
@@ -21,7 +22,7 @@ export function InputHeader({ children, inputId, nodeId }: InputHeaderProps) {
       inputId
     );
 
-    if (input instanceof Error) return undefined;
+    if (!input) return undefined;
 
     return input.type;
   });
@@ -35,13 +36,13 @@ export function InputHeader({ children, inputId, nodeId }: InputHeaderProps) {
       <h2 className={labelClasses({}, ["m-0 block"])}>
         <InputDropdown
           currentType={inputType}
-          inputPlugins={DecisionNode.inputPlugins}
+          inputPlugins={DecisionNode.inputPlugins.types}
           onSelect={(newType) => {
             if (inputType && inputId) {
-              DecisionNode.inputPlugins[inputType].plugin.delete([inputId]);
+              DecisionNode.inputPlugins.plugins[inputType].delete([inputId]);
             }
 
-            const newInput = DecisionNode.inputPlugins[newType].plugin.create(
+            const newInput = DecisionNode.inputPlugins.plugins[newType].create(
               {}
             )(treeClient);
             treeClient.pluginEntity.add("inputs", newInput);

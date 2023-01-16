@@ -6,6 +6,7 @@ import {
 } from "@open-decision/design-system";
 import { RichTextEditor } from "@open-decision/rich-text-editor";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
+import { TNodeId } from "@open-decision/tree-type";
 import { useTranslations } from "next-intl";
 import { DecisionNodePlugin } from "../DecisionNodePlugin";
 import { InputPlugin } from "./InputPlugin";
@@ -13,7 +14,7 @@ import { InputPlugin } from "./InputPlugin";
 const DecisionNode = new DecisionNodePlugin();
 
 type Props = {
-  nodeId: string;
+  nodeId: TNodeId;
 };
 
 export function DecisionNodeSidebarContent({ nodeId }: Props) {
@@ -21,7 +22,7 @@ export function DecisionNodeSidebarContent({ nodeId }: Props) {
   const treeClient = useTreeClient();
   const node = useTree(DecisionNode.getSingle(nodeId));
 
-  if (node instanceof Error) return null;
+  if (!node) return null;
 
   return (
     <Tabs.Content

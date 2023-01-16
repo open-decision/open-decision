@@ -41,7 +41,7 @@ export const typeName = "form" as const;
 
 export interface IFormNode extends INodePlugin<typeof typeName> {
   content?: TRichText;
-  inputs: string[];
+  inputs: TInputId[];
 }
 
 export class FormNodePlugin extends NodePluginWithVariable<

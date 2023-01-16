@@ -5,13 +5,14 @@ import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { DecisionNodePlugin } from "../DecisionNodePlugin";
 import { InputHeader } from "./InputHeader";
 import { TDecisionNodeInputs } from "../createInputPlugins";
-import { ODProgrammerError } from "@open-decision/type-classes";
+import { TInputId } from "@open-decision/plugins-node-helpers";
+import { TNodeId } from "@open-decision/tree-type";
 
 const DecisionNode = new DecisionNodePlugin();
 
 export type InputPluginComponentProps = {
-  inputId?: string;
-  nodeId: string;
+  inputId?: TInputId;
+  nodeId: TNodeId;
 };
 
 export function InputPlugin({ inputId, nodeId }: InputPluginComponentProps) {
@@ -22,7 +23,7 @@ export function InputPlugin({ inputId, nodeId }: InputPluginComponentProps) {
       inputId
     );
 
-    if (input instanceof ODProgrammerError) return undefined;
+    if (!input) return undefined;
 
     return input;
   });
@@ -30,7 +31,7 @@ export function InputPlugin({ inputId, nodeId }: InputPluginComponentProps) {
   const treeClient = useTreeClient();
 
   if (!inputId) {
-    const newInput = DecisionNode.inputPlugins.select.plugin.create({})(
+    const newInput = DecisionNode.inputPlugins.plugins.select.create({})(
       treeClient
     );
 
@@ -39,7 +40,7 @@ export function InputPlugin({ inputId, nodeId }: InputPluginComponentProps) {
   }
 
   const InputComponents = input
-    ? DecisionNode.inputPlugins[input.type].BuilderComponent
+    ? DecisionNode.inputPlugins.Builder[input.type]
     : null;
 
   const Header = ({ children }: { children?: React.ReactNode }) => (

@@ -1,6 +1,11 @@
 import { TRichText } from "@open-decision/rich-text-editor";
-import { NodePlugin, INodePlugin } from "@open-decision/plugins-node-helpers";
-import { TReadOnlyTreeClient, TTreeClient } from "@open-decision/tree-type";
+import {
+  INodePlugin,
+  NodePlugin,
+  TNodeId,
+  TReadOnlyTreeClient,
+  TTreeClient,
+} from "@open-decision/tree-type";
 
 export const typeName = "document" as const;
 
@@ -21,7 +26,7 @@ export class DocumentNodePlugin extends NodePlugin<IDocumentNode> {
     }: Omit<IDocumentNode, "id" | "type">) =>
     (_treeClient: TTreeClient | TReadOnlyTreeClient) => {
       return {
-        id: crypto.randomUUID(),
+        id: `nodes_${crypto.randomUUID()}`,
         type: this.type,
         position,
         ...data,
@@ -39,28 +44,28 @@ export class DocumentNodePlugin extends NodePlugin<IDocumentNode> {
     };
 
   updateNodeContent =
-    (nodeId: string, content: IDocumentNode["content"]) =>
+    (nodeId: TNodeId, content: IDocumentNode["content"]) =>
     (treeClient: TTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 
-      if (node instanceof Error) throw node;
+      if (!node) return;
 
       node.content = content;
     };
 
   updateTemplateUuid =
-    (nodeId: string, newTemplateUuid: string) => (treeClient: TTreeClient) => {
+    (nodeId: TNodeId, newTemplateUuid: string) => (treeClient: TTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 
-      if (node instanceof Error) throw node;
+      if (!node) return;
 
       node.templateUuid = newTemplateUuid;
     };
 
-  deleteTemplateUuid = (nodeId: string) => (treeClient: TTreeClient) => {
+  deleteTemplateUuid = (nodeId: TNodeId) => (treeClient: TTreeClient) => {
     const node = this.getSingle(nodeId)(treeClient);
 
-    if (node instanceof Error) throw node;
+    if (!node) return;
 
     delete node.templateUuid;
   };

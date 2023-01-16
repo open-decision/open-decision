@@ -3,7 +3,7 @@ import {
   useInterpreter,
   useInterpreterTree,
 } from "@open-decision/interpreter-react";
-import { NodeRenderer } from "@open-decision/plugins-node-helpers";
+import { NodeRenderer, TInputId } from "@open-decision/plugins-node-helpers";
 import { RendererPrimitives } from "@open-decision/renderer";
 import { RichTextRenderer } from "@open-decision/rich-text-editor";
 import { mapValues } from "remeda";
@@ -18,7 +18,7 @@ export const FormNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
   const node = FormNode.getSingle(nodeId)(treeClient);
 
   const inputs = useInterpreterTree((treeClient) => {
-    if (node instanceof Error || !node.inputs) return undefined;
+    if (!node || !node.inputs) return undefined;
 
     return treeClient.pluginEntity.get.collection<TFormNodeInput>(
       "inputs",
@@ -26,23 +26,24 @@ export const FormNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
     );
   });
 
-  const answer =
-    node instanceof Error
-      ? undefined
-      : FormNode.getVariable(node.id, getAnswers());
+  const answer = !node
+    ? undefined
+    : FormNode.getVariable(node.id, getAnswers());
 
-  const methods = Form.useForm({
+  const methods = Form.useForm<Record<TInputId, string | string[]>>({
     defaultValues: mapValues(answer?.value ?? {}, (value) => value?.value),
   });
 
-  if (node instanceof Error) return null;
+  if (!node) return null;
 
   const onSubmit = methods.handleSubmit((values) => {
-    const answers = FormNode.createVariable(node.id, values)(treeClient);
+    const variable = FormNode.createVariable(node.id, values)(treeClient);
+
+    if (!variable) return;
 
     send({
       type: "ADD_USER_ANSWER",
-      answer: { [node.id]: { type: "form", answers } },
+      answer: variable,
     });
 
     send("EVALUATE_NODE_CONDITIONS");
@@ -62,6 +63,8 @@ export const FormNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
           {Object.values(inputs ?? {}).map((input) => {
             const FormElement =
               FormNode.inputPlugins[input.type].RendererComponent;
+
+            if (!FormElement) return null;
 
             return <FormElement key={input.id} inputId={input.id} />;
           })}

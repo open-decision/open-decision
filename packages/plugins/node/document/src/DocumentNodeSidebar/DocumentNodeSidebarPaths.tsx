@@ -7,12 +7,13 @@ import {
 import { DirectEdgePlugin } from "@open-decision/plugins-edge-direct";
 import { TNodeSidebarProps } from "@open-decision/plugins-node-helpers";
 import { useTree } from "@open-decision/tree-sync";
+import { TNodeId } from "@open-decision/tree-type";
 import { DocumentNodePlugin } from "../DocumentNodePlugin";
 
 const DocumentNode = new DocumentNodePlugin();
 const DirectEdge = new DirectEdgePlugin();
 
-type Props = { nodeId: string } & Pick<TNodeSidebarProps, "onNodeCreate">;
+type Props = { nodeId: TNodeId } & Pick<TNodeSidebarProps, "onNodeCreate">;
 
 export function DocumentNodeSidebarPaths({ nodeId, onNodeCreate }: Props) {
   const node = useTree(DocumentNode.getSingle(nodeId));

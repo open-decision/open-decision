@@ -1,10 +1,11 @@
 import {
   TSelectInput,
   SelectInputPluginObject,
+  createInputPluginGroup,
 } from "@open-decision/plugins-node-helpers";
 
-export const DecisionNodeInputPlugins = {
-  [SelectInputPluginObject.type]: SelectInputPluginObject.plugin,
-};
+export const DecisionNodeInputPlugins = createInputPluginGroup({
+  [SelectInputPluginObject.type]: SelectInputPluginObject,
+});
 
 export type TDecisionNodeInputs = TSelectInput;
