@@ -5,7 +5,6 @@ import {
   ZEntityPluginBase,
   IEntityPluginBase,
   EntityPlugin,
-  TId,
 } from "./EntityPlugin";
 import { IReadableVariablePlugin, IVariablePlugin } from "./VariablePlugin";
 
@@ -77,19 +76,6 @@ export abstract class BaseNodePlugin<
   delete = (nodeIds: TNodeId[]) => (treeClient: TTreeClient) => {
     treeClient.nodes.delete(nodeIds);
   };
-
-  createReadableKey = (key: string) =>
-    key
-      .split(" ")
-      .join("_")
-      .replace(/\u00df/g, "ss")
-      .replace(/\u00e4/g, "ae")
-      .replace(/\u00f6/g, "oe")
-      .replace(/\u00fc/g, "ue")
-      .replace(/\u00c4/g, "Ae")
-      .replace(/\u00d6/g, "Oe")
-      .replace(/\u00dc/g, "Ue")
-      .replace(/\W/g, "");
 }
 
 export abstract class NodePlugin<
@@ -115,9 +101,9 @@ export abstract class NodePluginWithVariable<
   ) => TVariableType | ODError | ODProgrammerError | undefined;
 
   abstract createReadableVariable: (
-    nodeId: TId,
+    nodeId: TNodeId,
     answer: any
   ) => (
     treeClient: TTreeClient | TReadOnlyTreeClient
-  ) => IReadableVariablePlugin<TVariableType> | undefined;
+  ) => IReadableVariablePlugin | undefined;
 }

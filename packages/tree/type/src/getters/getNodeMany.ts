@@ -12,5 +12,5 @@ export const getNodeMany =
 
     if (!isEmpty(nodes)) return undefined;
 
-    return nodes as Record<string, TType>;
+    return nodes as Record<TNodeId, TType>;
   };

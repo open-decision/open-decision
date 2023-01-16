@@ -1,7 +1,7 @@
 import {
-  deleteEntityFn,
   INodePlugin,
   NodePluginWithVariable,
+  TNodeId,
   TReadOnlyTreeClient,
   TTreeClient,
 } from "@open-decision/tree-type";
@@ -14,6 +14,7 @@ import {
   addInput,
   getInputByNode,
   getNodesByInput,
+  TInputId,
 } from "@open-decision/plugins-node-helpers";
 import {
   ISelectVariable,
@@ -21,6 +22,7 @@ import {
 } from "@open-decision/plugins-variable-select";
 import { match } from "ts-pattern";
 import { TRichText } from "@open-decision/rich-text-editor";
+import { forEachObj } from "remeda";
 
 const SelectVariable = new SelectVariablePlugin();
 
@@ -30,7 +32,7 @@ export const typeName = "decision" as const;
 
 export interface IDecisionNode extends INodePlugin<typeof typeName> {
   content?: TRichText;
-  input?: string;
+  input?: TInputId;
 }
 
 export class DecisionNodePlugin extends NodePluginWithVariable<
@@ -50,7 +52,7 @@ export class DecisionNodePlugin extends NodePluginWithVariable<
     }: Omit<IDecisionNode, "id" | "type">) =>
     (_treeClient: TTreeClient | TReadOnlyTreeClient) => {
       return {
-        id: crypto.randomUUID(),
+        id: `nodes_${crypto.randomUUID()}`,
         type: this.type,
         position,
         ...data,
@@ -65,10 +67,10 @@ export class DecisionNodePlugin extends NodePluginWithVariable<
   getByInput = getNodesByInput(this);
 
   connectInputAndNode =
-    (nodeId: string, inputId: string) => (treeClient: TTreeClient) => {
+    (nodeId: TNodeId, inputId: TInputId) => (treeClient: TTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 
-      if (node instanceof Error) throw node;
+      if (!node) return;
 
       // We get the input just to validate that it exists.
       treeClient.pluginEntity.get.single("inputs", inputId);
@@ -76,69 +78,66 @@ export class DecisionNodePlugin extends NodePluginWithVariable<
       node.input = inputId;
     };
 
-  disconnectInputAndNode = (nodeId: string) => (treeClient: TTreeClient) => {
+  disconnectInputAndNode = (nodeId: TNodeId) => (treeClient: TTreeClient) => {
     const node = this.getSingle(nodeId)(treeClient);
 
-    if (node instanceof Error) throw node;
+    if (!node) return;
 
     delete node.input;
   };
 
   updateInput =
-    (nodeId: string, newInputId: string) => (treeClient: TTreeClient) => {
+    (nodeId: TNodeId, newInputId: TInputId) => (treeClient: TTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 
-      if (node instanceof Error) return;
+      if (!node) return;
 
       node.input = newInputId;
     };
 
   updateNodeContent =
-    (nodeId: string, content: IDecisionNode["content"]) =>
+    (nodeId: TNodeId, content: IDecisionNode["content"]) =>
     (treeClient: TTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 
-      if (node instanceof Error) throw node;
+      if (!node) return;
 
       node.content = content;
     };
 
-  override delete: deleteEntityFn =
-    (ids: string[]) => (treeClient: TTreeClient) => {
-      const nodes = this.getCollection(ids)(treeClient);
+  override delete = (ids: TNodeId[]) => (treeClient: TTreeClient) => {
+    const nodes = this.getCollection(ids)(treeClient);
 
-      if (!nodes) return;
+    if (!nodes) return;
 
-      treeClient.nodes.delete(ids);
+    treeClient.nodes.delete(ids);
 
-      for (const id in nodes) {
-        const value = nodes[id];
+    forEachObj.indexed(nodes, (value, id) => {
+      const edges = treeClient.edges.get.byNode(id);
+      treeClient.edges.delete(
+        [
+          ...Object.values(edges?.source ?? {}),
+          ...Object.values(edges?.target ?? {}),
+        ]
+          .filter((edge) => edge.source === id || edge.target === id)
+          .map((edge) => edge.id)
+      );
 
-        const edges = treeClient.edges.get.byNode(id);
-        treeClient.edges.delete(
-          [
-            ...Object.values(edges?.source ?? {}),
-            ...Object.values(edges?.target ?? {}),
-          ]
-            .filter((edge) => edge.source === id || edge.target === id)
-            .map((edge) => edge.id)
-        );
-
-        if (value.input) {
-          DecisionNodeInputPlugins.select.delete([value.input])(treeClient);
-        }
+      if (value.input) {
+        DecisionNodeInputPlugins.select.delete([value.input])(treeClient);
       }
-    };
+    });
+  };
 
   getVariable = (nodeId: string, answers: any) => {
     return answers[nodeId] as TDecisionNodeVariable;
   };
 
   private getVariableData =
-    (nodeId: string) => (treeClient: TTreeClient | TReadOnlyTreeClient) => {
+    (nodeId: TNodeId) => (treeClient: TTreeClient | TReadOnlyTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 
-      if (node instanceof Error) return node;
+      if (!node) return;
       if (!node.input)
         return new ODProgrammerError({ code: "NODE_WITHOUT_INPUT" });
 
@@ -147,17 +146,18 @@ export class DecisionNodePlugin extends NodePluginWithVariable<
         node.input
       );
 
-      if (input instanceof ODProgrammerError) return input;
+      if (!input) return;
 
       return { node, input };
     };
 
   createVariable =
-    (nodeId: string, answer: string) =>
+    (nodeId: TNodeId, answer: TNodeId) =>
     (treeClient: TTreeClient | TReadOnlyTreeClient) => {
       const data = this.getVariableData(nodeId)(treeClient);
 
       if (data instanceof Error) return data;
+      if (!data) return undefined;
 
       return match(data.input)
         .with({ type: "select" }, (input) =>
@@ -171,11 +171,12 @@ export class DecisionNodePlugin extends NodePluginWithVariable<
     };
 
   createReadableVariable =
-    (nodeId: string, answer: string) =>
+    (nodeId: TNodeId, answer: TNodeId) =>
     (treeClient: TTreeClient | TReadOnlyTreeClient) => {
       const data = this.getVariableData(nodeId)(treeClient);
 
       if (data instanceof Error) return;
+      if (!data) return;
 
       return match(data.input)
         .with({ type: "select" }, (input) => {
@@ -185,11 +186,11 @@ export class DecisionNodePlugin extends NodePluginWithVariable<
 
           if (!value || !data.node.name) return;
 
-          return SelectVariable.create({
-            id: this.createReadableKey(data.node.name),
-            value: answer,
-            values: input.answers,
-          });
+          const variable = this.createVariable(nodeId, answer)(treeClient);
+
+          if (!variable || variable instanceof ODProgrammerError) return;
+
+          return SelectVariable.createReadable(variable);
         })
         .run();
     };

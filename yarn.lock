@@ -3709,14 +3709,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@open-decision/plugins-variable-helpers@workspace:packages/plugins/variable/helpers":
-  version: 0.0.0-use.local
-  resolution: "@open-decision/plugins-variable-helpers@workspace:packages/plugins/variable/helpers"
-  dependencies:
-    zod: ^3.20.2
-  languageName: unknown
-  linkType: soft
-
 "@open-decision/plugins-variable-list@workspace:packages/plugins/variable/list":
   version: 0.0.0-use.local
   resolution: "@open-decision/plugins-variable-list@workspace:packages/plugins/variable/list"

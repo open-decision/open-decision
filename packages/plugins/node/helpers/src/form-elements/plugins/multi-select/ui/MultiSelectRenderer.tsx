@@ -1,10 +1,9 @@
-import { IMultiSelectInput } from "../MultiSelectPlugin";
-
 import { Form, Stack } from "@open-decision/design-system";
 import { useInterpreterTree } from "@open-decision/interpreter-react";
 import { CheckboxElement } from "../../../helpers";
 import { ODProgrammerError } from "@open-decision/type-classes";
 import { InputRenderer } from "../../../helpers/types";
+import { IMultiSelectInput } from "../MultiSelectPlugin";
 
 export const MultiSelectInputRenderer: InputRenderer = ({ inputId }) => {
   const input = useInterpreterTree((treeClient) => {
