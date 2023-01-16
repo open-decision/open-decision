@@ -1,6 +1,7 @@
 import { Node, Tree } from "../type-classes";
 import { v4 as uuid } from "uuid";
-import { getAll } from "../getters/getAll";
+import { getNodeAll } from "../getters";
+import { INodePlugin } from "../plugin";
 
 export type NewNodeData = Partial<Omit<Node.TNode, "id">>;
 
@@ -16,18 +17,16 @@ export const createNode =
   <TNodeType extends Node.TNode>({
     position = { x: 0, y: 0 },
     type = "placeholder",
-    data,
     name,
   }: Partial<Omit<TNodeType, "id">>) => {
     const fallbackName = `Knoten ${
-      Object.keys(getAll(tree)("nodes") ?? {}).length + 1
+      Object.keys(getNodeAll(tree)() ?? {}).length + 1
     }`;
 
     return {
-      id: uuid(),
+      id: `nodes_${uuid()}`,
       position,
       type,
-      data: data ?? {},
       name: name ?? fallbackName,
-    } as TNodeType;
+    } satisfies INodePlugin;
   };

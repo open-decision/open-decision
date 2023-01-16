@@ -4,16 +4,6 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "build": {
-      "executor": "@nrwl/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/packages/plugins/edge/direct",
-        "main": "packages/plugins/edge/direct/src/index.ts",
-        "tsConfig": "packages/plugins/edge/direct/tsconfig.lib.json",
-        "assets": ["packages/plugins/edge/direct/*.md"]
-      }
-    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],

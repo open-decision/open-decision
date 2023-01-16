@@ -1,5 +1,6 @@
 import { TNodeSidebar } from "@open-decision/plugins-node-helpers";
 import { NodeSidebar } from "../../components";
+import { GroupNodePlugin } from "../GroupNodePlugin";
 import { GroupNodeSidebarContent } from "./GroupNodeSidebarContent";
 import { GroupNodeSidebarPaths } from "./GroupNodeSidebarPaths";
 
@@ -10,6 +11,8 @@ export const GroupNodeSidebar: TNodeSidebar = ({
   onNodeCreate,
   nodePlugins,
 }) => {
+  const GroupNode = new GroupNodePlugin(nodePlugins.pluginsWithVariable);
+
   return (
     <NodeSidebar
       nodeId={nodeId}
@@ -20,8 +23,12 @@ export const GroupNodeSidebar: TNodeSidebar = ({
       initialTab="Inhalt"
       hasPreview
     >
-      <GroupNodeSidebarContent nodeId={nodeId} />
-      <GroupNodeSidebarPaths nodeId={nodeId} onNodeCreate={onNodeCreate} />
+      <GroupNodeSidebarContent nodeId={nodeId} GroupNode={GroupNode} />
+      <GroupNodeSidebarPaths
+        nodeId={nodeId}
+        onNodeCreate={onNodeCreate}
+        GroupNode={GroupNode}
+      />
     </NodeSidebar>
   );
 };

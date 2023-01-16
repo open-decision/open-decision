@@ -15,8 +15,7 @@ import { nodeNameMaxLength } from "../../utils/constants";
 import { NodeMenu } from "../NodeMenu";
 import { SidebarPreview } from "./SidebarPreview";
 import {
-  getAddableNodePlugins,
-  NodePluginObject,
+  TNodePluginGroup,
   TNodeSidebarProps,
 } from "@open-decision/plugins-node-helpers";
 
@@ -65,11 +64,11 @@ export const NodeSidebar = ({
   );
 };
 
-type HeaderProps = { nodeId: string } & {
+type HeaderProps = Pick<TNodeSidebarProps, "nodeId"> & {
   selectedTab?: string;
   setSelectedTab?: (value: string) => void;
   tabs?: string[];
-  nodePlugins: Record<string, NodePluginObject>;
+  nodePlugins: TNodePluginGroup;
 };
 
 const Header = ({
@@ -98,11 +97,9 @@ const Header = ({
           },
   });
 
-  if (node instanceof Error) return null;
+  if (!node) return null;
 
-  const NodeTypeIcon = nodePlugins[node.type].Icon;
-
-  const addableNodePlugins = getAddableNodePlugins(nodePlugins);
+  const NodeTypeIcon = nodePlugins.Icons[node.type];
 
   return (
     <Form.Root methods={methods}>
@@ -124,13 +121,13 @@ const Header = ({
                 </DropdownMenu.Button>
               </DropdownMenu.Trigger>
               <DropdownMenu.Content align="start">
-                {Object.values(addableNodePlugins).map(({ plugin }) => (
+                {Object.values(nodePlugins.addablePlugins).map((plugin) => (
                   <DropdownMenu.Item
                     key={plugin.type}
                     onSelect={() => {
                       const oldNode = treeClient.nodes.get.single(nodeId);
 
-                      if (oldNode instanceof Error) throw oldNode;
+                      if (!oldNode) return;
                       let oldNodeContent;
 
                       if (hasContent(oldNode)) {

@@ -4,16 +4,6 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "build": {
-      "executor": "@nrwl/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/packages/tree/client",
-        "main": "packages/tree/client/src/index.ts",
-        "tsConfig": "packages/tree/client/tsconfig.lib.json",
-        "assets": ["packages/tree/client/*.md"]
-      }
-    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],

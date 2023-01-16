@@ -1,10 +1,11 @@
 import { mapValues, omitBy, pick } from "remeda";
+import { TNodeId } from "../plugin";
 import { Tree } from "../type-classes";
 
 const nodeWithName = (node: {
-  id: string;
+  id: TNodeId;
   name?: string;
-}): node is { id: string; name: string } => {
+}): node is { id: TNodeId; name: string } => {
   return typeof node.name === "string";
 };
 
@@ -15,7 +16,7 @@ const nodeWithName = (node: {
  * a name will be omitted from the result.
  */
 export const getNodeNames =
-  (tree: Tree.TTree) => (ids?: string[], fallbackName?: string) => {
+  (tree: Tree.TTree) => (ids?: TNodeId[], fallbackName?: string) => {
     if (!tree.nodes) return {};
 
     // map all the nodes into the desired shape. If the node does not have a name, use the fallback.
@@ -28,7 +29,7 @@ export const getNodeNames =
     const nodesWithNames = omitBy(
       nodes,
       (node) => !nodeWithName(node)
-    ) as Record<string, { id: string; name: string }>;
+    ) as Record<TNodeId, { id: TNodeId; name: string }>;
 
     // If no ids are provided, return all the nodes with names.
     return ids ? pick(nodesWithNames, ids) : nodesWithNames;

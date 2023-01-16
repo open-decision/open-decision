@@ -1,18 +1,20 @@
 import { InputPlugin } from "../InputPlugin";
 import {
-  InputComponentProps,
+  InputConfiguratorProps,
   InputPrimaryActionSlotProps,
-  RendererComponentProps,
+  InputRendererProps,
 } from "./componentTypes";
 
 export type InputPluginObject = {
   plugin: InputPlugin;
   type: string;
   BuilderComponent: {
-    InputConfigurator: ((props: InputComponentProps) => React.ReactNode) | null;
+    InputConfigurator:
+      | ((props: InputConfiguratorProps) => React.ReactNode)
+      | null;
     PrimaryActionSlot:
       | ((props: InputPrimaryActionSlotProps) => React.ReactNode)
       | null;
   };
-  RendererComponent: (props: RendererComponentProps) => React.ReactNode;
+  RendererComponent: (props: InputRendererProps) => React.ReactNode;
 };

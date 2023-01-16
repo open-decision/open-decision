@@ -1,5 +1,6 @@
 import { TReadOnlyTreeClient, TTreeClient } from "@open-decision/tree-type";
-import { IInputPlugin, InputPlugin, TAnswer } from "../../helpers";
+import { IInputPlugin, InputPlugin } from "../../helpers";
+import { TAnswer } from "../../helpers/types";
 import {
   addAnswer,
   createAnswer,
@@ -31,7 +32,7 @@ export class MultiSelectInputPlugin extends InputPlugin<IMultiSelectInput> {
     }: Partial<Omit<IMultiSelectInput, "id" | "type">>) =>
     (_treeClient: TTreeClient | TReadOnlyTreeClient) => {
       return {
-        id: crypto.randomUUID(),
+        id: `input_${crypto.randomUUID()}`,
         type: this.type,
         answers,
         required,

@@ -1,12 +1,13 @@
+import { TNodeId } from "../plugin";
 import { Tree } from "../type-classes";
 
 export function createAdjacencyList<
   T extends {
-    source: string;
-    target?: string;
+    source: TNodeId;
+    target?: TNodeId;
   }[]
 >(array: T) {
-  const adjacencyList: Record<string, string[]> = {};
+  const adjacencyList: Record<TNodeId, TNodeId[]> = {};
 
   array.forEach(({ source, target }) => {
     if (!target) return;
@@ -23,14 +24,14 @@ export function createAdjacencyList<
 }
 
 export function depthFirstSearch(
-  startId: string,
-  adjacencyList: Record<string, string[]>
+  startId: TNodeId,
+  adjacencyList: Record<TNodeId, TNodeId[]>
 ) {
-  const result: string[][] = [];
-  let path: string[] = [];
+  const result: TNodeId[][] = [];
+  let path: TNodeId[] = [];
   const visited: Record<string, boolean> = {};
 
-  (function depthFirstSearch(id: string) {
+  (function depthFirstSearch(id: TNodeId) {
     visited[id] = true;
     path.push(id);
 
@@ -47,7 +48,7 @@ export function depthFirstSearch(
   return result;
 }
 
-export const getPaths = (tree: Tree.TTree) => (nodeId: string) => {
+export const getPaths = (tree: Tree.TTree) => (nodeId: TNodeId) => {
   const adjacencyList = createAdjacencyList(Object.values(tree.edges ?? {}));
 
   return depthFirstSearch(nodeId, adjacencyList);

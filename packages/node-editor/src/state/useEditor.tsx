@@ -3,26 +3,26 @@ import { useReactFlow, useStore } from "reactflow";
 import { calculateCenterOfNode } from "../utils/calculateCenterOfNode";
 import { sidebarWidth } from "../utils/constants";
 import { ODProgrammerError } from "@open-decision/type-classes";
-import { Node, TTreeClient } from "@open-decision/tree-type";
+import { Node, TEdgeId, TNodeId, TTreeClient } from "@open-decision/tree-type";
 import shallow from "zustand/shallow";
 import { proxy } from "valtio";
 import { useTreeClient } from "@open-decision/tree-sync";
 import { useUnmount } from "react-use";
 
 type EditorStore = {
-  connectionSourceNodeId: string;
-  validConnections: string[];
-  selectedNodeIds: string[];
-  selectedEdgeIds: string[];
+  connectionSourceNodeId?: TNodeId;
+  validConnections: TNodeId[];
+  selectedNodeIds: TNodeId[];
+  selectedEdgeIds: TEdgeId[];
 };
 
 const createSelectionMethods = (
   treeClient: TTreeClient,
   editorStore: EditorStore
 ) => {
-  function startConnecting(sourceNodeId: string) {
+  function startConnecting(sourceNodeId: TNodeId) {
     const connectionOriginNode = treeClient.nodes.get.single(sourceNodeId);
-    if (connectionOriginNode instanceof Error) return;
+    if (!connectionOriginNode) return;
 
     editorStore.connectionSourceNodeId = sourceNodeId;
 
@@ -34,15 +34,15 @@ const createSelectionMethods = (
   }
 
   function abortConnecting() {
-    editorStore.connectionSourceNodeId = "";
+    delete editorStore.connectionSourceNodeId;
     editorStore.validConnections = [];
   }
 
-  function addSelectedNodes(nodeIds: string[]) {
+  function addSelectedNodes(nodeIds: TNodeId[]) {
     editorStore.selectedNodeIds.push(...nodeIds);
   }
 
-  function replaceSelectedNodes(nodeIds: string[]) {
+  function replaceSelectedNodes(nodeIds: TNodeId[]) {
     editorStore.selectedNodeIds = nodeIds;
   }
 
@@ -56,11 +56,11 @@ const createSelectionMethods = (
     );
     editorStore.selectedNodeIds.splice(nodeIndex, 1);
   }
-  function addSelectedEdges(edgeIds: string[]) {
+  function addSelectedEdges(edgeIds: TEdgeId[]) {
     editorStore.selectedEdgeIds.push(...edgeIds);
   }
 
-  function replaceSelectedEdges(edgeIds: string[]) {
+  function replaceSelectedEdges(edgeIds: TEdgeId[]) {
     editorStore.selectedEdgeIds = edgeIds;
   }
 
@@ -115,11 +115,15 @@ type TreeProviderProps = Omit<
   "value"
 >;
 
-const editorStore = proxy({
-  connectionSourceNodeId: "",
-  validConnections: [] as string[],
-  selectedNodeIds: [] as string[],
-  selectedEdgeIds: [] as string[],
+const editorStore = proxy<{
+  connectionSourceNodeId?: TNodeId;
+  validConnections: TNodeId[];
+  selectedNodeIds: TNodeId[];
+  selectedEdgeIds: TEdgeId[];
+}>({
+  validConnections: [],
+  selectedNodeIds: [],
+  selectedEdgeIds: [],
 });
 
 export function EditorProvider({ children }: TreeProviderProps) {
@@ -175,7 +179,7 @@ export function EditorProvider({ children }: TreeProviderProps) {
   }, [treeClient]);
 
   useUnmount(() => {
-    editorStore.connectionSourceNodeId = "";
+    delete editorStore.connectionSourceNodeId;
     editorStore.selectedEdgeIds = [];
     editorStore.selectedNodeIds = [];
     editorStore.validConnections = [];

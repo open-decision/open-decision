@@ -4,16 +4,6 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "build": {
-      "executor": "@nrwl/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/packages/plugins/variable/list",
-        "main": "packages/plugins/variable/list/src/index.ts",
-        "tsConfig": "packages/plugins/variable/list/tsconfig.lib.json",
-        "assets": ["packages/plugins/variable/list/*.md"]
-      }
-    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],

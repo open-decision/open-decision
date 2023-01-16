@@ -5,12 +5,12 @@ import {
   InterpreterProviderProps,
   useInterpreter,
 } from "@open-decision/interpreter-react";
-import { NodePluginObject } from "@open-decision/plugins-node-helpers";
+import { TNodePluginGroup } from "@open-decision/plugins-node-helpers";
 import { EdgePluginObject } from "@open-decision/plugins-edge-helpers";
 
 export type RendererProps = {
   nodeId?: string;
-  nodePlugins: Record<string, NodePluginObject>;
+  nodePlugins: TNodePluginGroup;
   edgePlugins: Record<string, EdgePluginObject>;
   withNavigation?: boolean;
 } & StackProps;
@@ -25,7 +25,9 @@ export function View({
   const { getCurrentNode } = useInterpreter();
   const node = getCurrentNode();
 
-  const Renderer = nodePlugins[node.type]?.Renderer;
+  if (node instanceof Error) return null;
+
+  const Renderer = nodePlugins.Renderers[node.type];
 
   if (!Renderer) return null;
 

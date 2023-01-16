@@ -8,6 +8,14 @@ import {
   getEntirePluginEntity,
   getStartNodeId,
   getNodeNames,
+  getNodeSingle,
+  getNodeMany,
+  getEdgeSingle,
+  getEdgeMany,
+  getNodeAll,
+  getEdgeAll,
+  getEdgeAllOfType,
+  getNodeAllOfType,
 } from "./getters";
 import {
   deleteNodes,
@@ -37,10 +45,7 @@ import type {} from "zod";
 import { udpateRendererLabel } from "./mutaters/updateRendererLabel";
 import { Theme } from "./type-classes/Theme";
 import { z } from "zod";
-import { getSingle } from "./getters/getSingle";
-import { getCollection } from "./getters/getCollection";
-import { getAll } from "./getters/getAll";
-import { IEdgePlugin, INodePlugin } from "./plugin";
+import { TEdgeId, TNodeId } from "./plugin";
 
 export class ReadOnlyTreeClient<TTree extends Tree.TTree> {
   tree: Tree.TTree;
@@ -65,9 +70,10 @@ export class ReadOnlyTreeClient<TTree extends Tree.TTree> {
         childNode: createChildNode(this.tree),
       },
       get: {
-        single: getSingle(this.tree)<INodePlugin>("nodes"),
-        collection: getCollection(this.tree)<INodePlugin>("nodes"),
-        all: getAll(this.tree)<INodePlugin>("nodes"),
+        single: getNodeSingle(this.tree),
+        collection: getNodeMany(this.tree),
+        allOfType: getNodeAllOfType(this.tree),
+        all: getNodeAll(this.tree),
         connectableNodes: getConnectableNodes(this.tree),
         children: getChildren(this.tree),
         parents: getParents(this.tree),
@@ -83,9 +89,10 @@ export class ReadOnlyTreeClient<TTree extends Tree.TTree> {
     return {
       create: createEdge(this.tree),
       get: {
-        single: getSingle(this.tree)<IEdgePlugin>("edges"),
-        collection: getCollection(this.tree)<IEdgePlugin>("edges"),
-        all: getAll(this.tree)<IEdgePlugin>("edges"),
+        single: getEdgeSingle(this.tree),
+        collection: getEdgeMany(this.tree),
+        allOfType: getEdgeAllOfType(this.tree),
+        all: getEdgeAll(this.tree),
         byNode: getEdgesByNode(this.tree),
       },
     };
@@ -121,8 +128,8 @@ export class TreeClient<TTree extends Tree.TTree> {
   get get() {
     return this.ReadOnlyTreeClient.get;
   }
-  updateStartNode(startNode: string) {
-    const node = getSingle(this.tree)("nodes")(startNode);
+  updateStartNode(startNode: TNodeId) {
+    const node = this.nodes.get.single(startNode);
 
     if (!node) return;
 
@@ -152,8 +159,8 @@ export class TreeClient<TTree extends Tree.TTree> {
          * an Edge without source and target. If you want to update the connection
          * use nodes.connect.toEdgeAsTarget or edges.connect.toEdgeAsSource.
          */
-        fromEdgeAsTarget: (id: string) => deleteEdges(this.tree)([id]),
-        fromEdgeAsSource: (id: string) => deleteEdges(this.tree)([id]),
+        fromEdgeAsTarget: (id: TEdgeId) => deleteEdges(this.tree)([id]),
+        fromEdgeAsSource: (id: TEdgeId) => deleteEdges(this.tree)([id]),
       },
       update: {
         name: updateNodeName(this.tree),
@@ -164,19 +171,7 @@ export class TreeClient<TTree extends Tree.TTree> {
       },
     };
   }
-  // get conditions() {
-  //   return {
-  //     ...this.ReadOnlyTreeClient.conditions,
-  //     delete: deleteConditions(this.tree),
-  //     add: addCondition(this.tree),
-  //     connect: {
-  //       toEdge: connectEdgeAndCondition(this.tree),
-  //     },
-  //     disconnect: {
-  //       fromEdge: disconnectEdgeAndCondition(this.tree),
-  //     },
-  //   };
-  // }
+
   get edges() {
     return {
       ...this.ReadOnlyTreeClient.edges,
@@ -196,13 +191,13 @@ export class TreeClient<TTree extends Tree.TTree> {
          * an Edge without source and target. If you want to update the connection
          * use edges.connect.toTargetNode or edges.connect.toSourceNode.
          */
-        fromTargetNode: (id: string) => deleteEdges(this.tree)([id]),
+        fromTargetNode: (id: TEdgeId) => deleteEdges(this.tree)([id]),
         /**
          * Disconnecting an Edge is equivalent to deleting it, because there cannot be
          * an Edge without source and target. If you want to update the connection
          * use edges.connect.toTargetNode or edges.connect.toSourceNode.
          */
-        fromSourceNode: (id: string) => deleteEdges(this.tree)([id]),
+        fromSourceNode: (id: TEdgeId) => deleteEdges(this.tree)([id]),
       },
       update: updateEdge(this.tree),
     };

@@ -3,10 +3,7 @@ import { useTreeClient } from "@open-decision/tree-sync";
 import { NodeSidebar } from "../components/NodeSidebar/NodeSidebar";
 import { sidebarCardClasses } from "../components";
 import { useTranslations } from "next-intl";
-import {
-  getAddableNodePlugins,
-  TNodeSidebar,
-} from "@open-decision/plugins-node-helpers";
+import { TNodeSidebar } from "@open-decision/plugins-node-helpers";
 
 export const PlaceholderNodeSidebar: TNodeSidebar = ({
   nodeId,
@@ -15,8 +12,6 @@ export const PlaceholderNodeSidebar: TNodeSidebar = ({
 }) => {
   const t = useTranslations("common.nodeNames");
   const treeClient = useTreeClient();
-
-  const addableNodePlugins = getAddableNodePlugins(nodePlugins);
 
   return (
     <NodeSidebar
@@ -28,7 +23,7 @@ export const PlaceholderNodeSidebar: TNodeSidebar = ({
         Wähle einen Typ für diesen Knoten aus:
       </Heading>
       <Stack className="gap-2">
-        {Object.values(addableNodePlugins).map(({ plugin }) => {
+        {Object.values(nodePlugins.addablePlugins).map((plugin) => {
           return (
             <Row
               classNames={[sidebarCardClasses, "items-center justify-between"]}
@@ -43,16 +38,13 @@ export const PlaceholderNodeSidebar: TNodeSidebar = ({
                   const newNode = plugin.create({})(treeClient);
                   const oldNode = treeClient.nodes.get.single(nodeId);
 
-                  if (oldNode instanceof Error) {
-                    oldNode.message = `A placeholder node should be transformed into a ${newNode.type}. The placeholder of ${nodeId} could however not be found in the tree.`;
-                    throw oldNode;
-                  }
+                  if (!oldNode) return;
 
                   treeClient.nodes.update.node(nodeId, {
                     ...newNode,
                     name: oldNode.name,
                     position: oldNode.position,
-                  } as any);
+                  });
                 }}
               >
                 Erstellen

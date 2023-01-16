@@ -3,52 +3,25 @@
   "sourceRoot": "packages/test-utils/src",
   "projectType": "library",
   "implicitDependencies": ["prisma"],
-  "targets": {
-    "build": {
-      "executor": "@nrwl/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/packages/test-utils",
-        "main": "packages/test-utils/src/index.ts",
-        "tsConfig": "packages/test-utils/tsconfig.lib.json",
-        "assets": ["packages/test-utils/*.md"]
-      }
-    },
-    "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["packages/test-utils/**/*.ts"]
-      }
-    },
-    "test": {
-      "executor": "@nxext/vitest:vitest",
-      "options": {
-        "command": "run"
-      },
-      "dependsOn": [
-        {
-          "target": "build",
-          "projects": "dependencies"
-        }
-      ]
-    },
-    "typecheck": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "tsc -p tsconfig.lib.json --noEmit",
-        "cwd": "packages/test-utils"
-      },
-      "dependsOn": [
-        {
-          "projects": "dependencies",
-          "target": "build"
-        },
-        {
-          "projects": "dependencies",
-          "target": "setup"
-        }
-      ]
+  "targets": {},
+  "lint": {
+    "executor": "@nrwl/linter:eslint",
+    "outputs": ["{options.outputFile}"],
+    "options": {
+      "lintFilePatterns": ["packages/test-utils/**/*.ts"]
+    }
+  },
+  "test": {
+    "executor": "@nxext/vitest:vitest",
+    "options": {
+      "command": "run"
+    }
+  },
+  "typecheck": {
+    "executor": "nx:run-commands",
+    "options": {
+      "command": "tsc -p tsconfig.lib.json --noEmit",
+      "cwd": "packages/test-utils"
     }
   },
   "name": "test-utils"

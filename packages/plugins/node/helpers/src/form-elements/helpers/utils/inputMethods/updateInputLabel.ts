@@ -1,14 +1,13 @@
 import { TTreeClient } from "@open-decision/tree-type";
-import { ODProgrammerError } from "@open-decision/type-classes";
-import { IInputPlugin } from "../../InputPlugin";
+import { IInputPlugin, TInputId } from "../../InputPlugin";
 
 export const updateInputLabel =
   <TType extends IInputPlugin>() =>
-  (inputId: string, newLabel: string) =>
+  (inputId: TInputId, newLabel: string) =>
   (treeClient: TTreeClient) => {
     const input = treeClient.pluginEntity.get.single<TType>("inputs", inputId);
 
-    if (input instanceof ODProgrammerError) return;
+    if (!input) return;
 
     input.label = newLabel;
   };

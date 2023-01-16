@@ -1,20 +1,23 @@
 import { DirectEdgePlugin } from "@open-decision/plugins-edge-direct";
 import {
-  NodePlugin,
   TReadOnlyTreeClient,
   Tree,
   TTreeClient,
   INodePlugin,
   NodePluginWithVariable,
+  TNodeId,
+  TEdgeId,
   IVariablePlugin,
+  IReadableVariablePlugin,
 } from "@open-decision/tree-type";
 import { TRichText } from "@open-decision/rich-text-editor";
 import { InterpreterContext } from "@open-decision/interpreter";
+import { fromPairs } from "remeda";
 
 const DirectEdge = new DirectEdgePlugin();
 
 export interface IGroupNodeVariable extends IVariablePlugin<"group"> {
-  value: Record<string, IVariablePlugin<string>>[];
+  value: Record<string, IVariablePlugin<string> | undefined>[];
 }
 
 export const typeName = "group" as const;
@@ -26,20 +29,23 @@ export interface IGroupNode extends INodePlugin<typeof typeName> {
   title?: string;
 }
 
-export class GroupNodePlugin
-  extends NodePlugin<IGroupNode>
-  implements NodePluginWithVariable<IGroupNodeVariable>
-{
-  constructor() {
+export class GroupNodePlugin extends NodePluginWithVariable<
+  IGroupNode,
+  IGroupNodeVariable
+> {
+  declare nodePlugins: Record<string, NodePluginWithVariable>;
+
+  constructor(nodePlugins: Record<string, NodePluginWithVariable>) {
     super(typeName);
     this.isAddable = false;
+    this.nodePlugins = nodePlugins;
   }
 
   create =
     ({ position = { x: 0, y: 0 }, ...data }: Omit<IGroupNode, "id" | "type">) =>
     (_treeClient: TTreeClient | TReadOnlyTreeClient) => {
       return {
-        id: crypto.randomUUID(),
+        id: `nodes_${crypto.randomUUID()}`,
         type: this.type,
         position,
         ...data,
@@ -47,21 +53,21 @@ export class GroupNodePlugin
     };
 
   updateTitle =
-    (nodeId: string, newTitle: string) =>
+    (nodeId: TNodeId, newTitle: string) =>
     (treeClient: TTreeClient | TReadOnlyTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 
-      if (node instanceof Error) throw node;
+      if (!node) return;
 
       node.title = newTitle;
     };
 
   updateCta =
-    (nodeId: string, newCta: string) =>
+    (nodeId: TNodeId, newCta: string) =>
     (treeClient: TTreeClient | TReadOnlyTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 
-      if (node instanceof Error) throw node;
+      if (!node) return;
 
       node.cta = newCta;
     };
@@ -69,22 +75,22 @@ export class GroupNodePlugin
   updateTarget =
     ({
       nodeId,
-      newItem,
+      newTarget,
       edgeId,
     }: {
-      nodeId: string;
-      newItem: string;
-      edgeId?: string;
+      nodeId: TNodeId;
+      newTarget: TNodeId;
+      edgeId?: TEdgeId;
     }) =>
     (treeClient: TTreeClient) => {
       const edge = edgeId ? treeClient.edges.get.single(edgeId) : undefined;
 
       if (edge instanceof Error) throw edge;
 
-      if (!edge?.target && newItem) {
+      if (!edge?.target && newTarget) {
         const newEdge = DirectEdge.create({
           source: nodeId,
-          target: newItem,
+          target: newTarget,
         })(treeClient);
 
         if (newEdge instanceof Error) return;
@@ -92,16 +98,16 @@ export class GroupNodePlugin
         treeClient.edges.add(newEdge);
       }
 
-      if (edge?.target && newItem)
-        treeClient.edges.connect.toTargetNode(edge.id, newItem);
+      if (edge?.target && newTarget)
+        treeClient.edges.connect.toTargetNode(edge.id, newTarget);
     };
 
   updateNodeContent =
-    (nodeId: string, content: IGroupNode["content"]) =>
+    (nodeId: TNodeId, content: IGroupNode["content"]) =>
     (treeClient: TTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 
-      if (node instanceof Error) throw node;
+      if (!node) return;
 
       node.content = content;
     };
@@ -111,11 +117,11 @@ export class GroupNodePlugin
   };
 
   createVariable =
-    (nodeId: string, answer: InterpreterContext[]) =>
+    (nodeId: TNodeId, answer: InterpreterContext[]) =>
     (treeClient: TTreeClient | TReadOnlyTreeClient) => {
       const node = treeClient.nodes.get.single<IGroupNode>(nodeId);
 
-      if (node instanceof Error) return;
+      if (!node) return;
 
       return {
         id: nodeId,
@@ -123,5 +129,41 @@ export class GroupNodePlugin
         name: node.name,
         value: answer.map((answer) => answer.answers),
       } satisfies IGroupNodeVariable;
+    };
+
+  createReadableVariable =
+    (nodeId: TNodeId, answer: InterpreterContext[]) =>
+    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
+      const variable = this.createVariable(nodeId, answer)(treeClient);
+
+      if (!variable || !variable.name) return;
+
+      return {
+        ...variable,
+        id: this.createReadableKey(variable.name),
+        value: variable.value.map((value) => {
+          const variables = Object.values(value)
+            .map((value) => {
+              const readableVariable = this.nodePlugins[
+                value.type
+              ].createReadableVariable(
+                value.id,
+                value.value
+              )(treeClient);
+
+              if (!readableVariable) return undefined;
+
+              return [readableVariable.id, readableVariable] as const;
+            })
+            .filter(
+              (
+                value
+              ): value is [string, IReadableVariablePlugin<IVariablePlugin>] =>
+                value !== undefined
+            );
+
+          return fromPairs(variables);
+        }),
+      } satisfies IReadableVariablePlugin<IGroupNodeVariable>;
     };
 }

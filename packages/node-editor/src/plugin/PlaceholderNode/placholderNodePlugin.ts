@@ -23,7 +23,7 @@ export class PlaceholderNodePlugin extends NodePlugin<IPlaceholderNode> {
     }: Omit<IPlaceholderNode, "id" | "type">) =>
     (_treeClient: TTreeClient | TReadOnlyTreeClient) => {
       return {
-        id: crypto.randomUUID(),
+        id: `nodes_${crypto.randomUUID()}`,
         type: this.type,
         position,
         ...data,

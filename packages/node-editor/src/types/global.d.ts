@@ -1,8 +1,6 @@
 import "reactflow";
 import "valtio";
 
-// import type { NodePluginData, NodePluginProps } from "../state/useRFNodes";
-
 declare module "reactflow" {
   interface Connection {
     source: string;

@@ -4,10 +4,10 @@ import {
   getNodesByInput,
 } from "@open-decision/plugins-node-helpers";
 import {
-  INodePlugin,
-  NodePluginWithVariable,
   TReadOnlyTreeClient,
   TTreeClient,
+  INodePlugin,
+  NodePluginWithVariable,
 } from "@open-decision/tree-type";
 import { ODProgrammerError } from "@open-decision/type-classes";
 import { DirectEdgePlugin } from "@open-decision/plugins-edge-direct";
@@ -149,7 +149,7 @@ export class FormNodePlugin extends NodePluginWithVariable<
   };
 
   createVariable =
-    (nodeId: string, answer: any) =>
+    (nodeId: string, answer: Record<string, string | string[]>) =>
     (treeClient: TTreeClient | TReadOnlyTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 
@@ -168,23 +168,36 @@ export class FormNodePlugin extends NodePluginWithVariable<
         if (input instanceof ODProgrammerError) continue;
 
         const variable = match(input)
-          .with({ type: "text" }, () =>
-            TextVariable.create({ value, id: input.id })
-          )
-          .with({ type: "select" }, (input) =>
-            SelectVariable.create({
+          .with({ type: "text" }, () => {
+            if (typeof value !== "string")
+              return new ODProgrammerError({
+                code: "REQUESTED_ANSWER_OF_WRONG_TYPE",
+              });
+            return TextVariable.create({ value, id: input.id });
+          })
+          .with({ type: "select" }, (input) => {
+            if (typeof value !== "string")
+              return new ODProgrammerError({
+                code: "REQUESTED_ANSWER_OF_WRONG_TYPE",
+              });
+            return SelectVariable.create({
               values: input.answers,
               value,
               id: input.id,
-            })
-          )
-          .with({ type: "multi-select" }, (input) =>
-            ListVariable.create({
+            });
+          })
+          .with({ type: "multi-select" }, (input) => {
+            if (typeof value !== "object")
+              return new ODProgrammerError({
+                code: "REQUESTED_ANSWER_OF_WRONG_TYPE",
+              });
+
+            return ListVariable.create({
               values: input.answers,
               value,
               id: input.id,
-            })
-          )
+            });
+          })
           .with({ type: "placeholder" }, () =>
             EmptyVariable.create({ id: input.id })
           )
@@ -199,6 +212,95 @@ export class FormNodePlugin extends NodePluginWithVariable<
         value: variables,
         name: node.name,
         id: nodeId,
+      });
+    };
+
+  createReadableVariable =
+    (nodeId: string, answer: Record<string, string | string[]>) =>
+    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
+      const node = this.getSingle(nodeId)(treeClient);
+
+      if (node instanceof Error) return undefined;
+      if (!node.name) return undefined;
+
+      const variables: TRecordVariable["value"] = {};
+
+      for (const key in answer) {
+        const value = answer[key];
+
+        const input = treeClient.pluginEntity.get.single<TFormNodeInput>(
+          "inputs",
+          key
+        );
+
+        if (input instanceof ODProgrammerError) continue;
+
+        const variable = match(input)
+          .with({ type: "text" }, () => {
+            if (typeof value !== "string")
+              return new ODProgrammerError({
+                code: "REQUESTED_ANSWER_OF_WRONG_TYPE",
+              });
+            return TextVariable.create({ value, id: input.id });
+          })
+          .with({ type: "select" }, (input) => {
+            if (typeof value !== "string")
+              return new ODProgrammerError({
+                code: "REQUESTED_ANSWER_OF_WRONG_TYPE",
+              });
+
+            const readableValue = input.answers.find(
+              (answer) => answer.id === value
+            )?.value;
+
+            if (!readableValue)
+              return new ODProgrammerError({ code: "MISSING_NAME" });
+
+            return SelectVariable.create({
+              values: input.answers,
+              value: readableValue,
+              id: input.id,
+            });
+          })
+          .with({ type: "multi-select" }, (input) => {
+            if (typeof value !== "object")
+              return new ODProgrammerError({
+                code: "REQUESTED_ANSWER_OF_WRONG_TYPE",
+              });
+
+            const readableValue = value.map(
+              (value) =>
+                input.answers.find((answer) => answer.id === value)?.value
+            );
+
+            if (readableValue.includes(undefined))
+              return new ODProgrammerError({
+                code: "REQUESTED_ANSWER_DOES_NOT_EXIST_ON_INPUT",
+              });
+
+            if (!readableValue)
+              return new ODProgrammerError({ code: "MISSING_NAME" });
+
+            return ListVariable.create({
+              values: input.answers,
+              value: readableValue as string[],
+              id: input.id,
+            });
+          })
+          .with({ type: "placeholder" }, () =>
+            EmptyVariable.create({ id: input.id })
+          )
+          .run();
+
+        if (variable instanceof ODProgrammerError) continue;
+
+        variables[input.id] = variable;
+      }
+
+      return RecordVariable.create({
+        value: variables,
+        name: node.name,
+        id: this.createReadableKey(node.name),
       });
     };
 }

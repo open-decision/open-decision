@@ -5,20 +5,23 @@ import { CrossCircledIcon } from "@radix-ui/react-icons";
 import { ISelectInput, SelectInputPlugin } from "../SelectInputPlugin";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import {
-  InputPrimaryActionSlotProps,
   AddOptionButton,
-  InputComponentProps,
-  TAnswer,
   DragHandle,
   InputConfig,
+  TInputId,
 } from "../../../helpers";
 import { ODProgrammerError } from "@open-decision/type-classes";
+import {
+  InputConfigurator,
+  InputPrimaryActionSlot,
+  TAnswer,
+} from "../../../helpers/types";
 
 const SelectInput = new SelectInputPlugin();
 
-export const SelectInputPrimaryActionSlot = ({
+export const SelectInputPrimaryActionSlot: InputPrimaryActionSlot = ({
   inputId,
-}: InputPrimaryActionSlotProps) => {
+}) => {
   const treeClient = useTreeClient();
 
   return (
@@ -31,10 +34,10 @@ export const SelectInputPrimaryActionSlot = ({
   );
 };
 
-export const SelectInputConfigurator = ({
+export const SelectInputConfigurator: InputConfigurator = ({
   inputId,
   withRequiredOption,
-}: InputComponentProps) => {
+}) => {
   const treeClient = useTreeClient();
   const ref = React.useRef<HTMLDivElement | null>(null);
 
@@ -102,7 +105,7 @@ export const SelectInputConfigurator = ({
 
 type AnswerProps = {
   answer: TAnswer;
-  inputId: string;
+  inputId: TInputId;
   groupRef: React.MutableRefObject<HTMLDivElement | null>;
   name: string;
   index: number;

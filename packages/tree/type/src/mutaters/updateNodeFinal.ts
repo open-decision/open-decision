@@ -1,11 +1,12 @@
-import { getNode } from "../getters";
+import { getNodeSingle } from "../getters";
+import { TNodeId } from "../plugin";
 import { Tree } from "../type-classes";
 
 export const updateNodeFinal =
-  (tree: Tree.TTree) => (nodeId: string, isFinal: boolean) => {
-    const node = getNode(tree)(nodeId);
+  (tree: Tree.TTree) => (nodeId: TNodeId, isFinal: boolean) => {
+    const node = getNodeSingle(tree)(nodeId);
 
-    if (node instanceof Error) throw node;
+    if (!node) return;
 
     if (isFinal === false) {
       delete node.final;

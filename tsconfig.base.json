@@ -74,9 +74,6 @@
       "@open-decision/plugins-node-placeholder": [
         "packages/plugins/node/placeholder/src/index.ts"
       ],
-      "@open-decision/plugins-variable-helpers": [
-        "packages/plugins/variable/helpers/src/index.ts"
-      ],
       "@open-decision/plugins-variable-list": [
         "packages/plugins/variable/list/src/index.ts"
       ],

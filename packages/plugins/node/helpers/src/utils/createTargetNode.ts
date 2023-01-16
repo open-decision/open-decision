@@ -1,11 +1,11 @@
-import { Node, TTreeClient } from "@open-decision/tree-type";
+import { INodePlugin, TNodeId, TTreeClient } from "@open-decision/tree-type";
 
 export const createTargetNode =
   (treeClient: TTreeClient) =>
-  <TNodeType extends Node.TNode>(nodeId: string, newNode: TNodeType) => {
+  <TNodeType extends INodePlugin>(nodeId: TNodeId, newNode: TNodeType) => {
     const childNode = treeClient.nodes.create.childNode(nodeId, newNode);
 
-    if (childNode instanceof Error) return childNode;
+    if (!childNode) return undefined;
 
     treeClient.nodes.add(childNode);
 

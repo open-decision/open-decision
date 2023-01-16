@@ -1,11 +1,7 @@
 import { DirectEdgePlugin } from "@open-decision/plugins-edge-direct";
+import { INodePlugin, NodePlugin } from "@open-decision/plugins-node-helpers";
 import { TRichText } from "@open-decision/rich-text-editor";
-import {
-  NodePlugin,
-  TTreeClient,
-  INodePlugin,
-  TReadOnlyTreeClient,
-} from "@open-decision/tree-type";
+import { TTreeClient, TReadOnlyTreeClient } from "@open-decision/tree-type";
 
 const DirectEdge = new DirectEdgePlugin();
 

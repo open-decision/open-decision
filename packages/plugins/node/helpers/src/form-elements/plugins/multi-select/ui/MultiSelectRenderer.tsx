@@ -2,10 +2,11 @@ import { IMultiSelectInput } from "../MultiSelectPlugin";
 
 import { Form, Stack } from "@open-decision/design-system";
 import { useInterpreterTree } from "@open-decision/interpreter-react";
-import { RendererComponentProps, CheckboxElement } from "../../../helpers";
+import { CheckboxElement } from "../../../helpers";
 import { ODProgrammerError } from "@open-decision/type-classes";
+import { InputRenderer } from "../../../helpers/types";
 
-export function MultiSelectInputRenderer({ inputId }: RendererComponentProps) {
+export const MultiSelectInputRenderer: InputRenderer = ({ inputId }) => {
   const input = useInterpreterTree((treeClient) => {
     const input = treeClient.pluginEntity.get.single<IMultiSelectInput>(
       "inputs",
@@ -40,4 +41,4 @@ export function MultiSelectInputRenderer({ inputId }: RendererComponentProps) {
       </Stack>
     </Form.Field>
   );
-}
+};

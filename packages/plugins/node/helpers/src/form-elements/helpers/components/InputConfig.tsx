@@ -1,7 +1,7 @@
 import { Stack, Form } from "@open-decision/design-system";
-import { InputComponentProps } from "../types";
+import { InputConfiguratorProps } from "../types";
 
-type Props = InputComponentProps & {
+type Props = InputConfiguratorProps & {
   onLabelChange: (newLabel: string) => void;
   onRequiredChange: (newValue: boolean) => void;
 };

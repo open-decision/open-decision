@@ -3,28 +3,6 @@
   "sourceRoot": "packages/interpreter-react/src",
   "projectType": "library",
   "targets": {
-    "build": {
-      "executor": "@nrwl/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/packages/interpreter-react",
-        "main": "packages/interpreter-react/src/index.ts",
-        "tsConfig": "packages/interpreter-react/tsconfig.lib.json",
-        "assets": ["packages/interpreter-react/*.md"]
-      }
-    },
-    "publish": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "node tools/scripts/publish.mjs interpreter-react {args.ver} {args.tag}"
-      },
-      "dependsOn": [
-        {
-          "projects": "self",
-          "target": "build"
-        }
-      ]
-    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
@@ -46,13 +24,7 @@
       "options": {
         "command": "tsc -p tsconfig.lib.json --noEmit",
         "cwd": "packages/interpreter-react"
-      },
-      "dependsOn": [
-        {
-          "projects": "dependencies",
-          "target": "build"
-        }
-      ]
+      }
     }
   },
   "tags": [],

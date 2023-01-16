@@ -1,11 +1,12 @@
+import { getNodeSingle } from "../getters";
+import { TNodeId } from "../plugin";
 import { Tree } from "../type-classes";
-import { getNode } from "../getters";
 
 export const updateNodeName =
-  (tree: Tree.TTree) => (nodeId: string, name: string) => {
-    const node = getNode(tree)(nodeId);
+  (tree: Tree.TTree) => (nodeId: TNodeId, name: string) => {
+    const node = getNodeSingle(tree)(nodeId);
 
-    if (node instanceof Error) throw node;
+    if (!node) return;
 
     node.name = name;
   };

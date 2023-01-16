@@ -19,8 +19,8 @@ export const getCurrentNode = (
     context.history.nodes[context.history.position]
   );
 
-  if (currentNode instanceof Error)
-    throw new ODProgrammerError({
+  if (!currentNode)
+    return new ODProgrammerError({
       code: "INTERPRETER_WITHOUT_CURRENT_NODE",
       message:
         "The interpreters current node is invalid, because it cannot be found on the tree.",

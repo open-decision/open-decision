@@ -1,4 +1,5 @@
-import { Tree, Node } from "../type-classes";
+import { INodePlugin } from "../plugin";
+import { Tree } from "../type-classes";
 
 /**
  * Always adds a new Node to the tree. There are no rules so this
@@ -7,7 +8,7 @@ import { Tree, Node } from "../type-classes";
  *
  * @param node to be added to the tree
  */
-export const addNode = (tree: Tree.TTree) => (node: Node.TNode) => {
+export const addNode = (tree: Tree.TTree) => (node: INodePlugin) => {
   if (!tree.nodes) tree.nodes = {};
 
   tree.nodes[node.id] = node;

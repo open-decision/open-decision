@@ -1,17 +1,18 @@
+import { TEdgeId } from "../plugin";
 import { Tree } from "../type-classes";
-import { getNode } from "./getNode";
-import { getEdge } from "./getEdge";
+import { getEdgeSingle } from "./getEdgeSingle";
+import { getNodeSingle } from "./getNodeSingle";
 
 /**
  * Provide an edge id and receive the nodes that are related to it.
  * Returns undefined if there are no nodes.
  */
-export const getNodesByEdge = (tree: Tree.TTree) => (edgeId: string) => {
-  const edge = getEdge(tree)(edgeId);
-  if (edge instanceof Error) return undefined;
+export const getNodesByEdge = (tree: Tree.TTree) => (edgeId: TEdgeId) => {
+  const edge = getEdgeSingle(tree)(edgeId);
+  if (!edge) return undefined;
 
-  const source = getNode(tree)(edge.source);
-  const target = edge?.target ? getNode(tree)(edge.target) : undefined;
+  const source = getNodeSingle(tree)(edge.source);
+  const target = edge?.target ? getNodeSingle(tree)(edge.target) : undefined;
 
   return { source, target };
 };

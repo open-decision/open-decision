@@ -1,6 +1,7 @@
 import { isCircular } from "../utils";
-import { Tree, Edge } from "../type-classes";
+import { Tree } from "../type-classes";
 import { ODError } from "@open-decision/type-classes";
+import { IEdgePlugin } from "../plugin";
 
 /**
  * Validates an edge object based on the full tree.
@@ -11,7 +12,7 @@ import { ODError } from "@open-decision/type-classes";
  */
 export const isValidEdge =
   (tree: Tree.TTree) =>
-  ({ source, target }: Omit<Edge.TEdge, "id">) => {
+  ({ source, target }: Omit<IEdgePlugin, "id">) => {
     // Only validate edges with targets.
     if (!target) return true;
 

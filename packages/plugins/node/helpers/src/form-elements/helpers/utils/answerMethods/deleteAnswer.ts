@@ -1,15 +1,15 @@
 import { TTreeClient } from "@open-decision/tree-type";
-import { ODProgrammerError } from "@open-decision/type-classes";
+import { TInputId } from "../../InputPlugin";
 import { getInput } from "../inputMethods";
 import { InputWithAnswers } from "./sharedTypes";
 
 export const deleteAnswer =
   <TType extends InputWithAnswers>() =>
-  (inputId: string, answerId: string) =>
+  (inputId: TInputId, answerId: string) =>
   (treeClient: TTreeClient) => {
     const input = getInput<TType>()(inputId)(treeClient);
 
-    if (input instanceof ODProgrammerError) return;
+    if (!input) return;
 
     const answerIndex = input.answers?.findIndex(({ id }) => id === answerId);
 

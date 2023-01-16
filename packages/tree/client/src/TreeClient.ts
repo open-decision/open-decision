@@ -24,8 +24,8 @@ export const createTreeClientWithPlugins = (tree: Tree.TTree) => {
   };
 
   const EdgeType = z.discriminatedUnion("type", [
-    CompareEdgePluginObject.plugin.Type,
-    DirectEdgePluginObject.plugin.Type,
+    CompareEdgePluginObject.Type,
+    DirectEdgePluginObject.Type,
   ]);
 
   const NodePlugins = {

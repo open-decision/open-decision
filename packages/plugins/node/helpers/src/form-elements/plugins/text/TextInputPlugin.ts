@@ -17,7 +17,7 @@ export class TextInputPlugin extends InputPlugin<ITextInput> {
     ({ required = false, ...data }: Partial<Omit<ITextInput, "id" | "type">>) =>
     (_treeClient: TTreeClient | TReadOnlyTreeClient) => {
       return {
-        id: crypto.randomUUID(),
+        id: `input_${crypto.randomUUID()}`,
         type: this.type,
         required,
         ...data,

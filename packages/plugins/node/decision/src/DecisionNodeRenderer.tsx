@@ -51,7 +51,7 @@ export const DecisionNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
 
     send({
       type: "ADD_USER_ANSWER",
-      answer: { [variable.id]: variable },
+      answer: variable,
     });
 
     send("EVALUATE_NODE_CONDITIONS");

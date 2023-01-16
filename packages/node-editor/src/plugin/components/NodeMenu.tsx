@@ -13,10 +13,11 @@ import {
 import { useTranslations } from "next-intl";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { useEditor } from "../../state";
+import { TNodeId } from "@open-decision/tree-type";
 
 type Props = {
   isStartNode?: boolean;
-  nodeId: string;
+  nodeId: TNodeId;
   name: string;
   className?: string;
 } & DropdownMenu.ContentProps;
@@ -34,7 +35,7 @@ export function NodeMenu({
 
   const node = useTree((treeClient) => treeClient.nodes.get.single(nodeId));
 
-  if (node instanceof Error) return null;
+  if (!node) return null;
 
   return (
     <DropdownMenu.Root>

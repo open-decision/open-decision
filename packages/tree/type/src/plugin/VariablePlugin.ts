@@ -1,8 +1,25 @@
+import { z } from "zod";
+import { TId } from "./EntityPlugin";
+
+export const ZVariablePlugin = z.object({
+  id: z.string().uuid(),
+  type: z.string(),
+  name: z.string().optional(),
+  value: z.any().optional(),
+});
+
 export interface IVariablePlugin<TType extends string = string> {
-  id: string;
+  id: TId;
   type: TType;
   name?: string;
+  value?: any;
 }
+
+export type IReadableVariablePlugin<
+  TType extends IVariablePlugin = IVariablePlugin
+> = Omit<TType, "id"> & {
+  id: string;
+};
 
 export abstract class VariablePlugin<
   TType extends IVariablePlugin = IVariablePlugin

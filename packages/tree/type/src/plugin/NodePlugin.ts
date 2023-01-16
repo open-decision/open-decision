@@ -1,23 +1,49 @@
 import { ODError, ODProgrammerError } from "@open-decision/type-classes";
+import { z } from "zod";
 import { TTreeClient, TReadOnlyTreeClient } from "../treeClient";
 import {
+  ZEntityPluginBase,
   IEntityPluginBase,
   EntityPlugin,
-  deleteEntityFn,
+  TId,
 } from "./EntityPlugin";
-import { IVariablePlugin } from "./VariablePlugin";
+import { IReadableVariablePlugin, IVariablePlugin } from "./VariablePlugin";
+
+export const ZNodeId = z.custom<TNodeId>(
+  (value) => typeof value === "string" && value.includes("nodes")
+);
+
+export const isNodeId = (value: any): value is TNodeId => {
+  return ZNodeId.safeParse(value).success;
+};
+
+export const ZNodePlugin = ZEntityPluginBase.extend({
+  id: ZNodeId,
+  position: z.object({
+    x: z.number(),
+    y: z.number(),
+  }),
+  name: z.string().optional(),
+  parent: z.string().optional(),
+  final: z.boolean().optional(),
+  rendererButtonLabel: z.string().optional(),
+  isAddable: z.boolean().optional(),
+});
+
+export type TNodeId = `nodes_${string}`;
 
 export interface INodePlugin<TType extends string = string>
   extends IEntityPluginBase<TType> {
+  id: TNodeId;
   position: { x: number; y: number };
   name?: string;
   parent?: string;
   final?: true;
   rendererButtonLabel?: string;
-  isAddable?: true;
+  isAddable?: boolean;
 }
 
-abstract class BaseNodePlugin<
+export abstract class BaseNodePlugin<
   TType extends INodePlugin = INodePlugin
 > extends EntityPlugin<TType> {
   pluginType = "nodes" as const;
@@ -25,28 +51,30 @@ abstract class BaseNodePlugin<
   abstract create: (data: any) => (treeClient: TTreeClient) => TType;
 
   getSingle =
-    (nodeId: string) => (treeClient: TTreeClient | TReadOnlyTreeClient) =>
-      treeClient.nodes.get.single<TType>(nodeId);
+    (nodeId: TType["id"]) => (treeClient: TTreeClient | TReadOnlyTreeClient) =>
+      treeClient.nodes.get.single<TType>(nodeId, this.type);
 
   getCollection =
-    (nodeIds: string[]) => (treeClient: TTreeClient | TReadOnlyTreeClient) =>
-      treeClient.nodes.get.collection<TType>(nodeIds);
+    (nodeIds: TType["id"][]) =>
+    (treeClient: TTreeClient | TReadOnlyTreeClient) =>
+      treeClient.nodes.get.collection<TType>(nodeIds, this.type);
 
   getAll = (treeClient: TTreeClient | TReadOnlyTreeClient) =>
-    treeClient.nodes.get.all<TType>();
+    treeClient.nodes.get.allOfType<TType>(this.type);
 
   subscribeSingle =
-    (nodeId: string) => (treeClient: TTreeClient | TReadOnlyTreeClient) =>
-      treeClient.nodes.get.single<TType>(nodeId);
+    (nodeId: TType["id"]) => (treeClient: TTreeClient | TReadOnlyTreeClient) =>
+      treeClient.nodes.get.single<TType>(nodeId, this.type);
 
   subscribeCollection =
-    (nodeIds: string[]) => (treeClient: TTreeClient | TReadOnlyTreeClient) =>
-      treeClient.nodes.get.collection<TType>(nodeIds);
+    (nodeIds: TType["id"][]) =>
+    (treeClient: TTreeClient | TReadOnlyTreeClient) =>
+      treeClient.nodes.get.collection<TType>(nodeIds, this.type);
 
   subscribeAll = (treeClient: TTreeClient | TReadOnlyTreeClient) =>
-    treeClient.nodes.get.all<TType>();
+    treeClient.nodes.get.allOfType<TType>(this.type);
 
-  delete: deleteEntityFn = (nodeIds) => (treeClient) => {
+  delete = (nodeIds: TNodeId[]) => (treeClient: TTreeClient) => {
     treeClient.nodes.delete(nodeIds);
   };
 
@@ -75,21 +103,21 @@ export abstract class NodePluginWithVariable<
   hasVariable = true;
 
   abstract getVariable: (
-    nodeId: string,
+    nodeId: TNodeId,
     answers: any
   ) => TVariableType | undefined;
 
   abstract createVariable: (
-    nodeId: string,
+    nodeId: TNodeId,
     answer: any
   ) => (
     treeClient: TTreeClient | TReadOnlyTreeClient
   ) => TVariableType | ODError | ODProgrammerError | undefined;
 
   abstract createReadableVariable: (
-    nodeId: string,
+    nodeId: TId,
     answer: any
   ) => (
     treeClient: TTreeClient | TReadOnlyTreeClient
-  ) => TVariableType | ODError | ODProgrammerError | undefined;
+  ) => IReadableVariablePlugin<TVariableType> | undefined;
 }

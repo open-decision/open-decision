@@ -1,5 +1,5 @@
-import { RendererComponentProps } from "../../../helpers";
+import { InputRenderer } from "../../../helpers/types";
 
-export function PlaceholderInputRenderer(_props: RendererComponentProps) {
+export const PlaceholderInputRenderer: InputRenderer = (_props) => {
   return <>Platzhalter</>;
-}
+};

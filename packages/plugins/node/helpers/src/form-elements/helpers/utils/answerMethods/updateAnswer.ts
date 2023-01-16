@@ -2,13 +2,14 @@ import { TTreeClient } from "@open-decision/tree-type";
 import { getInput } from "../inputMethods";
 import { InputWithAnswers } from "./sharedTypes";
 import { getAnswer } from "./getAnswer";
+import { TInputId } from "../../InputPlugin";
 
 export const updateAnswer =
   <TType extends InputWithAnswers>() =>
-  (inputId: string, answerId: string, newValue: string) =>
+  (inputId: TInputId, answerId: string, newValue: string) =>
   (treeClient: TTreeClient) => {
     const input = getInput<TType>()(inputId)(treeClient);
-    if (input instanceof Error) return;
+    if (!input) return;
 
     const answer = getAnswer<TType>()(input, answerId);
 

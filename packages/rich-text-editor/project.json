@@ -4,16 +4,6 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "build": {
-      "executor": "@nrwl/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/packages/rich-text-editor",
-        "main": "packages/rich-text-editor/src/index.ts",
-        "tsConfig": "packages/rich-text-editor/tsconfig.lib.json",
-        "assets": ["packages/rich-text-editor/*.md"]
-      }
-    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
@@ -35,13 +25,7 @@
       "options": {
         "command": "tsc -p tsconfig.lib.json --noEmit",
         "cwd": "packages/rich-text-editor"
-      },
-      "dependsOn": [
-        {
-          "projects": "dependencies",
-          "target": "build"
-        }
-      ]
+      }
     }
   },
   "name": "rich-text-editor"

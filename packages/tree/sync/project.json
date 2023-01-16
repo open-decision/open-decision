@@ -4,16 +4,6 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "build": {
-      "executor": "@nrwl/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/packages/tree/sync",
-        "main": "packages/tree/sync/src/index.ts",
-        "tsConfig": "packages/tree/sync/tsconfig.lib.json",
-        "assets": ["packages/tree/sync/*.md"]
-      }
-    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],

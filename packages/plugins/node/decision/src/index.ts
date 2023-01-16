@@ -3,12 +3,14 @@ import { DecisionNodePlugin } from "./DecisionNodePlugin";
 import { DecisionNodeSidebar } from "./DecisionNodeSidebar/DecisionNodeSidebar";
 import { DecisionNodeRenderer } from "./DecisionNodeRenderer";
 import { Pencil1Icon } from "@radix-ui/react-icons";
+import { createNodePluginObject } from "@open-decision/plugins-node-helpers";
+import { DecisionNodeInputPlugins } from "./createInputPlugins";
 
 export * from "./DecisionNodePlugin";
 
 const plugin = new DecisionNodePlugin();
 
-export const DecisionNodePluginObject = {
+export const DecisionNodePluginObject = createNodePluginObject({
   plugin,
   Editor: {
     Node: DecisionCanvasNode,
@@ -16,6 +18,6 @@ export const DecisionNodePluginObject = {
   },
   Renderer: DecisionNodeRenderer,
   type: plugin.type,
-  pluginEntities: ["inputs"],
+  pluginEntities: { inputs: DecisionNodeInputPlugins },
   Icon: Pencil1Icon,
-};
+});

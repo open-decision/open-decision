@@ -4,16 +4,6 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "build": {
-      "executor": "@nrwl/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/packages/plugins/edge/compare",
-        "main": "packages/plugins/edge/compare/src/index.ts",
-        "tsConfig": "packages/plugins/edge/compare/tsconfig.lib.json",
-        "assets": ["packages/plugins/edge/compare/*.md"]
-      }
-    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],

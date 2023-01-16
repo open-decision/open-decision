@@ -1,14 +1,11 @@
+import { IEntityPluginBase, TId } from "../plugin";
 import { Tree } from "../type-classes";
-import { lookupEntityOfKey } from "./findEntityOfKey";
 
 export const getPluginEntity = (tree: Tree.TTree) =>
-  function <TType extends { id: string; type: string }>(
-    entityKey: string,
-    id: string
-  ) {
-    const data = tree.pluginEntities[entityKey][id];
+  function <TType extends IEntityPluginBase>(entityKey: string, id: TId) {
+    const entity = tree.pluginEntities[entityKey][id];
 
-    if (!data) return lookupEntityOfKey(entityKey)(tree, id);
+    if (!entity) return undefined;
 
-    return data as TType;
+    return entity as TType;
   };

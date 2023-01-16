@@ -14,7 +14,7 @@ export class PlaceholderInputPlugin extends InputPlugin<IPlaceholderInput> {
     (data: Partial<Omit<IPlaceholderInput, "id" | "type">>) =>
     (_treeClient: TTreeClient | TReadOnlyTreeClient) => {
       return {
-        id: crypto.randomUUID(),
+        id: `input_${crypto.randomUUID()}`,
         type: this.type,
         ...data,
       } satisfies IPlaceholderInput;

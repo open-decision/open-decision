@@ -1,5 +1,6 @@
 import { ODProgrammerError } from "@open-decision/type-classes";
-import { Tree, Edge } from "../type-classes";
+import { IEdgePlugin } from "../plugin";
+import { Tree } from "../type-classes";
 import { isValidEdge } from "../validators";
 
 /**
@@ -12,7 +13,7 @@ import { isValidEdge } from "../validators";
  *
  * @param edge to be added to the tree
  */
-export const addEdge = (tree: Tree.TTree) => (edge: Edge.TEdge) => {
+export const addEdge = (tree: Tree.TTree) => (edge: IEdgePlugin) => {
   if (!tree.edges) tree.edges = {};
 
   if (!isValidEdge(tree)(edge))

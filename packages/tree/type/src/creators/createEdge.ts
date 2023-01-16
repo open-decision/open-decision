@@ -1,14 +1,15 @@
-import { Edge, Tree } from "../type-classes";
+import { Tree } from "../type-classes";
 import { v4 as uuid } from "uuid";
 import { isValidEdge } from "../validators";
 import { ODError } from "@open-decision/type-classes";
+import { IEdgePlugin } from "../plugin";
 
 /**
  * Used to create a valid new edge. This needs the full tree to make sure the edge is valid.
  */
 export const createEdge =
   (tree: Tree.TTree) =>
-  <TEdgeType extends Edge.TEdge>(edge: Omit<TEdgeType, "id">) => {
+  <TEdgeType extends IEdgePlugin>(edge: Omit<TEdgeType, "id">) => {
     // Make sure the edge does not connect the node to itself.
     if (edge.source === edge.target)
       return new ODError({
@@ -18,9 +19,9 @@ export const createEdge =
 
     // Create the edge object
     const newEdge = {
-      id: uuid(),
+      id: `edges_${uuid()}`,
       ...edge,
-    } as TEdgeType;
+    } satisfies IEdgePlugin;
 
     // Validate the created edge object, based on the rest of the tree.
     const isEdgeValid = isValidEdge(tree)(newEdge);

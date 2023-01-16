@@ -3,14 +3,21 @@ import { Form, TargetSelector } from "@open-decision/design-system";
 import { DirectEdgePlugin } from "@open-decision/plugins-edge-direct";
 import { TNodeSidebarProps } from "@open-decision/plugins-node-helpers";
 import { useTree } from "@open-decision/tree-sync";
+import { TNodeId } from "@open-decision/tree-type";
 import { GroupNodePlugin } from "../GroupNodePlugin";
 
-const GroupNode = new GroupNodePlugin();
 const DirectEdge = new DirectEdgePlugin();
 
-type Props = { nodeId: string } & Pick<TNodeSidebarProps, "onNodeCreate">;
+type Props = { nodeId: TNodeId; GroupNode: GroupNodePlugin } & Pick<
+  TNodeSidebarProps,
+  "onNodeCreate"
+>;
 
-export function GroupNodeSidebarPaths({ nodeId, onNodeCreate }: Props) {
+export function GroupNodeSidebarPaths({
+  nodeId,
+  GroupNode,
+  onNodeCreate,
+}: Props) {
   const node = useTree(GroupNode.getSingle(nodeId));
 
   const edge = useTree((treeClient) => {

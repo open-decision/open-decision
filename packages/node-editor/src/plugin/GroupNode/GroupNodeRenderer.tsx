@@ -24,13 +24,10 @@ import { PlusIcon } from "@radix-ui/react-icons";
 import { ErrorBoundary } from "react-error-boundary";
 import { convertToODError } from "@open-decision/type-classes";
 import {
-  NodePluginObject,
   NodeRenderer,
   NodeRendererProps,
 } from "@open-decision/plugins-node-helpers";
-import { EdgePluginObject } from "@open-decision/plugins-edge-helpers";
-
-const GroupNode = new GroupNodePlugin();
+import { TNodeId } from "@open-decision/tree-type";
 
 export const GroupNodeRenderer: NodeRenderer = (props) => {
   return (
@@ -52,12 +49,13 @@ function RendererComponent({
   edgePlugins,
   ...props
 }: NodeRendererProps) {
+  const GroupNode = new GroupNodePlugin(nodePlugins.pluginsWithVariable);
+
   const { treeClient, send, environment } = useInterpreter();
   const groupNode = GroupNode.getSingle(nodeId)(treeClient);
 
   const subTree = React.useMemo(
-    () =>
-      groupNode instanceof Error ? undefined : createSubTree(clone(groupNode)),
+    () => (!groupNode ? undefined : createSubTree(clone(groupNode))),
     [groupNode]
   );
 
@@ -96,6 +94,7 @@ function RendererComponent({
           nodePlugins={nodePlugins}
           edgePlugins={edgePlugins}
           groupNodeId={nodeId}
+          GroupNode={GroupNode}
         />
       </Renderer.Root>
     </RendererPrimitives.Container>
@@ -103,28 +102,28 @@ function RendererComponent({
 }
 
 type RendererContentProps = {
-  nodePlugins: Record<string, NodePluginObject>;
-  edgePlugins: Record<string, EdgePluginObject>;
-  groupNodeId: string;
+  groupNodeId: TNodeId;
   iterationResults: InterpreterContext[];
   onDone: () => void;
   className?: string;
-};
+  GroupNode: GroupNodePlugin;
+} & Pick<NodeRendererProps, "edgePlugins" | "nodePlugins">;
 
 const RendererContent = ({
-  nodePlugins,
+  GroupNode,
   edgePlugins,
   groupNodeId,
   iterationResults,
   onDone,
   className,
+  nodePlugins,
 }: RendererContentProps) => {
   const { getCurrentNode, state, send } = useInterpreter();
   const groupNode = useInterpreterTree(GroupNode.getSingle(groupNodeId));
 
   const methods = Form.useForm();
 
-  if (groupNode instanceof Error) return null;
+  if (!groupNode) return null;
 
   if (state.matches("done"))
     return (
@@ -153,11 +152,15 @@ const RendererContent = ({
             send({ type: "EVALUATE_NODE_CONDITIONS" });
           }}
           groupNodeId={groupNodeId}
+          GroupNode={GroupNode}
         />
       </RendererPrimitives.Form>
     );
 
   const currentNode = getCurrentNode();
+
+  if (currentNode instanceof Error) return null;
+
   if (currentNode.id === groupNodeId)
     return (
       <RendererPrimitives.Form methods={methods}>
@@ -171,6 +174,7 @@ const RendererContent = ({
             send({ type: "EVALUATE_NODE_CONDITIONS" });
           }}
           groupNodeId={groupNodeId}
+          GroupNode={GroupNode}
         />
       </RendererPrimitives.Form>
     );
@@ -187,10 +191,11 @@ const RendererContent = ({
 
 type ButtonRowProps = {
   onClick: () => void;
-  groupNodeId: string;
+  groupNodeId: TNodeId;
+  GroupNode: GroupNodePlugin;
 };
 
-const ButtonRow = ({ onClick, groupNodeId }: ButtonRowProps) => {
+const ButtonRow = ({ onClick, GroupNode, groupNodeId }: ButtonRowProps) => {
   const groupNode = useInterpreterTree(GroupNode.getSingle(groupNodeId));
 
   if (groupNode instanceof Error) return null;
@@ -201,7 +206,7 @@ const ButtonRow = ({ onClick, groupNodeId }: ButtonRowProps) => {
         <Icon>
           <PlusIcon />
         </Icon>
-        {`${groupNode.cta ?? "Antwort"} hinzufügen`}
+        {`${groupNode?.cta ?? "Antwort"} hinzufügen`}
       </Button>
     </Row>
   );

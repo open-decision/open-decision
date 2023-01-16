@@ -1,11 +1,12 @@
-import { getEdge } from "../getters";
+import { getEdgeSingle } from "../getters";
+import { TEdgeId, TNodeId } from "../plugin";
 import { Tree } from "../type-classes";
 
 export const updateEdgeTarget =
-  (tree: Tree.TTree) => (edgeId: string, newTarget: string) => {
-    const edge = getEdge(tree)(edgeId);
+  (tree: Tree.TTree) => (edgeId: TEdgeId, newTarget: TNodeId) => {
+    const edge = getEdgeSingle(tree)(edgeId);
 
-    if (edge instanceof Error) throw edge;
+    if (!edge) return;
 
     edge.target = newTarget;
   };

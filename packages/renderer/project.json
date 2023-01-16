@@ -4,16 +4,6 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "build": {
-      "executor": "@nrwl/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/packages/renderer",
-        "main": "packages/renderer/src/index.ts",
-        "tsConfig": "packages/renderer/tsconfig.lib.json",
-        "assets": ["packages/renderer/*.md"]
-      }
-    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
@@ -35,13 +25,7 @@
       "options": {
         "command": "tsc -p tsconfig.lib.json --noEmit",
         "cwd": "packages/renderer"
-      },
-      "dependsOn": [
-        {
-          "projects": "dependencies",
-          "target": "build"
-        }
-      ]
+      }
     }
   },
   "name": "renderer"

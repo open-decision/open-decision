@@ -1,18 +1,19 @@
-import { getSingle } from "../getters/getSingle";
-import { INodePlugin } from "../plugin";
-import { Node, Tree } from "../type-classes";
+import { values } from "remeda";
+import { getNodeSingle } from "../getters";
+import { INodePlugin, TNodeId } from "../plugin";
+import { Tree } from "../type-classes";
 import { createNode } from "./createNode";
 
 export const createChildNode =
   (tree: Tree.TTree) =>
-  <TNodeType extends Node.TNode>(nodeId: string, newNode: TNodeType) => {
+  <TNodeType extends INodePlugin>(nodeId: TNodeId, newNode: TNodeType) => {
     // Get the node we want the children for
-    const node = getSingle(tree)<INodePlugin>("nodes")(nodeId);
+    const node = getNodeSingle(tree)(nodeId);
 
-    if (node instanceof Error) throw node;
+    if (!node) return undefined;
 
     // Fitler the edges to only include the ones with the given node as the source
-    const numberOfEdges = Object.values(tree.edges ?? {}).filter(
+    const numberOfEdges = values(tree.edges ?? {}).filter(
       (edge) => edge.source === nodeId
     ).length;
 

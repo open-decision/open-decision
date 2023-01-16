@@ -3,16 +3,6 @@
   "sourceRoot": "packages/plugins/node/info/src",
   "projectType": "library",
   "targets": {
-    "build": {
-      "executor": "@nrwl/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/packages/plugins/node/info",
-        "main": "packages/plugins/node/info/src/index.ts",
-        "tsConfig": "packages/plugins/node/info/tsconfig.lib.json",
-        "assets": ["packages/plugins/node/info/*.md"]
-      }
-    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],

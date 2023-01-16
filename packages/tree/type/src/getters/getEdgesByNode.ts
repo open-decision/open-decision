@@ -1,8 +1,9 @@
 import { isEmpty } from "ramda";
 import { Tree } from "../type-classes";
-
-import { IEdgePlugin } from "../plugin/EdgePlugin";
-import { getSingle } from "./getSingle";
+import { IEdgePlugin, TEdgeId } from "../plugin/EdgePlugin";
+import { getEdgeSingle } from "./getEdgeSingle";
+import { TNodeId } from "../plugin";
+import { forEachObj } from "remeda";
 
 const isEdgeOfType = <TType extends IEdgePlugin>(
   edge: TType,
@@ -11,22 +12,22 @@ const isEdgeOfType = <TType extends IEdgePlugin>(
 
 export const getEdgesByNode =
   (tree: Tree.TTree) =>
-  <TType extends IEdgePlugin>(nodeId: string, type?: string) => {
+  <TType extends IEdgePlugin>(nodeId: TNodeId, type?: string) => {
     if (!tree.edges) return undefined;
 
     // We loop over the edges and check if the node is present on the edge.
     const relatedEdges: Record<
       "source" | "target",
-      Record<string, TType> | undefined
+      Record<TEdgeId, TType> | undefined
     > = {
       source: undefined,
       target: undefined,
     };
 
-    for (const key in tree.edges) {
-      const edge = getSingle(tree)<TType>("edges")(key);
+    forEachObj.indexed(tree.edges, (_, key) => {
+      const edge = getEdgeSingle(tree)<TType>(key);
 
-      if (edge instanceof Error) continue;
+      if (!edge) return;
 
       if (type ? isEdgeOfType(edge, type) : true) {
         if (edge.source === nodeId) {
@@ -39,7 +40,7 @@ export const getEdgesByNode =
           relatedEdges.target[key] = edge;
         }
       }
-    }
+    });
 
     // If the resulting conditions are empty we return undefined, because it is more meaningful and
     // easier to handle downstream.

@@ -1,5 +1,5 @@
 import { TRichText } from "@open-decision/rich-text-editor";
-import { NodePlugin, INodePlugin } from "@open-decision/tree-type";
+import { NodePlugin, INodePlugin } from "@open-decision/plugins-node-helpers";
 import { TReadOnlyTreeClient, TTreeClient } from "@open-decision/tree-type";
 
 export const typeName = "document" as const;

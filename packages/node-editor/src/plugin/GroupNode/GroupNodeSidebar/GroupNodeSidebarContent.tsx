@@ -8,15 +8,14 @@ import {
 import { Label } from "@open-decision/design-system";
 import { RichTextEditor } from "@open-decision/rich-text-editor";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
+import { TNodeId } from "@open-decision/tree-type";
 import { useTranslations } from "next-intl";
 import { sidebarCardClasses } from "../../components";
 import { GroupNodePlugin } from "../GroupNodePlugin";
 
-const GroupNode = new GroupNodePlugin();
+type Props = { nodeId: TNodeId; GroupNode: GroupNodePlugin };
 
-type Props = { nodeId: string };
-
-export function GroupNodeSidebarContent({ nodeId }: Props) {
+export function GroupNodeSidebarContent({ nodeId, GroupNode }: Props) {
   const node = useTree(GroupNode.getSingle(nodeId));
   const treeClient = useTreeClient();
 
@@ -32,7 +31,7 @@ export function GroupNodeSidebarContent({ nodeId }: Props) {
           },
   });
 
-  if (node instanceof Error) return null;
+  if (!node) return null;
 
   return (
     <Tabs.Content value="Inhalt" className={stackClasses({}, "gap-4")}>

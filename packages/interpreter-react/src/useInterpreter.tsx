@@ -15,12 +15,13 @@ import { InterpreterOptions as XStateInterpreterOptions } from "xstate";
 import { UseMachineOptions } from "@xstate/react/lib/types";
 import { ErrorCard, Stack } from "@open-decision/design-system";
 import {
-  IEdgePlugin,
   ReadOnlyTreeClient,
   TReadOnlyTreeClient,
   Tree,
+  IEdgePlugin,
 } from "@open-decision/tree-type";
 import { EdgePluginObject } from "@open-decision/plugins-edge-helpers";
+import { forEachObj } from "remeda";
 
 function createResolver(
   treeClient: TReadOnlyTreeClient,
@@ -43,22 +44,29 @@ function createResolver(
   const resolver: Resolver = (context, event) => (callback) => {
     const currentNode = getCurrentNode(treeClient, context);
 
+    if (currentNode instanceof Error)
+      return callback({ type: "INVALID_INTERPRETATION", error: currentNode });
+
     if (currentNode.final) {
       callback({ type: "FINAL_INTERPRETATION" });
     }
 
     const edges = treeClient.edges.get.byNode(currentNode.id)?.source;
 
-    for (const edgeId in edges) {
-      const edge = edges[edgeId];
+    if (!edges)
+      return callback({
+        type: "INVALID_INTERPRETATION",
+        error: new ODProgrammerError({ code: "MISSING_EDGES_FOR_NODE" }),
+      });
 
+    forEachObj.indexed(edges, (edge) => {
       const edgeResolver = resolvers(edge);
 
       const result = edgeResolver(context, event);
 
       // If the result is false the condtion was not true and we
       // can continue with the next condition.
-      if (result.state === "failure") continue;
+      if (result.state === "failure") return;
 
       // If the result is an error we fail the interpretation, because
       // we can not resolve the tree correctly.
@@ -70,7 +78,7 @@ function createResolver(
         });
 
       callback({ type: "VALID_INTERPRETATION", target: result.target });
-    }
+    });
   };
 
   return resolver;

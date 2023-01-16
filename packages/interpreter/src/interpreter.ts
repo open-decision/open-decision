@@ -1,10 +1,6 @@
-import { IVariablePlugin, Tree } from "@open-decision/tree-type";
+import { IVariablePlugin, TNodeId, Tree } from "@open-decision/tree-type";
 import { assign, createMachine, Interpreter, Sender } from "xstate";
-import {
-  InvalidTreeError,
-  MissingEdgeForThruthyConditionError,
-  NoTruthyConditionError,
-} from "./errors";
+import { InvalidTreeError } from "./errors";
 import { canGoBack, canGoForward } from "./methods";
 import { z } from "zod";
 
@@ -18,17 +14,13 @@ export type EVALUATE_NODE_CONDITIONS = {
 };
 
 type ResolverEvents =
-  | { type: "VALID_INTERPRETATION"; target: string }
-  | { type: "INVALID_INTERPRETATION"; error: InterpreterErrors }
+  | { type: "VALID_INTERPRETATION"; target: TNodeId }
+  | { type: "INVALID_INTERPRETATION"; error: Error }
   | { type: "FINAL_INTERPRETATION" };
 
-export type InterpreterErrors =
-  | MissingEdgeForThruthyConditionError
-  | NoTruthyConditionError;
-
 export type InterpreterContext = {
-  history: { nodes: string[]; position: number };
-  answers: Record<string, IVariablePlugin>;
+  history: { nodes: TNodeId[]; position: number };
+  answers: Record<TNodeId, IVariablePlugin>;
 };
 
 export type InterpreterEvents =
@@ -37,7 +29,7 @@ export type InterpreterEvents =
   | { type: "DONE" }
   | { type: "GO_BACK" }
   | { type: "GO_FORWARD" }
-  | { type: "JUMP_TO_NODE"; target: string }
+  | { type: "JUMP_TO_NODE"; target: TNodeId }
   | { type: "RECOVER" }
   | { type: "RESTART" }
   | ResolverEvents
@@ -52,9 +44,9 @@ export type InterpreterService = Interpreter<
 >;
 
 export type InterpreterOptions = {
-  onError?: (error: InterpreterErrors) => void;
-  onSelectedNodeChange?: (nextNodeIs: string) => void;
-  initialNode?: string;
+  onError?: (error: Error) => void;
+  onSelectedNodeChange?: (nextNodeId: TNodeId) => void;
+  initialNode?: TNodeId;
   onDone?: (context: InterpreterContext) => void;
   environment: "private" | "shared" | "published";
   isInteractive?: boolean;

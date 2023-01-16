@@ -14,7 +14,7 @@ export function useSelectedEdges() {
 
 export function useSelectedEdgeIds() {
   const { editorStore } = useEditor();
-  const { selectedNodeIds } = useSnapshot(editorStore);
+  const { selectedEdgeIds } = useSnapshot(editorStore);
 
-  return selectedNodeIds;
+  return selectedEdgeIds;
 }

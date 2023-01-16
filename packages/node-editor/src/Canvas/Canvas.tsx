@@ -15,12 +15,7 @@ import { useEditor } from "../state";
 import { useUnmount } from "react-use";
 import { twMerge, useNotificationTemplate } from "@open-decision/design-system";
 import { NodeDeletionDialog } from "./NodeDeletionDialog";
-
-// const validConnectEvent = (
-//   target: MouseEvent["target"]
-// ): target is HTMLDivElement | HTMLSpanElement =>
-//   (target instanceof HTMLDivElement || target instanceof HTMLSpanElement) &&
-//   target.dataset["nodeid"] != null;
+import { isNodeId, TNodeId, ZEdgeId, ZNodeId } from "@open-decision/tree-type";
 
 const containerClasses = "grid h-full w-full relative bg-layer-3";
 
@@ -44,7 +39,7 @@ export function Canvas({
   onUnmount,
   style,
 }: Props) {
-  const [nodesToDelete, setNodesToDelete] = React.useState<string[]>([]);
+  const [nodesToDelete, setNodesToDelete] = React.useState<TNodeId[]>([]);
   const addNotificationFromTemplate = useNotificationTemplate();
 
   const startNodeId = useTree((treeClient) => treeClient.get.startNodeId());
@@ -102,8 +97,12 @@ export function Canvas({
         onNodesChange={(nodeChanges) => {
           const nodesToDelete = nodeChanges
             .filter(
-              (change): change is NodeRemoveChange =>
-                change.type === "remove" && change.id !== startNodeId
+              (
+                change
+              ): change is Omit<NodeRemoveChange, "id"> & { id: TNodeId } =>
+                change.type === "remove" &&
+                change.id !== startNodeId &&
+                isNodeId(change.id)
             )
             .map((change) => change.id);
 
@@ -123,8 +122,12 @@ export function Canvas({
                 if (nodeChange.dragging) {
                   setDragging(true);
 
+                  const parsedNodeChangeId = ZNodeId.safeParse(nodeChange.id);
+
+                  if (!parsedNodeChangeId.success) return;
+
                   treeClient.nodes.update.position(
-                    nodeChange.id,
+                    parsedNodeChangeId.data,
                     nodeChange.position ?? { x: 0, y: 0 }
                   );
                 }
@@ -133,8 +136,12 @@ export function Canvas({
               case "select": {
                 if (dragging && selectedNodeIds.length === 0) return;
 
+                const parsedNodeChangeId = ZNodeId.safeParse(nodeChange.id);
+
+                if (!parsedNodeChangeId.success) return;
+
                 if (nodeChange.selected) {
-                  addSelectedNodes([nodeChange.id]);
+                  addSelectedNodes([parsedNodeChangeId.data]);
                 } else {
                   removeSelectedNode(nodeChange.id);
                 }
@@ -148,7 +155,11 @@ export function Canvas({
             switch (edgeChange.type) {
               case "select":
                 if (edgeChange.selected) {
-                  addSelectedEdges([edgeChange.id]);
+                  const parsedEdgeChangeId = ZEdgeId.safeParse(edgeChange.id);
+
+                  if (!parsedEdgeChangeId.success) return;
+
+                  addSelectedEdges([parsedEdgeChangeId.data]);
                 } else {
                   removeSelectedEdge(edgeChange.id);
                 }

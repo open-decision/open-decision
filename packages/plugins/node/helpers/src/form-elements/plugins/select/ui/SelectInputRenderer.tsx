@@ -1,13 +1,14 @@
 import { Form, Stack } from "@open-decision/design-system";
 import { useInterpreterTree } from "@open-decision/interpreter-react";
 import { ISelectInput } from "../SelectInputPlugin";
-import { RendererComponentProps, RendererRadioGroup } from "../../../helpers";
+import { RendererRadioGroup } from "../../../helpers";
 import { ODProgrammerError } from "@open-decision/type-classes";
+import { InputRenderer } from "../../../helpers/types";
 
-export function SelectInputRendererComponent({
+export const SelectInputRendererComponent: InputRenderer = ({
   inputId,
   className,
-}: RendererComponentProps) {
+}) => {
   const input = useInterpreterTree((treeClient) => {
     const input = treeClient.pluginEntity.get.single<ISelectInput>(
       "inputs",
@@ -40,4 +41,4 @@ export function SelectInputRendererComponent({
       </Stack>
     </Form.Field>
   );
-}
+};

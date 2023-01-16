@@ -1,8 +1,5 @@
-import {
-  EdgePlugin,
-  IEdgePlugin,
-  TReadOnlyTreeClient,
-} from "@open-decision/tree-type";
+import { IEdgePlugin, EdgePlugin } from "@open-decision/plugins-edge-helpers";
+import { TReadOnlyTreeClient } from "@open-decision/tree-type";
 import { TTreeClient } from "@open-decision/tree-type";
 import { ODError } from "@open-decision/type-classes";
 

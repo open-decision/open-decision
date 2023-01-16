@@ -1,9 +1,10 @@
 import { Tree } from "../type-classes";
-import { getNode } from "../getters";
+import { getNodeSingle } from "../getters";
+import { TNodeId } from "../plugin";
 
-export const updateStartNode = (tree: Tree.TTree) => (startNode: string) => {
+export const updateStartNode = (tree: Tree.TTree) => (startNode: TNodeId) => {
   // We only get the node to make sure it exists.
-  getNode(tree)(startNode);
+  getNodeSingle(tree)(startNode);
 
   tree.startNode = startNode;
 };

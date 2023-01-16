@@ -1,8 +1,9 @@
 import { DropdownMenu } from "@open-decision/design-system";
+import { TNodeId } from "@open-decision/tree-type";
 import { useTranslations } from "next-intl";
 import { useEditor } from "./state";
 
-type Props = { parentNodes: { id: string; name?: string }[] };
+type Props = { parentNodes: { id: TNodeId; name?: string }[] };
 
 export function ParentNodeSelector({ parentNodes }: Props) {
   const t = useTranslations("builder.nodeEditingSidebar.parentNodeSelector");

@@ -1,10 +1,10 @@
 import { Form } from "@open-decision/design-system";
 import { useInterpreterTree } from "@open-decision/interpreter-react";
 import { ODProgrammerError } from "@open-decision/type-classes";
-import { RendererComponentProps } from "../../../helpers";
+import { InputRenderer } from "../../../helpers/types";
 import { ITextInput } from "../TextInputPlugin";
 
-export function TextInputRenderer({ inputId }: RendererComponentProps) {
+export const TextInputRenderer: InputRenderer = ({ inputId }) => {
   const input = useInterpreterTree((treeClient) => {
     const input = treeClient.pluginEntity.get.single<ITextInput>(
       "inputs",
@@ -28,4 +28,4 @@ export function TextInputRenderer({ inputId }: RendererComponentProps) {
       />
     </Form.Field>
   );
-}
+};

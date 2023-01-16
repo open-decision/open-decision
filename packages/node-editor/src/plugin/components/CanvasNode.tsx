@@ -19,9 +19,7 @@ export const CanvasNodeContainer = ({
   children,
   zIndex,
   className,
-}: NodePluginProps & {
-  children: React.ReactNode;
-}) => {
+}: NodePluginProps) => {
   const node = useTree((treeClient) => treeClient.nodes.get.single(id));
 
   const t = useTranslations("builder.canvas.questionNode");

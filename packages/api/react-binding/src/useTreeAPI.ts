@@ -185,7 +185,7 @@ export const useTreeAPI = (client: TClient = APIClient) => {
           nodes: {},
           pluginEntities: {},
           edges: {},
-          startNode: "",
+          startNode: "nodes_0",
           uuid: "",
         });
 

@@ -1,5 +1,6 @@
 import { Dialog, Text } from "@open-decision/design-system";
 import { useTreeClient } from "@open-decision/tree-sync";
+import { TNodeId } from "@open-decision/tree-type";
 import { useEditor } from "../state";
 
 type Props = Dialog.TriggerProps & {
@@ -7,7 +8,7 @@ type Props = Dialog.TriggerProps & {
   focusOnCancel?: () => void;
   onSuccess?: () => void;
   onCancel?: () => void;
-  nodesToDelete: string[];
+  nodesToDelete: TNodeId[];
 };
 
 export function NodeDeletionDialog({

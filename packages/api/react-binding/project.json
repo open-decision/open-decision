@@ -3,16 +3,6 @@
   "sourceRoot": "packages/api/react-binding/src",
   "projectType": "library",
   "targets": {
-    "build": {
-      "executor": "@nrwl/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/packages/api/react-binding",
-        "main": "packages/api/react-binding/src/index.ts",
-        "tsConfig": "packages/api/react-binding/tsconfig.lib.json",
-        "assets": ["packages/api/react-binding/*.md"]
-      }
-    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],

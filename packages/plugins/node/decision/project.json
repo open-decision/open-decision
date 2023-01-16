@@ -3,16 +3,6 @@
   "sourceRoot": "packages/plugins/node/decision/src",
   "projectType": "library",
   "targets": {
-    "build": {
-      "executor": "@nrwl/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/packages/plugins/node/decision",
-        "main": "packages/plugins/node/decision/src/index.ts",
-        "tsConfig": "packages/plugins/node/decision/tsconfig.lib.json",
-        "assets": ["packages/plugins/node/decision/*.md"]
-      }
-    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],

@@ -3,16 +3,6 @@
   "sourceRoot": "packages/plugins/node/document/src",
   "projectType": "library",
   "targets": {
-    "build": {
-      "executor": "@nrwl/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/packages/plugins/node/document",
-        "main": "packages/plugins/node/document/src/index.ts",
-        "tsConfig": "packages/plugins/node/document/tsconfig.lib.json",
-        "assets": ["packages/plugins/node/document/*.md"]
-      }
-    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],

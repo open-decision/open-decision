@@ -1,5 +1,11 @@
 import { useTreeClient } from "@open-decision/tree-sync";
-import { Edge, INodePlugin, Node, TTreeClient } from "@open-decision/tree-type";
+import {
+  IEdgePlugin,
+  INodePlugin,
+  TNodeId,
+  TTreeClient,
+  ZNodeId,
+} from "@open-decision/tree-type";
 import { ODError } from "@open-decision/type-classes";
 import { useTranslations } from "next-intl";
 import { Controller } from "react-hook-form";
@@ -7,22 +13,22 @@ import { Form, SelectWithCombobox, SelectWithComboboxProps } from "../Form";
 import { Row } from "../Layout";
 import { addNotification } from "../Notifications";
 
-export type onNodeCreate = (
-  data: Pick<INodePlugin, "name">
-) => (treeClient: TTreeClient) => Node.TNode;
+export type onNodeCreate = (data: {
+  name: string;
+}) => (treeClient: TTreeClient) => INodePlugin;
 
 export type onEdgeCreate = (
-  data: Pick<Edge.TEdge, "source" | "target">
-) => (treeClient: TTreeClient) => Edge.TEdge | ODError;
+  data: Pick<IEdgePlugin, "source" | "target">
+) => (treeClient: TTreeClient) => IEdgePlugin | ODError;
 
 export type onTargetUpdate = (newTarget?: string) => void;
 
 export type TargetSelectorProps = {
   name: string;
-  nodeId: string;
+  nodeId: TNodeId;
   inputClassName?: string;
   className?: string;
-  edge: Edge.TEdge;
+  edge: IEdgePlugin;
   onNodeCreate: onNodeCreate;
   onEdgeCreate: onEdgeCreate;
   onTargetUpdate?: onTargetUpdate;
@@ -61,6 +67,8 @@ export function TargetSelector({
                   onNodeCreate({ name: value })(treeClient)
                 );
 
+                if (!childNode) return;
+
                 const newEdge = onEdgeCreate({
                   source: nodeId,
                   target: childNode.id,
@@ -83,9 +91,13 @@ export function TargetSelector({
                 treeClient.nodes.add(childNode);
               }}
               onSelect={(newTarget) => {
+                const parsedTarget = ZNodeId.safeParse(newTarget);
+
+                if (!parsedTarget.success) return;
+
                 const newEdge = onEdgeCreate({
                   source: nodeId,
-                  target: newTarget,
+                  target: parsedTarget.data,
                 })(treeClient);
 
                 if (newEdge instanceof ODError) {

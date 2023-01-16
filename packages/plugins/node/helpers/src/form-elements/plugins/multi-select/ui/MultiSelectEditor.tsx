@@ -8,21 +8,24 @@ import {
 } from "../MultiSelectPlugin";
 import { TrashIcon } from "@radix-ui/react-icons";
 import {
-  InputComponentProps,
-  TAnswer,
   DragHandle,
-  InputPrimaryActionSlotProps,
   AddOptionButton,
   InputConfig,
+  TInputId,
 } from "../../../helpers";
 import { ODProgrammerError } from "@open-decision/type-classes";
+import {
+  InputConfigurator,
+  InputPrimaryActionSlot,
+  TAnswer,
+} from "../../../helpers/types";
 
 const MultiSelect = new MultiSelectInputPlugin();
 
-export function MultiSelectInputConfigurator({
+export const MultiSelectInputConfigurator: InputConfigurator = ({
   inputId,
   withRequiredOption,
-}: InputComponentProps) {
+}) => {
   const treeClient = useTreeClient();
 
   const ref = React.useRef<HTMLDivElement | null>(null);
@@ -85,11 +88,11 @@ export function MultiSelectInputConfigurator({
       </Form.Root>
     </Reorder.Group>
   );
-}
+};
 
 type AnswerProps = {
   answer: TAnswer;
-  inputId: string;
+  inputId: TInputId;
   groupRef: React.MutableRefObject<HTMLDivElement | null>;
   name: string;
 };
@@ -151,9 +154,9 @@ const Answer = ({ answer, inputId, groupRef, name }: AnswerProps) => {
   );
 };
 
-export function MultiSelectInputPrimaryActionSlot({
+export const MultiSelectInputPrimaryActionSlot: InputPrimaryActionSlot = ({
   inputId,
-}: InputPrimaryActionSlotProps) {
+}) => {
   const treeClient = useTreeClient();
 
   return (
@@ -164,4 +167,4 @@ export function MultiSelectInputPrimaryActionSlot({
       }}
     />
   );
-}
+};

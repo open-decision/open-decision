@@ -1,9 +1,9 @@
 import {
   deleteEntityFn,
-  TReadOnlyTreeClient,
-  TTreeClient,
   INodePlugin,
   NodePluginWithVariable,
+  TReadOnlyTreeClient,
+  TTreeClient,
 } from "@open-decision/tree-type";
 import {
   DecisionNodeInputPlugins,
@@ -125,9 +125,7 @@ export class DecisionNodePlugin extends NodePluginWithVariable<
         );
 
         if (value.input) {
-          DecisionNodeInputPlugins.select.plugin.delete([value.input])(
-            treeClient
-          );
+          DecisionNodeInputPlugins.select.delete([value.input])(treeClient);
         }
       }
     };
@@ -177,7 +175,7 @@ export class DecisionNodePlugin extends NodePluginWithVariable<
     (treeClient: TTreeClient | TReadOnlyTreeClient) => {
       const data = this.getVariableData(nodeId)(treeClient);
 
-      if (data instanceof Error) return data;
+      if (data instanceof Error) return;
 
       return match(data.input)
         .with({ type: "select" }, (input) => {
@@ -185,13 +183,7 @@ export class DecisionNodePlugin extends NodePluginWithVariable<
             (inputAnswer) => answer === inputAnswer.id
           )?.value;
 
-          if (!value)
-            return new ODProgrammerError({
-              code: "REQUESTED_ANSWER_DOES_NOT_EXIST_ON_INPUT",
-            });
-
-          if (!data.node.name)
-            return new ODProgrammerError({ code: "MISSING_NAME" });
+          if (!value || !data.node.name) return;
 
           return SelectVariable.create({
             id: this.createReadableKey(data.node.name),

@@ -1,14 +1,19 @@
-import { ODProgrammerError } from "@open-decision/type-classes";
+import { z } from "zod";
 import { TReadOnlyTreeClient, TTreeClient } from "../treeClient";
 
+export type TId<TEntity extends string = string> = `${TEntity}_${string}`;
+
+export const ZEntityId = z.custom<TId>((value) => typeof value === "string");
+
+export const ZEntityPluginBase = z.object({
+  id: ZEntityId,
+  type: z.string(),
+});
+
 export interface IEntityPluginBase<TType extends string = string> {
-  id: string;
+  id: TId;
   type: TType;
 }
-
-export type deleteEntityFn = (
-  ids: string[]
-) => (treeClient: TTreeClient) => void;
 
 export abstract class EntityPlugin<
   TType extends IEntityPluginBase = IEntityPluginBase
@@ -21,19 +26,14 @@ export abstract class EntityPlugin<
     this.type = typeName;
   }
 
-  abstract delete: deleteEntityFn;
+  abstract delete: (ids: TType["id"][]) => (treeClient: TTreeClient) => void;
 
   abstract getSingle: (
-    id: string
-  ) => (
-    treeClient: TTreeClient | TReadOnlyTreeClient
-  ) =>
-    | TType
-    | ODProgrammerError<"ENTITY_NOT_FOUND">
-    | ODProgrammerError<"ENTITY_FOUND_ON_DIFFERENT_ENTITY_KEY">;
+    id: TType["id"]
+  ) => (treeClient: TTreeClient | TReadOnlyTreeClient) => TType | undefined;
 
   abstract getCollection: (
-    ids: string[]
+    ids: TType["id"][]
   ) => (
     treeClient: TTreeClient | TReadOnlyTreeClient
   ) => Record<string, TType> | undefined;
@@ -43,16 +43,11 @@ export abstract class EntityPlugin<
   ) => Record<string, TType> | undefined;
 
   abstract subscribeSingle: (
-    id: string
-  ) => (
-    treeClient: TReadOnlyTreeClient
-  ) =>
-    | TType
-    | ODProgrammerError<"ENTITY_NOT_FOUND">
-    | ODProgrammerError<"ENTITY_FOUND_ON_DIFFERENT_ENTITY_KEY">;
+    id: TType["id"]
+  ) => (treeClient: TReadOnlyTreeClient) => TType | undefined;
 
   abstract subscribeCollection: (
-    ids: string[]
+    ids: TType["id"][]
   ) => (treeClient: TReadOnlyTreeClient) => Record<string, TType> | undefined;
 
   abstract subscribeAll: (

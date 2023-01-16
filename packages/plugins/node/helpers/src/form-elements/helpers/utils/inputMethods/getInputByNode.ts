@@ -1,5 +1,6 @@
 import {
   NodePlugin,
+  TNodeId,
   TReadOnlyTreeClient,
   TTreeClient,
 } from "@open-decision/tree-type";
@@ -10,12 +11,11 @@ export const getInputByNode =
   <TNodeType extends NodeWithInput, TInputType extends IInputPlugin>(
     nodePlugin: NodePlugin<TNodeType>
   ) =>
-  (nodeId: string) =>
+  (nodeId: TNodeId) =>
   (treeClient: TReadOnlyTreeClient | TTreeClient) => {
     const node = nodePlugin.getSingle(nodeId)(treeClient);
 
-    if (node instanceof Error) throw node;
-    if (!node.input) return undefined;
+    if (!node || !node.input) return undefined;
 
     return treeClient.pluginEntity.get.single<TInputType>("inputs", node.input);
   };

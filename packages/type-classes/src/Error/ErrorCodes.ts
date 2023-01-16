@@ -29,6 +29,8 @@ export const ProgrammerErrors = [
   "FETCH_BLOB_FUNCTION_NOT_PROVIDED",
   "MISSING_NAME",
   "NODE_WITHOUT_INPUT",
+  "INVALID_ENTITY_TYPE",
+  "MISSING_EDGES_FOR_NODE",
 ] as const;
 
 export const InterpreterErrors = [

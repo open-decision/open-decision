@@ -9,6 +9,7 @@ import {
 import { Navigation } from "./Navigation";
 import { useInterpreterTree } from "@open-decision/interpreter-react";
 import { mapKeys } from "remeda";
+import { TNodeId } from "@open-decision/tree-type";
 
 type RendererContentAreaProps = {
   children: React.ReactNode;
@@ -32,7 +33,7 @@ export function ContentArea({ children, className }: RendererContentAreaProps) {
 type RendererContainerProps = {
   children: React.ReactNode;
   withNavigation?: boolean;
-  nodeId: string;
+  nodeId: TNodeId;
   className?: string;
   classNames?: ClassNameArrayProp;
   successButtonLabel?: React.ReactNode;
@@ -51,7 +52,7 @@ export function Container({
     treeClient.nodes.get.single(nodeId)
   );
 
-  if (node instanceof Error) throw node;
+  if (!node) return null;
 
   return (
     <Stack

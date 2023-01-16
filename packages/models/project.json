@@ -3,16 +3,6 @@
   "sourceRoot": "packages/models/src",
   "projectType": "library",
   "targets": {
-    "build": {
-      "executor": "@nrwl/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/packages/models",
-        "main": "packages/models/src/index.ts",
-        "tsConfig": "packages/models/tsconfig.lib.json",
-        "assets": ["packages/models/*.md"]
-      }
-    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
@@ -34,13 +24,7 @@
       "options": {
         "command": "tsc -p tsconfig.lib.json --noEmit",
         "cwd": "packages/models"
-      },
-      "dependsOn": [
-        {
-          "projects": "dependencies",
-          "target": "build"
-        }
-      ]
+      }
     }
   },
   "tags": [],

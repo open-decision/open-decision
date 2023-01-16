@@ -1,25 +1,27 @@
-export type InputComponentProps = {
-  inputId: string;
+import { TInputId } from "../InputPlugin";
+
+export type InputConfiguratorProps = {
+  inputId: TInputId;
   withRequiredOption?: boolean;
 };
 
 export type InputPrimaryActionSlotProps = {
-  inputId: string;
+  inputId: TInputId;
 };
 
-export type RendererComponentProps = {
-  inputId: string;
+export type InputRendererProps = {
+  inputId: TInputId;
   onSubmit?: (values: Record<string, string | string[]>) => void;
   className?: string;
   children?: React.ReactNode;
 };
 
-export type BuilderComponent = (
-  props: InputComponentProps
+export type InputConfigurator = (
+  props: InputConfiguratorProps
 ) => JSX.Element | null;
 
-export type BuilderPrimaryActionSlotComponent = (
+export type InputPrimaryActionSlot = (
   props: InputPrimaryActionSlotProps
-) => JSX.Element;
+) => JSX.Element | null;
 
-export type RendererComponent = (props: RendererComponentProps) => JSX.Element;
+export type InputRenderer = (props: InputRendererProps) => JSX.Element | null;
