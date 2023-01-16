@@ -8,11 +8,9 @@ import {
   TNodeId,
   TEdgeId,
   IVariablePlugin,
-  IReadableVariablePlugin,
 } from "@open-decision/tree-type";
 import { TRichText } from "@open-decision/rich-text-editor";
 import { InterpreterContext } from "@open-decision/interpreter";
-import { fromPairs } from "remeda";
 
 const DirectEdge = new DirectEdgePlugin();
 
@@ -131,39 +129,39 @@ export class GroupNodePlugin extends NodePluginWithVariable<
       } satisfies IGroupNodeVariable;
     };
 
-  createReadableVariable =
-    (nodeId: TNodeId, answer: InterpreterContext[]) =>
-    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
-      const variable = this.createVariable(nodeId, answer)(treeClient);
+  // createReadableVariable =
+  //   (nodeId: TNodeId, answer: InterpreterContext[]) =>
+  //   (treeClient: TTreeClient | TReadOnlyTreeClient) => {
+  //     const variable = this.createVariable(nodeId, answer)(treeClient);
 
-      if (!variable || !variable.name) return;
+  //     if (!variable || !variable.name) return;
 
-      return {
-        ...variable,
-        id: this.createReadableKey(variable.name),
-        value: variable.value.map((value) => {
-          const variables = Object.values(value)
-            .map((value) => {
-              const readableVariable = this.nodePlugins[
-                value.type
-              ].createReadableVariable(
-                value.id,
-                value.value
-              )(treeClient);
+  //     return {
+  //       ...variable,
+  //       id: this.createReadableKey(variable.name),
+  //       value: variable.value.map((value) => {
+  //         const variables = Object.values(value)
+  //           .map((value) => {
+  //             const readableVariable = this.nodePlugins[
+  //               value.type
+  //             ].createReadableVariable(
+  //               value.id,
+  //               value.value
+  //             )(treeClient);
 
-              if (!readableVariable) return undefined;
+  //             if (!readableVariable) return undefined;
 
-              return [readableVariable.id, readableVariable] as const;
-            })
-            .filter(
-              (
-                value
-              ): value is [string, IReadableVariablePlugin<IVariablePlugin>] =>
-                value !== undefined
-            );
+  //             return [readableVariable.id, readableVariable] as const;
+  //           })
+  //           .filter(
+  //             (
+  //               value
+  //             ): value is [string, IReadableVariablePlugin<IVariablePlugin>] =>
+  //               value !== undefined
+  //           );
 
-          return fromPairs(variables);
-        }),
-      } satisfies IReadableVariablePlugin<IGroupNodeVariable>;
-    };
+  //         return fromPairs(variables);
+  //       }),
+  //     } satisfies IReadableVariablePlugin<IGroupNodeVariable>;
+  //   };
 }

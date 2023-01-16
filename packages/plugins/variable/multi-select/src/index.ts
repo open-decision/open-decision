@@ -4,35 +4,38 @@ import {
   VariablePlugin,
 } from "@open-decision/tree-type";
 
-const typeName = "list";
+const typeName = "multi-select";
 
-export interface IListVariable extends IVariablePlugin<typeof typeName> {
+export interface IMultiSelectVariable extends IVariablePlugin<typeof typeName> {
+  values: { id: string; value?: string }[];
+  value?: string[];
+}
+
+export interface IReadableMultiSelectVariable extends IReadableVariablePlugin {
   values: { id: string; value: string }[];
   value?: string[];
 }
 
-export interface IReadableListVariable
-  extends IReadableVariablePlugin<IListVariable> {
-  values: { id: string; value: string }[];
-  value?: string[];
-}
-
-export class ListVariablePlugin extends VariablePlugin<IListVariable> {
+export class MultiSelectVariablePlugin extends VariablePlugin<
+  IMultiSelectVariable,
+  IReadableMultiSelectVariable
+> {
   constructor() {
     super(typeName);
   }
 
   create = (
-    data: Partial<Omit<IListVariable, "type">> & Pick<IListVariable, "id">
+    data: Partial<Omit<IMultiSelectVariable, "type">> &
+      Pick<IMultiSelectVariable, "id">
   ) => {
     return {
       type: this.type,
       values: [],
       ...data,
-    } satisfies IListVariable;
+    } satisfies IMultiSelectVariable;
   };
 
-  createReadable = (variable: IListVariable) => {
+  createReadable = (variable: IMultiSelectVariable) => {
     const readbableValue = variable.value
       ?.map(
         (selectedValue) =>
@@ -48,6 +51,6 @@ export class ListVariablePlugin extends VariablePlugin<IListVariable> {
       ...variable,
       id: this.createReadableKey(variable.name),
       value: readbableValue,
-    } satisfies IReadableListVariable;
+    } satisfies IReadableMultiSelectVariable;
   };
 }

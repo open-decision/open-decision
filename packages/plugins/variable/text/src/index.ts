@@ -1,4 +1,8 @@
-import { IVariablePlugin, VariablePlugin } from "@open-decision/tree-type";
+import {
+  IReadableVariablePlugin,
+  IVariablePlugin,
+  VariablePlugin,
+} from "@open-decision/tree-type";
 
 const typeName = "text";
 
@@ -6,7 +10,14 @@ export interface ITextVariable extends IVariablePlugin<typeof typeName> {
   value?: string;
 }
 
-export class TextVariablePlugin extends VariablePlugin<ITextVariable> {
+export interface IReadableTextVariable extends IReadableVariablePlugin {
+  value?: string;
+}
+
+export class TextVariablePlugin extends VariablePlugin<
+  ITextVariable,
+  IReadableTextVariable
+> {
   constructor() {
     super(typeName);
   }
@@ -21,6 +32,8 @@ export class TextVariablePlugin extends VariablePlugin<ITextVariable> {
   };
 
   createReadable = (variable: ITextVariable) => {
-    return variable;
+    if (!variable.name) return;
+
+    return { ...variable, id: this.createReadableKey(variable.name) };
   };
 }

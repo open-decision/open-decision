@@ -6,7 +6,7 @@ import {
   IEntityPluginBase,
   EntityPlugin,
 } from "./EntityPlugin";
-import { IReadableVariablePlugin, IVariablePlugin } from "./VariablePlugin";
+import { IVariablePlugin } from "./VariablePlugin";
 
 export const ZNodeId = z.custom<TNodeId>(
   (value) => typeof value === "string" && value.includes("nodes")
@@ -100,10 +100,10 @@ export abstract class NodePluginWithVariable<
     treeClient: TTreeClient | TReadOnlyTreeClient
   ) => TVariableType | ODError | ODProgrammerError | undefined;
 
-  abstract createReadableVariable: (
-    nodeId: TNodeId,
-    answer: any
-  ) => (
-    treeClient: TTreeClient | TReadOnlyTreeClient
-  ) => IReadableVariablePlugin | undefined;
+  // abstract createReadableVariable: (
+  //   nodeId: TNodeId,
+  //   answer: any
+  // ) => (
+  //   treeClient: TTreeClient | TReadOnlyTreeClient
+  // ) => IReadableVariablePlugin | undefined;
 }

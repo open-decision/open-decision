@@ -3709,9 +3709,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@open-decision/plugins-variable-list@workspace:packages/plugins/variable/list":
+"@open-decision/plugins-variable-multi-select@workspace:packages/plugins/variable/multi-select":
   version: 0.0.0-use.local
-  resolution: "@open-decision/plugins-variable-list@workspace:packages/plugins/variable/list"
+  resolution: "@open-decision/plugins-variable-multi-select@workspace:packages/plugins/variable/multi-select"
   dependencies:
     zod: ^3.20.2
   languageName: unknown

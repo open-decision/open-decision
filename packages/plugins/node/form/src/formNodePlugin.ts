@@ -2,36 +2,40 @@ import {
   addInput,
   getInputByNode,
   getNodesByInput,
+  TInputId,
 } from "@open-decision/plugins-node-helpers";
 import {
   TReadOnlyTreeClient,
   TTreeClient,
   INodePlugin,
   NodePluginWithVariable,
+  TNodeId,
+  TEdgeId,
 } from "@open-decision/tree-type";
 import { ODProgrammerError } from "@open-decision/type-classes";
 import { DirectEdgePlugin } from "@open-decision/plugins-edge-direct";
 import { formNodeInputPlugins, TFormNodeInput } from "./FormNodeInputs";
 import {
   RecordVariablePlugin,
-  TRecordVariable,
+  IRecordVariable,
 } from "@open-decision/plugins-variable-record";
 import { match } from "ts-pattern";
 import { EmptyVariablePlugin } from "@open-decision/plugins-variable-empty";
-import { ListVariablePlugin } from "@open-decision/plugins-variable-list";
+import { MultiSelectVariablePlugin } from "@open-decision/plugins-variable-multi-select";
 import { SelectVariablePlugin } from "@open-decision/plugins-variable-select";
 import { TextVariablePlugin } from "@open-decision/plugins-variable-text";
 import { TRichText } from "@open-decision/rich-text-editor";
+import { forEachObj } from "remeda";
 
 const TextVariable = new TextVariablePlugin();
 const SelectVariable = new SelectVariablePlugin();
-const ListVariable = new ListVariablePlugin();
+const MultiSelectVariable = new MultiSelectVariablePlugin();
 const EmptyVariable = new EmptyVariablePlugin();
 
 const RecordVariable = new RecordVariablePlugin();
 const DirectEdge = new DirectEdgePlugin();
 
-export type TFormNodeVariable = TRecordVariable;
+export type TFormNodeVariable = IRecordVariable;
 
 export const typeName = "form" as const;
 
@@ -54,7 +58,7 @@ export class FormNodePlugin extends NodePluginWithVariable<
     ({ position = { x: 0, y: 0 }, ...data }: Omit<IFormNode, "id" | "type">) =>
     (_treeClient: TTreeClient | TReadOnlyTreeClient) => {
       return {
-        id: crypto.randomUUID(),
+        id: `nodes_${crypto.randomUUID()}`,
         type: this.type,
         position,
         ...data,
@@ -62,29 +66,29 @@ export class FormNodePlugin extends NodePluginWithVariable<
     };
 
   updateNodeContent =
-    (nodeId: string, content: IFormNode["content"]) =>
+    (nodeId: TNodeId, content: IFormNode["content"]) =>
     (treeClient: TTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 
-      if (node instanceof Error) throw node;
+      if (!node) return;
 
       node.content = content;
     };
 
   reorderInputs =
-    (nodeId: string, newInputs: string[]) => (treeClient: TTreeClient) => {
+    (nodeId: TNodeId, newInputs: TInputId[]) => (treeClient: TTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 
-      if (node instanceof Error) throw node;
+      if (!node) return;
 
       node.inputs = newInputs;
     };
 
   connectInputAndNode =
-    (nodeId: string, inputId: string) => (treeClient: TTreeClient) => {
+    (nodeId: TNodeId, inputId: TInputId) => (treeClient: TTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 
-      if (node instanceof Error) throw node;
+      if (!node) return;
 
       // We get the input just to validate that it exists.
       treeClient.pluginEntity.get.single("inputs", inputId);
@@ -93,10 +97,10 @@ export class FormNodePlugin extends NodePluginWithVariable<
     };
 
   disconnectInputAndNode =
-    (nodeId: string, inputId: string) => (treeClient: TTreeClient) => {
+    (nodeId: TNodeId, inputId: TInputId) => (treeClient: TTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 
-      if (node instanceof Error) throw node;
+      if (!node) return;
 
       const inputIndex = node.inputs?.findIndex((id) => id === inputId);
 
@@ -108,12 +112,12 @@ export class FormNodePlugin extends NodePluginWithVariable<
   updateTarget =
     ({
       nodeId,
-      newItem,
+      newTarget: newItem,
       edgeId,
     }: {
-      nodeId: string;
-      newItem: string;
-      edgeId?: string;
+      nodeId: TNodeId;
+      newTarget: TNodeId;
+      edgeId?: TEdgeId;
     }) =>
     (treeClient: TTreeClient) => {
       const edge = edgeId ? treeClient.edges.get.single(edgeId) : undefined;
@@ -149,25 +153,23 @@ export class FormNodePlugin extends NodePluginWithVariable<
   };
 
   createVariable =
-    (nodeId: string, answer: Record<string, string | string[]>) =>
+    (nodeId: TNodeId, answer: Record<TInputId, string | string[]>) =>
     (treeClient: TTreeClient | TReadOnlyTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 
-      if (node instanceof Error) return undefined;
+      if (!node) return;
 
-      const variables: TRecordVariable["value"] = {};
+      const variables: IRecordVariable["value"] = {};
 
-      for (const key in answer) {
-        const value = answer[key];
-
+      forEachObj.indexed(answer, (value, key) => {
         const input = treeClient.pluginEntity.get.single<TFormNodeInput>(
           "inputs",
           key
         );
 
-        if (input instanceof ODProgrammerError) continue;
+        if (!input) return;
 
-        const variable = match(input)
+        const variableValue = match(input)
           .with({ type: "text" }, () => {
             if (typeof value !== "string")
               return new ODProgrammerError({
@@ -176,75 +178,7 @@ export class FormNodePlugin extends NodePluginWithVariable<
             return TextVariable.create({ value, id: input.id });
           })
           .with({ type: "select" }, (input) => {
-            if (typeof value !== "string")
-              return new ODProgrammerError({
-                code: "REQUESTED_ANSWER_OF_WRONG_TYPE",
-              });
-            return SelectVariable.create({
-              values: input.answers,
-              value,
-              id: input.id,
-            });
-          })
-          .with({ type: "multi-select" }, (input) => {
-            if (typeof value !== "object")
-              return new ODProgrammerError({
-                code: "REQUESTED_ANSWER_OF_WRONG_TYPE",
-              });
-
-            return ListVariable.create({
-              values: input.answers,
-              value,
-              id: input.id,
-            });
-          })
-          .with({ type: "placeholder" }, () =>
-            EmptyVariable.create({ id: input.id })
-          )
-          .run();
-
-        if (variable instanceof ODProgrammerError) continue;
-
-        variables[input.id] = variable;
-      }
-
-      return RecordVariable.create({
-        value: variables,
-        name: node.name,
-        id: nodeId,
-      });
-    };
-
-  createReadableVariable =
-    (nodeId: string, answer: Record<string, string | string[]>) =>
-    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
-      const node = this.getSingle(nodeId)(treeClient);
-
-      if (node instanceof Error) return undefined;
-      if (!node.name) return undefined;
-
-      const variables: TRecordVariable["value"] = {};
-
-      for (const key in answer) {
-        const value = answer[key];
-
-        const input = treeClient.pluginEntity.get.single<TFormNodeInput>(
-          "inputs",
-          key
-        );
-
-        if (input instanceof ODProgrammerError) continue;
-
-        const variable = match(input)
-          .with({ type: "text" }, () => {
-            if (typeof value !== "string")
-              return new ODProgrammerError({
-                code: "REQUESTED_ANSWER_OF_WRONG_TYPE",
-              });
-            return TextVariable.create({ value, id: input.id });
-          })
-          .with({ type: "select" }, (input) => {
-            if (typeof value !== "string")
+            if (typeof answer !== "string")
               return new ODProgrammerError({
                 code: "REQUESTED_ANSWER_OF_WRONG_TYPE",
               });
@@ -281,7 +215,7 @@ export class FormNodePlugin extends NodePluginWithVariable<
             if (!readableValue)
               return new ODProgrammerError({ code: "MISSING_NAME" });
 
-            return ListVariable.create({
+            return MultiSelectVariable.create({
               values: input.answers,
               value: readableValue as string[],
               id: input.id,
@@ -292,15 +226,15 @@ export class FormNodePlugin extends NodePluginWithVariable<
           )
           .run();
 
-        if (variable instanceof ODProgrammerError) continue;
+        if (variableValue instanceof ODProgrammerError) return;
 
-        variables[input.id] = variable;
-      }
+        variables[input.id] = variableValue;
+      });
 
       return RecordVariable.create({
         value: variables,
         name: node.name,
-        id: this.createReadableKey(node.name),
+        id: nodeId,
       });
     };
 }

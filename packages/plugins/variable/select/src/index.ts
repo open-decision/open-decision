@@ -7,12 +7,13 @@ import {
 const typeName = "select";
 
 export interface ISelectVariable extends IVariablePlugin<typeof typeName> {
-  values: { id: string; value: string }[];
+  values: { id: string; value?: string }[];
   value?: string;
 }
 
-export interface IReadableSelectVariable extends IReadableVariablePlugin {
-  values: { id: string; value: string }[];
+export interface IReadableSelectVariable
+  extends IReadableVariablePlugin<typeof typeName> {
+  values: { id: string; value?: string }[];
   value?: string;
 }
 
@@ -34,12 +35,14 @@ export class SelectVariablePlugin extends VariablePlugin<ISelectVariable> {
   createReadable = (variable: ISelectVariable) => {
     if (!variable.name) return undefined;
 
-    const value = variable.values.find((v) => v.id === variable.value);
+    const readableValue = variable.values.find((v) => v.id === variable.value);
+
+    if (!readableValue) return undefined;
 
     return {
       ...variable,
       id: this.createReadableKey(variable.name),
-      value: value?.value,
+      value: readableValue.value,
     } satisfies IReadableSelectVariable;
   };
 }

@@ -74,8 +74,8 @@
       "@open-decision/plugins-node-placeholder": [
         "packages/plugins/node/placeholder/src/index.ts"
       ],
-      "@open-decision/plugins-variable-list": [
-        "packages/plugins/variable/list/src/index.ts"
+      "@open-decision/plugins-variable-multi-select": [
+        "packages/plugins/variable/multi-select/src/index.ts"
       ],
       "@open-decision/plugins-variable-record": [
         "packages/plugins/variable/record/src/index.ts"

@@ -1,6 +1,6 @@
 {
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/plugins/variable/list/src",
+  "sourceRoot": "packages/plugins/variable/multi-select/src",
   "projectType": "library",
   "tags": [],
   "targets": {
@@ -9,7 +9,7 @@
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": [
-          "packages/plugins/variable/list/**/*.{ts,tsx,js,jsx}"
+          "packages/plugins/variable/multi-select/**/*.{ts,tsx,js,jsx}"
         ]
       }
     },
@@ -23,5 +23,5 @@
       }
     }
   },
-  "name": "plugins-variable-list"
+  "name": "plugins-variable-multi-select"
 }

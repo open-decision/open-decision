@@ -8,21 +8,26 @@ export const ZVariablePlugin = z.object({
   value: z.any().optional(),
 });
 
-export interface IVariablePlugin<TType extends string = string> {
-  id: TId;
+export type TValueId = `value_${string}`;
+interface IVariablePluginBase<TType extends string = string> {
   type: TType;
   name?: string;
   value?: any;
 }
 
-export type IReadableVariablePlugin<
-  TType extends IVariablePlugin = IVariablePlugin
-> = Omit<TType, "id"> & {
+export interface IVariablePlugin<TType extends string = string>
+  extends IVariablePluginBase<TType> {
+  id: TId;
+}
+
+export interface IReadableVariablePlugin<TType extends string = string>
+  extends IVariablePluginBase<TType> {
   id: string;
-};
+}
 
 export abstract class VariablePlugin<
-  TType extends IVariablePlugin = IVariablePlugin
+  TType extends IVariablePlugin = IVariablePlugin,
+  TReadableType extends IReadableVariablePlugin = IReadableVariablePlugin
 > {
   pluginType = "variable" as const;
   type: TType["type"];
@@ -38,9 +43,7 @@ export abstract class VariablePlugin<
     data: Partial<Omit<TType, "type">> & Pick<TType, "id">
   ) => TType;
 
-  abstract createReadable: (
-    variable: TType
-  ) => IReadableVariablePlugin<TType> | undefined;
+  // abstract createReadable: (variable: TType) => TReadableType | undefined;
 
   createReadableKey = (key: string) =>
     key

@@ -170,28 +170,28 @@ export class DecisionNodePlugin extends NodePluginWithVariable<
         .run();
     };
 
-  createReadableVariable =
-    (nodeId: TNodeId, answer: TNodeId) =>
-    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
-      const data = this.getVariableData(nodeId)(treeClient);
+  // createReadableVariable =
+  //   (nodeId: TNodeId, answer: TNodeId) =>
+  //   (treeClient: TTreeClient | TReadOnlyTreeClient) => {
+  //     const data = this.getVariableData(nodeId)(treeClient);
 
-      if (data instanceof Error) return;
-      if (!data) return;
+  //     if (data instanceof Error) return;
+  //     if (!data) return;
 
-      return match(data.input)
-        .with({ type: "select" }, (input) => {
-          const value = input.answers.find(
-            (inputAnswer) => answer === inputAnswer.id
-          )?.value;
+  //     return match(data.input)
+  //       .with({ type: "select" }, (input) => {
+  //         const value = input.answers.find(
+  //           (inputAnswer) => answer === inputAnswer.id
+  //         )?.value;
 
-          if (!value || !data.node.name) return;
+  //         if (!value || !data.node.name) return;
 
-          const variable = this.createVariable(nodeId, answer)(treeClient);
+  //         const variable = this.createVariable(nodeId, answer)(treeClient);
 
-          if (!variable || variable instanceof ODProgrammerError) return;
+  //         if (!variable || variable instanceof ODProgrammerError) return;
 
-          return SelectVariable.createReadable(variable);
-        })
-        .run();
-    };
+  //         return SelectVariable.createReadable(variable);
+  //       })
+  //       .run();
+  //   };
 }
