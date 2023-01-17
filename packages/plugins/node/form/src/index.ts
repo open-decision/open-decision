@@ -13,7 +13,9 @@ import { RichText } from "@open-decision/rich-text-editor";
 import { formNodeInputPlugins } from "./FormNodeInputs";
 
 export * from "./FormNodePlugin";
+
 const plugin = new FormNodePlugin();
+
 const ZFormNode = ZNodePlugin.extend({
   type: z.literal(plugin.type),
   content: RichText.optional(),

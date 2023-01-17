@@ -3,7 +3,7 @@ import {
   useInterpreter,
   useInterpreterTree,
 } from "@open-decision/interpreter-react";
-import { NodeRenderer, TInputId } from "@open-decision/plugins-node-helpers";
+import { TNodeRenderer, TInputId } from "@open-decision/plugins-node-helpers";
 import { RendererPrimitives } from "@open-decision/renderer";
 import { RichTextRenderer } from "@open-decision/rich-text-editor";
 import { TDecisionNodeInputs } from "./createInputPlugins";
@@ -11,7 +11,7 @@ import { DecisionNodePlugin, IDecisionNode } from "./DecisionNodePlugin";
 
 const DecisionNode = new DecisionNodePlugin();
 
-export const DecisionNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
+export const DecisionNodeRenderer: TNodeRenderer = ({ nodeId, ...props }) => {
   const node = useInterpreterTree((treeClient) =>
     DecisionNode.getSingle(nodeId)(treeClient)
   );

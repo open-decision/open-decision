@@ -11,6 +11,7 @@ import {
 } from "@open-decision/interpreter";
 import { ODError, ODProgrammerError } from "@open-decision/type-classes";
 import { z } from "zod";
+import { mapValues } from "remeda";
 
 export type EdgeResolver<TType extends IEdgePlugin> = (
   treeClient: TTreeClient | TReadOnlyTreeClient
@@ -34,6 +35,23 @@ export type EdgePluginObject<
   Type: TZodType;
 };
 
-export const createEdgePluginObject = <TType extends IEdgePlugin = IEdgePlugin>(
-  pluginObj: EdgePluginObject<TType>
-) => pluginObj satisfies EdgePluginObject<TType>;
+export const createEdgePluginObject = <
+  TPluginObject extends EdgePluginObject = EdgePluginObject
+>(
+  pluginObj: TPluginObject
+) => pluginObj satisfies TPluginObject;
+
+export const createEdgePluginGroup = <
+  TEdgePlugins extends Record<string, EdgePluginObject>
+>(
+  edgePlugins: TEdgePlugins
+) => {
+  const plugins = mapValues(edgePlugins, (plugin) => plugin.plugin);
+
+  return {
+    plugins,
+    pluginObjects: edgePlugins,
+  };
+};
+
+export type TEdgePluginGroup = ReturnType<typeof createEdgePluginGroup>;

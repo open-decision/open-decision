@@ -1,5 +1,8 @@
 import { ClassNameArrayProp, onNodeCreate } from "@open-decision/design-system";
-import { EdgePluginObject } from "@open-decision/plugins-edge-helpers";
+import {
+  EdgePluginObject,
+  TEdgePluginGroup,
+} from "@open-decision/plugins-edge-helpers";
 import {
   INodePlugin,
   isNodeId,
@@ -8,8 +11,8 @@ import {
   TNodeId,
 } from "@open-decision/tree-type";
 import { NodeProps } from "reactflow";
-import { mapValues, omitBy, pickBy } from "remeda";
 import { z } from "zod";
+import { TNodePluginGroup } from "./createNodePluginGroup";
 
 export type NodePluginProps = Omit<NodeProps, "id"> & {
   className?: string;
@@ -17,7 +20,7 @@ export type NodePluginProps = Omit<NodeProps, "id"> & {
   id: TNodeId;
 };
 
-export type CanvasNode = (props: NodePluginProps) => JSX.Element | null;
+export type TCanvasNode = (props: NodePluginProps) => JSX.Element | null;
 
 export type TNodeSidebarProps = {
   nodeId: TNodeId;
@@ -39,12 +42,12 @@ export type NodeRendererProps = {
   withNavigation?: boolean;
   classNames?: ClassNameArrayProp;
   nodePlugins: TNodePluginGroup;
-  edgePlugins: Record<string, EdgePluginObject>;
+  edgePlugins: TEdgePluginGroup;
 };
 
-export type NodeRenderer = (props: NodeRendererProps) => JSX.Element | null;
+export type TNodeRenderer = (props: NodeRendererProps) => JSX.Element | null;
 
-export interface NodePluginObject<
+interface BaseNodePluginObject<
   TType extends INodePlugin = INodePlugin,
   TPluginEntities extends Record<string, z.ZodTypeAny> = Record<
     string,
@@ -53,17 +56,26 @@ export interface NodePluginObject<
   TZodType extends z.AnyZodObject = z.AnyZodObject
 > {
   Editor: {
-    Node: CanvasNode;
+    Node: TCanvasNode;
     Sidebar: TNodeSidebar;
   };
-  Renderer: NodeRenderer | null;
+  Renderer: TNodeRenderer | null;
   type: TType["type"];
   pluginEntities?: TPluginEntities;
   Icon: React.ForwardRefExoticComponent<
     any & React.RefAttributes<SVGSVGElement>
   >;
-  plugin: NodePlugin<TType> | NodePluginWithVariable<TType>;
   Type: TZodType;
+}
+
+export interface NodePluginObject<
+  TType extends INodePlugin = INodePlugin,
+  TPluginEntities extends Record<string, z.ZodTypeAny> = Record<
+    string,
+    z.ZodTypeAny
+  >
+> extends BaseNodePluginObject<TType, TPluginEntities> {
+  plugin: NodePlugin<TType>;
 }
 
 export interface NodePluginObjectWithVariable<
@@ -72,18 +84,14 @@ export interface NodePluginObjectWithVariable<
     string,
     z.ZodTypeAny
   >
-> extends NodePluginObject<TType, TPluginEntities> {
+> extends BaseNodePluginObject<TType, TPluginEntities> {
   plugin: NodePluginWithVariable<TType>;
 }
 
 export const createNodePluginObject = <
-  TType extends INodePlugin = INodePlugin,
-  TPluginEntities extends Record<string, z.ZodTypeAny> = Record<
-    string,
-    z.ZodTypeAny
-  >
+  TNodePluginObject extends NodePluginObject = NodePluginObject
 >(
-  pluginObj: NodePluginObject<TType, TPluginEntities>
+  pluginObj: TNodePluginObject
 ) => {
   return {
     ...pluginObj,
@@ -98,31 +106,5 @@ export const createNodePluginObject = <
         return <pluginObj.Editor.Node {...props} id={id} />;
       },
     },
-  } satisfies NodePluginObject<TType, TPluginEntities>;
+  } satisfies TNodePluginObject;
 };
-
-export const createNodePluginGroup = (
-  nodePlugins: Record<string, NodePluginObject>
-) => {
-  const plugins = mapValues(nodePlugins, (plugin) => plugin.plugin);
-
-  const pluginsWithVariable = pickBy(
-    plugins,
-    (plugin) => plugin instanceof NodePluginWithVariable
-  ) as Record<string, NodePluginWithVariable>;
-
-  const addablePlugins = omitBy(plugins, (plugin) => !plugin.isAddable);
-
-  return {
-    plugins,
-    pluginsWithVariable,
-    pluginObjects: nodePlugins,
-    addablePlugins,
-    Sidebars: mapValues(nodePlugins, (plugin) => plugin.Editor.Sidebar),
-    Renderers: mapValues(nodePlugins, (plugin) => plugin.Renderer),
-    Icons: mapValues(nodePlugins, (plugin) => plugin.Icon),
-    Nodes: mapValues(nodePlugins, (plugin) => plugin.Editor.Node),
-  };
-};
-
-export type TNodePluginGroup = ReturnType<typeof createNodePluginGroup>;

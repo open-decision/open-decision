@@ -6,12 +6,12 @@ import {
   useInterpreter,
 } from "@open-decision/interpreter-react";
 import { TNodePluginGroup } from "@open-decision/plugins-node-helpers";
-import { EdgePluginObject } from "@open-decision/plugins-edge-helpers";
+import { TEdgePluginGroup } from "@open-decision/plugins-edge-helpers";
 
 export type RendererProps = {
   nodeId?: string;
   nodePlugins: TNodePluginGroup;
-  edgePlugins: Record<string, EdgePluginObject>;
+  edgePlugins: TEdgePluginGroup;
   withNavigation?: boolean;
 } & StackProps;
 

@@ -24,8 +24,7 @@ export const ZEdgePlugin = ZEntityPluginBase.extend({
 
 export type TEdgeId = `edges_${string}`;
 
-export interface IEdgePlugin<TType extends string = string>
-  extends IEntityPluginBase<TType> {
+export interface IEdgePlugin<TType = any> extends IEntityPluginBase<TType> {
   id: TEdgeId;
   source: TNodeId;
   target?: TNodeId;

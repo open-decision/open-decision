@@ -20,15 +20,16 @@ import {
   Tree,
   IEdgePlugin,
 } from "@open-decision/tree-type";
-import { EdgePluginObject } from "@open-decision/plugins-edge-helpers";
+import { TEdgePluginGroup } from "@open-decision/plugins-edge-helpers";
 import { forEachObj } from "remeda";
 
 function createResolver(
   treeClient: TReadOnlyTreeClient,
-  edgePlugins: Record<string, EdgePluginObject>
+  edgePlugins: TEdgePluginGroup
 ) {
   const resolvers = (edge: IEdgePlugin) => {
-    const edgeResolver = edgePlugins[edge.type].resolver(treeClient);
+    const edgeResolver =
+      edgePlugins.pluginObjects[edge.type].resolver(treeClient);
 
     if (!edgeResolver) {
       console.error(edge);
@@ -98,7 +99,7 @@ export type InterpreterProviderProps = {
   tree: Tree.TTree;
   config?: XStateInterpreterOptions &
     UseMachineOptions<InterpreterContext, InterpreterEvents>;
-  edgePlugins: Record<string, EdgePluginObject>;
+  edgePlugins: TEdgePluginGroup;
 } & InterpreterOptions;
 
 export function InterpreterProvider({

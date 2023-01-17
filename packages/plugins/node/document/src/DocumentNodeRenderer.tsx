@@ -12,12 +12,12 @@ import { RendererPrimitives } from "@open-decision/renderer";
 import { DocumentNodePlugin } from "./DocumentNodePlugin";
 import { isODError, ODError } from "@open-decision/type-classes";
 import { useTranslations } from "next-intl";
-import { NodeRenderer } from "@open-decision/plugins-node-helpers";
+import { TNodeRenderer } from "@open-decision/plugins-node-helpers";
 import { APIClient } from "@open-decision/api-client";
 
 const DocumentNode = new DocumentNodePlugin();
 
-export const DocumentNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
+export const DocumentNodeRenderer: TNodeRenderer = ({ nodeId, ...props }) => {
   const {
     treeClient,
     environment,

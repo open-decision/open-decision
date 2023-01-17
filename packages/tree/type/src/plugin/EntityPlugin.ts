@@ -9,7 +9,7 @@ export const ZEntityPluginBase = z.object({
   id: ZEntityId,
 });
 
-export interface IEntityPluginBase<TType extends string = string> {
+export interface IEntityPluginBase<TType = any> {
   id: TId;
   type: TType;
 }

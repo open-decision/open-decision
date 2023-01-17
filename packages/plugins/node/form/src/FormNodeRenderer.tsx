@@ -3,7 +3,7 @@ import {
   useInterpreter,
   useInterpreterTree,
 } from "@open-decision/interpreter-react";
-import { NodeRenderer, TInputId } from "@open-decision/plugins-node-helpers";
+import { TNodeRenderer, TInputId } from "@open-decision/plugins-node-helpers";
 import { RendererPrimitives } from "@open-decision/renderer";
 import { RichTextRenderer } from "@open-decision/rich-text-editor";
 import { mapValues } from "remeda";
@@ -12,7 +12,7 @@ import { FormNodePlugin, IFormNode } from "./FormNodePlugin";
 
 const FormNode = new FormNodePlugin();
 
-export const FormNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
+export const FormNodeRenderer: TNodeRenderer = ({ nodeId, ...props }) => {
   const node = useInterpreterTree(FormNode.getSingle(nodeId));
   const inputs = useInterpreterTree((treeClient) => {
     if (!node || !node.inputs) return undefined;

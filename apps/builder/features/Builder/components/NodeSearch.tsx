@@ -7,6 +7,7 @@ import {
 import { useTranslations } from "next-intl";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { PlaceholderNodePlugin, useEditor } from "@open-decision/node-editor";
+import { TNodeId } from "@open-decision/tree-type";
 
 type Props = { className?: string };
 
@@ -43,11 +44,12 @@ export const NodeSearch = ({ className }: Props) => {
     return { id: newNode.id, label: newNode.name };
   }
 
-  function changeHandler(newSelectedItemId: string) {
+  function changeHandler(newSelectedItemId: TNodeId) {
     replaceSelectedNodes([newSelectedItemId]);
     const node = treeClient.nodes.get.single(newSelectedItemId);
 
-    if (node instanceof Error) return;
+    if (!node) return;
+
     zoomToNode(node);
   }
 

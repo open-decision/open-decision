@@ -11,36 +11,32 @@ import {
 import { CompareEdgePluginObject } from "@open-decision/plugins-edge-compare";
 import { DirectEdgePluginObject } from "@open-decision/plugins-edge-direct";
 import { createTreeClient } from "./createTreeClient";
+import { createNodePluginGroup } from "@open-decision/plugins-node-helpers";
+import { createEdgePluginGroup } from "@open-decision/plugins-edge-helpers";
 
 export const createTreeClientWithPlugins = (tree: Tree.TTree) => {
-  const EdgePlugins = {
-    [CompareEdgePluginObject.plugin.type]: CompareEdgePluginObject.plugin,
-    [DirectEdgePluginObject.plugin.type]: DirectEdgePluginObject.plugin,
-  };
-
-  const Edges = {
-    [CompareEdgePluginObject.plugin.type]: CompareEdgePluginObject,
-    [DirectEdgePluginObject.plugin.type]: DirectEdgePluginObject,
-  };
+  const Edges = createEdgePluginGroup({
+    [CompareEdgePluginObject.type]: CompareEdgePluginObject,
+    [DirectEdgePluginObject.type]: DirectEdgePluginObject,
+  });
 
   const EdgeType = z.discriminatedUnion("type", [
     CompareEdgePluginObject.Type,
     DirectEdgePluginObject.Type,
   ]);
 
-  const NodePlugins = {
-    [DecisionNodePluginObject.plugin.type]: DecisionNodePluginObject.plugin,
-    [DocumentNodePluginObject.plugin.type]: DocumentNodePluginObject.plugin,
-    [InfoNodePluginObject.plugin.type]: InfoNodePluginObject.plugin,
-    [FormNodePluginObject.plugin.type]: FormNodePluginObject.plugin,
-  };
-
-  const Nodes = {
-    [DecisionNodePluginObject.plugin.type]: DecisionNodePluginObject,
-    [DocumentNodePluginObject.plugin.type]: DocumentNodePluginObject,
-    [InfoNodePluginObject.plugin.type]: InfoNodePluginObject,
-    [FormNodePluginObject.plugin.type]: FormNodePluginObject,
-  };
+  const Nodes = createNodePluginGroup(
+    {
+      [DocumentNodePluginObject.type]: DocumentNodePluginObject,
+      [InfoNodePluginObject.type]: InfoNodePluginObject,
+      [PlaceholderNodePluginObject.plugin.type]: PlaceholderNodePluginObject,
+    },
+    {
+      [DecisionNodePluginObject.type]: DecisionNodePluginObject,
+      [FormNodePluginObject.type]: FormNodePluginObject,
+      [GroupNodePluginObject.plugin.type]: GroupNodePluginObject,
+    }
+  );
 
   const NodeType = z.discriminatedUnion("type", [
     DecisionNodePluginObject.Type,
@@ -55,25 +51,21 @@ export const createTreeClientWithPlugins = (tree: Tree.TTree) => {
     {
       nodes: [
         {
-          ...NodePlugins,
+          ...Nodes.plugins,
           [PlaceholderNodePluginObject.plugin.type]:
             PlaceholderNodePluginObject.plugin,
         },
         NodeType,
       ],
-      edges: [EdgePlugins, EdgeType],
-      pluginEntities: FormNodePluginObject.pluginEntities?.inputs,
+      edges: [Edges.plugins, EdgeType],
+      pluginEntities: FormNodePluginObject.pluginEntities.inputs,
     },
     tree
   );
 
   return {
     treeClient,
-    nodePlugins: {
-      ...Nodes,
-      [GroupNodePluginObject.plugin.type]: GroupNodePluginObject,
-      [PlaceholderNodePluginObject.plugin.type]: PlaceholderNodePluginObject,
-    },
+    nodePlugins: Nodes,
     edgePlugins: Edges,
   };
 };

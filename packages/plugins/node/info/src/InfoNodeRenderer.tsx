@@ -1,13 +1,13 @@
 import { Form } from "@open-decision/design-system";
 import { useInterpreter } from "@open-decision/interpreter-react";
-import { NodeRenderer } from "@open-decision/plugins-node-helpers";
+import { TNodeRenderer } from "@open-decision/plugins-node-helpers";
 import { RendererPrimitives } from "@open-decision/renderer";
 import { RichTextRenderer } from "@open-decision/rich-text-editor";
 import { InfoNodePlugin } from "./InfoNodePlugin";
 
 const InfoNode = new InfoNodePlugin();
 
-export const InfoNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
+export const InfoNodeRenderer: TNodeRenderer = ({ nodeId, ...props }) => {
   const { treeClient } = useInterpreter();
   const node = InfoNode.getSingle(nodeId)(treeClient);
 

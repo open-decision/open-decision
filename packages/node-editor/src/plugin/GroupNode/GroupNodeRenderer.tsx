@@ -24,14 +24,14 @@ import { PlusIcon } from "@radix-ui/react-icons";
 import { ErrorBoundary } from "react-error-boundary";
 import { convertToODError } from "@open-decision/type-classes";
 import {
-  NodeRenderer,
+  TNodeRenderer,
   NodeRendererProps,
 } from "@open-decision/plugins-node-helpers";
 import { TNodeId } from "@open-decision/tree-type";
 
 const GroupNode = new GroupNodePlugin();
 
-export const GroupNodeRenderer: NodeRenderer = (props) => {
+export const GroupNodeRenderer: TNodeRenderer = (props) => {
   return (
     <ErrorBoundary
       FallbackComponent={({ error }) => (

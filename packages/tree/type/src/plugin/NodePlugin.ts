@@ -31,8 +31,7 @@ export const ZNodePlugin = ZEntityPluginBase.extend({
 
 export type TNodeId = `nodes_${string}`;
 
-export interface INodePlugin<TType extends string = string>
-  extends IEntityPluginBase<TType> {
+export interface INodePlugin<TType = any> extends IEntityPluginBase<TType> {
   id: TNodeId;
   position: { x: number; y: number };
   name: string;

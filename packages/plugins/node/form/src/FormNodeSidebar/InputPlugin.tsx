@@ -56,7 +56,7 @@ export function InputPlugin({ inputIds, nodeId }: InputPluginComponentProps) {
       })}
       <SidebarButton
         onClick={() => {
-          const input = PlaceholderInput.create({})(treeClient);
+          const input = PlaceholderInput.create({});
           FormNode.inputs.add(input)(treeClient);
           FormNode.connectInputAndNode(nodeId, input.id)(treeClient);
         }}
@@ -124,7 +124,7 @@ const InputItem = ({ inputId, dragGroupRef, nodeId }: InputItemProps) => {
             onSelect={(newType) => {
               const newInput = FormNode.inputPlugins.plugins[newType].create(
                 {}
-              )(treeClient);
+              );
 
               FormNode.inputPlugins.plugins[input.type].update(
                 inputId,

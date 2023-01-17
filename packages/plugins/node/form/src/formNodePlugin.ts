@@ -35,7 +35,7 @@ const EmptyVariable = new EmptyVariablePlugin();
 const RecordVariable = new RecordVariablePlugin();
 const DirectEdge = new DirectEdgePlugin();
 
-export type TFormNodeVariable = IRecordVariable;
+export type TFormNodeVariable = IRecordVariable<TNodeId>;
 
 export const typeName = "form" as const;
 
@@ -143,12 +143,10 @@ export class FormNodePlugin extends NodePluginWithVariable<
         treeClient.edges.connect.toTargetNode(edge.id, newItem);
     };
 
-  get inputs() {
-    return {
-      getByNode: getInputByNode<IFormNode, TFormNodeInput>(this),
-      add: addInput,
-    };
-  }
+  inputs = {
+    getByNode: getInputByNode<IFormNode, TFormNodeInput>(this),
+    add: addInput,
+  };
 
   getByInput = getNodesByInput(this);
 
