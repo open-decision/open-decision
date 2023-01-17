@@ -48,14 +48,13 @@ export class DecisionNodePlugin extends NodePluginWithVariable<
     ({
       position = { x: 0, y: 0 },
       ...data
-    }: Omit<IDecisionNode, "id" | "type">) =>
-    (_treeClient: TTreeClient | TReadOnlyTreeClient) => {
-      return {
-        id: `nodes_${crypto.randomUUID()}`,
+    }: Partial<Omit<IDecisionNode, "id" | "type">>) =>
+    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
+      return treeClient.nodes.create.node<IDecisionNode>({
         type: this.type,
         position,
         ...data,
-      } satisfies IDecisionNode;
+      });
     };
 
   inputs = {

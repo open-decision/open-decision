@@ -55,14 +55,18 @@ export class FormNodePlugin extends NodePluginWithVariable<
   }
 
   create =
-    ({ position = { x: 0, y: 0 }, ...data }: Omit<IFormNode, "id" | "type">) =>
-    (_treeClient: TTreeClient | TReadOnlyTreeClient) => {
-      return {
-        id: `nodes_${crypto.randomUUID()}`,
+    ({
+      position = { x: 0, y: 0 },
+      inputs = [],
+      ...data
+    }: Omit<IFormNode, "id" | "type">) =>
+    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
+      return treeClient.nodes.create.node<IFormNode>({
         type: this.type,
         position,
+        inputs,
         ...data,
-      } satisfies IFormNode;
+      });
     };
 
   updateNodeContent =

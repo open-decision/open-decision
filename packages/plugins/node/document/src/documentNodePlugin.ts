@@ -23,14 +23,13 @@ export class DocumentNodePlugin extends NodePlugin<IDocumentNode> {
     ({
       position = { x: 0, y: 0 },
       ...data
-    }: Omit<IDocumentNode, "id" | "type">) =>
-    (_treeClient: TTreeClient | TReadOnlyTreeClient) => {
-      return {
-        id: `nodes_${crypto.randomUUID()}`,
+    }: Partial<Omit<IDocumentNode, "id" | "type">>) =>
+    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
+      return treeClient.nodes.create.node<IDocumentNode>({
         type: this.type,
         position,
         ...data,
-      } satisfies IDocumentNode;
+      });
     };
 
   getByTemplateUuid =

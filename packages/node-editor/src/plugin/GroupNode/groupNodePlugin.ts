@@ -39,13 +39,12 @@ export class GroupNodePlugin extends NodePluginWithVariable<
 
   create =
     ({ position = { x: 0, y: 0 }, ...data }: Omit<IGroupNode, "id" | "type">) =>
-    (_treeClient: TTreeClient | TReadOnlyTreeClient) => {
-      return {
-        id: `nodes_${crypto.randomUUID()}`,
+    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
+      return treeClient.nodes.create.node<typeof this.type>({
         type: this.type,
         position,
         ...data,
-      } satisfies IGroupNode;
+      }) satisfies IGroupNode;
     };
 
   updateTitle =

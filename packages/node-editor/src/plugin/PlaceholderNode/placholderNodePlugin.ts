@@ -20,13 +20,12 @@ export class PlaceholderNodePlugin extends NodePlugin<IPlaceholderNode> {
     ({
       position = { x: 0, y: 0 },
       ...data
-    }: Omit<IPlaceholderNode, "id" | "type">) =>
-    (_treeClient: TTreeClient | TReadOnlyTreeClient) => {
-      return {
-        id: `nodes_${crypto.randomUUID()}`,
+    }: Partial<Omit<IPlaceholderNode, "id" | "type">>) =>
+    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
+      return treeClient.nodes.create.node<IPlaceholderNode>({
         type: this.type,
         position,
         ...data,
-      } satisfies IPlaceholderNode;
+      });
     };
 }

@@ -27,13 +27,12 @@ export class InfoNodePlugin extends NodePlugin<IInfoNodePlugin> {
       position = { x: 0, y: 0 },
       ...data
     }: Omit<IInfoNodePlugin, "id" | "type">) =>
-    (_treeClient: TTreeClient | TReadOnlyTreeClient) => {
-      return {
-        id: `nodes_${crypto.randomUUID()}`,
+    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
+      return treeClient.nodes.create.node<IInfoNodePlugin>({
         type: this.type,
         position,
         ...data,
-      } satisfies IInfoNodePlugin;
+      });
     };
 
   updateNodeContent =
