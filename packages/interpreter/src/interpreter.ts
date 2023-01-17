@@ -161,7 +161,7 @@ export const createInterpreterMachine = (
           answers: (context, event) => {
             return {
               ...context.answers,
-              [event.answer.id]: event.answer,
+              [event.answer.escapedName]: event.answer,
             };
           },
         }),

@@ -1,8 +1,4 @@
-import {
-  IReadableVariablePlugin,
-  IVariablePlugin,
-  VariablePlugin,
-} from "@open-decision/tree-type";
+import { IVariablePlugin, VariablePlugin } from "@open-decision/tree-type";
 
 const typeName = "select";
 
@@ -12,7 +8,7 @@ export interface ISelectVariable extends IVariablePlugin<typeof typeName> {
 }
 
 export interface IReadableSelectVariable
-  extends IReadableVariablePlugin<typeof typeName> {
+  extends IVariablePlugin<typeof typeName> {
   values: { id: string; value?: string }[];
   value?: string;
 }
@@ -23,26 +19,27 @@ export class SelectVariablePlugin extends VariablePlugin<ISelectVariable> {
   }
 
   create = (
-    data: Partial<Omit<ISelectVariable, "type">> & Pick<ISelectVariable, "id">
+    data: Partial<Omit<ISelectVariable, "type">> &
+      Pick<ISelectVariable, "id" | "name">
   ) => {
     return {
       type: this.type,
       values: [],
+      escapedName: this.createReadableKey(data.name),
       ...data,
     } satisfies ISelectVariable;
   };
 
-  createReadable = (variable: ISelectVariable) => {
-    if (!variable.name) return undefined;
+  addValue = (variable: ISelectVariable, valueId: string) => {
+    const value = variable.values.find(
+      (possibleAnswer) => possibleAnswer.id === valueId
+    )?.value;
 
-    const readableValue = variable.values.find((v) => v.id === variable.value);
-
-    if (!readableValue) return undefined;
+    if (!value) return;
 
     return {
       ...variable,
-      id: this.createReadableKey(variable.name),
-      value: readableValue.value,
-    } satisfies IReadableSelectVariable;
+      value,
+    } satisfies ISelectVariable;
   };
 }

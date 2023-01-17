@@ -91,6 +91,8 @@ export abstract class NodePluginWithVariable<
   abstract getVariable: (
     nodeId: TNodeId,
     answers: any
+  ) => (
+    treeClient: TTreeClient | TReadOnlyTreeClient
   ) => TVariableType | undefined;
 
   abstract createVariable: (

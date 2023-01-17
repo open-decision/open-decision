@@ -7,59 +7,22 @@ import { NodeRenderer, TInputId } from "@open-decision/plugins-node-helpers";
 import { RendererPrimitives } from "@open-decision/renderer";
 import { RichTextRenderer } from "@open-decision/rich-text-editor";
 import { TDecisionNodeInputs } from "./createInputPlugins";
-import { DecisionNodePlugin } from "./DecisionNodePlugin";
+import { DecisionNodePlugin, IDecisionNode } from "./DecisionNodePlugin";
 
 const DecisionNode = new DecisionNodePlugin();
 
 export const DecisionNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
-  const { getAnswers, send, treeClient } = useInterpreter();
-
-  const node = DecisionNode.getSingle(nodeId)(treeClient);
-
-  const inputType = useInterpreterTree((treeClient) => {
-    if (!node || !node.input) return undefined;
-
-    const input = treeClient.pluginEntity.get.single<TDecisionNodeInputs>(
+  const node = useInterpreterTree((treeClient) =>
+    DecisionNode.getSingle(nodeId)(treeClient)
+  );
+  const input = useInterpreterTree((treeClient) =>
+    treeClient.pluginEntity.get.single<TDecisionNodeInputs>(
       "inputs",
-      node.input
-    );
+      node?.input
+    )
+  );
 
-    if (!input) return undefined;
-    return input.type;
-  });
-
-  const answer = !node
-    ? undefined
-    : DecisionNode.getVariable(node.id, getAnswers());
-
-  const methods = Form.useForm<{ [x: TInputId]: string }>({
-    defaultValues:
-      node && answer && node.input ? { [node.input]: answer?.value } : {},
-  });
-
-  const onSubmit = methods.handleSubmit((values) => {
-    if (!node || !node.input) return;
-
-    const variable = DecisionNode.createVariable(
-      node.id,
-      values[node.input]
-    )(treeClient);
-
-    if (!variable || variable instanceof Error) return;
-
-    send({
-      type: "ADD_USER_ANSWER",
-      answer: variable,
-    });
-
-    send("EVALUATE_NODE_CONDITIONS");
-  });
-
-  if (!node || !inputType || !node.input) return null;
-
-  const FormElement = DecisionNode.inputPlugins.Renderer[inputType];
-
-  if (!FormElement) return null;
+  if (!node) return null;
 
   return (
     <RendererPrimitives.Container
@@ -75,10 +38,49 @@ export const DecisionNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
             className="px-0"
           />
         ) : null}
-        <RendererPrimitives.Form methods={methods} onSubmit={onSubmit}>
-          <FormElement inputId={node.input} />
-        </RendererPrimitives.Form>
+        {input ? <DecisionNodeForm node={node} input={input} /> : null}
       </RendererPrimitives.ContentArea>
     </RendererPrimitives.Container>
+  );
+};
+
+type DecisionNodeFormProps = {
+  input: TDecisionNodeInputs;
+  node: IDecisionNode;
+};
+
+const DecisionNodeForm = ({ input, node }: DecisionNodeFormProps) => {
+  const { getAnswers, send, treeClient } = useInterpreter();
+
+  const answer = DecisionNode.getVariable(node.id, getAnswers())(treeClient);
+
+  const methods = Form.useForm<{ [x: TInputId]: string }>({
+    defaultValues: answer ? { [input.id]: answer?.value } : {},
+  });
+
+  const onSubmit = methods.handleSubmit((values) => {
+    const variable = DecisionNode.createVariable(
+      node.id,
+      values[input.id]
+    )(treeClient);
+
+    if (!variable) return;
+
+    send({
+      type: "ADD_USER_ANSWER",
+      answer: variable,
+    });
+
+    send("EVALUATE_NODE_CONDITIONS");
+  });
+
+  const FormElement = DecisionNode.inputPlugins.Renderer[input.type];
+
+  if (!FormElement) return null;
+
+  return (
+    <RendererPrimitives.Form methods={methods} onSubmit={onSubmit}>
+      <FormElement inputId={input.id} />
+    </RendererPrimitives.Form>
   );
 };
