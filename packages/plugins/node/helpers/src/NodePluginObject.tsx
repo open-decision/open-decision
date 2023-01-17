@@ -1,8 +1,5 @@
 import { ClassNameArrayProp, onNodeCreate } from "@open-decision/design-system";
-import {
-  EdgePluginObject,
-  TEdgePluginGroup,
-} from "@open-decision/plugins-edge-helpers";
+import { TEdgePluginGroup } from "@open-decision/plugins-edge-helpers";
 import {
   INodePlugin,
   isNodeId,
@@ -30,7 +27,7 @@ export type TNodeSidebarProps = {
   tabs?: string[];
   initialTab?: string;
   hasPreview?: boolean;
-  edgePlugins: Record<string, EdgePluginObject>;
+  edgePlugins: TEdgePluginGroup;
   nodePlugins: TNodePluginGroup;
 };
 

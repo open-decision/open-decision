@@ -1,7 +1,6 @@
 import { stackClasses, Tabs } from "@open-decision/design-system";
 import { SidebarButton } from "@open-decision/node-editor";
 import { CompareEdgePlugin } from "@open-decision/plugins-edge-compare";
-import { EdgePluginObject } from "@open-decision/plugins-edge-helpers";
 import { TNodeSidebarProps } from "@open-decision/plugins-node-helpers";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { TNodeId } from "@open-decision/tree-type";
@@ -12,8 +11,7 @@ const CompareEdge = new CompareEdgePlugin();
 
 type Props = {
   nodeId: TNodeId;
-  edgePlugins: Record<string, EdgePluginObject>;
-} & Pick<TNodeSidebarProps, "onNodeCreate">;
+} & Pick<TNodeSidebarProps, "onNodeCreate" | "edgePlugins">;
 
 export function DecisionNodeSidebarPaths({ nodeId, onNodeCreate }: Props) {
   const treeClient = useTreeClient();

@@ -1,13 +1,13 @@
-import { EdgePlugin } from "@open-decision/plugins-edge-helpers";
-import { NodePlugin } from "@open-decision/plugins-node-helpers";
 import { Tree, TreeClient } from "@open-decision/tree-type";
 import { z } from "zod";
 import { merge } from "remeda";
+import { TNodePluginGroup } from "@open-decision/plugins-node-helpers";
+import { TEdgePluginGroup } from "@open-decision/plugins-edge-helpers";
 
 export const createTreeClient = <
   TExtendedTree extends Omit<Tree.TTree, "startNode" | "edge">,
-  NodePlugins extends Record<string, NodePlugin>,
-  ConditionPlugins extends Record<string, EdgePlugin>,
+  NodePlugins extends TNodePluginGroup,
+  ConditionPlugins extends TEdgePluginGroup,
   NodeType extends z.ZodType,
   ConditionType extends z.ZodType
 >(

@@ -49,15 +49,8 @@ export const createTreeClientWithPlugins = (tree: Tree.TTree) => {
 
   const treeClient = createTreeClient(
     {
-      nodes: [
-        {
-          ...Nodes.plugins,
-          [PlaceholderNodePluginObject.plugin.type]:
-            PlaceholderNodePluginObject.plugin,
-        },
-        NodeType,
-      ],
-      edges: [Edges.plugins, EdgeType],
+      nodes: [Nodes, NodeType],
+      edges: [Edges, EdgeType],
       pluginEntities: FormNodePluginObject.pluginEntities.inputs,
     },
     tree

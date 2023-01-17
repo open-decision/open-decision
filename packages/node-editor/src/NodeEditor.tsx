@@ -10,7 +10,7 @@ import { mapValues } from "remeda";
 import { useSelectedNodeIds } from "./state";
 import { useTree } from "@open-decision/tree-sync";
 import { PlaceholderNodePlugin } from "./plugin/PlaceholderNode/placholderNodePlugin";
-import { EdgePluginObject } from "@open-decision/plugins-edge-helpers";
+import { TEdgePluginGroup } from "@open-decision/plugins-edge-helpers";
 import { CustomEdge } from "./Canvas/Edges/CustomEdge";
 import { TNodePluginGroup } from "@open-decision/plugins-node-helpers";
 
@@ -19,7 +19,7 @@ const canvasClasses = "grid justify-center h-full overflow-hidden";
 type NodeEditorProps = {
   className?: string;
   nodePlugins: TNodePluginGroup;
-  edgePlugins: Record<string, EdgePluginObject>;
+  edgePlugins: TEdgePluginGroup;
   defaultViewport?: { x: number; y: number; zoom: number };
   onUnmount?: (viewport: { x: number; y: number; zoom: number }) => void;
 };
@@ -54,7 +54,7 @@ export const NodeEditor = ({
 
 type SidebarProps = {
   nodePlugins: TNodePluginGroup;
-  edgePlugins: Record<string, EdgePluginObject>;
+  edgePlugins: TEdgePluginGroup;
 };
 
 const PlaceholderNode = new PlaceholderNodePlugin();
