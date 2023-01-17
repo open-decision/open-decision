@@ -27,10 +27,11 @@ export type EdgeResolver<TType extends IEdgePlugin> = (
 
 export type EdgePluginObject<
   TType extends IEdgePlugin = IEdgePlugin,
+  TResolver extends EdgeResolver<any> = EdgeResolver<any>,
   TZodType extends z.AnyZodObject = z.AnyZodObject
 > = {
   plugin: EdgePlugin<TType>;
-  resolver: EdgeResolver<TType>;
+  resolver: TResolver;
   type: TType["type"];
   Type: TZodType;
 };

@@ -1,5 +1,5 @@
 import { Tabs, addNotification } from "@open-decision/design-system";
-import { EdgePluginObject } from "@open-decision/plugins-edge-helpers";
+import { TEdgePluginGroup } from "@open-decision/plugins-edge-helpers";
 import { TNodePluginGroup } from "@open-decision/plugins-node-helpers";
 import { Renderer } from "@open-decision/renderer";
 import { useTree } from "@open-decision/tree-sync";
@@ -7,7 +7,7 @@ import { useEditor, useSelectedNodeIds } from "../../../state";
 
 type Props = {
   nodePlugins: TNodePluginGroup;
-  edgePlugins: Record<string, EdgePluginObject>;
+  edgePlugins: TEdgePluginGroup;
 };
 
 export function SidebarPreview({ nodePlugins, edgePlugins }: Props) {
