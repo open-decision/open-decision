@@ -17,7 +17,6 @@ import {
   addInput,
   getInput,
   getInputs,
-  updateInputLabel,
   updateInput,
 } from "./utils/inputMethods";
 
@@ -27,8 +26,7 @@ export const ZInputId = z.custom<TInputId>(
 
 export const ZInputPlugin = ZEntityPluginBase.extend({
   id: ZInputId,
-  label: z.string().optional(),
-  name: z.string().optional(),
+  name: z.string(),
 });
 
 export type InputPluginObject<TType extends IInputPlugin = IInputPlugin> = {
@@ -47,7 +45,6 @@ export type TInputId = `input_${string}`;
 export interface IInputPlugin<TTypeName extends string = string>
   extends IEntityPluginBase<TTypeName> {
   id: TInputId;
-  label?: string;
   name: string;
 }
 
@@ -60,7 +57,6 @@ export abstract class InputPlugin<
 
   addInput = addInput;
   update = updateInput;
-  updateLabel = updateInputLabel<TType>();
   delete = deleteInput;
   getSingle = getInput<TType>();
   getCollection = getInputs<TType>();

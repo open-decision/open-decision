@@ -4,6 +4,8 @@ import { GroupNodePlugin } from "../GroupNodePlugin";
 import { GroupNodeSidebarContent } from "./GroupNodeSidebarContent";
 import { GroupNodeSidebarPaths } from "./GroupNodeSidebarPaths";
 
+const GroupNode = new GroupNodePlugin();
+
 export const GroupNodeSidebar: TNodeSidebar = ({
   nodeId,
   className,
@@ -11,8 +13,6 @@ export const GroupNodeSidebar: TNodeSidebar = ({
   onNodeCreate,
   nodePlugins,
 }) => {
-  const GroupNode = new GroupNodePlugin(nodePlugins.pluginsWithVariable);
-
   return (
     <NodeSidebar
       nodeId={nodeId}

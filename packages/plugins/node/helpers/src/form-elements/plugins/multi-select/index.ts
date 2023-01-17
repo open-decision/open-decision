@@ -10,6 +10,7 @@ import { z } from "zod";
 export * from "./MultiSelectPlugin";
 
 const plugin = new MultiSelectInputPlugin();
+
 const ZMultiSelectInput = ZInputPlugin.extend({
   type: z.literal(plugin.type),
   answers: z.array(z.object({ id: z.string().uuid(), value: z.string() })),

@@ -1,4 +1,5 @@
 import { TReadOnlyTreeClient, TTreeClient } from "@open-decision/tree-type";
+import { createDefaultName } from "../../../utils/createDefaultName";
 import { IInputPlugin, InputPlugin } from "../../helpers";
 import { TAnswer } from "../../helpers/types";
 import {
@@ -29,14 +30,16 @@ export class SelectInputPlugin extends InputPlugin<ISelectInput> {
     ({
       answers = [],
       required = false,
+      name,
       ...data
     }: Partial<Omit<ISelectInput, "id" | "type">>) =>
-    (_treeClient: TTreeClient | TReadOnlyTreeClient) => {
+    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
       return {
         id: `input_${crypto.randomUUID()}`,
         type: this.type,
         answers,
         required,
+        name: name ? name : createDefaultName(treeClient),
         ...data,
       } satisfies ISelectInput;
     };

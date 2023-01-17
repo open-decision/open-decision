@@ -1,4 +1,5 @@
 import { TReadOnlyTreeClient, TTreeClient } from "@open-decision/tree-type";
+import { createDefaultName } from "../../../utils/createDefaultName";
 import { IInputPlugin, InputPlugin } from "../../helpers";
 import { updateRequired } from "../../helpers/utils/inputMethods";
 
@@ -14,12 +15,17 @@ export class TextInputPlugin extends InputPlugin<ITextInput> {
   }
 
   create =
-    ({ required = false, ...data }: Partial<Omit<ITextInput, "id" | "type">>) =>
-    (_treeClient: TTreeClient | TReadOnlyTreeClient) => {
+    ({
+      required = false,
+      name,
+      ...data
+    }: Partial<Omit<ITextInput, "id" | "type">>) =>
+    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
       return {
         id: `input_${crypto.randomUUID()}`,
         type: this.type,
         required,
+        name: name ? name : createDefaultName(treeClient),
         ...data,
       } satisfies ITextInput;
     };
