@@ -175,7 +175,7 @@ export class FormNodePlugin extends NodePluginWithVariable<
             return TextVariable.create({
               value,
               id: input.id,
-              name: input.name,
+              name: input.label,
             });
           })
           .with({ type: "select" }, (input) => {
@@ -195,7 +195,7 @@ export class FormNodePlugin extends NodePluginWithVariable<
               values: input.answers,
               value: readableValue,
               id: input.id,
-              name: input.name,
+              name: input.label,
             });
           })
           .with({ type: "multi-select" }, (input) => {
@@ -221,11 +221,11 @@ export class FormNodePlugin extends NodePluginWithVariable<
               values: input.answers,
               value: readableValue as string[],
               id: input.id,
-              name: input.name,
+              name: input.label,
             });
           })
           .with({ type: "placeholder" }, () =>
-            EmptyVariable.create({ id: input.id, name: input.name })
+            EmptyVariable.create({ id: input.id, name: input.label })
           )
           .run();
 

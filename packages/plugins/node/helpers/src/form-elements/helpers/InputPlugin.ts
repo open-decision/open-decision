@@ -18,6 +18,7 @@ import {
   getInput,
   getInputs,
   updateInput,
+  updateInputLabel,
 } from "./utils/inputMethods";
 
 export const ZInputId = z.custom<TInputId>(
@@ -26,7 +27,7 @@ export const ZInputId = z.custom<TInputId>(
 
 export const ZInputPlugin = ZEntityPluginBase.extend({
   id: ZInputId,
-  name: z.string(),
+  label: z.string(),
 });
 
 export type InputPluginObject<TType extends IInputPlugin = IInputPlugin> = {
@@ -45,7 +46,7 @@ export type TInputId = `input_${string}`;
 export interface IInputPlugin<TTypeName extends string = string>
   extends IEntityPluginBase<TTypeName> {
   id: TInputId;
-  name: string;
+  label: string;
 }
 
 export abstract class InputPlugin<
@@ -53,12 +54,13 @@ export abstract class InputPlugin<
 > extends EntityPlugin<TType> {
   pluginType = "pluginEntity" as const;
 
-  abstract create: (data: any) => (treeClient: TTreeClient) => TType;
+  abstract create: (data: any) => TType;
 
   addInput = addInput;
   update = updateInput;
   delete = deleteInput;
   getSingle = getInput<TType>();
+  updateLabel = updateInputLabel<TType>();
   getCollection = getInputs<TType>();
   getAll = (treeClient: TTreeClient | TReadOnlyTreeClient) =>
     treeClient.pluginEntity.get.all<TType>("inputs");

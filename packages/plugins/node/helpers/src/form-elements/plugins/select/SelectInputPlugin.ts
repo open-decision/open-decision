@@ -1,5 +1,3 @@
-import { TReadOnlyTreeClient, TTreeClient } from "@open-decision/tree-type";
-import { createDefaultName } from "../../../utils/createDefaultName";
 import { IInputPlugin, InputPlugin } from "../../helpers";
 import { TAnswer } from "../../helpers/types";
 import {
@@ -17,7 +15,6 @@ export const typeName = "select" as const;
 
 export interface ISelectInput extends IInputPlugin<typeof typeName> {
   answers: TAnswer[];
-  label?: string;
   required: boolean;
 }
 
@@ -26,23 +23,21 @@ export class SelectInputPlugin extends InputPlugin<ISelectInput> {
     super(typeName);
   }
 
-  create =
-    ({
-      answers = [],
-      required = false,
-      name,
-      ...data
-    }: Partial<Omit<ISelectInput, "id" | "type">>) =>
-    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
-      return {
-        id: `input_${crypto.randomUUID()}`,
-        type: this.type,
-        answers,
-        required,
-        name: name ? name : createDefaultName(treeClient),
-        ...data,
-      } satisfies ISelectInput;
-    };
+  create = ({
+    answers = [],
+    required = false,
+    label,
+    ...data
+  }: Partial<Omit<ISelectInput, "id" | "type">>) => {
+    return {
+      id: `input_${crypto.randomUUID()}`,
+      type: this.type,
+      answers,
+      required,
+      label: label ? label : `Einfachauswahl ${answers.length + 1}`,
+      ...data,
+    } satisfies ISelectInput;
+  };
 
   createAnswer = createAnswer;
 

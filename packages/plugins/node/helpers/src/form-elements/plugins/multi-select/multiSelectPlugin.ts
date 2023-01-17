@@ -1,5 +1,3 @@
-import { TReadOnlyTreeClient, TTreeClient } from "@open-decision/tree-type";
-import { createDefaultName } from "../../../utils/createDefaultName";
 import { IInputPlugin, InputPlugin } from "../../helpers";
 import { TAnswer } from "../../helpers/types";
 import {
@@ -25,23 +23,21 @@ export class MultiSelectInputPlugin extends InputPlugin<IMultiSelectInput> {
     super(typeName);
   }
 
-  create =
-    ({
-      answers = [],
-      required = false,
-      name,
-      ...data
-    }: Partial<Omit<IMultiSelectInput, "id" | "type">>) =>
-    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
-      return {
-        id: `input_${crypto.randomUUID()}`,
-        type: this.type,
-        answers,
-        required,
-        name: name ? name : createDefaultName(treeClient),
-        ...data,
-      } satisfies IMultiSelectInput;
-    };
+  create = ({
+    answers = [],
+    required = false,
+    label,
+    ...data
+  }: Partial<Omit<IMultiSelectInput, "id" | "type">>) => {
+    return {
+      id: `input_${crypto.randomUUID()}`,
+      type: this.type,
+      answers,
+      required,
+      label: label ? label : `Mehrfachauswahl ${answers.length + 1}`,
+      ...data,
+    } satisfies IMultiSelectInput;
+  };
 
   createAnswer = createAnswer;
 

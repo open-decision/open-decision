@@ -1,5 +1,3 @@
-import { TReadOnlyTreeClient, TTreeClient } from "@open-decision/tree-type";
-import { createDefaultName } from "../../../utils/createDefaultName";
 import { IInputPlugin, InputPlugin } from "../../helpers";
 
 export const typeName = "placeholder";
@@ -11,14 +9,15 @@ export class PlaceholderInputPlugin extends InputPlugin<IPlaceholderInput> {
     super(typeName);
   }
 
-  create =
-    ({ name, ...data }: Partial<Omit<IPlaceholderInput, "id" | "type">>) =>
-    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
-      return {
-        id: `input_${crypto.randomUUID()}`,
-        type: this.type,
-        name: name ? name : createDefaultName(treeClient),
-        ...data,
-      } satisfies IPlaceholderInput;
-    };
+  create = ({
+    label,
+    ...data
+  }: Partial<Omit<IPlaceholderInput, "id" | "type">>) => {
+    return {
+      id: `input_${crypto.randomUUID()}`,
+      type: this.type,
+      label: label ? label : `Platzhalter`,
+      ...data,
+    } satisfies IPlaceholderInput;
+  };
 }

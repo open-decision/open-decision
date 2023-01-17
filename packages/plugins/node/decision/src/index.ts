@@ -10,6 +10,7 @@ import {
 import { ZNodePlugin } from "@open-decision/tree-type";
 import { RichText } from "@open-decision/rich-text-editor";
 import { z } from "zod";
+import { DecisionNodeInputPlugins } from "./createInputPlugins";
 
 export * from "./DecisionNodePlugin";
 
@@ -29,7 +30,7 @@ export const DecisionNodePluginObject = createNodePluginObject({
   },
   Renderer: DecisionNodeRenderer,
   type: plugin.type,
-  pluginEntities: ["inputs"],
+  pluginEntities: { inputs: DecisionNodeInputPlugins.Type },
   Icon: Pencil1Icon,
   Type: ZDecisionNode,
 });
