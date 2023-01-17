@@ -31,12 +31,9 @@ export class GroupNodePlugin extends NodePluginWithVariable<
   IGroupNode,
   IGroupNodeVariable
 > {
-  declare nodePlugins: Record<string, NodePluginWithVariable>;
-
-  constructor(nodePlugins: Record<string, NodePluginWithVariable>) {
+  constructor() {
     super(typeName);
     this.isAddable = false;
-    this.nodePlugins = nodePlugins;
   }
 
   create =

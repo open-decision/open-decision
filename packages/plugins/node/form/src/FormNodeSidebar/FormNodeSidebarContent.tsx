@@ -1,13 +1,14 @@
 import { stackClasses, Tabs } from "@open-decision/design-system";
 import { RichTextEditor } from "@open-decision/rich-text-editor";
 import { useTreeClient, useTree } from "@open-decision/tree-sync";
+import { TNodeId } from "@open-decision/tree-type";
 import { useTranslations } from "next-intl";
 import { FormNodePlugin } from "../FormNodePlugin";
 import { InputPlugin } from "./InputPlugin";
 
 const FormNode = new FormNodePlugin();
 
-type Props = { nodeId: string };
+type Props = { nodeId: TNodeId };
 
 export function FormNodeSidebarContent({ nodeId }: Props) {
   const t = useTranslations("builder.nodeEditingSidebar");
@@ -15,7 +16,7 @@ export function FormNodeSidebarContent({ nodeId }: Props) {
 
   const node = useTree(FormNode.getSingle(nodeId));
 
-  if (node instanceof Error) return null;
+  if (!node) return null;
 
   return (
     <Tabs.Content value="Inhalt" className={stackClasses({}, "gap-4")}>

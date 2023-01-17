@@ -15,10 +15,11 @@ import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { useTranslations } from "next-intl";
 import { DocumentNodePlugin } from "../DocumentNodePlugin";
 import { Cross1Icon } from "@radix-ui/react-icons";
+import { TNodeId } from "@open-decision/tree-type";
 
 const DocumentNode = new DocumentNodePlugin();
 
-type Props = { nodeId: string };
+type Props = { nodeId: TNodeId };
 
 export function DocumentNodeSidebarContent({ nodeId }: Props) {
   const treeClient = useTreeClient();
@@ -28,7 +29,7 @@ export function DocumentNodeSidebarContent({ nodeId }: Props) {
     return DocumentNode.getSingle(nodeId)(treeClient);
   });
 
-  if (node instanceof Error) return null;
+  if (!node) return null;
 
   return (
     <Tabs.Content value="Inhalt">
@@ -57,7 +58,7 @@ export function DocumentNodeSidebarContent({ nodeId }: Props) {
   );
 }
 
-type TemplateCardProps = { templateUuid: string; nodeId: string };
+type TemplateCardProps = { templateUuid: string; nodeId: TNodeId };
 
 export const TemplateCard = ({ templateUuid, nodeId }: TemplateCardProps) => {
   const treeClient = useTreeClient();
@@ -118,7 +119,7 @@ export const TemplateCard = ({ templateUuid, nodeId }: TemplateCardProps) => {
   );
 };
 
-type EmptyTemplateCardProps = { nodeId: string };
+type EmptyTemplateCardProps = { nodeId: TNodeId };
 
 const EmptyTemplateCard = ({ nodeId }: EmptyTemplateCardProps) => {
   const treeClient = useTreeClient();

@@ -43,12 +43,12 @@ export const createTreeClientWithPlugins = (tree: Tree.TTree) => {
   };
 
   const NodeType = z.discriminatedUnion("type", [
-    DecisionNodePluginObject.plugin.Type,
-    DocumentNodePluginObject.plugin.Type,
-    PlaceholderNodePluginObject.plugin.Type,
-    InfoNodePluginObject.plugin.Type,
-    FormNodePluginObject.plugin.Type,
-    GroupNodePluginObject.plugin.Type,
+    DecisionNodePluginObject.Type,
+    DocumentNodePluginObject.Type,
+    PlaceholderNodePluginObject.Type,
+    InfoNodePluginObject.Type,
+    FormNodePluginObject.Type,
+    GroupNodePluginObject.Type,
   ]);
 
   const treeClient = createTreeClient(
@@ -62,9 +62,7 @@ export const createTreeClientWithPlugins = (tree: Tree.TTree) => {
         NodeType,
       ],
       edges: [EdgePlugins, EdgeType],
-      pluginEntities: z.object({
-        inputs: FormNodePluginObject.pluginEntities.inputs.optional(),
-      }),
+      pluginEntities: FormNodePluginObject.pluginEntities?.inputs,
     },
     tree
   );

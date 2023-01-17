@@ -15,7 +15,6 @@ export const typeName = "info" as const;
 
 export interface IInfoNodePlugin extends INodePlugin<typeof typeName> {
   content?: TRichText;
-  target?: string;
 }
 
 export class InfoNodePlugin extends NodePlugin<IInfoNodePlugin> {

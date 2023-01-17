@@ -8,8 +8,8 @@ import {
 import { SidebarButton, sidebarCardClasses } from "@open-decision/node-editor";
 import {
   DragHandle,
-  InputComponentProps,
   InputDropdown,
+  TInputId,
 } from "@open-decision/plugins-node-helpers";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { CrossCircledIcon } from "@radix-ui/react-icons";
@@ -18,13 +18,14 @@ import React from "react";
 import { FormNodePlugin } from "../FormNodePlugin";
 import { PlaceholderInputPlugin } from "@open-decision/plugins-node-helpers";
 import { TFormNodeInput } from "../FormNodeInputs";
+import { TNodeId } from "@open-decision/tree-type";
 
 const FormNode = new FormNodePlugin();
 const PlaceholderInput = new PlaceholderInputPlugin();
 
 type InputPluginComponentProps = {
-  inputIds: string[];
-  nodeId: string;
+  inputIds: TInputId[];
+  nodeId: TNodeId;
 };
 
 export function InputPlugin({ inputIds, nodeId }: InputPluginComponentProps) {
@@ -68,8 +69,9 @@ export function InputPlugin({ inputIds, nodeId }: InputPluginComponentProps) {
 
 type InputItemProps = {
   dragGroupRef: React.MutableRefObject<HTMLDivElement | null>;
-  nodeId: string;
-} & Pick<InputComponentProps, "inputId">;
+  nodeId: TNodeId;
+  inputId: TInputId;
+};
 
 const InputItem = ({ inputId, dragGroupRef, nodeId }: InputItemProps) => {
   const treeClient = useTreeClient();
@@ -88,9 +90,9 @@ const InputItem = ({ inputId, dragGroupRef, nodeId }: InputItemProps) => {
     treeClient.pluginEntity.delete("inputs", inputId);
   }, [inputId, nodeId, treeClient]);
 
-  if (input instanceof Error) return null;
+  if (!input) return null;
 
-  const InputComponents = FormNode.inputPlugins[input.type].BuilderComponent;
+  const InputComponents = FormNode.inputPlugins.Builder[input.type];
 
   return (
     <Reorder.Item
@@ -118,13 +120,13 @@ const InputItem = ({ inputId, dragGroupRef, nodeId }: InputItemProps) => {
           </Button>
           <InputDropdown
             currentType={input.type}
-            inputPlugins={FormNode.inputPlugins}
+            inputPlugins={FormNode.inputPlugins.types}
             onSelect={(newType) => {
-              const newInput = FormNode.inputPlugins[newType].plugin.create({})(
-                treeClient
-              );
+              const newInput = FormNode.inputPlugins.plugins[newType].create(
+                {}
+              )(treeClient);
 
-              FormNode.inputPlugins[input.type].plugin.update(
+              FormNode.inputPlugins.plugins[input.type].update(
                 inputId,
                 newInput
               )(treeClient);

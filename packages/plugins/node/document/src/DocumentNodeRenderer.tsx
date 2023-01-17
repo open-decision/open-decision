@@ -14,7 +14,6 @@ import { isODError, ODError } from "@open-decision/type-classes";
 import { useTranslations } from "next-intl";
 import { NodeRenderer } from "@open-decision/plugins-node-helpers";
 import { APIClient } from "@open-decision/api-client";
-import { mapValues } from "remeda";
 
 const DocumentNode = new DocumentNodePlugin();
 
@@ -39,7 +38,7 @@ export const DocumentNodeRenderer: NodeRenderer = ({
   const { mutate, data, isLoading } = useMutation(
     ["generateDocument"],
     async () => {
-      if (node instanceof Error) throw node;
+      if (!node) return;
 
       if (!node.templateUuid) {
         throw new ODError({
@@ -68,7 +67,7 @@ export const DocumentNodeRenderer: NodeRenderer = ({
     },
     {
       onSuccess: (data) => {
-        if (!ref.current) return;
+        if (!ref.current || !data) return;
 
         ref.current.href = data;
         return ref.current.click();
@@ -85,7 +84,7 @@ export const DocumentNodeRenderer: NodeRenderer = ({
     }
   );
 
-  if (node instanceof Error) return null;
+  if (!node) return null;
 
   return (
     <RendererPrimitives.Container

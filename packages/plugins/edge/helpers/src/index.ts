@@ -24,11 +24,14 @@ export type EdgeResolver<TType extends IEdgePlugin> = (
   | { state: "failure" }
   | { state: "error"; error: ODProgrammerError | ODError };
 
-export type EdgePluginObject<TType extends IEdgePlugin = IEdgePlugin> = {
+export type EdgePluginObject<
+  TType extends IEdgePlugin = IEdgePlugin,
+  TZodType extends z.AnyZodObject = z.AnyZodObject
+> = {
   plugin: EdgePlugin<TType>;
   resolver: EdgeResolver<TType>;
   type: TType["type"];
-  Type: z.ZodType<TType>;
+  Type: TZodType;
 };
 
 export const createEdgePluginObject = <TType extends IEdgePlugin = IEdgePlugin>(

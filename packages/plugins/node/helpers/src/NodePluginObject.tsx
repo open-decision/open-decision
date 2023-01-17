@@ -9,6 +9,7 @@ import {
 } from "@open-decision/tree-type";
 import { NodeProps } from "reactflow";
 import { mapValues, omitBy, pickBy } from "remeda";
+import { z } from "zod";
 
 export type NodePluginProps = Omit<NodeProps, "id"> & {
   className?: string;
@@ -45,7 +46,11 @@ export type NodeRenderer = (props: NodeRendererProps) => JSX.Element | null;
 
 export interface NodePluginObject<
   TType extends INodePlugin = INodePlugin,
-  TPluginEntities extends string[] = string[]
+  TPluginEntities extends Record<string, z.ZodTypeAny> = Record<
+    string,
+    z.ZodTypeAny
+  >,
+  TZodType extends z.AnyZodObject = z.AnyZodObject
 > {
   Editor: {
     Node: CanvasNode;
@@ -58,18 +63,25 @@ export interface NodePluginObject<
     any & React.RefAttributes<SVGSVGElement>
   >;
   plugin: NodePlugin<TType> | NodePluginWithVariable<TType>;
+  Type: TZodType;
 }
 
 export interface NodePluginObjectWithVariable<
   TType extends INodePlugin = INodePlugin,
-  TPluginEntities extends string[] = string[]
+  TPluginEntities extends Record<string, z.ZodTypeAny> = Record<
+    string,
+    z.ZodTypeAny
+  >
 > extends NodePluginObject<TType, TPluginEntities> {
   plugin: NodePluginWithVariable<TType>;
 }
 
 export const createNodePluginObject = <
   TType extends INodePlugin = INodePlugin,
-  TPluginEntities extends string[] = string[]
+  TPluginEntities extends Record<string, z.ZodTypeAny> = Record<
+    string,
+    z.ZodTypeAny
+  >
 >(
   pluginObj: NodePluginObject<TType, TPluginEntities>
 ) => {

@@ -92,6 +92,11 @@ export const createInputPluginGroup = <
     (plugin) => plugin.RendererComponent
   );
   const types = keys.strict(inputPlugins);
+  const TypeArray = Object.values(inputPlugins).map((plugin) => plugin.Type);
+  const Type =
+    TypeArray.length > 1
+      ? z.union([TypeArray[0], TypeArray[1], ...TypeArray])
+      : TypeArray[0];
 
   return {
     types,
@@ -99,5 +104,6 @@ export const createInputPluginGroup = <
     plugins,
     Builder,
     Renderer,
+    Type,
   };
 };

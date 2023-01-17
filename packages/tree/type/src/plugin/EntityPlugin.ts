@@ -7,7 +7,6 @@ export const ZEntityId = z.custom<TId>((value) => typeof value === "string");
 
 export const ZEntityPluginBase = z.object({
   id: ZEntityId,
-  type: z.string(),
 });
 
 export interface IEntityPluginBase<TType extends string = string> {
