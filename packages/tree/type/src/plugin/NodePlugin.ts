@@ -35,7 +35,7 @@ export interface INodePlugin<TType extends string = string>
   extends IEntityPluginBase<TType> {
   id: TNodeId;
   position: { x: number; y: number };
-  name?: string;
+  name: string;
   parent?: string;
   final?: true;
   rendererButtonLabel?: string;
@@ -88,24 +88,10 @@ export abstract class NodePluginWithVariable<
 > extends BaseNodePlugin<TType> {
   hasVariable = true;
 
-  abstract getVariable: (
-    nodeId: TNodeId,
-    answers: any
-  ) => (
-    treeClient: TTreeClient | TReadOnlyTreeClient
-  ) => TVariableType | undefined;
-
   abstract createVariable: (
     nodeId: TNodeId,
     answer: any
   ) => (
     treeClient: TTreeClient | TReadOnlyTreeClient
   ) => TVariableType | ODError | ODProgrammerError | undefined;
-
-  // abstract createReadableVariable: (
-  //   nodeId: TNodeId,
-  //   answer: any
-  // ) => (
-  //   treeClient: TTreeClient | TReadOnlyTreeClient
-  // ) => IReadableVariablePlugin | undefined;
 }

@@ -1,22 +1,18 @@
 import {
   IEmptyVariable,
-  IReadableEmptyVariable,
 } from "@open-decision/plugins-variable-empty";
 import {
   IMultiSelectVariable,
-  IReadableMultiSelectVariable,
 } from "@open-decision/plugins-variable-multi-select";
 import {
-  IReadableSelectVariable,
   ISelectVariable,
 } from "@open-decision/plugins-variable-select";
 import {
-  IReadableTextVariable,
   ITextVariable,
 } from "@open-decision/plugins-variable-text";
 import {
-  IReadableVariablePlugin,
   IVariablePlugin,
+  TId,
   VariablePlugin,
 } from "@open-decision/tree-type";
 
@@ -28,60 +24,26 @@ type TRecordContent =
   | IMultiSelectVariable
   | IEmptyVariable;
 
-type TReadableRecordContent =
-  | IReadableTextVariable
-  | IReadableSelectVariable
-  | IReadableMultiSelectVariable
-  | IReadableEmptyVariable;
 
-export interface IRecordVariable extends IVariablePlugin<typeof typeName> {
+
+export interface IRecordVariable<Id extends TId = TId>
+  extends IVariablePlugin<typeof typeName, Id> {
   value?: Record<string, TRecordContent>;
 }
 
-export interface IReadableRecordVariable
-  extends IReadableVariablePlugin<typeof typeName> {
-  value?: Record<string, TReadableRecordContent | undefined>;
-}
-
-export class RecordVariablePlugin extends VariablePlugin<
-  IRecordVariable,
-  IReadableRecordVariable
-> {
+export class RecordVariablePlugin extends VariablePlugin<IRecordVariable> {
   constructor() {
     super(typeName);
   }
 
-  create = (
-    data: Partial<Omit<IRecordVariable, "type">> & Pick<IRecordVariable, "id">
+  create = <Id extends TId = TId>(
+    data: Omit<IRecordVariable<Id>, "type" | "escapedName">
   ) => {
     return {
       type: this.type,
+      escapedName: this.createReadableKey(data.name),
       ...data,
     } satisfies IRecordVariable;
   };
 
-  // createReadable = (variable: IRecordVariable) => {
-  //   if (!variable.name || !variable.value) return;
 
-  //   return {
-  //     ...variable,
-  //     id: this.createReadableKey(variable.name),
-  //     value: mapValues(variable.value, (value) => {
-  //       return match(value)
-  //         .with({ type: "text" }, (textVariable) =>
-  //           TextVariable.createReadable(textVariable)
-  //         )
-  //         .with({ type: "select" }, (selectVariable) =>
-  //           SelectVariable.createReadable(selectVariable)
-  //         )
-  //         .with({ type: "multi-select" }, (multiSelectVariable) =>
-  //           MultiSelectVariable.createReadable(multiSelectVariable)
-  //         )
-  //         .with({ type: "empty" }, (emptyVariable) =>
-  //           EmptyVariable.createReadable(emptyVariable)
-  //         )
-  //         .otherwise(() => undefined);
-  //     }),
-  //   } satisfies IReadableRecordVariable;
-  // };
-}

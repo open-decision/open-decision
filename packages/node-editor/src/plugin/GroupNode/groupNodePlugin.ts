@@ -122,7 +122,7 @@ export class GroupNodePlugin extends NodePluginWithVariable<
         id: nodeId,
         type: this.type,
         name: node.name,
-        value: answer.map((answer) => answer.answers),
+        value: answer.map((answer) => answer.variables),
       } satisfies IGroupNodeVariable;
     };
 

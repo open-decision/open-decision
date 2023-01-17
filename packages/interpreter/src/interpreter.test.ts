@@ -26,7 +26,7 @@ test("Sending ADD_USER_ANSWER should add the answer to context or override the e
 
   interpreterService.send(userAnswer2);
 
-  expect(interpreterService.state.context.answers).toMatchInlineSnapshot(`
+  expect(interpreterService.state.context.variables).toMatchInlineSnapshot(`
     {
       "49f7bbaa-f58c-4310-9137-b19fd89d4848": "8d0946ab-5934-4bb7-8203-d1cb41b73aba",
       "cbca524c-4b3d-4a99-a85c-68f8d57487c2": "9675cc27-b1a3-4dfe-a759-0eff5e7a2cf3",

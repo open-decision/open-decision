@@ -148,10 +148,6 @@ export class FormNodePlugin extends NodePluginWithVariable<
 
   getByInput = getNodesByInput(this);
 
-  getVariable = (nodeId: string, answers: any) => {
-    return answers[nodeId] as TFormNodeVariable | undefined;
-  };
-
   createVariable =
     (nodeId: TNodeId, answer: Record<TInputId, string | string[]>) =>
     (treeClient: TTreeClient | TReadOnlyTreeClient) => {
@@ -175,7 +171,12 @@ export class FormNodePlugin extends NodePluginWithVariable<
               return new ODProgrammerError({
                 code: "REQUESTED_ANSWER_OF_WRONG_TYPE",
               });
-            return TextVariable.create({ value, id: input.id });
+
+            return TextVariable.create({
+              value,
+              id: input.id,
+              name: input.name,
+            });
           })
           .with({ type: "select" }, (input) => {
             if (typeof answer !== "string")
@@ -194,6 +195,7 @@ export class FormNodePlugin extends NodePluginWithVariable<
               values: input.answers,
               value: readableValue,
               id: input.id,
+              name: input.name,
             });
           })
           .with({ type: "multi-select" }, (input) => {
@@ -219,10 +221,11 @@ export class FormNodePlugin extends NodePluginWithVariable<
               values: input.answers,
               value: readableValue as string[],
               id: input.id,
+              name: input.name,
             });
           })
           .with({ type: "placeholder" }, () =>
-            EmptyVariable.create({ id: input.id })
+            EmptyVariable.create({ id: input.id, name: input.name })
           )
           .run();
 

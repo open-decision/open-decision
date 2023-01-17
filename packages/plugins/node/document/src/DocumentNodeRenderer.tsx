@@ -26,7 +26,7 @@ export const DocumentNodeRenderer: NodeRenderer = ({
     treeClient,
     environment,
     state: {
-      context: { answers },
+      context: { variables: answers },
     },
   } = useInterpreter();
 

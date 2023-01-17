@@ -50,9 +50,9 @@ type DecisionNodeFormProps = {
 };
 
 const DecisionNodeForm = ({ input, node }: DecisionNodeFormProps) => {
-  const { getAnswers, send, treeClient } = useInterpreter();
+  const { send, treeClient, getVariable } = useInterpreter();
 
-  const answer = DecisionNode.getVariable(node.id, getAnswers())(treeClient);
+  const answer = getVariable(node.id);
 
   const methods = Form.useForm<{ [x: TInputId]: string }>({
     defaultValues: answer ? { [input.id]: answer?.value } : {},
@@ -68,7 +68,7 @@ const DecisionNodeForm = ({ input, node }: DecisionNodeFormProps) => {
 
     send({
       type: "ADD_USER_ANSWER",
-      answer: variable,
+      variable,
     });
 
     send("EVALUATE_NODE_CONDITIONS");

@@ -13,7 +13,7 @@ import { FormNodePlugin } from "./FormNodePlugin";
 const FormNode = new FormNodePlugin();
 
 export const FormNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
-  const { send, getAnswers, treeClient } = useInterpreter();
+  const { send, getVariables: getAnswers, treeClient } = useInterpreter();
 
   const node = FormNode.getSingle(nodeId)(treeClient);
 

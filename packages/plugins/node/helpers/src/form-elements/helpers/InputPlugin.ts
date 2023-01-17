@@ -48,7 +48,7 @@ export interface IInputPlugin<TTypeName extends string = string>
   extends IEntityPluginBase<TTypeName> {
   id: TInputId;
   label?: string;
-  name?: string;
+  name: string;
 }
 
 export abstract class InputPlugin<

@@ -21,11 +21,11 @@ type ResolverEvents =
 
 export type InterpreterContext = {
   history: { nodes: TNodeId[]; position: number };
-  answers: Record<TNodeId, IVariablePlugin>;
+  variables: Record<string, IVariablePlugin>;
 };
 
 export type InterpreterEvents =
-  | { type: "ADD_USER_ANSWER"; answer: IVariablePlugin }
+  | { type: "ADD_USER_ANSWER"; variable: IVariablePlugin }
   | { type: "RESET" }
   | { type: "DONE" }
   | { type: "GO_BACK" }
@@ -89,7 +89,7 @@ export const createInterpreterMachine = (
           nodes: [startNode],
           position: 0,
         },
-        answers: {},
+        variables: {},
       } as InterpreterContext,
       id: "interpreter",
       initial: "idle",
@@ -158,16 +158,16 @@ export const createInterpreterMachine = (
     {
       actions: {
         assignAnswerToContext: assign({
-          answers: (context, event) => {
+          variables: (context, event) => {
             return {
-              ...context.answers,
-              [event.answer.escapedName]: event.answer,
+              ...context.variables,
+              [event.variable.escapedName]: event.variable,
             };
           },
         }),
         resetToInitialContext: assign((_context, _event) => ({
           history: { nodes: [startNode], position: 0 },
-          answers: {},
+          variables: {},
           Error: undefined,
         })),
         goBack: assign((context) => {

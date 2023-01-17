@@ -1,43 +1,25 @@
-import {
-  IVariablePlugin,
-  VariablePlugin,
-  IReadableVariablePlugin,
-} from "@open-decision/tree-type";
+import { IVariablePlugin, VariablePlugin, TId } from "@open-decision/tree-type";
 
 const typeName = "empty";
 
-export interface IEmptyVariable extends IVariablePlugin<typeof typeName> {
+export interface IEmptyVariable<Id extends TId = TId>
+  extends IVariablePlugin<typeof typeName, Id> {
   value: undefined;
 }
 
-export interface IReadableEmptyVariable extends IReadableVariablePlugin {
-  value: undefined;
-}
-
-export class EmptyVariablePlugin extends VariablePlugin<
-  IEmptyVariable,
-  IReadableEmptyVariable
-> {
+export class EmptyVariablePlugin extends VariablePlugin<IEmptyVariable> {
   constructor() {
     super(typeName);
   }
 
-  create = (
-    data: Partial<Omit<IEmptyVariable, "type">> & Pick<IEmptyVariable, "id">
+  create = <Id extends TId = TId>(
+    data: Omit<IEmptyVariable<Id>, "type" | "escapedName" | "value">
   ) => {
     return {
       type: this.type,
+      escapedName: this.createReadableKey(data.name),
       value: undefined,
       ...data,
     } satisfies IEmptyVariable;
-  };
-
-  createReadable = (variable: IEmptyVariable) => {
-    if (!variable.name) return;
-
-    return {
-      ...variable,
-      id: this.createReadableKey(variable.name),
-    };
   };
 }

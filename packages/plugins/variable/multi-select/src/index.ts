@@ -1,56 +1,28 @@
-import {
-  IReadableVariablePlugin,
-  IVariablePlugin,
-  VariablePlugin,
-} from "@open-decision/tree-type";
+import { IVariablePlugin, TId, VariablePlugin } from "@open-decision/tree-type";
 
 const typeName = "multi-select";
 
-export interface IMultiSelectVariable extends IVariablePlugin<typeof typeName> {
+export interface IMultiSelectVariable<Id extends TId = TId>
+  extends IVariablePlugin<typeof typeName> {
+  id: Id;
   values: { id: string; value?: string }[];
   value?: string[];
 }
 
-export interface IReadableMultiSelectVariable extends IReadableVariablePlugin {
-  values: { id: string; value: string }[];
-  value?: string[];
-}
-
-export class MultiSelectVariablePlugin extends VariablePlugin<
-  IMultiSelectVariable,
-  IReadableMultiSelectVariable
-> {
+export class MultiSelectVariablePlugin extends VariablePlugin<IMultiSelectVariable> {
   constructor() {
     super(typeName);
   }
 
-  create = (
-    data: Partial<Omit<IMultiSelectVariable, "type">> &
-      Pick<IMultiSelectVariable, "id">
-  ) => {
+  create = <Id extends TId = TId>({
+    values = [],
+    ...data
+  }: Omit<IMultiSelectVariable<Id>, "type" | "escapedName">) => {
     return {
       type: this.type,
-      values: [],
+      values,
+      escapedName: this.createReadableKey(data.name),
       ...data,
     } satisfies IMultiSelectVariable;
-  };
-
-  createReadable = (variable: IMultiSelectVariable) => {
-    const readbableValue = variable.value
-      ?.map(
-        (selectedValue) =>
-          variable.values.find(
-            (possibleValue) => possibleValue.id === selectedValue
-          )?.value
-      )
-      .filter((value): value is string => value !== undefined);
-
-    if (!readbableValue || !variable.name) return;
-
-    return {
-      ...variable,
-      id: this.createReadableKey(variable.name),
-      value: readbableValue,
-    } satisfies IReadableMultiSelectVariable;
   };
 }

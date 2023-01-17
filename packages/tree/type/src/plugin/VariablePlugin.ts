@@ -9,8 +9,11 @@ export const ZVariablePlugin = z.object({
 });
 
 export type TValueId = `value_${string}`;
-export interface IVariablePlugin<TType extends string = string> {
-  id: TId;
+export interface IVariablePlugin<
+  TType extends string = string,
+  Id extends TId = TId
+> {
+  id: Id;
   type: TType;
   name: string;
   escapedName: string;
@@ -31,8 +34,7 @@ export abstract class VariablePlugin<
     return answers[id] as TType | undefined;
   };
   abstract create: (
-    data: Partial<Omit<TType, "type" | "id" | "name">> &
-      Required<Pick<TType, "id" | "name">>
+    data: Omit<TType, "type" | "escapedName">
   ) => TType | undefined;
 
   createReadableKey = (key: string) =>

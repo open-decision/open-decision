@@ -22,7 +22,10 @@ export const compareEdgeResolver: EdgeResolver<ICompareEdge> =
     if (!condition || !edge.target) return { state: "failure" };
 
     // Get a possibly existing answer from the interpreter context
-    const existingAnswer = SelectVariable.get(currentNode.id, context.answers);
+    const existingAnswer = SelectVariable.get(
+      currentNode.id,
+      context.variables
+    );
 
     // We expect there to be an answer on the interpreter context.
     // Not finding an answer on the interpreter context is a programmer error.

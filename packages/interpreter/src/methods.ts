@@ -1,5 +1,8 @@
 import {
+  createReadableKey,
+  IVariablePlugin,
   ReadOnlyTreeClient,
+  TNodeId,
   TReadOnlyTreeClient,
   Tree,
   TTreeClient,
@@ -7,9 +10,23 @@ import {
 import { ODProgrammerError } from "@open-decision/type-classes";
 import { InterpreterContext } from "./interpreter";
 
-function getAnswers(interpreterContext: InterpreterContext) {
-  return interpreterContext.answers;
+function getVariables(interpreterContext: InterpreterContext) {
+  return interpreterContext.variables;
 }
+
+const getVariable = <TVariableType extends IVariablePlugin = IVariablePlugin>(
+  interpreterContext: InterpreterContext,
+  nodeId: TNodeId,
+  treeClient: TTreeClient | TReadOnlyTreeClient
+) => {
+  const node = treeClient.nodes.get.single(nodeId);
+
+  if (!node || !node.name) return;
+
+  const nodeName = createReadableKey(node.name);
+
+  return interpreterContext.variables[nodeName] as TVariableType;
+};
 
 export const getCurrentNode = (
   treeClient: TTreeClient | TReadOnlyTreeClient,
@@ -46,7 +63,9 @@ export function createInterpreterMethods(
   return {
     treeClient,
     getCurrentNode: () => getCurrentNode(treeClient, interpreterContext),
-    getAnswers: () => getAnswers(interpreterContext),
+    getVariables: () => getVariables(interpreterContext),
+    getVariable: (nodeId: TNodeId) =>
+      getVariable(interpreterContext, nodeId, treeClient),
     canGoBack: canGoBack(interpreterContext),
     canGoForward: canGoForward(interpreterContext),
     hasHistory: () => interpreterContext.history.nodes.length > 1,
