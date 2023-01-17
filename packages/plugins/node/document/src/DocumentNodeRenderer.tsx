@@ -17,16 +17,12 @@ import { APIClient } from "@open-decision/api-client";
 
 const DocumentNode = new DocumentNodePlugin();
 
-export const DocumentNodeRenderer: NodeRenderer = ({
-  nodeId,
-  nodePlugins,
-  ...props
-}) => {
+export const DocumentNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
   const {
     treeClient,
     environment,
     state: {
-      context: { variables: answers },
+      context: { variables },
     },
   } = useInterpreter();
 
@@ -54,7 +50,7 @@ export const DocumentNodeRenderer: NodeRenderer = ({
         )(treeClient)
       );
 
-      const { response } = await APIClient.trees[environment].generateDocument({
+      const response = await APIClient.trees[environment].generateDocument({
         params: { uuid: node.templateUuid },
         body: { variables: readableAnswers },
       });

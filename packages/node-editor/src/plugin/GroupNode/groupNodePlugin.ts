@@ -8,6 +8,7 @@ import {
   TNodeId,
   TEdgeId,
   IVariablePlugin,
+  createReadableKey,
 } from "@open-decision/tree-type";
 import { TRichText } from "@open-decision/rich-text-editor";
 import { InterpreterContext } from "@open-decision/interpreter";
@@ -122,43 +123,8 @@ export class GroupNodePlugin extends NodePluginWithVariable<
         id: nodeId,
         type: this.type,
         name: node.name,
+        escapedName: createReadableKey(node.name),
         value: answer.map((answer) => answer.variables),
       } satisfies IGroupNodeVariable;
     };
-
-  // createReadableVariable =
-  //   (nodeId: TNodeId, answer: InterpreterContext[]) =>
-  //   (treeClient: TTreeClient | TReadOnlyTreeClient) => {
-  //     const variable = this.createVariable(nodeId, answer)(treeClient);
-
-  //     if (!variable || !variable.name) return;
-
-  //     return {
-  //       ...variable,
-  //       id: this.createReadableKey(variable.name),
-  //       value: variable.value.map((value) => {
-  //         const variables = Object.values(value)
-  //           .map((value) => {
-  //             const readableVariable = this.nodePlugins[
-  //               value.type
-  //             ].createReadableVariable(
-  //               value.id,
-  //               value.value
-  //             )(treeClient);
-
-  //             if (!readableVariable) return undefined;
-
-  //             return [readableVariable.id, readableVariable] as const;
-  //           })
-  //           .filter(
-  //             (
-  //               value
-  //             ): value is [string, IReadableVariablePlugin<IVariablePlugin>] =>
-  //               value !== undefined
-  //           );
-
-  //         return fromPairs(variables);
-  //       }),
-  //     } satisfies IReadableVariablePlugin<IGroupNodeVariable>;
-  //   };
 }

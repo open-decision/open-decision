@@ -8,15 +8,12 @@ import { RendererPrimitives } from "@open-decision/renderer";
 import { RichTextRenderer } from "@open-decision/rich-text-editor";
 import { mapValues } from "remeda";
 import { TFormNodeInput } from "./FormNodeInputs";
-import { FormNodePlugin } from "./FormNodePlugin";
+import { FormNodePlugin, IFormNode } from "./FormNodePlugin";
 
 const FormNode = new FormNodePlugin();
 
 export const FormNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
-  const { send, getVariables: getAnswers, treeClient } = useInterpreter();
-
-  const node = FormNode.getSingle(nodeId)(treeClient);
-
+  const node = useInterpreterTree(FormNode.getSingle(nodeId));
   const inputs = useInterpreterTree((treeClient) => {
     if (!node || !node.inputs) return undefined;
 
@@ -26,28 +23,7 @@ export const FormNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
     );
   });
 
-  const answer = !node
-    ? undefined
-    : FormNode.getVariable(node.id, getAnswers());
-
-  const methods = Form.useForm<Record<TInputId, string | string[]>>({
-    defaultValues: mapValues(answer?.value ?? {}, (value) => value?.value),
-  });
-
   if (!node) return null;
-
-  const onSubmit = methods.handleSubmit((values) => {
-    const variable = FormNode.createVariable(node.id, values)(treeClient);
-
-    if (!variable) return;
-
-    send({
-      type: "ADD_USER_ANSWER",
-      answer: variable,
-    });
-
-    send("EVALUATE_NODE_CONDITIONS");
-  });
 
   return (
     <RendererPrimitives.Container
@@ -59,17 +35,48 @@ export const FormNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
         {node.content ? (
           <RichTextRenderer content={node.content} key={node.id} />
         ) : null}
-        <RendererPrimitives.Form methods={methods} onSubmit={onSubmit}>
-          {Object.values(inputs ?? {}).map((input) => {
-            const FormElement =
-              FormNode.inputPlugins[input.type].RendererComponent;
-
-            if (!FormElement) return null;
-
-            return <FormElement key={input.id} inputId={input.id} />;
-          })}
-        </RendererPrimitives.Form>
+        {inputs ? <FormNodeForm inputs={inputs} node={node} /> : null}
       </RendererPrimitives.ContentArea>
     </RendererPrimitives.Container>
+  );
+};
+
+type FormNodeFormProps = {
+  inputs: Record<string, TFormNodeInput>;
+  node: IFormNode;
+};
+
+const FormNodeForm = ({ inputs, node }: FormNodeFormProps) => {
+  const { send, getVariable, treeClient } = useInterpreter();
+
+  const answer = getVariable(node.id);
+
+  const methods = Form.useForm<Record<TInputId, string | string[]>>({
+    defaultValues: mapValues(answer?.value ?? {}, (value) => value?.value),
+  });
+
+  const onSubmit = methods.handleSubmit((values) => {
+    const variable = FormNode.createVariable(node.id, values)(treeClient);
+
+    if (!variable) return;
+
+    send({
+      type: "ADD_USER_ANSWER",
+      variable,
+    });
+
+    send("EVALUATE_NODE_CONDITIONS");
+  });
+
+  return (
+    <RendererPrimitives.Form methods={methods} onSubmit={onSubmit}>
+      {Object.values(inputs ?? {}).map((input) => {
+        const FormElement = FormNode.inputPlugins.Renderer[input.type];
+
+        if (!FormElement) return null;
+
+        return <FormElement key={input.id} inputId={input.id} />;
+      })}
+    </RendererPrimitives.Form>
   );
 };

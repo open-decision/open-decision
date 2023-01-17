@@ -29,6 +29,8 @@ import {
 } from "@open-decision/plugins-node-helpers";
 import { TNodeId } from "@open-decision/tree-type";
 
+const GroupNode = new GroupNodePlugin();
+
 export const GroupNodeRenderer: NodeRenderer = (props) => {
   return (
     <ErrorBoundary
@@ -49,8 +51,6 @@ function RendererComponent({
   edgePlugins,
   ...props
 }: NodeRendererProps) {
-  const GroupNode = new GroupNodePlugin(nodePlugins.pluginsWithVariable);
-
   const { treeClient, send, environment } = useInterpreter();
   const groupNode = GroupNode.getSingle(nodeId)(treeClient);
 
@@ -86,7 +86,7 @@ function RendererComponent({
 
             send({
               type: "ADD_USER_ANSWER",
-              answer: variable,
+              variable,
             });
             send({ type: "EVALUATE_NODE_CONDITIONS" });
           }}
