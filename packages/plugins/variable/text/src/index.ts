@@ -12,12 +12,15 @@ export class TextVariablePlugin extends VariablePlugin<ITextVariable> {
     super(typeName);
   }
 
-  create = <Id extends TId = TId>(
-    data: Omit<ITextVariable<Id>, "type" | "escapedName">
-  ) => {
+  create = <Id extends TId = TId>({
+    value = "",
+    ...data
+  }: Omit<ITextVariable<Id>, "type" | "escapedName" | "readableValue">) => {
     return {
       type: this.type,
       escapedName: this.createReadableKey(data.name),
+      value,
+      readableValue: value,
       ...data,
     } satisfies ITextVariable;
   };

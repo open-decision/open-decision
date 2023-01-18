@@ -13,12 +13,16 @@ export class EmptyVariablePlugin extends VariablePlugin<IEmptyVariable> {
   }
 
   create = <Id extends TId = TId>(
-    data: Omit<IEmptyVariable<Id>, "type" | "escapedName" | "value">
+    data: Omit<
+      IEmptyVariable<Id>,
+      "type" | "escapedName" | "value" | "readableValue"
+    >
   ) => {
     return {
       type: this.type,
       escapedName: this.createReadableKey(data.name),
       value: undefined,
+      readableValue: undefined,
       ...data,
     } satisfies IEmptyVariable;
   };

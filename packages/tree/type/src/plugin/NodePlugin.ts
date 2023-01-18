@@ -46,6 +46,8 @@ export abstract class BaseNodePlugin<
 > extends EntityPlugin<TType> {
   pluginType = "nodes" as const;
 
+  isAddable = true;
+
   abstract create: (data: any) => (treeClient: TTreeClient) => TType;
 
   getSingle =

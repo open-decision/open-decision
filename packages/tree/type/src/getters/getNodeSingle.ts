@@ -9,7 +9,7 @@ export const getNodeSingle =
 
     if (!node) return undefined;
 
-    if (type && node.type !== "type") {
+    if (type && node.type !== type) {
       console.warn(
         new ODProgrammerError({
           code: "INVALID_ENTITY_TYPE",

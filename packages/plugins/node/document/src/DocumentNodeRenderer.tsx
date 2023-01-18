@@ -14,6 +14,7 @@ import { isODError, ODError } from "@open-decision/type-classes";
 import { useTranslations } from "next-intl";
 import { TNodeRenderer } from "@open-decision/plugins-node-helpers";
 import { APIClient } from "@open-decision/api-client";
+import { mapObjRecusively } from "./mapObjRecursively";
 
 const DocumentNode = new DocumentNodePlugin();
 
@@ -50,7 +51,7 @@ export const DocumentNodeRenderer: TNodeRenderer = ({ nodeId, ...props }) => {
         )(treeClient)
       );
 
-      const response = await APIClient.trees[environment].generateDocument({
+      const { response } = await APIClient.trees[environment].generateDocument({
         params: { uuid: node.templateUuid },
         body: { variables: readableAnswers },
       });

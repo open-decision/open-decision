@@ -41,8 +41,8 @@ export function ZoomInOut({ className }: Props) {
       </Button>
       <Button
         onClick={() => {
+          fitView({ duration: 200, maxZoom: 1, includeHiddenNodes: true });
           removeSelectedNodes();
-          fitView({ duration: 200, maxZoom: 1 });
         }}
         variant="neutral"
         square

@@ -3563,7 +3563,7 @@ __metadata:
     next-intl: ^2.9.1
     react: ^18.2.0
     react-use: ^17.4.0
-    reactflow: ^11.3.0
+    reactflow: ^11.4.2
     remeda: ^1.3.0
     tslib: ^2.4.1
     valtio: ^1.7.6
@@ -3673,7 +3673,7 @@ __metadata:
     "@radix-ui/react-icons": ^1.1.1
     next: ^13
     next-intl: ^2.9.1
-    reactflow: ^11.3.0
+    reactflow: ^11
     remeda: ^1.3.0
     valtio: ^1.7.6
   peerDependencies:
@@ -4853,38 +4853,36 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@reactflow/background@npm:11.0.5":
-  version: 11.0.5
-  resolution: "@reactflow/background@npm:11.0.5"
+"@reactflow/background@npm:11.1.2":
+  version: 11.1.2
+  resolution: "@reactflow/background@npm:11.1.2"
   dependencies:
-    "@babel/runtime": ^7.18.9
-    "@reactflow/core": 11.3.0
+    "@reactflow/core": 11.4.2
     classcat: ^5.0.3
-    zustand: ^4.1.1
+    zustand: ^4.3.1
   peerDependencies:
     react: ">=17"
     react-dom: ">=17"
-  checksum: 78f28f72c721da50c1dd1fff7c13aba40521a3f957fdf47235f2518ee6c018acd97aa9fac8918b080018dfc37bc7d7dc8bd865fb860858e5e9c2a0cd33afc200
+  checksum: 1a88a5780d700f04be0cf17fa4ddc82328547c570d65b44df778a8f9bd12ade68a8f94bb853d36c20753672552b2a0de63d46b8331a94c34f71c3f726ce8b479
   languageName: node
   linkType: hard
 
-"@reactflow/controls@npm:11.0.5":
-  version: 11.0.5
-  resolution: "@reactflow/controls@npm:11.0.5"
+"@reactflow/controls@npm:11.1.2":
+  version: 11.1.2
+  resolution: "@reactflow/controls@npm:11.1.2"
   dependencies:
-    "@babel/runtime": ^7.18.9
-    "@reactflow/core": 11.3.0
+    "@reactflow/core": 11.4.2
     classcat: ^5.0.3
   peerDependencies:
     react: ">=17"
     react-dom: ">=17"
-  checksum: 96dbe142816bd89e4baeaa5fad51f2678a132d386bbd7d582f9a9461a1800d2c218043d6061c440aff8667f6dea31afcd682a90b2068af437fed8c2d49194bfa
+  checksum: fd92d75d7c96eac17d0fed8297f61e01ce523fd030881a95a4e32a689e9e7e66179a179db494019fcbcf314d7d19947af39439a3f1c0691dd3c1aa855f2347c4
   languageName: node
   linkType: hard
 
-"@reactflow/core@npm:11.3.0":
-  version: 11.3.0
-  resolution: "@reactflow/core@npm:11.3.0"
+"@reactflow/core@npm:11.4.2":
+  version: 11.4.2
+  resolution: "@reactflow/core@npm:11.4.2"
   dependencies:
     "@types/d3": ^7.4.0
     "@types/d3-drag": ^3.0.1
@@ -4894,45 +4892,43 @@ __metadata:
     d3-drag: ^3.0.0
     d3-selection: ^3.0.0
     d3-zoom: ^3.0.0
-    zustand: ^4.1.1
+    zustand: ^4.3.1
   peerDependencies:
     react: ">=17"
     react-dom: ">=17"
-  checksum: 07a96f354dbdbf3deac657c58e136e3e8bb733685bda8344e6d764566c7643ec55f31e448af4915a504a4e9f1ea80735fd91a77c343ad0ffb16c1403eb335e24
+  checksum: afcb8f33c6450d9fbf3910162d94b1abd9685fa284b7d955dc3d51840948e1785bd0d3aaf69df0551c37a8c8f9a3b5f322246f4baf7dbbe4979299f00c892699
   languageName: node
   linkType: hard
 
-"@reactflow/minimap@npm:11.2.0":
-  version: 11.2.0
-  resolution: "@reactflow/minimap@npm:11.2.0"
+"@reactflow/minimap@npm:11.3.2":
+  version: 11.3.2
+  resolution: "@reactflow/minimap@npm:11.3.2"
   dependencies:
-    "@babel/runtime": ^7.18.9
-    "@reactflow/core": 11.3.0
+    "@reactflow/core": 11.4.2
     "@types/d3-selection": ^3.0.3
     "@types/d3-zoom": ^3.0.1
     classcat: ^5.0.3
     d3-selection: ^3.0.0
     d3-zoom: ^3.0.0
-    zustand: ^4.1.1
+    zustand: ^4.3.1
   peerDependencies:
     react: ">=17"
     react-dom: ">=17"
-  checksum: 4aa358dfa3747c248f9eb2ec028b229d52e650808277fb03e2dad2c970950747be6022e54996de4f69db85d9206dd806a7788fa7e048b1dcd4bef396c9d81ff7
+  checksum: af5626db85acfe62365013a749cb2c1097c1300582c82b3e0456ff7e46fc4809f00080e36bd621ed0daae1dee4b1961f7ff7fa204c6ca0bc4e955fda69b51f9d
   languageName: node
   linkType: hard
 
-"@reactflow/node-toolbar@npm:1.0.0":
-  version: 1.0.0
-  resolution: "@reactflow/node-toolbar@npm:1.0.0"
+"@reactflow/node-toolbar@npm:1.1.2":
+  version: 1.1.2
+  resolution: "@reactflow/node-toolbar@npm:1.1.2"
   dependencies:
-    "@babel/runtime": ^7.18.9
-    "@reactflow/core": 11.3.0
+    "@reactflow/core": 11.4.2
     classcat: ^5.0.3
-    zustand: ^4.1.1
+    zustand: ^4.3.1
   peerDependencies:
     react: ">=17"
     react-dom: ">=17"
-  checksum: a2596cb399be5f59170433948105ad8ec0ad8846b5bc328d5bb07eeb60ae2787871b42e6fb7d4566bff164bb34bf796ee6d87bdbaabf50f4dbac6df2c5d5ae28
+  checksum: 85689cc1190423ddff2c543db2cdc0f1311da8f0fd84e0178e14161988d65c2ae4cea94358a121404c590b5271e9790fb67719c339df8888fa84e59a910a0e8c
   languageName: node
   linkType: hard
 
@@ -16404,19 +16400,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"reactflow@npm:^11.3.0":
-  version: 11.3.0
-  resolution: "reactflow@npm:11.3.0"
+"reactflow@npm:^11, reactflow@npm:^11.4.2":
+  version: 11.4.2
+  resolution: "reactflow@npm:11.4.2"
   dependencies:
-    "@reactflow/background": 11.0.5
-    "@reactflow/controls": 11.0.5
-    "@reactflow/core": 11.3.0
-    "@reactflow/minimap": 11.2.0
-    "@reactflow/node-toolbar": 1.0.0
+    "@reactflow/background": 11.1.2
+    "@reactflow/controls": 11.1.2
+    "@reactflow/core": 11.4.2
+    "@reactflow/minimap": 11.3.2
+    "@reactflow/node-toolbar": 1.1.2
   peerDependencies:
     react: ">=17"
     react-dom: ">=17"
-  checksum: 12a36ab5a8595e7006f49f0acc401d9eb5bf247a4a1a828a86bc792b911f8d5c7fab3d5e2286405497e35ce6256799ca8d2a0cdf99ed2be9d3c49dfc646cb260
+  checksum: 4b462084559becd3c717c070285749a84e75cc19a0d07ecc7d309391097305442e9b94f4e90a2fe2fe6d789d574b69ac759fe348cd657e6c6d287e78488a0a01
   languageName: node
   linkType: hard
 
@@ -19762,7 +19758,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zustand@npm:4.1.4, zustand@npm:^4.1.1, zustand@npm:^4.1.4":
+"zustand@npm:4.1.4, zustand@npm:^4.1.4":
   version: 4.1.4
   resolution: "zustand@npm:4.1.4"
   dependencies:
@@ -19776,5 +19772,22 @@ __metadata:
     react:
       optional: true
   checksum: a9ceb7849ebf407d31a6121be09acfb041324f6f45ca9a3f62ab85e2d840d0f48f157abd99ed7b9e08b96ebb4e15480b4a196ed8b1df8a5a9a2ba9afd7c639a7
+  languageName: node
+  linkType: hard
+
+"zustand@npm:^4.3.1":
+  version: 4.3.2
+  resolution: "zustand@npm:4.3.2"
+  dependencies:
+    use-sync-external-store: 1.2.0
+  peerDependencies:
+    immer: ">=9.0"
+    react: ">=16.8"
+  peerDependenciesMeta:
+    immer:
+      optional: true
+    react:
+      optional: true
+  checksum: fc443abf5bc9deac0d4e375847e7914e44c7ffc9f7f09b60e466cb9bbbcf5a46706bf2f9c8b9e6e6c9a1c5aea0bd6123cbf9fbcd39788ae27d8494d505969ae8
   languageName: node
   linkType: hard

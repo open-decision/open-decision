@@ -10,11 +10,13 @@ import {
 import { ODProgrammerError } from "@open-decision/type-classes";
 import { InterpreterContext } from "./interpreter";
 
-function getVariables(interpreterContext: InterpreterContext) {
+export function getVariables(interpreterContext: InterpreterContext) {
   return interpreterContext.variables;
 }
 
-const getVariable = <TVariableType extends IVariablePlugin = IVariablePlugin>(
+export const getVariable = <
+  TVariableType extends IVariablePlugin = IVariablePlugin
+>(
   interpreterContext: InterpreterContext,
   nodeId: TNodeId,
   treeClient: TTreeClient | TReadOnlyTreeClient

@@ -41,7 +41,7 @@
     "test:single": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "PLAYWRIGHT_HTML_REPORT=playwright-report-single playwright test --config=./playwright.config.ts -g '{args.name}' --headed --output=test-single-result",
+        "command": "PLAYWRIGHT_HTML_REPORT=playwright-report-single playwright test --config=./playwright.config.ts -g '{args.name}' --headed --output=test-results-single",
         "cwd": "apps/e2e"
       },
       "dependsOn": [
@@ -58,7 +58,7 @@
     "test:debug": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "PWDEBUG=1 PLAYWRIGHT_HTML_REPORT=playwright-report-debug playwright test --config=./playwright.config.ts -g '{args.name}' --project=webkit --output=test-debug-result",
+        "command": "PWDEBUG=1 PLAYWRIGHT_HTML_REPORT=playwright-report-debug playwright test --config=./playwright.config.ts -g '{args.name}' --project=chromium --output=test-results-debug",
         "cwd": "apps/e2e"
       },
       "dependsOn": [

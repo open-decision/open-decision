@@ -15,11 +15,11 @@ import { InterpreterContext } from "@open-decision/interpreter";
 
 const DirectEdge = new DirectEdgePlugin();
 
-export interface IGroupNodeVariable extends IVariablePlugin<"group"> {
+export interface IGroupNodeVariable extends IVariablePlugin<typeof typeName> {
   value: Record<string, IVariablePlugin<string> | undefined>[];
 }
 
-export const typeName = "group" as const;
+export const typeName = "node-group" as const;
 
 export interface IGroupNode extends INodePlugin<typeof typeName> {
   content?: TRichText;

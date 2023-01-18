@@ -1,14 +1,12 @@
 import {
   getCurrentNode,
+  getVariable,
   MissingAnswerOnInterpreterContextError,
   MissingEdgeForThruthyConditionError,
 } from "@open-decision/interpreter";
 import { EdgeResolver } from "@open-decision/plugins-edge-helpers";
-import { SelectVariablePlugin } from "@open-decision/plugins-variable-select";
 import { ODProgrammerError } from "@open-decision/type-classes";
 import { ICompareEdge } from "./plugin";
-
-const SelectVariable = new SelectVariablePlugin();
 
 export const compareEdgeResolver: EdgeResolver<ICompareEdge> =
   (treeClient) => (edge) => (context) => {
@@ -22,19 +20,13 @@ export const compareEdgeResolver: EdgeResolver<ICompareEdge> =
     if (!condition || !edge.target) return { state: "failure" };
 
     // Get a possibly existing answer from the interpreter context
-    const existingAnswer = SelectVariable.get(
-      currentNode.id,
-      context.variables
-    );
+    const variable = getVariable(context, currentNode.id, treeClient);
 
     // We expect there to be an answer on the interpreter context.
     // Not finding an answer on the interpreter context is a programmer error.
-    if (!existingAnswer) throw new MissingAnswerOnInterpreterContextError();
+    if (!variable) throw new MissingAnswerOnInterpreterContextError();
 
-    if (
-      !existingAnswer.value ||
-      !condition.valueIds.includes(existingAnswer.value)
-    )
+    if (!variable.value || !condition.valueIds.includes(variable.value))
       return { state: "failure" };
 
     if (edge) return { state: "success", target: edge.target };

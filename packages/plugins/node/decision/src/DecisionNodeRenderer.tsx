@@ -55,7 +55,10 @@ const DecisionNodeForm = ({ input, node }: DecisionNodeFormProps) => {
   const answer = getVariable(node.id);
 
   const methods = Form.useForm<{ [x: TInputId]: string }>({
-    defaultValues: answer ? { [input.id]: answer?.value } : {},
+    defaultValues: DecisionNode.createDefaultValues(
+      node.id,
+      answer
+    )(treeClient),
   });
 
   const onSubmit = methods.handleSubmit((values) => {

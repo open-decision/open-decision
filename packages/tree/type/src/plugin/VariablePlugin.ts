@@ -18,6 +18,7 @@ export interface IVariablePlugin<
   name: string;
   escapedName: string;
   value?: any;
+  readableValue?: any;
 }
 
 export abstract class VariablePlugin<
@@ -30,11 +31,8 @@ export abstract class VariablePlugin<
     this.type = type;
   }
 
-  get = (id: string, answers: any) => {
-    return answers[id] as TType | undefined;
-  };
   abstract create: (
-    data: Omit<TType, "type" | "escapedName">
+    data: Omit<TType, "type" | "escapedName" | "readableValue">
   ) => TType | undefined;
 
   createReadableKey = (key: string) =>

@@ -1,19 +1,15 @@
 import { Form, Stack } from "@open-decision/design-system";
 import { useInterpreterTree } from "@open-decision/interpreter-react";
 import { CheckboxElement } from "../../../helpers";
-import { ODProgrammerError } from "@open-decision/type-classes";
 import { InputRenderer } from "../../../helpers/types";
 import { IMultiSelectInput } from "../MultiSelectPlugin";
 
 export const MultiSelectInputRenderer: InputRenderer = ({ inputId }) => {
   const input = useInterpreterTree((treeClient) => {
-    const input = treeClient.pluginEntity.get.single<IMultiSelectInput>(
+    return treeClient.pluginEntity.get.single<IMultiSelectInput>(
       "inputs",
       inputId
     );
-
-    if (input instanceof ODProgrammerError) return undefined;
-    return input;
   });
 
   const { register } = Form.useFormContext();

@@ -40,7 +40,9 @@ export const Type = z.object({
       return true;
     });
   }),
-  pluginEntities: z.record(z.record(ZEntityId, ZEntityPluginBase)),
+  pluginEntities: z.record(
+    z.record(ZEntityId, ZEntityPluginBase.passthrough())
+  ),
   uuid: z.string().uuid().optional(),
   theme: Theme.optional(),
 });

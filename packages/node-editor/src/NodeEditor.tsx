@@ -32,7 +32,7 @@ export const NodeEditor = ({
   onUnmount,
 }: NodeEditorProps) => {
   const edgeTypes = React.useMemo(
-    () => mapValues(edgePlugins, () => CustomEdge),
+    () => mapValues(edgePlugins.plugins, () => CustomEdge),
     [edgePlugins]
   );
 

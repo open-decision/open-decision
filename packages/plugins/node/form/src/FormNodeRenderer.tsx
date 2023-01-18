@@ -6,7 +6,6 @@ import {
 import { TNodeRenderer, TInputId } from "@open-decision/plugins-node-helpers";
 import { RendererPrimitives } from "@open-decision/renderer";
 import { RichTextRenderer } from "@open-decision/rich-text-editor";
-import { mapValues } from "remeda";
 import { TFormNodeInput } from "./FormNodeInputs";
 import { FormNodePlugin, IFormNode } from "./FormNodePlugin";
 
@@ -49,10 +48,13 @@ type FormNodeFormProps = {
 const FormNodeForm = ({ inputs, node }: FormNodeFormProps) => {
   const { send, getVariable, treeClient } = useInterpreter();
 
-  const answer = getVariable(node.id);
+  const previousVariable = getVariable(node.id);
 
   const methods = Form.useForm<Record<TInputId, string | string[]>>({
-    defaultValues: mapValues(answer?.value ?? {}, (value) => value?.value),
+    defaultValues: FormNode.createDefaultValues(
+      node.id,
+      previousVariable
+    )(treeClient),
   });
 
   const onSubmit = methods.handleSubmit((values) => {

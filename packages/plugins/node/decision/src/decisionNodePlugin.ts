@@ -1,5 +1,6 @@
 import {
   INodePlugin,
+  IVariablePlugin,
   NodePluginWithVariable,
   TNodeId,
   TReadOnlyTreeClient,
@@ -156,7 +157,7 @@ export class DecisionNodePlugin extends NodePluginWithVariable<
       return { node, input };
     };
 
-  createVariable =
+  private createInputVariable =
     (nodeId: TNodeId, valueId?: string) =>
     (treeClient: TTreeClient | TReadOnlyTreeClient) => {
       const data = this.getVariableData(nodeId)(treeClient);
@@ -165,20 +166,46 @@ export class DecisionNodePlugin extends NodePluginWithVariable<
 
       return match(data.input)
         .with({ type: "select" }, (input) => {
-          if (!data.node.name) return undefined;
-
-          const variable = SelectVariable.create({
+          return SelectVariable.create({
             id: data.node.id,
             name: data.node.name,
             values: input.answers,
+            value: valueId,
           });
-
-          if (valueId) {
-            return SelectVariable.addValue(variable, valueId);
-          }
-
-          return variable;
         })
         .run();
+    };
+
+  createVariable =
+    (nodeId: TNodeId, valueId?: string) =>
+    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
+      return this.createInputVariable(nodeId, valueId)(treeClient);
+    };
+
+  createDefaultValues =
+    (
+      nodeId: TNodeId,
+      previousVariable?: IVariablePlugin<string, `${string}_${string}`>
+    ) =>
+    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
+      const node = this.getSingle(nodeId)(treeClient);
+
+      if (!node) return;
+
+      const input = treeClient.pluginEntity.get.single<TDecisionNodeInputs>(
+        "inputs",
+        node.input
+      );
+
+      if (!input) return undefined;
+
+      const variable = this.createInputVariable(
+        nodeId,
+        previousVariable?.value
+      )(treeClient);
+
+      if (!variable) return undefined;
+
+      return { [input.id]: variable.value };
     };
 }

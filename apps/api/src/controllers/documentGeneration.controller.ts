@@ -49,7 +49,6 @@ export const generateDocumentForPrototype = catchAsync(
       await documentTemplateModel.getSingleDocumentTemplateForPreview(
         reqData.params.uuid
       );
-
     return fetchAndReturnDocument(template, reqData.body.variables, res);
   }
 );
@@ -71,6 +70,7 @@ export const generateDocumentForPublishedTree = catchAsync(
         code: "NO_ACCESSIBLE_OBJECT_FOUND",
       });
     }
+
     return fetchAndReturnDocument(template, reqData.body.variables, res);
   }
 );
@@ -103,6 +103,7 @@ const fetchAndReturnDocument = async (
       headers: { "Content-Type": "application/json" },
     }
   );
+
   if (docResponse.status != 200) {
     const errData = (await docResponse.json()) as any;
     throw new APIError({

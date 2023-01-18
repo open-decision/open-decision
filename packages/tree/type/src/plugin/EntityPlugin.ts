@@ -18,8 +18,7 @@ export abstract class EntityPlugin<
   TType extends IEntityPluginBase = IEntityPluginBase
 > {
   type: TType["type"];
-  declare abstract pluginType: "edges" | "nodes" | "pluginEntity";
-  declare isAddable: boolean;
+  abstract pluginType: "edges" | "nodes" | "pluginEntity";
 
   constructor(typeName: TType["type"]) {
     this.type = typeName;

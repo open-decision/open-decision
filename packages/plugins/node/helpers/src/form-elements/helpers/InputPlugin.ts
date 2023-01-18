@@ -22,7 +22,7 @@ import {
 } from "./utils/inputMethods";
 
 export const ZInputId = z.custom<TInputId>(
-  (value) => typeof value === "string" && value.includes("input")
+  (value) => typeof value === "string" && value.includes("inputs")
 );
 
 export const ZInputPlugin = ZEntityPluginBase.extend({

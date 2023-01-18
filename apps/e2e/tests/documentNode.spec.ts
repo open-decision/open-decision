@@ -6,6 +6,7 @@ import {
 import { DocumentNodeModel } from "@open-decision/test-utils";
 import { de } from "@open-decision/translations";
 import { expect } from "@playwright/test";
+import fs from "fs";
 
 const fillAuroaTree = async (prototypePage: PrototypePage) => {
   await prototypePage.renderer.submitButton.click();
@@ -116,12 +117,6 @@ const fillAuroaTree = async (prototypePage: PrototypePage) => {
   await prototypePage.renderer.SingleSelectRenderer.selectAnswer("Ja");
 
   await prototypePage.renderer.submitButton.click();
-  await prototypePage.renderer.submitButton.click();
-
-  await prototypePage.renderer.MultiSelectRenderer.selectAnswers([
-    "LaTeX",
-    "pandoc",
-  ]);
 
   await prototypePage.renderer.submitButton.click();
 
@@ -166,7 +161,7 @@ pwTest.describe.configure({ mode: "parallel" });
 
 pwTest(
   "should generate document from auroa project",
-  async ({ prototypePage }) => {
+  async ({ prototypePage }, testInfo) => {
     pwTest.slow();
     await fillAuroaTree(prototypePage);
 
@@ -177,17 +172,19 @@ pwTest(
 
     const download = await downloadPromise;
 
-    const testInfo = pwTest.info();
-
     await download.saveAs(
-      `./test-results/auroa-contract_${testInfo.project.name}.docx`
+      `${testInfo.outputDir}/auroa-contract_${testInfo.project.name}.docx`
     );
+
+    expect(
+      (await fs.promises.stat((await download.path()) as string)).size
+    ).toBeGreaterThan(200);
   }
 );
 
 pwTest(
   "should generate document for shared prototype",
-  async ({ sharedPrototypePage }) => {
+  async ({ sharedPrototypePage }, testInfo) => {
     pwTest.slow();
     await fillAuroaTree(sharedPrototypePage);
 
@@ -198,11 +195,15 @@ pwTest(
 
     const download = await downloadPromise;
 
-    const testInfo = pwTest.info();
-
     await download.saveAs(
-      `./test-results/auroa-contract-shared-prototype_${testInfo.project.name}.docx`
+      `${testInfo.outputDir}/auroa-contract-shared-prototype_${testInfo.project.name}.docx`
     );
+
+    await sharedPrototypePage.page.pause();
+
+    expect(
+      (await fs.promises.stat((await download.path()) as string)).size
+    ).toBeGreaterThan(200);
   }
 );
 
