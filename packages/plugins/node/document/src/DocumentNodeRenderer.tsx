@@ -44,12 +44,14 @@ export const DocumentNodeRenderer: NodeRenderer = ({ nodeId, ...props }) => {
         });
       }
 
-      const response = await APIClient.trees[environment].generateDocument({
+      const { response } = await APIClient.trees[environment].generateDocument({
         params: { uuid: node.data.templateUuid },
         body: { variables: readableAnswers },
       });
 
-      const file = new Blob([response.data], { type: "application/xlsx" });
+      const blob = await response.blob();
+
+      const file = new Blob([blob], { type: "application/xlsx" });
 
       return URL.createObjectURL(file);
     },
