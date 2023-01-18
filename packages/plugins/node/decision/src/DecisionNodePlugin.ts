@@ -1,6 +1,5 @@
 import {
   INodePlugin,
-  IVariablePlugin,
   NodePluginWithVariable,
   TNodeId,
   TReadOnlyTreeClient,
@@ -16,7 +15,6 @@ import {
   getNodesByInput,
   TInputId,
 } from "@open-decision/plugins-node-helpers";
-
 import { match } from "ts-pattern";
 import { TRichText } from "@open-decision/rich-text-editor";
 import { forEachObj } from "remeda";
@@ -179,10 +177,7 @@ export class DecisionNodePlugin extends NodePluginWithVariable<
     };
 
   createDefaultValues =
-    (
-      nodeId: TNodeId,
-      previousVariable?: IVariablePlugin<string, `${string}_${string}`>
-    ) =>
+    (nodeId: TNodeId, previousVariable?: TDecisionNodeVariable) =>
     (treeClient: TTreeClient | TReadOnlyTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 

@@ -14,7 +14,7 @@ export function getVariables(interpreterContext: InterpreterContext) {
   return interpreterContext.variables;
 }
 
-export const getVariable = <TVariableType extends IVariable = IVariable>(
+export const getVariable = (
   interpreterContext: InterpreterContext,
   nodeId: TNodeId,
   treeClient: TTreeClient | TReadOnlyTreeClient

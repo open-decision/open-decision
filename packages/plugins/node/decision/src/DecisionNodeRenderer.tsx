@@ -7,11 +7,16 @@ import { TNodeRenderer, TInputId } from "@open-decision/plugins-node-helpers";
 import { RendererPrimitives } from "@open-decision/renderer";
 import { RichTextRenderer } from "@open-decision/rich-text-editor";
 import { TDecisionNodeInputs } from "./createInputPlugins";
-import { DecisionNodePlugin, IDecisionNode } from "./DecisionNodePlugin";
+import {
+  DecisionNodePlugin,
+  IDecisionNode,
+  TDecisionNodeVariable,
+} from "./DecisionNodePlugin";
 
 const DecisionNode = new DecisionNodePlugin();
 
 export const DecisionNodeRenderer: TNodeRenderer = ({ nodeId, ...props }) => {
+  const { getVariable } = useInterpreter();
   const node = useInterpreterTree((treeClient) =>
     DecisionNode.getSingle(nodeId)(treeClient)
   );
@@ -23,6 +28,7 @@ export const DecisionNodeRenderer: TNodeRenderer = ({ nodeId, ...props }) => {
   );
 
   if (!node) return null;
+  const variable = getVariable(node.id);
 
   return (
     <RendererPrimitives.Container
@@ -38,7 +44,9 @@ export const DecisionNodeRenderer: TNodeRenderer = ({ nodeId, ...props }) => {
             className="px-0"
           />
         ) : null}
-        {input ? <DecisionNodeForm node={node} input={input} /> : null}
+        {input && variable?.type === "select" ? (
+          <DecisionNodeForm variable={variable} node={node} input={input} />
+        ) : null}
       </RendererPrimitives.ContentArea>
     </RendererPrimitives.Container>
   );
@@ -47,17 +55,16 @@ export const DecisionNodeRenderer: TNodeRenderer = ({ nodeId, ...props }) => {
 type DecisionNodeFormProps = {
   input: TDecisionNodeInputs;
   node: IDecisionNode;
+  variable: TDecisionNodeVariable | undefined;
 };
 
-const DecisionNodeForm = ({ input, node }: DecisionNodeFormProps) => {
-  const { send, treeClient, getVariable } = useInterpreter();
-
-  const answer = getVariable(node.id);
+const DecisionNodeForm = ({ input, node, variable }: DecisionNodeFormProps) => {
+  const { send, treeClient } = useInterpreter();
 
   const methods = Form.useForm<{ [x: TInputId]: string }>({
     defaultValues: DecisionNode.createDefaultValues(
       node.id,
-      answer
+      variable
     )(treeClient),
   });
 
