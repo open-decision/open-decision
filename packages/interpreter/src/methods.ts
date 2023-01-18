@@ -25,7 +25,9 @@ export const getVariable = <TVariableType extends IVariable = IVariable>(
 
   const nodeName = createReadableKey(node.name);
 
-  return interpreterContext.variables[nodeName] as TVariableType;
+  const variable = interpreterContext.variables[nodeName];
+
+  return variable;
 };
 
 export const getCurrentNode = (

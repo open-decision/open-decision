@@ -22,6 +22,7 @@ import { forEachObj, fromPairs, isDefined } from "remeda";
 import {
   EmptyVariable,
   IRecordVariable,
+  IVariable,
   MultiSelectVariable,
   RecordVariable,
   SelectVariable,
@@ -226,7 +227,7 @@ export class FormNodePlugin extends NodePluginWithVariable<
     };
 
   createDefaultValues =
-    (nodeId: TNodeId, previousVariable?: TFormNodeVariable) =>
+    (nodeId: TNodeId, previousVariable?: IVariable) =>
     (treeClient: TTreeClient | TReadOnlyTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 

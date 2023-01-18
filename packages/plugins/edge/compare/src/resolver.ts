@@ -22,9 +22,9 @@ export const compareEdgeResolver: EdgeResolver<ICompareEdge> =
     // Get a possibly existing answer from the interpreter context
     const variable = getVariable(context, currentNode.id, treeClient);
 
-    // We expect there to be an answer on the interpreter context.
-    // Not finding an answer on the interpreter context is a programmer error.
-    if (!variable) throw new MissingAnswerOnInterpreterContextError();
+    if (!variable || variable.type !== "select") {
+      throw new MissingAnswerOnInterpreterContextError();
+    }
 
     if (!variable.value || !condition.valueIds.includes(variable.value))
       return { state: "failure" };

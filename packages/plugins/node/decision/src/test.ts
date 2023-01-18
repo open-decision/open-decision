@@ -16,15 +16,11 @@ import {
   getNodesByInput,
   TInputId,
 } from "@open-decision/plugins-node-helpers";
-import {
-  ISelectVariable,
-  SelectVariablePlugin,
-} from "packages/plugins/variables/select/src";
+
 import { match } from "ts-pattern";
 import { TRichText } from "@open-decision/rich-text-editor";
 import { forEachObj } from "remeda";
-
-const SelectVariable = new SelectVariablePlugin();
+import { ISelectVariable, SelectVariable } from "@open-decision/variables";
 
 export type TDecisionNodeVariable = ISelectVariable;
 
