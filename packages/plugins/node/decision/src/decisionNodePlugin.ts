@@ -19,7 +19,7 @@ import {
 import {
   ISelectVariable,
   SelectVariablePlugin,
-} from "@open-decision/plugins-variable-select";
+} from "packages/plugins/variables/select/src";
 import { match } from "ts-pattern";
 import { TRichText } from "@open-decision/rich-text-editor";
 import { forEachObj } from "remeda";

@@ -1,13 +1,14 @@
-import { IVariablePlugin, TId, VariablePlugin } from "@open-decision/tree-type";
+import { TId } from "@open-decision/tree-type";
+import { IBaseVariable, BaseVariable } from "../Variable";
 
 const typeName = "text";
 
 export interface ITextVariable<Id extends TId = TId>
-  extends IVariablePlugin<typeof typeName, Id> {
+  extends IBaseVariable<typeof typeName, Id> {
   value?: string;
 }
 
-export class TextVariablePlugin extends VariablePlugin<ITextVariable> {
+export class TextVariable extends BaseVariable<ITextVariable> {
   constructor() {
     super(typeName);
   }

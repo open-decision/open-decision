@@ -1,8 +1,9 @@
-import { IEmptyVariable } from "@open-decision/plugins-variable-empty";
-import { IMultiSelectVariable } from "@open-decision/plugins-variable-multi-select";
-import { ISelectVariable } from "@open-decision/plugins-variable-select";
-import { ITextVariable } from "@open-decision/plugins-variable-text";
-import { IVariablePlugin, TId, VariablePlugin } from "@open-decision/tree-type";
+import { TId } from "@open-decision/tree-type";
+import { IBaseVariable, BaseVariable } from "../Variable";
+import { IEmptyVariable } from "./EmptyVariable";
+import { IMultiSelectVariable } from "./MultiSelectVariable";
+import { ISelectVariable } from "./SelectVariable";
+import { ITextVariable } from "./TextVariable";
 
 const typeName = "record";
 
@@ -13,11 +14,11 @@ type TRecordContent =
   | IEmptyVariable;
 
 export interface IRecordVariable<Id extends TId = TId>
-  extends IVariablePlugin<typeof typeName, Id> {
+  extends IBaseVariable<typeof typeName, Id> {
   value?: Record<string, TRecordContent>;
 }
 
-export class RecordVariablePlugin extends VariablePlugin<IRecordVariable> {
+export class RecordVariable extends BaseVariable<IRecordVariable> {
   constructor() {
     super(typeName);
   }

@@ -1,6 +1,5 @@
 import {
   createReadableKey,
-  IVariablePlugin,
   ReadOnlyTreeClient,
   TNodeId,
   TReadOnlyTreeClient,
@@ -8,15 +7,14 @@ import {
   TTreeClient,
 } from "@open-decision/tree-type";
 import { ODProgrammerError } from "@open-decision/type-classes";
+import { IVariable } from "@open-decision/variables";
 import { InterpreterContext } from "./interpreter";
 
 export function getVariables(interpreterContext: InterpreterContext) {
   return interpreterContext.variables;
 }
 
-export const getVariable = <
-  TVariableType extends IVariablePlugin = IVariablePlugin
->(
+export const getVariable = <TVariableType extends IVariable = IVariable>(
   interpreterContext: InterpreterContext,
   nodeId: TNodeId,
   treeClient: TTreeClient | TReadOnlyTreeClient

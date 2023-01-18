@@ -3701,46 +3701,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@open-decision/plugins-variable-empty@workspace:packages/plugins/variable/empty":
-  version: 0.0.0-use.local
-  resolution: "@open-decision/plugins-variable-empty@workspace:packages/plugins/variable/empty"
-  dependencies:
-    zod: ^3.20.2
-  languageName: unknown
-  linkType: soft
-
-"@open-decision/plugins-variable-multi-select@workspace:packages/plugins/variable/multi-select":
-  version: 0.0.0-use.local
-  resolution: "@open-decision/plugins-variable-multi-select@workspace:packages/plugins/variable/multi-select"
-  dependencies:
-    zod: ^3.20.2
-  languageName: unknown
-  linkType: soft
-
-"@open-decision/plugins-variable-record@workspace:packages/plugins/variable/record":
-  version: 0.0.0-use.local
-  resolution: "@open-decision/plugins-variable-record@workspace:packages/plugins/variable/record"
-  dependencies:
-    zod: ^3.20.2
-  languageName: unknown
-  linkType: soft
-
-"@open-decision/plugins-variable-select@workspace:packages/plugins/variable/select":
-  version: 0.0.0-use.local
-  resolution: "@open-decision/plugins-variable-select@workspace:packages/plugins/variable/select"
-  dependencies:
-    zod: ^3.20.2
-  languageName: unknown
-  linkType: soft
-
-"@open-decision/plugins-variable-text@workspace:packages/plugins/variable/text":
-  version: 0.0.0-use.local
-  resolution: "@open-decision/plugins-variable-text@workspace:packages/plugins/variable/text"
-  dependencies:
-    zod: ^3.20.2
-  languageName: unknown
-  linkType: soft
-
 "@open-decision/renderer@workspace:packages/renderer":
   version: 0.0.0-use.local
   resolution: "@open-decision/renderer@workspace:packages/renderer"
@@ -3905,6 +3865,25 @@ __metadata:
     vite: ^3.2.4
     vitest: ^0.25.3
     zod: ^3.20.2
+  languageName: unknown
+  linkType: soft
+
+"@open-decision/variables@workspace:packages/variables":
+  version: 0.0.0-use.local
+  resolution: "@open-decision/variables@workspace:packages/variables"
+  dependencies:
+    "@radix-ui/react-icons": ^1.1.1
+    next: ^13
+    next-intl: ^2.9.1
+    reactflow: ^11
+    remeda: ^1.3.0
+    valtio: ^1.7.6
+  peerDependencies:
+    "@fontsource/poppins": ^4.5.10
+    next: ^13
+    next-intl: ^2.9.0
+    react: ^18.2.0
+    react-dom: ^18.2.0
   languageName: unknown
   linkType: soft
 

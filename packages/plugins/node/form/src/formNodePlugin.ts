@@ -19,12 +19,12 @@ import { formNodeInputPlugins, TFormNodeInput } from "./FormNodeInputs";
 import {
   RecordVariablePlugin,
   IRecordVariable,
-} from "@open-decision/plugins-variable-record";
+} from "packages/plugins/variables/record/src";
 import { match } from "ts-pattern";
-import { EmptyVariablePlugin } from "@open-decision/plugins-variable-empty";
-import { MultiSelectVariablePlugin } from "@open-decision/plugins-variable-multi-select";
-import { SelectVariablePlugin } from "@open-decision/plugins-variable-select";
-import { TextVariablePlugin } from "@open-decision/plugins-variable-text";
+import { EmptyVariablePlugin } from "packages/plugins/variables/empty/src";
+import { MultiSelectVariablePlugin } from "packages/plugins/variables/multi-select/src";
+import { SelectVariablePlugin } from "packages/plugins/variables/select/src";
+import { TextVariablePlugin } from "packages/plugins/variables/text/src";
 import { TRichText } from "@open-decision/rich-text-editor";
 import { forEachObj, fromPairs, isDefined } from "remeda";
 

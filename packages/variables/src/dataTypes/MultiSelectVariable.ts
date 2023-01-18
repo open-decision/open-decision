@@ -1,16 +1,17 @@
-import { IVariablePlugin, TId, VariablePlugin } from "@open-decision/tree-type";
+import { IBaseVariable, BaseVariable } from "../Variable";
+import { TId } from "@open-decision/tree-type";
 
 const typeName = "multi-select";
 
 export interface IMultiSelectVariable<Id extends TId = TId>
-  extends IVariablePlugin<typeof typeName> {
+  extends IBaseVariable<typeof typeName> {
   id: Id;
   values: { id: string; value?: string }[];
   value?: string[];
   readableValue?: string[];
 }
 
-export class MultiSelectVariablePlugin extends VariablePlugin<IMultiSelectVariable> {
+export class MultiSelectVariable extends BaseVariable<IMultiSelectVariable> {
   constructor() {
     super(typeName);
   }

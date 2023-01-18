@@ -1,8 +1,0 @@
-{
-  "name": "@open-decision/plugins-variable-multi-select",
-  "version": "0.0.1",
-  "main": "src/index.js",
-  "dependencies": {
-    "zod": "^3.20.2"
-  }
-}

@@ -74,21 +74,7 @@
       "@open-decision/plugins-node-placeholder": [
         "packages/plugins/node/placeholder/src/index.ts"
       ],
-      "@open-decision/plugins-variable-multi-select": [
-        "packages/plugins/variable/multi-select/src/index.ts"
-      ],
-      "@open-decision/plugins-variable-record": [
-        "packages/plugins/variable/record/src/index.ts"
-      ],
-      "@open-decision/plugins-variable-empty": [
-        "packages/plugins/variable/empty/src/index.ts"
-      ],
-      "@open-decision/plugins-variable-select": [
-        "packages/plugins/variable/select/src/index.ts"
-      ],
-      "@open-decision/plugins-variable-text": [
-        "packages/plugins/variable/text/src/index.ts"
-      ],
+      "@open-decision/variables": ["packages/variables/src/index.ts"],
       "@open-decision/renderer": ["packages/renderer/src/index.ts"],
       "@open-decision/rich-text-editor": [
         "packages/rich-text-editor/src/index.ts"

@@ -1,5 +1,5 @@
+import { TId } from "@open-decision/tree-type";
 import { z } from "zod";
-import { TId } from "./EntityPlugin";
 
 export const ZVariablePlugin = z.object({
   id: z.string().uuid(),
@@ -9,7 +9,7 @@ export const ZVariablePlugin = z.object({
 });
 
 export type TValueId = `value_${string}`;
-export interface IVariablePlugin<
+export interface IBaseVariable<
   TType extends string = string,
   Id extends TId = TId
 > {
@@ -21,8 +21,8 @@ export interface IVariablePlugin<
   readableValue?: any;
 }
 
-export abstract class VariablePlugin<
-  TType extends IVariablePlugin = IVariablePlugin
+export abstract class BaseVariable<
+  TType extends IBaseVariable = IBaseVariable
 > {
   pluginType = "variable" as const;
   type: TType["type"];

@@ -1,4 +1,5 @@
 import { ODError, ODProgrammerError } from "@open-decision/type-classes";
+import { IVariable } from "@open-decision/variables";
 import { z } from "zod";
 import { TTreeClient, TReadOnlyTreeClient } from "../treeClient";
 import {
@@ -6,7 +7,6 @@ import {
   IEntityPluginBase,
   EntityPlugin,
 } from "./EntityPlugin";
-import { IVariablePlugin } from "./VariablePlugin";
 
 export const ZNodeId = z.custom<TNodeId>(
   (value) => typeof value === "string" && value.includes("nodes")
@@ -85,7 +85,7 @@ export abstract class NodePlugin<
 
 export abstract class NodePluginWithVariable<
   TType extends INodePlugin = INodePlugin,
-  TVariableType extends IVariablePlugin = IVariablePlugin
+  TVariableType extends IVariable = IVariable
 > extends BaseNodePlugin<TType> {
   hasVariable = true;
 

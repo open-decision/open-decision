@@ -1,9 +1,10 @@
-import { IVariablePlugin, TNodeId, Tree } from "@open-decision/tree-type";
+import { TNodeId, Tree } from "@open-decision/tree-type";
 import { assign, createMachine, Interpreter, Sender } from "xstate";
 import { InvalidTreeError } from "./errors";
 import { canGoBack, canGoForward } from "./methods";
 import { z } from "zod";
 import { ODError, ODProgrammerError } from "@open-decision/type-classes";
+import { IVariable } from "@open-decision/variables";
 
 export type Resolver = (
   context: InterpreterContext,
@@ -21,11 +22,11 @@ type ResolverEvents =
 
 export type InterpreterContext = {
   history: { nodes: TNodeId[]; position: number };
-  variables: Record<string, IVariablePlugin>;
+  variables: Record<string, IVariable>;
 };
 
 export type InterpreterEvents =
-  | { type: "ADD_USER_ANSWER"; variable: IVariablePlugin }
+  | { type: "ADD_USER_ANSWER"; variable: IVariable }
   | { type: "RESET" }
   | { type: "DONE" }
   | { type: "GO_BACK" }
