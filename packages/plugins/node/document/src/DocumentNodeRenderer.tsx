@@ -14,6 +14,13 @@ import { isODError, ODError } from "@open-decision/type-classes";
 import { useTranslations } from "next-intl";
 import { TNodeRenderer } from "@open-decision/plugins-node-helpers";
 import { APIClient } from "@open-decision/api-client";
+import { mapValues } from "remeda";
+import { match } from "ts-pattern";
+import {
+  isGroupVariable,
+  isPrimitiveVariable,
+  IVariable,
+} from "@open-decision/variables";
 
 const DocumentNode = new DocumentNodePlugin();
 
@@ -43,16 +50,37 @@ export const DocumentNodeRenderer: TNodeRenderer = ({ nodeId, ...props }) => {
         });
       }
 
-      const readableAnswers = mapValues(answers, (answer) =>
-        nodePlugins.pluginsWithVariable[answer.type].createVariable(
-          nodeId,
-          answer
-        )(treeClient)
-      );
+      const restructureVariables = (variable: IVariable): any =>
+        match(variable)
+          .with({ type: "list" }, (variable) =>
+            variable.value.map((value) =>
+              isGroupVariable(value)
+                ? restructureVariables(value)
+                : value.readableValue
+            )
+          )
+          .with({ type: "record" }, (variable) =>
+            mapValues(variable.value, (value) =>
+              isGroupVariable(value)
+                ? restructureVariables(value)
+                : value.readableValue
+            )
+          )
+          .with({ type: "module" }, (variable) =>
+            variable.value.map((value) =>
+              mapValues(value, (value) =>
+                isGroupVariable(value)
+                  ? restructureVariables(value)
+                  : value.readableValue
+              )
+            )
+          )
+          .when(isPrimitiveVariable, (variable) => variable.readableValue)
+          .run();
 
       const { response } = await APIClient.trees[environment].generateDocument({
         params: { uuid: node.templateUuid },
-        body: { variables: readableAnswers },
+        body: { variables: mapValues(variables, restructureVariables) },
       });
 
       const blob = await response.blob();

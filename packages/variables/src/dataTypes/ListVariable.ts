@@ -6,7 +6,7 @@ const typeName = "list";
 
 export interface IListVariable<Id extends TId = TId>
   extends IBaseVariable<typeof typeName, Id> {
-  value?: IVariable[];
+  value: IVariable[];
 }
 
 class CListVariable extends BaseVariable<IListVariable> {
@@ -14,12 +14,15 @@ class CListVariable extends BaseVariable<IListVariable> {
     super(typeName);
   }
 
-  create = <Id extends TId = TId>(
-    data: Omit<IListVariable<Id>, "type" | "escapedName">
-  ) => {
+  create = <Id extends TId = TId>({
+    value = [],
+    ...data
+  }: Omit<IListVariable<Id>, "type" | "escapedName" | "value"> &
+    Partial<Pick<IListVariable, "value">>) => {
     return {
       type: this.type,
       escapedName: this.createReadableKey(data.name),
+      value,
       ...data,
     } satisfies IListVariable;
   };

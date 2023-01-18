@@ -108,7 +108,7 @@ export class GroupNodePlugin extends NodePluginWithVariable<
   };
 
   createVariable =
-    (nodeId: TNodeId, answer: InterpreterContext[]) =>
+    (nodeId: TNodeId, answer: InterpreterContext["variables"][]) =>
     (treeClient: TTreeClient | TReadOnlyTreeClient) => {
       const node = treeClient.nodes.get.single<IGroupNode>(nodeId);
 
@@ -119,7 +119,7 @@ export class GroupNodePlugin extends NodePluginWithVariable<
         type: "module",
         name: node.name,
         escapedName: createReadableKey(node.name),
-        value: answer.map((answer) => answer.variables),
+        value: answer,
       } satisfies IModuleVariable;
     };
 }

@@ -6,6 +6,7 @@ const typeName = "text";
 export interface ITextVariable<Id extends TId = TId>
   extends IBaseVariable<typeof typeName, Id> {
   value?: string;
+  readableValue?: string;
 }
 
 class CTextVariable extends BaseVariable<ITextVariable> {

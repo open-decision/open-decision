@@ -7,7 +7,7 @@ export interface IMultiSelectVariable<Id extends TId = TId>
   extends IBaseVariable<typeof typeName> {
   id: Id;
   values: { id: string; value?: string }[];
-  value?: string[];
+  value: string[];
   readableValue?: string[];
 }
 
@@ -22,8 +22,9 @@ class CMultiSelectVariable extends BaseVariable<IMultiSelectVariable> {
     ...data
   }: Omit<
     IMultiSelectVariable<Id>,
-    "type" | "escapedName" | "readableValue"
-  >) => {
+    "type" | "escapedName" | "readableValue" | "value"
+  > &
+    Partial<Pick<IMultiSelectVariable, "value">>) => {
     return {
       type: this.type,
       values,

@@ -17,8 +17,6 @@ export interface IBaseVariable<
   type: TType;
   name: string;
   escapedName: string;
-  value?: any;
-  readableValue?: any;
 }
 
 export abstract class BaseVariable<

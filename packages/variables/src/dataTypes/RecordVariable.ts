@@ -6,7 +6,7 @@ const typeName = "record";
 
 export interface IRecordVariable<Id extends TId = TId>
   extends IBaseVariable<typeof typeName, Id> {
-  value?: Record<string, IVariable>;
+  value: Record<string, IVariable>;
 }
 
 class CRecordVariable extends BaseVariable<IRecordVariable> {
@@ -14,12 +14,15 @@ class CRecordVariable extends BaseVariable<IRecordVariable> {
     super(typeName);
   }
 
-  create = <Id extends TId = TId>(
-    data: Omit<IRecordVariable<Id>, "type" | "escapedName">
-  ) => {
+  create = <Id extends TId = TId>({
+    value = {},
+    ...data
+  }: Omit<IRecordVariable<Id>, "type" | "escapedName" | "value"> &
+    Partial<Pick<IRecordVariable, "value">>) => {
     return {
       type: this.type,
       escapedName: this.createReadableKey(data.name),
+      value,
       ...data,
     } satisfies IRecordVariable;
   };

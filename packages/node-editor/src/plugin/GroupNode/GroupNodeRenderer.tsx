@@ -79,7 +79,7 @@ function RendererComponent({
           onDone={() => {
             const variable = GroupNode.createVariable(
               nodeId,
-              iterationResults
+              iterationResults.map((result) => result.variables)
             )(treeClient);
 
             if (!variable) return;

@@ -7,6 +7,7 @@ const typeName = "empty";
 export interface IEmptyVariable<Id extends TId = TId>
   extends IBaseVariable<typeof typeName, Id> {
   value: undefined;
+  readableValue: undefined;
 }
 
 class CEmptyVariable extends BaseVariable<IEmptyVariable> {

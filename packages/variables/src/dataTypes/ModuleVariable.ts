@@ -6,7 +6,7 @@ const typeName = "module";
 
 export interface IModuleVariable<Id extends TId = TId>
   extends IBaseVariable<typeof typeName, Id> {
-  value?: Record<string, IVariable>[];
+  value: Record<string, IVariable>[];
 }
 
 class CModuleVariable extends BaseVariable<IModuleVariable> {
@@ -14,12 +14,15 @@ class CModuleVariable extends BaseVariable<IModuleVariable> {
     super(typeName);
   }
 
-  create = <Id extends TId = TId>(
-    data: Omit<IModuleVariable<Id>, "type" | "escapedName">
-  ) => {
+  create = <Id extends TId = TId>({
+    value = [],
+    ...data
+  }: Omit<IModuleVariable<Id>, "type" | "escapedName" | "value"> &
+    Partial<Pick<IModuleVariable, "value">>) => {
     return {
       type: this.type,
       escapedName: this.createReadableKey(data.name),
+      value,
       ...data,
     } satisfies IModuleVariable;
   };
