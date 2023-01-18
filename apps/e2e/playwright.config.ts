@@ -3,6 +3,10 @@ import * as dotenv from "dotenv";
 
 dotenv.config({ path: "../../.env" });
 dotenv.config({ path: "../../.env.local" });
+const viewport =
+  Number(process.env["PWDEBUG"]) === 1
+    ? { width: 1920, height: 1080 }
+    : undefined;
 
 const config: PlaywrightTestConfig = {
   workers: process.env["CI"] ? 1 : 3,
@@ -39,15 +43,25 @@ const config: PlaywrightTestConfig = {
   projects: [
     {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"], launchOptions: { devtools: true } },
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport,
+        launchOptions: { devtools: true },
+      },
     },
     {
       name: "firefox",
-      use: { ...devices["Desktop Firefox"] },
+      use: {
+        ...devices["Desktop Firefox"],
+        viewport,
+      },
     },
     {
       name: "webkit",
-      use: { ...devices["Desktop Safari"] },
+      use: {
+        ...devices["Desktop Safari"],
+        viewport,
+      },
     },
   ],
 };

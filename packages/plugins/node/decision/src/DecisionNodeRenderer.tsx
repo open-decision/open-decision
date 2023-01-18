@@ -30,6 +30,8 @@ export const DecisionNodeRenderer: TNodeRenderer = ({ nodeId, ...props }) => {
   if (!node) return null;
   const variable = getVariable(node.id);
 
+  if (variable && variable?.type !== "select") return null;
+
   return (
     <RendererPrimitives.Container
       nodeId={nodeId}
@@ -44,7 +46,7 @@ export const DecisionNodeRenderer: TNodeRenderer = ({ nodeId, ...props }) => {
             className="px-0"
           />
         ) : null}
-        {input && variable?.type === "select" ? (
+        {input ? (
           <DecisionNodeForm variable={variable} node={node} input={input} />
         ) : null}
       </RendererPrimitives.ContentArea>
