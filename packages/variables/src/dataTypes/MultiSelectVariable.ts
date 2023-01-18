@@ -11,7 +11,7 @@ export interface IMultiSelectVariable<Id extends TId = TId>
   readableValue?: string[];
 }
 
-export class MultiSelectVariable extends BaseVariable<IMultiSelectVariable> {
+class CMultiSelectVariable extends BaseVariable<IMultiSelectVariable> {
   constructor() {
     super(typeName);
   }
@@ -36,3 +36,5 @@ export class MultiSelectVariable extends BaseVariable<IMultiSelectVariable> {
     } satisfies IMultiSelectVariable;
   };
 }
+
+export const MultiSelectVariable = new CMultiSelectVariable();

@@ -11,7 +11,7 @@ export interface ISelectVariable<Id extends TId = TId>
   readableValue?: string;
 }
 
-export class SelectVariable extends BaseVariable<ISelectVariable> {
+class CSelectVariable extends BaseVariable<ISelectVariable> {
   constructor() {
     super(typeName);
   }
@@ -32,3 +32,5 @@ export class SelectVariable extends BaseVariable<ISelectVariable> {
     } satisfies ISelectVariable;
   };
 }
+
+export const SelectVariable = new CSelectVariable();

@@ -7,17 +7,13 @@ import {
   NodePluginWithVariable,
   TNodeId,
   TEdgeId,
-  IVariablePlugin,
   createReadableKey,
 } from "@open-decision/tree-type";
 import { TRichText } from "@open-decision/rich-text-editor";
 import { InterpreterContext } from "@open-decision/interpreter";
+import { IModuleVariable } from "@open-decision/variables";
 
 const DirectEdge = new DirectEdgePlugin();
-
-export interface IGroupNodeVariable extends IVariablePlugin<typeof typeName> {
-  value: Record<string, IVariablePlugin<string> | undefined>[];
-}
 
 export const typeName = "node-group" as const;
 
@@ -30,7 +26,7 @@ export interface IGroupNode extends INodePlugin<typeof typeName> {
 
 export class GroupNodePlugin extends NodePluginWithVariable<
   IGroupNode,
-  IGroupNodeVariable
+  IModuleVariable
 > {
   constructor() {
     super(typeName);
@@ -108,7 +104,7 @@ export class GroupNodePlugin extends NodePluginWithVariable<
     };
 
   getVariable = (nodeId: string, answers: any) => {
-    return answers[nodeId] as IGroupNodeVariable | undefined;
+    return answers[nodeId] as IModuleVariable | undefined;
   };
 
   createVariable =
@@ -120,10 +116,10 @@ export class GroupNodePlugin extends NodePluginWithVariable<
 
       return {
         id: nodeId,
-        type: this.type,
+        type: "module",
         name: node.name,
         escapedName: createReadableKey(node.name),
         value: answer.map((answer) => answer.variables),
-      } satisfies IGroupNodeVariable;
+      } satisfies IModuleVariable;
     };
 }

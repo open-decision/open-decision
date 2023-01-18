@@ -4,6 +4,8 @@ import {
   IRecordVariable,
   ISelectVariable,
   IMultiSelectVariable,
+  IListVariable,
+  IModuleVariable,
 } from "./dataTypes";
 
 export * from "./dataTypes";
@@ -13,4 +15,6 @@ export type IVariable =
   | IEmptyVariable
   | IRecordVariable
   | ISelectVariable
-  | IMultiSelectVariable;
+  | IMultiSelectVariable
+  | IListVariable
+  | IModuleVariable;

@@ -8,7 +8,7 @@ export interface ITextVariable<Id extends TId = TId>
   value?: string;
 }
 
-export class TextVariable extends BaseVariable<ITextVariable> {
+class CTextVariable extends BaseVariable<ITextVariable> {
   constructor() {
     super(typeName);
   }
@@ -26,3 +26,5 @@ export class TextVariable extends BaseVariable<ITextVariable> {
     } satisfies ITextVariable;
   };
 }
+
+export const TextVariable = new CTextVariable();

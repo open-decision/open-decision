@@ -9,7 +9,7 @@ export interface IEmptyVariable<Id extends TId = TId>
   value: undefined;
 }
 
-export class EmptyVariable extends BaseVariable<IEmptyVariable> {
+class CEmptyVariable extends BaseVariable<IEmptyVariable> {
   constructor() {
     super(typeName);
   }
@@ -29,3 +29,5 @@ export class EmptyVariable extends BaseVariable<IEmptyVariable> {
     } satisfies IEmptyVariable;
   };
 }
+
+export const EmptyVariable = new CEmptyVariable();

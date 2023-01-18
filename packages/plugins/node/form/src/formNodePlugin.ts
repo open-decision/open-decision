@@ -11,29 +11,23 @@ import {
   NodePluginWithVariable,
   TNodeId,
   TEdgeId,
-  IVariablePlugin,
 } from "@open-decision/tree-type";
 import { ODProgrammerError } from "@open-decision/type-classes";
 import { DirectEdgePlugin } from "@open-decision/plugins-edge-direct";
 import { formNodeInputPlugins, TFormNodeInput } from "./FormNodeInputs";
-import {
-  RecordVariablePlugin,
-  IRecordVariable,
-} from "packages/plugins/variables/record/src";
+
 import { match } from "ts-pattern";
-import { EmptyVariablePlugin } from "packages/plugins/variables/empty/src";
-import { MultiSelectVariablePlugin } from "packages/plugins/variables/multi-select/src";
-import { SelectVariablePlugin } from "packages/plugins/variables/select/src";
-import { TextVariablePlugin } from "packages/plugins/variables/text/src";
 import { TRichText } from "@open-decision/rich-text-editor";
 import { forEachObj, fromPairs, isDefined } from "remeda";
+import {
+  EmptyVariable,
+  IRecordVariable,
+  MultiSelectVariable,
+  RecordVariable,
+  SelectVariable,
+  TextVariable,
+} from "@open-decision/variables";
 
-const TextVariable = new TextVariablePlugin();
-const SelectVariable = new SelectVariablePlugin();
-const MultiSelectVariable = new MultiSelectVariablePlugin();
-const EmptyVariable = new EmptyVariablePlugin();
-
-const RecordVariable = new RecordVariablePlugin();
 const DirectEdge = new DirectEdgePlugin();
 
 export type TFormNodeVariable = IRecordVariable<TNodeId>;
@@ -232,10 +226,7 @@ export class FormNodePlugin extends NodePluginWithVariable<
     };
 
   createDefaultValues =
-    (
-      nodeId: TNodeId,
-      previousVariable?: IVariablePlugin<string, `${string}_${string}`>
-    ) =>
+    (nodeId: TNodeId, previousVariable?: TFormNodeVariable) =>
     (treeClient: TTreeClient | TReadOnlyTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 

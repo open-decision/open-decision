@@ -2,27 +2,27 @@ import { TId } from "@open-decision/tree-type";
 import { IVariable } from "..";
 import { IBaseVariable, BaseVariable } from "../Variable";
 
-const typeName = "record";
+const typeName = "list";
 
-export interface IRecordVariable<Id extends TId = TId>
+export interface IListVariable<Id extends TId = TId>
   extends IBaseVariable<typeof typeName, Id> {
-  value?: Record<string, IVariable>;
+  value?: IVariable[];
 }
 
-class CRecordVariable extends BaseVariable<IRecordVariable> {
+class CListVariable extends BaseVariable<IListVariable> {
   constructor() {
     super(typeName);
   }
 
   create = <Id extends TId = TId>(
-    data: Omit<IRecordVariable<Id>, "type" | "escapedName">
+    data: Omit<IListVariable<Id>, "type" | "escapedName">
   ) => {
     return {
       type: this.type,
       escapedName: this.createReadableKey(data.name),
       ...data,
-    } satisfies IRecordVariable;
+    } satisfies IListVariable;
   };
 }
 
-export const RecordVariable = new CRecordVariable();
+export const ListVariable = new CListVariable();
