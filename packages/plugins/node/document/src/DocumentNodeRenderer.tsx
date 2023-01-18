@@ -14,7 +14,6 @@ import { isODError, ODError } from "@open-decision/type-classes";
 import { useTranslations } from "next-intl";
 import { TNodeRenderer } from "@open-decision/plugins-node-helpers";
 import { APIClient } from "@open-decision/api-client";
-import { mapObjRecusively } from "./mapObjRecursively";
 
 const DocumentNode = new DocumentNodePlugin();
 
