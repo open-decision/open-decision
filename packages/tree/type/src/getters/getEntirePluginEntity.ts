@@ -1,9 +1,9 @@
 import { Tree } from "../type-classes";
-import { IEntityPluginBase } from "../plugin";
+import { IEntityBase } from "../plugin";
 
 export const getEntirePluginEntity =
   (tree: Tree.TTree) =>
-  <TType extends IEntityPluginBase>(entityKey: string) => {
+  <TType extends IEntityBase>(entityKey: string) => {
     if (!tree.pluginEntities) return undefined;
     const data = tree.pluginEntities[entityKey];
 

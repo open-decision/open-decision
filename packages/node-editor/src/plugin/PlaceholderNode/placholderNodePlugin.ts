@@ -1,13 +1,13 @@
 import {
   NodePlugin,
-  INodePlugin,
+  INode,
   TTreeClient,
   TReadOnlyTreeClient,
 } from "@open-decision/tree-type";
 
 export const typeName = "placeholder" as const;
 
-export type IPlaceholderNode = INodePlugin<typeof typeName>;
+export type IPlaceholderNode = INode<typeof typeName>;
 
 export class PlaceholderNodePlugin extends NodePlugin<IPlaceholderNode> {
   constructor() {

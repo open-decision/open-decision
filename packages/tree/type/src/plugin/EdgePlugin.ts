@@ -1,11 +1,7 @@
 import { ODError } from "@open-decision/type-classes";
 import { z } from "zod";
 import { TTreeClient, TReadOnlyTreeClient } from "../treeClient";
-import {
-  ZEntityPluginBase,
-  IEntityPluginBase,
-  EntityPlugin,
-} from "./EntityPlugin";
+import { ZEntityPluginBase, IEntityBase, EntityPlugin } from "./EntityPlugin";
 import { TNodeId, ZNodeId } from "./NodePlugin";
 
 export const ZEdgeId = z.custom<TEdgeId>(
@@ -24,14 +20,14 @@ export const ZEdgePlugin = ZEntityPluginBase.extend({
 
 export type TEdgeId = `edges_${string}`;
 
-export interface IEdgePlugin<TType = any> extends IEntityPluginBase<TType> {
+export interface IEdge<TType = any> extends IEntityBase<TType> {
   id: TEdgeId;
   source: TNodeId;
   target?: TNodeId;
 }
 
 export abstract class EdgePlugin<
-  TType extends IEdgePlugin = IEdgePlugin
+  TType extends IEdge = IEdge
 > extends EntityPlugin<TType> {
   pluginType = "edges" as const;
 

@@ -1,6 +1,6 @@
 import { TRichText } from "@open-decision/rich-text-editor";
 import {
-  INodePlugin,
+  INode,
   NodePlugin,
   TNodeId,
   TReadOnlyTreeClient,
@@ -9,7 +9,7 @@ import {
 
 export const typeName = "document" as const;
 
-export interface IDocumentNode extends INodePlugin<typeof typeName> {
+export interface IDocumentNode extends INode<typeof typeName> {
   content?: TRichText;
   templateUuid?: string;
 }

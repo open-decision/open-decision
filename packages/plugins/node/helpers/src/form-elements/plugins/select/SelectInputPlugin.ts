@@ -34,7 +34,7 @@ export class SelectInputPlugin extends InputPlugin<ISelectInput> {
       type: this.type,
       answers,
       required,
-      label: label ? label : `Einfachauswahl ${answers.length + 1}`,
+      label: label ? label : `Einfachauswahl`,
       ...data,
     } satisfies ISelectInput;
   };

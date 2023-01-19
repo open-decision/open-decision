@@ -1,7 +1,7 @@
 import { ClassNameArrayProp, onNodeCreate } from "@open-decision/design-system";
 import { TEdgePluginGroup } from "@open-decision/plugins-edge-helpers";
 import {
-  INodePlugin,
+  INode,
   isNodeId,
   NodePlugin,
   NodePluginWithVariable,
@@ -45,7 +45,7 @@ export type NodeRendererProps = {
 export type TNodeRenderer = (props: NodeRendererProps) => JSX.Element | null;
 
 interface BaseNodePluginObject<
-  TType extends INodePlugin = INodePlugin,
+  TType extends INode = INode,
   TPluginEntities extends Record<string, z.ZodTypeAny> = Record<
     string,
     z.ZodTypeAny
@@ -66,7 +66,7 @@ interface BaseNodePluginObject<
 }
 
 export interface NodePluginObject<
-  TType extends INodePlugin = INodePlugin,
+  TType extends INode = INode,
   TPluginEntities extends Record<string, z.ZodTypeAny> = Record<
     string,
     z.ZodTypeAny
@@ -76,7 +76,7 @@ export interface NodePluginObject<
 }
 
 export interface NodePluginObjectWithVariable<
-  TType extends INodePlugin = INodePlugin,
+  TType extends INode = INode,
   TPluginEntities extends Record<string, z.ZodTypeAny> = Record<
     string,
     z.ZodTypeAny

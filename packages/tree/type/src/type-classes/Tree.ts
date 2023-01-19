@@ -1,24 +1,19 @@
 import { forEachObj } from "remeda";
 import { z } from "zod";
 import {
-  INodePlugin,
+  INode,
   TNodeId,
   ZEntityId,
   ZEntityPluginBase,
   ZNodeId,
   ZNodePlugin,
 } from "../plugin";
-import {
-  IEdgePlugin,
-  TEdgeId,
-  ZEdgeId,
-  ZEdgePlugin,
-} from "../plugin/EdgePlugin";
+import { IEdge, TEdgeId, ZEdgeId, ZEdgePlugin } from "../plugin/EdgePlugin";
 import { Theme } from "./Theme";
 
 export const Type = z.object({
   startNode: ZNodeId,
-  nodes: z.custom<Record<TNodeId, INodePlugin>>((value) => {
+  nodes: z.custom<Record<TNodeId, INode>>((value) => {
     if (!value || typeof value !== "object") return false;
 
     return forEachObj.indexed(value, (value, key: string) => {
@@ -29,7 +24,7 @@ export const Type = z.object({
       return true;
     });
   }),
-  edges: z.custom<Record<TEdgeId, IEdgePlugin>>((value) => {
+  edges: z.custom<Record<TEdgeId, IEdge>>((value) => {
     if (!value || typeof value !== "object") return false;
 
     return forEachObj.indexed(value, (value, key: string) => {

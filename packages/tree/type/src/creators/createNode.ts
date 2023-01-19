@@ -1,6 +1,6 @@
 import { Node, Tree } from "../type-classes";
 import { getNodeAll } from "../getters";
-import { INodePlugin } from "../plugin";
+import { INode } from "../plugin";
 
 export type NewNodeData = Partial<Omit<Node.TNode, "id">>;
 
@@ -13,7 +13,7 @@ export type NewNodeData = Partial<Omit<Node.TNode, "id">>;
  */
 export const createNode =
   (tree: Tree.TTree) =>
-  <TNodeType extends INodePlugin = INodePlugin>({
+  <TNodeType extends INode = INode>({
     position = { x: 0, y: 0 },
     type,
     name,
@@ -29,5 +29,5 @@ export const createNode =
       type,
       name: name ?? fallbackName,
       ...data,
-    } satisfies INodePlugin;
+    } satisfies INode;
   };

@@ -1,6 +1,6 @@
 import {
   EdgePlugin,
-  IEdgePlugin,
+  IEdge,
   TNodeId,
   TReadOnlyTreeClient,
   TTreeClient,
@@ -13,7 +13,7 @@ import { ODError, ODProgrammerError } from "@open-decision/type-classes";
 import { z } from "zod";
 import { mapValues } from "remeda";
 
-export type EdgeResolver<TType extends IEdgePlugin> = (
+export type EdgeResolver<TType extends IEdge> = (
   treeClient: TTreeClient | TReadOnlyTreeClient
 ) => (
   edge: TType
@@ -26,7 +26,7 @@ export type EdgeResolver<TType extends IEdgePlugin> = (
   | { state: "error"; error: ODProgrammerError | ODError };
 
 export type EdgePluginObject<
-  TType extends IEdgePlugin = IEdgePlugin,
+  TType extends IEdge = IEdge,
   TResolver extends EdgeResolver<any> = EdgeResolver<any>,
   TZodType extends z.AnyZodObject = z.AnyZodObject
 > = {

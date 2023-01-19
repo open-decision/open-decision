@@ -1,5 +1,5 @@
 import { pipe, filter, map, values } from "remeda";
-import { INodePlugin, TNodeId } from "../plugin";
+import { INode, TNodeId } from "../plugin";
 import { Tree } from "../type-classes";
 import { getPaths } from "./getPaths";
 
@@ -9,7 +9,7 @@ export const getConnectableNodes =
     if (!tree.nodes) return [];
 
     const nodesOnPath = getPaths(tree)(nodeId).flatMap((path) => path);
-    const isPreviousNode = (node: INodePlugin) => nodesOnPath.includes(node.id);
+    const isPreviousNode = (node: INode) => nodesOnPath.includes(node.id);
 
     return pipe(
       tree.nodes,

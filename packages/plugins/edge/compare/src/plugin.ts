@@ -1,6 +1,6 @@
 import {
   EdgePlugin,
-  IEdgePlugin,
+  IEdge,
   TEdgeId,
   TReadOnlyTreeClient,
 } from "@open-decision/tree-type";
@@ -9,7 +9,7 @@ import { ODError } from "@open-decision/type-classes";
 
 export const typeName = "compare" as const;
 
-export interface ICompareEdge extends IEdgePlugin<typeof typeName> {
+export interface ICompareEdge extends IEdge<typeof typeName> {
   condition: {
     variableId: string;
     valueIds: string[];

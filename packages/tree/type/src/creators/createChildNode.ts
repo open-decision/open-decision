@@ -1,12 +1,12 @@
 import { values } from "remeda";
 import { getNodeSingle } from "../getters";
-import { INodePlugin, TNodeId } from "../plugin";
+import { INode, TNodeId } from "../plugin";
 import { Tree } from "../type-classes";
 import { createNode } from "./createNode";
 
 export const createChildNode =
   (tree: Tree.TTree) =>
-  <TNodeType extends INodePlugin>(nodeId: TNodeId, newNode: TNodeType) => {
+  <TNodeType extends INode>(nodeId: TNodeId, newNode: TNodeType) => {
     // Get the node we want the children for
     const node = getNodeSingle(tree)(nodeId);
 

@@ -2,7 +2,7 @@ import {
   EntityPlugin,
   TTreeClient,
   TReadOnlyTreeClient,
-  IEntityPluginBase,
+  IEntityBase,
   ZEntityPluginBase,
 } from "@open-decision/tree-type";
 import { keys, mapValues } from "remeda";
@@ -44,7 +44,7 @@ export type InputPluginObject<TType extends IInputPlugin = IInputPlugin> = {
 export type TInputId = `input_${string}`;
 
 export interface IInputPlugin<TTypeName extends string = string>
-  extends IEntityPluginBase<TTypeName> {
+  extends IEntityBase<TTypeName> {
   id: TInputId;
   label: string;
 }

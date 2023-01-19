@@ -18,7 +18,7 @@ const TreeProvider = ({ id, children }: Props) => {
     [id]
   );
 
-  const [state, send] = useMachine(websocketMachine, { devTools: true });
+  const [state, send] = useMachine(websocketMachine);
 
   if (state.matches("error")) {
     throw new ODError({
@@ -30,6 +30,7 @@ const TreeProvider = ({ id, children }: Props) => {
   React.useEffect(() => {
     if (id && treeStore) {
       new IndexeddbPersistence(id, treeStore.yDoc);
+
       send({
         type: "OPEN",
         id,

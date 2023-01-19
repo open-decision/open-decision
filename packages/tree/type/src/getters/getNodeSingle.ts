@@ -1,10 +1,10 @@
 import { ODProgrammerError } from "@open-decision/type-classes";
-import { INodePlugin } from "../plugin";
+import { INode } from "../plugin";
 import { Tree } from "../type-classes";
 
 export const getNodeSingle =
   (tree: Tree.TTree) =>
-  <TType extends INodePlugin>(id: TType["id"], type?: TType["type"]) => {
+  <TType extends INode>(id: TType["id"], type?: TType["type"]) => {
     const node = tree.nodes[id];
 
     if (!node) return undefined;

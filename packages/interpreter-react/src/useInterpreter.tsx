@@ -18,7 +18,7 @@ import {
   ReadOnlyTreeClient,
   TReadOnlyTreeClient,
   Tree,
-  IEdgePlugin,
+  IEdge,
 } from "@open-decision/tree-type";
 import { TEdgePluginGroup } from "@open-decision/plugins-edge-helpers";
 import { forEachObj } from "remeda";
@@ -27,7 +27,7 @@ function createResolver(
   treeClient: TReadOnlyTreeClient,
   edgePlugins: TEdgePluginGroup
 ) {
-  const resolvers = (edge: IEdgePlugin) => {
+  const resolvers = (edge: IEdge) => {
     const edgeResolver =
       edgePlugins.pluginObjects[edge.type].resolver(treeClient);
 

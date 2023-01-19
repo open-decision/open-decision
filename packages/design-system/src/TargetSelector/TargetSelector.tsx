@@ -1,7 +1,7 @@
 import { useTreeClient } from "@open-decision/tree-sync";
 import {
-  IEdgePlugin,
-  INodePlugin,
+  IEdge,
+  INode,
   TNodeId,
   TTreeClient,
   ZNodeId,
@@ -15,11 +15,11 @@ import { addNotification } from "../Notifications";
 
 export type onNodeCreate = (data: {
   name: string;
-}) => (treeClient: TTreeClient) => INodePlugin;
+}) => (treeClient: TTreeClient) => INode;
 
 export type onEdgeCreate = (
-  data: Pick<IEdgePlugin, "source" | "target">
-) => (treeClient: TTreeClient) => IEdgePlugin | ODError;
+  data: Pick<IEdge, "source" | "target">
+) => (treeClient: TTreeClient) => IEdge | ODError;
 
 export type onTargetUpdate = (newTarget?: string) => void;
 
@@ -28,7 +28,7 @@ export type TargetSelectorProps = {
   nodeId: TNodeId;
   inputClassName?: string;
   className?: string;
-  edge: IEdgePlugin;
+  edge: IEdge;
   onNodeCreate: onNodeCreate;
   onEdgeCreate: onEdgeCreate;
   onTargetUpdate?: onTargetUpdate;

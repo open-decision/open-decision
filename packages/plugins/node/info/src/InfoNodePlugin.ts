@@ -4,7 +4,7 @@ import {
   TTreeClient,
   TReadOnlyTreeClient,
   NodePlugin,
-  INodePlugin,
+  INode,
   TNodeId,
   TEdgeId,
 } from "@open-decision/tree-type";
@@ -13,7 +13,7 @@ const DirectEdge = new DirectEdgePlugin();
 
 export const typeName = "info" as const;
 
-export interface IInfoNodePlugin extends INodePlugin<typeof typeName> {
+export interface IInfoNodePlugin extends INode<typeof typeName> {
   content?: TRichText;
 }
 

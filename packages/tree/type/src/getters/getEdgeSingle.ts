@@ -1,10 +1,10 @@
 import { ODProgrammerError } from "@open-decision/type-classes";
-import { IEdgePlugin, TEdgeId } from "../plugin";
+import { IEdge, TEdgeId } from "../plugin";
 import { Tree } from "../type-classes";
 
 export const getEdgeSingle =
   (tree: Tree.TTree) =>
-  <TType extends IEdgePlugin>(id: TEdgeId, type?: TType["type"]) => {
+  <TType extends IEdge>(id: TEdgeId, type?: TType["type"]) => {
     const edge = tree.edges[id];
 
     if (!edge) return undefined;

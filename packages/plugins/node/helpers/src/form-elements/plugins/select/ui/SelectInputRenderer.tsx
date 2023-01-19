@@ -2,7 +2,6 @@ import { Form, Stack } from "@open-decision/design-system";
 import { useInterpreterTree } from "@open-decision/interpreter-react";
 import { ISelectInput } from "../SelectInputPlugin";
 import { RendererRadioGroup } from "../../../helpers";
-import { ODProgrammerError } from "@open-decision/type-classes";
 import { InputRenderer } from "../../../helpers/types";
 
 export const SelectInputRendererComponent: InputRenderer = ({
@@ -10,17 +9,10 @@ export const SelectInputRendererComponent: InputRenderer = ({
   className,
 }) => {
   const input = useInterpreterTree((treeClient) => {
-    const input = treeClient.pluginEntity.get.single<ISelectInput>(
-      "inputs",
-      inputId
-    );
-
-    if (input instanceof ODProgrammerError) return undefined;
-    return input;
+    return treeClient.pluginEntity.get.single<ISelectInput>("inputs", inputId);
   });
 
   const { watch } = Form.useFormContext();
-
   if (!input) return null;
 
   return (

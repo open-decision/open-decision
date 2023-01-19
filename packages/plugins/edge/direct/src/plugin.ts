@@ -1,6 +1,6 @@
 import {
   EdgePlugin,
-  IEdgePlugin,
+  IEdge,
   TReadOnlyTreeClient,
   TTreeClient,
 } from "@open-decision/tree-type";
@@ -8,7 +8,7 @@ import { ODError } from "@open-decision/type-classes";
 
 export const typeName = "direct" as const;
 
-export type IDirectEdge = IEdgePlugin<typeof typeName>;
+export type IDirectEdge = IEdge<typeof typeName>;
 
 export class DirectEdgePlugin extends EdgePlugin<IDirectEdge> {
   constructor() {

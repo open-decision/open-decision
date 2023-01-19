@@ -7,7 +7,7 @@ import {
 import {
   TReadOnlyTreeClient,
   TTreeClient,
-  INodePlugin,
+  INode,
   NodePluginWithVariable,
   TNodeId,
   TEdgeId,
@@ -35,7 +35,7 @@ export type TFormNodeVariable = IRecordVariable<TNodeId>;
 
 export const typeName = "form" as const;
 
-export interface IFormNode extends INodePlugin<typeof typeName> {
+export interface IFormNode extends INode<typeof typeName> {
   content?: TRichText;
   inputs: TInputId[];
 }

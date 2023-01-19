@@ -15,7 +15,7 @@ export const wss = new WebSocketServer({
 });
 
 wss.on("connection", (websocket, request) => {
-  return setupWSConnection(websocket, request, {
+  setupWSConnection(websocket, request, {
     docName: getUuidFromRequest(request),
   });
 });

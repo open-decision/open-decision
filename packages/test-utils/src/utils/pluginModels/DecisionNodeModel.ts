@@ -65,7 +65,7 @@ class DecisionNodeSidebarModel extends NodeSidebarModel {
       input: {
         addOptionButton: page.locator("text=Neue Antwortmöglichkeit"),
         input: (number: number) =>
-          page.getByRole("textbox", { name: `Antwortoption ${number}` }),
+          page.locator(`[aria-label='Antwortoption ${number}']`),
       },
     };
   }
@@ -74,7 +74,12 @@ class DecisionNodeSidebarModel extends NodeSidebarModel {
     await this.locators.tabs[tab].click();
   }
 
+  async scrollToInput(inputNumber: number) {
+    await this.locators.input.input(inputNumber).scrollIntoViewIfNeeded();
+  }
+
   async addAnswerOption(optionText: string) {
+    await this.locators.input.addOptionButton.scrollIntoViewIfNeeded();
     await this.locators.input.addOptionButton.click();
     await this.locators.input.input(3).fill(optionText);
   }

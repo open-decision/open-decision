@@ -1,5 +1,5 @@
 import {
-  INodePlugin,
+  INode,
   NodePluginWithVariable,
   TNodeId,
   TReadOnlyTreeClient,
@@ -24,7 +24,7 @@ export type TDecisionNodeVariable = ISelectVariable;
 
 export const typeName = "decision" as const;
 
-export interface IDecisionNode extends INodePlugin<typeof typeName> {
+export interface IDecisionNode extends INode<typeof typeName> {
   content?: TRichText;
   input?: TInputId;
 }

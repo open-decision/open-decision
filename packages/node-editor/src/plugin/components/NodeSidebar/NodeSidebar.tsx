@@ -1,6 +1,5 @@
 import * as React from "react";
 import {
-  DropdownMenu,
   Form,
   Icon,
   Row,
@@ -18,10 +17,7 @@ import {
   TNodePluginGroup,
   TNodeSidebarProps,
 } from "@open-decision/plugins-node-helpers";
-
-const hasContent = (node: any): node is { data: { content: any } } => {
-  return node.data && node.data.content;
-};
+import { NodeDropdown } from "./NodeDropdown";
 
 export const sidebarPaddingClasses = "p-4";
 
@@ -79,7 +75,6 @@ const Header = ({
   nodePlugins,
 }: HeaderProps) => {
   const t = useTranslations("builder.nodeEditingSidebar");
-  const nodeNames = useTranslations("common.nodeNames");
   const treeClient = useTreeClient();
 
   const node = useTree((treeClient) => treeClient.nodes.get.single(nodeId));
@@ -114,40 +109,7 @@ const Header = ({
             <Icon label="" className="bg-gray3 rounded-md p-2">
               <NodeTypeIcon />
             </Icon>
-            <DropdownMenu.Root>
-              <DropdownMenu.Trigger asChild>
-                <DropdownMenu.Button variant="neutral">
-                  {nodeNames(`${node.type as any}.short`)}
-                </DropdownMenu.Button>
-              </DropdownMenu.Trigger>
-              <DropdownMenu.Content align="start">
-                {Object.values(nodePlugins.addablePlugins).map((plugin) => (
-                  <DropdownMenu.Item
-                    key={plugin.type}
-                    onSelect={() => {
-                      const oldNode = treeClient.nodes.get.single(nodeId);
-
-                      if (!oldNode) return;
-                      let oldNodeContent;
-
-                      if (hasContent(oldNode)) {
-                        oldNodeContent = oldNode.data.content;
-                      }
-
-                      const newNode = plugin.create({
-                        data: { content: oldNodeContent },
-                        name: oldNode.name,
-                        position: oldNode.position,
-                      })(treeClient);
-
-                      treeClient.nodes.update.node(nodeId, newNode);
-                    }}
-                  >
-                    {nodeNames(`${plugin.type}.short`)}
-                  </DropdownMenu.Item>
-                ))}
-              </DropdownMenu.Content>
-            </DropdownMenu.Root>
+            <NodeDropdown node={node} nodePlugins={nodePlugins} />
           </Row>
           <NodeMenu
             align="end"

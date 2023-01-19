@@ -1,4 +1,4 @@
-import { INodePlugin } from "../plugin";
+import { INode } from "../plugin";
 import { Tree } from "../type-classes";
 
 /**
@@ -8,7 +8,7 @@ import { Tree } from "../type-classes";
  *
  * @param node to be added to the tree
  */
-export const addNode = (tree: Tree.TTree) => (node: INodePlugin) => {
+export const addNode = (tree: Tree.TTree) => (node: INode) => {
   if (!tree.nodes) tree.nodes = {};
 
   tree.nodes[node.id] = node;

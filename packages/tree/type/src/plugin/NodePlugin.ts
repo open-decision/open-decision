@@ -2,11 +2,7 @@ import { ODError, ODProgrammerError } from "@open-decision/type-classes";
 import { IVariable } from "@open-decision/variables";
 import { z } from "zod";
 import { TTreeClient, TReadOnlyTreeClient } from "../treeClient";
-import {
-  ZEntityPluginBase,
-  IEntityPluginBase,
-  EntityPlugin,
-} from "./EntityPlugin";
+import { ZEntityPluginBase, IEntityBase, EntityPlugin } from "./EntityPlugin";
 
 export const ZNodeId = z.custom<TNodeId>(
   (value) => typeof value === "string" && value.includes("nodes")
@@ -31,7 +27,7 @@ export const ZNodePlugin = ZEntityPluginBase.extend({
 
 export type TNodeId = `nodes_${string}`;
 
-export interface INodePlugin<TType = any> extends IEntityPluginBase<TType> {
+export interface INode<TType = any> extends IEntityBase<TType> {
   id: TNodeId;
   position: { x: number; y: number };
   name: string;
@@ -42,13 +38,15 @@ export interface INodePlugin<TType = any> extends IEntityPluginBase<TType> {
 }
 
 export abstract class BaseNodePlugin<
-  TType extends INodePlugin = INodePlugin
+  TType extends INode = INode
 > extends EntityPlugin<TType> {
   pluginType = "nodes" as const;
 
   isAddable = true;
 
-  abstract create: (data: any) => (treeClient: TTreeClient) => TType;
+  abstract create: (
+    data: Partial<Omit<TType, "id" | "type">> & { [x: string]: any }
+  ) => (treeClient: TTreeClient) => TType;
 
   getSingle =
     (nodeId: TType["id"]) => (treeClient: TTreeClient | TReadOnlyTreeClient) =>
@@ -80,11 +78,11 @@ export abstract class BaseNodePlugin<
 }
 
 export abstract class NodePlugin<
-  TType extends INodePlugin = INodePlugin
+  TType extends INode = INode
 > extends BaseNodePlugin<TType> {}
 
 export abstract class NodePluginWithVariable<
-  TType extends INodePlugin = INodePlugin,
+  TType extends INode = INode,
   TVariableType extends IVariable = IVariable
 > extends BaseNodePlugin<TType> {
   hasVariable = true;

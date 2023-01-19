@@ -3,7 +3,7 @@ import {
   TReadOnlyTreeClient,
   Tree,
   TTreeClient,
-  INodePlugin,
+  INode,
   NodePluginWithVariable,
   TNodeId,
   TEdgeId,
@@ -17,7 +17,7 @@ const DirectEdge = new DirectEdgePlugin();
 
 export const typeName = "node-group" as const;
 
-export interface IGroupNode extends INodePlugin<typeof typeName> {
+export interface IGroupNode extends INode<typeof typeName> {
   content?: TRichText;
   cta?: string;
   tree?: Tree.TTree;

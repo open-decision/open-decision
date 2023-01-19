@@ -9,13 +9,13 @@ export const ZEntityPluginBase = z.object({
   id: ZEntityId,
 });
 
-export interface IEntityPluginBase<TType = any> {
+export interface IEntityBase<TType = any> {
   id: TId;
   type: TType;
 }
 
 export abstract class EntityPlugin<
-  TType extends IEntityPluginBase = IEntityPluginBase
+  TType extends IEntityBase = IEntityBase
 > {
   type: TType["type"];
   abstract pluginType: "edges" | "nodes" | "pluginEntity";

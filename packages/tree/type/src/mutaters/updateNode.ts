@@ -1,12 +1,12 @@
 import { keys } from "remeda";
 import { getEdgesByNode } from "../getters";
-import { INodePlugin, TNodeId } from "../plugin";
+import { INode, TNodeId } from "../plugin";
 import { Tree } from "../type-classes";
 import { deleteEdges } from "./deleteEdges";
 
 export const updateNode =
   (tree: Tree.TTree) =>
-  <TNode extends INodePlugin>(nodeId: TNodeId, newNode: TNode) => {
+  <TNode extends INode>(nodeId: TNodeId, newNode: TNode) => {
     const nodes = tree.nodes;
     const edges = getEdgesByNode(tree)(nodeId);
 
