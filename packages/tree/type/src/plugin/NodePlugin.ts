@@ -4,6 +4,10 @@ import { z } from "zod";
 import { TTreeClient, TReadOnlyTreeClient } from "../treeClient";
 import { ZEntityPluginBase, IEntityBase, EntityPlugin } from "./EntityPlugin";
 
+export type createFn<TType extends INode> = (
+  data: Omit<TType, "id" | "type" | "name"> & Partial<Pick<TType, "name">>
+) => (treeClient: TTreeClient) => TType;
+
 export const ZNodeId = z.custom<TNodeId>(
   (value) => typeof value === "string" && value.includes("nodes")
 );
@@ -44,9 +48,7 @@ export abstract class BaseNodePlugin<
 
   isAddable = true;
 
-  abstract create: (
-    data: Partial<Omit<TType, "id" | "type">> & { [x: string]: any }
-  ) => (treeClient: TTreeClient) => TType;
+  abstract create: createFn<TType>;
 
   getSingle =
     (nodeId: TType["id"]) => (treeClient: TTreeClient | TReadOnlyTreeClient) =>

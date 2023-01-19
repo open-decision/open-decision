@@ -8,6 +8,7 @@ import {
   TNodeId,
   TEdgeId,
   createReadableKey,
+  createFn,
 } from "@open-decision/tree-type";
 import { TRichText } from "@open-decision/rich-text-editor";
 import { InterpreterContext } from "@open-decision/interpreter";
@@ -33,14 +34,14 @@ export class GroupNodePlugin extends NodePluginWithVariable<
     this.isAddable = false;
   }
 
-  create =
-    ({ position = { x: 0, y: 0 }, ...data }: Omit<IGroupNode, "id" | "type">) =>
-    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
+  create: createFn<IGroupNode> =
+    ({ position = { x: 0, y: 0 }, ...data }) =>
+    (treeClient) => {
       return treeClient.nodes.create.node<IGroupNode>({
         type: this.type,
         position,
         ...data,
-      });
+      }) satisfies IGroupNode;
     };
 
   updateTitle =

@@ -51,7 +51,9 @@ export const createTreeClientWithPlugins = (tree: Tree.TTree) => {
     {
       nodes: [Nodes, NodeType],
       edges: [Edges, EdgeType],
-      pluginEntities: FormNodePluginObject.pluginEntities.inputs,
+      pluginEntities: FormNodePluginObject.pluginEntities
+        ? z.record(FormNodePluginObject.pluginEntities.inputs)
+        : z.undefined(),
     },
     tree
   );
