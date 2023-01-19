@@ -40,7 +40,7 @@ export async function createSharedPrototypePage(
   const DocumentNode = new DocumentNodeModel(page);
 
   await DocumentNode.sidebar.uploadTemplate(
-    path.join(__dirname, "../../files/auroa.docx")
+    path.join(__dirname, "../../../files/auroa.docx")
   );
 
   const Notification = new NotificationComponent(page);
