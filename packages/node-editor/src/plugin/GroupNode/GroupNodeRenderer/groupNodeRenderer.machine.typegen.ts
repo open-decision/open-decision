@@ -18,6 +18,7 @@ export interface Typegen0 {
     assignIterationPosition: "EDIT_ITERATION";
     goBack: "GO_BACK";
     goForward: "GO_FORWARD";
+    removeIterationHistory: "EDIT_ITERATION";
     removeUnfinishedIteration: "LEAVE_ITERATION";
   };
   eventsCausingDelays: {};

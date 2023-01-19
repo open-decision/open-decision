@@ -3,6 +3,7 @@ import {
   pwTest,
   RendererPage,
 } from "@open-decision/test-utils";
+import { expect } from "@playwright/test";
 
 const navigateToGroupNode = async (rendererPage: RendererPage) => {
   await rendererPage.renderer.submitButton.click();
@@ -24,10 +25,10 @@ const navigateToGroupNode = async (rendererPage: RendererPage) => {
   );
 
   await rendererPage.renderer.submitButton.click();
+};
 
+const fillGroupNode = async (rendererPage: RendererPage) => {
   const GroupNode = new GroupNodeModel(rendererPage.page);
-
-  await rendererPage.page.pause();
 
   await GroupNode.renderer.addItem("Drittwerk hinzufügen");
 
@@ -54,6 +55,44 @@ const navigateToGroupNode = async (rendererPage: RendererPage) => {
   await rendererPage.renderer.submitButton.click();
 };
 
-pwTest("should open group node", async ({ publishedPage }) => {
+pwTest(
+  "should be able to add multiple answers to module",
+  async ({ publishedPage }) => {
+    await navigateToGroupNode(publishedPage);
+
+    await fillGroupNode(publishedPage);
+
+    await fillGroupNode(publishedPage);
+
+    const GroupNode = new GroupNodeModel(publishedPage.page);
+
+    await expect(
+      GroupNode.renderer.locators.iterationTitle("1. Antwort")
+    ).toBeVisible();
+
+    await expect(
+      GroupNode.renderer.locators.iterationTitle("2. Antwort")
+    ).toBeVisible();
+  }
+);
+
+pwTest("should be able to edit module iteration", async ({ publishedPage }) => {
   await navigateToGroupNode(publishedPage);
+
+  await fillGroupNode(publishedPage);
+
+  const GroupNode = new GroupNodeModel(publishedPage.page);
+
+  await GroupNode.renderer.editIteration("1. Antwort");
+
+  await publishedPage.renderer.TextRenderer.fillAnswer(
+    "Name des Drittwerkes",
+    "Anna Karenina"
+  );
+
+  await publishedPage.renderer.submitButton.click();
+  await publishedPage.renderer.submitButton.click();
+  await publishedPage.renderer.submitButton.click();
+
+  await expect(publishedPage.page.getByText("Anna Karenina")).toBeVisible();
 });

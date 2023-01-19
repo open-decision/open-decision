@@ -52,7 +52,7 @@ export const createGroupNodeRendererMachine = (
               actions: "goForward",
             },
             EDIT_ITERATION: {
-              actions: "assignIterationPosition",
+              actions: ["assignIterationPosition", "removeIterationHistory"],
               target: "running",
             },
           },
@@ -95,6 +95,22 @@ export const createGroupNodeRendererMachine = (
         }),
         assignIterationPosition: assign({
           position: (_, event) => event.position,
+        }),
+        removeIterationHistory: assign({
+          iterations: (context, event) => {
+            const iterations = [
+              ...context.iterations.slice(0, event.position),
+              {
+                variables: context.iterations[event.position].variables,
+                history: { nodes: [], position: 0 },
+              },
+              ...context.iterations.slice(event.position + 1),
+            ];
+
+            console.log(iterations);
+
+            return iterations;
+          },
         }),
         goBack: assign({
           position: (context) => context.position - 1,

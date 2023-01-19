@@ -42,13 +42,18 @@ export function ResultCard({ result, resultNumber, node, onEdit }: Props) {
     </Stack>
   );
 
+  const nodeTitle = `${resultNumber}. ${node.title ?? "Antwort"}`;
+
   return (
     <Stack className="gap-6 border border-gray7 p-4 bg-layer-1 rounded-md">
       <Row className="items-center justify-between">
-        <Heading as="h2">
-          {resultNumber}. {node.title ?? "Antwort"}
-        </Heading>
-        <Button size="small" variant="secondary" onClick={onEdit}>
+        <Heading as="h2">{nodeTitle}</Heading>
+        <Button
+          size="small"
+          variant="secondary"
+          onClick={onEdit}
+          aria-label={`${nodeTitle} bearbeiten`}
+        >
           <Icon>
             <Pencil1Icon />
           </Icon>
