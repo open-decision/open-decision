@@ -1,29 +1,33 @@
 import { TNodeId, Tree } from "@open-decision/tree-type";
-import { assign, createMachine, Interpreter, Sender } from "xstate";
+import { assign, createMachine, Interpreter, Sender, State } from "xstate";
 import { InvalidTreeError } from "./errors";
-import { canGoBack, canGoForward } from "./methods";
 import { z } from "zod";
 import { ODError, ODProgrammerError } from "@open-decision/type-classes";
-import { IVariable } from "@open-decision/variables";
+import {
+  IVariable,
+  TModuleVariableHistory,
+  TModuleVariableValue,
+} from "@open-decision/variables";
+import { canGoBackInArray, canGoForwardInArray } from "@open-decision/utils";
 
 export type Resolver = (
-  context: InterpreterContext,
+  context: TModuleVariableValue,
   event: EVALUATE_NODE_CONDITIONS
 ) => (callback: Sender<ResolverEvents>) => void;
 
 export type EVALUATE_NODE_CONDITIONS = {
   type: "EVALUATE_NODE_CONDITIONS";
+  history?: TModuleVariableHistory;
 };
 
 type ResolverEvents =
-  | { type: "VALID_INTERPRETATION"; target: TNodeId }
+  | {
+      type: "VALID_INTERPRETATION";
+      target: TNodeId;
+      history?: TModuleVariableHistory;
+    }
   | { type: "INVALID_INTERPRETATION"; error: ODProgrammerError | ODError }
   | { type: "FINAL_INTERPRETATION" };
-
-export type InterpreterContext = {
-  history: { nodes: TNodeId[]; position: number };
-  variables: Record<string, IVariable>;
-};
 
 export type InterpreterEvents =
   | { type: "ADD_USER_ANSWER"; variable: IVariable }
@@ -38,7 +42,7 @@ export type InterpreterEvents =
   | EVALUATE_NODE_CONDITIONS;
 
 export type InterpreterService = Interpreter<
-  InterpreterContext,
+  TModuleVariableValue,
   any,
   InterpreterEvents,
   any,
@@ -47,11 +51,15 @@ export type InterpreterService = Interpreter<
 
 export type InterpreterOptions = {
   onError?: (error: ODProgrammerError | ODError) => void;
-  onSelectedNodeChange?: (nextNodeId: TNodeId) => void;
+  onSelectedNodeChange?: (
+    nextNodeId: TModuleVariableHistory[number]["id"]
+  ) => void;
   initialNode?: TNodeId;
-  onDone?: (context: InterpreterContext) => void;
+  onDone?: (context: TModuleVariableValue) => void;
+  onLeave?: () => void;
   environment: "private" | "shared" | "published";
   isInteractive?: boolean;
+  initialContext?: Partial<TModuleVariableValue>;
 };
 
 export const createInterpreterMachine = (
@@ -63,9 +71,12 @@ export const createInterpreterMachine = (
     onSelectedNodeChange,
     initialNode,
     onDone,
+    onLeave,
     isInteractive,
+    initialContext = {} as TModuleVariableValue,
   }: InterpreterOptions = {
     environment: "private",
+    initialContext: {} as TModuleVariableValue,
   }
 ) => {
   const decodedJSON = TreeType.safeParse(json);
@@ -82,16 +93,16 @@ export const createInterpreterMachine = (
       predictableActionArguments: true,
       tsTypes: {} as import("./interpreter.typegen").Typegen0,
       schema: {
-        context: {} as InterpreterContext,
+        context: {} as TModuleVariableValue,
         events: {} as InterpreterEvents,
       },
       context: {
         history: {
-          nodes: [startNode],
-          position: 0,
+          nodes: [{ id: startNode }, ...(initialContext.history?.nodes ?? [])],
+          position: initialContext.history?.position ?? 0,
         },
-        variables: {},
-      } as InterpreterContext,
+        variables: initialContext.variables ?? {},
+      } as TModuleVariableValue,
       id: "interpreter",
       initial: "idle",
       on: {
@@ -113,10 +124,13 @@ export const createInterpreterMachine = (
               target: "interpreting",
               cond: "isInteractive",
             },
-            GO_BACK: {
-              cond: "canGoBack",
-              actions: "goBack",
-            },
+            GO_BACK: [
+              {
+                cond: "canGoBack",
+                actions: "goBack",
+              },
+              { cond: "canLeave", actions: "onLeave" },
+            ],
             GO_FORWARD: {
               cond: "canGoForward",
               actions: "goForward",
@@ -167,19 +181,23 @@ export const createInterpreterMachine = (
           },
         }),
         resetToInitialContext: assign((_context, _event) => ({
-          history: { nodes: [startNode], position: 0 },
+          history: { nodes: [{ id: startNode }], position: 0 },
           variables: {},
           Error: undefined,
         })),
         goBack: assign((context) => {
           // When there is no history we should not go back.
-          if (context.history.nodes.length === 0) return context;
-          // When we have reached the end of the history array we should not go back further.
-          if (context.history.position === context.history.nodes.length - 1)
+          if (context.history.nodes.length === 0) {
             return context;
+          }
+
+          // When we have reached the end of the history array we should not go back further.
+          if (context.history.position === context.history.nodes.length - 1) {
+            return context;
+          }
 
           onSelectedNodeChange?.(
-            context.history.nodes[context.history.position + 1]
+            context.history.nodes[context.history.position + 1].id
           );
 
           return {
@@ -192,7 +210,7 @@ export const createInterpreterMachine = (
         goForward: assign((context) => {
           if (context.history.position === 0) return context;
           onSelectedNodeChange?.(
-            context.history.nodes[context.history.position - 1]
+            context.history.nodes[context.history.position - 1].id
           );
 
           return {
@@ -208,7 +226,7 @@ export const createInterpreterMachine = (
           return {
             history: {
               position: 0,
-              nodes: [event.target, ...context.history.nodes],
+              nodes: [{ id: event.target }, ...context.history.nodes],
             },
           };
         }),
@@ -216,37 +234,56 @@ export const createInterpreterMachine = (
         assignNewTarget: assign((context, event) => {
           onSelectedNodeChange?.(event.target);
 
-          if (context.history.position !== 0) {
-            return {
-              history: {
-                position: 0,
-                nodes: [
-                  event.target,
-                  ...context.history.nodes.slice(
-                    context.history.position,
-                    context.history.nodes.length
-                  ),
-                ],
-              },
-            };
+          // Split the existing history by the current position. This enables the user to
+          // go back and change an answer and go into a new direction.
+          const previousHistory =
+            context.history.position !== 0
+              ? context.history.nodes.slice(
+                  context.history.position,
+                  context.history.nodes.length
+                )
+              : context.history.nodes;
+
+          if (event.history) {
+            previousHistory[0].subHistory = event.history;
           }
+
+          const history = [
+            // Add the target node to the history stack at the front
+            { id: event.target },
+            ...previousHistory,
+          ];
 
           return {
             history: {
-              position: context.history.position,
-              nodes: [event.target, ...context.history.nodes],
+              position:
+                context.history.position !== 0 ? 0 : context.history.position,
+              nodes: history,
             },
           };
         }),
+        onLeave,
       },
       services: {
         resolveConditions: resolver,
       },
       guards: {
-        canGoBack,
-        canGoForward,
+        canGoBack: (context) =>
+          canGoBackInArray(context.history.nodes, context.history.position),
+        canGoForward: (context) =>
+          canGoForwardInArray(context.history.nodes, context.history.position),
         isInteractive: () => isInteractive ?? true,
+        canLeave: () => !!onLeave,
       },
     }
   );
 };
+
+export type InterpreterMachine = ReturnType<typeof createInterpreterMachine>;
+export type InterpreterState = State<
+  TModuleVariableValue,
+  InterpreterEvents,
+  any,
+  any,
+  any
+>;

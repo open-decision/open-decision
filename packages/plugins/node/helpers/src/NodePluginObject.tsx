@@ -66,7 +66,7 @@ interface BaseNodePluginObject<
 }
 
 export interface NodePluginObject<
-  TType extends INode,
+  TType extends INode = INode,
   TPluginEntities extends Record<string, z.ZodTypeAny> = Record<
     string,
     z.ZodTypeAny

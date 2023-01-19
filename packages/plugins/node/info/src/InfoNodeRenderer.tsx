@@ -30,11 +30,13 @@ export const InfoNodeRenderer: TNodeRenderer = ({ nodeId, ...props }) => {
             className="px-0"
           />
         ) : null}
+        <RendererPrimitives.Form
+          methods={methods}
+          onSubmit={methods.handleSubmit(() =>
+            send("EVALUATE_NODE_CONDITIONS")
+          )}
+        />
       </RendererPrimitives.ContentArea>
-      <RendererPrimitives.Form
-        methods={methods}
-        onSubmit={methods.handleSubmit(() => send("EVALUATE_NODE_CONDITIONS"))}
-      />
     </RendererPrimitives.Container>
   );
 };

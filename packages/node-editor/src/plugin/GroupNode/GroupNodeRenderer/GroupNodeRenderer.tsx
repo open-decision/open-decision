@@ -1,33 +1,25 @@
 import * as React from "react";
-import { InterpreterContext } from "@open-decision/interpreter";
-import {
-  useInterpreter,
-  useInterpreterTree,
-} from "@open-decision/interpreter-react";
-import { Renderer, RendererPrimitives } from "@open-decision/renderer";
-import { RichTextRenderer } from "@open-decision/rich-text-editor";
+import { useInterpreter } from "@open-decision/interpreter-react";
+import { Renderer } from "@open-decision/renderer";
 import { clone } from "remeda";
-import { GroupNodePlugin } from "../GroupNodePlugin";
+import { GroupNodePlugin, IGroupNode } from "../GroupNodePlugin";
 import { createSubTree } from "../utils/createSubtree";
-import {
-  Button,
-  ErrorCard,
-  Form,
-  Heading,
-  Icon,
-  Row,
-  Stack,
-  stackClasses,
-} from "@open-decision/design-system";
-import { PlusIcon } from "@radix-ui/react-icons";
+import { ErrorCard, Stack } from "@open-decision/design-system";
 import { ErrorBoundary } from "react-error-boundary";
 import { convertToODError } from "@open-decision/type-classes";
 import {
   TNodeRenderer,
   NodeRendererProps,
 } from "@open-decision/plugins-node-helpers";
-import { TNodeId } from "@open-decision/tree-type";
-import { ResultCard } from "./ResultCard";
+import { SubRenderer } from "./SubRenderer";
+import { useMachine } from "@xstate/react";
+import {
+  createGroupNodeRendererMachine,
+  getCurrentIteration,
+} from "./groupNodeRenderer.machine";
+import { MasterGroupNodeRenderer } from "./MasterGroupNodeRenderer";
+import { canGoBackInArray } from "@open-decision/utils";
+import { Tree } from "@open-decision/tree-type";
 
 const GroupNode = new GroupNodePlugin();
 
@@ -45,189 +37,119 @@ export const GroupNodeRenderer: TNodeRenderer = (props) => {
   );
 };
 
-function RendererComponent({
-  nodeId,
+function RendererComponent({ nodeId, ...props }: NodeRendererProps) {
+  const { treeClient } = useInterpreter();
+
+  const groupNode = GroupNode.getSingle(nodeId)(treeClient);
+  const subTree = React.useMemo(() => {
+    return !groupNode ? undefined : createSubTree(clone(groupNode));
+  }, [groupNode]);
+
+  if (!groupNode || !subTree) return null;
+
+  return <GroupNodeView groupNode={groupNode} tree={subTree} {...props} />;
+}
+
+type Props = {
+  groupNode: IGroupNode;
+  tree: Tree.TTree;
+} & Omit<NodeRendererProps, "nodeId">;
+
+function GroupNodeView({
+  groupNode,
+  tree,
   nodePlugins,
   edgePlugins,
   ...props
-}: NodeRendererProps) {
-  const { treeClient, send, environment, getVariable } = useInterpreter();
-  const groupNode = GroupNode.getSingle(nodeId)(treeClient);
+}: Props) {
+  const { send, environment, getVariable, treeClient } = useInterpreter();
 
-  const subTree = React.useMemo(
-    () => (!groupNode ? undefined : createSubTree(clone(groupNode))),
-    [groupNode]
+  const [groupNodeMachine] = React.useState(() => {
+    const previousVariable = getVariable(groupNode.id);
+    const defaultValue = GroupNode.createDefaultValues(
+      groupNode.id,
+      previousVariable
+    )(treeClient);
+
+    return createGroupNodeRendererMachine({
+      iterations: defaultValue,
+      position: 0,
+    });
+  });
+
+  const [groupNodeState, sendToGroupNode] = useMachine(groupNodeMachine);
+  const currentIteration = getCurrentIteration(groupNodeState.context);
+
+  const canGoBack = canGoBackInArray(
+    groupNodeState.context.iterations,
+    groupNodeState.context.position
   );
 
-  const previousVariable = getVariable(nodeId);
+  if (groupNodeState.matches("idle")) {
+    return (
+      <MasterGroupNodeRenderer
+        groupNode={groupNode}
+        onSubmitGroup={(context) => {
+          const variable = GroupNode.createVariable(
+            groupNode.id,
+            groupNodeState.context.iterations
+          )(treeClient);
 
-  const defautValue = GroupNode.createDefaultValues(
-    nodeId,
-    previousVariable
-  )(treeClient);
+          if (!variable) return;
 
-  const [iterationResults, setIterationsResults] =
-    React.useState<InterpreterContext["variables"][]>(defautValue);
+          send({
+            type: "ADD_USER_ANSWER",
+            variable,
+          });
 
-  const [history, setHistory] = React.useState<TNodeId[]>([]);
+          send({
+            type: "EVALUATE_NODE_CONDITIONS",
+            history: context.history.nodes,
+          });
+        }}
+        results={groupNodeState.context.iterations.map(
+          (iteration) => iteration.variables
+        )}
+        onAddIteration={() => {
+          sendToGroupNode("START_ITERATION");
+        }}
+        onGoBack={
+          canGoBack
+            ? () => {
+                sendToGroupNode("GO_BACK");
+              }
+            : undefined
+        }
+        onEdit={(index) => {
+          sendToGroupNode({ type: "EDIT_ITERATION", position: index });
+        }}
+        {...props}
+      />
+    );
+  }
 
-  console.log(iterationResults, history);
-
-  if (groupNode instanceof Error || !subTree) return null;
-
-  return (
-    <RendererPrimitives.Container nodeId={nodeId} {...props}>
+  if (groupNodeState.matches("running")) {
+    return (
       <Renderer.Root
         environment={environment}
-        tree={subTree}
-        onDone={(context) => {
-          setHistory((oldState) => [...oldState, ...context.history.nodes]);
-          return setIterationsResults((oldState) => [
-            ...oldState,
-            context.variables,
-          ]);
-        }}
+        tree={tree}
         edgePlugins={edgePlugins}
+        initialContext={currentIteration}
+        onDone={(context) => {
+          sendToGroupNode({ type: "FINISH_ITERATION", context });
+        }}
+        onLeave={() => {
+          return sendToGroupNode("LEAVE_ITERATION");
+        }}
       >
-        <RendererContent
-          onDone={() => {
-            const variable = GroupNode.createVariable(
-              nodeId,
-              iterationResults
-            )(treeClient);
-
-            if (!variable) return;
-
-            send({
-              type: "ADD_USER_ANSWER",
-              variable,
-            });
-
-            send({ type: "EVALUATE_NODE_CONDITIONS" });
-          }}
-          iterationResults={iterationResults}
-          nodePlugins={nodePlugins}
+        <SubRenderer
           edgePlugins={edgePlugins}
-          groupNodeId={nodeId}
-          GroupNode={GroupNode}
+          nodePlugins={nodePlugins}
+          {...props}
         />
       </Renderer.Root>
-    </RendererPrimitives.Container>
-  );
+    );
+  }
+
+  return null;
 }
-
-type RendererContentProps = {
-  groupNodeId: TNodeId;
-  iterationResults: InterpreterContext["variables"][];
-  onDone: () => void;
-  className?: string;
-  GroupNode: GroupNodePlugin;
-} & Pick<NodeRendererProps, "edgePlugins" | "nodePlugins">;
-
-const RendererContent = ({
-  GroupNode,
-  edgePlugins,
-  groupNodeId,
-  iterationResults,
-  onDone,
-  className,
-  nodePlugins,
-}: RendererContentProps) => {
-  const { getCurrentNode, state, send } = useInterpreter();
-  const groupNode = useInterpreterTree(GroupNode.getSingle(groupNodeId));
-
-  const methods = Form.useForm();
-
-  if (!groupNode) return null;
-
-  if (state.matches("done"))
-    return (
-      <RendererPrimitives.Form
-        methods={methods}
-        onSubmit={methods.handleSubmit(onDone)}
-      >
-        <RendererPrimitives.ContentArea>
-          {groupNode.content ? (
-            <RichTextRenderer content={groupNode.content} className="px-0" />
-          ) : null}
-          <Row className="items-center justify-between">
-            <Heading size="small" as="h3">
-              Bisherige Antworten
-            </Heading>
-            <ButtonRow
-              onClick={() => {
-                send({ type: "RESTART" });
-                send({ type: "EVALUATE_NODE_CONDITIONS" });
-              }}
-              groupNodeId={groupNodeId}
-              GroupNode={GroupNode}
-            />
-          </Row>
-          <ol className={stackClasses({}, ["gap-4 mb-4"])}>
-            {iterationResults.map((value, index) => (
-              <ResultCard
-                key={index}
-                result={value}
-                resultNumber={index + 1}
-                node={groupNode}
-              />
-            ))}
-          </ol>
-        </RendererPrimitives.ContentArea>
-      </RendererPrimitives.Form>
-    );
-
-  const currentNode = getCurrentNode();
-
-  if (currentNode instanceof Error) return null;
-
-  if (currentNode.id === groupNodeId)
-    return (
-      <RendererPrimitives.Form methods={methods}>
-        <RendererPrimitives.ContentArea>
-          {groupNode.content ? (
-            <RichTextRenderer content={groupNode.content} className="px-0" />
-          ) : null}
-        </RendererPrimitives.ContentArea>
-        <ButtonRow
-          onClick={() => {
-            send({ type: "EVALUATE_NODE_CONDITIONS" });
-          }}
-          groupNodeId={groupNodeId}
-          GroupNode={GroupNode}
-        />
-      </RendererPrimitives.Form>
-    );
-
-  return (
-    <Renderer.View
-      nodePlugins={nodePlugins}
-      edgePlugins={edgePlugins}
-      withNavigation={false}
-      className={`p-0 ${className}`}
-    />
-  );
-};
-
-type ButtonRowProps = {
-  onClick: () => void;
-  groupNodeId: TNodeId;
-  GroupNode: GroupNodePlugin;
-};
-
-const ButtonRow = ({ onClick, GroupNode, groupNodeId }: ButtonRowProps) => {
-  const groupNode = useInterpreterTree(GroupNode.getSingle(groupNodeId));
-
-  if (groupNode instanceof Error) return null;
-
-  return (
-    <Row className="gap-2 justify-end">
-      <Button onClick={onClick} variant="secondary">
-        <Icon>
-          <PlusIcon />
-        </Icon>
-        {`${groupNode?.cta ?? "Antwort"} hinzufügen`}
-      </Button>
-    </Row>
-  );
-};

@@ -30,6 +30,7 @@
     "baseUrl": ".",
     "paths": {
       "@open-decision/api-client": ["packages/api/client/src/index.ts"],
+      "@open-decision/utils": ["packages/utils/src/index.ts"],
       "@open-decision/api-react-binding": [
         "packages/api/react-binding/src/index.ts"
       ],

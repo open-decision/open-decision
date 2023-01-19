@@ -27,6 +27,8 @@ const navigateToGroupNode = async (rendererPage: RendererPage) => {
 
   const GroupNode = new GroupNodeModel(rendererPage.page);
 
+  await rendererPage.page.pause();
+
   await GroupNode.renderer.addItem("Drittwerk hinzufügen");
 
   await rendererPage.renderer.TextRenderer.fillAnswer(
@@ -50,8 +52,6 @@ const navigateToGroupNode = async (rendererPage: RendererPage) => {
   );
 
   await rendererPage.renderer.submitButton.click();
-
-  await rendererPage.page.pause();
 };
 
 pwTest("should open group node", async ({ publishedPage }) => {

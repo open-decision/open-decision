@@ -11,8 +11,11 @@ import {
   createFn,
 } from "@open-decision/tree-type";
 import { TRichText } from "@open-decision/rich-text-editor";
-import { InterpreterContext } from "@open-decision/interpreter";
-import { IModuleVariable, IVariable } from "@open-decision/variables";
+import {
+  IModuleVariable,
+  IVariable,
+  TModuleVariableValue,
+} from "@open-decision/variables";
 
 const DirectEdge = new DirectEdgePlugin();
 
@@ -106,7 +109,7 @@ export class GroupNodePlugin extends NodePluginWithVariable<
   };
 
   createVariable =
-    (nodeId: TNodeId, answer: InterpreterContext["variables"][]) =>
+    (nodeId: TNodeId, answer: TModuleVariableValue[]) =>
     (treeClient: TTreeClient | TReadOnlyTreeClient) => {
       const node = treeClient.nodes.get.single<IGroupNode>(nodeId);
 
@@ -123,7 +126,9 @@ export class GroupNodePlugin extends NodePluginWithVariable<
 
   createDefaultValues =
     (_nodeId: TNodeId, previousVariable?: IVariable) =>
-    (_treeClient: TTreeClient | TReadOnlyTreeClient) => {
+    (
+      _treeClient: TTreeClient | TReadOnlyTreeClient
+    ): TModuleVariableValue[] => {
       if (previousVariable && previousVariable.type === "module") {
         return previousVariable.value;
       }

@@ -227,6 +227,8 @@ export class FormNodePlugin extends NodePluginWithVariable<
 
       if (!node || !node.inputs) return;
 
+      if (previousVariable && previousVariable.type !== "record") return;
+
       return fromPairs(
         node.inputs
           .map((inputId) => {
@@ -237,11 +239,14 @@ export class FormNodePlugin extends NodePluginWithVariable<
 
             if (!input) return undefined;
 
-            const variable = this.createInputVariable(input);
+            const inputVariable = this.createInputVariable(input);
 
-            if (variable instanceof ODProgrammerError) return undefined;
+            if (inputVariable instanceof ODProgrammerError) return undefined;
 
-            return [inputId, previousVariable?.value ?? variable.value] as [
+            const previousValue =
+              previousVariable?.value[inputVariable.escapedName];
+
+            return [inputId, previousValue?.value ?? inputVariable.value] as [
               string,
               any
             ];

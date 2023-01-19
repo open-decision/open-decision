@@ -11,12 +11,12 @@ import { useInterpreterTree } from "@open-decision/interpreter-react";
 import { mapKeys } from "remeda";
 import { TNodeId } from "@open-decision/tree-type";
 
-type RendererContentAreaProps = {
+export type ContentAreaProps = {
   children: React.ReactNode;
   className?: string;
 };
 
-export function ContentArea({ children, className }: RendererContentAreaProps) {
+export function ContentArea({ children, className }: ContentAreaProps) {
   return (
     <ScrollArea.Root
       className={twMerge("flex flex-col overflow-hidden", className)}
@@ -29,7 +29,7 @@ export function ContentArea({ children, className }: RendererContentAreaProps) {
   );
 }
 
-type RendererContainerProps = {
+export type ContainerProps = {
   children: React.ReactNode;
   withNavigation?: boolean;
   nodeId: TNodeId;
@@ -45,7 +45,7 @@ export function Container({
   nodeId,
   successButtonLabel,
   classNames,
-}: RendererContainerProps) {
+}: ContainerProps) {
   const theme = useInterpreterTree((treeClient) => treeClient.get.tree().theme);
   const node = useInterpreterTree((treeClient) =>
     treeClient.nodes.get.single(nodeId)
@@ -61,7 +61,7 @@ export function Container({
       <Stack className="flex-1 overflow-hidden mb-4 px-1 pb-1 gap-4">
         {children}
       </Stack>
-      {withNavigation && !node.final ? (
+      {withNavigation ? (
         <Navigation
           className="self-center mb-[var(--padding)]"
           successButtonLabel={successButtonLabel}
@@ -71,14 +71,14 @@ export function Container({
   );
 }
 
-type RendererFormProps<TFieldValues extends SystemForm.FieldValues> = {
+export type FormProps<TFieldValues extends SystemForm.FieldValues> = {
   children?: React.ReactNode;
 } & SystemForm.RootProps<TFieldValues>;
 
 export function Form<TFieldValues extends SystemForm.FieldValues>({
   children,
   ...props
-}: RendererFormProps<TFieldValues>) {
+}: FormProps<TFieldValues>) {
   return (
     <SystemForm.Root className="gap-8 h-full" id="form" {...props}>
       {children}

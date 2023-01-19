@@ -30,12 +30,14 @@ export interface Typegen0 {
     goBack: "GO_BACK";
     goForward: "GO_FORWARD";
     jumpToNode: "JUMP_TO_NODE";
+    onLeave: "GO_BACK";
     resetToInitialContext: "RESET" | "RESTART";
   };
   eventsCausingDelays: {};
   eventsCausingGuards: {
     canGoBack: "GO_BACK";
     canGoForward: "GO_FORWARD";
+    canLeave: "GO_BACK";
     isInteractive: "EVALUATE_NODE_CONDITIONS";
   };
   eventsCausingServices: {

@@ -26,7 +26,6 @@ export const createSubTree = (masterNode: IGroupNode) => {
   }
 
   treeClient.edges.add(edge);
-  treeClient.updateStartNode(masterNode.id);
 
   return treeClient.get.tree();
 };

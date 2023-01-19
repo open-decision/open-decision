@@ -8,8 +8,8 @@ import {
   InterpreterOptions,
   Resolver,
   getCurrentNode,
+  InterpreterMachine,
 } from "@open-decision/interpreter";
-import type { InterpreterContext } from "@open-decision/interpreter";
 import { useActor, useInterpret } from "@xstate/react";
 import { InterpreterOptions as XStateInterpreterOptions } from "xstate";
 import { UseMachineOptions } from "@xstate/react/lib/types";
@@ -22,6 +22,7 @@ import {
 } from "@open-decision/tree-type";
 import { TEdgePluginGroup } from "@open-decision/plugins-edge-helpers";
 import { forEachObj } from "remeda";
+import { TModuleVariableValue } from "@open-decision/variables";
 
 function createResolver(
   treeClient: TReadOnlyTreeClient,
@@ -78,7 +79,11 @@ function createResolver(
           error: result.error,
         });
 
-      callback({ type: "VALID_INTERPRETATION", target: result.target });
+      callback({
+        type: "VALID_INTERPRETATION",
+        target: result.target,
+        history: event.history,
+      });
     });
   };
 
@@ -90,6 +95,7 @@ type Context = {
   tree: Tree.TTree;
   environment: InterpreterOptions["environment"];
   isInteractive: boolean;
+  interpreterMachine: InterpreterMachine;
 };
 
 const MachineContext = React.createContext<Context | null>(null);
@@ -98,7 +104,7 @@ export type InterpreterProviderProps = {
   children: React.ReactNode;
   tree: Tree.TTree;
   config?: XStateInterpreterOptions &
-    UseMachineOptions<InterpreterContext, InterpreterEvents>;
+    UseMachineOptions<TModuleVariableValue, InterpreterEvents>;
   edgePlugins: TEdgePluginGroup;
 } & InterpreterOptions;
 
@@ -111,14 +117,12 @@ export function InterpreterProvider({
 }: InterpreterProviderProps) {
   const readOnlyTreeClient = new ReadOnlyTreeClient(tree);
 
-  const [[interpreterMachine]] = React.useState(
-    React.useState(
-      createInterpreterMachine(
-        tree,
-        Tree.Type,
-        createResolver(readOnlyTreeClient, edgePlugins),
-        options
-      )
+  const [interpreterMachine] = React.useState(
+    createInterpreterMachine(
+      tree,
+      Tree.Type,
+      createResolver(readOnlyTreeClient, edgePlugins),
+      options
     )
   );
 
@@ -138,6 +142,7 @@ export function InterpreterProvider({
         tree,
         environment: options.environment,
         isInteractive: options?.isInteractive ?? true,
+        interpreterMachine,
       }}
     >
       {children}
@@ -161,12 +166,13 @@ export function useInterpreterService() {
 }
 
 export function useInterpreter() {
-  const { service, tree, environment, isInteractive } = useInterpreterService();
+  const { service, tree, environment, isInteractive, interpreterMachine } =
+    useInterpreterService();
 
   const [state, send] = useActor(service);
 
   const methods = React.useMemo(() => {
-    return createInterpreterMethods(state.context, tree);
+    return createInterpreterMethods(interpreterMachine, state, tree);
   }, [state.context, tree]);
 
   return { state, send, tree, environment, isInteractive, ...methods };

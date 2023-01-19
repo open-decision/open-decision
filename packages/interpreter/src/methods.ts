@@ -7,15 +7,16 @@ import {
   TTreeClient,
 } from "@open-decision/tree-type";
 import { ODProgrammerError } from "@open-decision/type-classes";
-import { IVariable } from "@open-decision/variables";
-import { InterpreterContext } from "./interpreter";
+import { canGoForwardInArray } from "@open-decision/utils";
+import { TModuleVariableValue } from "@open-decision/variables";
+import { InterpreterMachine, InterpreterState } from "./interpreter";
 
-export function getVariables(interpreterContext: InterpreterContext) {
+export function getVariables(interpreterContext: TModuleVariableValue) {
   return interpreterContext.variables;
 }
 
 export const getVariable = (
-  interpreterContext: InterpreterContext,
+  interpreterContext: TModuleVariableValue,
   nodeId: TNodeId,
   treeClient: TTreeClient | TReadOnlyTreeClient
 ) => {
@@ -32,10 +33,10 @@ export const getVariable = (
 
 export const getCurrentNode = (
   treeClient: TTreeClient | TReadOnlyTreeClient,
-  context: InterpreterContext
+  context: TModuleVariableValue
 ) => {
   const currentNode = treeClient.nodes.get.single(
-    context.history.nodes[context.history.position]
+    context.history.nodes[context.history.position].id
   );
 
   if (!currentNode)
@@ -48,28 +49,30 @@ export const getCurrentNode = (
   return currentNode;
 };
 
-export const canGoBack = (interpreterContext: InterpreterContext) =>
-  interpreterContext.history.nodes.length > 1 &&
-  interpreterContext.history.position <
-    interpreterContext.history.nodes.length - 1;
-
-export const canGoForward = (interpreterContext: InterpreterContext) =>
-  interpreterContext.history.position > 0;
-
 export function createInterpreterMethods(
-  interpreterContext: InterpreterContext,
+  machine: InterpreterMachine,
+  state: InterpreterState,
   tree: Tree.TTree
 ) {
   const treeClient = new ReadOnlyTreeClient(tree);
 
   return {
     treeClient,
-    getCurrentNode: () => getCurrentNode(treeClient, interpreterContext),
-    getVariables: () => getVariables(interpreterContext),
+    getCurrentNode: () => getCurrentNode(treeClient, state.context),
+    getVariables: () => getVariables(state.context),
     getVariable: (nodeId: TNodeId) =>
-      getVariable(interpreterContext, nodeId, treeClient),
-    canGoBack: canGoBack(interpreterContext),
-    canGoForward: canGoForward(interpreterContext),
-    hasHistory: () => interpreterContext.history.nodes.length > 1,
+      getVariable(state.context, nodeId, treeClient),
+    canGoBack:
+      machine instanceof Error
+        ? false
+        : machine?.transition(state, { type: "GO_BACK" }),
+    canGoForward: canGoForwardInArray(
+      state.context.history.nodes,
+      state.context.history.position
+    ),
+    hasHistory: () => state.context.history.nodes.length > 1,
+    getSubHistory: () =>
+      state.context.history.nodes[state.context.history.position].subHistory ??
+      ([] as TModuleVariableValue["history"]["nodes"]),
   };
 }

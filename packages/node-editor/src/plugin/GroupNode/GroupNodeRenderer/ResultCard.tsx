@@ -1,4 +1,5 @@
 import {
+  Button,
   Heading,
   Icon,
   Row,
@@ -13,17 +14,18 @@ import {
   isGroupVariable,
   IGroupVariable,
 } from "@open-decision/variables";
-import { ChevronRightIcon } from "@radix-ui/react-icons";
+import { ChevronRightIcon, Pencil1Icon } from "@radix-ui/react-icons";
 import { IGroupNode } from "../GroupNodePlugin";
 import { match } from "ts-pattern";
 
 type Props = {
-  result: IModuleVariable["value"][number];
+  result: IModuleVariable["value"][number]["variables"];
   resultNumber: number;
   node: IGroupNode;
+  onEdit: () => void;
 };
 
-export function ResultCard({ result, resultNumber, node }: Props) {
+export function ResultCard({ result, resultNumber, node, onEdit }: Props) {
   const NestedResult = (
     <Stack className="gap-4">
       {Object.values(result).map((value, index) => (
@@ -42,9 +44,17 @@ export function ResultCard({ result, resultNumber, node }: Props) {
 
   return (
     <Stack className="gap-6 border border-gray7 p-4 bg-layer-1 rounded-md">
-      <Heading as="h2">
-        {resultNumber}. {node.title ?? "Antwort"}
-      </Heading>
+      <Row className="items-center justify-between">
+        <Heading as="h2">
+          {resultNumber}. {node.title ?? "Antwort"}
+        </Heading>
+        <Button size="small" variant="secondary" onClick={onEdit}>
+          <Icon>
+            <Pencil1Icon />
+          </Icon>
+          Bearbeiten
+        </Button>
+      </Row>
       {NestedResult}
     </Stack>
   );
@@ -96,9 +106,9 @@ const createNestedResult = (result: IGroupVariable) => {
     ))
     .with({ type: "module" }, (module) => (
       <Stack className="gap-2">
-        {module.value.map((item) => (
+        {module.value.map(({ variables }) => (
           <Stack>
-            {Object.values(item).map((item) => {
+            {Object.values(variables).map((item) => {
               if (isGroupVariable(item)) {
                 return createNestedResult(item);
               }

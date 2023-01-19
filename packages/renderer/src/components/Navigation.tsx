@@ -6,29 +6,19 @@ import { ArrowLeftIcon, ArrowRightIcon } from "@radix-ui/react-icons";
 type Props = {
   className?: string;
   successButtonLabel?: React.ReactNode;
+  onGoBack?: () => void;
+  canGoBack?: true;
 };
 
 export function Navigation({ className, successButtonLabel }: Props) {
   const { isInteractive } = useInterpreter();
-  const { send, canGoBack } = useInterpreter();
-
   const [open, setOpen] = React.useState(false);
 
   return (
     <Tooltip.Root open={!isInteractive && open} onOpenChange={setOpen}>
       <Tooltip.Trigger asChild>
         <Row classNames={["p-2 max-w-max gap-2 rounded-md", className]}>
-          <Button
-            variant="neutral"
-            onClick={() => send("GO_BACK")}
-            disabled={!canGoBack || !isInteractive}
-            className={isInteractive ? "" : "pointer-events-none"}
-          >
-            <Icon label="Zurück">
-              <ArrowLeftIcon />
-            </Icon>
-            Zurück
-          </Button>
+          <BackButton />
           <Form.SubmitButton
             form="form"
             className={isInteractive ? "" : "pointer-events-none"}
@@ -45,5 +35,25 @@ export function Navigation({ className, successButtonLabel }: Props) {
         bitte die Prototypansicht.
       </Tooltip.Content>
     </Tooltip.Root>
+  );
+}
+
+export function BackButton() {
+  const { send, canGoBack, isInteractive } = useInterpreter();
+
+  return (
+    <Button
+      variant="neutral"
+      onClick={() => {
+        return send("GO_BACK");
+      }}
+      disabled={!canGoBack || !isInteractive}
+      classNames={[isInteractive ? "" : "pointer-events-none"]}
+    >
+      <Icon label="Zurück">
+        <ArrowLeftIcon />
+      </Icon>
+      Zurück
+    </Button>
   );
 }

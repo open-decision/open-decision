@@ -3560,6 +3560,7 @@ __metadata:
     "@radix-ui/react-icons": ^1.1.1
     "@types/node": ^18.11.9
     "@types/react": ^18.0.25
+    "@xstate/react": ^3.0.2
     next-intl: ^2.9.1
     react: ^18.2.0
     react-use: ^17.4.0
@@ -3567,6 +3568,7 @@ __metadata:
     remeda: ^1.3.0
     tslib: ^2.4.1
     valtio: ^1.7.6
+    xstate: ^4.35.2
     zod: ^3.20.2
     zustand: ^4.1.4
   peerDependencies:
@@ -3865,6 +3867,15 @@ __metadata:
     vite: ^3.2.4
     vitest: ^0.25.3
     zod: ^3.20.2
+  languageName: unknown
+  linkType: soft
+
+"@open-decision/utils@workspace:packages/utils":
+  version: 0.0.0-use.local
+  resolution: "@open-decision/utils@workspace:packages/utils"
+  dependencies:
+    ramda: ^0.28.0
+    remeda: ^1.6.0
   languageName: unknown
   linkType: soft
 
@@ -6960,6 +6971,25 @@ __metadata:
     xstate:
       optional: true
   checksum: c2ca0efa8ba27b2bf85ba34b0327fea997101ceb372e709b4c32ef772d9baab1b405475c38c064ec81a7eb5d6b974c33c70e2d47237fa5e589bec11a49444de0
+  languageName: node
+  linkType: hard
+
+"@xstate/react@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "@xstate/react@npm:3.0.2"
+  dependencies:
+    use-isomorphic-layout-effect: ^1.0.0
+    use-sync-external-store: ^1.0.0
+  peerDependencies:
+    "@xstate/fsm": ^2.0.0
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    xstate: ^4.35.2
+  peerDependenciesMeta:
+    "@xstate/fsm":
+      optional: true
+    xstate:
+      optional: true
+  checksum: 4e8a4b101289c3ff7f25759b9881774c26bad726d963144e37a62aa207c77a5bc6f923b27f8469ee669acaffd18b64be86bb8df8a007a79a2304ef741ce4a4de
   languageName: node
   linkType: hard
 
@@ -16544,6 +16574,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"remeda@npm:^1.6.0":
+  version: 1.6.0
+  resolution: "remeda@npm:1.6.0"
+  checksum: 82a8dad40fafef41cde8ae7b09c30e61c1ba0ade15a43523b53be50c72d2b19ff08a58dadfe3ca324f1d4b62590ea65ab2aad699c678a464d48da35e474b6703
+  languageName: node
+  linkType: hard
+
 "remove-accents@npm:0.4.2":
   version: 0.4.2
   resolution: "remove-accents@npm:0.4.2"
@@ -19568,6 +19605,13 @@ __metadata:
   version: 4.34.0
   resolution: "xstate@npm:4.34.0"
   checksum: 465062f73133ef33bdd6e7f160e893b72454c252a51f0975c68415ee17a77bbcdf541e7711aad2e82d14ba5cb2b865419bd4f8e51918efe8f756a47470375225
+  languageName: node
+  linkType: hard
+
+"xstate@npm:^4.35.2":
+  version: 4.35.2
+  resolution: "xstate@npm:4.35.2"
+  checksum: fe34d02b33745b36579c45924a7bcfc7ec819379aa8c4fc21e8a87eecee9e1b0885eba56f72e6bda08f3e5931f35741c81268fe4275a6bceaa5d006949ce4e40
   languageName: node
   linkType: hard
 

@@ -7,12 +7,16 @@ import {
 } from "@open-decision/interpreter-react";
 import { TNodePluginGroup } from "@open-decision/plugins-node-helpers";
 import { TEdgePluginGroup } from "@open-decision/plugins-edge-helpers";
+import { TNodeId } from "@open-decision/tree-type";
 
-export type RendererProps = {
+export type ViewProps = {
   nodeId?: string;
   nodePlugins: TNodePluginGroup;
   edgePlugins: TEdgePluginGroup;
   withNavigation?: boolean;
+  canGoBack?: true;
+  onGoBack?: () => void;
+  parentId?: TNodeId;
 } & StackProps;
 
 export function View({
@@ -21,7 +25,7 @@ export function View({
   withNavigation,
   classNames,
   edgePlugins,
-}: RendererProps) {
+}: ViewProps) {
   const { getCurrentNode } = useInterpreter();
   const node = getCurrentNode();
 
@@ -44,6 +48,8 @@ export function View({
   );
 }
 
-export const Root = ({ children, ...props }: InterpreterProviderProps) => {
+export type ProviderProps = InterpreterProviderProps;
+
+export const Root = ({ children, ...props }: ProviderProps) => {
   return <InterpreterProvider {...props}>{children}</InterpreterProvider>;
 };
