@@ -12,7 +12,7 @@ import {
 } from "@open-decision/tree-type";
 import { TRichText } from "@open-decision/rich-text-editor";
 import { InterpreterContext } from "@open-decision/interpreter";
-import { IModuleVariable } from "@open-decision/variables";
+import { IModuleVariable, IVariable } from "@open-decision/variables";
 
 const DirectEdge = new DirectEdgePlugin();
 
@@ -119,5 +119,15 @@ export class GroupNodePlugin extends NodePluginWithVariable<
         escapedName: createReadableKey(node.name),
         value: answer,
       } satisfies IModuleVariable;
+    };
+
+  createDefaultValues =
+    (_nodeId: TNodeId, previousVariable?: IVariable) =>
+    (_treeClient: TTreeClient | TReadOnlyTreeClient) => {
+      if (previousVariable && previousVariable.type === "module") {
+        return previousVariable.value;
+      }
+
+      return [];
     };
 }

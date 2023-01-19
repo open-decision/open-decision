@@ -1,12 +1,19 @@
 import { test as base } from "@playwright/test";
-import { DashboardPage, createDashboardPage } from "./pageModels/DashboardPage";
-import { createEditorPage, EditorPage } from "./pageModels/EditorPage";
-import { ForgotPasswordPage } from "./pageModels/ForgotPasswordPage";
-import { LoginPage } from "./pageModels/LoginPage";
-import { RegisterPage } from "./pageModels/RegisterPage";
-import { createPrototypePage, PrototypePage } from "./pageModels/PrototypePage";
-import { createPublishedPage, PublishedPage } from "./pageModels/PublishedPage";
-import { createSharedPrototypePage, SharedPrototypePage } from "./pageModels";
+import {
+  DashboardPage,
+  RegisterPage,
+  LoginPage,
+  ForgotPasswordPage,
+  EditorPage,
+  PrototypePage,
+  SharedPrototypePage,
+  PublishedPage,
+  createDashboardPage,
+  createEditorPage,
+  createPrototypePage,
+  createSharedPrototypePage,
+  createPublishedPage,
+} from "./pageModels";
 
 type Fixtures = {
   dashboardPage: DashboardPage;

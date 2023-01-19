@@ -1,7 +1,7 @@
 import { GroupNodePlugin, typeName } from "./GroupNodePlugin";
 import { GroupNodeSidebar } from "./GroupNodeSidebar/GroupNodeSidebar";
 import { GroupCanvasNode } from "./GroupCanvasNode";
-import { GroupNodeRenderer } from "./GroupNodeRenderer";
+import { GroupNodeRenderer } from "./GroupNodeRenderer/GroupNodeRenderer";
 import { GroupIcon } from "@radix-ui/react-icons";
 import { createNodePluginObject } from "@open-decision/plugins-node-helpers";
 import { Tree, ZNodePlugin } from "@open-decision/tree-type";

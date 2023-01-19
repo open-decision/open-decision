@@ -1,16 +1,17 @@
 import { de } from "@open-decision/translations";
 import { BrowserContext, expect, Page } from "@playwright/test";
 import path from "path";
-import { TreeFixture } from "../../fixtures/Tree";
-import { UserFixture } from "../../fixtures/User";
-import { NotificationComponent } from "../componentModels";
-import { proxiedPlaywrightOD } from "../playwright/APIClient";
-import { DocumentNodeModel } from "../pluginModels";
-import { EditorPage } from "./EditorPage";
-import { PrototypePage } from "./PrototypePage";
+import { TreeFixture } from "../../../fixtures/Tree";
+import { UserFixture } from "../../../fixtures/User";
+import { NotificationComponent } from "../../componentModels";
+import { proxiedPlaywrightOD } from "../../playwright/APIClient";
+import { DocumentNodeModel } from "../../pluginModels";
+import { EditorPage } from "../EditorPage";
 
-export class SharedPrototypePage extends PrototypePage {
-  override async goto() {
+import { RendererPage } from "./RendererPage";
+
+export class SharedPrototypePage extends RendererPage {
+  async goto() {
     await this.page.goto(`/shared/prototype/${this.tree.uuid}`);
   }
 }

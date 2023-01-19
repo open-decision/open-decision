@@ -7,8 +7,8 @@ import {
 import { Renderer, RendererPrimitives } from "@open-decision/renderer";
 import { RichTextRenderer } from "@open-decision/rich-text-editor";
 import { clone } from "remeda";
-import { GroupNodePlugin } from "./GroupNodePlugin";
-import { createSubTree } from "./utils/createSubtree";
+import { GroupNodePlugin } from "../GroupNodePlugin";
+import { createSubTree } from "../utils/createSubtree";
 import {
   Button,
   ErrorCard,
@@ -18,7 +18,6 @@ import {
   Row,
   Stack,
   stackClasses,
-  textClasses,
 } from "@open-decision/design-system";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { ErrorBoundary } from "react-error-boundary";
@@ -28,6 +27,7 @@ import {
   NodeRendererProps,
 } from "@open-decision/plugins-node-helpers";
 import { TNodeId } from "@open-decision/tree-type";
+import { ResultCard } from "./ResultCard";
 
 const GroupNode = new GroupNodePlugin();
 
@@ -51,7 +51,7 @@ function RendererComponent({
   edgePlugins,
   ...props
 }: NodeRendererProps) {
-  const { treeClient, send, environment } = useInterpreter();
+  const { treeClient, send, environment, getVariable } = useInterpreter();
   const groupNode = GroupNode.getSingle(nodeId)(treeClient);
 
   const subTree = React.useMemo(
@@ -59,9 +59,19 @@ function RendererComponent({
     [groupNode]
   );
 
-  const [iterationResults, setIterationsResults] = React.useState<
-    InterpreterContext[]
-  >([]);
+  const previousVariable = getVariable(nodeId);
+
+  const defautValue = GroupNode.createDefaultValues(
+    nodeId,
+    previousVariable
+  )(treeClient);
+
+  const [iterationResults, setIterationsResults] =
+    React.useState<InterpreterContext["variables"][]>(defautValue);
+
+  const [history, setHistory] = React.useState<TNodeId[]>([]);
+
+  console.log(iterationResults, history);
 
   if (groupNode instanceof Error || !subTree) return null;
 
@@ -71,7 +81,11 @@ function RendererComponent({
         environment={environment}
         tree={subTree}
         onDone={(context) => {
-          return setIterationsResults((oldState) => [...oldState, context]);
+          setHistory((oldState) => [...oldState, ...context.history.nodes]);
+          return setIterationsResults((oldState) => [
+            ...oldState,
+            context.variables,
+          ]);
         }}
         edgePlugins={edgePlugins}
       >
@@ -79,7 +93,7 @@ function RendererComponent({
           onDone={() => {
             const variable = GroupNode.createVariable(
               nodeId,
-              iterationResults.map((result) => result.variables)
+              iterationResults
             )(treeClient);
 
             if (!variable) return;
@@ -88,6 +102,7 @@ function RendererComponent({
               type: "ADD_USER_ANSWER",
               variable,
             });
+
             send({ type: "EVALUATE_NODE_CONDITIONS" });
           }}
           iterationResults={iterationResults}
@@ -103,7 +118,7 @@ function RendererComponent({
 
 type RendererContentProps = {
   groupNodeId: TNodeId;
-  iterationResults: InterpreterContext[];
+  iterationResults: InterpreterContext["variables"][];
   onDone: () => void;
   className?: string;
   GroupNode: GroupNodePlugin;
@@ -135,25 +150,30 @@ const RendererContent = ({
           {groupNode.content ? (
             <RichTextRenderer content={groupNode.content} className="px-0" />
           ) : null}
+          <Row className="items-center justify-between">
+            <Heading size="small" as="h3">
+              Bisherige Antworten
+            </Heading>
+            <ButtonRow
+              onClick={() => {
+                send({ type: "RESTART" });
+                send({ type: "EVALUATE_NODE_CONDITIONS" });
+              }}
+              groupNodeId={groupNodeId}
+              GroupNode={GroupNode}
+            />
+          </Row>
+          <ol className={stackClasses({}, ["gap-4 mb-4"])}>
+            {iterationResults.map((value, index) => (
+              <ResultCard
+                key={index}
+                result={value}
+                resultNumber={index + 1}
+                node={groupNode}
+              />
+            ))}
+          </ol>
         </RendererPrimitives.ContentArea>
-        <Heading size="small" as="h3">
-          Bisherige Antworten
-        </Heading>
-        <ol className={stackClasses({}, ["gap-4 mb-4"])}>
-          {iterationResults.map((_, index) => (
-            <li className={textClasses({ size: "large" })} key={index}>
-              {groupNode.title ?? "Ausfüllung"}
-            </li>
-          ))}
-        </ol>
-        <ButtonRow
-          onClick={() => {
-            send({ type: "RESTART" });
-            send({ type: "EVALUATE_NODE_CONDITIONS" });
-          }}
-          groupNodeId={groupNodeId}
-          GroupNode={GroupNode}
-        />
       </RendererPrimitives.Form>
     );
 
@@ -202,7 +222,7 @@ const ButtonRow = ({ onClick, GroupNode, groupNodeId }: ButtonRowProps) => {
 
   return (
     <Row className="gap-2 justify-end">
-      <Button className="max-w-max" onClick={onClick} variant="tertiary">
+      <Button onClick={onClick} variant="secondary">
         <Icon>
           <PlusIcon />
         </Icon>

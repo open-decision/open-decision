@@ -20,9 +20,8 @@ export function ContentArea({ children, className }: RendererContentAreaProps) {
   return (
     <ScrollArea.Root
       className={twMerge("flex flex-col overflow-hidden", className)}
-      scrollHideDelay={1000000}
     >
-      <ScrollArea.Viewport className="min-h-0 p-4 -ml-2">
+      <ScrollArea.Viewport className="p-4 -ml-2">
         <Stack className="gap-4">{children}</Stack>
         <ScrollArea.Scrollbar />
       </ScrollArea.Viewport>
@@ -81,7 +80,7 @@ export function Form<TFieldValues extends SystemForm.FieldValues>({
   ...props
 }: RendererFormProps<TFieldValues>) {
   return (
-    <SystemForm.Root className="gap-8" id="form" {...props}>
+    <SystemForm.Root className="gap-8 h-full" id="form" {...props}>
       {children}
     </SystemForm.Root>
   );

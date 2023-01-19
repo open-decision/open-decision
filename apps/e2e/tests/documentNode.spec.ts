@@ -1,6 +1,6 @@
 import {
   GroupNodeModel,
-  PrototypePage,
+  RendererPage,
   pwTest,
 } from "@open-decision/test-utils";
 import { DocumentNodeModel } from "@open-decision/test-utils";
@@ -8,7 +8,7 @@ import { de } from "@open-decision/translations";
 import { expect } from "@playwright/test";
 import fs from "fs";
 
-const fillAuroaTree = async (prototypePage: PrototypePage) => {
+const fillAuroaTree = async (prototypePage: RendererPage) => {
   await prototypePage.renderer.submitButton.click();
 
   await prototypePage.renderer.submitButton.click();

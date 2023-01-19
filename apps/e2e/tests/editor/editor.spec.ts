@@ -1,10 +1,6 @@
 import { expect } from "@playwright/test";
 import { de } from "@open-decision/translations";
-import {
-  DashboardPage,
-  PrototypePage,
-  pwTest,
-} from "@open-decision/test-utils";
+import { DashboardPage, RendererPage, pwTest } from "@open-decision/test-utils";
 
 pwTest.describe.configure({ mode: "parallel" });
 
@@ -308,7 +304,7 @@ pwTest(
       nodeEditorPage.header.prototypeDialog.openPrototype(),
     ]);
 
-    const prototypePage = new PrototypePage(
+    const prototypePage = new RendererPage(
       newPage,
       nodeEditorPage.user,
       nodeEditorPage.tree,
