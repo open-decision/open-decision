@@ -1,5 +1,5 @@
 {
-  "name": "AuROA:aktuell",
+  "name": "Imported Tree",
   "treeData": {
     "startNode": "nodes_2cb0d477-8ab6-4c4e-a27e-9477a8014ccb",
     "nodes": {
@@ -1728,6 +1728,7 @@
               "inputs_f8e0af5c-0249-42a5-8dbe-da49d74e8434": {
                 "id": "inputs_f8e0af5c-0249-42a5-8dbe-da49d74e8434",
                 "type": "select",
+                "label": "Einfachauswahl",
                 "answers": [
                   {
                     "id": "28b267b4-c8a5-47c3-8802-32b694c1429d",
@@ -1743,6 +1744,7 @@
               "inputs_0ee95dd9-cce4-4256-9c84-7db8249ce6e9": {
                 "id": "inputs_0ee95dd9-cce4-4256-9c84-7db8249ce6e9",
                 "type": "select",
+                "label": "Einfachauswahl",
                 "answers": [
                   {
                     "id": "872b7d06-a7b8-4083-a6d1-f33d21d7d4d8",
@@ -1758,6 +1760,7 @@
               "inputs_809aa7c7-d064-49ef-8332-8d8a979a2e2e": {
                 "id": "inputs_809aa7c7-d064-49ef-8332-8d8a979a2e2e",
                 "type": "select",
+                "label": "Einfachauswahl",
                 "answers": [
                   {
                     "id": "b493df9d-e0ed-4a40-83a4-9785b78ccf3d",
@@ -2474,6 +2477,7 @@
         "inputs_86228849-7c48-4a77-85de-e84f18aa27c7": {
           "id": "inputs_86228849-7c48-4a77-85de-e84f18aa27c7",
           "type": "select",
+          "label": "Einfachauswahl",
           "answers": [
             {
               "id": "b1516586-01a1-4ef0-a8d5-afa5ae36bb7d",
@@ -2486,6 +2490,7 @@
         "inputs_55ed1707-6f23-450b-b306-a443084dcdeb": {
           "id": "inputs_55ed1707-6f23-450b-b306-a443084dcdeb",
           "type": "select",
+          "label": "Einfachauswahl",
           "answers": [
             {
               "id": "36744116-319d-4a15-8013-28788647df82",
@@ -2505,7 +2510,7 @@
         "inputs_db645a46-2b62-4ea0-b7a9-9af55ed07f3a": {
           "id": "inputs_db645a46-2b62-4ea0-b7a9-9af55ed07f3a",
           "type": "select",
-
+          "label": "Einfachauswahl",
           "answers": [
             { "id": "273830a0-4d21-4cae-8ef0-dd5f80e043e1", "value": "" }
           ],
@@ -2514,7 +2519,7 @@
         "inputs_a1252bd4-2dac-49f8-beef-8cc26892c7d6": {
           "id": "inputs_a1252bd4-2dac-49f8-beef-8cc26892c7d6",
           "type": "select",
-
+          "label": "Einfachauswahl",
           "answers": [
             {
               "id": "48b89fbe-371d-407c-86d9-7902c84eed96",
@@ -2534,6 +2539,7 @@
         "inputs_a275aead-dc36-4cfd-a3fa-38cbd8ef882c": {
           "id": "inputs_a275aead-dc36-4cfd-a3fa-38cbd8ef882c",
           "type": "select",
+          "label": "Einfachauswahl",
 
           "answers": [
             { "id": "46a7417c-9308-40b8-b736-ee106ace3a2e", "value": "Ja" },
@@ -2553,6 +2559,7 @@
         "inputs_d285c28a-0531-4333-b2e7-b3f417f06c0a": {
           "id": "inputs_d285c28a-0531-4333-b2e7-b3f417f06c0a",
           "type": "select",
+          "label": "Einfachauswahl",
 
           "answers": [
             {
@@ -2569,6 +2576,7 @@
         "inputs_c42ee0fd-236f-48f9-89f7-935358f3a2fe": {
           "id": "inputs_c42ee0fd-236f-48f9-89f7-935358f3a2fe",
           "type": "select",
+          "label": "Einfachauswahl",
 
           "answers": [
             {
@@ -2585,6 +2593,7 @@
         "inputs_3035768d-ba66-4481-84df-03aa9e822a71": {
           "id": "inputs_3035768d-ba66-4481-84df-03aa9e822a71",
           "type": "select",
+          "label": "Einfachauswahl",
 
           "answers": [
             {
@@ -2605,16 +2614,19 @@
         "inputs_fce27978-be71-42de-9625-0703a27e0af3": {
           "id": "inputs_fce27978-be71-42de-9625-0703a27e0af3",
           "type": "text",
+          "label": "Texteingabe",
           "required": false
         },
         "inputs_05ae7147-7124-4a73-8b73-ca2671d69cc3": {
           "id": "inputs_05ae7147-7124-4a73-8b73-ca2671d69cc3",
           "type": "text",
+          "label": "Texteingabe",
           "required": false
         },
         "inputs_f49a9a75-eb56-4c62-8304-5f9c15c16f51": {
           "id": "inputs_f49a9a75-eb56-4c62-8304-5f9c15c16f51",
           "type": "select",
+          "label": "Einfachauswahl",
 
           "answers": [
             {
@@ -2628,11 +2640,13 @@
         "inputs_7f688ae5-1909-4487-8eaa-12bce5c0bcb5": {
           "id": "inputs_7f688ae5-1909-4487-8eaa-12bce5c0bcb5",
           "type": "text",
+          "label": "Texteingabe",
           "required": false
         },
         "inputs_8cf06cd7-36c4-4051-b891-c60e030848c7": {
           "id": "inputs_8cf06cd7-36c4-4051-b891-c60e030848c7",
           "type": "select",
+          "label": "Einfachauswahl",
 
           "answers": [
             {
@@ -2646,6 +2660,7 @@
         "inputs_d1689abc-6e6a-405d-95fa-b92d3c518fe0": {
           "id": "inputs_d1689abc-6e6a-405d-95fa-b92d3c518fe0",
           "type": "select",
+          "label": "Einfachauswahl",
 
           "answers": [
             { "id": "399e6acc-2b64-4966-be6b-81ed744c3261", "value": "Ja" },
@@ -2659,11 +2674,13 @@
         "inputs_a63e9f70-4c6e-43bc-a68c-c015c6695f38": {
           "id": "inputs_a63e9f70-4c6e-43bc-a68c-c015c6695f38",
           "type": "text",
+          "label": "Texteingabe",
           "required": false
         },
         "inputs_d8ca84d5-74f1-4951-bf30-6a92e343f8f2": {
           "id": "inputs_d8ca84d5-74f1-4951-bf30-6a92e343f8f2",
           "type": "multi-select",
+          "label": "Mehrfachauswahl",
 
           "answers": [
             {
@@ -2684,6 +2701,7 @@
         "inputs_d26edc20-b173-4f56-ba08-3b8169b59952": {
           "id": "inputs_d26edc20-b173-4f56-ba08-3b8169b59952",
           "type": "select",
+          "label": "Einfachauswahl",
 
           "answers": [
             {
@@ -2733,6 +2751,7 @@
         "inputs_7f2c9ab9-b4f9-4179-88f2-20931db74493": {
           "id": "inputs_7f2c9ab9-b4f9-4179-88f2-20931db74493",
           "type": "select",
+          "label": "Einfachauswahl",
 
           "answers": [
             {
@@ -2745,6 +2764,7 @@
         "inputs_3a1ea603-c363-41ca-8d6c-f81c0ff8631f": {
           "id": "inputs_3a1ea603-c363-41ca-8d6c-f81c0ff8631f",
           "type": "select",
+          "label": "Einfachauswahl",
 
           "answers": [
             {
@@ -2761,6 +2781,7 @@
         "inputs_8dd0b035-a392-4eb3-809d-091c7252392c": {
           "id": "inputs_8dd0b035-a392-4eb3-809d-091c7252392c",
           "type": "select",
+          "label": "Einfachauswahl",
 
           "answers": [
             {
@@ -2773,6 +2794,7 @@
         "inputs_df74ccc1-b1b4-46da-b427-9632d22f3889": {
           "id": "inputs_df74ccc1-b1b4-46da-b427-9632d22f3889",
           "type": "select",
+          "label": "Einfachauswahl",
 
           "answers": [
             {
@@ -2811,6 +2833,7 @@
         "inputs_a503a60f-5c14-4a07-bc15-a28b059052e9": {
           "id": "inputs_a503a60f-5c14-4a07-bc15-a28b059052e9",
           "type": "select",
+          "label": "Einfachauswahl",
 
           "answers": [
             { "id": "9d382a24-9a6a-4b88-8075-fc8eb43ebd0e", "value": "" }
@@ -2820,6 +2843,7 @@
         "inputs_0396b66a-405f-4f81-9916-83f67bf90f1f": {
           "id": "inputs_0396b66a-405f-4f81-9916-83f67bf90f1f",
           "type": "select",
+          "label": "Einfachauswahl",
 
           "answers": [
             {
@@ -2837,17 +2861,20 @@
         "inputs_bbade54d-3b68-4390-828e-04c7e43d1e14": {
           "id": "inputs_bbade54d-3b68-4390-828e-04c7e43d1e14",
           "type": "text",
+          "label": "Texteingabe",
           "required": false
         },
         "inputs_b0fe922d-a670-4572-8dcb-6e50c094e103": {
           "id": "inputs_b0fe922d-a670-4572-8dcb-6e50c094e103",
           "type": "select",
+          "label": "Einfachauswahl",
           "answers": [],
           "required": false
         },
         "inputs_2467f72a-ec27-4b2d-b8fe-3eb9a4157db2": {
           "id": "inputs_2467f72a-ec27-4b2d-b8fe-3eb9a4157db2",
           "type": "select",
+          "label": "Einfachauswahl",
 
           "answers": [
             { "id": "9b6ce3ea-a391-43c5-8a38-b58729da400d", "value": "Ja" },
@@ -2867,6 +2894,7 @@
         "inputs_7094042f-fa02-47ae-8dbf-d4a9fbbef195": {
           "id": "inputs_7094042f-fa02-47ae-8dbf-d4a9fbbef195",
           "type": "multi-select",
+          "label": "Mehrfachauswahl",
           "answers": [],
           "required": false
         },
@@ -2910,6 +2938,7 @@
         "inputs_adf32307-a3c0-4977-a8a0-7f078d3fcb0d": {
           "id": "inputs_adf32307-a3c0-4977-a8a0-7f078d3fcb0d",
           "type": "select",
+          "label": "Einfachauswahl",
 
           "answers": [
             {
@@ -2922,11 +2951,13 @@
         "inputs_d5fd5314-8950-4ae6-bc3c-5fd7eecccad4": {
           "id": "inputs_d5fd5314-8950-4ae6-bc3c-5fd7eecccad4",
           "type": "text",
+          "label": "Texteingabe",
           "required": false
         },
         "inputs_f3b1cda3-5643-4b3e-8e31-a540b8539951": {
           "id": "inputs_f3b1cda3-5643-4b3e-8e31-a540b8539951",
           "type": "select",
+          "label": "Einfachauswahl",
 
           "answers": [
             {
@@ -2939,6 +2970,7 @@
         "inputs_9a51cf61-42b3-46f1-ba0e-b2414f3877dc": {
           "id": "inputs_9a51cf61-42b3-46f1-ba0e-b2414f3877dc",
           "type": "select",
+          "label": "Einfachauswahl",
 
           "answers": [
             {
@@ -2951,6 +2983,7 @@
         "inputs_83fcce86-647c-487c-9a08-d94085bb6208": {
           "id": "inputs_83fcce86-647c-487c-9a08-d94085bb6208",
           "type": "select",
+          "label": "Einfachauswahl",
 
           "answers": [
             { "id": "176ed9b8-8b99-474d-9d73-e675ba2a3e6d", "value": "Ja" },
@@ -3071,6 +3104,7 @@
         "inputs_987fdb1f-71dc-432a-ab7f-35699e0166d0": {
           "id": "inputs_987fdb1f-71dc-432a-ab7f-35699e0166d0",
           "type": "select",
+          "label": "Einfachauswahl",
           "answers": [
             { "id": "7841b296-a63c-401b-8fa2-548b71cafae3", "value": "Ja" },
             {
@@ -3083,6 +3117,7 @@
         "inputs_60a10efc-2365-4f7d-9b04-c66a43aa5068": {
           "id": "inputs_60a10efc-2365-4f7d-9b04-c66a43aa5068",
           "type": "select",
+          "label": "Einfachauswahl",
           "answers": [
             { "id": "d2dbaad9-9ec0-42e5-b2e3-875d0dd49d45", "value": "Ja" },
             {
@@ -3095,6 +3130,7 @@
         "inputs_04f33b4e-556e-4e74-a103-50fa8b6a26e0": {
           "id": "inputs_04f33b4e-556e-4e74-a103-50fa8b6a26e0",
           "type": "text",
+          "label": "Texteingabe",
           "required": false
         },
         "inputs_17350989-f472-4b82-b08a-6be189d6a5d8": {
@@ -3112,6 +3148,7 @@
         "inputs_aca01489-3c2d-4805-bda9-6336e2981f0b": {
           "id": "inputs_aca01489-3c2d-4805-bda9-6336e2981f0b",
           "type": "select",
+          "label": "Einfachauswahl",
           "answers": [
             { "id": "77401369-82b8-450e-ab77-c0349f3ea130", "value": "" },
             { "id": "577fd5a7-60a1-4130-ab27-3d92bfa1a436", "value": "" },

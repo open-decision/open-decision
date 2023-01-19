@@ -2,41 +2,35 @@ import { DirectEdgePlugin } from "@open-decision/plugins-edge-direct";
 import { TRichText } from "@open-decision/rich-text-editor";
 import {
   TTreeClient,
-  TReadOnlyTreeClient,
   NodePlugin,
   INode,
   TNodeId,
   TEdgeId,
+  createFn,
 } from "@open-decision/tree-type";
 
 const DirectEdge = new DirectEdgePlugin();
 
 export const typeName = "info" as const;
 
-export interface IInfoNodePlugin extends INode<typeof typeName> {
+export interface IInfoNode extends INode<typeof typeName> {
   content?: TRichText;
 }
 
-export class InfoNodePlugin extends NodePlugin<IInfoNodePlugin> {
+export class InfoNodePlugin extends NodePlugin<IInfoNode> {
   constructor() {
     super(typeName);
   }
 
-  create =
-    ({
-      position = { x: 0, y: 0 },
-      ...data
-    }: Omit<IInfoNodePlugin, "id" | "type">) =>
-    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
-      return treeClient.nodes.create.node<IInfoNodePlugin>({
-        type: this.type,
-        position,
-        ...data,
-      });
-    };
+  create: createFn<IInfoNode> = (data) => (treeClient) => {
+    return treeClient.nodes.create.node<IInfoNode>({
+      type: this.type,
+      ...data,
+    });
+  };
 
   updateNodeContent =
-    (nodeId: TNodeId, content: IInfoNodePlugin["content"]) =>
+    (nodeId: TNodeId, content: IInfoNode["content"]) =>
     (treeClient: TTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 

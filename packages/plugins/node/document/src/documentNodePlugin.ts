@@ -1,5 +1,6 @@
 import { TRichText } from "@open-decision/rich-text-editor";
 import {
+  createFn,
   INode,
   NodePlugin,
   TNodeId,
@@ -19,18 +20,12 @@ export class DocumentNodePlugin extends NodePlugin<IDocumentNode> {
     super(typeName);
   }
 
-  create =
-    ({
-      position = { x: 0, y: 0 },
-      ...data
-    }: Partial<Omit<IDocumentNode, "id" | "type">>) =>
-    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
-      return treeClient.nodes.create.node<IDocumentNode>({
-        type: this.type,
-        position,
-        ...data,
-      });
-    };
+  create: createFn<IDocumentNode> = (data) => (treeClient) => {
+    return treeClient.nodes.create.node<IDocumentNode>({
+      type: this.type,
+      ...data,
+    });
+  };
 
   getByTemplateUuid =
     (templateUuid: string) =>

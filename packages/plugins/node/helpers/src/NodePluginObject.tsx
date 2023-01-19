@@ -66,7 +66,7 @@ interface BaseNodePluginObject<
 }
 
 export interface NodePluginObject<
-  TType extends INode = INode,
+  TType extends INode,
   TPluginEntities extends Record<string, z.ZodTypeAny> = Record<
     string,
     z.ZodTypeAny
@@ -86,7 +86,8 @@ export interface NodePluginObjectWithVariable<
 }
 
 export const createNodePluginObject = <
-  TNodePluginObject extends NodePluginObject = NodePluginObject
+  TType extends INode,
+  TNodePluginObject extends NodePluginObject<TType> = NodePluginObject<TType>
 >(
   pluginObj: TNodePluginObject
 ) => {

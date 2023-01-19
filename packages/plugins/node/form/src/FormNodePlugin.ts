@@ -11,6 +11,7 @@ import {
   NodePluginWithVariable,
   TNodeId,
   TEdgeId,
+  createFn,
 } from "@open-decision/tree-type";
 import { ODProgrammerError } from "@open-decision/type-classes";
 import { DirectEdgePlugin } from "@open-decision/plugins-edge-direct";
@@ -37,7 +38,7 @@ export const typeName = "form" as const;
 
 export interface IFormNode extends INode<typeof typeName> {
   content?: TRichText;
-  inputs: TInputId[];
+  inputs?: TInputId[];
 }
 
 export class FormNodePlugin extends NodePluginWithVariable<
@@ -50,20 +51,13 @@ export class FormNodePlugin extends NodePluginWithVariable<
     super(typeName);
   }
 
-  create =
-    ({
-      position = { x: 0, y: 0 },
-      inputs = [],
-      ...data
-    }: Omit<IFormNode, "id" | "type">) =>
-    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
-      return treeClient.nodes.create.node<IFormNode>({
-        type: this.type,
-        position,
-        inputs,
-        ...data,
-      });
-    };
+  create: createFn<IFormNode> = (data) => (treeClient) => {
+    return treeClient.nodes.create.node<IFormNode>({
+      type: this.type,
+      inputs: data?.inputs ?? [],
+      ...data,
+    }) satisfies IFormNode;
+  };
 
   updateNodeContent =
     (nodeId: TNodeId, content: IFormNode["content"]) =>
@@ -93,7 +87,7 @@ export class FormNodePlugin extends NodePluginWithVariable<
       // We get the input just to validate that it exists.
       treeClient.pluginEntity.get.single("inputs", inputId);
 
-      node.inputs.push(inputId);
+      node.inputs?.push(inputId);
     };
 
   disconnectInputAndNode =
@@ -104,7 +98,7 @@ export class FormNodePlugin extends NodePluginWithVariable<
 
       const inputIndex = node.inputs?.findIndex((id) => id === inputId);
 
-      if (!(inputIndex !== null)) return;
+      if (inputIndex == null) return;
 
       node.inputs?.splice(inputIndex, 1);
     };
@@ -231,7 +225,7 @@ export class FormNodePlugin extends NodePluginWithVariable<
     (treeClient: TTreeClient | TReadOnlyTreeClient) => {
       const node = this.getSingle(nodeId)(treeClient);
 
-      if (!node) return;
+      if (!node || !node.inputs) return;
 
       return fromPairs(
         node.inputs

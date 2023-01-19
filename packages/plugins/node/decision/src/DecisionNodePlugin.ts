@@ -1,4 +1,5 @@
 import {
+  createFn,
   INode,
   NodePluginWithVariable,
   TNodeId,
@@ -39,18 +40,12 @@ export class DecisionNodePlugin extends NodePluginWithVariable<
     super(typeName);
   }
 
-  create =
-    ({
-      position = { x: 0, y: 0 },
-      ...data
-    }: Partial<Omit<IDecisionNode, "id" | "type">>) =>
-    (treeClient: TTreeClient | TReadOnlyTreeClient) => {
-      return treeClient.nodes.create.node<IDecisionNode>({
-        type: this.type,
-        position,
-        ...data,
-      });
-    };
+  create: createFn<IDecisionNode> = (data) => (treeClient) => {
+    return treeClient.nodes.create.node<IDecisionNode>({
+      type: this.type,
+      ...data,
+    });
+  };
 
   inputs = {
     getByNode: getInputByNode<IDecisionNode, TDecisionNodeInputs>(this),

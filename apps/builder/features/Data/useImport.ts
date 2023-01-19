@@ -45,8 +45,10 @@ export const useImport = ({
           treeData: createTreeClientWithPlugins(parsedResult["treeData"])
             .treeClient.Type,
         });
+        console.log(parsedResult);
 
         const validatedResult = TreeImportType.safeParse(parsedResult);
+
         if (!validatedResult.success) {
           console.error(validatedResult.error);
           throw validatedResult;
@@ -62,6 +64,7 @@ export const useImport = ({
 
         return response;
       } catch (error) {
+        console.error(error);
         throw new ODError({
           code: "IMPORT_INVALID_FILE",
           message: "The provided file is invalid.",

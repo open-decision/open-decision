@@ -18,7 +18,8 @@ export const createNode =
     type,
     name,
     ...data
-  }: Omit<TNodeType, "id" | "name"> & Partial<Pick<TNodeType, "name">>) => {
+  }: Omit<TNodeType, "id" | "name" | "position"> &
+    Partial<Pick<TNodeType, "name" | "position">>) => {
     const fallbackName = `Knoten ${
       Object.keys(getNodeAll(tree)() ?? {}).length + 1
     }`;

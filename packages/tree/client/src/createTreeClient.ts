@@ -9,12 +9,13 @@ export const createTreeClient = <
   NodePlugins extends TNodePluginGroup,
   ConditionPlugins extends TEdgePluginGroup,
   NodeType extends z.ZodType,
-  ConditionType extends z.ZodType
+  ConditionType extends z.ZodType,
+  TPluginEntities extends z.ZodType
 >(
   plugins: {
     nodes: [NodePlugins, NodeType];
     edges: [ConditionPlugins, ConditionType];
-    pluginEntities?: z.ZodTypeAny;
+    pluginEntities: TPluginEntities;
   },
   tree: Omit<Tree.TTree, "inputs" | "nodes"> & TExtendedTree
 ) => {
@@ -22,7 +23,7 @@ export const createTreeClient = <
     z.object({
       edges: z.record(plugins.edges[1]),
       nodes: z.record(plugins.nodes[1]),
-      pluginEntities: plugins.pluginEntities ? plugins.pluginEntities : z.any(),
+      pluginEntities: plugins.pluginEntities,
     })
   );
 

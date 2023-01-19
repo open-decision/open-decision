@@ -3,10 +3,10 @@ import { ComponentPlaceholderIcon } from "@radix-ui/react-icons";
 import { z } from "zod";
 import { PlaceholderCanvasNode } from "./PlaceholderCanvasNode";
 import { PlaceholderNodeSidebar } from "./PlaceholderNodeSidebar";
-import { PlaceholderNodePlugin } from "./placholderNodePlugin";
+import { PlaceholderNodePlugin } from "./PlaceholderNodePlugin";
 
-export { PlaceholderNodePlugin } from "./placholderNodePlugin";
-export type { IPlaceholderNode } from "./placholderNodePlugin";
+export { PlaceholderNodePlugin } from "./PlaceholderNodePlugin";
+export type { IPlaceholderNode } from "./PlaceholderNodePlugin";
 
 const plugin = new PlaceholderNodePlugin();
 

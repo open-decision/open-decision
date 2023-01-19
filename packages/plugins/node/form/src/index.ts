@@ -30,7 +30,7 @@ export const FormNodePluginObject = createNodePluginObject({
   },
   Renderer: FormNodeRenderer,
   type: plugin.type,
-  pluginEntities: { inputs: formNodeInputPlugins.Type },
+  pluginEntities: { inputs: z.record(formNodeInputPlugins.Type) },
   Icon: IdCardIcon,
   Type: ZFormNode,
 });

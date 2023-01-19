@@ -34,15 +34,12 @@ export class GroupNodePlugin extends NodePluginWithVariable<
     this.isAddable = false;
   }
 
-  create: createFn<IGroupNode> =
-    ({ position = { x: 0, y: 0 }, ...data }) =>
-    (treeClient) => {
-      return treeClient.nodes.create.node<IGroupNode>({
-        type: this.type,
-        position,
-        ...data,
-      }) satisfies IGroupNode;
-    };
+  create: createFn<IGroupNode> = (data) => (treeClient) => {
+    return treeClient.nodes.create.node<IGroupNode>({
+      type: this.type,
+      ...data,
+    }) satisfies IGroupNode;
+  };
 
   updateTitle =
     (nodeId: TNodeId, newTitle: string) =>

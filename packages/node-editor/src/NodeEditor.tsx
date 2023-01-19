@@ -9,7 +9,7 @@ import { ZoomInOut } from "./Canvas/ZoomInOut";
 import { mapValues } from "remeda";
 import { useSelectedNodeIds } from "./state";
 import { useTree } from "@open-decision/tree-sync";
-import { PlaceholderNodePlugin } from "./plugin/PlaceholderNode/placholderNodePlugin";
+import { PlaceholderNodePlugin } from "./plugin/PlaceholderNode/PlaceholderNodePlugin";
 import { TEdgePluginGroup } from "@open-decision/plugins-edge-helpers";
 import { CustomEdge } from "./Canvas/Edges/CustomEdge";
 import { TNodePluginGroup } from "@open-decision/plugins-node-helpers";
