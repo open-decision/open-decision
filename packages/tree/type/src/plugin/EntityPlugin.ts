@@ -1,4 +1,4 @@
-import { ZEntityId, TId } from "@open-decision/tree-ids";
+import { ZEntityId, TId } from "@open-decision/tree-id";
 import { z } from "zod";
 import { TReadOnlyTreeClient, TTreeClient } from "../treeClient";
 

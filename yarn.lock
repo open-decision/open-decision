@@ -3748,9 +3748,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@open-decision/tree-ids@workspace:packages/tree/ids":
+"@open-decision/tree-id@workspace:packages/tree/id":
   version: 0.0.0-use.local
-  resolution: "@open-decision/tree-ids@workspace:packages/tree/ids"
+  resolution: "@open-decision/tree-id@workspace:packages/tree/id"
   dependencies:
     zod: ^3.20.2
   languageName: unknown

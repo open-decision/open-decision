@@ -1,5 +1,5 @@
 import { IBaseVariable, BaseVariable } from "../Variable";
-import { TId } from "@open-decision/tree-ids";
+import { TId } from "@open-decision/tree-id";
 
 const typeName = "multi-select";
 

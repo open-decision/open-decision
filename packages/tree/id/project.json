@@ -1,6 +1,6 @@
 {
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/tree/ids/src",
+  "sourceRoot": "packages/tree/id/src",
   "projectType": "library",
   "tags": [],
   "targets": {
@@ -8,7 +8,7 @@
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["packages/tree/ids/**/*.{ts,tsx,js,jsx}"]
+        "lintFilePatterns": ["packages/tree/id/**/*.{ts,tsx,js,jsx}"]
       }
     },
     "test": {
@@ -23,9 +23,9 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "tsc -p tsconfig.lib.json --noEmit",
-        "cwd": "packages/tree/ids"
+        "cwd": "packages/tree/id"
       }
     }
   },
-  "name": "tree-ids"
+  "name": "tree-id"
 }

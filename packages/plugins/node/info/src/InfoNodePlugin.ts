@@ -1,6 +1,6 @@
 import { DirectEdgePlugin } from "@open-decision/plugins-edge-direct";
 import { TRichText } from "@open-decision/rich-text-editor";
-import { TNodeId, TEdgeId } from "@open-decision/tree-ids";
+import { TNodeId, TEdgeId } from "@open-decision/tree-id";
 import {
   TTreeClient,
   NodePlugin,

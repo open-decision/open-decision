@@ -4,7 +4,7 @@ import {
   TEdgeId,
   ZEdgeId,
   ZEntityId,
-} from "@open-decision/tree-ids";
+} from "@open-decision/tree-id";
 import { forEachObj } from "remeda";
 import { z } from "zod";
 import { INode, ZEntityPluginBase, ZNodePlugin } from "../plugin";

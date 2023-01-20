@@ -2,7 +2,7 @@ import { Tree } from "../type-classes";
 import { fromPairs } from "remeda";
 import { IEntityBase } from "../plugin/EntityPlugin";
 import { getPluginEntity } from "./getPluginEntity";
-import { TId } from "@open-decision/tree-ids";
+import { TId } from "@open-decision/tree-id";
 
 export const getPluginEntities =
   (tree: Tree.TTree) =>

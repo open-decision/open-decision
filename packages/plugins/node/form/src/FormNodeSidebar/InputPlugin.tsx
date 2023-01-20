@@ -18,7 +18,7 @@ import React from "react";
 import { FormNodePlugin } from "../FormNodePlugin";
 import { PlaceholderInputPlugin } from "@open-decision/plugins-node-helpers";
 import { TFormNodeInput } from "../FormNodeInputs";
-import { TNodeId } from "@open-decision/tree-ids";
+import { TNodeId } from "@open-decision/tree-id";
 
 const FormNode = new FormNodePlugin();
 const PlaceholderInput = new PlaceholderInputPlugin();

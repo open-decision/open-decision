@@ -1,6 +1,6 @@
 import { ClassNameArrayProp, onNodeCreate } from "@open-decision/design-system";
 import { TEdgePluginGroup } from "@open-decision/plugins-edge-helpers";
-import { TNodeId, isNodeId } from "@open-decision/tree-ids";
+import { TNodeId, isNodeId } from "@open-decision/tree-id";
 import {
   INode,
   NodePlugin,

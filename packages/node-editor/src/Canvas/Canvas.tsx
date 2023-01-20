@@ -15,7 +15,7 @@ import { useEditor } from "../state";
 import { useUnmount } from "react-use";
 import { twMerge, useNotificationTemplate } from "@open-decision/design-system";
 import { NodeDeletionDialog } from "./NodeDeletionDialog";
-import { isNodeId, TNodeId, ZEdgeId, ZNodeId } from "@open-decision/tree-ids";
+import { isNodeId, TNodeId, ZEdgeId, ZNodeId } from "@open-decision/tree-id";
 
 const containerClasses = "grid h-full w-full relative bg-layer-3";
 

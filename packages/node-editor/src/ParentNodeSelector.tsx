@@ -1,5 +1,5 @@
 import { DropdownMenu } from "@open-decision/design-system";
-import { TNodeId } from "@open-decision/tree-ids";
+import { TNodeId } from "@open-decision/tree-id";
 import { useTranslations } from "next-intl";
 import { useEditor } from "./state";
 

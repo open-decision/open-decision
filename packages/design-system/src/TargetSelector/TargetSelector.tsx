@@ -1,4 +1,4 @@
-import { TNodeId, ZNodeId } from "@open-decision/tree-ids";
+import { TNodeId, ZNodeId } from "@open-decision/tree-id";
 import { useTreeClient } from "@open-decision/tree-sync";
 import { IEdge, INode, TTreeClient } from "@open-decision/tree-type";
 import { ODError } from "@open-decision/type-classes";

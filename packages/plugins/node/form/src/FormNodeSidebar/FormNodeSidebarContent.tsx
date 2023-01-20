@@ -1,7 +1,7 @@
 import { stackClasses, Tabs } from "@open-decision/design-system";
 import { RichTextEditor } from "@open-decision/rich-text-editor";
 import { useTreeClient, useTree } from "@open-decision/tree-sync";
-import { TNodeId } from "@open-decision/tree-ids";
+import { TNodeId } from "@open-decision/tree-id";
 import { useTranslations } from "next-intl";
 import { FormNodePlugin } from "../FormNodePlugin";
 import { InputPlugin } from "./InputPlugin";

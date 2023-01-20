@@ -1,6 +1,6 @@
 import { Tree, Node } from "../type-classes";
 import { getNodeSingle } from "../getters";
-import { TNodeId } from "@open-decision/tree-ids";
+import { TNodeId } from "@open-decision/tree-id";
 
 export const updateNodePosition =
   (tree: Tree.TTree) => (nodeId: TNodeId, position: Node.TCoordinates) => {

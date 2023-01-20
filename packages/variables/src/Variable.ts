@@ -1,4 +1,4 @@
-import { TId } from "@open-decision/tree-ids";
+import { TId } from "@open-decision/tree-id";
 import { z } from "zod";
 
 export const ZVariablePlugin = z.object({

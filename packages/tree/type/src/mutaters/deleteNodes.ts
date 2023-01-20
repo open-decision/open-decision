@@ -1,4 +1,4 @@
-import { TNodeId, TEdgeId } from "@open-decision/tree-ids";
+import { TNodeId, TEdgeId } from "@open-decision/tree-id";
 import { getEdgesByNode } from "../getters";
 import { Tree } from "../type-classes";
 import { deleteEdges } from "./deleteEdges";

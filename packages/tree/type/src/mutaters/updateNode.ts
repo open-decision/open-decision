@@ -1,4 +1,4 @@
-import { TNodeId } from "@open-decision/tree-ids";
+import { TNodeId } from "@open-decision/tree-id";
 import { keys } from "remeda";
 import { getEdgesByNode } from "../getters";
 import { INode } from "../plugin";

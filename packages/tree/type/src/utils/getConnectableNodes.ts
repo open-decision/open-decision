@@ -1,4 +1,4 @@
-import { TNodeId } from "@open-decision/tree-ids";
+import { TNodeId } from "@open-decision/tree-id";
 import { pipe, filter, map, values } from "remeda";
 import { INode } from "../plugin";
 import { Tree } from "../type-classes";

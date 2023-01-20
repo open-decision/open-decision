@@ -1,7 +1,7 @@
 import { labelClasses } from "@open-decision/design-system";
 import { InputDropdown, TInputId } from "@open-decision/plugins-node-helpers";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
-import { TNodeId } from "@open-decision/tree-ids";
+import { TNodeId } from "@open-decision/tree-id";
 import { TDecisionNodeInputs } from "../createInputPlugins";
 import { DecisionNodePlugin } from "../DecisionNodePlugin";
 

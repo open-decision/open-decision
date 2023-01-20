@@ -6,7 +6,7 @@ import { DecisionNodePlugin } from "../DecisionNodePlugin";
 import { InputHeader } from "./InputHeader";
 import { TDecisionNodeInputs } from "../createInputPlugins";
 import { TInputId } from "@open-decision/plugins-node-helpers";
-import { TNodeId } from "@open-decision/tree-ids";
+import { TNodeId } from "@open-decision/tree-id";
 
 const DecisionNode = new DecisionNodePlugin();
 

@@ -19,7 +19,7 @@ import { match } from "ts-pattern";
 import { TRichText } from "@open-decision/rich-text-editor";
 import { forEachObj } from "remeda";
 import { ISelectVariable, SelectVariable } from "@open-decision/variables";
-import { TNodeId } from "@open-decision/tree-ids";
+import { TNodeId } from "@open-decision/tree-id";
 
 export type TDecisionNodeVariable = ISelectVariable;
 

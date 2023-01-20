@@ -7,7 +7,7 @@ import {
 } from "@open-decision/interpreter-react";
 import { TNodePluginGroup } from "@open-decision/plugins-node-helpers";
 import { TEdgePluginGroup } from "@open-decision/plugins-edge-helpers";
-import { TNodeId } from "@open-decision/tree-ids";
+import { TNodeId } from "@open-decision/tree-id";
 
 export type ViewProps = {
   nodeId?: string;

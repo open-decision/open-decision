@@ -27,7 +27,7 @@ import {
   SelectVariable,
   TextVariable,
 } from "@open-decision/variables";
-import { TNodeId, TEdgeId } from "@open-decision/tree-ids";
+import { TNodeId, TEdgeId } from "@open-decision/tree-id";
 
 const DirectEdge = new DirectEdgePlugin();
 

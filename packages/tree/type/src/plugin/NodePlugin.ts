@@ -1,4 +1,4 @@
-import { TNodeId, ZNodeId } from "@open-decision/tree-ids";
+import { TNodeId, ZNodeId } from "@open-decision/tree-id";
 import { ODError, ODProgrammerError } from "@open-decision/type-classes";
 import { IVariable } from "@open-decision/variables";
 import { z } from "zod";

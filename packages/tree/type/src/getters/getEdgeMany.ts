@@ -1,4 +1,4 @@
-import { TEdgeId } from "@open-decision/tree-ids";
+import { TEdgeId } from "@open-decision/tree-id";
 import { fromPairs, isEmpty } from "ramda";
 import { IEdge } from "../plugin";
 import { Tree } from "../type-classes";

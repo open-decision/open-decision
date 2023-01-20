@@ -3,7 +3,7 @@ import { Tree } from "../type-classes";
 import { IEdge } from "../plugin/EdgePlugin";
 import { getEdgeSingle } from "./getEdgeSingle";
 import { forEachObj } from "remeda";
-import { TNodeId, TEdgeId } from "@open-decision/tree-ids";
+import { TNodeId, TEdgeId } from "@open-decision/tree-id";
 
 const isEdgeOfType = <TType extends IEdge>(
   edge: TType,

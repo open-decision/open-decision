@@ -8,7 +8,7 @@ import shallow from "zustand/shallow";
 import { proxy } from "valtio";
 import { useTreeClient } from "@open-decision/tree-sync";
 import { useUnmount } from "react-use";
-import { TNodeId, TEdgeId } from "@open-decision/tree-ids";
+import { TNodeId, TEdgeId } from "@open-decision/tree-id";
 
 type EditorStore = {
   connectionSourceNodeId?: TNodeId;

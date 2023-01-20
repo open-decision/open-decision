@@ -1,4 +1,4 @@
-import { TId } from "@open-decision/tree-ids";
+import { TId } from "@open-decision/tree-id";
 import { IEntityBase } from "../plugin";
 import { Tree } from "../type-classes";
 

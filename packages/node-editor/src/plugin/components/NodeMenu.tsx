@@ -13,7 +13,7 @@ import {
 import { useTranslations } from "next-intl";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { useEditor } from "../../state";
-import { TNodeId } from "@open-decision/tree-ids";
+import { TNodeId } from "@open-decision/tree-id";
 
 type Props = {
   isStartNode?: boolean;

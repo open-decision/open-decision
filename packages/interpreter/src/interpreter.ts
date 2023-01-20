@@ -9,7 +9,7 @@ import {
   TModuleVariableValue,
 } from "@open-decision/variables";
 import { canGoBackInArray, canGoForwardInArray } from "@open-decision/utils";
-import { TNodeId } from "@open-decision/tree-ids";
+import { TNodeId } from "@open-decision/tree-id";
 
 export type Resolver = (
   context: TModuleVariableValue,

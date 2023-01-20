@@ -1,4 +1,4 @@
-import { TNodeId } from "@open-decision/tree-ids";
+import { TNodeId } from "@open-decision/tree-id";
 import { getNodeSingle } from "../getters";
 import { Tree } from "../type-classes";
 

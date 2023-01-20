@@ -86,7 +86,7 @@
       "@open-decision/tree-sync": ["packages/tree/sync/src/index.ts"],
       "@open-decision/tree-type": ["packages/tree/type/src/index.ts"],
       "@open-decision/tree-utils": ["packages/tree/utils/src/index.ts"],
-      "@open-decision/tree-ids": ["packages/tree/ids/src/index.ts"],
+      "@open-decision/tree-id": ["packages/tree/id/src/index.ts"],
       "@open-decision/tree-clientWithPlugins": [
         "packages/tree/clientWithPlugins/src/index.ts"
       ],

@@ -1,4 +1,4 @@
-import { TId } from "@open-decision/tree-ids";
+import { TId } from "@open-decision/tree-id";
 import { IBaseVariable, BaseVariable } from "../Variable";
 
 const typeName = "empty";

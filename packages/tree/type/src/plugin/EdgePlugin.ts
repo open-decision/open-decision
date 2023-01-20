@@ -1,4 +1,4 @@
-import { ZEdgeId, ZNodeId, TEdgeId, TNodeId } from "@open-decision/tree-ids";
+import { ZEdgeId, ZNodeId, TEdgeId, TNodeId } from "@open-decision/tree-id";
 import { ODError } from "@open-decision/type-classes";
 import { TTreeClient, TReadOnlyTreeClient } from "../treeClient";
 import { ZEntityPluginBase, IEntityBase, EntityPlugin } from "./EntityPlugin";
