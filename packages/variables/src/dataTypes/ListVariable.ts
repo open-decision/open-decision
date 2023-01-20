@@ -1,4 +1,4 @@
-import { TId } from "@open-decision/tree-type";
+import { TId } from "@open-decision/tree-ids";
 import { IVariable } from "..";
 import { IBaseVariable, BaseVariable } from "../Variable";
 

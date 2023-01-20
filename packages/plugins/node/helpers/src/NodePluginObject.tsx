@@ -1,11 +1,10 @@
 import { ClassNameArrayProp, onNodeCreate } from "@open-decision/design-system";
 import { TEdgePluginGroup } from "@open-decision/plugins-edge-helpers";
+import { TNodeId, isNodeId } from "@open-decision/tree-ids";
 import {
   INode,
-  isNodeId,
   NodePlugin,
   NodePluginWithVariable,
-  TNodeId,
 } from "@open-decision/tree-type";
 import { NodeProps } from "reactflow";
 import { z } from "zod";

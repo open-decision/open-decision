@@ -1,7 +1,7 @@
+import { TEdgeId } from "@open-decision/tree-ids";
 import {
   EdgePlugin,
   IEdge,
-  TEdgeId,
   TReadOnlyTreeClient,
 } from "@open-decision/tree-type";
 import { TTreeClient } from "@open-decision/tree-type";

@@ -1,9 +1,9 @@
 import { isEmpty } from "ramda";
 import { Tree } from "../type-classes";
-import { IEdge, TEdgeId } from "../plugin/EdgePlugin";
+import { IEdge } from "../plugin/EdgePlugin";
 import { getEdgeSingle } from "./getEdgeSingle";
-import { TNodeId } from "../plugin";
 import { forEachObj } from "remeda";
+import { TNodeId, TEdgeId } from "@open-decision/tree-ids";
 
 const isEdgeOfType = <TType extends IEdge>(
   edge: TType,

@@ -1,0 +1,8 @@
+{
+  "name": "@open-decision/tree-ids",
+  "version": "0.0.1",
+  "main": "src/index.js",
+  "dependencies": {
+    "zod": "^3.20.2"
+  }
+}

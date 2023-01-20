@@ -3,11 +3,12 @@ import { useReactFlow, useStore } from "reactflow";
 import { calculateCenterOfNode } from "../utils/calculateCenterOfNode";
 import { sidebarWidth } from "../utils/constants";
 import { ODProgrammerError } from "@open-decision/type-classes";
-import { Node, TEdgeId, TNodeId, TTreeClient } from "@open-decision/tree-type";
+import { Node, TTreeClient } from "@open-decision/tree-type";
 import shallow from "zustand/shallow";
 import { proxy } from "valtio";
 import { useTreeClient } from "@open-decision/tree-sync";
 import { useUnmount } from "react-use";
+import { TNodeId, TEdgeId } from "@open-decision/tree-ids";
 
 type EditorStore = {
   connectionSourceNodeId?: TNodeId;

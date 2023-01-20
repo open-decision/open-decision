@@ -1,5 +1,5 @@
+import { TNodeId } from "@open-decision/tree-ids";
 import { getNodeSingle } from "../getters";
-import { TNodeId } from "../plugin";
 import { Tree } from "../type-classes";
 
 export const udpateRendererLabel =

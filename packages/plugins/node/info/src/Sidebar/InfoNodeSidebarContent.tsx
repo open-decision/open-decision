@@ -4,7 +4,7 @@ import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { useTranslations } from "next-intl";
 import { InfoNodePlugin } from "../InfoNodePlugin";
 import { RichTextEditor } from "@open-decision/rich-text-editor";
-import { TNodeId } from "@open-decision/tree-type";
+import { TNodeId } from "@open-decision/tree-ids";
 
 const InfoNode = new InfoNodePlugin();
 

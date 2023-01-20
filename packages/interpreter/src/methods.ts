@@ -1,7 +1,7 @@
+import { TNodeId } from "@open-decision/tree-ids";
 import {
   createReadableKey,
   ReadOnlyTreeClient,
-  TNodeId,
   TReadOnlyTreeClient,
   Tree,
   TTreeClient,

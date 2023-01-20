@@ -1,5 +1,6 @@
+import { TNodeId } from "@open-decision/tree-ids";
 import { fromPairs, isEmpty } from "ramda";
-import { INode, TNodeId } from "../plugin";
+import { INode } from "../plugin";
 import { Tree } from "../type-classes";
 import { getNodeSingle } from "./getNodeSingle";
 

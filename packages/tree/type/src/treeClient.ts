@@ -45,7 +45,7 @@ import type {} from "zod";
 import { udpateRendererLabel } from "./mutaters/updateRendererLabel";
 import { Theme } from "./type-classes/Theme";
 import { z } from "zod";
-import { TEdgeId, TNodeId } from "./plugin";
+import { TNodeId, TEdgeId } from "@open-decision/tree-ids";
 
 export class ReadOnlyTreeClient<TTree extends Tree.TTree> {
   tree: Tree.TTree;

@@ -1,6 +1,6 @@
+import { TNodeId } from "@open-decision/tree-ids";
 import {
   NodePlugin,
-  TNodeId,
   TReadOnlyTreeClient,
   TTreeClient,
 } from "@open-decision/tree-type";

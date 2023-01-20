@@ -2,7 +2,6 @@ import {
   createFn,
   INode,
   NodePluginWithVariable,
-  TNodeId,
   TReadOnlyTreeClient,
   TTreeClient,
 } from "@open-decision/tree-type";
@@ -20,6 +19,7 @@ import { match } from "ts-pattern";
 import { TRichText } from "@open-decision/rich-text-editor";
 import { forEachObj } from "remeda";
 import { ISelectVariable, SelectVariable } from "@open-decision/variables";
+import { TNodeId } from "@open-decision/tree-ids";
 
 export type TDecisionNodeVariable = ISelectVariable;
 

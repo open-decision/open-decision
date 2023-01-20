@@ -9,7 +9,7 @@ import {
 import { Navigation } from "./Navigation";
 import { useInterpreterTree } from "@open-decision/interpreter-react";
 import { mapKeys } from "remeda";
-import { TNodeId } from "@open-decision/tree-type";
+import { TNodeId } from "@open-decision/tree-ids";
 
 export type ContentAreaProps = {
   children: React.ReactNode;

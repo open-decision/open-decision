@@ -1,4 +1,4 @@
-import { TNodeId } from "../plugin";
+import { TNodeId } from "@open-decision/tree-ids";
 import { Tree } from "../type-classes";
 
 export function createAdjacencyList<

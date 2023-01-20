@@ -7,7 +7,7 @@ import {
 import { useTranslations } from "next-intl";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { PlaceholderNodePlugin, useEditor } from "@open-decision/node-editor";
-import { TNodeId } from "@open-decision/tree-type";
+import { TNodeId } from "@open-decision/tree-ids";
 
 type Props = { className?: string };
 

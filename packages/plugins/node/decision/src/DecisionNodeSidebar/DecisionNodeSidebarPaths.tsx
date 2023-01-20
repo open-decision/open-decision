@@ -3,7 +3,7 @@ import { SidebarButton } from "@open-decision/node-editor";
 import { CompareEdgePlugin } from "@open-decision/plugins-edge-compare";
 import { TNodeSidebarProps } from "@open-decision/plugins-node-helpers";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
-import { TNodeId } from "@open-decision/tree-type";
+import { TNodeId } from "@open-decision/tree-ids";
 import { ODError } from "@open-decision/type-classes";
 import { PathCard } from "./PathCard";
 

@@ -1,6 +1,6 @@
 import { Row, Button, Icon } from "@open-decision/design-system";
 import { useInterpreterTree } from "@open-decision/interpreter-react";
-import { TNodeId } from "@open-decision/tree-type";
+import { TNodeId } from "@open-decision/tree-ids";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { GroupNodePlugin } from "../GroupNodePlugin";
 

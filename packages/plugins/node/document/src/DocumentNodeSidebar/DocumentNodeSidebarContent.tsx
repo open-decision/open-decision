@@ -15,7 +15,7 @@ import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { useTranslations } from "next-intl";
 import { DocumentNodePlugin } from "../DocumentNodePlugin";
 import { Cross1Icon } from "@radix-ui/react-icons";
-import { TNodeId } from "@open-decision/tree-type";
+import { TNodeId } from "@open-decision/tree-ids";
 
 const DocumentNode = new DocumentNodePlugin();
 

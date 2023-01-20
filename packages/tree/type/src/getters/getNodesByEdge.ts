@@ -1,4 +1,4 @@
-import { TEdgeId } from "../plugin";
+import { TEdgeId } from "@open-decision/tree-ids";
 import { Tree } from "../type-classes";
 import { getEdgeSingle } from "./getEdgeSingle";
 import { getNodeSingle } from "./getNodeSingle";

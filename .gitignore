@@ -88,3 +88,5 @@ coverage/validations/mailserver.validation.ts.html
 test-results*
 playwright-report*
 sessions
+
+.sentryclirc

@@ -1,9 +1,9 @@
 import { TRichText } from "@open-decision/rich-text-editor";
+import { TNodeId } from "@open-decision/tree-ids";
 import {
   createFn,
   INode,
   NodePlugin,
-  TNodeId,
   TReadOnlyTreeClient,
   TTreeClient,
 } from "@open-decision/tree-type";

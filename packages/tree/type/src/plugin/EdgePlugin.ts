@@ -1,24 +1,13 @@
+import { ZEdgeId, ZNodeId, TEdgeId, TNodeId } from "@open-decision/tree-ids";
 import { ODError } from "@open-decision/type-classes";
-import { z } from "zod";
 import { TTreeClient, TReadOnlyTreeClient } from "../treeClient";
 import { ZEntityPluginBase, IEntityBase, EntityPlugin } from "./EntityPlugin";
-import { TNodeId, ZNodeId } from "./NodePlugin";
-
-export const ZEdgeId = z.custom<TEdgeId>(
-  (value) => typeof value === "string" && value.includes("edges")
-);
-
-export const isEdgeId = (value: any): value is TEdgeId => {
-  return ZEdgeId.safeParse(value).success;
-};
 
 export const ZEdgePlugin = ZEntityPluginBase.extend({
   id: ZEdgeId,
   source: ZNodeId,
   target: ZNodeId.optional(),
 });
-
-export type TEdgeId = `edges_${string}`;
 
 export interface IEdge<TType = any> extends IEntityBase<TType> {
   id: TEdgeId;

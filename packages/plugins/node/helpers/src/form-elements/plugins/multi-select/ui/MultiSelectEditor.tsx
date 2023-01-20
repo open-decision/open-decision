@@ -19,7 +19,7 @@ import {
   InputPrimaryActionSlot,
   TAnswer,
 } from "../../../helpers/types";
-import { isNodeId } from "@open-decision/tree-type";
+import { isNodeId } from "@open-decision/tree-ids";
 
 const MultiSelect = new MultiSelectInputPlugin();
 

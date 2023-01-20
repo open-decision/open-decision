@@ -1,5 +1,5 @@
+import { TNodeId, TEdgeId } from "@open-decision/tree-ids";
 import { getEdgesByNode } from "../getters";
-import { TEdgeId, TNodeId } from "../plugin";
 import { Tree } from "../type-classes";
 import { deleteEdges } from "./deleteEdges";
 

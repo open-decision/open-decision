@@ -1,4 +1,4 @@
-import { TNodeId, Tree } from "@open-decision/tree-type";
+import { Tree } from "@open-decision/tree-type";
 import { assign, createMachine, Interpreter, Sender, State } from "xstate";
 import { InvalidTreeError } from "./errors";
 import { z } from "zod";
@@ -9,6 +9,7 @@ import {
   TModuleVariableValue,
 } from "@open-decision/variables";
 import { canGoBackInArray, canGoForwardInArray } from "@open-decision/utils";
+import { TNodeId } from "@open-decision/tree-ids";
 
 export type Resolver = (
   context: TModuleVariableValue,

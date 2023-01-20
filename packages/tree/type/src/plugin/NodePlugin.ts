@@ -1,3 +1,4 @@
+import { TNodeId, ZNodeId } from "@open-decision/tree-ids";
 import { ODError, ODProgrammerError } from "@open-decision/type-classes";
 import { IVariable } from "@open-decision/variables";
 import { z } from "zod";
@@ -7,14 +8,6 @@ import { ZEntityPluginBase, IEntityBase, EntityPlugin } from "./EntityPlugin";
 export type createFn<TType extends INode> = (
   data?: Partial<Omit<TType, "id" | "type">> & Partial<{ [x: string]: any }>
 ) => (treeClient: TTreeClient) => TType;
-
-export const ZNodeId = z.custom<TNodeId>(
-  (value) => typeof value === "string" && value.includes("nodes")
-);
-
-export const isNodeId = (value: any): value is TNodeId => {
-  return ZNodeId.safeParse(value).success;
-};
 
 export const ZNodePlugin = ZEntityPluginBase.extend({
   id: ZNodeId,
@@ -28,8 +21,6 @@ export const ZNodePlugin = ZEntityPluginBase.extend({
   rendererButtonLabel: z.string().optional(),
   isAddable: z.boolean().optional(),
 });
-
-export type TNodeId = `nodes_${string}`;
 
 export interface INode<TType = any> extends IEntityBase<TType> {
   id: TNodeId;

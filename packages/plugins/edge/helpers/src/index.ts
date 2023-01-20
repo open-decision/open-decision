@@ -1,7 +1,6 @@
 import {
   EdgePlugin,
   IEdge,
-  TNodeId,
   TReadOnlyTreeClient,
   TTreeClient,
 } from "@open-decision/tree-type";
@@ -10,6 +9,7 @@ import { ODError, ODProgrammerError } from "@open-decision/type-classes";
 import { z } from "zod";
 import { mapValues } from "remeda";
 import { TModuleVariableValue } from "@open-decision/variables";
+import { TNodeId } from "@open-decision/tree-ids";
 
 export type EdgeResolver<TType extends IEdge> = (
   treeClient: TTreeClient | TReadOnlyTreeClient

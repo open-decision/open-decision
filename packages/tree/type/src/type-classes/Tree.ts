@@ -1,14 +1,8 @@
+import { ZNodeId, TNodeId, TEdgeId, ZEdgeId } from "@open-decision/tree-ids";
 import { forEachObj } from "remeda";
 import { z } from "zod";
-import {
-  INode,
-  TNodeId,
-  ZEntityId,
-  ZEntityPluginBase,
-  ZNodeId,
-  ZNodePlugin,
-} from "../plugin";
-import { IEdge, TEdgeId, ZEdgeId, ZEdgePlugin } from "../plugin/EdgePlugin";
+import { INode, ZEntityId, ZEntityPluginBase, ZNodePlugin } from "../plugin";
+import { IEdge, ZEdgePlugin } from "../plugin/EdgePlugin";
 import { Theme } from "./Theme";
 
 export const Type = z.object({

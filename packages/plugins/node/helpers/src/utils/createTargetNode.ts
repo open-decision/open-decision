@@ -1,4 +1,5 @@
-import { INode, TNodeId, TTreeClient } from "@open-decision/tree-type";
+import { TNodeId } from "@open-decision/tree-ids";
+import { INode, TTreeClient } from "@open-decision/tree-type";
 
 export const createTargetNode =
   (treeClient: TTreeClient) =>

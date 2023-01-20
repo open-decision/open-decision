@@ -1,6 +1,7 @@
+import { TNodeId } from "@open-decision/tree-ids";
 import { values } from "remeda";
 import { getNodeSingle } from "../getters";
-import { INode, TNodeId } from "../plugin";
+import { INode } from "../plugin";
 import { Tree } from "../type-classes";
 import { createNode } from "./createNode";
 

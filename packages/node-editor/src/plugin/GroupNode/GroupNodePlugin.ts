@@ -5,8 +5,6 @@ import {
   TTreeClient,
   INode,
   NodePluginWithVariable,
-  TNodeId,
-  TEdgeId,
   createReadableKey,
   createFn,
 } from "@open-decision/tree-type";
@@ -16,6 +14,7 @@ import {
   IVariable,
   TModuleVariableValue,
 } from "@open-decision/variables";
+import { TNodeId, TEdgeId } from "@open-decision/tree-ids";
 
 const DirectEdge = new DirectEdgePlugin();
 

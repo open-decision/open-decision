@@ -1,11 +1,10 @@
 import { DirectEdgePlugin } from "@open-decision/plugins-edge-direct";
 import { TRichText } from "@open-decision/rich-text-editor";
+import { TNodeId, TEdgeId } from "@open-decision/tree-ids";
 import {
   TTreeClient,
   NodePlugin,
   INode,
-  TNodeId,
-  TEdgeId,
   createFn,
 } from "@open-decision/tree-type";
 

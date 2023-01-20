@@ -3801,6 +3801,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@open-decision/tree-ids@workspace:packages/tree/Ids":
+  version: 0.0.0-use.local
+  resolution: "@open-decision/tree-ids@workspace:packages/tree/Ids"
+  dependencies:
+    zod: ^3.20.2
+  languageName: unknown
+  linkType: soft
+
 "@open-decision/tree-sync@workspace:packages/tree/sync":
   version: 0.0.0-use.local
   resolution: "@open-decision/tree-sync@workspace:packages/tree/sync"

@@ -9,8 +9,6 @@ import {
   TTreeClient,
   INode,
   NodePluginWithVariable,
-  TNodeId,
-  TEdgeId,
   createFn,
 } from "@open-decision/tree-type";
 import { ODProgrammerError } from "@open-decision/type-classes";
@@ -29,6 +27,7 @@ import {
   SelectVariable,
   TextVariable,
 } from "@open-decision/variables";
+import { TNodeId, TEdgeId } from "@open-decision/tree-ids";
 
 const DirectEdge = new DirectEdgePlugin();
 

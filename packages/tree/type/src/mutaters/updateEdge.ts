@@ -1,5 +1,6 @@
+import { TEdgeId } from "@open-decision/tree-ids";
 import { getEdgeSingle } from "../getters";
-import { IEdge, TEdgeId } from "../plugin";
+import { IEdge } from "../plugin";
 import { Tree } from "../type-classes";
 
 export const updateEdge =
