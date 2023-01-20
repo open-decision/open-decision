@@ -136,6 +136,7 @@ function GroupNodeView({
         edgePlugins={edgePlugins}
         initialContext={currentIteration}
         onDone={(context) => {
+          console.log(context);
           sendToGroupNode({ type: "FINISH_ITERATION", context });
         }}
         onLeave={() => {

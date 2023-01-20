@@ -76,15 +76,17 @@ export const createGroupNodeRendererMachine = (
         addIterationResult: assign({
           iterations: (context, event) => {
             const newIterations = context.iterations;
-            context.iterations[0] = event.context;
+            context.iterations[context.position] = event.context;
             return newIterations;
           },
+          position: (_context, _event) => 0,
         }),
         addEmptyIteration: assign({
           iterations: (context, _event) => [
-            { history: { nodes: [], position: 0 }, variables: {} },
             ...context.iterations,
+            { history: { nodes: [], position: 0 }, variables: {} },
           ],
+          position: (context, _event) => context.iterations.length,
         }),
         removeUnfinishedIteration: assign({
           iterations: (context, _event) => {
@@ -106,8 +108,6 @@ export const createGroupNodeRendererMachine = (
               },
               ...context.iterations.slice(event.position + 1),
             ];
-
-            console.log(iterations);
 
             return iterations;
           },

@@ -73,6 +73,8 @@ pwTest(
     await expect(
       GroupNode.renderer.locators.iterationTitle("2. Antwort")
     ).toBeVisible();
+
+    await publishedPage.page.pause();
   }
 );
 
