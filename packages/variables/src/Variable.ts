@@ -1,4 +1,3 @@
-import { TId } from "@open-decision/tree-type";
 import { z } from "zod";
 
 export const ZVariablePlugin = z.object({
@@ -8,10 +7,9 @@ export const ZVariablePlugin = z.object({
   value: z.any().optional(),
 });
 
-export type TValueId = `value_${string}`;
 export interface IBaseVariable<
   TType extends string = string,
-  Id extends TId = TId
+  Id extends `${string}_${string}` = `${string}_${string}`
 > {
   id: Id;
   type: TType;

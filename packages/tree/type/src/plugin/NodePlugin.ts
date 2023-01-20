@@ -5,7 +5,7 @@ import { TTreeClient, TReadOnlyTreeClient } from "../treeClient";
 import { ZEntityPluginBase, IEntityBase, EntityPlugin } from "./EntityPlugin";
 
 export type createFn<TType extends INode> = (
-  data?: Partial<Omit<TType, "id" | "type">>
+  data?: Partial<Omit<TType, "id" | "type">> & Partial<{ [x: string]: any }>
 ) => (treeClient: TTreeClient) => TType;
 
 export const ZNodeId = z.custom<TNodeId>(

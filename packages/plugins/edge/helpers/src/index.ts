@@ -5,20 +5,18 @@ import {
   TReadOnlyTreeClient,
   TTreeClient,
 } from "@open-decision/tree-type";
-import {
-  InterpreterContext,
-  EVALUATE_NODE_CONDITIONS,
-} from "@open-decision/interpreter";
+import { EVALUATE_NODE_CONDITIONS } from "@open-decision/interpreter";
 import { ODError, ODProgrammerError } from "@open-decision/type-classes";
 import { z } from "zod";
 import { mapValues } from "remeda";
+import { TModuleVariableValue } from "@open-decision/variables";
 
 export type EdgeResolver<TType extends IEdge> = (
   treeClient: TTreeClient | TReadOnlyTreeClient
 ) => (
   edge: TType
 ) => (
-  context: InterpreterContext,
+  context: TModuleVariableValue,
   event: EVALUATE_NODE_CONDITIONS
 ) =>
   | { state: "success"; target: TNodeId }
