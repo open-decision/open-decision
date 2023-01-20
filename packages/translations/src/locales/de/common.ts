@@ -68,6 +68,11 @@ export default {
 
     submit: "Ändern",
   },
+  overwriteTreeDialog: {
+    title: "Projekt überschreiben",
+    description:
+      "Bitte wähle ein exportiertes Projekt aus um es in das aktuelle Projekt zu überschreiben.",
+  },
   exportDialog: {
     title: "Projekt exportieren",
     customization: {
@@ -82,6 +87,7 @@ export default {
     errorFallback: "Beim Export deines Projektes ist ein Fehler aufgetreten.",
   },
   projectMenu: {
+    overwriteTree: "Projektinhalt überschreiben",
     changeName: "Namen ändern",
     export: "Exportieren",
     uploadTheme: "Theme hochladen",

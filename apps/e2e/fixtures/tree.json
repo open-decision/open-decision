@@ -1,6 +1,7 @@
 {
   "name": "Imported Tree",
   "treeData": {
+    "uuid": "b2388056-1b73-4f0e-9732-449e6efb5ec1",
     "startNode": "nodes_2cb0d477-8ab6-4c4e-a27e-9477a8014ccb",
     "nodes": {
       "nodes_af1a2666-8d22-4919-8cd0-213c7e2a05eb": {
@@ -1321,6 +1322,7 @@
         "cta": "Drittwerk",
         "tree": {
           "startNode": "nodes_5a2594c0-7366-4f90-a62a-7bd1474af86e",
+          "uuid": "fbf6a708-06df-47d3-9e68-df88c5cc5bb0",
           "nodes": {
             "nodes_5a2594c0-7366-4f90-a62a-7bd1474af86e": {
               "id": "nodes_5a2594c0-7366-4f90-a62a-7bd1474af86e",

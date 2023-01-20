@@ -1,7 +1,12 @@
-import { Dialog, Text } from "@open-decision/design-system";
+import {
+  buttonClasses,
+  Dialog,
+  InfoBox,
+  Text,
+} from "@open-decision/design-system";
 import { useTranslations } from "next-intl";
 import * as React from "react";
-import { TreeImport } from "../../../features/Dashboard/TreeImport";
+import { OverwriteTreeImport } from "../../../features/Import-Export/OverwriteTreeImport";
 
 type Props = {
   treeId: string;
@@ -14,6 +19,7 @@ type Props = {
 };
 
 export function OverwriteTreeDialog({
+  treeId,
   open,
   onSuccess,
   onCancel,
@@ -27,12 +33,27 @@ export function OverwriteTreeDialog({
     <Dialog.Root open={open} onOpenChange={onCancel}>
       {children ? <Dialog.Trigger asChild>{children}</Dialog.Trigger> : null}
       <Dialog.Portal>
-        <Dialog.Content className={className} onCloseAutoFocus={focusOnCancel}>
+        <Dialog.Content
+          Above={
+            <InfoBox
+              title="Achtung"
+              content="Das überschreiben eines Projekts kann nicht rückgängig gemacht werden."
+              variant="danger"
+              className="bg-danger2"
+            />
+          }
+          className={className}
+          onCloseAutoFocus={focusOnCancel}
+        >
           <Dialog.Header className="mb-4">{t("title")}</Dialog.Header>
           <Text>{t("description")}</Text>
-          <TreeImport className="font-[500]" onDone={onSuccess}>
+          <OverwriteTreeImport
+            className={buttonClasses({}, "mt-4 colorScheme-danger")}
+            onDone={onSuccess}
+            treeUuid={treeId}
+          >
             Bauminhalt überschreiben
-          </TreeImport>
+          </OverwriteTreeImport>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

@@ -20,7 +20,7 @@ import { useTranslations } from "next-intl";
 import { ArchiveItem } from "./ArchiveItem";
 import { PublishItem } from "./PublishItem";
 import { TGetTreeOutput } from "@open-decision/api-specification";
-import { OverwriteTreeDialog } from "./Dialogs/OverwriteTreeMenu";
+import { OverwriteTreeDialog } from "./Dialogs/OverwriteTreeDialog";
 
 type ItemRendererProps = {
   setDropdownOpen: (open: boolean) => void;
@@ -54,7 +54,7 @@ export function ProjectMenu({ className, children, Items, tree }: Props) {
     overwrite: () => (
       <OverwriteTreeDialog
         treeId={tree.uuid}
-        open={openDialog === "update"}
+        open={openDialog === "overwrite"}
         onSuccess={() => {
           setOpenDialog(undefined);
           setDropdownOpen(false);

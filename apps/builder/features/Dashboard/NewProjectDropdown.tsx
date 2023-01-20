@@ -2,7 +2,7 @@ import * as React from "react";
 import { ButtonProps, DropdownMenu, Icon } from "@open-decision/design-system";
 import { PlusIcon, RocketIcon } from "@radix-ui/react-icons";
 import { CreateTreeDialog } from "../../components/ProjectMenu/Dialogs/CreateTreeDialog";
-import { TreeImport } from "./TreeImport";
+import { TreeImport } from "../Import-Export/TreeImport";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/router";
 

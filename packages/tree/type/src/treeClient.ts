@@ -117,6 +117,14 @@ export class TreeClient<TTree extends Tree.TTree> {
     this.ReadOnlyTreeClient = new ReadOnlyTreeClient(tree);
   }
 
+  updateTree(newTree: TTree) {
+    this.tree.edges = newTree.edges;
+    this.tree.nodes = newTree.nodes;
+    this.tree.startNode = newTree.startNode;
+    this.tree.pluginEntities = newTree.pluginEntities;
+    this.tree.theme = newTree.theme;
+  }
+
   updateTheme(newTheme: z.infer<typeof Theme>) {
     this.tree.theme = newTheme;
   }
