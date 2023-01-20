@@ -405,8 +405,6 @@ export const useTreeAPI = (client: TClient = APIClient) => {
           params: { uuid },
         });
 
-        delete treeData.uuid;
-
         return new Promise<string>((resolve) => {
           return setTimeout(() => {
             const file = createFile({
