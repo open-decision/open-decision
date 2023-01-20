@@ -1,4 +1,5 @@
-import { IEntityBase, TId } from "../plugin";
+import { TId } from "@open-decision/tree-ids";
+import { IEntityBase } from "../plugin";
 import { Tree } from "../type-classes";
 
 export const getPluginEntity = (tree: Tree.TTree) =>

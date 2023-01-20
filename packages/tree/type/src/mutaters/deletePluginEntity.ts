@@ -1,4 +1,4 @@
-import { TId } from "../plugin";
+import { TId } from "@open-decision/tree-ids";
 import { Tree } from "../type-classes";
 
 export const deletePluginEntity =

@@ -1,7 +1,8 @@
 import { Tree } from "../type-classes";
 import { fromPairs } from "remeda";
-import { IEntityBase, TId } from "../plugin/EntityPlugin";
+import { IEntityBase } from "../plugin/EntityPlugin";
 import { getPluginEntity } from "./getPluginEntity";
+import { TId } from "@open-decision/tree-ids";
 
 export const getPluginEntities =
   (tree: Tree.TTree) =>

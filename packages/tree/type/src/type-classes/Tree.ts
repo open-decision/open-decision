@@ -1,7 +1,13 @@
-import { ZNodeId, TNodeId, TEdgeId, ZEdgeId } from "@open-decision/tree-ids";
+import {
+  ZNodeId,
+  TNodeId,
+  TEdgeId,
+  ZEdgeId,
+  ZEntityId,
+} from "@open-decision/tree-ids";
 import { forEachObj } from "remeda";
 import { z } from "zod";
-import { INode, ZEntityId, ZEntityPluginBase, ZNodePlugin } from "../plugin";
+import { INode, ZEntityPluginBase, ZNodePlugin } from "../plugin";
 import { IEdge, ZEdgePlugin } from "../plugin/EdgePlugin";
 import { Theme } from "./Theme";
 
