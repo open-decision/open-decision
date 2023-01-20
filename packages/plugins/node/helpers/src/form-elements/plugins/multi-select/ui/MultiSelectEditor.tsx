@@ -5,7 +5,7 @@ import { AnimatePresence, Reorder, useDragControls } from "framer-motion";
 import {
   IMultiSelectInput,
   MultiSelectInputPlugin,
-} from "../MultiSelectPlugin";
+} from "../MultiSelectInputPlugin";
 import { TrashIcon } from "@radix-ui/react-icons";
 import {
   DragHandle,

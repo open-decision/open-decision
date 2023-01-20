@@ -3,11 +3,11 @@ import {
   MultiSelectInputConfigurator,
   MultiSelectInputPrimaryActionSlot,
 } from "./ui/MultiSelectEditor";
-import { MultiSelectInputPlugin } from "./MultiSelectPlugin";
+import { MultiSelectInputPlugin } from "./MultiSelectInputPlugin";
 import { createInputPluginObject, ZInputPlugin } from "../../helpers";
 import { z } from "zod";
 
-export * from "./MultiSelectPlugin";
+export * from "./MultiSelectInputPlugin";
 
 const plugin = new MultiSelectInputPlugin();
 
