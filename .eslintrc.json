@@ -16,6 +16,16 @@
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
+        "@typescript-eslint/ban-types": [
+          "error",
+          {
+            "types": {
+              // un-ban a type that's banned by default
+              "{}": false
+            },
+            "extendDefaults": true
+          }
+        ],
         "@nrwl/nx/enforce-module-boundaries": [
           "error",
           {
@@ -29,6 +39,7 @@
             ]
           }
         ],
+        "no-throw-literal": "error",
         "@typescript-eslint/no-unused-vars": "off",
         "unused-imports/no-unused-imports": "error",
         "unused-imports/no-unused-vars": [
