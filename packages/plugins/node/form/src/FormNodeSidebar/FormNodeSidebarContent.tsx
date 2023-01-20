@@ -31,7 +31,9 @@ export function FormNodeSidebarContent({ nodeId }: Props) {
           maxHeight={400}
         />
       </section>
-      <InputPlugin inputIds={node.inputs} nodeId={node.id} />
+      {node.inputs ? (
+        <InputPlugin inputIds={node.inputs} nodeId={node.id} />
+      ) : null}
     </Tabs.Content>
   );
 }

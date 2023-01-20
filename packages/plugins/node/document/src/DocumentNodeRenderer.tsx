@@ -68,7 +68,7 @@ export const DocumentNodeRenderer: TNodeRenderer = ({ nodeId, ...props }) => {
           )
           .with({ type: "module" }, (variable) =>
             variable.value.map((value) =>
-              mapValues(value, (value) =>
+              mapValues(value.variables, (value) =>
                 isGroupVariable(value)
                   ? restructureVariables(value)
                   : value.readableValue
