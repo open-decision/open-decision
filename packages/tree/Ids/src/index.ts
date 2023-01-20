@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export type TId<TEntity extends string = string> = `${TEntity}_${string}`;
+export const ZEntityId = z.custom<TId>((value) => typeof value === "string");
 
 export type TNodeId = TId<"nodes">;
 

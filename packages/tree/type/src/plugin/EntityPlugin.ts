@@ -1,9 +1,6 @@
+import { ZEntityId, TId } from "@open-decision/tree-ids";
 import { z } from "zod";
 import { TReadOnlyTreeClient, TTreeClient } from "../treeClient";
-
-export type TId<TEntity extends string = string> = `${TEntity}_${string}`;
-
-export const ZEntityId = z.custom<TId>((value) => typeof value === "string");
 
 export const ZEntityPluginBase = z.object({
   id: ZEntityId,
@@ -14,9 +11,7 @@ export interface IEntityBase<TType = any> {
   type: TType;
 }
 
-export abstract class EntityPlugin<
-  TType extends IEntityBase = IEntityBase
-> {
+export abstract class EntityPlugin<TType extends IEntityBase = IEntityBase> {
   type: TType["type"];
   abstract pluginType: "edges" | "nodes" | "pluginEntity";
 
