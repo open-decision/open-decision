@@ -5,7 +5,12 @@ import {
   Separator,
   Tooltip,
 } from "@open-decision/design-system";
-import { Pencil2Icon, DownloadIcon, TrashIcon } from "@radix-ui/react-icons";
+import {
+  Pencil2Icon,
+  DownloadIcon,
+  TrashIcon,
+  FileTextIcon,
+} from "@radix-ui/react-icons";
 import { MenuButton } from "../Header/MenuButton";
 import { DeleteTreeDialog } from "./Dialogs/DeleteTreeDialog";
 import { UpdateTreeDialog } from "./Dialogs/UpdateTreeDialog";
@@ -15,6 +20,7 @@ import { useTranslations } from "next-intl";
 import { ArchiveItem } from "./ArchiveItem";
 import { PublishItem } from "./PublishItem";
 import { TGetTreeOutput } from "@open-decision/api-specification";
+import { OverwriteTreeDialog } from "./Dialogs/OverwriteTreeMenu";
 
 type ItemRendererProps = {
   setDropdownOpen: (open: boolean) => void;
@@ -36,14 +42,29 @@ export function ProjectMenu({ className, children, Items, tree }: Props) {
   const updateItemRef = React.useRef<HTMLDivElement>(null);
   const exportItemRef = React.useRef<HTMLDivElement>(null);
   const deleteItemRef = React.useRef<HTMLDivElement>(null);
+  const overwriteItemRef = React.useRef<HTMLDivElement>(null);
 
   const [openDialog, setOpenDialog] = React.useState<
-    "export" | "update" | "delete" | undefined
+    "export" | "update" | "delete" | "overwrite" | undefined
   >(undefined);
 
   const isPublished = tree.publishedTrees.length > 0;
 
   const dialogs = {
+    overwrite: () => (
+      <OverwriteTreeDialog
+        treeId={tree.uuid}
+        open={openDialog === "update"}
+        onSuccess={() => {
+          setOpenDialog(undefined);
+          setDropdownOpen(false);
+        }}
+        onCancel={() => {
+          setOpenDialog(undefined);
+        }}
+        focusOnCancel={() => updateItemRef.current?.focus()}
+      />
+    ),
     update: () => (
       <UpdateTreeDialog
         treeId={tree.uuid}
@@ -113,6 +134,18 @@ export function ProjectMenu({ className, children, Items, tree }: Props) {
               <Pencil2Icon />
             </Icon>
             {t("projectMenu.changeName")}
+          </DropdownMenu.Item>
+          <DropdownMenu.Item
+            onSelect={() => {
+              setOpenDialog("overwrite");
+              setDropdownOpen(false);
+            }}
+            ref={overwriteItemRef}
+          >
+            <Icon>
+              <FileTextIcon />
+            </Icon>
+            {t("projectMenu.overwriteTree")}
           </DropdownMenu.Item>
           <DropdownMenu.Item
             onSelect={() => {
