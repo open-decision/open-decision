@@ -7,8 +7,8 @@ import {
 } from "@open-decision/design-system";
 import { Pencil2Icon, DownloadIcon, TrashIcon } from "@radix-ui/react-icons";
 import { MenuButton } from "../Header/MenuButton";
-import { DeleteTreeDialog } from "../../features/Dashboard/components/Dialogs/DeleteTreeDialog";
-import { UpdateTreeDialog } from "../../features/Dashboard/components/Dialogs/UpdateTreeDialog";
+import { DeleteTreeDialog } from "./Dialogs/DeleteTreeDialog";
+import { UpdateTreeDialog } from "./Dialogs/UpdateTreeDialog";
 import { useRouter } from "next/router";
 import { ExportDialog } from "../../features/Builder/components/ExportDialog";
 import { useTranslations } from "next-intl";

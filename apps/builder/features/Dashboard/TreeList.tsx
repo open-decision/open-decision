@@ -10,7 +10,7 @@ import {
   LoadingSpinner,
   headingClasses,
 } from "@open-decision/design-system";
-import { TreeCard } from "./components/TreeCard/TreeCard";
+import { TreeCard } from "./TreeCard";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { useFilter } from "./Filter";
 import { cardClasses } from "../../components/Card";

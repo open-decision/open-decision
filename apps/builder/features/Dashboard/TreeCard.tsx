@@ -9,13 +9,13 @@ import {
 } from "@open-decision/design-system";
 import { formatRelative, parseISO } from "date-fns";
 import Link from "next/link";
-import { cardClasses } from "../../../../components/Card";
+import { cardClasses } from "../../components/Card";
 import { TGetTreeOutput } from "@open-decision/api-specification";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
-import { useQueryClient } from "../../../Data/useQueryClient";
+import { useQueryClient } from "../Data/useQueryClient";
 import { treeQueryKey } from "@open-decision/api-react-binding";
 import { useTranslations } from "next-intl";
-import { ProjectMenu } from "../../../../components/ProjectMenu/ProjectMenu";
+import { ProjectMenu } from "../../components/ProjectMenu/ProjectMenu";
 import { de } from "date-fns/locale";
 
 type Props = { tree: TGetTreeOutput };

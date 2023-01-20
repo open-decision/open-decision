@@ -45,7 +45,6 @@ export const useImport = ({
           treeData: createTreeClientWithPlugins(parsedResult["treeData"])
             .treeClient.Type,
         });
-        console.log(parsedResult);
 
         const validatedResult = TreeImportType.safeParse(parsedResult);
 
