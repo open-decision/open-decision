@@ -8,8 +8,14 @@ declare module "valtio" {
 }
 
 export function createTreeStore(id: string) {
+  const transactionOrigin = `valtio for ${id}`;
+
   const yDoc = new Y.Doc({ guid: id });
   const yMap = yDoc.getMap("tree");
+
+  const undoManager = new Y.UndoManager(yMap, {
+    trackedOrigins: new Set([transactionOrigin]),
+  });
 
   const syncedStore = proxy<Tree.TTree>({ uuid: id } as Tree.TTree);
 
@@ -25,7 +31,7 @@ export function createTreeStore(id: string) {
   });
 
   bind(syncedStore, yMap, {
-    transactionOrigin: `valtio for ${id}`,
+    transactionOrigin,
   });
 
   const tree = proxy({
@@ -37,5 +43,6 @@ export function createTreeStore(id: string) {
     tree,
     yDoc,
     onSync,
+    undoManager,
   };
 }
