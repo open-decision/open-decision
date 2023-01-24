@@ -2,20 +2,20 @@ export default {
   pageTitle: "Builder | OD",
   header: {
     preview: {
-      button: "Preview teilen",
+      button: "Vorschau teilen",
       popover: {
-        title: "Preview teilen",
+        title: "Vorschau teilen",
         description:
-          "Wenn die Preview geteilt wird kann jeder mit dem Link die Preview öffnen.",
-        checkbox: "Preview öffentlich teilen",
+          "Wenn die Vorschau geteilt wird kann jeder mit dem Link die Vorschau öffnen.",
+        checkbox: "Vorschau öffentlich teilen",
         copyLinkButton: {
-          enabled: "Preview Link kopieren",
-          disabled: "Aktiviere erst die Preview",
+          enabled: "Vorschau Link kopieren",
+          disabled: "Aktiviere erst die Vorschau",
         },
-        openSharedPreviewButton: "Öffne geteilte Preview",
+        openSharedPreviewButton: "Öffne geteilte Vorschau",
       },
       previewLink: {
-        hiddenLabel: "Preview öffnen",
+        hiddenLabel: "Vorschau öffnen",
       },
     },
   },
@@ -72,10 +72,22 @@ export default {
           "{content, select, true {{name}} other {Leerer Frageknoten}} - {selected, select, true {ausgewählt} false {nicht ausgewählt} other {}}",
       },
     },
-    zoomInAndOut: {
+    toolbar: {
       zoomIn: { hiddenLabel: "Zoom in" },
       zoomOut: { hiddenLabel: "Zoom out" },
       fitView: { hiddenLabel: "Fokussiere das Projekt" },
+      undo: {
+        hiddenLabel: {
+          enabled: "Rückgängig machen",
+          disabled: "Rückgängig machen (deaktiviert)",
+        },
+      },
+      redo: {
+        hiddenLabel: {
+          enabled: "Wiederherstellen",
+          disabled: "Wiederherstellen (deaktiviert)",
+        },
+      },
     },
   },
 } as const;

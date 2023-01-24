@@ -19,13 +19,13 @@ export class EditorComponent {
     );
     this.canvas = page.locator(`[data-test=canvas]`);
     this.zoomOutButton = page.locator(
-      `role=button[name="${de.builder.canvas.zoomInAndOut.zoomOut.hiddenLabel}"]`
+      `role=button[name="${de.builder.canvas.toolbar.zoomOut.hiddenLabel}"]`
     );
     this.zoomInButton = page.locator(
-      `role=button[name="${de.builder.canvas.zoomInAndOut.zoomIn.hiddenLabel}"]`
+      `role=button[name="${de.builder.canvas.toolbar.zoomIn.hiddenLabel}"]`
     );
     this.fitViewButton = page.locator(
-      `role=button[name="${de.builder.canvas.zoomInAndOut.fitView.hiddenLabel}"]`
+      `role=button[name="${de.builder.canvas.toolbar.fitView.hiddenLabel}"]`
     );
     this.deleteNodesDialog = new DeleteNodesDialogComponent(page);
   }

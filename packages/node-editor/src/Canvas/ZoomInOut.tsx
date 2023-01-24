@@ -14,7 +14,7 @@ import { useEditor } from "../state";
 type Props = { className?: string };
 
 export function ZoomInOut({ className }: Props) {
-  const t = useTranslations("builder.canvas.zoomInAndOut");
+  const t = useTranslations("builder.canvas.toolbar");
   const { zoomIn, zoomOut, fitView } = useReactFlow();
   const { removeSelectedNodes } = useEditor();
   const { undoManager } = useTreeContext();
@@ -27,9 +27,14 @@ export function ZoomInOut({ className }: Props) {
         onClick={() => undoManager.undo()}
         variant="neutral"
         square
-        name={t("zoomIn.hiddenLabel")}
+        disabled={!undoManager.canUndo()}
+        name={
+          undoManager.canUndo()
+            ? t("undo.hiddenLabel.enabled")
+            : t("undo.hiddenLabel.disabled")
+        }
       >
-        <Icon label={t("zoomIn.hiddenLabel")}>
+        <Icon>
           <ArrowLeftIcon />
         </Icon>
       </Button>
@@ -37,9 +42,14 @@ export function ZoomInOut({ className }: Props) {
         onClick={() => undoManager.redo()}
         variant="neutral"
         square
-        name={t("zoomIn.hiddenLabel")}
+        disabled={!undoManager.canRedo()}
+        name={
+          undoManager.canRedo()
+            ? t("redo.hiddenLabel.enabled")
+            : t("redo.hiddenLabel.disabled")
+        }
       >
-        <Icon label={t("zoomIn.hiddenLabel")}>
+        <Icon>
           <ArrowRightIcon />
         </Icon>
       </Button>

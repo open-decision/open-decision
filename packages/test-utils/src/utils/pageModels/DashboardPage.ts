@@ -25,7 +25,7 @@ export type DashboardPageConstructorParams<
 > = {
   page: Page;
   user: TUser;
-  trees: TDashboardTrees;
+  trees?: TDashboardTrees;
   DataFixtures: { User: UserFixture; Tree: TreeFixture };
 };
 
@@ -40,7 +40,7 @@ export class DashboardPage<TDashboardTrees extends TTrees = TTrees> {
   readonly header: HeaderComponent;
   readonly user: TUser;
   readonly searchInput: Locator;
-  readonly trees: TDashboardTrees;
+  readonly trees?: TDashboardTrees;
 
   constructor({
     DataFixtures,

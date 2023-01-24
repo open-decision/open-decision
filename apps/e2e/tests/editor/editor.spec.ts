@@ -287,14 +287,14 @@ pwTest(
 );
 
 pwTest(
-  "should be able to activate and deactivate the prototype",
+  "should be able to activate and deactivate the preview",
   async ({ editorPage: nodeEditorPage, context }) => {
     await nodeEditorPage.header.prototypeDialog.open();
     await nodeEditorPage.header.prototypeDialog.activateSharedPreview();
 
     const [newPage] = await Promise.all([
       context.waitForEvent("page"),
-      nodeEditorPage.header.prototypeDialog.openPrivatePreview(),
+      nodeEditorPage.header.prototypeDialog.openSharedPreview(),
     ]);
 
     const prototypePage = new RendererPage({
@@ -305,9 +305,15 @@ pwTest(
     await expect(prototypePage.page).toHaveURL(/\/*prototype/);
     await expect(prototypePage.page.locator("text=Willkommen")).toBeVisible();
 
-    await nodeEditorPage.header.prototypeDialog.activateSharedPreview();
+    await nodeEditorPage.header.prototypeDialog.deactivateSharedPreview();
 
     await prototypePage.page.reload();
-    await expect(prototypePage.page.locator("text=Willkommen")).toBeVisible();
+    await expect(
+      prototypePage.page.locator("text=Willkommen")
+    ).not.toBeVisible();
+
+    await expect(
+      prototypePage.getErrorLocator("Vorschau nicht verfügbar")
+    ).toBeVisible();
   }
 );

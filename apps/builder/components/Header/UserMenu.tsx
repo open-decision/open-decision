@@ -10,7 +10,7 @@ export function UserMenu() {
   const t = useTranslations();
   const router = useRouter();
   const { mutate: logout } = useAuthAPI().useLogoutMutation({
-    onSuccess: () => router.push("auth/login"),
+    onSuccess: () => router.push("/auth/login"),
   });
 
   return (

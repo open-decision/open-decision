@@ -35,7 +35,10 @@ export class PreviewDialogComponent {
   }
 
   async activateSharedPreview() {
-    await this.open();
+    await this.activeCheckbox.click();
+  }
+
+  async deactivateSharedPreview() {
     await this.activeCheckbox.click();
   }
 
@@ -44,9 +47,6 @@ export class PreviewDialogComponent {
   }
 
   async openSharedPreview() {
-    await this.activateSharedPreview();
-    await this.sharedLinkCopyButton.click();
-
     await this.openSharedLink.click();
   }
 }

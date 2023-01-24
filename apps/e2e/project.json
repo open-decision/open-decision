@@ -82,14 +82,14 @@
     "serve:debug": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "playwright show-report playwright-debug-report --port=9324",
+        "command": "playwright show-report playwright-report-debug --port=9324",
         "cwd": "apps/e2e"
       }
     },
     "serve:single": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "playwright show-report playwright-single-report --port=9325",
+        "command": "playwright show-report playwright-report-single --port=9325",
         "cwd": "apps/e2e"
       }
     },
