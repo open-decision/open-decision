@@ -8,6 +8,7 @@ export const DocumentNodeSidebar: TNodeSidebar = ({
   edgePlugins,
   nodePlugins,
   onNodeCreate,
+  treeUuid,
 }) => {
   return (
     <NodeSidebar
@@ -17,6 +18,7 @@ export const DocumentNodeSidebar: TNodeSidebar = ({
       tabs={["Inhalt", "Ziel"]}
       initialTab="Inhalt"
       hasPreview
+      treeUuid={treeUuid}
     >
       <DocumentNodeSidebarContent nodeId={nodeId} />
       <DocumentNodeSidebarPaths nodeId={nodeId} onNodeCreate={onNodeCreate} />

@@ -34,21 +34,24 @@ export const getServerSideProps: GetServerSideProps = async ({
       messages,
       locale,
       now: new Date().toISOString(),
-      treeId: id,
+      treeUuid: id,
     },
   };
 };
 
-type PageProps = { treeId: string };
+type PageProps = { treeUuid: string };
 
-export default function Page({ treeId }: PageProps) {
+export default function Page({ treeUuid }: PageProps) {
   const t = useTranslations();
-  const { isLoading, data, isSuccess } = usePublicTree(treeId, {
+  const { isLoading, data, isSuccess } = usePublicTree(treeUuid, {
     select: (result) => result.data.treeData,
     staleTime: Infinity,
   });
 
-  const { nodePlugins, edgePlugins } = createTreeClientWithPlugins(data);
+  const { nodePlugins, edgePlugins } = createTreeClientWithPlugins(
+    treeUuid,
+    data
+  );
 
   if (isLoading)
     return (
@@ -66,6 +69,7 @@ export default function Page({ treeId }: PageProps) {
       </Head>
       <Layout>
         <Renderer.Root
+          treeUuid={treeUuid}
           environment="published"
           edgePlugins={edgePlugins}
           tree={data}
@@ -79,6 +83,7 @@ export default function Page({ treeId }: PageProps) {
         >
           <Stack center className="bg-layer-2 h-full">
             <Renderer.View
+              treeUuid={treeUuid}
               className="mb-2 p-4 h-full max-w-[700px] lg:mb-4"
               nodePlugins={nodePlugins}
               edgePlugins={edgePlugins}

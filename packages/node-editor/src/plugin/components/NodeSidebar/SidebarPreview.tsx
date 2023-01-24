@@ -37,6 +37,7 @@ export function SidebarPreview({ nodePlugins, edgePlugins, treeUuid }: Props) {
         }
       >
         <Renderer.View
+          treeUuid={treeUuid}
           className="h-full gap-4"
           nodePlugins={nodePlugins}
           edgePlugins={edgePlugins}

@@ -4,12 +4,12 @@ import { useTreeContext } from "@open-decision/tree-sync";
 
 export const useTreeClientWithPlugins = () => {
   const {
-    tree: { tree },
+    tree: { tree, uuid },
   } = useTreeContext();
 
   const treeClient = React.useMemo(
-    () => createTreeClientWithPlugins(tree),
-    [tree]
+    () => createTreeClientWithPlugins(uuid, tree),
+    [tree, uuid]
   );
 
   return treeClient;

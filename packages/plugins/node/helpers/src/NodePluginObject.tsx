@@ -28,6 +28,7 @@ export type TNodeSidebarProps = {
   hasPreview?: boolean;
   edgePlugins: TEdgePluginGroup;
   nodePlugins: TNodePluginGroup;
+  treeUuid: string;
 };
 
 export type TNodeSidebar = (props: TNodeSidebarProps) => JSX.Element | null;

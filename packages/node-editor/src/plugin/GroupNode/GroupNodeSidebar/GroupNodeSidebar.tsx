@@ -12,6 +12,7 @@ export const GroupNodeSidebar: TNodeSidebar = ({
   edgePlugins,
   onNodeCreate,
   nodePlugins,
+  treeUuid,
 }) => {
   return (
     <NodeSidebar
@@ -22,6 +23,7 @@ export const GroupNodeSidebar: TNodeSidebar = ({
       tabs={["Inhalt", "Ziel"]}
       initialTab="Inhalt"
       hasPreview
+      treeUuid={treeUuid}
     >
       <GroupNodeSidebarContent nodeId={nodeId} GroupNode={GroupNode} />
       <GroupNodeSidebarPaths

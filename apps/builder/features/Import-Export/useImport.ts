@@ -25,8 +25,8 @@ const getTreeFromImport = (event: ProgressEvent<FileReader>) => {
 
   const TreeImportType = z.object({
     name: z.string(),
-    treeData: createTreeClientWithPlugins(parsedResult["treeData"]).treeClient
-      .Type,
+    treeData: createTreeClientWithPlugins("", parsedResult["treeData"])
+      .treeClient.Type,
   });
 
   const validatedResult = TreeImportType.safeParse(parsedResult);

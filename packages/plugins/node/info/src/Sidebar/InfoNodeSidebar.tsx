@@ -10,6 +10,7 @@ export const InfoNodeSidebar: TNodeSidebar = ({
   nodePlugins,
   edgePlugins,
   onNodeCreate,
+  treeUuid,
 }) => {
   return (
     <NodeSidebar
@@ -20,6 +21,7 @@ export const InfoNodeSidebar: TNodeSidebar = ({
       tabs={["Inhalt", "Ziel"]}
       initialTab="Inhalt"
       hasPreview
+      treeUuid={treeUuid}
     >
       <InfoNodeSidebarContent nodeId={nodeId} />
       <InfoNodeSidebarPaths nodeId={nodeId} onNodeCreate={onNodeCreate} />

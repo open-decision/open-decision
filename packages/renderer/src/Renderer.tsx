@@ -17,6 +17,7 @@ export type ViewProps = {
   canGoBack?: true;
   onGoBack?: () => void;
   parentId?: TNodeId;
+  treeUuid: string;
 } & StackProps;
 
 export function View({
@@ -25,6 +26,7 @@ export function View({
   withNavigation,
   classNames,
   edgePlugins,
+  treeUuid,
 }: ViewProps) {
   const { getCurrentNode } = useInterpreter();
   const node = getCurrentNode();
@@ -37,6 +39,7 @@ export function View({
 
   return (
     <Renderer
+      treeUuid={treeUuid}
       key={node.id}
       nodeId={node.id}
       className={className}

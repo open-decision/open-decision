@@ -9,6 +9,7 @@ export const DecisionNodeSidebar: TNodeSidebar = ({
   nodePlugins,
   edgePlugins,
   onNodeCreate,
+  treeUuid,
 }) => {
   return (
     <NodeSidebar
@@ -18,6 +19,7 @@ export const DecisionNodeSidebar: TNodeSidebar = ({
       initialTab="Inhalt"
       nodePlugins={nodePlugins}
       edgePlugins={edgePlugins}
+      treeUuid={treeUuid}
     >
       <DecisionNodeSidebarContent nodeId={nodeId} />
       <DecisionNodeSidebarPaths

@@ -153,6 +153,7 @@ function GroupNodeView({
         }}
       >
         <SubRenderer
+          treeUuid={treeUuid}
           edgePlugins={edgePlugins}
           nodePlugins={nodePlugins}
           {...props}

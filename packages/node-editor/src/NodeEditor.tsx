@@ -22,6 +22,7 @@ type NodeEditorProps = {
   edgePlugins: TEdgePluginGroup;
   defaultViewport?: { x: number; y: number; zoom: number };
   onUnmount?: (viewport: { x: number; y: number; zoom: number }) => void;
+  treeUuid: string;
 };
 
 export const NodeEditor = ({
@@ -30,6 +31,7 @@ export const NodeEditor = ({
   edgePlugins,
   defaultViewport,
   onUnmount,
+  treeUuid,
 }: NodeEditorProps) => {
   const edgeTypes = React.useMemo(
     () => mapValues(edgePlugins.plugins, () => CustomEdge),
@@ -47,7 +49,11 @@ export const NodeEditor = ({
       onUnmount={onUnmount}
     >
       <ZoomInOut className="absolute bottom-[10px] left-[10px]" />
-      <Sidebar nodePlugins={nodePlugins} edgePlugins={edgePlugins} />
+      <Sidebar
+        treeUuid={treeUuid}
+        nodePlugins={nodePlugins}
+        edgePlugins={edgePlugins}
+      />
     </Canvas>
   );
 };
@@ -55,11 +61,12 @@ export const NodeEditor = ({
 type SidebarProps = {
   nodePlugins: TNodePluginGroup;
   edgePlugins: TEdgePluginGroup;
+  treeUuid: string;
 };
 
 const PlaceholderNode = new PlaceholderNodePlugin();
 
-export function Sidebar({ nodePlugins, edgePlugins }: SidebarProps) {
+export function Sidebar({ treeUuid, nodePlugins, edgePlugins }: SidebarProps) {
   const selectedNodeIds = useSelectedNodeIds();
   const nodeId = selectedNodeIds[0];
 
@@ -84,6 +91,7 @@ export function Sidebar({ nodePlugins, edgePlugins }: SidebarProps) {
     >
       {nodeId && SidebarContent ? (
         <SidebarContent
+          treeUuid={treeUuid}
           nodeId={nodeId}
           onNodeCreate={({ name }) =>
             PlaceholderNode.create({ position: { x: 0, y: 0 }, name })

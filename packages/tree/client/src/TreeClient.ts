@@ -14,7 +14,10 @@ import { createTreeClient } from "./createTreeClient";
 import { createNodePluginGroup } from "@open-decision/plugins-node-helpers";
 import { createEdgePluginGroup } from "@open-decision/plugins-edge-helpers";
 
-export const createTreeClientWithPlugins = (tree: Tree.TTree) => {
+export const createTreeClientWithPlugins = (
+  treeUuid: string,
+  tree: Tree.TTree
+) => {
   const Edges = createEdgePluginGroup({
     [CompareEdgePluginObject.type]: CompareEdgePluginObject,
     [DirectEdgePluginObject.type]: DirectEdgePluginObject,
@@ -48,6 +51,7 @@ export const createTreeClientWithPlugins = (tree: Tree.TTree) => {
   ]);
 
   const treeClient = createTreeClient(
+    treeUuid,
     {
       nodes: [Nodes, NodeType],
       edges: [Edges, EdgeType],

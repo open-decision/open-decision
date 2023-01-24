@@ -10,6 +10,7 @@ export const FormNodeSidebar: TNodeSidebar = ({
   nodePlugins,
   edgePlugins,
   onNodeCreate,
+  treeUuid,
 }) => {
   return (
     <NodeSidebar
@@ -20,6 +21,7 @@ export const FormNodeSidebar: TNodeSidebar = ({
       tabs={["Inhalt", "Ziel"]}
       initialTab="Inhalt"
       hasPreview
+      treeUuid={treeUuid}
     >
       <FormNodeSidebarContent nodeId={nodeId} />
       <FormNodeSidebarPaths nodeId={nodeId} onNodeCreate={onNodeCreate} />

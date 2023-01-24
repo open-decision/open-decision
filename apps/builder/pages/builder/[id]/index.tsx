@@ -44,14 +44,14 @@ export const getServerSideProps: GetServerSideProps<
       messages,
       locale,
       now: new Date().toISOString(),
-      treeId: params.id,
+      treeUuid: params.id,
     },
   };
 };
 
-type PageProps = { treeId: string };
+type PageProps = { treeUuid: string };
 
-const Content = ({ treeId }: PageProps) => {
+const Content = ({ treeUuid }: PageProps) => {
   const [defaultViewport, setDefaultViewport] = React.useState<
     { x: number; y: number; zoom: number } | undefined
   >(undefined);
@@ -60,11 +60,15 @@ const Content = ({ treeId }: PageProps) => {
 
   return (
     <Layout className="bg-layer-3 grid grid-cols-[max-content_1fr] grid-rows-[max-content_1fr]">
-      <EditorHeader treeId={treeId} className="col-span-full row-span-1 z-20" />
+      <EditorHeader
+        treeId={treeUuid}
+        className="col-span-full row-span-1 z-20"
+      />
       <SideMenu className="col-span-1 row-span-1 z-10 gap-2 bg-layer-1">
         <CreateNodeButton />
       </SideMenu>
       <NodeEditor
+        treeUuid={treeUuid}
         nodePlugins={nodePlugins}
         edgePlugins={edgePlugins}
         className="col-[2] row-[2] h-full overflow-hidden"
@@ -75,7 +79,7 @@ const Content = ({ treeId }: PageProps) => {
   );
 };
 
-export default function BuilderPage({ treeId }: PageProps) {
+export default function BuilderPage({ treeUuid }: PageProps) {
   const t = useTranslations("builder");
 
   return (
@@ -84,7 +88,7 @@ export default function BuilderPage({ treeId }: PageProps) {
         <title>{t("pageTitle")}</title>
       </Head>
       <ReactFlowProvider>
-        <TreeProvider id={treeId}>
+        <TreeProvider id={treeUuid}>
           <React.Suspense
             fallback={
               <Stack center className="h-full">
@@ -93,7 +97,7 @@ export default function BuilderPage({ treeId }: PageProps) {
             }
           >
             <EditorProvider>
-              <Content treeId={treeId} />
+              <Content treeUuid={treeUuid} />
             </EditorProvider>
           </React.Suspense>
         </TreeProvider>

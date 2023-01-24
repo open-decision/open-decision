@@ -30,6 +30,7 @@ export const NodeSidebar = ({
   initialTab,
   nodePlugins,
   edgePlugins,
+  treeUuid,
 }: Omit<TNodeSidebarProps, "onNodeCreate" | "onEdgeCreate">) => {
   const [selectedTab, setSelectedTab] = React.useState(initialTab);
 
@@ -53,7 +54,11 @@ export const NodeSidebar = ({
           ]}
         >
           {children}
-          <SidebarPreview nodePlugins={nodePlugins} edgePlugins={edgePlugins} />
+          <SidebarPreview
+            treeUuid={treeUuid}
+            nodePlugins={nodePlugins}
+            edgePlugins={edgePlugins}
+          />
         </Stack>
       </Tabs.Root>
     </Stack>

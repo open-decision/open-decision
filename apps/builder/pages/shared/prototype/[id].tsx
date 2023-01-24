@@ -31,23 +31,23 @@ export const getServerSideProps: GetServerSideProps<
       messages,
       locale,
       now: new Date().toISOString(),
-      treeId: params.id,
+      treeUuid: params.id,
     },
   };
 };
 
-type PageProps = { treeId: string };
+type PageProps = { treeUuid: string };
 
-export default function VorschauPage({ treeId }: PageProps) {
+export default function VorschauPage({ treeUuid }: PageProps) {
   const t = useTranslations("renderer.preview");
 
   const { isLoading, isPaused, data, error, isSuccess } =
-    useTreeAPI().useTreePreview(treeId, {
+    useTreeAPI().useTreePreview(treeUuid, {
       select: (result) => result.data,
     });
 
   const treeClientWithPlugins = data
-    ? createTreeClientWithPlugins(data)
+    ? createTreeClientWithPlugins(treeUuid, data)
     : undefined;
 
   if (isPaused || isLoading)
@@ -65,12 +65,14 @@ export default function VorschauPage({ treeId }: PageProps) {
         <title>{t("pageTitle")}</title>
       </Head>
       <Renderer.Root
+        treeUuid={treeUuid}
         tree={data}
         edgePlugins={treeClientWithPlugins.edgePlugins}
         environment="shared"
       >
         <Stack center className="bg-layer-2 h-full">
           <Renderer.View
+            treeUuid={treeUuid}
             className="mb-2 px-4 py-4 h-full max-w-[700px] lg:mb-4"
             nodePlugins={treeClientWithPlugins.nodePlugins}
             edgePlugins={treeClientWithPlugins.edgePlugins}

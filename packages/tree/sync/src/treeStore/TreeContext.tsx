@@ -12,6 +12,7 @@ export type TTreeContext = ReturnType<typeof createTreeStore>;
 const TreeContext = React.createContext<TTreeContext | null>(null);
 
 type Props = { children: React.ReactNode; id: string };
+
 const TreeProvider = ({ id, children }: Props) => {
   const treeStore = React.useMemo(
     () => (id ? createTreeStore(id) : undefined),

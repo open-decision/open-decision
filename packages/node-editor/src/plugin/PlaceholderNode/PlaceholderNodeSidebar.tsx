@@ -9,6 +9,7 @@ export const PlaceholderNodeSidebar: TNodeSidebar = ({
   nodeId,
   nodePlugins,
   edgePlugins,
+  treeUuid,
 }) => {
   const t = useTranslations("common.nodeNames");
   const treeClient = useTreeClient();
@@ -18,6 +19,7 @@ export const PlaceholderNodeSidebar: TNodeSidebar = ({
       nodeId={nodeId}
       edgePlugins={edgePlugins}
       nodePlugins={nodePlugins}
+      treeUuid={treeUuid}
     >
       <Heading className="mb-4" size="small">
         Wähle einen Typ für diesen Knoten aus:
