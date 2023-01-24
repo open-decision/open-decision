@@ -50,6 +50,9 @@ export function Container({
   const node = useInterpreterTree((treeClient) =>
     treeClient.nodes.get.single(nodeId)
   );
+  const startNodeId = useInterpreterTree((treeClient) =>
+    treeClient.get.startNodeId()
+  );
 
   if (!node) return null;
 
@@ -65,6 +68,7 @@ export function Container({
         <Navigation
           className="self-center mb-[var(--padding)]"
           successButtonLabel={successButtonLabel}
+          isStartNode={nodeId === startNodeId}
         />
       ) : null}
     </Stack>

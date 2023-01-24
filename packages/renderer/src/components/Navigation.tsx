@@ -8,9 +8,14 @@ type Props = {
   successButtonLabel?: React.ReactNode;
   onGoBack?: () => void;
   canGoBack?: true;
+  isStartNode: boolean;
 };
 
-export function Navigation({ className, successButtonLabel }: Props) {
+export function Navigation({
+  className,
+  successButtonLabel,
+  isStartNode,
+}: Props) {
   const { isInteractive } = useInterpreter();
   const [open, setOpen] = React.useState(false);
 
@@ -18,7 +23,7 @@ export function Navigation({ className, successButtonLabel }: Props) {
     <Tooltip.Root open={!isInteractive && open} onOpenChange={setOpen}>
       <Tooltip.Trigger asChild>
         <Row classNames={["p-2 max-w-max gap-2 rounded-md", className]}>
-          <BackButton />
+          <BackButton className={isStartNode ? "opacity-0" : "opacity-100"} />
           <Form.SubmitButton
             form="form"
             className={isInteractive ? "" : "pointer-events-none"}
@@ -38,7 +43,9 @@ export function Navigation({ className, successButtonLabel }: Props) {
   );
 }
 
-export function BackButton() {
+type BackButtonProps = { className?: string };
+
+export function BackButton({ className }: BackButtonProps) {
   const { send, canGoBack, isInteractive } = useInterpreter();
 
   return (
@@ -48,7 +55,7 @@ export function BackButton() {
         return send("GO_BACK");
       }}
       disabled={!canGoBack || !isInteractive}
-      classNames={[isInteractive ? "" : "pointer-events-none"]}
+      classNames={[isInteractive ? "" : "pointer-events-none", className]}
     >
       <Icon label="Zurück">
         <ArrowLeftIcon />
