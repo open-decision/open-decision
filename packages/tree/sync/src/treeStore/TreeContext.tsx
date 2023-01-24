@@ -69,8 +69,8 @@ export const useTreeContext = () => {
 export const useTreeClient = () => {
   const context = useTreeContext();
   const treeClient = React.useMemo(
-    () => new TreeClient(context.tree.tree),
-    [context.tree.tree]
+    () => new TreeClient(context.tree.uuid, context.tree.tree),
+    [context.tree.tree, context.tree.uuid]
   );
 
   return treeClient;

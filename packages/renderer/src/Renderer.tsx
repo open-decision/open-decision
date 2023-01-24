@@ -50,6 +50,10 @@ export function View({
 
 export type ProviderProps = InterpreterProviderProps;
 
-export const Root = ({ children, ...props }: ProviderProps) => {
-  return <InterpreterProvider {...props}>{children}</InterpreterProvider>;
+export const Root = ({ children, treeUuid, ...props }: ProviderProps) => {
+  return (
+    <InterpreterProvider treeUuid={treeUuid} {...props}>
+      {children}
+    </InterpreterProvider>
+  );
 };

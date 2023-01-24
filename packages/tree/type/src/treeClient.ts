@@ -48,9 +48,11 @@ import { z } from "zod";
 import { TNodeId, TEdgeId } from "@open-decision/tree-id";
 
 export class ReadOnlyTreeClient<TTree extends Tree.TTree> {
-  tree: Tree.TTree;
-  constructor(tree: TTree) {
+  private tree: Tree.TTree;
+  private uuid: string;
+  constructor(treeUuid: string, tree: TTree) {
     this.tree = tree;
+    this.uuid = treeUuid;
   }
 
   get pluginEntity() {
@@ -100,7 +102,8 @@ export class ReadOnlyTreeClient<TTree extends Tree.TTree> {
   get = {
     tree: () => this.tree,
     startNodeId: () => getStartNodeId(this.tree),
-    id: () => this.tree.uuid,
+    id: () => this.uuid,
+
     theme: () => this.tree.theme,
   };
 }
@@ -112,9 +115,12 @@ export type TTreeClient = TreeClient<Tree.TTree>;
 export class TreeClient<TTree extends Tree.TTree> {
   private tree: Tree.TTree;
   private ReadOnlyTreeClient: ReadOnlyTreeClient<Tree.TTree>;
-  constructor(tree: TTree) {
+  private uuid: string;
+
+  constructor(treeUuid: string, tree: TTree) {
     this.tree = tree;
-    this.ReadOnlyTreeClient = new ReadOnlyTreeClient(tree);
+    this.uuid = treeUuid;
+    this.ReadOnlyTreeClient = new ReadOnlyTreeClient(treeUuid, tree);
   }
 
   updateTree(newTree: TTree) {

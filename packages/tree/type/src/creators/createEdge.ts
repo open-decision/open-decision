@@ -19,7 +19,7 @@ export const createEdge =
 
     // Create the edge object
     const newEdge = {
-      id: `edges_${uuid()}`,
+      id: `edge_${uuid()}`,
       ...edge,
     } satisfies IEdge;
 

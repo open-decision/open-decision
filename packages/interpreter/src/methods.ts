@@ -52,9 +52,10 @@ export const getCurrentNode = (
 export function createInterpreterMethods(
   machine: InterpreterMachine,
   state: InterpreterState,
-  tree: Tree.TTree
+  tree: Tree.TTree,
+  treeUuid: string
 ) {
-  const treeClient = new ReadOnlyTreeClient(tree);
+  const treeClient = new ReadOnlyTreeClient(treeUuid, tree);
 
   return {
     treeClient,

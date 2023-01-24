@@ -3,14 +3,12 @@ import { FormNodePlugin } from "./FormNodePlugin";
 import { FormNodeSidebar } from "./FormNodeSidebar/FormNodeSidebar";
 import { FormNodeRenderer } from "./FormNodeRenderer";
 import { IdCardIcon } from "@radix-ui/react-icons";
-import {
-  createNodePluginObject,
-  ZInputId,
-} from "@open-decision/plugins-node-helpers";
+import { createNodePluginObject } from "@open-decision/plugins-node-helpers";
 import { ZNodePlugin } from "@open-decision/tree-type";
 import { z } from "zod";
 import { RichText } from "@open-decision/rich-text-editor";
 import { formNodeInputPlugins } from "./FormNodeInputs";
+import { ZInputId } from "@open-decision/tree-id";
 
 export * from "./FormNodePlugin";
 

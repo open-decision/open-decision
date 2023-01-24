@@ -181,12 +181,11 @@ export const useTreeAPI = (client: TClient = APIClient) => {
 
         const yMap = yDoc.getMap("tree");
 
-        const treeClient = new TreeClient({
+        const treeClient = new TreeClient("", {
           nodes: {},
           pluginEntities: {},
           edges: {},
-          startNode: "nodes_0",
-          uuid: "",
+          startNode: "node_0",
         });
 
         const node = PlaceholderNode.create({

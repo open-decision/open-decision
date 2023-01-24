@@ -37,7 +37,7 @@ export const GroupNodeRenderer: TNodeRenderer = (props) => {
   );
 };
 
-function RendererComponent({ nodeId, ...props }: NodeRendererProps) {
+function RendererComponent({ nodeId, treeUuid, ...props }: NodeRendererProps) {
   const { treeClient } = useInterpreter();
 
   const groupNode = GroupNode.getSingle(nodeId)(treeClient);
@@ -47,12 +47,20 @@ function RendererComponent({ nodeId, ...props }: NodeRendererProps) {
 
   if (!groupNode || !subTree) return null;
 
-  return <GroupNodeView groupNode={groupNode} tree={subTree} {...props} />;
+  return (
+    <GroupNodeView
+      treeUuid={treeUuid}
+      groupNode={groupNode}
+      tree={subTree}
+      {...props}
+    />
+  );
 }
 
 type Props = {
   groupNode: IGroupNode;
   tree: Tree.TTree;
+  treeUuid: string;
 } & Omit<NodeRendererProps, "nodeId">;
 
 function GroupNodeView({
@@ -60,6 +68,7 @@ function GroupNodeView({
   tree,
   nodePlugins,
   edgePlugins,
+  treeUuid,
   ...props
 }: Props) {
   const { send, environment, getVariable, treeClient } = useInterpreter();
@@ -131,6 +140,7 @@ function GroupNodeView({
   if (groupNodeState.matches("running")) {
     return (
       <Renderer.Root
+        treeUuid={treeUuid}
         environment={environment}
         tree={tree}
         edgePlugins={edgePlugins}

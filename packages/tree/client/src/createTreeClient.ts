@@ -12,6 +12,7 @@ export const createTreeClient = <
   ConditionType extends z.ZodType,
   TPluginEntities extends z.ZodType
 >(
+  treeUuid: string,
   plugins: {
     nodes: [NodePlugins, NodeType];
     edges: [ConditionPlugins, ConditionType];
@@ -27,7 +28,7 @@ export const createTreeClient = <
     })
   );
 
-  const treeClient = new TreeClient(tree);
+  const treeClient = new TreeClient(treeUuid, tree);
 
   const treeClientWithTypes = merge(treeClient, {
     Type: mergedTreeTypes,

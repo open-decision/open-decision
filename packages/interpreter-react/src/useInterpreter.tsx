@@ -96,6 +96,7 @@ type Context = {
   environment: InterpreterOptions["environment"];
   isInteractive: boolean;
   interpreterMachine: InterpreterMachine;
+  treeUuid: string;
 };
 
 const MachineContext = React.createContext<Context | null>(null);
@@ -106,6 +107,7 @@ export type InterpreterProviderProps = {
   config?: XStateInterpreterOptions &
     UseMachineOptions<TModuleVariableValue, InterpreterEvents>;
   edgePlugins: TEdgePluginGroup;
+  treeUuid: string;
 } & InterpreterOptions;
 
 export function InterpreterProvider({
@@ -113,9 +115,10 @@ export function InterpreterProvider({
   tree,
   config,
   edgePlugins,
+  treeUuid,
   ...options
 }: InterpreterProviderProps) {
-  const readOnlyTreeClient = new ReadOnlyTreeClient(tree);
+  const readOnlyTreeClient = new ReadOnlyTreeClient(treeUuid, tree);
 
   const [interpreterMachine] = React.useState(
     createInterpreterMachine(
@@ -143,6 +146,7 @@ export function InterpreterProvider({
         environment: options.environment,
         isInteractive: options?.isInteractive ?? true,
         interpreterMachine,
+        treeUuid,
       }}
     >
       {children}
@@ -166,24 +170,38 @@ export function useInterpreterService() {
 }
 
 export function useInterpreter() {
-  const { service, tree, environment, isInteractive, interpreterMachine } =
-    useInterpreterService();
+  const {
+    service,
+    tree,
+    environment,
+    isInteractive,
+    interpreterMachine,
+    treeUuid,
+  } = useInterpreterService();
 
   const [state, send] = useActor(service);
 
   const methods = React.useMemo(() => {
-    return createInterpreterMethods(interpreterMachine, state, tree);
+    return createInterpreterMethods(interpreterMachine, state, tree, treeUuid);
   }, [state.context, tree]);
 
-  return { state, send, tree, environment, isInteractive, ...methods };
+  return {
+    state,
+    send,
+    tree,
+    environment,
+    isInteractive,
+    treeUuid,
+    ...methods,
+  };
 }
 
 export function useInterpreterTree<TReturn>(
   selector: (ReadOnlyTreeClient: ReadOnlyTreeClient<Tree.TTree>) => TReturn
 ) {
-  const { tree } = useInterpreterService();
+  const { tree, treeUuid } = useInterpreterService();
 
-  const readOnlyTreeClient = new ReadOnlyTreeClient(tree);
+  const readOnlyTreeClient = new ReadOnlyTreeClient(treeUuid, tree);
 
   return selector(readOnlyTreeClient);
 }

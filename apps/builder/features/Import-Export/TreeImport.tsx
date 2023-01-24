@@ -1,6 +1,5 @@
-import { FileInputProps } from "@open-decision/design-system";
+import { FileInputProps, FileReaderInput } from "@open-decision/design-system";
 import * as React from "react";
-import { FileReaderInput } from "./FileReaderInput";
 import { useImport } from "./useImport";
 
 export const TreeImport = React.forwardRef<

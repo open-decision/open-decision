@@ -38,7 +38,6 @@ export const Type = z.object({
   pluginEntities: z.record(
     z.record(ZEntityId, ZEntityPluginBase.passthrough())
   ),
-  uuid: z.string().uuid(),
   theme: Theme.optional(),
 });
 

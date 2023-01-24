@@ -3,14 +3,12 @@ import { DecisionNodePlugin } from "./DecisionNodePlugin";
 import { DecisionNodeSidebar } from "./DecisionNodeSidebar/DecisionNodeSidebar";
 import { DecisionNodeRenderer } from "./DecisionNodeRenderer";
 import { Pencil1Icon } from "@radix-ui/react-icons";
-import {
-  createNodePluginObject,
-  ZInputId,
-} from "@open-decision/plugins-node-helpers";
+import { createNodePluginObject } from "@open-decision/plugins-node-helpers";
 import { ZNodePlugin } from "@open-decision/tree-type";
 import { RichText } from "@open-decision/rich-text-editor";
 import { z } from "zod";
 import { DecisionNodeInputPlugins } from "./createInputPlugins";
+import { ZInputId } from "@open-decision/tree-id";
 
 export * from "./DecisionNodePlugin";
 

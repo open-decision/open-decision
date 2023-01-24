@@ -12,7 +12,7 @@ export const createSubTree = (masterNode: IGroupNode) => {
       message: "The module is missing a tree",
     });
 
-  const treeClient = new TreeClient(masterNode.tree);
+  const treeClient = new TreeClient("", masterNode.tree);
 
   treeClient.nodes.add(masterNode);
 

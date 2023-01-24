@@ -39,6 +39,7 @@ export const EditorHeader = ({ className, treeId, children }: HeaderProps) => {
   const templateFile = new Blob([JSON.stringify(themeTemplate)], {
     type: "application/json",
   });
+
   const templateFileLink = URL.createObjectURL(templateFile);
 
   const {

@@ -1,3 +1,4 @@
+import { ZInputId } from "@open-decision/tree-id";
 import {
   EntityPlugin,
   TTreeClient,
@@ -20,10 +21,6 @@ import {
   updateInput,
   updateInputLabel,
 } from "./utils/inputMethods";
-
-export const ZInputId = z.custom<TInputId>(
-  (value) => typeof value === "string" && value.includes("input")
-);
 
 export const ZInputPlugin = ZEntityPluginBase.extend({
   id: ZInputId,

@@ -17,7 +17,7 @@ export function createTreeStore(id: string) {
     trackedOrigins: new Set([transactionOrigin]),
   });
 
-  const syncedStore = proxy<Tree.TTree>({ uuid: id } as Tree.TTree);
+  const syncedStore = proxy<Tree.TTree>({} as Tree.TTree);
 
   let onSync = (_value: unknown) => {
     return;
@@ -37,6 +37,7 @@ export function createTreeStore(id: string) {
   const tree = proxy({
     tree: syncedStore,
     supensionProxy,
+    uuid: id,
   });
 
   return {

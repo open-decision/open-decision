@@ -25,7 +25,7 @@ export const createNode =
     }`;
 
     return {
-      id: `nodes_${crypto.randomUUID()}`,
+      id: `node_${crypto.randomUUID()}`,
       position,
       type,
       name: name ?? fallbackName,

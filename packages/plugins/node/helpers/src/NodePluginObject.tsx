@@ -33,6 +33,7 @@ export type TNodeSidebarProps = {
 export type TNodeSidebar = (props: TNodeSidebarProps) => JSX.Element | null;
 
 export type NodeRendererProps = {
+  treeUuid: string;
   nodeId: TNodeId;
   className?: string;
   withNavigation?: boolean;

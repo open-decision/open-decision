@@ -7,13 +7,13 @@ export const useTree = <TReturn>(
   selector: (ReadOnlyTreeClient: ReadOnlyTreeClient<Tree.TTree>) => TReturn
 ) => {
   const {
-    tree: { tree },
+    tree: { tree, uuid },
   } = useTreeContext();
 
   const treeSnapshot = useSnapshot(tree);
   const readOnlyTreeClient = React.useMemo(
-    () => new ReadOnlyTreeClient(treeSnapshot),
-    [treeSnapshot]
+    () => new ReadOnlyTreeClient(uuid, treeSnapshot),
+    [treeSnapshot, uuid]
   );
 
   return selector(readOnlyTreeClient);
@@ -21,10 +21,10 @@ export const useTree = <TReturn>(
 
 export const useSubscribedTreeClient = () => {
   const {
-    tree: { tree },
+    tree: { tree, uuid },
   } = useTreeContext();
 
   const treeSnapshot = useSnapshot(tree);
 
-  return new ReadOnlyTreeClient(treeSnapshot);
+  return new ReadOnlyTreeClient(uuid, treeSnapshot);
 };

@@ -139,7 +139,6 @@ const EmptyTemplateCard = ({ nodeId }: EmptyTemplateCardProps) => {
         className={buttonClasses({})}
         onChange={(event) => {
           const treeUuid = treeClient.get.id();
-          if (!treeUuid) return;
 
           if (!event.currentTarget.files?.[0]) return;
 

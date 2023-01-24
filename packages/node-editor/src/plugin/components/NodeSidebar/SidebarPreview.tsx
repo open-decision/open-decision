@@ -8,9 +8,10 @@ import { useEditor, useSelectedNodeIds } from "../../../state";
 type Props = {
   nodePlugins: TNodePluginGroup;
   edgePlugins: TEdgePluginGroup;
+  treeUuid: string;
 };
 
-export function SidebarPreview({ nodePlugins, edgePlugins }: Props) {
+export function SidebarPreview({ nodePlugins, edgePlugins, treeUuid }: Props) {
   const tree = useTree((treeClient) => treeClient.get.tree());
   const selectedNodeIds = useSelectedNodeIds();
   const { replaceSelectedNodes } = useEditor();
@@ -18,6 +19,7 @@ export function SidebarPreview({ nodePlugins, edgePlugins }: Props) {
   return (
     <Tabs.Content value="Vorschau" className="h-full">
       <Renderer.Root
+        treeUuid={treeUuid}
         isInteractive={false}
         environment="private"
         edgePlugins={edgePlugins}
