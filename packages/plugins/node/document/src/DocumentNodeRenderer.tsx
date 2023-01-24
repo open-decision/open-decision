@@ -120,7 +120,7 @@ export const DocumentNodeRenderer: TNodeRenderer = ({ nodeId, ...props }) => {
       </RendererPrimitives.ContentArea>
       <Row className="justify-end">
         {data ? (
-          <a href={data} download className={buttonClasses({})}>
+          <a href={data} download="Dokument.docx" className={buttonClasses({})}>
             Datei speichern
           </a>
         ) : (
