@@ -1,15 +1,21 @@
 export default {
   pageTitle: "Builder | OD",
   header: {
-    prototypeButton: {
-      button: "Prototyp teilen",
+    preview: {
+      button: "Preview teilen",
       popover: {
-        title: "Prototyp teilen",
+        title: "Preview teilen",
         description:
-          "Wenn der Prototyp aktiviert ist kann jeder mit dem Link den Projekt-Prototyp ansehen.",
-        checkbox: "Prototyp öffentlich teilen",
-        newTabLink: "In neuem Tab öffnen",
-        copyLinkButton: "Link kopieren",
+          "Wenn die Preview geteilt wird kann jeder mit dem Link die Preview öffnen.",
+        checkbox: "Preview öffentlich teilen",
+        copyLinkButton: {
+          enabled: "Preview Link kopieren",
+          disabled: "Aktiviere erst die Preview",
+        },
+        openSharedPreviewButton: "Öffne geteilte Preview",
+      },
+      previewLink: {
+        hiddenLabel: "Preview öffnen",
       },
     },
   },

@@ -1,32 +1,52 @@
 import { de } from "@open-decision/translations";
 import { Locator, Page } from "@playwright/test";
 
-export class PrototypeDialogComponent {
+export class PreviewDialogComponent {
   readonly button: Locator;
   readonly activeCheckbox: Locator;
-  readonly openLink: Locator;
+  readonly privateLink: Locator;
+  readonly sharedLinkCopyButton: Locator;
+  readonly openSharedLink: Locator;
 
   constructor(page: Page) {
     this.button = page.locator(
-      `button >> text=${de.builder.header.prototypeButton.button}`
+      `button >> text=${de.builder.header.preview.button}`
     );
+
     this.activeCheckbox = page.locator(
-      `text=${de.builder.header.prototypeButton.popover.checkbox}`
+      `text=${de.builder.header.preview.popover.checkbox}`
     );
-    this.openLink = page.locator(
-      `text=${de.builder.header.prototypeButton.popover.newTabLink}`
+
+    this.privateLink = page.getByRole("link", {
+      name: de.builder.header.preview.previewLink.hiddenLabel,
+    });
+
+    this.sharedLinkCopyButton = page.locator(
+      `text=${de.builder.header.preview.popover.copyLinkButton}.enabled`
     );
+
+    this.openSharedLink = page.getByRole("link", {
+      name: de.builder.header.preview.popover.openSharedPreviewButton,
+    });
   }
 
   async open() {
     await this.button.click();
   }
 
-  async toggleCheckbox() {
+  async activateSharedPreview() {
+    await this.open();
     await this.activeCheckbox.click();
   }
 
-  async openPrototype() {
-    await this.openLink.click();
+  async openPrivatePreview() {
+    await this.privateLink.click();
+  }
+
+  async openSharedPreview() {
+    await this.activateSharedPreview();
+    await this.sharedLinkCopyButton.click();
+
+    await this.openSharedLink.click();
   }
 }

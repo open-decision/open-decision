@@ -2,13 +2,13 @@ import { Page } from "@playwright/test";
 import { HeaderComponent } from "./HeaderComponent";
 import { NodeSearch } from "./NodeSearch";
 import { ProjectMenuComponent } from "./ProjectMenuComponent";
-import { PrototypeDialogComponent } from "./PrototypeDialogComponent";
+import { PreviewDialogComponent } from "./PrototypeDialogComponent";
 
 export class EditorHeaderComponent extends HeaderComponent {
   readonly title: string;
   readonly nodeSearch: NodeSearch;
   readonly projectMenuDropdown: ProjectMenuComponent;
-  readonly prototypeDialog: PrototypeDialogComponent;
+  readonly prototypeDialog: PreviewDialogComponent;
 
   constructor(page: Page, title: string) {
     super(page);
@@ -16,6 +16,6 @@ export class EditorHeaderComponent extends HeaderComponent {
     this.title = title;
     this.nodeSearch = new NodeSearch(page);
     this.projectMenuDropdown = new ProjectMenuComponent(page, title);
-    this.prototypeDialog = new PrototypeDialogComponent(page);
+    this.prototypeDialog = new PreviewDialogComponent(page);
   }
 }

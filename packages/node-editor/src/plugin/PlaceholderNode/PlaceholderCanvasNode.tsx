@@ -1,14 +1,14 @@
-import { Icon } from "@open-decision/design-system";
 import { TCanvasNode } from "@open-decision/plugins-node-helpers";
-import { QuestionMarkIcon } from "@radix-ui/react-icons";
+import { useTree } from "@open-decision/tree-sync";
 import { CanvasNodeContainer } from "../components/CanvasNode";
+import { PlaceholderNodePlugin } from "./PlaceholderNodePlugin";
+
+const PlaceholderNode = new PlaceholderNodePlugin();
 
 export const PlaceholderCanvasNode: TCanvasNode = (props) => {
-  return (
-    <CanvasNodeContainer {...props}>
-      <Icon>
-        <QuestionMarkIcon />
-      </Icon>
-    </CanvasNodeContainer>
-  );
+  const node = useTree(PlaceholderNode.getSingle(props.id));
+
+  if (!node) return null;
+
+  return <CanvasNodeContainer {...props}>{node.name}</CanvasNodeContainer>;
 };

@@ -1,6 +1,5 @@
 import { test as base } from "@playwright/test";
 import {
-  DashboardPage,
   RegisterPage,
   LoginPage,
   ForgotPasswordPage,
@@ -16,7 +15,7 @@ import {
 } from "./pageModels";
 
 type Fixtures = {
-  dashboardPage: DashboardPage;
+  dashboardPage: Awaited<ReturnType<typeof createDashboardPage>>;
   registerPage: RegisterPage;
   loginPage: LoginPage;
   forgotPasswordPage: ForgotPasswordPage;
@@ -104,8 +103,8 @@ export const pwTest = base.extend<Fixtures>({
 
     await sharedPrototypePage.cleanup();
   },
-  publishedPage: async ({ page, context }, use) => {
-    const publishedPage = await createPublishedPage(page, context);
+  publishedPage: async ({ page }, use) => {
+    const publishedPage = await createPublishedPage(page);
     await publishedPage.goto();
 
     await use(publishedPage);

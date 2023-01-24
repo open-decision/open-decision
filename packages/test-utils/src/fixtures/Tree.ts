@@ -163,4 +163,8 @@ export class TreeFixture {
       this.createdTrees.map((treeUuid) => this.remove(treeUuid))
     );
   }
+
+  addCreatedTree(treeUuid: string) {
+    this.createdTrees.push(treeUuid);
+  }
 }

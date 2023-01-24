@@ -7,14 +7,19 @@ import { ProjectMenuComponent } from "../componentModels/ProjectMenuComponent";
 import { TUser, UserFixture } from "../../fixtures/User";
 import { TreeFixture, createDefaultSetOfTrees } from "../../fixtures/Tree";
 import { proxiedPlaywrightOD } from "../playwright/APIClient";
-import { PartialTree } from "../../fixtures";
-import { TCreatePublishedTreeOutput } from "@open-decision/api-specification";
+import { createTreeOutput, treesRoot } from "@open-decision/api-specification";
 
-export class DashboardPage<
-  TTrees extends Record<string, PartialTree | TCreatePublishedTreeOutput> = any
-> {
+export type DashboardPageConstructorParams<
+  TTreeFixture extends TreeFixture = TreeFixture
+> = {
+  page: Page;
+  user: TUser;
+  DataFixtures: { User: UserFixture; Tree: TTreeFixture };
+};
+
+export class DashboardPage<TTreeFixture extends TreeFixture = TreeFixture> {
   readonly page: Page;
-  readonly dataFixtures: { User: UserFixture; Tree: TreeFixture };
+  readonly DataFixtures: { User: UserFixture; Tree: TTreeFixture };
   readonly filterButton: Locator;
   readonly sortButton: Locator;
   readonly createProjectDropdown: Locator;
@@ -23,18 +28,15 @@ export class DashboardPage<
   readonly header: HeaderComponent;
   readonly user: TUser;
   readonly searchInput: Locator;
-  readonly trees: TTrees;
 
-  constructor(
-    page: Page,
-    user: TUser,
-    trees: TTrees,
-    DataFixtures: { User: UserFixture; Tree: TreeFixture }
-  ) {
+  constructor({
+    DataFixtures,
+    page,
+    user,
+  }: DashboardPageConstructorParams<TTreeFixture>) {
     this.page = page;
     this.user = user;
-    this.trees = trees;
-    this.dataFixtures = DataFixtures;
+    this.DataFixtures = DataFixtures;
     this.filterButton = page.locator(`text=Filter`);
     this.sortButton = page.locator(`text=Sortieren`);
     this.createProjectDropdown = page.locator(`text=Projekt erstellen`);
@@ -51,8 +53,8 @@ export class DashboardPage<
   }
 
   async cleanup() {
-    await this.dataFixtures.Tree.cleanup();
-    await this.dataFixtures.User.cleanup();
+    await this.DataFixtures.Tree.cleanup();
+    await this.DataFixtures.User.cleanup();
   }
 
   async openCreateProjectDropdown() {
@@ -69,7 +71,23 @@ export class DashboardPage<
   async createProject(title: string) {
     this.openCreateProjectDialog();
 
-    await this.createProjectDialog.createProject(title);
+    const [createProjectResponse] = await Promise.all([
+      this.page.waitForResponse((response) => {
+        return (
+          response.url().includes(treesRoot) &&
+          response.status() < 300 &&
+          response.request().method() === "POST"
+        );
+      }),
+      this.createProjectDialog.createProject(title),
+    ]);
+
+    const json = await createProjectResponse.json();
+    const parsedOutput = createTreeOutput.parse(json);
+
+    this.DataFixtures.Tree.addCreatedTree(parsedOutput.uuid);
+
+    return parsedOutput;
   }
 
   async openImportProjectDialog() {
@@ -172,16 +190,18 @@ export async function createDashboardPage(
   fixtures?: { User?: UserFixture; Tree?: TreeFixture }
 ) {
   const User = fixtures?.User ? fixtures.User : new UserFixture();
+
   const Tree = fixtures?.Tree
     ? fixtures.Tree
     : new TreeFixture(await proxiedPlaywrightOD(page.request));
+
   const user = await User.insert();
 
   await page.request.post(`/api/external-api/auth/login`, {
     data: { email: user.email, password: user.password },
   });
 
-  const trees = await createDefaultSetOfTrees(Tree, user);
+  await createDefaultSetOfTrees(Tree, user);
 
-  return new DashboardPage(page, user, trees, { User, Tree });
+  return new DashboardPage({ page, user, DataFixtures: { User, Tree } });
 }

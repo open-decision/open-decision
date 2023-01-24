@@ -13,7 +13,11 @@ import {
   Separator,
   buttonClasses,
 } from "@open-decision/design-system";
-import { ClipboardCopyIcon, PlayIcon } from "@radix-ui/react-icons";
+import {
+  ClipboardCopyIcon,
+  ExternalLinkIcon,
+  PlayIcon,
+} from "@radix-ui/react-icons";
 import { useTranslations } from "next-intl";
 import NextLink from "next/link";
 import { useNotificationTemplate } from "@open-decision/design-system";
@@ -22,6 +26,8 @@ import { useTreeAPI } from "@open-decision/api-react-binding";
 type Props = { treeId: string; hasPreview: boolean };
 
 export function PrototypButton({ treeId, hasPreview }: Props) {
+  const notificationMessages = useTranslations("common.notifications");
+
   const { mutate: updateTree, isLoading: isUpdating } = useTreeAPI().useUpdate({
     notification: false,
     onSuccess: (_, { body: { hasPreview } }) => {
@@ -42,9 +48,7 @@ export function PrototypButton({ treeId, hasPreview }: Props) {
     defaultValues: { preview: hasPreview },
   });
 
-  const t = useTranslations("builder.header.prototypeButton");
-  const notificationMessages = useTranslations("common.notifications");
-  const common = useTranslations("common");
+  const tPreview = useTranslations("builder.header.preview");
   const addNotificationFromTemplate = useNotificationTemplate();
 
   const link =
@@ -64,7 +68,7 @@ export function PrototypButton({ treeId, hasPreview }: Props) {
       <Row>
         <Popover.Trigger asChild>
           <Button className="min-w-max rounded-none rounded-l-md">
-            {t("button")}
+            {tPreview("button")}
           </Button>
         </Popover.Trigger>
         <Separator orientation="vertical" />
@@ -72,6 +76,7 @@ export function PrototypButton({ treeId, hasPreview }: Props) {
           href={link}
           className={buttonClasses({}, "rounded-none rounded-r-md")}
           target="_blank"
+          aria-label={tPreview("previewLink.hiddenLabel")}
         >
           <Icon>
             <PlayIcon />
@@ -80,13 +85,13 @@ export function PrototypButton({ treeId, hasPreview }: Props) {
       </Row>
       <Popover.Content sideOffset={15} asChild>
         <Stack className="z-10 max-w-[350px] p-5 gap-2">
-          <Heading as="h2">{t("popover.title")}</Heading>
-          <Text className="mb-2">{t("popover.description")}</Text>
+          <Heading as="h2">{tPreview("popover.title")}</Heading>
+          <Text className="mb-2">{tPreview("popover.description")}</Text>
           <Stack className="gap-3 justify-between">
             <Form.Root methods={methods}>
               <Row className="gap-2">
                 <Form.Field
-                  Label={t("popover.checkbox")}
+                  Label={tPreview("popover.checkbox")}
                   layout="inline-right"
                   className="max-w-max"
                 >
@@ -105,20 +110,40 @@ export function PrototypButton({ treeId, hasPreview }: Props) {
                 {isUpdating ? <LoadingSpinner /> : null}
               </Row>
             </Form.Root>
-            <Button
-              disabled={!hasPreview}
-              variant="secondary"
-              size="small"
-              onClick={() => {
-                addNotificationFromTemplate("copyLink");
-                navigator.clipboard.writeText(sharingLink);
-              }}
-            >
-              <Icon>
-                <ClipboardCopyIcon />
-              </Icon>
-              {common("projectMenu.publish.copyLink")}
-            </Button>
+            <Row className="gap-2">
+              <Button
+                disabled={!hasPreview}
+                variant="secondary"
+                size="small"
+                className="flex-1"
+                onClick={() => {
+                  addNotificationFromTemplate("copyLink");
+                  navigator.clipboard.writeText(sharingLink);
+                }}
+              >
+                <Icon>
+                  <ClipboardCopyIcon />
+                </Icon>
+                {!hasPreview
+                  ? tPreview("popover.copyLinkButton.disabled")
+                  : tPreview("popover.copyLinkButton.enabled")}
+              </Button>
+              {hasPreview ? (
+                <NextLink
+                  className={buttonClasses({
+                    variant: "tertiary",
+                    size: "small",
+                  })}
+                  href={sharingLink}
+                  target="_blank"
+                  aria-label={tPreview("popover.openSharedPreviewButton")}
+                >
+                  <Icon>
+                    <ExternalLinkIcon />
+                  </Icon>
+                </NextLink>
+              ) : null}
+            </Row>
           </Stack>
         </Stack>
       </Popover.Content>
