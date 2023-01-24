@@ -49,7 +49,7 @@ export type useUpdateTemplateOptions = UseMutationOptions<
 export type useTemplateQueryOptions = UseQueryOptions<
   FetchResponse<Response, TGetTemplateSingleOutput>,
   APIError,
-  TGetTemplateSingleOutput,
+  FetchResponse<Response, TGetTemplateSingleOutput>,
   ReturnType<typeof templateQueryKey>
 >;
 

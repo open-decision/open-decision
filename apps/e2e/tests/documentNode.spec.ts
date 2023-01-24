@@ -168,6 +168,7 @@ pwTest(
     const downloadPromise = prototypePage.page.waitForEvent("download");
 
     const DocumentNode = new DocumentNodeModel(prototypePage.page);
+    await prototypePage.page.pause();
     await DocumentNode.renderer.download("Vertrag generieren");
 
     const download = await downloadPromise;
@@ -198,8 +199,6 @@ pwTest(
     await download.saveAs(
       `${testInfo.outputDir}/auroa-contract-shared-prototype_${testInfo.project.name}.docx`
     );
-
-    await sharedPrototypePage.page.pause();
 
     expect(
       (await fs.promises.stat((await download.path()) as string)).size

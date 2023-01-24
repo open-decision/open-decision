@@ -27,7 +27,7 @@ export const createTreeFixture = (
   ...data,
 });
 
-export const insertTrees = (userUuid: string, trees: PartialTree[]) =>
-  prisma.decisionTree.createMany({
+export const insertTrees = async (userUuid: string, trees: PartialTree[]) =>
+  await prisma.decisionTree.createMany({
     data: trees.map((tree) => ({ ...tree, ownerUuid: userUuid })),
   });

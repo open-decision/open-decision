@@ -7,19 +7,31 @@ import { ProjectMenuComponent } from "../componentModels/ProjectMenuComponent";
 import { TUser, UserFixture } from "../../fixtures/User";
 import { TreeFixture, createDefaultSetOfTrees } from "../../fixtures/Tree";
 import { proxiedPlaywrightOD } from "../playwright/APIClient";
-import { createTreeOutput, treesRoot } from "@open-decision/api-specification";
+import {
+  createTreeOutput,
+  TCreateTreeOutput,
+  TGetPublishedTreeOutput,
+  treesRoot,
+} from "@open-decision/api-specification";
+import { PartialTree } from "../../fixtures";
+
+export type TTrees = Record<
+  string,
+  TCreateTreeOutput | PartialTree | TGetPublishedTreeOutput
+>;
 
 export type DashboardPageConstructorParams<
-  TTreeFixture extends TreeFixture = TreeFixture
+  TDashboardTrees extends TTrees = TTrees
 > = {
   page: Page;
   user: TUser;
-  DataFixtures: { User: UserFixture; Tree: TTreeFixture };
+  trees: TDashboardTrees;
+  DataFixtures: { User: UserFixture; Tree: TreeFixture };
 };
 
-export class DashboardPage<TTreeFixture extends TreeFixture = TreeFixture> {
+export class DashboardPage<TDashboardTrees extends TTrees = TTrees> {
   readonly page: Page;
-  readonly DataFixtures: { User: UserFixture; Tree: TTreeFixture };
+  readonly DataFixtures: { User: UserFixture; Tree: TreeFixture };
   readonly filterButton: Locator;
   readonly sortButton: Locator;
   readonly createProjectDropdown: Locator;
@@ -28,14 +40,17 @@ export class DashboardPage<TTreeFixture extends TreeFixture = TreeFixture> {
   readonly header: HeaderComponent;
   readonly user: TUser;
   readonly searchInput: Locator;
+  readonly trees: TDashboardTrees;
 
   constructor({
     DataFixtures,
     page,
     user,
-  }: DashboardPageConstructorParams<TTreeFixture>) {
+    trees,
+  }: DashboardPageConstructorParams<TDashboardTrees>) {
     this.page = page;
     this.user = user;
+    this.trees = trees;
     this.DataFixtures = DataFixtures;
     this.filterButton = page.locator(`text=Filter`);
     this.sortButton = page.locator(`text=Sortieren`);
@@ -201,7 +216,7 @@ export async function createDashboardPage(
     data: { email: user.email, password: user.password },
   });
 
-  await createDefaultSetOfTrees(Tree, user);
+  const trees = await createDefaultSetOfTrees(Tree, user);
 
-  return new DashboardPage({ page, user, DataFixtures: { User, Tree } });
+  return new DashboardPage({ page, user, trees, DataFixtures: { User, Tree } });
 }

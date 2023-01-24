@@ -3,25 +3,26 @@
   "sourceRoot": "packages/test-utils/src",
   "projectType": "library",
   "implicitDependencies": ["prisma"],
-  "targets": {},
-  "lint": {
-    "executor": "@nrwl/linter:eslint",
-    "outputs": ["{options.outputFile}"],
-    "options": {
-      "lintFilePatterns": ["packages/test-utils/**/*.ts"]
-    }
-  },
-  "test": {
-    "executor": "@nxext/vitest:vitest",
-    "options": {
-      "command": "run"
-    }
-  },
-  "typecheck": {
-    "executor": "nx:run-commands",
-    "options": {
-      "command": "tsc -p tsconfig.lib.json --noEmit",
-      "cwd": "packages/test-utils"
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/test-utils/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nxext/vitest:vitest",
+      "options": {
+        "command": "run"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -p tsconfig.lib.json --noEmit",
+        "cwd": "packages/test-utils"
+      }
     }
   },
   "name": "test-utils"

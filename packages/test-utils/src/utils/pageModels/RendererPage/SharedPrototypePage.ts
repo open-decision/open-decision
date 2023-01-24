@@ -31,7 +31,12 @@ export async function createSharedPrototypePage(
     data: { email: user.email, password: user.password },
   });
 
-  const editorPage = new EditorPage(page, user, tree, { User, Tree });
+  const editorPage = new EditorPage({
+    page,
+    user,
+    tree,
+    DataFixtures: { User, Tree },
+  });
 
   await editorPage.goto();
 
@@ -51,8 +56,13 @@ export async function createSharedPrototypePage(
 
   await context.clearCookies();
 
-  return new SharedPrototypePage(page, user, tree, {
-    Tree,
-    User,
+  return new SharedPrototypePage({
+    page,
+    user,
+    tree,
+    DataFixtures: {
+      Tree,
+      User,
+    },
   });
 }

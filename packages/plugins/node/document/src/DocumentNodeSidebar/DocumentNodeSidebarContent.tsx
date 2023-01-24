@@ -78,7 +78,7 @@ export const TemplateCard = ({ templateUuid, nodeId }: TemplateCardProps) => {
   return (
     <Stack className={sidebarCardClasses}>
       <Row className="justify-between items-center">
-        <Text>{`${data?.displayName}`}</Text>
+        <Text>{`${data?.data.displayName}`}</Text>
         <Row className="gap-2">
           <FileInput
             type="upload"

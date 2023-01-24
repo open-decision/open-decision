@@ -27,7 +27,12 @@ export async function createPrototypePage(page: Page) {
     data: { email: user.email, password: user.password },
   });
 
-  const editorPage = new EditorPage(page, user, tree, { User, Tree });
+  const editorPage = new EditorPage({
+    page,
+    user,
+    tree,
+    DataFixtures: { User, Tree },
+  });
 
   await editorPage.goto();
 
@@ -45,8 +50,13 @@ export async function createPrototypePage(page: Page) {
     Notification.getLocator(de.common.notifications.addTemplate.title)
   ).toBeVisible();
 
-  return new PrototypePage(page, user, tree, {
-    Tree,
-    User,
+  return new PrototypePage({
+    page,
+    user,
+    tree,
+    DataFixtures: {
+      Tree,
+      User,
+    },
   });
 }

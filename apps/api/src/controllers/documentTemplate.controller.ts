@@ -25,6 +25,7 @@ export const requestDocumentTemplateUpload = catchAsync(
           reqData.body.templateUuid
         )
       : await hasPermissionsForTree(req.user.uuid, reqData.body.treeUuid);
+
     if (!hasPermissions) {
       throw new APIError({
         code: "UNAUTHORIZED",

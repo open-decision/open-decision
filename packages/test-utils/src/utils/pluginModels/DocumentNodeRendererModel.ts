@@ -1,4 +1,4 @@
-import { Page } from "@playwright/test";
+import { Locator, Page } from "@playwright/test";
 
 export class DocumentNodeModel {
   readonly page: Page;
@@ -14,17 +14,24 @@ export class DocumentNodeModel {
 
 class DocumentNodeRenderer {
   readonly page: Page;
+  readonly locators: {
+    downloadLink: Locator;
+  };
 
   constructor(page: Page) {
     this.page = page;
+    this.locators = {
+      downloadLink: page.getByText("Datei speichern"),
+    };
   }
 
-  getDownloadLocator(buttonText: string) {
+  getGenerateLocator(buttonText: string) {
     return this.page.locator(`button >> text=${buttonText}`);
   }
 
   async download(buttonText: string) {
-    await this.getDownloadLocator(buttonText).click();
+    await this.getGenerateLocator(buttonText).click();
+    await this.locators.downloadLink.click();
   }
 }
 

@@ -24,18 +24,15 @@ export class PublishedPage extends RendererPage {
 export const createPublishedPage = async (page: Page) => {
   const UserClass = new UserFixture();
   const TreeClass = new TreeFixture(await proxiedPlaywrightOD(page.request));
+
   const dashboardPage = await createDashboardPage(page, {
     Tree: TreeClass,
     User: UserClass,
   });
 
-  return new PublishedPage(
+  return new PublishedPage({
+    ...dashboardPage,
     page,
-    dashboardPage.user,
-    dashboardPage.trees.publishedTree,
-    {
-      Tree: TreeClass,
-      User: UserClass,
-    }
-  );
+    tree: dashboardPage.trees.publishedTree,
+  });
 };

@@ -1,9 +1,9 @@
 import * as React from "react";
 import {
   addNotification,
+  buttonClasses,
   Row,
   SubmitButton,
-  VisuallyHidden,
 } from "@open-decision/design-system";
 import { useInterpreter } from "@open-decision/interpreter-react";
 import { useMutation } from "@tanstack/react-query";
@@ -37,7 +37,6 @@ export const DocumentNodeRenderer: TNodeRenderer = ({ nodeId, ...props }) => {
 
   const t = useTranslations("common.errors");
 
-  const ref = React.useRef<HTMLAnchorElement | null>(null);
   const { mutate, data, isLoading } = useMutation(
     ["generateDocument"],
     async () => {
@@ -90,12 +89,6 @@ export const DocumentNodeRenderer: TNodeRenderer = ({ nodeId, ...props }) => {
       return URL.createObjectURL(file);
     },
     {
-      onSuccess: (data) => {
-        if (!ref.current || !data) return;
-
-        ref.current.href = data;
-        return ref.current.click();
-      },
       onError: (error) => {
         if (isODError(error)) {
           addNotification({
@@ -126,19 +119,20 @@ export const DocumentNodeRenderer: TNodeRenderer = ({ nodeId, ...props }) => {
         ) : null}
       </RendererPrimitives.ContentArea>
       <Row className="justify-end">
-        <SubmitButton
-          type="button"
-          onClick={() => mutate()}
-          className="max-w-max"
-          isLoading={isLoading}
-        >
-          Vertrag generieren
-        </SubmitButton>
-        <VisuallyHidden>
-          <a href={data} download={`Vertrag.docx`} ref={ref}>
+        {data ? (
+          <a href={data} download className={buttonClasses({})}>
             Datei speichern
           </a>
-        </VisuallyHidden>
+        ) : (
+          <SubmitButton
+            type="button"
+            onClick={() => mutate()}
+            className="max-w-max"
+            isLoading={isLoading}
+          >
+            Vertrag generieren
+          </SubmitButton>
+        )}
       </Row>
     </RendererPrimitives.Container>
   );
