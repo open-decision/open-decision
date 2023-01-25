@@ -9,7 +9,7 @@ const headingSizeClasses = {
   "extra-large": "extra-large-heading",
 };
 
-const sharedHeadingClasses = "break-all";
+const sharedHeadingClasses = "break-words";
 
 export type HeadingSizeVariants = keyof typeof headingSizeClasses;
 

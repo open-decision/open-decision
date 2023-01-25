@@ -84,7 +84,7 @@ export default function Page({ treeUuid }: PageProps) {
           <Stack center className="bg-layer-1 h-full">
             <Renderer.View
               treeUuid={treeUuid}
-              className="mb-2 p-4 h-full max-w-[700px] lg:mb-4"
+              className="h-full max-w-[700px]"
               nodePlugins={nodePlugins}
               edgePlugins={edgePlugins}
             />
