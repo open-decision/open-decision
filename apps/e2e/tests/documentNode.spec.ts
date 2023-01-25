@@ -9,6 +9,7 @@ import { expect } from "@playwright/test";
 import fs from "fs";
 
 const fillAuroaTree = async (prototypePage: RendererPage) => {
+  await prototypePage.page.pause();
   await prototypePage.renderer.submitButton.click();
 
   await prototypePage.renderer.submitButton.click();

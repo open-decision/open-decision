@@ -81,9 +81,7 @@ export function Container({
           />
         ) : null}
       </Stack>
-      <Stack className="mb-1 px-4 lg:mb-4 lg:px-8">
-        <Logo className="w-[72px] lg:w-[88px]" />
-      </Stack>
+      <Logo className="h-[25px] w-[60px] lg:w-[90px] lg:absolute lg:bottom-4 lg:right-6 pr-2 self-end" />
     </>
   );
 }

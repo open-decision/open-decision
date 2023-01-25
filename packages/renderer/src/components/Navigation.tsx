@@ -27,28 +27,17 @@ export function Navigation({
     <Tooltip.Root open={!isInteractive && open} onOpenChange={setOpen}>
       <Tooltip.Trigger asChild>
         <div
-          className={`grid grid-cols-2 gap-2 pt-4 pb-2 lg:py-6 rounded-md ${className}`}
+          className={`grid auto-cols-fr grid-flow-col gap-2 pt-4 pb-2 lg:py-4 rounded-md ${className}`}
         >
-          <BackButton
-            classNames={[
-              isStartNode && !isModule
-                ? "opacity-0 pointer-events-none"
-                : "opacity-100",
-            ]}
-            disabled={isStartNode && !isModule}
-          />
-          <Form.SubmitButton
-            form="form"
-            classNames={[
-              isInteractive ? "" : "pointer-events-none",
-              isFinalNode && !isModule
-                ? "opacity-0 pointer-events-none"
-                : "opacity-100",
-            ]}
-            disabled={(isFinalNode && !isModule) || !isInteractive}
-          >
-            {successButtonLabel ? successButtonLabel : "Zum nächsten Schritt"}
-          </Form.SubmitButton>
+          {isStartNode && !isModule ? null : <BackButton />}
+          {isFinalNode && !isModule ? null : (
+            <Form.SubmitButton
+              form="form"
+              className={isInteractive ? "" : "pointer-events-none"}
+            >
+              {successButtonLabel ? successButtonLabel : "Zum nächsten Schritt"}
+            </Form.SubmitButton>
+          )}
         </div>
       </Tooltip.Trigger>
       <Tooltip.Content>
