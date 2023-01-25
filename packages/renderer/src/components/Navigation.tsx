@@ -59,9 +59,9 @@ export function Navigation({
   );
 }
 
-type BackButtonProps = { className?: string; disabled?: boolean };
+type BackButtonProps = { classNames?: string[]; disabled?: boolean };
 
-export function BackButton({ className, disabled }: BackButtonProps) {
+export function BackButton({ classNames, disabled }: BackButtonProps) {
   const { send, canGoBack } = useInterpreter();
 
   return (
@@ -71,7 +71,7 @@ export function BackButton({ className, disabled }: BackButtonProps) {
         return send("GO_BACK");
       }}
       disabled={!canGoBack || disabled}
-      classNames={["colorScheme-gray", className]}
+      classNames={["colorScheme-gray", classNames]}
     >
       <Icon label="Zurück">
         <ArrowLeftIcon />
