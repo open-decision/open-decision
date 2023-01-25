@@ -60,9 +60,6 @@ export function Container({
 
   return (
     <>
-      <Stack className="p-2 px-4 lg:p-4 lg:px-8 self-start">
-        <Logo className="w-[70px] lg:w-[100px]" />
-      </Stack>
       <Stack
         classNames={[
           `rounded-md overflow-hidden w-full`,
@@ -71,7 +68,9 @@ export function Container({
         ]}
         style={mapKeys(theme ?? {}, (key) => `--${key}`) as React.CSSProperties}
       >
-        <Stack className="flex-1 overflow-hidden lg:mt-4">{children}</Stack>
+        <Stack className="flex-1 overflow-hidden mt-4 lg:mt-10">
+          {children}
+        </Stack>
         <Separator className="m-0" />
         {withNavigation ? (
           <Navigation
@@ -81,6 +80,9 @@ export function Container({
             isFinalNode={node.final}
           />
         ) : null}
+      </Stack>
+      <Stack className="mb-1 px-4 lg:mb-4 lg:px-8">
+        <Logo className="w-[72px] lg:w-[88px]" />
       </Stack>
     </>
   );

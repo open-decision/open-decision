@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Icon, Button, Row, Form, Tooltip } from "@open-decision/design-system";
+import { Icon, Button, Form, Tooltip } from "@open-decision/design-system";
 import { useInterpreter } from "@open-decision/interpreter-react";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 
@@ -26,15 +26,15 @@ export function Navigation({
   return (
     <Tooltip.Root open={!isInteractive && open} onOpenChange={setOpen}>
       <Tooltip.Trigger asChild>
-        <Row
-          classNames={["max-w-max gap-2 py-4 lg:py-6 rounded-md", className]}
+        <div
+          className={`grid grid-cols-2 gap-2 pt-4 pb-2 lg:py-6 rounded-md ${className}`}
         >
           <BackButton
-            className={
+            classNames={[
               isStartNode && !isModule
                 ? "opacity-0 pointer-events-none"
-                : "opacity-100"
-            }
+                : "opacity-100",
+            ]}
             disabled={isStartNode && !isModule}
           />
           <Form.SubmitButton
@@ -49,7 +49,7 @@ export function Navigation({
           >
             {successButtonLabel ? successButtonLabel : "Zum nächsten Schritt"}
           </Form.SubmitButton>
-        </Row>
+        </div>
       </Tooltip.Trigger>
       <Tooltip.Content>
         Die Vorschau ist nicht interaktiv. Um mit dem Baum zu interagieren nutze
@@ -66,12 +66,12 @@ export function BackButton({ className, disabled }: BackButtonProps) {
 
   return (
     <Button
-      variant="neutral"
+      variant="secondary"
       onClick={() => {
         return send("GO_BACK");
       }}
       disabled={!canGoBack || disabled}
-      classNames={["min-w-max", className]}
+      classNames={["colorScheme-gray", className]}
     >
       <Icon label="Zurück">
         <ArrowLeftIcon />
