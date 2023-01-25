@@ -60,8 +60,8 @@ export function Container({
 
   return (
     <>
-      <Stack className="p-1 px-4 lg:p-4 lg:px-8 self-start">
-        <Logo className="w-[60px] lg:w-[100px]" />
+      <Stack className="p-2 px-4 lg:p-4 lg:px-8 self-start">
+        <Logo className="w-[70px] lg:w-[100px]" />
       </Stack>
       <Stack
         classNames={[

@@ -40,13 +40,13 @@ export class DashboardPage<TDashboardTrees extends TTrees = TTrees> {
   readonly header: HeaderComponent;
   readonly user: TUser;
   readonly searchInput: Locator;
-  readonly trees?: TDashboardTrees;
+  readonly trees: TDashboardTrees;
 
   constructor({
     DataFixtures,
     page,
     user,
-    trees,
+    trees = {} as TDashboardTrees,
   }: DashboardPageConstructorParams<TDashboardTrees>) {
     this.page = page;
     this.user = user;
