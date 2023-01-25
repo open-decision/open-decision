@@ -16,7 +16,7 @@ export const badgeClasses = (
   classNames?: ClassNameValue[]
 ) =>
   twMerge(
-    "rounded-md text-center border border-solid colorScheme-primary bg-colorScheme2 border-colorScheme6 text-colorScheme11 flex items-center justify-center gap-1 break-keep",
+    "rounded-md text-center colorScheme-primary bg-colorScheme2 text-colorScheme11 flex items-center justify-center gap-1 break-keep",
     size && sizeStyles[size],
     ...(classNames ? classNames : [])
   );

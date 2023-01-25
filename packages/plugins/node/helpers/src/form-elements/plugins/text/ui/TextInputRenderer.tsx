@@ -24,7 +24,7 @@ export const TextInputRenderer: InputRenderer = ({ inputId }) => {
       <Form.Input
         {...register(inputId, { required: input.required })}
         autoComplete="off"
-        className="bg-layer-1"
+        className="bg-layer-2"
       />
     </Form.Field>
   );

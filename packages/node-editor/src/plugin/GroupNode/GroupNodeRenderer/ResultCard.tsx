@@ -46,7 +46,7 @@ export function ResultCard({ result, resultNumber, node, onEdit }: Props) {
   const nodeTitle = `${resultNumber}. ${node.title ?? "Antwort"}`;
 
   return (
-    <Stack className="gap-6 border border-gray5 p-4 bg-layer-1 rounded-md">
+    <Stack className="gap-6 border border-gray5 p-4 bg-layer-2 rounded-md">
       <Row className="items-center justify-between">
         <Heading as="h2" size="small">
           {nodeTitle}
@@ -75,12 +75,14 @@ type PrimitiveResultProps = {
 const PrimitiveResult = ({ result }: PrimitiveResultProps) => {
   return (
     <Stack>
-      <Row className="items-center mt-2 gap-2">
+      <Row className="items-center mt-2 gap-2 flex-wrap">
         <Label className={textClasses({})}>{result.name}</Label>
-        <Icon>
-          <ChevronRightIcon />
-        </Icon>
-        <Text>{result.readableValue}</Text>
+        <Row className="items-center gap-2">
+          <Icon>
+            <ChevronRightIcon />
+          </Icon>
+          <Text>{result.readableValue}</Text>
+        </Row>
       </Row>
     </Stack>
   );

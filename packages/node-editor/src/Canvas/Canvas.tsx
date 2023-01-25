@@ -87,7 +87,7 @@ export function Canvas({
         defaultViewport={defaultViewport}
         fitView={!defaultViewport}
         maxZoom={2}
-        minZoom={0.3}
+        minZoom={0.1}
         panOnScroll
         fitViewOptions={{ maxZoom: 1, minZoom: 0.1, padding: 0.2 }}
         onNodesChange={(nodeChanges) => {
