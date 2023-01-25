@@ -81,7 +81,7 @@ function App({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
             {getLayout(<Component {...pageProps} />)}
           </Tooltip.Provider>
         </Hydrate>
-        {/* {process.env.NODE_ENV === "development" && <ReactQueryDevtools />} */}
+        {process.env.NODE_ENV === "development" && <ReactQueryDevtools />}
       </QueryClientProvider>
     </ErrorBoundary>
   );
