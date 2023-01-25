@@ -97,6 +97,7 @@ type Context = {
   isInteractive: boolean;
   interpreterMachine: InterpreterMachine;
   treeUuid: string;
+  isModule: boolean;
 };
 
 const MachineContext = React.createContext<Context | null>(null);
@@ -108,6 +109,7 @@ export type InterpreterProviderProps = {
     UseMachineOptions<TModuleVariableValue, InterpreterEvents>;
   edgePlugins: TEdgePluginGroup;
   treeUuid: string;
+  isModule?: boolean;
 } & InterpreterOptions;
 
 export function InterpreterProvider({
@@ -116,6 +118,7 @@ export function InterpreterProvider({
   config,
   edgePlugins,
   treeUuid,
+  isModule = false,
   ...options
 }: InterpreterProviderProps) {
   const readOnlyTreeClient = new ReadOnlyTreeClient(treeUuid, tree);
@@ -147,6 +150,7 @@ export function InterpreterProvider({
         isInteractive: options?.isInteractive ?? true,
         interpreterMachine,
         treeUuid,
+        isModule,
       }}
     >
       {children}
@@ -170,28 +174,23 @@ export function useInterpreterService() {
 }
 
 export function useInterpreter() {
-  const {
-    service,
-    tree,
-    environment,
-    isInteractive,
-    interpreterMachine,
-    treeUuid,
-  } = useInterpreterService();
+  const interpreterContext = useInterpreterService();
 
-  const [state, send] = useActor(service);
+  const [state, send] = useActor(interpreterContext.service);
 
   const methods = React.useMemo(() => {
-    return createInterpreterMethods(interpreterMachine, state, tree, treeUuid);
-  }, [state.context, tree]);
+    return createInterpreterMethods(
+      interpreterContext.interpreterMachine,
+      state,
+      interpreterContext.tree,
+      interpreterContext.treeUuid
+    );
+  }, [state.context]);
 
   return {
     state,
     send,
-    tree,
-    environment,
-    isInteractive,
-    treeUuid,
+    ...interpreterContext,
     ...methods,
   };
 }

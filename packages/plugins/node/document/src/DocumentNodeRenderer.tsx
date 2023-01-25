@@ -77,6 +77,8 @@ export const DocumentNodeRenderer: TNodeRenderer = ({ nodeId, ...props }) => {
           .when(isPrimitiveVariable, (variable) => variable.readableValue)
           .run();
 
+      console.log(mapValues(variables, restructureVariables));
+
       const { response } = await APIClient.trees[environment].generateDocument({
         params: { uuid: node.templateUuid },
         body: { variables: mapValues(variables, restructureVariables) },

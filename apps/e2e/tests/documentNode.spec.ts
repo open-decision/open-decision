@@ -167,6 +167,8 @@ pwTest(
 
     const downloadPromise = prototypePage.page.waitForEvent("download");
 
+    await prototypePage.page.pause();
+
     const DocumentNode = new DocumentNodeModel(prototypePage.page);
     await prototypePage.page.pause();
     await DocumentNode.renderer.download("Vertrag generieren");

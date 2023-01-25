@@ -9,24 +9,39 @@ type Props = {
   onGoBack?: () => void;
   canGoBack?: true;
   isStartNode: boolean;
+  isFinalNode?: true;
 };
 
 export function Navigation({
   className,
   successButtonLabel,
   isStartNode,
+  isFinalNode,
 }: Props) {
   const { isInteractive } = useInterpreter();
   const [open, setOpen] = React.useState(false);
+
+  const { isModule } = useInterpreter();
 
   return (
     <Tooltip.Root open={!isInteractive && open} onOpenChange={setOpen}>
       <Tooltip.Trigger asChild>
         <Row classNames={["p-2 max-w-max gap-2 rounded-md", className]}>
-          <BackButton className={isStartNode ? "opacity-0" : "opacity-100"} />
+          <BackButton
+            className={
+              isStartNode && !isModule
+                ? "opacity-0 pointer-events-none"
+                : "opacity-100"
+            }
+          />
           <Form.SubmitButton
             form="form"
-            className={isInteractive ? "" : "pointer-events-none"}
+            classNames={[
+              isInteractive || (!isFinalNode && !isModule)
+                ? ""
+                : "pointer-events-none",
+              isFinalNode && !isModule ? "opacity-0" : "opacity-100",
+            ]}
           >
             {successButtonLabel ? successButtonLabel : "Zum nächsten Schritt"}
             <Icon label="Vorwärts">

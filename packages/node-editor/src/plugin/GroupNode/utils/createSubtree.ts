@@ -5,7 +5,7 @@ import { IGroupNode } from "../GroupNodePlugin";
 
 const DirectEdge = new DirectEdgePlugin();
 
-export const createSubTree = (masterNode: IGroupNode) => {
+export const createSubTree = (masterNode: IGroupNode, theme?: any) => {
   if (!masterNode.tree)
     throw new ODError({
       code: "MISSING_TREE_IN_MODULE",
@@ -15,6 +15,7 @@ export const createSubTree = (masterNode: IGroupNode) => {
   const treeClient = new TreeClient("", masterNode.tree);
 
   treeClient.nodes.add(masterNode);
+  treeClient.updateTheme(theme);
 
   const edge = DirectEdge.create({
     source: masterNode.id,

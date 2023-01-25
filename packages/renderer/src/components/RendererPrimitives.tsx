@@ -69,6 +69,7 @@ export function Container({
           className="self-center mb-[var(--padding)]"
           successButtonLabel={successButtonLabel}
           isStartNode={nodeId === startNodeId}
+          isFinalNode={node.final}
         />
       ) : null}
     </Stack>

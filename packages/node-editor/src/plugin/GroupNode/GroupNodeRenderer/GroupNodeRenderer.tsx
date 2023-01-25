@@ -42,8 +42,10 @@ function RendererComponent({ nodeId, treeUuid, ...props }: NodeRendererProps) {
 
   const groupNode = GroupNode.getSingle(nodeId)(treeClient);
   const subTree = React.useMemo(() => {
-    return !groupNode ? undefined : createSubTree(clone(groupNode));
-  }, [groupNode]);
+    return !groupNode
+      ? undefined
+      : createSubTree(clone(groupNode), treeClient.get.theme());
+  }, [groupNode, treeClient.get]);
 
   if (!groupNode || !subTree) return null;
 
@@ -149,8 +151,9 @@ function GroupNodeView({
           sendToGroupNode({ type: "FINISH_ITERATION", context });
         }}
         onLeave={() => {
-          return sendToGroupNode("LEAVE_ITERATION");
+          sendToGroupNode("LEAVE_ITERATION");
         }}
+        isModule
       >
         <SubRenderer
           treeUuid={treeUuid}
