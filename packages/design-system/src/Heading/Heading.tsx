@@ -9,6 +9,8 @@ const headingSizeClasses = {
   "extra-large": "extra-large-heading",
 };
 
+const sharedHeadingClasses = "break-all";
+
 export type HeadingSizeVariants = keyof typeof headingSizeClasses;
 
 export type HeadingVariants = { size?: HeadingSizeVariants };
@@ -16,10 +18,7 @@ export type HeadingVariants = { size?: HeadingSizeVariants };
 export const headingClasses = (
   { size = "medium" }: HeadingVariants,
   classNames?: ClassNameValue[] | ClassNameValue
-) =>
-  classNames
-    ? twMerge(headingSizeClasses[size], classNames)
-    : headingSizeClasses[size];
+) => twMerge(headingSizeClasses[size], sharedHeadingClasses, classNames);
 
 export type HeadingProps = React.HTMLAttributes<HTMLHeadingElement> &
   HeadingVariants & { as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" };
