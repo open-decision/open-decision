@@ -6,7 +6,6 @@ import ReactFlow, {
   NodeRemoveChange,
 } from "reactflow";
 import { ConnectionLine } from "./Edges/ConnectionLine";
-import { ODError } from "@open-decision/type-classes";
 import { useTree, useTreeClient } from "@open-decision/tree-sync";
 import { useRFNodes } from "../state/useRFNodes";
 import { useRFEdges } from "../state/useRFEdges";
@@ -24,7 +23,6 @@ type Props = {
   className?: string;
   nodeTypes: NodeTypes;
   edgeTypes: EdgeTypes;
-  onInvalidConnection?: (error: ODError) => void;
   defaultViewport?: { x: number; y: number; zoom: number };
   onUnmount?: (viewport: { x: number; y: number; zoom: number }) => void;
   style?: React.CSSProperties;
@@ -86,13 +84,11 @@ export function Canvas({
         nodes={nodes}
         edges={edges}
         zoomOnDoubleClick={false}
-        panOnScroll={true}
-        panOnScrollSpeed={1.1}
-        selectNodesOnDrag={selectedNodeIds.length > 0}
         defaultViewport={defaultViewport}
         fitView={!defaultViewport}
         maxZoom={2}
-        minZoom={0.1}
+        minZoom={0.3}
+        panOnScroll
         fitViewOptions={{ maxZoom: 1, minZoom: 0.1, padding: 0.2 }}
         onNodesChange={(nodeChanges) => {
           const nodesToDelete = nodeChanges

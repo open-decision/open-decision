@@ -19,7 +19,6 @@ import {
   InputPrimaryActionSlot,
   TAnswer,
 } from "../../../helpers/types";
-import { isNodeId } from "@open-decision/tree-id";
 
 const MultiSelect = new MultiSelectInputPlugin();
 
@@ -103,7 +102,6 @@ const Answer = ({ answer, inputId, groupRef, name }: AnswerProps) => {
 
   const onChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      if (!isNodeId(event.target.value)) return;
       return MultiSelect.updateAnswer(
         inputId,
         answer.id,

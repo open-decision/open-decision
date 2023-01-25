@@ -52,10 +52,6 @@ export const getServerSideProps: GetServerSideProps<
 type PageProps = { treeUuid: string };
 
 const Content = ({ treeUuid }: PageProps) => {
-  const [defaultViewport, setDefaultViewport] = React.useState<
-    { x: number; y: number; zoom: number } | undefined
-  >(undefined);
-
   const { nodePlugins, edgePlugins } = useTreeClientWithPlugins();
 
   return (
@@ -72,8 +68,6 @@ const Content = ({ treeUuid }: PageProps) => {
         nodePlugins={nodePlugins}
         edgePlugins={edgePlugins}
         className="col-[2] row-[2] h-full overflow-hidden"
-        defaultViewport={defaultViewport}
-        onUnmount={(viewport) => setDefaultViewport(viewport)}
       />
     </Layout>
   );
