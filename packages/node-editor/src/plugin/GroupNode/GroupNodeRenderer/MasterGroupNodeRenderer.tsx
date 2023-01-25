@@ -1,4 +1,4 @@
-import { Form, Heading, Row, stackClasses } from "@open-decision/design-system";
+import { Form, stackClasses } from "@open-decision/design-system";
 import { useInterpreter } from "@open-decision/interpreter-react";
 import { RendererPrimitives } from "@open-decision/renderer";
 import { RichTextRenderer } from "@open-decision/rich-text-editor";
@@ -37,15 +37,7 @@ export const MasterGroupNodeRenderer = ({
           {groupNode.content ? (
             <RichTextRenderer content={groupNode.content} className="px-0" />
           ) : null}
-          <Row className="items-center justify-between">
-            <Heading size="small" as="h3">
-              Bisherige Antworten
-            </Heading>
-            <AddEntryButton
-              onClick={onAddIteration}
-              groupNodeId={groupNode.id}
-            />
-          </Row>
+          <AddEntryButton onClick={onAddIteration} groupNodeId={groupNode.id} />
           {results.length > 0 ? (
             <ol className={stackClasses({}, ["gap-4 mb-4"])}>
               {results.map((value, index) => (

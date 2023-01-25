@@ -73,7 +73,7 @@ export default function VorschauPage({ treeUuid }: PageProps) {
         <Stack center className="bg-layer-2 h-full">
           <Renderer.View
             treeUuid={treeUuid}
-            className="mb-2 px-4 py-4 h-full max-w-[700px] lg:mb-4"
+            className="h-full max-w-[700px]"
             nodePlugins={treeClientWithPlugins.nodePlugins}
             edgePlugins={treeClientWithPlugins.edgePlugins}
           />

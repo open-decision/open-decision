@@ -63,6 +63,12 @@ const config: PlaywrightTestConfig = {
         viewport,
       },
     },
+    {
+      name: "chromium-mobile",
+      use: {
+        ...devices["Pixel 5"],
+      },
+    },
   ],
 };
 

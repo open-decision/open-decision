@@ -2,6 +2,7 @@ import {
   Button,
   Heading,
   Icon,
+  Label,
   Row,
   Separator,
   Stack,
@@ -45,9 +46,11 @@ export function ResultCard({ result, resultNumber, node, onEdit }: Props) {
   const nodeTitle = `${resultNumber}. ${node.title ?? "Antwort"}`;
 
   return (
-    <Stack className="gap-6 border border-gray7 p-4 bg-layer-1 rounded-md">
+    <Stack className="gap-6 border border-gray5 p-4 bg-layer-1 rounded-md">
       <Row className="items-center justify-between">
-        <Heading as="h2">{nodeTitle}</Heading>
+        <Heading as="h2" size="small">
+          {nodeTitle}
+        </Heading>
         <Button
           size="small"
           variant="secondary"
@@ -73,13 +76,11 @@ const PrimitiveResult = ({ result }: PrimitiveResultProps) => {
   return (
     <Stack>
       <Row className="items-center mt-2 gap-2">
-        <h4 className={textClasses({}, "font-[500] text-gray11")}>
-          {result.name}
-        </h4>
+        <Label className={textClasses({})}>{result.name}</Label>
         <Icon>
           <ChevronRightIcon />
         </Icon>
-        <Text className="font-[600]">{result.readableValue}</Text>
+        <Text>{result.readableValue}</Text>
       </Row>
     </Stack>
   );

@@ -1,4 +1,4 @@
-import { Row, Button, Icon } from "@open-decision/design-system";
+import { Button, Icon } from "@open-decision/design-system";
 import { useInterpreterTree } from "@open-decision/interpreter-react";
 import { TNodeId } from "@open-decision/tree-id";
 import { PlusIcon } from "@radix-ui/react-icons";
@@ -17,13 +17,11 @@ export const AddEntryButton = ({ onClick, groupNodeId }: Props) => {
   if (groupNode instanceof Error) return null;
 
   return (
-    <Row className="gap-2 justify-end">
-      <Button onClick={onClick} variant="secondary">
-        <Icon>
-          <PlusIcon />
-        </Icon>
-        {`${groupNode?.cta ?? "Antwort"} hinzufügen`}
-      </Button>
-    </Row>
+    <Button onClick={onClick} variant="secondary" className="w-full lg:flex-1">
+      <Icon>
+        <PlusIcon />
+      </Icon>
+      {`${groupNode?.cta ?? "Antwort"} hinzufügen`}
+    </Button>
   );
 };

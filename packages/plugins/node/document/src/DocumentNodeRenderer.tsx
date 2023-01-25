@@ -119,23 +119,28 @@ export const DocumentNodeRenderer: TNodeRenderer = ({ nodeId, ...props }) => {
             className="px-0"
           />
         ) : null}
+        <Row className="justify-end">
+          {data ? (
+            <a
+              href={data}
+              download="Dokument.docx"
+              className={buttonClasses({ variant: "secondary" }, "w-full")}
+            >
+              Datei speichern
+            </a>
+          ) : (
+            <SubmitButton
+              type="button"
+              variant="secondary"
+              onClick={() => mutate()}
+              className="w-full"
+              isLoading={isLoading}
+            >
+              Vertrag generieren
+            </SubmitButton>
+          )}
+        </Row>
       </RendererPrimitives.ContentArea>
-      <Row className="justify-end">
-        {data ? (
-          <a href={data} download="Dokument.docx" className={buttonClasses({})}>
-            Datei speichern
-          </a>
-        ) : (
-          <SubmitButton
-            type="button"
-            onClick={() => mutate()}
-            className="max-w-max"
-            isLoading={isLoading}
-          >
-            Vertrag generieren
-          </SubmitButton>
-        )}
-      </Row>
     </RendererPrimitives.Container>
   );
 };

@@ -3,6 +3,7 @@ import {
   ClassNameArrayProp,
   Form as SystemForm,
   ScrollArea,
+  Separator,
   Stack,
   twMerge,
 } from "@open-decision/design-system";
@@ -19,10 +20,13 @@ export type ContentAreaProps = {
 export function ContentArea({ children, className }: ContentAreaProps) {
   return (
     <ScrollArea.Root
-      className={twMerge("flex flex-col overflow-hidden", className)}
+      className={twMerge(
+        "flex flex-col overflow-hidden mt-4 lg:mt-10",
+        className
+      )}
     >
-      <ScrollArea.Viewport className="p-4 -ml-2">
-        <Stack className="gap-4">{children}</Stack>
+      <ScrollArea.Viewport className="p-4 pt-0">
+        <Stack className="gap-6">{children}</Stack>
         <ScrollArea.Scrollbar />
       </ScrollArea.Viewport>
     </ScrollArea.Root>
@@ -61,12 +65,11 @@ export function Container({
       classNames={[`rounded-md overflow-hidden w-full`, classNames, className]}
       style={mapKeys(theme ?? {}, (key) => `--${key}`) as React.CSSProperties}
     >
-      <Stack className="flex-1 overflow-hidden mb-4 px-1 pb-1 gap-4">
-        {children}
-      </Stack>
+      <Stack className="flex-1 overflow-hidden">{children}</Stack>
+      <Separator className="m-0" />
       {withNavigation ? (
         <Navigation
-          className="self-center mb-[var(--padding)]"
+          className="self-center"
           successButtonLabel={successButtonLabel}
           isStartNode={nodeId === startNodeId}
           isFinalNode={node.final}
