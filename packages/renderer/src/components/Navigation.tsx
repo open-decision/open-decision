@@ -35,15 +35,17 @@ export function Navigation({
                 ? "opacity-0 pointer-events-none"
                 : "opacity-100"
             }
+            disabled={isStartNode && !isModule}
           />
           <Form.SubmitButton
             form="form"
             classNames={[
-              isInteractive || (!isFinalNode && !isModule)
-                ? ""
-                : "pointer-events-none",
-              isFinalNode && !isModule ? "opacity-0" : "opacity-100",
+              isInteractive ? "" : "pointer-events-none",
+              isFinalNode && !isModule
+                ? "opacity-0 pointer-events-none"
+                : "opacity-100",
             ]}
+            disabled={(isFinalNode && !isModule) || !isInteractive}
           >
             {successButtonLabel ? successButtonLabel : "Zum nächsten Schritt"}
           </Form.SubmitButton>
@@ -57,10 +59,10 @@ export function Navigation({
   );
 }
 
-type BackButtonProps = { className?: string };
+type BackButtonProps = { className?: string; disabled?: boolean };
 
-export function BackButton({ className }: BackButtonProps) {
-  const { send, canGoBack, isInteractive } = useInterpreter();
+export function BackButton({ className, disabled }: BackButtonProps) {
+  const { send, canGoBack } = useInterpreter();
 
   return (
     <Button
@@ -68,12 +70,8 @@ export function BackButton({ className }: BackButtonProps) {
       onClick={() => {
         return send("GO_BACK");
       }}
-      disabled={!canGoBack || !isInteractive}
-      classNames={[
-        isInteractive ? "" : "pointer-events-none",
-        "min-w-max",
-        className,
-      ]}
+      disabled={!canGoBack || disabled}
+      classNames={["min-w-max", className]}
     >
       <Icon label="Zurück">
         <ArrowLeftIcon />
