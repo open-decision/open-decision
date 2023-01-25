@@ -32,7 +32,7 @@ export function DecisionNodeSidebarPaths({ nodeId, onNodeCreate }: Props) {
             CompareEdge.create({
               source,
               target,
-              condition: { variableId: nodeId, valueIds: [] },
+              condition: edge.condition,
             })
           }
         />
