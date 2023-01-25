@@ -2,6 +2,7 @@ import * as React from "react";
 import {
   ClassNameArrayProp,
   Form as SystemForm,
+  Logo,
   ScrollArea,
   Separator,
   Stack,
@@ -20,12 +21,9 @@ export type ContentAreaProps = {
 export function ContentArea({ children, className }: ContentAreaProps) {
   return (
     <ScrollArea.Root
-      className={twMerge(
-        "flex flex-col overflow-hidden mt-4 lg:mt-10",
-        className
-      )}
+      className={twMerge("flex flex-col overflow-hidden", className)}
     >
-      <ScrollArea.Viewport className="p-4 pt-0">
+      <ScrollArea.Viewport className="p-6 pt-0">
         <Stack className="gap-6">{children}</Stack>
         <ScrollArea.Scrollbar />
       </ScrollArea.Viewport>
@@ -61,21 +59,30 @@ export function Container({
   if (!node) return null;
 
   return (
-    <Stack
-      classNames={[`rounded-md overflow-hidden w-full`, classNames, className]}
-      style={mapKeys(theme ?? {}, (key) => `--${key}`) as React.CSSProperties}
-    >
-      <Stack className="flex-1 overflow-hidden">{children}</Stack>
-      <Separator className="m-0" />
-      {withNavigation ? (
-        <Navigation
-          className="self-center"
-          successButtonLabel={successButtonLabel}
-          isStartNode={nodeId === startNodeId}
-          isFinalNode={node.final}
-        />
-      ) : null}
-    </Stack>
+    <>
+      <Stack className="p-1 px-4 lg:p-4 lg:px-8 self-start">
+        <Logo className="w-[60px] lg:w-[100px]" />
+      </Stack>
+      <Stack
+        classNames={[
+          `rounded-md overflow-hidden w-full`,
+          classNames,
+          className,
+        ]}
+        style={mapKeys(theme ?? {}, (key) => `--${key}`) as React.CSSProperties}
+      >
+        <Stack className="flex-1 overflow-hidden lg:mt-4">{children}</Stack>
+        <Separator className="m-0" />
+        {withNavigation ? (
+          <Navigation
+            className="self-center"
+            successButtonLabel={successButtonLabel}
+            isStartNode={nodeId === startNodeId}
+            isFinalNode={node.final}
+          />
+        ) : null}
+      </Stack>
+    </>
   );
 }
 

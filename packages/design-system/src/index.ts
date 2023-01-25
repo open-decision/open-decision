@@ -10,6 +10,7 @@ export * from "./Separator";
 export * from "./LoadingSpinner";
 export * from "./Text";
 export * from "./Heading";
+export * from "./Logo/Logo";
 
 // Component Systems
 export * from "./Error";
