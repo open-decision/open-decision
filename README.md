@@ -1,23 +1,15 @@
 # Open Decision
 
-Open Decision has been archived in March of 2023. It is being continued as Mioto.
-
 Open Decision is a free and Open Source no-code platform to automate workflows and responses to recurring requests. Designed for the legal market.
+
+Further information and a live version of the Software → [open-decision.org](https://open-decision.org)
+
+Join our community → [Slack Workspace](https://open-decision.org/slack)
 
 ## Table of Contents
 
-- [Introduction](#introduction)
-- [Getting Started](#getting-started)
 - [Setup](#setup)
 - [License](#license)
-
-## Introduction
-
-(Describe in more detail what open decision was and does => or link to the website.)
-
-### Join our Developer Team
-
-(Mention mioto and where to connect)
 
 ## Setup
 
