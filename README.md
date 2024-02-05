@@ -1,66 +1,38 @@
 # Open Decision
 
+Open Decision has been archived in March of 2023. It is being continued as Mioto.
+
 Open Decision is a free and Open Source no-code platform to automate workflows and responses to recurring requests. Designed for the legal market.
-
-Further information and a live version of the Software → [open-decision.org](https://open-decision.org)
-
-Join our community → [Slack Workspace](https://open-decision.org/slack)
 
 ## Table of Contents
 
 - [Introduction](#introduction)
-- [Architecture](#architecture)
-- [Participate](#participate)
-    - [Contribute](#contribute)
-    - [Join our Developer Team](#join-our-developer-team)
-    - [Join the User Community](#join-the-user-community)
 - [Getting Started](#getting-started)
-- [Installation](#installation)
+- [Setup](#setup)
 - [License](#license)
 
 ## Introduction
 
-tba
-
-
-## Architecture
-
-tba
-
-## Participate
-
-
-> This project is still very unstable and the codebase may change without warning. If you are interested in participating in development it is best you send a DM to **PhilGarb** on GitHub, because the current state of the project makes the normal PR - Merge workflow difficult.
-
-As Open Decision is an ambitious and large scale project. Most of the work has been conducted in a team organized by [Open Legal Tech](https://open-legal-tech.org/), a non-profit based in Berlin. 
-
-You are welcome to [contribute](#contribute) via GitHub, [join our team](#Join-our-developer-team) or [join the user community on Slack](#join-the-user-community).
-
-### Contribute
-
-Feel free to pick an issue, open a bug report, feature request or fork the project. We are open to any input or suggestions on how to bring the project forward.
-
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+(Describe in more detail what open decision was and does => or link to the website.)
 
 ### Join our Developer Team
 
-If you want to join our team, you are very welcome to send a DM to **PhilGarb** on GitHub
+(Mention mioto and where to connect)
 
-### Join the User Community
+## Setup
 
-You can also join our growing community and socialize in our [Slack Workspace](https://open-decision.org/slack).
+Make sure to have the following installed:
 
+- node.js
+- git
+- docker
 
-## Getting Started
+Run the following commands in terminal to start open-decision:
 
-> If you encounter any problems please open an issue in this repository and attach the error that is printed to the console in case a command fails.
-
-tba
-
-
-## Installation
-
-tba
+1. Git clone `https://github.com/open-decision/open-decision.git`
+2. Install dependencies with `yarn install`
+3. Then run `yarn setup` to generate the prisma client
+4. Now start the development server with `yarn nx serve:app builder`
 
 ## License
 
